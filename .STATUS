@@ -1,0 +1,115 @@
+status: paused
+priority: 3
+progress: 58
+next: Sprint 8 - Search & Filter Enhancements (when resumed)
+type: dev
+checkpoint: Split from Nexus into standalone repo. Sprint 7 complete. Paused while focusing on Nexus knowledge management.
+
+# ═══════════════════════════════════════════════════════════════════
+# Scribe - Fast Knowledge Capture App
+# ═══════════════════════════════════════════════════════════════════
+
+📝 Scribe - Desktop Note Capture Status
+────────────────────────────────────────
+
+📍 LOCATION
+~/projects/dev-tools/scribe/
+
+⏰ LAST UPDATED
+2024-12-24 - Split from Nexus into standalone repo
+
+────────────────────────────────────────
+
+🎯 CURRENT STATUS
+**⏸️ PAUSED**: Focusing on Nexus knowledge management integration
+
+**What's Done (58%)**:
+- 7/12 sprints complete
+- Full-featured note editor
+- Wiki links + backlinks
+- Tags with filtering
+- Full-text search
+- Security hardened
+
+**Why Paused**:
+- Nexus refocused on Claude + Obsidian integration
+- Scribe can resume as companion app later
+- All code preserved, ready to continue
+
+────────────────────────────────────────
+
+📊 SPRINT PROGRESS
+
+Sprint 1: Electron Setup       ████████████████████ 100% ✅
+Sprint 2: SQLite Database      ████████████████████ 100% ✅
+Sprint 3: Rich Editor          ████████████████████ 100% ✅
+Sprint 4: PARA Folders         ████████████████████ 100% ✅
+Sprint 5: Full-Text Search     ████████████████████ 100% ✅
+Sprint 6: Wiki Links           ████████████████████ 100% ✅
+Sprint 7: Tags System          ████████████████████ 100% ✅
+Sprint 8: Search Enhance       ░░░░░░░░░░░░░░░░░░░░   0% ⏸️
+Sprint 9-12: Future            ░░░░░░░░░░░░░░░░░░░░   0% ⏸️
+
+**Overall Progress**: 7/12 sprints (58%)
+
+────────────────────────────────────────
+
+📋 WHEN RESUMED
+
+1. Sprint 8: Search & Filter Enhancements
+   - Search highlighting in results
+   - Combined tag + FTS filtering
+   - Search history
+
+2. Sprint 9: Daily Notes
+   - Date-based notes
+   - Templates
+
+3. Sprint 10: Global Hotkey
+   - ⌘+Shift+N anywhere
+   - Quick capture overlay
+
+4. Sprint 11: Obsidian Sync
+   - Export to vault
+   - Import from vault
+
+5. Sprint 12: Claude MCP
+   - Nexus integration
+   - AI-assisted capture
+
+────────────────────────────────────────
+
+📁 KEY FILES
+
+- README.md              - Project overview
+- CLAUDE.md              - Claude Code guidance
+- GETTING-STARTED.md     - User guide
+- SPRINT-7-COMPLETE.md   - Last sprint docs
+- SPRINT-8-PLAN.md       - Next sprint plan
+- SECURITY-IMPROVEMENTS.md - Security docs
+
+────────────────────────────────────────
+
+🔗 RELATED PROJECTS
+
+- **Nexus** (~/projects/dev-tools/nexus/)
+  Knowledge management architecture
+
+- **Statistical Research Plugin**
+  Claude Code integration for research
+
+────────────────────────────────────────
+
+💡 NOTES
+
+**Origin**:
+Scribe was `nexus/nexus-desktop/`. Split into
+standalone repo 2024-12-24 to clarify product
+positioning.
+
+**Future Options**:
+A) Resume as full PKM app (compete with Obsidian)
+B) Pivot to quick capture companion for Obsidian
+C) Integrate with Nexus knowledge pipeline
+
+Decision deferred - focus is on Nexus/Claude integration.
