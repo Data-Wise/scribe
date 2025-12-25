@@ -1,0 +1,31 @@
+{
+  "appId": "com.nexus.desktop",
+  "productName": "Nexus",
+  "directories": {
+    "output": "dist"
+  },
+  "files": [
+    "dist-electron",
+    "node_modules",
+    "package.json"
+  ],
+  "mac": {
+    "target": ["dmg"],
+    "category": "public.app-category.productivity",
+    "icon": "build/icon.icns"
+  },
+  "win": {
+    "target": ["nsis"],
+    "icon": "build/icon.ico"
+  },
+  "linux": {
+    "target": ["AppImage"],
+    "category": "Utility"
+  },
+  "extraMetadata": {
+    "main": "dist-electron/main/index.js"
+  },
+  "buildDependenciesFromSource": true,
+  "nodeGypRebuild": true,
+  "npmRebuild": true
+}
