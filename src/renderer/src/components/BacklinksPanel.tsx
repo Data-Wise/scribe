@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Note } from '../types'
+import { api } from '../lib/api'
 
 export interface BacklinksPanelProps {
   noteId: string | null
@@ -27,8 +28,8 @@ export function BacklinksPanel({ noteId, onSelectNote }: BacklinksPanelProps) {
     setLoading(true)
     try {
       const [backlinksData, outgoingData] = await Promise.all([
-        window.api.getBacklinks(noteId),
-        window.api.getOutgoingLinks(noteId)
+        api.getBacklinks(noteId),
+        api.getOutgoingLinks(noteId)
       ])
 
       setBacklinks(backlinksData)

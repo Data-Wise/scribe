@@ -10,8 +10,13 @@ afterEach(() => {
   cleanup()
 })
 
-// Mock window.api for Electron IPC
-global.window.api = {
+// Mock @tauri-apps/api/core
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(),
+}))
+
+// Define the API mock
+const apiMock = {
   // Note operations
   createNote: vi.fn(),
   updateNote: vi.fn(),
@@ -44,3 +49,11 @@ global.window.api = {
   getBacklinks: vi.fn(),
   getOutgoingLinks: vi.fn()
 }
+
+// Mock the api library
+vi.mock('../lib/api', () => ({
+  api: apiMock
+}))
+
+// Mock window.api for backward compatibility in existing tests
+global.window.api = apiMock

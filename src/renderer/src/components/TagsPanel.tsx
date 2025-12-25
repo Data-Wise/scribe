@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { TagWithCount } from '../types'
+import { api } from '../lib/api'
 
 export interface TagsPanelProps {
   noteId: string | null
@@ -17,7 +18,7 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
     const loadTags = async () => {
       setLoading(true)
       try {
-        const tags = await window.api.getAllTags()
+        const tags = await api.getAllTags()
         setAllTags(tags)
       } catch (error) {
         console.error('[TagsPanel] Error loading tags:', error)
@@ -39,7 +40,7 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
 
     const loadNoteTags = async () => {
       try {
-        const tags = await window.api.getNoteTags(noteId)
+        const tags = await api.getNoteTags(noteId)
         // Add note_count from allTags
         const tagsWithCount: TagWithCount[] = tags.map(tag => {
           const fullTag = allTags.find(t => t.id === tag.id)

@@ -1,8 +1,18 @@
+// Property types for YAML frontmatter
+export type PropertyType = 'text' | 'date' | 'number' | 'checkbox' | 'list' | 'link'
+
+export interface Property {
+  key: string
+  value: string | number | boolean | string[]
+  type: PropertyType
+}
+
 export interface Note {
   id: string
   title: string
   content: string
   folder: string
+  properties?: Record<string, Property>
   created_at: number
   updated_at: number
   deleted_at: number | null

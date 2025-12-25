@@ -1,115 +1,86 @@
-status: paused
-priority: 3
-progress: 58
-next: Sprint 8 - Search & Filter Enhancements (when resumed)
-type: dev
-checkpoint: Split from Nexus into standalone repo. Sprint 7 complete. Paused while focusing on Nexus knowledge management.
+---
+status: active
+priority: P1
+progress: 64
+version: 0.4.0-dev
+sprint: 8
+updated: 2024-12-24
+editor: blocknote
+next_sprint: 9
+next_focus: AI + Ecosystem
+tags:
+  - adhd-friendly
+  - distraction-free
+  - electron
+  - react
+---
 
-# ═══════════════════════════════════════════════════════════════════
-# Scribe - Fast Knowledge Capture App
-# ═══════════════════════════════════════════════════════════════════
+# Scribe
 
-📝 Scribe - Desktop Note Capture Status
-────────────────────────────────────────
+> **ADHD-friendly distraction-free writer** with projects, academic features, and CLI-based AI.
 
-📍 LOCATION
-~/projects/dev-tools/scribe/
+## Current Sprint
 
-⏰ LAST UPDATED
-2024-12-24 - Split from Nexus into standalone repo
+**Sprint 8: BlockNote + Focus Mode** ✅
 
-────────────────────────────────────────
+- [x] Migrated TipTap → BlockNote
+- [x] Focus mode (⌘⇧F / Escape)
+- [x] Word count footer
+- [x] Dark theme default
+- [x] Wiki links + tags autocomplete
 
-🎯 CURRENT STATUS
-**⏸️ PAUSED**: Focusing on Nexus knowledge management integration
+---
 
-**What's Done (58%)**:
-- 7/12 sprints complete
-- Full-featured note editor
-- Wiki links + backlinks
-- Tags with filtering
-- Full-text search
-- Security hardened
+## Sprint Progress
 
-**Why Paused**:
-- Nexus refocused on Claude + Obsidian integration
-- Scribe can resume as companion app later
-- All code preserved, ready to continue
+| Phase | Sprint | Focus | Status |
+|-------|--------|-------|--------|
+| **1** | 8 | BlockNote + Focus | ✅ 100% |
+| 1 | 9 | AI + Ecosystem | ⏳ Next |
+| 1 | 10 | Hotkey + Commands | ○ 0% |
+| **2** | 11 | Obsidian Sync | ○ 0% |
+| 2 | 12 | Zotero + Math | ○ 0% |
+| **3** | 13 | LaTeX/PDF/Word | ○ 0% |
+| 3 | 14 | Quarto | ○ 0% |
+| **4** | 15 | Project System | ○ 0% |
+| 4 | 16 | Templates + Daily | ○ 0% |
+| **5** | 17 | Search + Goals | ○ 0% |
 
-────────────────────────────────────────
+**Total: 64h / 10 sprints**
 
-📊 SPRINT PROGRESS
+---
 
-Sprint 1: Electron Setup       ████████████████████ 100% ✅
-Sprint 2: SQLite Database      ████████████████████ 100% ✅
-Sprint 3: Rich Editor          ████████████████████ 100% ✅
-Sprint 4: PARA Folders         ████████████████████ 100% ✅
-Sprint 5: Full-Text Search     ████████████████████ 100% ✅
-Sprint 6: Wiki Links           ████████████████████ 100% ✅
-Sprint 7: Tags System          ████████████████████ 100% ✅
-Sprint 8: Search Enhance       ░░░░░░░░░░░░░░░░░░░░   0% ⏸️
-Sprint 9-12: Future            ░░░░░░░░░░░░░░░░░░░░   0% ⏸️
+## Completed Sprints (1-8)
 
-**Overall Progress**: 7/12 sprints (58%)
+| Sprint | Focus | Done |
+|--------|-------|------|
+| 1 | Electron Setup | ✅ |
+| 2 | SQLite Database | ✅ |
+| 3 | Rich Editor (TipTap) | ✅ |
+| 4 | PARA Folders | ✅ |
+| 5 | Full-Text Search | ✅ |
+| 6 | Wiki Links | ✅ |
+| 7 | Tags System | ✅ |
+| 8 | BlockNote + Focus | ✅ |
 
-────────────────────────────────────────
+---
 
-📋 WHEN RESUMED
+## Stack
 
-1. Sprint 8: Search & Filter Enhancements
-   - Search highlighting in results
-   - Combined tag + FTS filtering
-   - Search history
+| Layer | Tech |
+|-------|------|
+| Shell | Electron 28 |
+| UI | React 18 |
+| Editor | **BlockNote** |
+| Styling | Tailwind |
+| State | Zustand |
+| Database | SQLite |
+| AI | Claude/Gemini CLI |
 
-2. Sprint 9: Daily Notes
-   - Date-based notes
-   - Templates
+---
 
-3. Sprint 10: Global Hotkey
-   - ⌘+Shift+N anywhere
-   - Quick capture overlay
+## Files
 
-4. Sprint 11: Obsidian Sync
-   - Export to vault
-   - Import from vault
-
-5. Sprint 12: Claude MCP
-   - Nexus integration
-   - AI-assisted capture
-
-────────────────────────────────────────
-
-📁 KEY FILES
-
-- README.md              - Project overview
-- CLAUDE.md              - Claude Code guidance
-- GETTING-STARTED.md     - User guide
-- SPRINT-7-COMPLETE.md   - Last sprint docs
-- SPRINT-8-PLAN.md       - Next sprint plan
-- SECURITY-IMPROVEMENTS.md - Security docs
-
-────────────────────────────────────────
-
-🔗 RELATED PROJECTS
-
-- **Nexus** (~/projects/dev-tools/nexus/)
-  Knowledge management architecture
-
-- **Statistical Research Plugin**
-  Claude Code integration for research
-
-────────────────────────────────────────
-
-💡 NOTES
-
-**Origin**:
-Scribe was `nexus/nexus-desktop/`. Split into
-standalone repo 2024-12-24 to clarify product
-positioning.
-
-**Future Options**:
-A) Resume as full PKM app (compete with Obsidian)
-B) Pivot to quick capture companion for Obsidian
-C) Integrate with Nexus knowledge pipeline
-
-Decision deferred - focus is on Nexus/Claude integration.
+- [PROJECT-DEFINITION.md](file:///Users/dt/projects/dev-tools/scribe/PROJECT-DEFINITION.md) - Scope & roadmap
+- [CHANGELOG.md](file:///Users/dt/projects/dev-tools/scribe/CHANGELOG.md) - Version history
+- [CLAUDE.md](file:///Users/dt/projects/dev-tools/scribe/CLAUDE.md) - AI guidance

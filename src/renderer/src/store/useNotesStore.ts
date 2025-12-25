@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Note } from '../types'
 import { sanitizeHTML, sanitizeText } from '../utils/sanitize'
+import { api } from '../lib/api'
 
 interface NotesState {
   notes: Note[]
@@ -17,7 +18,7 @@ interface NotesState {
   searchNotes: (query: string) => Promise<void>
 }
 
-export const useNotesStore = create<NotesState>((set, get) => ({
+export const useNotesStore = create<NotesState>((set) => ({
   notes: [],
   selectedNoteId: null,
   isLoading: false,
@@ -26,7 +27,7 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   loadNotes: async (folder?: string) => {
     set({ isLoading: true, error: null })
     try {
-      const notes = await window.api.listNotes(folder)
+      const notes = await api.listNotes(folder)
       set({ notes, isLoading: false })
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
@@ -43,7 +44,7 @@ export const useNotesStore = create<NotesState>((set, get) => ({
         content: note.content ? sanitizeHTML(note.content) : undefined
       }
 
-      const newNote = await window.api.createNote(sanitizedNote)
+      const newNote = await api.createNote(sanitizedNote)
       set((state) => ({
         notes: [newNote, ...state.notes],
         selectedNoteId: newNote.id,
@@ -64,7 +65,7 @@ export const useNotesStore = create<NotesState>((set, get) => ({
         content: updates.content ? sanitizeHTML(updates.content) : undefined
       }
 
-      const updatedNote = await window.api.updateNote(id, sanitizedUpdates)
+      const updatedNote = await api.updateNote(id, sanitizedUpdates)
       if (updatedNote) {
         set((state) => ({
           notes: state.notes.map((note) =>
@@ -81,7 +82,7 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   deleteNote: async (id: string) => {
     set({ isLoading: true, error: null })
     try {
-      await window.api.deleteNote(id)
+      await api.deleteNote(id)
       set((state) => ({
         notes: state.notes.filter((note) => note.id !== id),
         selectedNoteId: state.selectedNoteId === id ? null : state.selectedNoteId,
@@ -99,10 +100,11 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   searchNotes: async (query: string) => {
     set({ isLoading: true, error: null })
     try {
-      const notes = await window.api.searchNotes(query)
+      const notes = await api.searchNotes(query)
       set({ notes, isLoading: false })
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
     }
   }
 }))
+

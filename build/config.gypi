@@ -408,7 +408,7 @@
     "nodedir": "/Users/dt/.electron-gyp/28.3.3",
     "standalone_static_library": 1,
     "global_prefix": "/opt/homebrew",
-    "local_prefix": "/Users/dt/projects/dev-tools/nexus/nexus-desktop",
+    "local_prefix": "/Users/dt/projects/dev-tools/scribe",
     "globalconfig": "/opt/homebrew/etc/npmrc",
     "userconfig": "/Users/dt/.npmrc",
     "init_module": "/Users/dt/.npm-init.js",

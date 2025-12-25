@@ -78,7 +78,7 @@ export function WikiLinkAutocomplete({
     }
 
     editor.on('update', updateHandler)
-    return () => editor.off('update', updateHandler)
+    return () => { editor.off('update', updateHandler) }
   }, [isOpen, editor, triggerPosition, onClose])
 
   // Insert selected note title

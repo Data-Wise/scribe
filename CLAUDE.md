@@ -1,130 +1,214 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working with this repository.
+> **AI Assistant Guidance for Scribe**
 
 ---
 
-## What is Scribe?
+## 🎯 Project Identity
 
-**Scribe** is a lightweight desktop app for quick knowledge capture, designed to complement Obsidian-based knowledge management workflows.
+**Scribe** = ADHD-friendly distraction-free writer + projects + academic features + CLI-based AI
 
-**Purpose:** Fast, frictionless note capture that syncs to your Obsidian vault.
+**NOT** an IDE. **NOT** an Obsidian replacement. A focused writing companion.
 
 ---
 
-## Tech Stack
+## ⚠️ Critical: Read First
 
-| Component | Technology |
-|-----------|------------|
-| Framework | Electron + React |
-| Language | TypeScript |
-| Build | Vite + electron-vite |
-| Database | SQLite (better-sqlite3) + FTS5 |
-| Editor | TipTap |
+Before making ANY changes, read:
+
+- **PROJECT-DEFINITION.md** — Complete scope control, feature tiers, anti-drift rules
+
+---
+
+## 🧠 ADHD Principles (Override All Decisions)
+
+1. **Zero Friction** — < 3 seconds to start writing
+2. **One Thing at a Time** — Single note, no tabs
+3. **Escape Hatches** — ⌘W closes, auto-saves
+4. **Visible Progress** — Word count, timer
+5. **Sensory-Friendly** — Dark mode, no animations
+6. **Quick Wins** — Milestone celebrations
+
+---
+
+## 📐 Technical Stack (Locked)
+
+| Layer | Technology |
+|-------|------------|
+| Shell | Electron 28 |
+| UI | React 18 |
+| Editor | BlockNote (migrating from TipTap) |
 | Styling | Tailwind CSS |
 | State | Zustand |
-| Testing | Vitest |
+| Database | SQLite (better-sqlite3) |
+| AI | Claude/Gemini CLI only (NO API) |
+| Citations | Pandoc citeproc |
+| Math | KaTeX |
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 scribe/
 ├── src/
-│   ├── main/           # Electron main process
-│   │   ├── index.ts
-│   │   └── database/
-│   │       └── DatabaseService.ts
-│   ├── preload/        # Preload scripts
-│   │   └── index.ts
-│   └── renderer/       # React UI
+│   ├── main/                  # Electron main process
+│   │   ├── database/          # SQLite operations
+│   │   ├── ai/                # Claude/Gemini CLI wrappers
+│   │   ├── academic/          # Zotero, Pandoc, Quarto
+│   │   ├── projects/          # Project manager
+│   │   ├── knowledge/         # Daily notes, backlinks
+│   │   ├── ecosystem/         # flow-cli, obs, aiterm status
+│   │   └── sync/              # Obsidian sync
+│   │
+│   ├── preload/               # IPC bridge
+│   │
+│   └── renderer/              # React app
 │       └── src/
-│           ├── App.tsx
 │           ├── components/
-│           ├── extensions/    # TipTap extensions
-│           ├── store/
-│           └── utils/
-├── package.json
-├── electron.vite.config.ts
-├── tsconfig.json
-└── vitest.config.ts
+│           │   ├── Editor/    # BlockNote
+│           │   ├── Sidebar/   # Project switcher, panels
+│           │   ├── AIPanel/   # AI actions
+│           │   └── FocusMode/ # Distraction-free
+│           ├── blocks/        # Custom BlockNote blocks
+│           │   ├── WikiLink.tsx
+│           │   ├── Tag.tsx
+│           │   ├── Citation.tsx
+│           │   └── Equation.tsx
+│           └── store/         # Zustand
 ```
 
 ---
 
-## Development Commands
+## 🚀 Commands
 
 ```bash
-# Install dependencies
-npm install
-
-# Development mode
-npm run dev
-
-# Build production
-npm run build
-
-# Run tests
-npm test
-
-# Package for distribution
-npm run package
+npm run dev      # Development
+npm run build    # Production build
+npm run test     # Run tests
+npm run lint     # Lint code
 ```
 
 ---
 
-## Current Status
+## 🎯 Current Sprint: 8 (BlockNote + Focus Mode)
 
-**Progress:** 7/12 sprints complete (58%)
+**Tasks:**
 
-### Completed Features
-- Electron + React + TypeScript setup
-- SQLite database with FTS5 full-text search
-- TipTap rich markdown editor
-- Wiki-style [[links]] with autocomplete
-- Backlinks panel
-- #tags with colored badges
-- Tags panel with filtering (AND logic)
-- PARA folder organization
-- Security hardening (XSS, SQL injection protection)
-
-### Remaining Sprints (Paused)
-- Sprint 8: Search & Filter Enhancements
-- Sprint 9-12: Daily notes, templates, sync
+- [ ] Replace TipTap with BlockNote
+- [ ] Implement Focus Mode
+- [ ] Dark mode default
+- [ ] Auto-save
+- [ ] Word count
+- [ ] Port wiki links
+- [ ] Port tags
 
 ---
 
-## Key Files
+## ✅ Feature Tiers
+
+### Tier 1-3: Build Now (v1.0)
+
+- BlockNote editor
+- Focus mode
+- Global hotkey
+- Claude/Gemini CLI
+- Zotero citations
+- LaTeX/PDF/Word export
+- Quarto render
+
+### Tier 4: Build Now (v1.0)
+
+- Project system (5 types)
+- Daily notes
+- Backlinks
+
+### Deferred to v2
+
+- Terminal (xterm.js)
+- Graph view
+- Multi-tab editing
+
+### Never Build
+
+- API-based AI
+- Plugin system
+- Mobile app
+
+---
+
+## 🚫 Scope Creep Prevention
+
+### Before Adding Anything
+
+1. **Does it help ADHD focus?** → If no, reject
+2. **Is it in Tiers 1-4?** → If no, defer
+3. **Does it need API keys?** → If yes, reject
+4. **Does it add UI clutter?** → If yes, reconsider
+
+### Red Flags (Stop)
+
+- "We could also add..."
+- "While we're at it..."
+- "Other apps have..."
+
+### Green Flags (Proceed)
+
+- "This reduces friction"
+- "This helps focus"
+- "This removes a step"
+
+---
+
+## 🔧 Key Implementation Details
+
+### AI Integration (CLI Only)
+
+```typescript
+// Uses installed CLI tools, no API keys
+async function askClaude(prompt: string, context: string): Promise<string> {
+  const result = await execAsync(
+    `echo "${escape(context)}" | claude --print "${escape(prompt)}"`
+  );
+  return result.stdout;
+}
+```
+
+### Project Structure on Disk
+
+```
+~/Projects/{project}/
+├── .scribe/
+│   ├── project.json     # Settings
+│   └── templates/       # Custom templates
+├── notes/
+└── daily/
+    └── 2024-12-24.md
+```
+
+### Daily Notes
+
+- Shortcut: ⌘D
+- Auto-create with template
+- Per-project configuration
+
+---
+
+## 📋 Approval Required For
+
+1. New npm packages
+2. New features not in Tiers 1-4
+3. Any API integrations (rejected by default)
+4. New UI panels
+5. Database schema changes
+
+---
+
+## 🔗 Related Files
 
 | File | Purpose |
 |------|---------|
-| `src/main/database/DatabaseService.ts` | SQLite operations, migrations |
-| `src/renderer/src/App.tsx` | Main React component |
-| `src/renderer/src/store/useNotesStore.ts` | Zustand state management |
-| `src/renderer/src/extensions/WikiLink.ts` | TipTap [[link]] extension |
-| `src/renderer/src/utils/sanitize.ts` | DOMPurify XSS protection |
-
----
-
-## Security Considerations
-
-This app has been security-hardened:
-- **XSS Protection:** DOMPurify sanitization
-- **SQL Injection:** Input validation, parameterized queries
-- **Input Limits:** Title 500 chars, content 10MB
-- **Path Traversal:** Folder whitelist validation
-
-See `SECURITY-IMPROVEMENTS.md` for details.
-
----
-
-## Relationship to Nexus
-
-Scribe was originally part of the Nexus project (`nexus/nexus-desktop/`). It has been split out as a standalone app that can:
-
-1. Run independently as a quick capture tool
-2. Sync with Obsidian vaults (future feature)
-3. Integrate with Claude via MCP (future feature)
-
-The main Nexus project focuses on knowledge management architecture and Claude integration.
+| PROJECT-DEFINITION.md | Complete scope control |
+| README.md | User-facing overview |
+| .STATUS | Progress tracking |
+| CHANGELOG.md | Version history |
