@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
@@ -20,7 +20,7 @@ type EditorMode = 'write' | 'preview'
 /**
  * HybridEditor - ADHD-friendly distraction-free editor
  *
- * Write mode: Contenteditable with wiki-link/tag highlighting
+ * Write mode: Plain textarea for reliable input
  * Preview mode: Rendered markdown with clickable links
  * Toggle: Cmd+E (Mac) or Ctrl+E (Windows/Linux)
  */
@@ -33,26 +33,53 @@ export function HybridEditor({
   onSearchTags = async () => []
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>('write')
-  const editorRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Autocomplete state with cursor position
   const [wikiLinkTrigger, setWikiLinkTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
   const [tagTrigger, setTagTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
 
-  // Get cursor position in viewport coordinates
+  // Get cursor position from textarea
   const getCursorPosition = useCallback((): { top: number; left: number } => {
-    const selection = window.getSelection()
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
-      const rect = range.getBoundingClientRect()
-      return {
-        top: rect.bottom + window.scrollY + 4, // 4px below cursor
-        left: rect.left + window.scrollX
-      }
+    const textarea = textareaRef.current
+    if (!textarea) return { top: 100, left: 100 }
+
+    // Create a mirror element to measure cursor position
+    const mirror = document.createElement('div')
+    const style = window.getComputedStyle(textarea)
+    
+    // Copy textarea styles
+    mirror.style.cssText = `
+      position: absolute;
+      visibility: hidden;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: ${style.fontFamily};
+      font-size: ${style.fontSize};
+      line-height: ${style.lineHeight};
+      padding: ${style.padding};
+      width: ${textarea.clientWidth}px;
+    `
+    
+    // Get text before cursor
+    const textBeforeCursor = content.substring(0, textarea.selectionStart)
+    mirror.textContent = textBeforeCursor
+    
+    // Add a span to mark cursor position
+    const marker = document.createElement('span')
+    marker.textContent = '|'
+    mirror.appendChild(marker)
+    
+    document.body.appendChild(mirror)
+    const markerRect = marker.getBoundingClientRect()
+    const textareaRect = textarea.getBoundingClientRect()
+    document.body.removeChild(mirror)
+    
+    return {
+      top: textareaRect.top + (markerRect.top - mirror.getBoundingClientRect().top) + 24,
+      left: textareaRect.left + (markerRect.left - mirror.getBoundingClientRect().left)
     }
-    // Fallback position
-    return { top: 100, left: 100 }
-  }, [])
+  }, [content])
 
   // Toggle between write and preview modes
   const toggleMode = useCallback(() => {
@@ -80,154 +107,152 @@ export function HybridEditor({
 
   // Focus editor when entering write mode
   useEffect(() => {
-    if (mode === 'write' && editorRef.current) {
-      editorRef.current.focus()
+    if (mode === 'write' && textareaRef.current) {
+      textareaRef.current.focus()
     }
   }, [mode])
 
-  // Handle contenteditable input
-  const handleInput = useCallback(async () => {
-    const editor = editorRef.current
-    if (!editor) return
-
-    const text = editor.innerText
+  // Handle textarea input and check for autocomplete triggers
+  const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = e.target
+    const text = textarea.value
+    const cursorPos = textarea.selectionStart ?? text.length
+    
+    // Update content first
     onChange(text)
 
-    // Get cursor position
-    const selection = window.getSelection()
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
+    // Get text before cursor for trigger detection
+    const textBeforeCursor = text.substring(0, cursorPos)
+    
+    // Debug log
+    console.log('[HybridEditor] Input:', { cursorPos, textBeforeCursor: textBeforeCursor.slice(-10) })
 
-      // Check for wiki-link trigger [[
-      const textBeforeCursor = text.substring(0, getTextOffset(editor, range.startContainer, range.startOffset))
-      const wikiMatch = textBeforeCursor.match(/\[\[([^\]]*)$/)
-
-      if (wikiMatch) {
-        const query = wikiMatch[1]
-        const position = getCursorPosition()
-        setWikiLinkTrigger({ query, position })
-        setTagTrigger(null)
-      } else if (textBeforeCursor.match(/(?<![#\w])#[a-zA-Z][a-zA-Z0-9_-]*$/)) {
-        const tagMatch = textBeforeCursor.match(/(?<![#\w])#([a-zA-Z][a-zA-Z0-9_-]*)$/)
-        if (tagMatch) {
-          const query = tagMatch[1]
-          const position = getCursorPosition()
-          setTagTrigger({ query, position })
-        }
-        setWikiLinkTrigger(null)
-      } else {
-        setWikiLinkTrigger(null)
-        setTagTrigger(null)
+    // Check for wiki-link trigger [[
+    const wikiMatch = textBeforeCursor.match(/\[\[([^\]]*)$/)
+    if (wikiMatch) {
+      const query = wikiMatch[1]
+      console.log('[HybridEditor] Wiki-link trigger detected:', query)
+      
+      // Calculate position near cursor
+      const rect = textarea.getBoundingClientRect()
+      const position = {
+        top: rect.top + 30,
+        left: rect.left + 50
       }
+      
+      setWikiLinkTrigger({ query, position })
+      setTagTrigger(null)
+      return
     }
+
+    // Check for tag trigger # (but not ## headings)
+    const tagMatch = textBeforeCursor.match(/(?:^|[^#\w])#([a-zA-Z][a-zA-Z0-9_-]*)$/)
+    if (tagMatch) {
+      const query = tagMatch[1]
+      console.log('[HybridEditor] Tag trigger detected:', query)
+      
+      const rect = textarea.getBoundingClientRect()
+      const position = {
+        top: rect.top + 30,
+        left: rect.left + 50
+      }
+      
+      setTagTrigger({ query, position })
+      setWikiLinkTrigger(null)
+      return
+    }
+
+    // No triggers active
+    setWikiLinkTrigger(null)
+    setTagTrigger(null)
   }, [onChange])
 
-  // Get text offset for cursor position
-  const getTextOffset = useCallback((root: Node, node: Node, offset: number): number => {
-    const walker = document.createTreeWalker(
-      root,
-      NodeFilter.SHOW_TEXT,
-      null
-    )
-
-    let currentOffset = 0
-    while (walker.nextNode()) {
-      if (walker.currentNode === node) {
-        return currentOffset + offset
-      }
-      currentOffset += walker.currentNode.textContent?.length || 0
+  // Handle wiki-link selection from autocomplete
+  const handleWikiLinkSelect = useCallback((title: string) => {
+    console.log('[HybridEditor] Wiki-link selected:', title)
+    
+    const textarea = textareaRef.current
+    if (!textarea) {
+      console.log('[HybridEditor] No textarea ref')
+      return
     }
-    return currentOffset
-  }, [])
 
-  // Handle wiki-link selection
-  const handleWikiLinkSelect = useCallback(async (title: string) => {
-    const editor = editorRef.current
-    if (!editor) return
+    const text = content
+    
+    // Find the last [[ position in the entire text (since cursor might have moved)
+    const triggerPos = text.lastIndexOf('[[')
+    console.log('[HybridEditor] Trigger position:', triggerPos, 'in text:', text)
 
-    const selection = window.getSelection()
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
-      const cursorOffset = getTextOffset(editor, range.startContainer, range.startOffset)
-      const text = editor.innerText
-
-      // Find the last [[ position and replace to cursor
-      const beforeMatch = text.substring(0, cursorOffset).lastIndexOf('[[')
-
-      if (beforeMatch !== -1) {
-        const newText = text.substring(0, beforeMatch) + `[[${title}]]` + text.substring(cursorOffset)
-        onChange(newText)
-
-        // Focus back to editor
-        setTimeout(() => editor.focus(), 0)
+    if (triggerPos !== -1) {
+      // Find where the partial query ends (could be at end of text or before next space/bracket)
+      let endPos = text.length
+      for (let i = triggerPos + 2; i < text.length; i++) {
+        if (text[i] === ']' || text[i] === '\n') {
+          endPos = i
+          break
+        }
       }
+      
+      const newText = text.substring(0, triggerPos) + `[[${title}]]` + text.substring(endPos)
+      console.log('[HybridEditor] New text:', newText)
+      onChange(newText)
+
+      // Set cursor position after the inserted link
+      const newCursorPos = triggerPos + title.length + 4 // [[title]]
+      setTimeout(() => {
+        textarea.focus()
+        textarea.setSelectionRange(newCursorPos, newCursorPos)
+      }, 10)
+    } else {
+      console.log('[HybridEditor] No [[ found, appending')
+      // Fallback: just append
+      const newText = content + `[[${title}]]`
+      onChange(newText)
     }
 
     setWikiLinkTrigger(null)
-    onWikiLinkClick?.(title)
-  }, [onChange, onWikiLinkClick])
+  }, [content, onChange])
 
-  // Handle tag selection
-  const handleTagSelect = useCallback(async (name: string) => {
-    const editor = editorRef.current
-    if (!editor) return
+  // Handle tag selection from autocomplete
+  const handleTagSelect = useCallback((name: string) => {
+    const textarea = textareaRef.current
+    if (!textarea) return
 
-    const selection = window.getSelection()
-    if (selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
-      const cursorOffset = getTextOffset(editor, range.startContainer, range.startOffset)
-      const text = editor.innerText
+    const cursorPos = textarea.selectionStart
+    const text = content
 
-      // Find the last # position (not ## heading)
-      const beforeText = text.substring(0, cursorOffset)
-      const tagMatch = beforeText.match(/(?<![#\w])#[a-zA-Z][a-zA-Z0-9_-]*$/)
+    // Find the last # position before cursor (that's part of a tag)
+    const textBeforeCursor = text.substring(0, cursorPos)
+    const tagMatch = textBeforeCursor.match(/(?:^|[^#\w])#([a-zA-Z][a-zA-Z0-9_-]*)$/)
 
-      if (tagMatch) {
-        const beforeTagPos = beforeText.lastIndexOf('#')
-        const newText = text.substring(0, beforeTagPos) + `#${name} ` + text.substring(cursorOffset)
-        onChange(newText)
+    if (tagMatch) {
+      // Find the position of the # that triggered this
+      const triggerPos = textBeforeCursor.length - tagMatch[0].length + (tagMatch[0].startsWith('#') ? 0 : 1)
+      const newText = text.substring(0, triggerPos) + `#${name} ` + text.substring(cursorPos)
+      onChange(newText)
 
-        // Focus back to editor
-        setTimeout(() => editor.focus(), 0)
-      }
+      // Set cursor position after the inserted tag
+      const newCursorPos = triggerPos + name.length + 2 // #name + space
+      setTimeout(() => {
+        textarea.focus()
+        textarea.setSelectionRange(newCursorPos, newCursorPos)
+      }, 0)
     }
 
     setTagTrigger(null)
-    onTagClick?.(name)
-  }, [onChange, onTagClick])
+  }, [content, onChange])
 
-  // Handle wiki-link click in write mode
-  const handleWikiLinkClickInEditor = useCallback((e: React.MouseEvent) => {
-    const target = e.target as HTMLElement
-    if (target.classList.contains('wiki-link')) {
-      e.preventDefault()
-      const title = target.textContent?.replace(/^\[\[|\]\]$/g, '')
-      if (title) {
-        onWikiLinkClick?.(title)
+  // Handle keyboard navigation in autocomplete
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Close autocomplete on Escape
+    if (e.key === 'Escape') {
+      if (wikiLinkTrigger || tagTrigger) {
+        e.preventDefault()
+        setWikiLinkTrigger(null)
+        setTagTrigger(null)
       }
     }
-  }, [onWikiLinkClick])
-
-  // Handle tag click in write mode
-  const handleTagClickInEditor = useCallback((e: React.MouseEvent) => {
-    const target = e.target as HTMLElement
-    if (target.classList.contains('tag')) {
-      e.preventDefault()
-      const tagName = target.textContent?.substring(1) // Remove #
-      if (tagName) {
-        onTagClick?.(tagName)
-      }
-    }
-  }, [onTagClick])
-
-  // Highlighted content for write mode
-  const highlightedContent = useMemo(() => {
-    return content
-      // Highlight wiki-links [[...]]
-      .replace(/\[\[([^\]]+)\]\]/g, '<span class="wiki-link">[[$1]]</span>')
-      // Highlight tags #tag (but not ## headings)
-      .replace(/(?<![#\w])#([a-zA-Z][a-zA-Z0-9_-]*)/g, '<span class="tag">#$1</span>')
-  }, [content])
+  }, [wikiLinkTrigger, tagTrigger])
 
   // Word count
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
@@ -249,16 +274,16 @@ export function HybridEditor({
       {/* Editor area */}
       <div className="flex-1 overflow-auto p-8 pt-16">
         {mode === 'write' ? (
-          <div
-            ref={editorRef}
-            contentEditable
-            onInput={handleInput}
-            onClick={handleWikiLinkClickInEditor}
-            onClickCapture={handleTagClickInEditor}
-            className="editor-content w-full min-h-full bg-transparent text-neutral-100
-                       focus:outline-none font-mono text-lg leading-relaxed"
-            suppressContentEditableWarning
-            dangerouslySetInnerHTML={{ __html: highlightedContent }}
+          <textarea
+            ref={textareaRef}
+            value={content}
+            onChange={handleInput}
+            onKeyDown={handleKeyDown}
+            placeholder="Start writing... Type [[ for wiki-links, # for tags"
+            className="w-full h-full min-h-[calc(100vh-200px)] bg-transparent text-neutral-100
+                       focus:outline-none font-mono text-lg leading-relaxed resize-none
+                       placeholder:text-neutral-600"
+            spellCheck={false}
           />
         ) : (
           <div className="prose prose-invert prose-lg max-w-none">
@@ -319,26 +344,76 @@ function MarkdownPreview({
 }) {
   // Process wiki-links [[Title]] and tags #tag before rendering
   const processedContent = processWikiLinksAndTags(content)
+  
+  console.log('[MarkdownPreview] Rendering:', { original: content.slice(0, 50), processed: processedContent.slice(0, 50) })
 
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
+        // Headings with explicit styling
+        h1: ({ children }) => (
+          <h1 className="text-3xl font-bold text-white mb-4 mt-6">{children}</h1>
+        ),
+        h2: ({ children }) => (
+          <h2 className="text-2xl font-bold text-white mb-3 mt-5">{children}</h2>
+        ),
+        h3: ({ children }) => (
+          <h3 className="text-xl font-bold text-white mb-2 mt-4">{children}</h3>
+        ),
+        // Paragraphs
+        p: ({ children }) => (
+          <p className="text-neutral-200 mb-4 leading-relaxed">{children}</p>
+        ),
+        // Lists
+        ul: ({ children }) => (
+          <ul className="list-disc list-inside text-neutral-200 mb-4 space-y-1">{children}</ul>
+        ),
+        ol: ({ children }) => (
+          <ol className="list-decimal list-inside text-neutral-200 mb-4 space-y-1">{children}</ol>
+        ),
         // Custom rendering for links (handles wiki-links)
-        a: ({ href, children }) => {
-          if (href?.startsWith('wikilink:')) {
-            const title = href.replace('wikilink:', '')
+        a: (props) => {
+          const href = props.href || ''
+          const children = props.children
+          
+          console.log('[MarkdownPreview] Link href:', href)
+          
+          // Check for wiki-link (https://wikilink.internal/Title)
+          if (href?.includes('wikilink.internal/')) {
+            const titleEncoded = href.split('wikilink.internal/')[1]
+            const title = decodeURIComponent(titleEncoded || '')
+            console.log('[MarkdownPreview] Wiki-link detected:', title)
             return (
-              <button
-                onClick={() => onWikiLinkClick?.(title)}
-                className="text-blue-400 hover:text-blue-300 underline cursor-pointer bg-transparent border-none"
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  console.log('[MarkdownPreview] Wiki-link clicked:', title)
+                  onWikiLinkClick?.(title)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onWikiLinkClick?.(title)
+                  }
+                }}
+                className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
+                style={{ pointerEvents: 'auto' }}
               >
                 {children}
-              </button>
+              </span>
             )
           }
           return (
-            <a href={href} className="text-blue-400 hover:text-blue-300">
+            <a 
+              href={href} 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 underline"
+              onClick={(e) => e.stopPropagation()}
+            >
               {children}
             </a>
           )
@@ -349,7 +424,13 @@ function MarkdownPreview({
           if (text.startsWith('#') && !className) {
             return (
               <button
-                onClick={() => onTagClick?.(text.substring(1))}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  console.log('[MarkdownPreview] Tag clicked:', text)
+                  onTagClick?.(text.substring(1))
+                }}
                 className="inline-block px-2 py-0.5 rounded bg-purple-900/50 text-purple-300 text-sm cursor-pointer hover:bg-purple-900/70"
               >
                 {text}
@@ -357,11 +438,24 @@ function MarkdownPreview({
             )
           }
           return (
-            <code className={className}>
+            <code className={`${className || ''} bg-neutral-800 px-1 py-0.5 rounded text-sm`}>
               {children}
             </code>
           )
-        }
+        },
+        // Blockquotes
+        blockquote: ({ children }) => (
+          <blockquote className="border-l-4 border-neutral-600 pl-4 italic text-neutral-400 my-4">
+            {children}
+          </blockquote>
+        ),
+        // Bold and italic
+        strong: ({ children }) => (
+          <strong className="font-bold text-white">{children}</strong>
+        ),
+        em: ({ children }) => (
+          <em className="italic">{children}</em>
+        )
       }}
     >
       {processedContent}
@@ -371,12 +465,14 @@ function MarkdownPreview({
 
 /**
  * Process [[wiki-links]] and #tags into markdown-compatible format
+ * Using https scheme with special host to avoid URL sanitization
  */
 function processWikiLinksAndTags(content: string): string {
-  // Convert [[Title]] to [Title](wikilink:Title)
+  // Convert [[Title]] to [Title](https://wikilink/Title)
+  // Using https:// to avoid URL sanitization by react-markdown
   let processed = content.replace(
     /\[\[([^\]]+)\]\]/g,
-    (_, title) => `[${title}](wikilink:${encodeURIComponent(title.trim())})`
+    (_, title) => `[${title}](https://wikilink.internal/${encodeURIComponent(title.trim())})`
   )
 
   // Convert #tag to inline code (but not ## headings)

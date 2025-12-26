@@ -57,16 +57,25 @@ describe('HybridEditor Component', () => {
       expect(screen.getByText('0 words')).toBeInTheDocument()
     })
 
-    it('renders content in editor', () => {
+    it('renders content in textarea', () => {
       render(<HybridEditor {...defaultProps} />)
       
-      expect(screen.getByText('Hello world')).toBeInTheDocument()
+      const textarea = screen.getByRole('textbox')
+      expect(textarea).toHaveValue('Hello world')
     })
 
     it('shows markdown supported message in status bar', () => {
       render(<HybridEditor {...defaultProps} />)
       
       expect(screen.getByText('Markdown supported')).toBeInTheDocument()
+    })
+
+    it('renders textarea in write mode', () => {
+      render(<HybridEditor {...defaultProps} />)
+      
+      const textarea = screen.getByRole('textbox')
+      expect(textarea).toBeInTheDocument()
+      expect(textarea.tagName).toBe('TEXTAREA')
     })
   })
 
@@ -107,65 +116,60 @@ describe('HybridEditor Component', () => {
         expect(screen.getByText(/Preview/)).toBeInTheDocument()
       })
     })
-  })
 
-  describe('Wiki-Link Highlighting', () => {
-    it('renders wiki-links with highlighting class', () => {
-      render(<HybridEditor {...defaultProps} content="See [[My Note]] here" />)
+    it('hides textarea in preview mode', async () => {
+      render(<HybridEditor {...defaultProps} />)
       
-      const wikiLink = screen.getByText('[[My Note]]')
-      expect(wikiLink).toHaveClass('wiki-link')
-    })
-
-    it('renders multiple wiki-links', () => {
-      render(<HybridEditor {...defaultProps} content="Link to [[Note1]] and [[Note2]]" />)
+      fireEvent.click(screen.getByText('Preview'))
       
-      expect(screen.getByText('[[Note1]]')).toHaveClass('wiki-link')
-      expect(screen.getByText('[[Note2]]')).toHaveClass('wiki-link')
+      await waitFor(() => {
+        expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+      })
     })
   })
 
-  describe('Tag Highlighting', () => {
-    it('renders tags with highlighting class', () => {
-      render(<HybridEditor {...defaultProps} content="This is #important" />)
+  describe('Wiki-Link and Tag Patterns (Regex Tests)', () => {
+    const wikiLinkRegex = /\[\[([^\]]+)\]\]/g
+    const tagRegex = /(?:^|[^#\w])#([a-zA-Z][a-zA-Z0-9_-]*)$/
+
+    it('matches wiki-link pattern', () => {
+      const content = 'See [[My Note]] here'
+      const matches = Array.from(content.matchAll(wikiLinkRegex))
       
-      const tag = screen.getByText('#important')
-      expect(tag).toHaveClass('tag')
+      expect(matches.length).toBe(1)
+      expect(matches[0][1]).toBe('My Note')
     })
 
-    it('renders multiple tags', () => {
-      render(<HybridEditor {...defaultProps} content="Use #todo and #urgent" />)
+    it('matches multiple wiki-links', () => {
+      const content = 'Link to [[Note1]] and [[Note2]]'
+      const matches = Array.from(content.matchAll(wikiLinkRegex))
       
-      expect(screen.getByText('#todo')).toHaveClass('tag')
-      expect(screen.getByText('#urgent')).toHaveClass('tag')
+      expect(matches.length).toBe(2)
+      expect(matches[0][1]).toBe('Note1')
+      expect(matches[1][1]).toBe('Note2')
     })
 
-    it('does not highlight headings as tags', () => {
-      render(<HybridEditor {...defaultProps} content="## Heading 2" />)
+    it('matches tag pattern', () => {
+      const content = 'This is #important'
+      const match = content.match(tagRegex)
       
-      // Should not have .tag class on heading
-      const heading = screen.getByText('## Heading 2')
-      expect(heading).not.toHaveClass('tag')
-    })
-  })
-
-  describe('Click Handlers', () => {
-    it('calls onWikiLinkClick when clicking a wiki-link', () => {
-      render(<HybridEditor {...defaultProps} content="See [[Test Note]]" />)
-      
-      const wikiLink = screen.getByText('[[Test Note]]')
-      fireEvent.click(wikiLink)
-      
-      expect(defaultProps.onWikiLinkClick).toHaveBeenCalledWith('Test Note')
+      expect(match).not.toBeNull()
+      expect(match![1]).toBe('important')
     })
 
-    it('calls onTagClick when clicking a tag', () => {
-      render(<HybridEditor {...defaultProps} content="Check #urgent" />)
+    it('matches tag with hyphen', () => {
+      const content = '#important-task'
+      const match = content.match(tagRegex)
       
-      const tag = screen.getByText('#urgent')
-      fireEvent.click(tag)
+      expect(match).not.toBeNull()
+      expect(match![1]).toBe('important-task')
+    })
+
+    it('does not match heading as tag', () => {
+      const content = '## Heading'
+      const match = content.match(tagRegex)
       
-      expect(defaultProps.onTagClick).toHaveBeenCalledWith('urgent')
+      expect(match).toBeNull()
     })
   })
 
@@ -183,10 +187,10 @@ describe('HybridEditor Component', () => {
     })
 
     it('counts words correctly with newlines', () => {
-      // Note: In the rendered HTML, newlines become spaces so the count should be 3
-      // However, in contenteditable, the actual content counting happens differently
-      // The word count is calculated from the raw content string
-      render(<HybridEditor {...defaultProps} content="One two three" />)
+      const content = `One
+two
+three`
+      render(<HybridEditor {...defaultProps} content={content} />)
       
       expect(screen.getByText('3 words')).toBeInTheDocument()
     })
@@ -209,35 +213,52 @@ describe('HybridEditor Component', () => {
       const onChange = vi.fn()
       render(<HybridEditor {...defaultProps} onChange={onChange} />)
       
-      const editor = document.querySelector('[contenteditable="true"]')
+      const textarea = screen.getByRole('textbox')
+      fireEvent.change(textarea, { target: { value: 'New content' } })
       
-      if (editor) {
-        fireEvent.input(editor, { target: { innerText: 'New content' } })
-      }
-      // Note: The test verifies the editor is rendered and accepts input
-      // onChange is called via the onInput handler
+      expect(onChange).toHaveBeenCalledWith('New content')
+    })
+
+    it('updates content on typing', () => {
+      const onChange = vi.fn()
+      render(<HybridEditor {...defaultProps} content="" onChange={onChange} />)
+      
+      const textarea = screen.getByRole('textbox')
+      fireEvent.change(textarea, { target: { value: 'Hello' } })
+      
+      expect(onChange).toHaveBeenCalledWith('Hello')
     })
   })
 
-  describe('Mixed Content', () => {
-    it('renders mixed wiki-links and tags correctly', () => {
-      render(<HybridEditor {...defaultProps} content="See [[Note]] and #tag here" />)
+  describe('Autocomplete Triggers', () => {
+    it('triggers wiki-link autocomplete on [[ input', async () => {
+      const onSearchNotes = vi.fn().mockResolvedValue([mockNote])
+      render(<HybridEditor {...defaultProps} content="" onSearchNotes={onSearchNotes} />)
       
-      expect(screen.getByText('[[Note]]')).toHaveClass('wiki-link')
-      expect(screen.getByText('#tag')).toHaveClass('tag')
+      const textarea = screen.getByRole('textbox')
+      
+      // Simulate typing [[ to trigger autocomplete
+      fireEvent.change(textarea, { target: { value: '[[', selectionStart: 2 } })
+      
+      // Give time for async search
+      await waitFor(() => {
+        expect(onSearchNotes).toHaveBeenCalledWith('')
+      })
     })
 
-    it('handles complex markdown with links and tags', () => {
-      const content = `# Heading
-This has [[Link1]] and #tag1
-Another [[Link2]] with #tag2`
+    it('triggers tag autocomplete on # input', async () => {
+      const onSearchTags = vi.fn().mockResolvedValue([mockTag])
+      render(<HybridEditor {...defaultProps} content="" onSearchTags={onSearchTags} />)
       
-      render(<HybridEditor {...defaultProps} content={content} />)
+      const textarea = screen.getByRole('textbox')
       
-      expect(screen.getByText('[[Link1]]')).toHaveClass('wiki-link')
-      expect(screen.getByText('[[Link2]]')).toHaveClass('wiki-link')
-      expect(screen.getByText('#tag1')).toHaveClass('tag')
-      expect(screen.getByText('#tag2')).toHaveClass('tag')
+      // Simulate typing #t to trigger autocomplete
+      fireEvent.change(textarea, { target: { value: '#t', selectionStart: 2 } })
+      
+      // Give time for async search
+      await waitFor(() => {
+        expect(onSearchTags).toHaveBeenCalledWith('t')
+      })
     })
   })
 })
@@ -323,6 +344,40 @@ describe('HybridEditor Preview Mode', () => {
       expect(list).toBeInTheDocument()
     })
   })
+
+  it('enters preview mode and shows prose container', async () => {
+    render(<HybridEditor {...defaultProps} content="See [[My Note]] here" />)
+    
+    fireEvent.click(screen.getByText('Preview'))
+    
+    await waitFor(() => {
+      expect(screen.getByText('Edit')).toBeInTheDocument()
+      const proseDiv = document.querySelector('.prose')
+      expect(proseDiv).toBeInTheDocument()
+    })
+  })
+
+  it('shows Edit button in preview mode', async () => {
+    render(<HybridEditor {...defaultProps} content="See [[My Note]]" />)
+    
+    fireEvent.click(screen.getByText('Preview'))
+    
+    await waitFor(() => {
+      expect(screen.getByText('Edit')).toBeInTheDocument()
+    })
+  })
+
+  it('renders markdown content in preview mode', async () => {
+    render(<HybridEditor {...defaultProps} content="Check #important" />)
+    
+    fireEvent.click(screen.getByText('Preview'))
+    
+    await waitFor(() => {
+      // Prose container visible means markdown is rendering
+      const proseDiv = document.querySelector('.prose')
+      expect(proseDiv).toBeInTheDocument()
+    })
+  })
 })
 
 describe('HybridEditor Accessibility', () => {
@@ -331,16 +386,23 @@ describe('HybridEditor Accessibility', () => {
     onChange: vi.fn()
   }
 
-  it('has contenteditable attribute in write mode', () => {
+  it('has textarea in write mode', () => {
     render(<HybridEditor {...defaultProps} />)
     
-    const editor = document.querySelector('[contenteditable="true"]')
-    expect(editor).toBeInTheDocument()
+    const textarea = screen.getByRole('textbox')
+    expect(textarea).toBeInTheDocument()
   })
 
   it('toggle button has meaningful text', () => {
     render(<HybridEditor {...defaultProps} />)
     
     expect(screen.getByText('Preview')).toBeInTheDocument()
+  })
+
+  it('textarea has placeholder text', () => {
+    render(<HybridEditor {...defaultProps} />)
+    
+    const textarea = screen.getByRole('textbox')
+    expect(textarea).toHaveAttribute('placeholder')
   })
 })

@@ -5,9 +5,10 @@ import { api } from '../lib/api'
 export interface BacklinksPanelProps {
   noteId: string | null
   onSelectNote: (noteId: string) => void
+  refreshKey?: number  // Increment this to force refresh
 }
 
-export function BacklinksPanel({ noteId, onSelectNote }: BacklinksPanelProps) {
+export function BacklinksPanel({ noteId, onSelectNote, refreshKey = 0 }: BacklinksPanelProps) {
   const [backlinks, setBacklinks] = useState<Note[]>([])
   const [outgoingLinks, setOutgoingLinks] = useState<Note[]>([])
   const [loading, setLoading] = useState(false)
@@ -20,11 +21,12 @@ export function BacklinksPanel({ noteId, onSelectNote }: BacklinksPanelProps) {
     }
 
     loadLinks()
-  }, [noteId])
+  }, [noteId, refreshKey])  // Also refresh when refreshKey changes
 
   const loadLinks = async () => {
     if (!noteId) return
 
+    console.log('[BacklinksPanel] Loading links for noteId:', noteId)
     setLoading(true)
     try {
       const [backlinksData, outgoingData] = await Promise.all([
@@ -32,10 +34,11 @@ export function BacklinksPanel({ noteId, onSelectNote }: BacklinksPanelProps) {
         api.getOutgoingLinks(noteId)
       ])
 
+      console.log('[BacklinksPanel] Loaded:', { backlinks: backlinksData, outgoing: outgoingData })
       setBacklinks(backlinksData)
       setOutgoingLinks(outgoingData)
     } catch (error) {
-      console.error('Failed to load links:', error)
+      console.error('[BacklinksPanel] Failed to load links:', error)
     } finally {
       setLoading(false)
     }

@@ -70,8 +70,8 @@ export const api = {
   getBacklinks: (noteId: string): Promise<Note[]> => 
     invoke('get_backlinks', { noteId }),
     
-  getOutgoingLinks: (note_id: string): Promise<Note[]> => 
-    invoke('get_outgoing_links', { note_id }),
+  getOutgoingLinks: (noteId: string): Promise<Note[]> => 
+    invoke('get_outgoing_links', { noteId }),
 
   // AI operations
   runClaude: (prompt: string): Promise<string> => 

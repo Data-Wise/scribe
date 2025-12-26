@@ -203,32 +203,34 @@ pub fn update_note_tags(
 // Link commands
 
 #[tauri::command]
+#[allow(non_snake_case)]
 pub fn update_note_links(
     state: State<AppState>,
-    note_id: String,
+    noteId: String,
     content: String,
 ) -> Result<(), String> {
     let db = state.db.lock().unwrap();
-    db.update_note_links(&note_id, &content).map_err(|e| e.to_string())
+    db.update_note_links(&noteId, &content).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
+#[allow(non_snake_case)]
 pub fn get_backlinks(
-
     state: State<AppState>,
-    note_id: String,
+    noteId: String,
 ) -> Result<Vec<Note>, String> {
     let db = state.db.lock().unwrap();
-    db.get_backlinks(&note_id).map_err(|e| e.to_string())
+    db.get_backlinks(&noteId).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
+#[allow(non_snake_case)]
 pub fn get_outgoing_links(
     state: State<AppState>,
-    note_id: String,
+    noteId: String,
 ) -> Result<Vec<Note>, String> {
     let db = state.db.lock().unwrap();
-    db.get_outgoing_links(&note_id).map_err(|e| e.to_string())
+    db.get_outgoing_links(&noteId).map_err(|e| e.to_string())
 }
 
 // AI commands

@@ -56,6 +56,9 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([])
   const [isFiltering, setIsFiltering] = useState(false)
+  
+  // Backlinks refresh key - increment to force BacklinksPanel refresh
+  const [backlinksRefreshKey, setBacklinksRefreshKey] = useState(0)
 
 
   useEffect(() => {
@@ -73,9 +76,19 @@ function App() {
 
   const selectedNote = notes.find(n => n.id === selectedNoteId)
 
-  const handleContentChange = (content: string) => {
+  const handleContentChange = async (content: string) => {
     if (selectedNote) {
       updateNote(selectedNote.id, { content })
+      
+      // Update links when content changes (debounced effect would be better for performance)
+      try {
+        await api.updateNoteLinks(selectedNote.id, content)
+        await api.updateNoteTags(selectedNote.id, content)
+        // Trigger BacklinksPanel refresh
+        setBacklinksRefreshKey(prev => prev + 1)
+      } catch (error) {
+        console.error('Failed to update links/tags:', error)
+      }
     }
   }
 
@@ -112,28 +125,35 @@ function App() {
 
   // Wiki link handlers
   const handleLinkClick = async (title: string) => {
-    let targetNote = notes.find((n) => n.title === title)
+    console.log('[App] handleLinkClick called with title:', title)
+    try {
+      let targetNote = notes.find((n) => n.title === title)
 
-    if (!targetNote) {
-      const allNotes = await api.listNotes()
-      targetNote = allNotes.find((n) => n.title === title)
-    }
-
-    if (targetNote) {
-      selectNote(targetNote.id)
-    } else {
-      const newNote = await api.createNote({
-        title,
-        content: '',  // Empty markdown
-        folder: selectedNote?.folder || 'inbox'
-      })
-
-      if (selectedNote) {
-        await api.updateNoteLinks(selectedNote.id, selectedNote.content)
+      if (!targetNote) {
+        const allNotes = await api.listNotes()
+        targetNote = allNotes.find((n) => n.title === title)
       }
 
-      selectNote(newNote.id)
-      loadNotes(currentFolder)
+      if (targetNote) {
+        console.log('[App] Found target note:', targetNote.id)
+        selectNote(targetNote.id)
+      } else {
+        console.log('[App] Creating new note for:', title)
+        const newNote = await api.createNote({
+          title,
+          content: '',  // Empty markdown
+          folder: selectedNote?.folder || 'inbox'
+        })
+
+        if (selectedNote) {
+          await api.updateNoteLinks(selectedNote.id, selectedNote.content)
+        }
+
+        selectNote(newNote.id)
+        loadNotes(currentFolder)
+      }
+    } catch (error) {
+      console.error('[App] handleLinkClick error:', error)
     }
   }
 
@@ -434,7 +454,7 @@ function App() {
             {rightActiveTab === 'properties' ? (
               <PropertiesPanel properties={selectedNote.properties || {}} onChange={(p) => updateNote(selectedNote.id, { properties: p })} />
             ) : (
-              <BacklinksPanel noteId={selectedNote.id} onSelectNote={selectNote} />
+              <BacklinksPanel noteId={selectedNote.id} onSelectNote={selectNote} refreshKey={backlinksRefreshKey} />
             )}
           </div>
         </div>
