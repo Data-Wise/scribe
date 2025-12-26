@@ -5,6 +5,7 @@ import { SearchBar } from './components/SearchBar'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
+import { TagsPanel } from './components/TagsPanel'
 import { Ribbon } from './components/Ribbon'
 import { SettingsModal } from './components/SettingsModal'
 import { Note, Tag } from './types'
@@ -59,11 +60,35 @@ function App() {
   
   // Backlinks refresh key - increment to force BacklinksPanel refresh
   const [backlinksRefreshKey, setBacklinksRefreshKey] = useState(0)
+  
+  // Editor mode - track to preserve mode when navigating via wiki-links
+  const [editorMode, setEditorMode] = useState<'write' | 'preview'>('write')
+  
+  // Tags for current note (for PropertiesPanel display)
+  const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
 
 
   useEffect(() => {
     loadNotes(currentFolder)
   }, [loadNotes, currentFolder])
+
+  // Load tags for the current note
+  useEffect(() => {
+    const loadCurrentNoteTags = async () => {
+      if (!selectedNoteId) {
+        setCurrentNoteTags([])
+        return
+      }
+      try {
+        const tags = await api.getNoteTags(selectedNoteId)
+        setCurrentNoteTags(tags)
+      } catch (error) {
+        console.error('Failed to load note tags:', error)
+        setCurrentNoteTags([])
+      }
+    }
+    loadCurrentNoteTags()
+  }, [selectedNoteId, backlinksRefreshKey]) // Refresh when content changes (backlinksRefreshKey)
 
 
   const handleCreateNote = async () => {
@@ -75,6 +100,11 @@ function App() {
   }
 
   const selectedNote = notes.find(n => n.id === selectedNoteId)
+  
+  // Calculate word count for current note
+  const wordCount = selectedNote?.content 
+    ? selectedNote.content.trim().split(/\s+/).filter(word => word.length > 0).length 
+    : 0
 
   const handleContentChange = async (content: string) => {
     if (selectedNote) {
@@ -123,7 +153,7 @@ function App() {
     setSearchLoading(false)
   }
 
-  // Wiki link handlers
+  // Wiki link handlers - preserves preview mode when navigating
   const handleLinkClick = async (title: string) => {
     console.log('[App] handleLinkClick called with title:', title)
     try {
@@ -136,6 +166,8 @@ function App() {
 
       if (targetNote) {
         console.log('[App] Found target note:', targetNote.id)
+        // Keep preview mode when navigating via wiki-link click
+        setEditorMode('preview')
         selectNote(targetNote.id)
       } else {
         console.log('[App] Creating new note for:', title)
@@ -149,6 +181,8 @@ function App() {
           await api.updateNoteLinks(selectedNote.id, selectedNote.content)
         }
 
+        // New note opens in write mode
+        setEditorMode('write')
         selectNote(newNote.id)
         loadNotes(currentFolder)
       }
@@ -382,7 +416,10 @@ function App() {
                   {displayNotes.map((note) => (
                     <div 
                       key={note.id} 
-                      onClick={() => selectNote(note.id)}
+                      onClick={() => {
+                        setEditorMode('write')  // Reset to write mode when clicking sidebar
+                        selectNote(note.id)
+                      }}
                       className={`px-4 py-3 border-b border-white/[0.03] cursor-pointer hover:bg-white/[0.02] ${selectedNoteId === note.id ? 'bg-nexus-accent/5 text-nexus-accent' : ''}`}
                     >
                       <div className="font-medium truncate">{note.title || 'Untitled'}</div>
@@ -429,6 +466,7 @@ function App() {
                 onSearchNotes={handleSearchNotesForAutocomplete}
                 onSearchTags={handleSearchTagsForAutocomplete}
                 placeholder="Start writing... (Cmd+E to preview)"
+                initialMode={editorMode}
               />
             </div>
           </div>
@@ -449,12 +487,34 @@ function App() {
           <div className="sidebar-tabs">
             <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
             <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
+            <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
           </div>
           <div className="tab-content flex-1">
             {rightActiveTab === 'properties' ? (
-              <PropertiesPanel properties={selectedNote.properties || {}} onChange={(p) => updateNote(selectedNote.id, { properties: p })} />
+              <PropertiesPanel 
+                properties={selectedNote.properties || {}} 
+                onChange={(p) => updateNote(selectedNote.id, { properties: p })}
+                noteTags={currentNoteTags}
+                wordCount={wordCount}
+                createdAt={selectedNote.created_at}
+                updatedAt={selectedNote.updated_at}
+              />
+            ) : rightActiveTab === 'backlinks' ? (
+              <BacklinksPanel 
+                noteId={selectedNote.id} 
+                onSelectNote={(noteId) => {
+                  // Stay in preview mode when clicking backlinks
+                  setEditorMode('preview')
+                  selectNote(noteId)
+                }} 
+                refreshKey={backlinksRefreshKey} 
+              />
             ) : (
-              <BacklinksPanel noteId={selectedNote.id} onSelectNote={selectNote} refreshKey={backlinksRefreshKey} />
+              <TagsPanel
+                noteId={selectedNote.id}
+                selectedTagIds={selectedTagIds}
+                onTagClick={handleTagClick}
+              />
             )}
           </div>
         </div>

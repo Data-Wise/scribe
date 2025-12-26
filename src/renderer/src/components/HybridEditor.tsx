@@ -13,6 +13,7 @@ interface HybridEditorProps {
   onSearchNotes?: (query: string) => Promise<Note[]>
   onSearchTags?: (query: string) => Promise<Tag[]>
   placeholder?: string
+  initialMode?: 'write' | 'preview'
 }
 
 type EditorMode = 'write' | 'preview'
@@ -30,9 +31,15 @@ export function HybridEditor({
   onWikiLinkClick,
   onTagClick,
   onSearchNotes = async () => [],
-  onSearchTags = async () => []
+  onSearchTags = async () => [],
+  initialMode = 'write'
 }: HybridEditorProps) {
-  const [mode, setMode] = useState<EditorMode>('write')
+  const [mode, setMode] = useState<EditorMode>(initialMode)
+  
+  // Update mode when initialMode prop changes (e.g., when navigating via wiki-link)
+  useEffect(() => {
+    setMode(initialMode)
+  }, [initialMode])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Autocomplete state with cursor position

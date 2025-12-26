@@ -1,10 +1,14 @@
 import { useState, useCallback } from 'react'
-import { Property, PropertyType } from '../types'
+import { Property, PropertyType, Tag } from '../types'
 
 interface PropertiesPanelProps {
   properties: Record<string, Property>
   onChange: (properties: Record<string, Property>) => void
   editable?: boolean
+  noteTags?: Tag[]
+  wordCount?: number
+  createdAt?: number
+  updatedAt?: number
 }
 
 const TYPE_ICONS: Record<PropertyType, string> = {
@@ -13,7 +17,8 @@ const TYPE_ICONS: Record<PropertyType, string> = {
   number: '🔢',
   checkbox: '☑️',
   list: '📋',
-  link: '🔗'
+  link: '🔗',
+  tags: '🏷️'
 }
 
 const TYPE_LABELS: Record<PropertyType, string> = {
@@ -22,20 +27,52 @@ const TYPE_LABELS: Record<PropertyType, string> = {
   number: 'Number',
   checkbox: 'Checkbox',
   list: 'List',
-  link: 'Link'
+  link: 'Link',
+  tags: 'Tags'
+}
+
+// Options for list-type properties
+const LIST_OPTIONS: Record<string, string[]> = {
+  status: ['draft', 'in-progress', 'review', 'complete', 'archived'],
+  type: ['note', 'daily', 'meeting', 'reference', 'idea', 'research', 'lecture'],
+  priority: ['high', 'medium', 'low'],
 }
 
 export function PropertiesPanel({ 
   properties, 
   onChange, 
-  editable = true 
+  editable = true,
+  noteTags = [],
+  wordCount = 0,
+  createdAt,
+  updatedAt
 }: PropertiesPanelProps) {
-  console.log('🔍 PropertiesPanel rendering - this should ONLY appear in right sidebar')
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [newPropertyKey, setNewPropertyKey] = useState('')
   const [showAddRow, setShowAddRow] = useState(false)
 
-  const propertyEntries = Object.entries(properties)
+  // Format date for display
+  const formatDate = (timestamp?: number) => {
+    if (!timestamp) return '—'
+    return new Date(timestamp).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  // Build auto-managed properties
+  const autoProperties: Record<string, Property> = {
+    created: { key: 'created', value: formatDate(createdAt), type: 'date', readonly: true },
+    modified: { key: 'modified', value: formatDate(updatedAt), type: 'date', readonly: true },
+    word_count: { key: 'word_count', value: wordCount, type: 'number', readonly: true },
+  }
+
+  // Merge auto properties with user properties
+  const allProperties = { ...autoProperties, ...properties }
+  const propertyEntries = Object.entries(allProperties)
 
   const handleValueChange = useCallback((key: string, value: string | number | boolean | string[]) => {
     const updated = { ...properties }
@@ -69,8 +106,12 @@ export function PropertiesPanel({
   }, [properties, onChange])
 
   const renderValue = (prop: Property) => {
-    if (!editable) {
-      return <span className="text-nexus-text-primary">{String(prop.value)}</span>
+    // Readonly properties (auto-managed)
+    if (prop.readonly || !editable) {
+      if (prop.key === 'word_count') {
+        return <span className="text-nexus-text-muted">{Number(prop.value).toLocaleString()} words</span>
+      }
+      return <span className="text-nexus-text-muted">{String(prop.value)}</span>
     }
 
     switch (prop.type) {
@@ -101,6 +142,36 @@ export function PropertiesPanel({
             className="bg-transparent border-b border-transparent hover:border-nexus-text-muted focus:border-nexus-accent outline-none text-nexus-text-primary"
           />
         )
+      case 'list':
+        // Check if we have predefined options for this property
+        const options = LIST_OPTIONS[prop.key]
+        if (options) {
+          return (
+            <select
+              value={String(prop.value)}
+              onChange={(e) => handleValueChange(prop.key, e.target.value)}
+              className="bg-transparent border-b border-transparent hover:border-nexus-text-muted focus:border-nexus-accent outline-none text-nexus-text-primary cursor-pointer"
+            >
+              <option value="" className="bg-neutral-800">Select...</option>
+              {options.map((opt) => (
+                <option key={opt} value={opt} className="bg-neutral-800">{opt}</option>
+              ))}
+            </select>
+          )
+        }
+        // Fallback to text input
+        return (
+          <input
+            type="text"
+            value={String(prop.value)}
+            onChange={(e) => handleValueChange(prop.key, e.target.value)}
+            placeholder="Empty"
+            className="bg-transparent border-b border-transparent hover:border-nexus-text-muted focus:border-nexus-accent outline-none w-full text-nexus-text-primary placeholder:text-nexus-text-muted/50"
+          />
+        )
+      case 'tags':
+        // Tags are displayed separately, just show count here
+        return <span className="text-nexus-text-muted">{noteTags.length} tags</span>
       default:
         return (
           <input
@@ -175,8 +246,8 @@ export function PropertiesPanel({
               {/* Value */}
               <div>{renderValue(prop)}</div>
               
-              {/* Remove button */}
-              {editable && (
+              {/* Remove button - not shown for readonly properties */}
+              {editable && !prop.readonly && (
                 <button
                   onClick={() => handleRemoveProperty(key)}
                   className="opacity-0 group-hover:opacity-100 text-nexus-text-muted hover:text-nexus-error text-xs transition-opacity"
@@ -185,6 +256,7 @@ export function PropertiesPanel({
                   ×
                 </button>
               )}
+              {prop.readonly && <span className="w-4" />}
             </div>
           ))}
 

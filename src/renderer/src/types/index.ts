@@ -1,10 +1,47 @@
 // Property types for YAML frontmatter
-export type PropertyType = 'text' | 'date' | 'number' | 'checkbox' | 'list' | 'link'
+export type PropertyType = 'text' | 'date' | 'number' | 'checkbox' | 'list' | 'link' | 'tags'
 
 export interface Property {
   key: string
   value: string | number | boolean | string[]
   type: PropertyType
+  readonly?: boolean  // For auto-managed properties like created, modified, word_count
+}
+
+// Standard property keys
+export const STANDARD_PROPERTIES = {
+  // Auto-managed (readonly)
+  created: { key: 'created', type: 'date' as PropertyType, readonly: true },
+  modified: { key: 'modified', type: 'date' as PropertyType, readonly: true },
+  word_count: { key: 'word_count', type: 'number' as PropertyType, readonly: true },
+  
+  // Core properties
+  status: { key: 'status', type: 'list' as PropertyType, options: ['draft', 'in-progress', 'review', 'complete', 'archived'] },
+  type: { key: 'type', type: 'list' as PropertyType, options: ['note', 'daily', 'meeting', 'reference', 'idea', 'research', 'lecture'] },
+  priority: { key: 'priority', type: 'list' as PropertyType, options: ['high', 'medium', 'low'] },
+  
+  // Progress
+  progress: { key: 'progress', type: 'number' as PropertyType },
+  due: { key: 'due', type: 'date' as PropertyType },
+  word_goal: { key: 'word_goal', type: 'number' as PropertyType },
+  
+  // Academic
+  author: { key: 'author', type: 'text' as PropertyType },
+  project: { key: 'project', type: 'text' as PropertyType },
+  course: { key: 'course', type: 'text' as PropertyType },
+  week: { key: 'week', type: 'number' as PropertyType },
+  journal: { key: 'journal', type: 'text' as PropertyType },
+  
+  // Tags
+  tags: { key: 'tags', type: 'tags' as PropertyType },
+}
+
+// Default properties for new notes
+export const DEFAULT_NOTE_PROPERTIES: Record<string, Property> = {
+  status: { key: 'status', value: 'draft', type: 'list' },
+  created: { key: 'created', value: '', type: 'date', readonly: true },
+  modified: { key: 'modified', value: '', type: 'date', readonly: true },
+  word_count: { key: 'word_count', value: 0, type: 'number', readonly: true },
 }
 
 export interface Note {
