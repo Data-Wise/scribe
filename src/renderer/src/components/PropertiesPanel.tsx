@@ -7,6 +7,7 @@ interface PropertiesPanelProps {
   editable?: boolean
   noteTags?: Tag[]
   wordCount?: number
+  wordGoal?: number
   createdAt?: number
   updatedAt?: number
 }
@@ -44,6 +45,7 @@ export function PropertiesPanel({
   editable = true,
   noteTags = [],
   wordCount = 0,
+  wordGoal,
   createdAt,
   updatedAt
 }: PropertiesPanelProps) {
@@ -185,21 +187,60 @@ export function PropertiesPanel({
     }
   }
 
+  // Calculate word goal progress
+  const effectiveWordGoal = wordGoal || (properties.word_goal ? Number(properties.word_goal.value) : 0)
+  const progressPercent = effectiveWordGoal > 0 ? Math.min((wordCount / effectiveWordGoal) * 100, 100) : 0
+  const hasWordGoal = effectiveWordGoal > 0
+
+  // Word goal progress bar component
+  const WordGoalProgress = () => {
+    if (!hasWordGoal) return null
+    
+    const isComplete = wordCount >= effectiveWordGoal
+    const progressColor = isComplete ? 'bg-green-500' : 'bg-nexus-accent'
+    
+    return (
+      <div className="px-6 py-3 border-b border-white/5">
+        <div className="flex items-center justify-between text-xs text-nexus-text-muted mb-2">
+          <span>Word Goal</span>
+          <span className={isComplete ? 'text-green-500 font-medium' : ''}>
+            {wordCount.toLocaleString()} / {effectiveWordGoal.toLocaleString()}
+            {isComplete && ' ✓'}
+          </span>
+        </div>
+        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div 
+            className={`h-full ${progressColor} transition-all duration-300 ease-out rounded-full`}
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+        <div className="text-right text-[10px] text-nexus-text-muted mt-1">
+          {Math.round(progressPercent)}% complete
+        </div>
+      </div>
+    )
+  }
+
   if (propertyEntries.length === 0 && !showAddRow) {
     return (
-      <div className="properties-panel px-6 py-2 border-b border-white/5">
-        <button 
-          onClick={() => setShowAddRow(true)}
-          className="text-xs text-nexus-text-muted hover:text-nexus-accent transition-colors flex items-center gap-1"
-        >
-          <span>+</span> Add property
-        </button>
+      <div className="properties-panel">
+        <WordGoalProgress />
+        <div className="px-6 py-2 border-b border-white/5">
+          <button 
+            onClick={() => setShowAddRow(true)}
+            className="text-xs text-nexus-text-muted hover:text-nexus-accent transition-colors flex items-center gap-1"
+          >
+            <span>+</span> Add property
+          </button>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="properties-panel border-b border-white/5">
+    <div className="properties-panel">
+      {/* Word Goal Progress */}
+      <WordGoalProgress />
       {/* Header */}
       <div 
         className="px-6 py-2 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors"

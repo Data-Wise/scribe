@@ -14,11 +14,13 @@ import {
 interface SettingsModalProps {
   isOpen: boolean
   onClose: () => void
+  theme: 'dark' | 'light'
+  onThemeChange: (theme: 'dark' | 'light') => void
 }
 
 type SettingsTab = 'general' | 'editor' | 'appearance' | 'files' | 'academic'
 
-export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+export function SettingsModal({ isOpen, onClose, theme, onThemeChange }: SettingsModalProps) {
   const [activeTab, setActiveTab] = useState<SettingsTab>('general')
 
   if (!isOpen) return null
@@ -143,14 +145,36 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <section>
                   <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Themes</h4>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg border-2 border-nexus-accent bg-nexus-bg-primary">
+                    <button
+                      onClick={() => onThemeChange('dark')}
+                      className={`p-4 rounded-lg border-2 transition-colors text-left ${
+                        theme === 'dark' 
+                          ? 'border-nexus-accent bg-nexus-bg-primary' 
+                          : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20'
+                      }`}
+                    >
                       <div className="text-sm font-medium text-nexus-text-primary mb-1">Oxford Dark</div>
-                      <div className="text-[10px] text-nexus-accent uppercase font-bold tracking-widest">Active</div>
-                    </div>
-                    <div className="p-4 rounded-lg border border-white/5 bg-white text-nexus-bg-primary cursor-not-allowed opacity-50">
-                      <div className="text-sm font-medium mb-1">Classic Light</div>
-                      <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Available in Pro</div>
-                    </div>
+                      <div className={`text-[10px] uppercase font-bold tracking-widest ${
+                        theme === 'dark' ? 'text-nexus-accent' : 'text-nexus-text-muted'
+                      }`}>
+                        {theme === 'dark' ? 'Active' : 'Select'}
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => onThemeChange('light')}
+                      className={`p-4 rounded-lg border-2 transition-colors text-left ${
+                        theme === 'light' 
+                          ? 'border-nexus-accent bg-nexus-bg-primary' 
+                          : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20'
+                      }`}
+                    >
+                      <div className="text-sm font-medium text-nexus-text-primary mb-1">Classic Light</div>
+                      <div className={`text-[10px] uppercase font-bold tracking-widest ${
+                        theme === 'light' ? 'text-nexus-accent' : 'text-nexus-text-muted'
+                      }`}>
+                        {theme === 'light' ? 'Active' : 'Select'}
+                      </div>
+                    </button>
                   </div>
                 </section>
                 

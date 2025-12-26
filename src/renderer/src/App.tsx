@@ -8,7 +8,7 @@ import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { Ribbon } from './components/Ribbon'
 import { SettingsModal } from './components/SettingsModal'
-import { Note, Tag } from './types'
+import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
@@ -66,6 +66,22 @@ function App() {
   
   // Tags for current note (for PropertiesPanel display)
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
+  
+  // Theme state with localStorage persistence
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('scribe-theme')
+    return (saved === 'light' ? 'light' : 'dark') as 'dark' | 'light'
+  })
+  
+  // Apply theme to document root
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light')
+    } else {
+      document.documentElement.classList.remove('light')
+    }
+    localStorage.setItem('scribe-theme', theme)
+  }, [theme])
 
 
   useEffect(() => {
@@ -92,10 +108,17 @@ function App() {
 
 
   const handleCreateNote = async () => {
+    // Default properties for new notes
+    const defaultProperties: Record<string, Property> = {
+      status: { key: 'status', value: 'draft', type: 'list' },
+      type: { key: 'type', value: 'note', type: 'list' },
+    }
+    
     await createNote({
       title: `New Note`,
       content: '',  // Empty markdown - user starts fresh
-      folder: currentFolder || 'inbox'
+      folder: currentFolder || 'inbox',
+      properties: defaultProperties
     })
   }
 
@@ -496,6 +519,7 @@ function App() {
                 onChange={(p) => updateNote(selectedNote.id, { properties: p })}
                 noteTags={currentNoteTags}
                 wordCount={wordCount}
+                wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
                 createdAt={selectedNote.created_at}
                 updatedAt={selectedNote.updated_at}
               />
@@ -520,7 +544,12 @@ function App() {
         </div>
       )}
 
-      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+        theme={theme}
+        onThemeChange={setTheme}
+      />
     </div>
   )
 }

@@ -4,6 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   Theme Variables - Oxford Dark (default)
+   ============================================================ */
+:root {
+  --nexus-bg-primary: #0a0c10;
+  --nexus-bg-secondary: #12161c;
+  --nexus-bg-tertiary: #1a1f26;
+  --nexus-text-primary: #f1f5f9;
+  --nexus-text-muted: #94a3b8;
+  --nexus-accent: #38bdf8;
+  --nexus-accent-hover: #7dd3fc;
+}
+
+/* Classic Light Theme */
+:root.light {
+  --nexus-bg-primary: #f8fafc;
+  --nexus-bg-secondary: #ffffff;
+  --nexus-bg-tertiary: #f1f5f9;
+  --nexus-text-primary: #0f172a;
+  --nexus-text-muted: #64748b;
+  --nexus-accent: #0284c7;
+  --nexus-accent-hover: #0ea5e9;
+}
+
 * {
   margin: 0;
   padding: 0;

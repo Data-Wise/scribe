@@ -7,14 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Oxford Dark Theme - Premium Academic Aesthetic
-        'nexus-bg-primary': '#0a0c10',      // Near-black charcoal
-        'nexus-bg-secondary': '#12161c',    // Deep slate
-        'nexus-bg-tertiary': '#1a1f26',     // Card/Active backgrounds
-        'nexus-text-primary': '#f1f5f9',    // Ghost white
-        'nexus-text-muted': '#94a3b8',      // Slate gray
-        'nexus-accent': '#38bdf8',          // Sky blue (sharp)
-        'nexus-accent-hover': '#7dd3fc',    // Light sky
+        // Oxford Dark Theme - Premium Academic Aesthetic (default)
+        'nexus-bg-primary': 'var(--nexus-bg-primary)',
+        'nexus-bg-secondary': 'var(--nexus-bg-secondary)',
+        'nexus-bg-tertiary': 'var(--nexus-bg-tertiary)',
+        'nexus-text-primary': 'var(--nexus-text-primary)',
+        'nexus-text-muted': 'var(--nexus-text-muted)',
+        'nexus-accent': 'var(--nexus-accent)',
+        'nexus-accent-hover': 'var(--nexus-accent-hover)',
         'nexus-success': '#10b981',         // Emerald green
         'nexus-warning': '#f59e0b',         // Amber
         'nexus-error': '#ef4444',           // Rose red
