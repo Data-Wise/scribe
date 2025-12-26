@@ -8,6 +8,7 @@ import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { Ribbon } from './components/Ribbon'
 import { SettingsModal } from './components/SettingsModal'
+import { EmptyState } from './components/EmptyState'
 import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
@@ -752,7 +753,11 @@ function App() {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">Select a note to begin</div>
+          <EmptyState
+            onCreateNote={handleCreateNote}
+            onOpenDaily={handleDailyNote}
+            onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+          />
         )}
       </div>
 

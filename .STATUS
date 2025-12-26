@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 85
+progress: 87
 version: 0.4.0-alpha.1
-sprint: 11
+sprint: 12
 updated: 2024-12-26
 editor: hybrid-markdown++
-next_sprint: 12
-next_focus: Export Polish
-tests: 487
+next_sprint: 13
+next_focus: Project System
+tests: 483
 tags:
   - adhd-friendly
   - distraction-free
@@ -23,23 +23,20 @@ tags:
 
 ## Current Sprint
 
-**Sprint 11: Academic Features** ✅ Complete
+**Sprint 12: UI Polish & Micro-interactions** 🚀 In Progress
 
 **Latest Updates (2024-12-26):**
-- [x] MathJax 3 integration for LaTeX rendering
-- [x] MathRenderer component (inline $...$ and display $$...$$)
-- [x] CitationAutocomplete (@trigger for Pandoc citations)
-- [x] ExportDialog (PDF, Word, LaTeX, HTML via Pandoc)
-- [x] BibTeX parser (Rust backend)
-- [x] Citation search API
-- [x] 5 citation styles (APA, Chicago, MLA, IEEE, Harvard)
-- [x] Academic.test.ts (67 new tests)
-- [x] AcademicComponents.test.tsx (25 new tests)
-- [x] **487 tests passing** (67 Academic + 16 Debug tests)
-- [x] React Error Boundary for crash resilience
-- [x] MathJax SVG rendering with rehype-raw integration
+- [x] Migrated MathJax to KaTeX (browser-native, 1.7MB smaller)
+- [x] Fixed tags panel theme variables (brightness issue)
+- [x] Fixed act() warnings in tests
+- [x] UI analysis & improvement proposal created
+- [x] Button micro-interactions (CSS feedback)
+- [x] Sidebar icon tooltips & active states
+- [x] Engaging empty state with action buttons
+- [x] Loading spinner & success flash animations
+- [x] Reduced-motion accessibility support
 
-**Sprint 10.5: Theme & Font System** ✅ Complete (earlier today)
+**Sprint 11: Academic Features** ✅ Complete
 - [x] 10 built-in themes (5 dark, 5 light)
 - [x] Auto-theme by time of day
 - [x] Theme colors apply to editor area
@@ -82,12 +79,12 @@ tags:
 | 1 | 10 | Hotkey + Commands | ✅ 100% |
 | 1 | 10.5 | Theme & Font System | ✅ 100% |
 | **2** | 11 | Academic Features | ✅ 100% |
-| 2 | 12 | Export Polish | ⏳ Next |
+| 2 | 12 | UI Polish & Micro-interactions | 🚀 80% |
 | **3** | 13 | Project System | ○ 0% |
 | 3 | 14 | Templates + Daily | ○ 0% |
 | **4** | 15 | Search + Goals | ○ 0% |
 
-**Total: 85% complete (51h / 60h estimated)**
+**Total: 87% complete (52h / 60h estimated)**
 
 ---
 

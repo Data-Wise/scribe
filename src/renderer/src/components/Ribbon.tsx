@@ -7,13 +7,13 @@ interface RibbonProps {
   rightCollapsed: boolean
 }
 
-export function Ribbon({ 
-  onToggleLeft, 
-  onToggleRight, 
+export function Ribbon({
+  onToggleLeft,
+  onToggleRight,
   onSearch,
   onSettings,
-  leftCollapsed, 
-  rightCollapsed 
+  leftCollapsed,
+  rightCollapsed
 }: RibbonProps) {
 
 
@@ -22,8 +22,9 @@ export function Ribbon({
       {/* Files toggle */}
       <button
         onClick={onToggleLeft}
-        className={`ribbon-button ${!leftCollapsed ? 'active' : ''}`}
-        title="Toggle file list (⌘B)"
+        className={`ribbon-button tooltip-trigger ${!leftCollapsed ? 'active' : ''}`}
+        data-tooltip="Files"
+        data-shortcut="⌘B"
         aria-label="Toggle file list"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,8 +34,9 @@ export function Ribbon({
 
       {/* Search */}
       <button
-        className="ribbon-button"
-        title="Search (⌘K)"
+        className="ribbon-button tooltip-trigger"
+        data-tooltip="Search"
+        data-shortcut="⌘K"
         aria-label="Search"
         onClick={onSearch}
       >
@@ -47,8 +49,9 @@ export function Ribbon({
       {/* Tags toggle */}
       <button
         onClick={onToggleRight}
-        className={`ribbon-button ${!rightCollapsed ? 'active' : ''}`}
-        title="Toggle tags panel (⌘⇧B)"
+        className={`ribbon-button tooltip-trigger ${!rightCollapsed ? 'active' : ''}`}
+        data-tooltip="Tags"
+        data-shortcut="⌘⇧B"
         aria-label="Toggle tags panel"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,8 +63,9 @@ export function Ribbon({
 
       {/* Stats (future) */}
       <button
-        className="ribbon-button opacity-40"
-        title="Stats (coming soon)"
+        className="ribbon-button tooltip-trigger opacity-40"
+        data-tooltip="Stats"
+        data-shortcut="Soon"
         aria-label="Stats"
         disabled
       >
@@ -72,8 +76,8 @@ export function Ribbon({
 
       {/* Settings */}
       <button
-        className="ribbon-button"
-        title="Settings"
+        className="ribbon-button tooltip-trigger"
+        data-tooltip="Settings"
         aria-label="Settings"
         onClick={onSettings}
       >

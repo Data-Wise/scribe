@@ -26,11 +26,11 @@ describe('Ribbon Component', () => {
       />
     )
 
-    // Should have toggle buttons, search, and settings
-    expect(screen.getByTitle(/Toggle file list/)).toBeInTheDocument()
-    expect(screen.getByTitle(/Search/)).toBeInTheDocument()
-    expect(screen.getByTitle(/Toggle tags panel/)).toBeInTheDocument()
-    expect(screen.getByTitle(/Settings/)).toBeInTheDocument()
+    // Should have toggle buttons, search, and settings (using aria-label for accessibility)
+    expect(screen.getByLabelText(/Toggle file list/)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Search/)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Toggle tags panel/)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Settings/)).toBeInTheDocument()
   })
 
   it('calls onToggleLeft when file list button clicked', () => {
@@ -42,7 +42,7 @@ describe('Ribbon Component', () => {
       />
     )
 
-    fireEvent.click(screen.getByTitle(/Toggle file list/))
+    fireEvent.click(screen.getByLabelText(/Toggle file list/))
     expect(mockHandlers.onToggleLeft).toHaveBeenCalled()
   })
 
@@ -55,7 +55,7 @@ describe('Ribbon Component', () => {
       />
     )
 
-    fireEvent.click(screen.getByTitle(/Toggle tags panel/))
+    fireEvent.click(screen.getByLabelText(/Toggle tags panel/))
     expect(mockHandlers.onToggleRight).toHaveBeenCalled()
   })
 
@@ -68,7 +68,7 @@ describe('Ribbon Component', () => {
       />
     )
 
-    fireEvent.click(screen.getByTitle(/Search/))
+    fireEvent.click(screen.getByLabelText(/Search/))
     expect(mockHandlers.onSearch).toHaveBeenCalled()
   })
 
@@ -81,7 +81,7 @@ describe('Ribbon Component', () => {
       />
     )
 
-    fireEvent.click(screen.getByTitle(/Settings/))
+    fireEvent.click(screen.getByLabelText(/Settings/))
     expect(mockHandlers.onSettings).toHaveBeenCalled()
   })
 

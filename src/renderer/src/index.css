@@ -924,3 +924,310 @@ mark {
   color: theme('colors.nexus-text-muted');
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
+
+/* ============================================================
+   Button Micro-interactions
+
+   ADHD-friendly feedback:
+   - Immediate visual response reduces uncertainty
+   - Subtle scale creates satisfying tactile feel
+   - Consistent across all interactive elements
+   ============================================================ */
+
+/* Base button interaction pattern */
+.btn-interactive {
+  transition:
+    transform 100ms cubic-bezier(0.4, 0, 0.2, 1),
+    background 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.btn-interactive:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.btn-interactive:focus-visible {
+  outline: 2px solid theme('colors.nexus-accent');
+  outline-offset: 2px;
+}
+
+/* Ribbon button enhancements */
+.ribbon-button:active:not(:disabled) {
+  transform: scale(0.92);
+  background: theme('colors.nexus-bg-tertiary');
+}
+
+.ribbon-button:focus-visible {
+  outline: 2px solid theme('colors.nexus-accent');
+  outline-offset: 2px;
+}
+
+/* Sidebar tab press feedback */
+.sidebar-tab:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Action buttons (primary actions like Create, Export) */
+.btn-action {
+  transition:
+    transform 100ms cubic-bezier(0.4, 0, 0.2, 1),
+    background 150ms ease,
+    box-shadow 150ms ease;
+  transform-origin: center;
+}
+
+.btn-action:hover:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.2);
+}
+
+.btn-action:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: 0 1px 4px rgba(56, 189, 248, 0.1);
+}
+
+/* Icon buttons (small clickable icons) */
+.btn-icon {
+  transition:
+    transform 80ms cubic-bezier(0.4, 0, 0.2, 1),
+    background 120ms ease,
+    color 120ms ease;
+  transform-origin: center;
+}
+
+.btn-icon:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn-icon:active:not(:disabled) {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================
+   Tooltip System for Sidebar Icons
+
+   Provides context without cluttering the UI
+   ============================================================ */
+
+.tooltip-trigger {
+  position: relative;
+}
+
+.tooltip-trigger::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  padding: 6px 10px;
+  background: theme('colors.nexus-bg-tertiary');
+  color: theme('colors.nexus-text-primary');
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 6px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease,
+    visibility 150ms ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Tooltip arrow */
+.tooltip-trigger::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 6px);
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: theme('colors.nexus-bg-tertiary');
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 150ms ease,
+    visibility 150ms ease;
+  z-index: 1001;
+}
+
+.tooltip-trigger:hover::after,
+.tooltip-trigger:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+.tooltip-trigger:hover::before,
+.tooltip-trigger:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Keyboard shortcut in tooltip */
+.tooltip-trigger[data-shortcut]::after {
+  content: attr(data-tooltip) " " attr(data-shortcut);
+}
+
+.tooltip-trigger[data-shortcut]::after {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   Loading & Progress States
+   ============================================================ */
+
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: theme('colors.nexus-accent');
+  border-radius: 50%;
+  animation: buttonSpinner 600ms linear infinite;
+}
+
+@keyframes buttonSpinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success flash animation */
+@keyframes successPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+  }
+}
+
+.btn-success-flash {
+  animation: successPulse 400ms ease-out;
+}
+
+/* ============================================================
+   Reduced Motion Support
+
+   Respects user preferences for reduced animations
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-interactive,
+  .btn-action,
+  .btn-icon,
+  .ribbon-button,
+  .sidebar-tab,
+  .tooltip-trigger::after,
+  .tooltip-trigger::before {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .btn-interactive:active:not(:disabled),
+  .btn-action:active:not(:disabled),
+  .btn-icon:active:not(:disabled),
+  .ribbon-button:active:not(:disabled),
+  .sidebar-tab:active:not(:disabled) {
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   Empty State Animations
+   ============================================================ */
+
+/* Subtle pen writing animation */
+@keyframes penWrite {
+  0%, 100% {
+    transform: rotate(-5deg) translateY(0);
+  }
+  50% {
+    transform: rotate(5deg) translateY(-2px);
+  }
+}
+
+.animate-pen-write {
+  animation: penWrite 3s ease-in-out infinite;
+}
+
+/* Slow pulse for glow effect */
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 4s ease-in-out infinite;
+}
+
+/* Theme color classes for use in components */
+.text-nexus-accent {
+  color: var(--nexus-accent);
+}
+
+.text-nexus-text-primary {
+  color: var(--nexus-text-primary);
+}
+
+.text-nexus-text-muted {
+  color: var(--nexus-text-muted);
+}
+
+.bg-nexus-accent {
+  background-color: var(--nexus-accent);
+}
+
+.bg-nexus-bg-tertiary {
+  background-color: var(--nexus-bg-tertiary);
+}
+
+.bg-nexus-bg-secondary {
+  background-color: var(--nexus-bg-secondary);
+}
+
+.hover\:bg-nexus-accent-hover:hover {
+  background-color: var(--nexus-accent-hover);
+}
+
+.hover\:bg-nexus-bg-secondary:hover {
+  background-color: var(--nexus-bg-secondary);
+}
+
+.border-nexus-accent\/30 {
+  border-color: rgba(var(--nexus-accent-rgb, 56, 189, 248), 0.3);
+}
+
+.bg-nexus-accent\/10 {
+  background-color: rgba(var(--nexus-accent-rgb, 56, 189, 248), 0.1);
+}
