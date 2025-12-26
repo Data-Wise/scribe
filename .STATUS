@@ -1,7 +1,7 @@
 ---
 status: active
 priority: P1
-progress: 75
+progress: 80
 version: 0.4.0-alpha.1
 sprint: 10.5
 updated: 2024-12-26
@@ -37,6 +37,7 @@ tags:
 - [x] Font detection via fc-list
 - [x] Category filter tabs (All/Sans/Serif/Mono)
 - [x] Font preview with "Use" button
+- [x] **Theme colors apply to editor area** (fixed 2024-12-26)
 - [x] **407 tests passing** (101 new Theme & Font tests)
 
 **Sprint 10: Global Hotkey + Commands** ✅ Complete (2024-12-25)
@@ -50,12 +51,13 @@ tags:
 **Test Coverage:**
 | Test File | Tests |
 |-----------|-------|
+| Themes.test.ts | 101 |
 | Validation.test.ts | 54 |
 | Tags.test.tsx | 52 |
 | BlockNoteEditor.test.tsx | 35 |
 | Autocomplete.test.tsx | 34 |
 | HybridEditor.test.tsx | 32 |
-| Integration.test.tsx | 31 |
+| Integration.test.tsx | 32 |
 | CommandPalette.test.tsx | 24 |
 | Components.test.tsx | 16 |
 | WikiLinks.test.tsx | 16 (7 skipped) |
@@ -77,7 +79,7 @@ tags:
 | 3 | 14 | Templates + Daily | ○ 0% |
 | **4** | 15 | Search + Goals | ○ 0% |
 
-**Total: 75% complete (45h / 60h estimated)**
+**Total: 80% complete (48h / 60h estimated)**
 
 ---
 
@@ -106,6 +108,7 @@ tags:
 
 **Themes & Fonts:**
 - 10 built-in ADHD-friendly themes (5 dark, 5 light)
+- Theme colors apply to entire editor (including editor area)
 - Auto-theme by time of day (light 6am-6pm)
 - Custom theme creator with live preview
 - Import/export themes (JSON, Base16 YAML, URL)

@@ -348,6 +348,6 @@ pdflatex --version
 
 ## Getting Help
 
-- **Project Definition:** [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md)
-- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+- **Project Definition:** [PROJECT-DEFINITION.md](../reference/PROJECT-DEFINITION.md)
+- **Changelog:** [CHANGELOG.md](../reference/CHANGELOG.md)
 - **Quick Start:** [QUICKSTART.md](QUICKSTART.md)

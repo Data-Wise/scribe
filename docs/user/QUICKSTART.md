@@ -69,5 +69,5 @@ This is about #research and #methods.
 
 ## Next Steps
 
-- Read [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) for full scope
+- Read [PROJECT-DEFINITION.md](../reference/PROJECT-DEFINITION.md) for full scope
 - Read [GETTING-STARTED.md](GETTING-STARTED.md) for detailed guide
