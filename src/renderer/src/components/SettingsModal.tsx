@@ -54,7 +54,7 @@ interface SettingsModalProps {
   fontSettings: FontSettings
   onFontSettingsChange: (settings: FontSettings) => void
   themeShortcuts: ThemeShortcut[]
-  onThemeShortcutsChange?: (shortcuts: ThemeShortcut[]) => void  // Optional - for future shortcut customization
+  onThemeShortcutsChange: (shortcuts: ThemeShortcut[]) => void
 }
 
 type SettingsTab = 'general' | 'editor' | 'appearance' | 'files' | 'academic'
@@ -72,7 +72,7 @@ export function SettingsModal({
   fontSettings,
   onFontSettingsChange,
   themeShortcuts,
-  // onThemeShortcutsChange - reserved for future shortcut customization UI
+  onThemeShortcutsChange,
 }: SettingsModalProps) {
   const [activeTab, setActiveTab] = useState<SettingsTab>('general')
   const [showCustomCreator, setShowCustomCreator] = useState(false)
@@ -321,9 +321,21 @@ export function SettingsModal({
                         onChange={(e) => onFontSettingsChange({ ...fontSettings, family: e.target.value })}
                         className="w-full bg-nexus-bg-primary border border-white/10 rounded-md p-2 text-sm text-nexus-text-primary"
                       >
-                        {Object.entries(FONT_FAMILIES).map(([key, font]) => (
-                          <option key={key} value={key}>{font.name}</option>
-                        ))}
+                        <optgroup label="Sans-Serif (Modern)">
+                          {Object.entries(FONT_FAMILIES).filter(([, f]) => f.category === 'sans').map(([key, font]) => (
+                            <option key={key} value={key}>{font.name}</option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="Serif (Book/Academic)">
+                          {Object.entries(FONT_FAMILIES).filter(([, f]) => f.category === 'serif').map(([key, font]) => (
+                            <option key={key} value={key}>{font.name}</option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="Monospace (Focus/Code)">
+                          {Object.entries(FONT_FAMILIES).filter(([, f]) => f.category === 'mono').map(([key, font]) => (
+                            <option key={key} value={key}>{font.name}</option>
+                          ))}
+                        </optgroup>
                       </select>
                       <p className="text-[10px] text-nexus-text-muted mt-1">
                         {FONT_FAMILIES[fontSettings.family]?.description}
@@ -568,23 +580,45 @@ export function SettingsModal({
                       Press <kbd className="px-1.5 py-0.5 bg-nexus-bg-primary rounded text-nexus-accent font-mono">Cmd/Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-nexus-bg-primary rounded text-nexus-accent font-mono">Alt</kbd> + number to switch themes:
                     </p>
                     <div className="grid grid-cols-2 gap-2">
-                      {themeShortcuts.map((shortcut) => {
-                        const theme = themes[shortcut.themeId]
-                        return theme ? (
+                      {themeShortcuts.map((shortcut, index) => {
+                        const selectedTheme = themes[shortcut.themeId]
+                        return (
                           <div
                             key={shortcut.key}
                             className="flex items-center gap-2 p-2 bg-nexus-bg-primary rounded-md border border-white/5"
                           >
-                            <kbd className="px-2 py-1 bg-nexus-bg-tertiary rounded text-xs font-mono text-nexus-accent min-w-[28px] text-center">
+                            <kbd className="px-2 py-1 bg-nexus-bg-tertiary rounded text-xs font-mono text-nexus-accent min-w-[28px] text-center flex-shrink-0">
                               {shortcut.key}
                             </kbd>
-                            <div 
-                              className="w-4 h-4 rounded border border-white/10 flex-shrink-0"
-                              style={{ backgroundColor: theme.colors.bgPrimary }}
-                            />
-                            <span className="text-xs text-nexus-text-primary truncate">{theme.name}</span>
+                            <select
+                              value={shortcut.themeId}
+                              onChange={(e) => {
+                                const newShortcuts = [...themeShortcuts]
+                                newShortcuts[index] = { ...shortcut, themeId: e.target.value }
+                                onThemeShortcutsChange(newShortcuts)
+                              }}
+                              className="flex-1 bg-nexus-bg-tertiary border border-white/10 rounded px-2 py-1 text-xs text-nexus-text-primary min-w-0"
+                            >
+                              <optgroup label="Dark Themes">
+                                {Object.values(themes).filter(t => t.type === 'dark').map(t => (
+                                  <option key={t.id} value={t.id}>{t.name}</option>
+                                ))}
+                              </optgroup>
+                              <optgroup label="Light Themes">
+                                {Object.values(themes).filter(t => t.type === 'light').map(t => (
+                                  <option key={t.id} value={t.id}>{t.name}</option>
+                                ))}
+                              </optgroup>
+                            </select>
+                            {selectedTheme && (
+                              <div 
+                                className="w-4 h-4 rounded border border-white/10 flex-shrink-0"
+                                style={{ backgroundColor: selectedTheme.colors.bgPrimary }}
+                                title={selectedTheme.name}
+                              />
+                            )}
                           </div>
-                        ) : null
+                        )
                       })}
                     </div>
                   </div>

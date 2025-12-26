@@ -29,6 +29,11 @@
   --nexus-accent: #38bdf8;
   --nexus-accent-hover: #7dd3fc;
   --theme-name: 'Oxford Dark';
+  
+  /* Editor typography defaults (overridden by JS) */
+  --editor-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --editor-font-size: 18px;
+  --editor-line-height: 1.8;
 }
 
 /* 2. Forest Night - Deep greens, calming nature vibes */

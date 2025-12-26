@@ -893,47 +893,85 @@ export const DEFAULT_FONT_SETTINGS: FontSettings = {
   lineHeight: 1.8,
 }
 
-// Font family options - ADHD-friendly fonts that are easy to read
-export const FONT_FAMILIES: Record<string, { name: string; value: string; description: string }> = {
+// Font family options - Based on Homebrew-installed fonts
+// Run `brew list --cask | grep font` to see available fonts
+export const FONT_FAMILIES: Record<string, { name: string; value: string; description: string; category: 'sans' | 'serif' | 'mono' }> = {
+  // === Sans-Serif (Prose) ===
   'system': {
     name: 'System Default',
     value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    description: 'Your system\'s default font'
+    description: 'Your system\'s default font',
+    category: 'sans'
   },
-  'inter': {
-    name: 'Inter',
-    value: '"Inter", -apple-system, sans-serif',
-    description: 'Modern, highly readable'
+  'sf-pro': {
+    name: 'SF Pro',
+    value: '"SF Pro", "SF Pro Text", -apple-system, sans-serif',
+    description: 'Apple\'s system font - clean & modern',
+    category: 'sans'
   },
-  'source-sans': {
-    name: 'Source Sans 3',
-    value: '"Source Sans 3", -apple-system, sans-serif',
-    description: 'Adobe\'s open-source font'
+  'fira-sans': {
+    name: 'Fira Sans',
+    value: '"Fira Sans", -apple-system, sans-serif',
+    description: 'Mozilla\'s humanist sans-serif',
+    category: 'sans'
   },
-  'atkinson': {
-    name: 'Atkinson Hyperlegible',
-    value: '"Atkinson Hyperlegible", -apple-system, sans-serif',
-    description: 'Designed for low vision readers'
+  
+  // === Serif (Book/Academic) ===
+  'et-book': {
+    name: 'ET Book',
+    value: '"ETBookOT", "ET Book", Georgia, serif',
+    description: 'Tufte-style book font - elegant prose',
+    category: 'serif'
   },
-  'lexend': {
-    name: 'Lexend',
-    value: '"Lexend", -apple-system, sans-serif',
-    description: 'Optimized for reading proficiency'
+  'palatino': {
+    name: 'TeX Gyre Pagella',
+    value: '"TeX Gyre Pagella", Palatino, "Palatino Linotype", serif',
+    description: 'Classic Palatino - academic writing',
+    category: 'serif'
   },
-  'opendyslexic': {
-    name: 'OpenDyslexic',
-    value: '"OpenDyslexic", -apple-system, sans-serif',
-    description: 'Designed for dyslexic readers'
+  'century': {
+    name: 'TeX Gyre Schola',
+    value: '"TeX Gyre Schola", "Century Schoolbook", serif',
+    description: 'Schoolbook style - high readability',
+    category: 'serif'
   },
-  'ia-writer': {
-    name: 'iA Writer Duo',
-    value: '"iA Writer Duo", "SF Mono", monospace',
-    description: 'Monospace, distraction-free'
+  
+  // === Monospace (Code/Focus) ===
+  'sf-mono': {
+    name: 'SF Mono',
+    value: '"SF Mono", "SFMono-Regular", Menlo, monospace',
+    description: 'Apple\'s monospace - distraction-free',
+    category: 'mono'
   },
-  'jetbrains': {
-    name: 'JetBrains Mono',
-    value: '"JetBrains Mono", "SF Mono", monospace',
-    description: 'Developer-focused monospace'
+  'fira-code': {
+    name: 'Fira Code',
+    value: '"Fira Code", "Fira Mono", monospace',
+    description: 'Ligatures & coding symbols',
+    category: 'mono'
+  },
+  'cascadia': {
+    name: 'Cascadia Code',
+    value: '"Cascadia Code", "Cascadia Mono", monospace',
+    description: 'Microsoft\'s modern coding font',
+    category: 'mono'
+  },
+  'julia-mono': {
+    name: 'JuliaMono',
+    value: '"JuliaMono", monospace',
+    description: 'Scientific computing - math symbols',
+    category: 'mono'
+  },
+  'inconsolata': {
+    name: 'Inconsolata',
+    value: '"Inconsolata", "Inconsolata for Powerline", monospace',
+    description: 'Clean & compact monospace',
+    category: 'mono'
+  },
+  'source-code': {
+    name: 'Source Code Pro',
+    value: '"Source Code Pro", "Source Code Pro for Powerline", monospace',
+    description: 'Adobe\'s coding font',
+    category: 'mono'
   },
 }
 

@@ -245,13 +245,24 @@ export function HybridEditor({
             onChange={handleInput}
             onKeyDown={handleKeyDown}
             placeholder="Start writing... Type [[ for wiki-links, # for tags"
-            className="w-full h-full min-h-[calc(100vh-200px)] bg-transparent text-neutral-100
-                       focus:outline-none font-mono text-lg leading-relaxed resize-none
-                       placeholder:text-neutral-600"
+            className="w-full h-full min-h-[calc(100vh-200px)] bg-transparent text-nexus-text-primary
+                       focus:outline-none resize-none placeholder:text-nexus-text-muted/50"
+            style={{
+              fontFamily: 'var(--editor-font-family)',
+              fontSize: 'var(--editor-font-size)',
+              lineHeight: 'var(--editor-line-height)',
+            }}
             spellCheck={false}
           />
         ) : (
-          <div className="prose prose-invert prose-lg max-w-none">
+          <div 
+            className="prose prose-invert max-w-none"
+            style={{
+              fontFamily: 'var(--editor-font-family)',
+              fontSize: 'var(--editor-font-size)',
+              lineHeight: 'var(--editor-line-height)',
+            }}
+          >
             <MarkdownPreview
               content={content}
               onWikiLinkClick={onWikiLinkClick}
