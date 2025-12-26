@@ -9,6 +9,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - v0.4.0-dev
 
+### Sprint 10.5: Theme & Font System (2024-12-26)
+
+**Theme System:**
+- 10 built-in ADHD-friendly themes (5 dark, 5 light)
+  - Dark: Calm Night, Deep Focus, Midnight, Warm Dark, Nord Dark
+  - Light: Soft Cream, Morning Light, Sepia, Clean White, Nord Light
+- Auto-theme by time of day (light 6am-6pm, dark otherwise)
+- Custom theme creator with live preview
+- Theme import/export (JSON format)
+- Base16 YAML import (256+ community schemes)
+- Import themes from URL (GitHub Gists, raw URLs)
+- Theme keyboard shortcuts (Cmd+Alt+0-9, editable in Settings)
+- Live theme preview on hover
+
+**Font Management:**
+- Font settings panel (family, size, line height)
+- 14 ADHD-friendly font recommendations with research-backed benefits:
+  - Accessibility: Atkinson Hyperlegible, Lexend, OpenDyslexic
+  - iA Writer family: Mono, Duo, Quattro
+  - Modern coding: Monaspace, Commit Mono, Intel One Mono, Recursive
+  - Premium: Berkeley Mono, MonoLisa, Operator Mono, Input
+- Font detection via `fc-list` (Tauri backend)
+- One-click Homebrew font installation
+- Category filter tabs (All/Sans/Serif/Mono)
+- Font preview with sample text
+- "Use this font" button for quick application
+- Groups fonts by: Installed / Available via Homebrew / Premium
+
+**Technical Details:**
+- `src-tauri/src/commands.rs` - Font management commands (get_installed_fonts, install_font_via_homebrew)
+- `src/renderer/src/lib/themes.ts` - RECOMMENDED_FONTS list, theme definitions
+- `src/renderer/src/components/SettingsModal.tsx` - Font UI, theme shortcuts
+- CSS variables: `--editor-font-family`, `--editor-font-size`, `--editor-line-height`
+
+**Tests:** 306 passing
+
+---
+
 ### Sprint 10 Enhancements (2024-12-25)
 
 **Autocomplete Positioning Fix:**

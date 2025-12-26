@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 70
+progress: 75
 version: 0.4.0-dev
-sprint: 10
-updated: 2024-12-25
+sprint: 10.5
+updated: 2024-12-26
 editor: hybrid-markdown++
 next_sprint: 11
 next_focus: Academic Features
-tests: 300
+tests: 306
 tags:
   - adhd-friendly
   - distraction-free
@@ -22,9 +22,24 @@ tags:
 
 ## Current Sprint
 
-**Sprint 10: Global Hotkey + Commands** ✅ Complete
+**Sprint 10.5: Theme & Font System** ✅ Complete
 
-**Latest Updates (2024-12-25):**
+**Latest Updates (2024-12-26):**
+- [x] 10 built-in themes (5 dark, 5 light)
+- [x] Auto-theme by time of day
+- [x] Custom theme creator
+- [x] Theme import/export (JSON + Base16 YAML)
+- [x] Theme import from URL (GitHub Gists, raw URLs)
+- [x] Theme keyboard shortcuts (Cmd+Alt+0-9, editable)
+- [x] Font settings (family, size, line height)
+- [x] 14 ADHD-friendly font recommendations
+- [x] One-click Homebrew font installation
+- [x] Font detection via fc-list
+- [x] Category filter tabs (All/Sans/Serif/Mono)
+- [x] Font preview with "Use" button
+- [x] **306 tests passing**
+
+**Sprint 10: Global Hotkey + Commands** ✅ Complete (2024-12-25)
 - [x] Global hotkey ⌘⇧N opens app from anywhere
 - [x] Command palette ⌘K with 6 quick actions
 - [x] Autocomplete positioning follows cursor (fixed)
@@ -55,13 +70,14 @@ tags:
 | **1** | 8 | Editor Foundation | ✅ 100% |
 | 1 | 9 | Editor Enhancement | ✅ 100% |
 | 1 | 10 | Hotkey + Commands | ✅ 100% |
+| 1 | 10.5 | Theme & Font System | ✅ 100% |
 | **2** | 11 | Academic Features | ⏳ Next |
 | 2 | 12 | Export (PDF/Word) | ○ 0% |
 | **3** | 13 | Project System | ○ 0% |
 | 3 | 14 | Templates + Daily | ○ 0% |
 | **4** | 15 | Search + Goals | ○ 0% |
 
-**Total: 70% complete (42h / 60h estimated)**
+**Total: 75% complete (45h / 60h estimated)**
 
 ---
 
@@ -75,6 +91,7 @@ tags:
 | 8 | Editor Foundation | ✅ |
 | 9 | Editor Enhancement | 125 |
 | 10 | Hotkey + Commands + Tests | 300 |
+| 10.5 | Theme & Font System | 306 |
 
 ---
 
@@ -86,6 +103,16 @@ tags:
 - Live tag `#tag` highlighting with autocomplete
 - Word count, mode toggle (⌘E)
 - Focus mode (⌘⇧F)
+
+**Themes & Fonts:**
+- 10 built-in ADHD-friendly themes (5 dark, 5 light)
+- Auto-theme by time of day (light 6am-6pm)
+- Custom theme creator with live preview
+- Import/export themes (JSON, Base16 YAML, URL)
+- Theme keyboard shortcuts (Cmd+Alt+0-9)
+- 14 recommended ADHD-friendly fonts
+- One-click Homebrew font installation
+- Font settings (family, size, line height)
 
 **Commands:**
 - Global hotkey ⌘⇧N

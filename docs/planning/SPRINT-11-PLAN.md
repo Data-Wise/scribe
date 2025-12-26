@@ -1,9 +1,10 @@
 # Sprint 11: Academic Features
 
-> **Status:** Planned
+> **Status:** Ready to Start
 > **Effort:** 8 hours estimated
 > **Priority:** P1
 > **Target Start:** 2024-12-26
+> **Prerequisites:** Sprint 10.5 (Theme & Font System) ✅ Complete
 
 ---
 
@@ -230,3 +231,24 @@ After academic features:
 - Obsidian sync
 - Project system foundation
 - Settings persistence
+
+---
+
+## Related Commits (Sprint 10.5 - Theme & Font System)
+
+```
+c1a0313 polish: Category filter tabs, font previews, and 'Use' button
+9a8560b polish: Font management UI improvements
+3ec70bc feat: Font management with Homebrew installation and ADHD-friendly recommendations
+a8557cd feat: Font settings with Homebrew fonts, editable theme shortcuts
+bf83a14 feat: URL theme import, font settings, and keyboard shortcuts
+b1c5427 feat: Theme import/export with Base16 support and live preview
+4ac7aca feat: Add auto-theme by time and custom theme creator
+641f5c5 feat: Add 10 ADHD-friendly themes (5 dark, 5 light)
+049a16f feat: Default note properties, word goal progress bar, and theme persistence
+```
+
+**Current State:**
+- 306 tests passing
+- TypeScript: 0 errors
+- Rust: Compiles (1 dead code warning)
