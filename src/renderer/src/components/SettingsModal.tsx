@@ -24,6 +24,8 @@ import {
 import { 
   Theme, 
   AutoThemeSettings,
+  FontSettings,
+  ThemeShortcut,
   createCustomTheme,
   generateThemeFromColor,
   isValidHexColor,
@@ -32,7 +34,10 @@ import {
   generateShareableTheme,
   exportThemeToBase16,
   importThemeFromBase16,
+  fetchThemeFromUrl,
+  isValidThemeUrl,
   POPULAR_BASE16_SCHEMES,
+  FONT_FAMILIES,
   Base16Scheme
 } from '../lib/themes'
 
@@ -46,6 +51,10 @@ interface SettingsModalProps {
   onAutoThemeChange: (settings: AutoThemeSettings) => void
   onSaveCustomTheme: (theme: Theme) => void
   onDeleteCustomTheme: (themeId: string) => void
+  fontSettings: FontSettings
+  onFontSettingsChange: (settings: FontSettings) => void
+  themeShortcuts: ThemeShortcut[]
+  onThemeShortcutsChange?: (shortcuts: ThemeShortcut[]) => void  // Optional - for future shortcut customization
 }
 
 type SettingsTab = 'general' | 'editor' | 'appearance' | 'files' | 'academic'
@@ -59,7 +68,11 @@ export function SettingsModal({
   autoThemeSettings,
   onAutoThemeChange,
   onSaveCustomTheme,
-  onDeleteCustomTheme
+  onDeleteCustomTheme,
+  fontSettings,
+  onFontSettingsChange,
+  themeShortcuts,
+  // onThemeShortcutsChange - reserved for future shortcut customization UI
 }: SettingsModalProps) {
   const [activeTab, setActiveTab] = useState<SettingsTab>('general')
   const [showCustomCreator, setShowCustomCreator] = useState(false)
@@ -79,6 +92,10 @@ export function SettingsModal({
   const [exportText, setExportText] = useState('')
   const [copied, setCopied] = useState(false)
   const [showPopularSchemes, setShowPopularSchemes] = useState(false)
+  
+  // URL import state
+  const [importUrl, setImportUrl] = useState('')
+  const [isLoadingUrl, setIsLoadingUrl] = useState(false)
   
   // Apply preview theme
   useEffect(() => {
@@ -104,7 +121,7 @@ export function SettingsModal({
     }
   }
   
-  // Handle import
+  // Handle import from text
   const handleImport = () => {
     setImportError('')
     const imported = importTheme(importText)
@@ -113,8 +130,37 @@ export function SettingsModal({
       onThemeChange(imported.id)
       setShowImportModal(false)
       setImportText('')
+      setImportUrl('')
     } else {
       setImportError('Invalid theme format. Supports Scribe JSON or Base16 YAML.')
+    }
+  }
+  
+  // Handle import from URL
+  const handleImportFromUrl = async () => {
+    if (!isValidThemeUrl(importUrl)) {
+      setImportError('Please enter a valid URL (https://...)')
+      return
+    }
+    
+    setImportError('')
+    setIsLoadingUrl(true)
+    
+    try {
+      const imported = await fetchThemeFromUrl(importUrl)
+      if (imported) {
+        onSaveCustomTheme(imported)
+        onThemeChange(imported.id)
+        setShowImportModal(false)
+        setImportText('')
+        setImportUrl('')
+      } else {
+        setImportError('Could not parse theme from URL. Make sure it contains valid Scribe JSON or Base16 YAML.')
+      }
+    } catch {
+      setImportError('Failed to fetch theme from URL. Check the URL and try again.')
+    } finally {
+      setIsLoadingUrl(false)
     }
   }
   
@@ -261,6 +307,88 @@ export function SettingsModal({
 
             {activeTab === 'editor' && (
               <div className="space-y-6">
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    <Type className="w-3 h-3 inline mr-2" />
+                    Typography
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-5">
+                    {/* Font Family */}
+                    <div>
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Font Family</label>
+                      <select
+                        value={fontSettings.family}
+                        onChange={(e) => onFontSettingsChange({ ...fontSettings, family: e.target.value })}
+                        className="w-full bg-nexus-bg-primary border border-white/10 rounded-md p-2 text-sm text-nexus-text-primary"
+                      >
+                        {Object.entries(FONT_FAMILIES).map(([key, font]) => (
+                          <option key={key} value={key}>{font.name}</option>
+                        ))}
+                      </select>
+                      <p className="text-[10px] text-nexus-text-muted mt-1">
+                        {FONT_FAMILIES[fontSettings.family]?.description}
+                      </p>
+                    </div>
+                    
+                    {/* Font Size */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-xs text-nexus-text-muted">Font Size</label>
+                        <span className="text-sm font-bold text-nexus-accent">{fontSettings.size}px</span>
+                      </div>
+                      <input 
+                        type="range" 
+                        className="w-full accent-nexus-accent" 
+                        min="12" 
+                        max="24" 
+                        value={fontSettings.size}
+                        onChange={(e) => onFontSettingsChange({ ...fontSettings, size: parseInt(e.target.value) })}
+                      />
+                      <div className="flex justify-between text-[10px] text-nexus-text-muted mt-1">
+                        <span>12px (compact)</span>
+                        <span>24px (large)</span>
+                      </div>
+                    </div>
+                    
+                    {/* Line Height */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-xs text-nexus-text-muted">Line Height</label>
+                        <span className="text-sm font-bold text-nexus-accent">{fontSettings.lineHeight.toFixed(1)}</span>
+                      </div>
+                      <input 
+                        type="range" 
+                        className="w-full accent-nexus-accent" 
+                        min="1.4" 
+                        max="2.2" 
+                        step="0.1"
+                        value={fontSettings.lineHeight}
+                        onChange={(e) => onFontSettingsChange({ ...fontSettings, lineHeight: parseFloat(e.target.value) })}
+                      />
+                      <div className="flex justify-between text-[10px] text-nexus-text-muted mt-1">
+                        <span>1.4 (tight)</span>
+                        <span>2.2 (spacious)</span>
+                      </div>
+                    </div>
+                    
+                    {/* Preview */}
+                    <div className="pt-3 border-t border-white/5">
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Preview</label>
+                      <div 
+                        className="p-3 bg-nexus-bg-primary rounded-md border border-white/10"
+                        style={{
+                          fontFamily: FONT_FAMILIES[fontSettings.family]?.value,
+                          fontSize: `${fontSettings.size}px`,
+                          lineHeight: fontSettings.lineHeight,
+                        }}
+                      >
+                        <p className="text-nexus-text-primary">The quick brown fox jumps over the lazy dog.</p>
+                        <p className="text-nexus-text-muted">0123456789 - ADHD-friendly writing experience.</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                
                 <section>
                   <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Writing Experience</h4>
                   <div className="space-y-4">
@@ -428,6 +556,38 @@ export function SettingsModal({
                       ))}
                     </div>
                   )}
+                </section>
+                
+                {/* Theme Keyboard Shortcuts */}
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    Keyboard Shortcuts
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
+                    <p className="text-xs text-nexus-text-muted mb-3">
+                      Press <kbd className="px-1.5 py-0.5 bg-nexus-bg-primary rounded text-nexus-accent font-mono">Cmd/Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-nexus-bg-primary rounded text-nexus-accent font-mono">Alt</kbd> + number to switch themes:
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {themeShortcuts.map((shortcut) => {
+                        const theme = themes[shortcut.themeId]
+                        return theme ? (
+                          <div
+                            key={shortcut.key}
+                            className="flex items-center gap-2 p-2 bg-nexus-bg-primary rounded-md border border-white/5"
+                          >
+                            <kbd className="px-2 py-1 bg-nexus-bg-tertiary rounded text-xs font-mono text-nexus-accent min-w-[28px] text-center">
+                              {shortcut.key}
+                            </kbd>
+                            <div 
+                              className="w-4 h-4 rounded border border-white/10 flex-shrink-0"
+                              style={{ backgroundColor: theme.colors.bgPrimary }}
+                            />
+                            <span className="text-xs text-nexus-text-primary truncate">{theme.name}</span>
+                          </div>
+                        ) : null
+                      })}
+                    </div>
+                  </div>
                 </section>
 
                 {/* Custom Theme Creator */}
@@ -656,16 +816,6 @@ export function SettingsModal({
                   </div>
                 </section>
                 
-                <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Typography</h4>
-                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-nexus-text-primary">Font size (Editor)</span>
-                      <span className="text-sm font-bold text-nexus-accent">18px</span>
-                    </div>
-                    <input type="range" className="w-full accent-nexus-accent" min="12" max="24" defaultValue="18" />
-                  </div>
-                </section>
               </div>
             )}
 
@@ -751,6 +901,7 @@ export function SettingsModal({
             onClick={() => {
               setShowImportModal(false)
               setImportText('')
+              setImportUrl('')
               setImportError('')
             }}
           />
@@ -759,9 +910,40 @@ export function SettingsModal({
               <Upload className="w-5 h-5" />
               Import Theme
             </h3>
-            <p className="text-sm text-nexus-text-muted mb-4">
-              Paste a Scribe JSON theme or Base16 YAML scheme below.
-            </p>
+            
+            {/* URL Import Section */}
+            <div className="mb-4">
+              <label className="text-xs text-nexus-text-muted mb-2 block">Import from URL</label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={importUrl}
+                  onChange={(e) => {
+                    setImportUrl(e.target.value)
+                    setImportError('')
+                  }}
+                  placeholder="https://gist.github.com/user/..."
+                  className="flex-1 bg-nexus-bg-primary border border-white/10 rounded-lg p-2 text-sm text-nexus-text-primary placeholder:text-nexus-text-muted/40 focus:outline-none focus:border-nexus-accent/50"
+                />
+                <button
+                  onClick={handleImportFromUrl}
+                  disabled={!importUrl.trim() || isLoadingUrl}
+                  className="px-4 py-2 bg-nexus-accent hover:bg-nexus-accent-hover rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoadingUrl ? 'Loading...' : 'Fetch'}
+                </button>
+              </div>
+              <p className="text-[10px] text-nexus-text-muted mt-1">
+                Supports GitHub Gists, raw URLs, and Base16 repos
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-3 my-4">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-xs text-nexus-text-muted">or paste below</span>
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
+            
             <textarea
               value={importText}
               onChange={(e) => {
@@ -769,7 +951,7 @@ export function SettingsModal({
                 setImportError('')
               }}
               placeholder={`Scribe JSON:\n{\n  "name": "My Theme",\n  "type": "dark",\n  "colors": { ... }\n}\n\nOr Base16 YAML:\nscheme: "My Scheme"\nbase00: "#1d1f21"\nbase05: "#c5c8c6"\n...`}
-              className="w-full h-48 bg-nexus-bg-primary border border-white/10 rounded-lg p-3 text-sm text-nexus-text-primary font-mono placeholder:text-nexus-text-muted/40 resize-none focus:outline-none focus:border-nexus-accent/50"
+              className="w-full h-40 bg-nexus-bg-primary border border-white/10 rounded-lg p-3 text-sm text-nexus-text-primary font-mono placeholder:text-nexus-text-muted/40 resize-none focus:outline-none focus:border-nexus-accent/50"
             />
             {importError && (
               <p className="text-sm text-red-400 mt-2">{importError}</p>
@@ -779,6 +961,7 @@ export function SettingsModal({
                 onClick={() => {
                   setShowImportModal(false)
                   setImportText('')
+                  setImportUrl('')
                   setImportError('')
                 }}
                 className="flex-1 p-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm font-medium text-nexus-text-muted transition-colors"

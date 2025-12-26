@@ -807,3 +807,203 @@ export const POPULAR_BASE16_SCHEMES: Record<string, Base16Scheme> = {
     base0F: '#dd7878',
   },
 }
+
+// ============================================================
+// Theme Download from URL
+// Supports: GitHub Gists, Raw URLs, Base16 repos
+// ============================================================
+
+/**
+ * Convert various URL formats to raw content URLs
+ */
+export function normalizeThemeUrl(url: string): string {
+  const trimmed = url.trim()
+  
+  // GitHub Gist: convert to raw
+  // https://gist.github.com/user/id -> https://gist.githubusercontent.com/user/id/raw
+  if (trimmed.includes('gist.github.com') && !trimmed.includes('raw')) {
+    const match = trimmed.match(/gist\.github\.com\/([^\/]+)\/([a-f0-9]+)/)
+    if (match) {
+      return `https://gist.githubusercontent.com/${match[1]}/${match[2]}/raw`
+    }
+  }
+  
+  // GitHub blob: convert to raw
+  // https://github.com/user/repo/blob/main/file.yaml -> https://raw.githubusercontent.com/user/repo/main/file.yaml
+  if (trimmed.includes('github.com') && trimmed.includes('/blob/')) {
+    return trimmed
+      .replace('github.com', 'raw.githubusercontent.com')
+      .replace('/blob/', '/')
+  }
+  
+  // Already raw or other URL - return as is
+  return trimmed
+}
+
+/**
+ * Fetch theme from URL and parse it
+ */
+export async function fetchThemeFromUrl(url: string): Promise<Theme | null> {
+  try {
+    const normalizedUrl = normalizeThemeUrl(url)
+    
+    const response = await fetch(normalizedUrl, {
+      headers: {
+        'Accept': 'text/plain, application/json, */*'
+      }
+    })
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
+    
+    const content = await response.text()
+    return importTheme(content)
+  } catch (error) {
+    console.error('Failed to fetch theme from URL:', error)
+    return null
+  }
+}
+
+/**
+ * Validate URL format
+ */
+export function isValidThemeUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url.trim())
+    return ['http:', 'https:'].includes(parsed.protocol)
+  } catch {
+    return false
+  }
+}
+
+// ============================================================
+// Editor Font Settings
+// ============================================================
+
+export interface FontSettings {
+  family: string
+  size: number
+  lineHeight: number
+}
+
+export const DEFAULT_FONT_SETTINGS: FontSettings = {
+  family: 'system',
+  size: 18,
+  lineHeight: 1.8,
+}
+
+// Font family options - ADHD-friendly fonts that are easy to read
+export const FONT_FAMILIES: Record<string, { name: string; value: string; description: string }> = {
+  'system': {
+    name: 'System Default',
+    value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    description: 'Your system\'s default font'
+  },
+  'inter': {
+    name: 'Inter',
+    value: '"Inter", -apple-system, sans-serif',
+    description: 'Modern, highly readable'
+  },
+  'source-sans': {
+    name: 'Source Sans 3',
+    value: '"Source Sans 3", -apple-system, sans-serif',
+    description: 'Adobe\'s open-source font'
+  },
+  'atkinson': {
+    name: 'Atkinson Hyperlegible',
+    value: '"Atkinson Hyperlegible", -apple-system, sans-serif',
+    description: 'Designed for low vision readers'
+  },
+  'lexend': {
+    name: 'Lexend',
+    value: '"Lexend", -apple-system, sans-serif',
+    description: 'Optimized for reading proficiency'
+  },
+  'opendyslexic': {
+    name: 'OpenDyslexic',
+    value: '"OpenDyslexic", -apple-system, sans-serif',
+    description: 'Designed for dyslexic readers'
+  },
+  'ia-writer': {
+    name: 'iA Writer Duo',
+    value: '"iA Writer Duo", "SF Mono", monospace',
+    description: 'Monospace, distraction-free'
+  },
+  'jetbrains': {
+    name: 'JetBrains Mono',
+    value: '"JetBrains Mono", "SF Mono", monospace',
+    description: 'Developer-focused monospace'
+  },
+}
+
+const FONT_SETTINGS_KEY = 'scribe-font-settings'
+
+export function loadFontSettings(): FontSettings {
+  try {
+    const saved = localStorage.getItem(FONT_SETTINGS_KEY)
+    return saved ? { ...DEFAULT_FONT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_FONT_SETTINGS
+  } catch {
+    return DEFAULT_FONT_SETTINGS
+  }
+}
+
+export function saveFontSettings(settings: FontSettings): void {
+  localStorage.setItem(FONT_SETTINGS_KEY, JSON.stringify(settings))
+}
+
+export function applyFontSettings(settings: FontSettings): void {
+  const root = document.documentElement
+  const fontFamily = FONT_FAMILIES[settings.family]?.value || FONT_FAMILIES['system'].value
+  
+  root.style.setProperty('--editor-font-family', fontFamily)
+  root.style.setProperty('--editor-font-size', `${settings.size}px`)
+  root.style.setProperty('--editor-line-height', `${settings.lineHeight}`)
+}
+
+// ============================================================
+// Theme Keyboard Shortcuts
+// ============================================================
+
+export interface ThemeShortcut {
+  key: string // e.g., '1', '2', 'd', 'l'
+  themeId: string
+}
+
+const THEME_SHORTCUTS_KEY = 'scribe-theme-shortcuts'
+
+// Default shortcuts: 1-5 for dark themes, 6-0 for light themes
+export const DEFAULT_THEME_SHORTCUTS: ThemeShortcut[] = [
+  { key: '1', themeId: 'oxford-dark' },
+  { key: '2', themeId: 'forest-night' },
+  { key: '3', themeId: 'warm-cocoa' },
+  { key: '4', themeId: 'midnight-purple' },
+  { key: '5', themeId: 'deep-ocean' },
+  { key: '6', themeId: 'soft-paper' },
+  { key: '7', themeId: 'morning-fog' },
+  { key: '8', themeId: 'sage-garden' },
+  { key: '9', themeId: 'lavender-mist' },
+  { key: '0', themeId: 'sand-dune' },
+]
+
+export function loadThemeShortcuts(): ThemeShortcut[] {
+  try {
+    const saved = localStorage.getItem(THEME_SHORTCUTS_KEY)
+    return saved ? JSON.parse(saved) : DEFAULT_THEME_SHORTCUTS
+  } catch {
+    return DEFAULT_THEME_SHORTCUTS
+  }
+}
+
+export function saveThemeShortcuts(shortcuts: ThemeShortcut[]): void {
+  localStorage.setItem(THEME_SHORTCUTS_KEY, JSON.stringify(shortcuts))
+}
+
+/**
+ * Get theme ID for a keyboard shortcut
+ * Shortcut format: Cmd/Ctrl + Alt + [key]
+ */
+export function getThemeForShortcut(key: string, shortcuts: ThemeShortcut[]): string | null {
+  const shortcut = shortcuts.find(s => s.key === key)
+  return shortcut?.themeId || null
+}

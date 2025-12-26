@@ -16,6 +16,8 @@ import { Plus } from 'lucide-react'
 import {
   Theme,
   AutoThemeSettings,
+  FontSettings,
+  ThemeShortcut,
   getAllThemes,
   loadCustomThemes,
   saveCustomThemes,
@@ -25,6 +27,12 @@ import {
   saveSelectedTheme,
   applyTheme,
   getAutoTheme,
+  loadFontSettings,
+  saveFontSettings,
+  applyFontSettings,
+  loadThemeShortcuts,
+  saveThemeShortcuts,
+  getThemeForShortcut,
 } from './lib/themes'
 
 function App() {
@@ -142,6 +150,46 @@ function App() {
     if (theme === themeId) {
       setTheme('oxford-dark')
     }
+  }
+
+  // Font settings state
+  const [fontSettings, setFontSettings] = useState<FontSettings>(() => loadFontSettings())
+  
+  // Apply font settings on load and change
+  useEffect(() => {
+    applyFontSettings(fontSettings)
+    saveFontSettings(fontSettings)
+  }, [fontSettings])
+  
+  // Theme shortcuts state
+  const [themeShortcuts, setThemeShortcuts] = useState<ThemeShortcut[]>(() => loadThemeShortcuts())
+  
+  // Theme keyboard shortcuts: Cmd/Ctrl + Alt + [1-0]
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Cmd/Ctrl + Alt + number key
+      if ((e.metaKey || e.ctrlKey) && e.altKey && /^[0-9]$/.test(e.key)) {
+        e.preventDefault()
+        const targetTheme = getThemeForShortcut(e.key, themeShortcuts)
+        if (targetTheme && allThemes[targetTheme]) {
+          setTheme(targetTheme)
+        }
+      }
+    }
+    
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [themeShortcuts, allThemes])
+  
+  // Handle font settings change
+  const handleFontSettingsChange = (settings: FontSettings) => {
+    setFontSettings(settings)
+  }
+  
+  // Handle theme shortcuts change
+  const handleThemeShortcutsChange = (shortcuts: ThemeShortcut[]) => {
+    setThemeShortcuts(shortcuts)
+    saveThemeShortcuts(shortcuts)
   }
 
 
@@ -615,6 +663,10 @@ function App() {
         onAutoThemeChange={handleAutoThemeChange}
         onSaveCustomTheme={handleSaveCustomTheme}
         onDeleteCustomTheme={handleDeleteCustomTheme}
+        fontSettings={fontSettings}
+        onFontSettingsChange={handleFontSettingsChange}
+        themeShortcuts={themeShortcuts}
+        onThemeShortcutsChange={handleThemeShortcutsChange}
       />
     </div>
   )
