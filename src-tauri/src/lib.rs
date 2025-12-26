@@ -1,5 +1,6 @@
 mod database;
 mod commands;
+mod academic;
 
 use commands::AppState;
 use database::Database;
@@ -80,6 +81,14 @@ pub fn run() {
       commands::is_font_installed,
       commands::install_font_via_homebrew,
       commands::is_homebrew_available,
+      // Academic (citations & export)
+      commands::get_citations,
+      commands::search_citations,
+      commands::get_citation_by_key,
+      commands::set_bibliography_path,
+      commands::get_bibliography_path,
+      commands::export_document,
+      commands::is_pandoc_available,
     ])
 
 

@@ -13,6 +13,7 @@ import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
 import { Plus } from 'lucide-react'
+import { PanelMenu, MenuSection } from './components/PanelMenu'
 import {
   Theme,
   AutoThemeSettings,
@@ -62,6 +63,34 @@ function App() {
   // Tab state
   const [leftActiveTab, setLeftActiveTab] = useState<'files' | 'search'>('files')
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
+
+  // Left sidebar preferences (persisted in localStorage)
+  const [leftSortBy, setLeftSortBy] = useState<'name' | 'modified' | 'created'>(() => {
+    const saved = localStorage.getItem('leftSortBy')
+    return (saved as 'name' | 'modified' | 'created') || 'modified'
+  })
+  const [leftViewMode, setLeftViewMode] = useState<'default' | 'compact'>(() => {
+    const saved = localStorage.getItem('leftViewMode')
+    return (saved as 'default' | 'compact') || 'default'
+  })
+
+  // Right sidebar preferences (persisted in localStorage)
+  const [backlinksSort, setBacklinksSort] = useState<'name' | 'date'>(() => {
+    const saved = localStorage.getItem('backlinksSort')
+    return (saved as 'name' | 'date') || 'date'
+  })
+  const [showOutgoingLinks, setShowOutgoingLinks] = useState<boolean>(() => {
+    const saved = localStorage.getItem('showOutgoingLinks')
+    return saved === null ? true : saved === 'true'
+  })
+  const [tagsSort, setTagsSort] = useState<'alpha' | 'count'>(() => {
+    const saved = localStorage.getItem('tagsSort')
+    return (saved as 'alpha' | 'count') || 'alpha'
+  })
+  const [propertiesCollapsed, setPropertiesCollapsed] = useState<boolean>(() => {
+    const saved = localStorage.getItem('propertiesCollapsed')
+    return saved === 'true'
+  })
 
   // Search state
   const [, setSearchQuery] = useState('')
@@ -496,10 +525,128 @@ function App() {
     }
   }
 
-  const displayNotes = isSearching ? searchResults : isFiltering ? filteredNotes : notes
+  // Handlers for left sidebar preferences
+  const handleLeftSortChange = (sortBy: 'name' | 'modified' | 'created') => {
+    setLeftSortBy(sortBy)
+    localStorage.setItem('leftSortBy', sortBy)
+  }
+
+  const handleLeftViewChange = (viewMode: 'default' | 'compact') => {
+    setLeftViewMode(viewMode)
+    localStorage.setItem('leftViewMode', viewMode)
+  }
+
+  // Handlers for right sidebar preferences
+  const handleBacklinksSortChange = (sortBy: 'name' | 'date') => {
+    setBacklinksSort(sortBy)
+    localStorage.setItem('backlinksSort', sortBy)
+  }
+
+  const handleShowOutgoingLinksChange = () => {
+    const newValue = !showOutgoingLinks
+    setShowOutgoingLinks(newValue)
+    localStorage.setItem('showOutgoingLinks', String(newValue))
+  }
+
+  const handleTagsSortChange = (sortBy: 'alpha' | 'count') => {
+    setTagsSort(sortBy)
+    localStorage.setItem('tagsSort', sortBy)
+  }
+
+  const handlePropertiesCollapseAll = () => {
+    const newValue = !propertiesCollapsed
+    setPropertiesCollapsed(newValue)
+    localStorage.setItem('propertiesCollapsed', String(newValue))
+  }
+
+  // Sort and filter notes based on preferences
+  const getSortedNotes = (notesToSort: Note[]) => {
+    return [...notesToSort].sort((a, b) => {
+      switch (leftSortBy) {
+        case 'name':
+          return (a.title || '').localeCompare(b.title || '')
+        case 'created':
+          return b.created_at - a.created_at
+        case 'modified':
+        default:
+          return b.updated_at - a.updated_at
+      }
+    })
+  }
+
+  const displayNotes = getSortedNotes(isSearching ? searchResults : isFiltering ? filteredNotes : notes)
+
+  // Build left sidebar menu sections
+  const leftMenuSections: MenuSection[] = [
+    {
+      title: 'Sort by',
+      items: [
+        { id: 'sort-name', label: 'Name', action: () => handleLeftSortChange('name'), checked: leftSortBy === 'name' },
+        { id: 'sort-modified', label: 'Modified', action: () => handleLeftSortChange('modified'), checked: leftSortBy === 'modified' },
+        { id: 'sort-created', label: 'Created', action: () => handleLeftSortChange('created'), checked: leftSortBy === 'created' },
+      ]
+    },
+    {
+      title: 'View',
+      items: [
+        { id: 'view-default', label: 'Default', action: () => handleLeftViewChange('default'), checked: leftViewMode === 'default' },
+        { id: 'view-compact', label: 'Compact', action: () => handleLeftViewChange('compact'), checked: leftViewMode === 'compact' },
+      ]
+    }
+  ]
+
+  // Build right sidebar menu sections based on active tab
+  const getRightMenuSections = (): MenuSection[] => {
+    switch (rightActiveTab) {
+      case 'properties':
+        return [
+          {
+            items: [
+              { id: 'add-property', label: 'Add property', action: () => { /* placeholder */ }, shortcut: '/' },
+              { id: 'collapse-all', label: propertiesCollapsed ? 'Expand all' : 'Collapse all', action: handlePropertiesCollapseAll },
+            ]
+          }
+        ]
+      case 'backlinks':
+        return [
+          {
+            title: 'Sort by',
+            items: [
+              { id: 'backlinks-name', label: 'Name', action: () => handleBacklinksSortChange('name'), checked: backlinksSort === 'name' },
+              { id: 'backlinks-date', label: 'Date', action: () => handleBacklinksSortChange('date'), checked: backlinksSort === 'date' },
+            ]
+          },
+          {
+            items: [
+              { id: 'toggle-outgoing', label: 'Show outgoing links', action: handleShowOutgoingLinksChange, checked: showOutgoingLinks },
+            ]
+          }
+        ]
+      case 'tags':
+        return [
+          {
+            title: 'Sort by',
+            items: [
+              { id: 'tags-alpha', label: 'Alphabetical', action: () => handleTagsSortChange('alpha'), checked: tagsSort === 'alpha' },
+              { id: 'tags-count', label: 'By count', action: () => handleTagsSortChange('count'), checked: tagsSort === 'count' },
+            ]
+          },
+          {
+            items: [
+              { id: 'bulk-edit', label: 'Bulk edit tags...', action: () => { /* placeholder */ }, disabled: true },
+            ]
+          }
+        ]
+      default:
+        return []
+    }
+  }
 
   return (
     <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex overflow-hidden" style={{ height: '100vh' }}>
+      {/* Titlebar drag region for window moving */}
+      <div className="titlebar-drag-region" data-tauri-drag-region />
+
       {!focusMode && (
         <Ribbon
           onToggleLeft={() => setLeftSidebarCollapsed(prev => !prev)}
@@ -532,6 +679,8 @@ function App() {
           <div className="sidebar-tabs">
             <button className={`sidebar-tab ${leftActiveTab === 'files' ? 'active' : ''}`} onClick={() => setLeftActiveTab('files')}>Files</button>
             <button className={`sidebar-tab ${leftActiveTab === 'search' ? 'active' : ''}`} onClick={() => setLeftActiveTab('search')}>Search</button>
+            <div className="flex-1" />
+            <PanelMenu sections={leftMenuSections} />
           </div>
 
           <div className="tab-content">
@@ -546,15 +695,15 @@ function App() {
                 </div>
                 <div className="flex-1 overflow-y-auto">
                   {displayNotes.map((note) => (
-                    <div 
-                      key={note.id} 
+                    <div
+                      key={note.id}
                       onClick={() => {
                         setEditorMode('write')  // Reset to write mode when clicking sidebar
                         selectNote(note.id)
                       }}
-                      className={`px-4 py-3 border-b border-white/[0.03] cursor-pointer hover:bg-white/[0.02] ${selectedNoteId === note.id ? 'bg-nexus-accent/5 text-nexus-accent' : ''}`}
+                      className={`${leftViewMode === 'compact' ? 'px-4 py-2' : 'px-4 py-3'} border-b border-white/[0.03] cursor-pointer hover:bg-white/[0.02] ${selectedNoteId === note.id ? 'bg-nexus-accent/5 text-nexus-accent' : ''}`}
                     >
-                      <div className="font-medium truncate">{note.title || 'Untitled'}</div>
+                      <div className={`font-medium truncate ${leftViewMode === 'compact' ? 'text-sm' : ''}`}>{note.title || 'Untitled'}</div>
                     </div>
                   ))}
                 </div>
@@ -620,6 +769,8 @@ function App() {
             <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
             <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
             <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
+            <div className="flex-1" />
+            <PanelMenu sections={getRightMenuSections()} />
           </div>
           <div className="tab-content flex-1">
             {rightActiveTab === 'properties' ? (

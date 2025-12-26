@@ -1,6 +1,33 @@
 import { invoke } from '@tauri-apps/api/core';
 import { Note, Tag, TagWithCount, Folder } from '../types';
 
+// Citation type from BibTeX
+export interface Citation {
+  key: string;
+  title: string;
+  authors: string[];
+  year: number;
+  journal?: string;
+  doi?: string;
+}
+
+// Export options
+export interface ExportOptions {
+  noteId: string;
+  content: string;
+  title: string;
+  format: 'pdf' | 'docx' | 'latex' | 'html';
+  bibliography?: string;
+  csl: string;
+  includeMetadata: boolean;
+  processEquations: boolean;
+}
+
+export interface ExportResult {
+  path: string;
+  success: boolean;
+}
+
 export const api = {
   // Note operations
   createNote: (note: Partial<Note>): Promise<Note> => 
@@ -96,8 +123,31 @@ export const api = {
   installFontViaHomebrew: (caskName: string): Promise<string> => 
     invoke('install_font_via_homebrew', { caskName }),
     
-  isHomebrewAvailable: (): Promise<boolean> => 
+  isHomebrewAvailable: (): Promise<boolean> =>
     invoke('is_homebrew_available'),
+
+  // Citation operations (Zotero/BibTeX)
+  getCitations: (): Promise<Citation[]> =>
+    invoke('get_citations'),
+
+  searchCitations: (query: string): Promise<Citation[]> =>
+    invoke('search_citations', { query }),
+
+  getCitationByKey: (key: string): Promise<Citation | null> =>
+    invoke('get_citation_by_key', { key }),
+
+  setBibliographyPath: (path: string): Promise<void> =>
+    invoke('set_bibliography_path', { path }),
+
+  getBibliographyPath: (): Promise<string | null> =>
+    invoke('get_bibliography_path'),
+
+  // Document export (Pandoc)
+  exportDocument: (options: ExportOptions): Promise<ExportResult> =>
+    invoke('export_document', { options }),
+
+  isPandocAvailable: (): Promise<boolean> =>
+    invoke('is_pandoc_available'),
 };
 
 

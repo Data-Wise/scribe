@@ -47,7 +47,16 @@ const apiMock = {
   // Link operations
   updateNoteLinks: vi.fn(),
   getBacklinks: vi.fn(),
-  getOutgoingLinks: vi.fn()
+  getOutgoingLinks: vi.fn(),
+
+  // Academic operations
+  getCitations: vi.fn(),
+  searchCitations: vi.fn(),
+  getCitationByKey: vi.fn(),
+  setBibliographyPath: vi.fn(),
+  getBibliographyPath: vi.fn(),
+  exportDocument: vi.fn(),
+  isPandocAvailable: vi.fn()
 }
 
 // Mock the api library

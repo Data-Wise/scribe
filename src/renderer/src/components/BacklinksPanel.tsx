@@ -46,10 +46,10 @@ export function BacklinksPanel({ noteId, onSelectNote, refreshKey = 0 }: Backlin
 
   if (!noteId) {
     return (
-      <div className="h-full bg-gray-900 border-l border-gray-700 p-4">
-        <div className="text-center text-gray-500 mt-8">
+      <div className="h-full bg-nexus-bg-primary p-4">
+        <div className="text-center text-nexus-text-muted mt-8">
           <svg
-            className="w-12 h-12 mx-auto mb-2 text-gray-600"
+            className="w-12 h-12 mx-auto mb-2 opacity-50"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -68,10 +68,10 @@ export function BacklinksPanel({ noteId, onSelectNote, refreshKey = 0 }: Backlin
   }
 
   return (
-    <div className="h-full bg-gray-900 border-l border-gray-700 flex flex-col">
+    <div className="h-full bg-nexus-bg-primary flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-gray-700">
-        <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wide">
+      <div className="p-4 border-b border-white/5">
+        <h2 className="text-sm font-semibold text-nexus-text-muted uppercase tracking-wide">
           Links
         </h2>
       </div>
@@ -79,12 +79,12 @@ export function BacklinksPanel({ noteId, onSelectNote, refreshKey = 0 }: Backlin
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="p-4 text-center text-gray-500 text-sm">Loading links...</div>
+          <div className="p-4 text-center text-nexus-text-muted text-sm">Loading links...</div>
         ) : (
           <>
             {/* Backlinks Section */}
-            <div className="p-4 border-b border-gray-800">
-              <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2 flex items-center">
+            <div className="p-4 border-b border-white/5">
+              <h3 className="text-xs font-medium text-nexus-text-muted uppercase tracking-wide mb-2 flex items-center">
                 <svg
                   className="w-4 h-4 mr-1.5"
                   fill="none"
@@ -102,19 +102,19 @@ export function BacklinksPanel({ noteId, onSelectNote, refreshKey = 0 }: Backlin
               </h3>
 
               {backlinks.length === 0 ? (
-                <p className="text-xs text-gray-500">No notes link here yet</p>
+                <p className="text-xs text-nexus-text-muted opacity-60">No notes link here yet</p>
               ) : (
                 <div className="space-y-1">
                   {backlinks.map((note) => (
                     <button
                       key={note.id}
                       onClick={() => onSelectNote(note.id)}
-                      className="w-full text-left px-2 py-1.5 rounded hover:bg-gray-800 transition-colors group"
+                      className="w-full text-left px-2 py-1.5 rounded hover:bg-white/5 transition-colors group"
                     >
-                      <div className="text-sm text-gray-300 group-hover:text-white truncate">
+                      <div className="text-sm text-nexus-text-primary group-hover:text-nexus-accent truncate">
                         {note.title}
                       </div>
-                      <div className="text-xs text-gray-500 mt-0.5">
+                      <div className="text-xs text-nexus-text-muted mt-0.5">
                         {note.folder}
                       </div>
                     </button>
@@ -125,7 +125,7 @@ export function BacklinksPanel({ noteId, onSelectNote, refreshKey = 0 }: Backlin
 
             {/* Outgoing Links Section */}
             <div className="p-4">
-              <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2 flex items-center">
+              <h3 className="text-xs font-medium text-nexus-text-muted uppercase tracking-wide mb-2 flex items-center">
                 <svg
                   className="w-4 h-4 mr-1.5"
                   fill="none"
@@ -143,19 +143,19 @@ export function BacklinksPanel({ noteId, onSelectNote, refreshKey = 0 }: Backlin
               </h3>
 
               {outgoingLinks.length === 0 ? (
-                <p className="text-xs text-gray-500">No outgoing links yet</p>
+                <p className="text-xs text-nexus-text-muted opacity-60">No outgoing links yet</p>
               ) : (
                 <div className="space-y-1">
                   {outgoingLinks.map((note) => (
                     <button
                       key={note.id}
                       onClick={() => onSelectNote(note.id)}
-                      className="w-full text-left px-2 py-1.5 rounded hover:bg-gray-800 transition-colors group"
+                      className="w-full text-left px-2 py-1.5 rounded hover:bg-white/5 transition-colors group"
                     >
-                      <div className="text-sm text-gray-300 group-hover:text-white truncate">
+                      <div className="text-sm text-nexus-text-primary group-hover:text-nexus-accent truncate">
                         {note.title}
                       </div>
-                      <div className="text-xs text-gray-500 mt-0.5">
+                      <div className="text-xs text-nexus-text-muted mt-0.5">
                         {note.folder}
                       </div>
                     </button>

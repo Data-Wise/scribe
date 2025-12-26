@@ -81,21 +81,28 @@ export function SimpleTagAutocomplete({
   return (
     <div
       ref={listRef}
-      className="tag-autocomplete fixed z-50 w-80 max-h-80 overflow-y-auto bg-gray-800 border border-gray-700 rounded-lg shadow-xl"
-      style={{ top: `${position.top}px`, left: `${Math.min(position.left, window.innerWidth - 340)}px` }}
+      className="tag-autocomplete fixed z-50 w-80 max-h-80 overflow-y-auto rounded-lg shadow-xl"
+      style={{
+        top: `${position.top}px`,
+        left: `${Math.min(position.left, window.innerWidth - 340)}px`,
+        backgroundColor: 'var(--nexus-bg-tertiary)',
+        border: '1px solid var(--nexus-bg-secondary)'
+      }}
     >
       {loading ? (
-        <div className="p-3 text-gray-400 text-sm">Loading tags...</div>
+        <div className="p-3 text-sm" style={{ color: 'var(--nexus-text-muted)' }}>Loading tags...</div>
       ) : tags.length === 0 && !query.trim() ? (
-        <div className="p-3 text-gray-400 text-sm">No tags available</div>
+        <div className="p-3 text-sm" style={{ color: 'var(--nexus-text-muted)' }}>No tags available</div>
       ) : (
         <div>
           {tags.map((tag, index) => (
             <button
               key={tag.id}
-              className={`w-full text-left px-4 py-2.5 border-b border-gray-700
-                hover:bg-gray-700 transition-colors
-                ${index === selectedIndex ? 'bg-gray-700' : 'bg-gray-800'}`}
+              className="w-full text-left px-4 py-2.5 transition-colors"
+              style={{
+                backgroundColor: index === selectedIndex ? 'var(--nexus-bg-secondary)' : 'transparent',
+                borderBottom: '1px solid var(--nexus-bg-secondary)'
+              }}
               onClick={() => onSelect(tag.name)}
               onMouseEnter={() => setSelectedIndex(index)}
             >
@@ -105,10 +112,16 @@ export function SimpleTagAutocomplete({
                     className="inline-block w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: tag.color || generateTagColor(tag.name) }}
                   />
-                  <span className="text-sm font-medium text-white truncate">#{tag.name}</span>
+                  <span className="text-sm font-medium truncate" style={{ color: 'var(--nexus-text-primary)' }}>#{tag.name}</span>
                 </div>
                 <div className="ml-3 flex-shrink-0">
-                  <span className="inline-block px-2 py-0.5 text-xs rounded bg-gray-700 text-gray-300">
+                  <span
+                    className="inline-block px-2 py-0.5 text-xs rounded"
+                    style={{
+                      backgroundColor: 'var(--nexus-bg-secondary)',
+                      color: 'var(--nexus-text-muted)'
+                    }}
+                  >
                     {(tag as any).note_count || 0} notes
                   </span>
                 </div>
@@ -117,15 +130,16 @@ export function SimpleTagAutocomplete({
           ))}
           {query.trim() && (
             <button
-              className={`w-full text-left px-4 py-2.5
-                hover:bg-gray-700 transition-colors
-                ${selectedIndex === tags.length ? 'bg-gray-700' : 'bg-gray-800'}`}
+              className="w-full text-left px-4 py-2.5 transition-colors"
+              style={{
+                backgroundColor: selectedIndex === tags.length ? 'var(--nexus-bg-secondary)' : 'transparent'
+              }}
               onClick={() => onSelect(query)}
               onMouseEnter={() => setSelectedIndex(tags.length)}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-400">Create new tag:</span>
-                <span className="text-sm font-medium text-blue-400">#{query}</span>
+                <span className="text-sm" style={{ color: 'var(--nexus-text-muted)' }}>Create new tag:</span>
+                <span className="text-sm font-medium" style={{ color: 'var(--nexus-accent)' }}>#{query}</span>
               </div>
             </button>
           )}

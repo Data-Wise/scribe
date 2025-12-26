@@ -397,5 +397,77 @@ pub fn is_homebrew_available() -> bool {
         .unwrap_or(false)
 }
 
+// Academic commands (citations & export)
+
+use crate::academic::{Citation, ExportOptions, ExportResult};
+use std::sync::RwLock;
+
+// Global state for bibliography path
+lazy_static::lazy_static! {
+    static ref BIB_PATH: RwLock<Option<String>> = RwLock::new(None);
+    static ref CITATIONS_CACHE: RwLock<Vec<Citation>> = RwLock::new(Vec::new());
+}
+
+/// Set bibliography file path
+#[tauri::command]
+pub fn set_bibliography_path(path: String) -> Result<(), String> {
+    let mut bib_path = BIB_PATH.write().map_err(|e| e.to_string())?;
+    *bib_path = Some(path.clone());
+
+    // Load citations into cache
+    let citations = crate::academic::read_bibliography(std::path::Path::new(&path))?;
+    let mut cache = CITATIONS_CACHE.write().map_err(|e| e.to_string())?;
+    *cache = citations;
+
+    Ok(())
+}
+
+/// Get bibliography file path
+#[tauri::command]
+pub fn get_bibliography_path() -> Option<String> {
+    BIB_PATH.read().ok().and_then(|p| p.clone())
+}
+
+/// Get all citations from cached bibliography
+#[tauri::command]
+pub fn get_citations() -> Result<Vec<Citation>, String> {
+    let cache = CITATIONS_CACHE.read().map_err(|e| e.to_string())?;
+    Ok(cache.clone())
+}
+
+/// Search citations by query
+#[tauri::command]
+pub fn search_citations(query: String) -> Result<Vec<Citation>, String> {
+    let cache = CITATIONS_CACHE.read().map_err(|e| e.to_string())?;
+    Ok(crate::academic::search_citations(&cache, &query))
+}
+
+/// Get citation by key
+#[tauri::command]
+pub fn get_citation_by_key(key: String) -> Result<Option<Citation>, String> {
+    let cache = CITATIONS_CACHE.read().map_err(|e| e.to_string())?;
+    Ok(cache.iter().find(|c| c.key == key).cloned())
+}
+
+/// Check if Pandoc is available
+#[tauri::command]
+pub fn is_pandoc_available() -> bool {
+    crate::academic::is_pandoc_available()
+}
+
+/// Export document using Pandoc
+#[tauri::command]
+pub fn export_document(options: ExportOptions) -> Result<ExportResult, String> {
+    // Get output directory from user's Documents folder
+    let output_dir = dirs::document_dir()
+        .ok_or("Could not find Documents directory")?
+        .join("Scribe Exports");
+
+    std::fs::create_dir_all(&output_dir)
+        .map_err(|e| format!("Failed to create export directory: {}", e))?;
+
+    crate::academic::export_document(&options, &output_dir)
+}
+
 
 

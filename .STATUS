@@ -1,19 +1,20 @@
 ---
 status: active
 priority: P1
-progress: 80
+progress: 85
 version: 0.4.0-alpha.1
-sprint: 10.5
+sprint: 11
 updated: 2024-12-26
 editor: hybrid-markdown++
-next_sprint: 11
-next_focus: Academic Features
-tests: 407
+next_sprint: 12
+next_focus: Export Polish
+tests: 487
 tags:
   - adhd-friendly
   - distraction-free
   - tauri
   - react
+  - academic
 ---
 
 # Scribe
@@ -22,23 +23,27 @@ tags:
 
 ## Current Sprint
 
-**Sprint 10.5: Theme & Font System** ✅ Complete
+**Sprint 11: Academic Features** ✅ Complete
 
 **Latest Updates (2024-12-26):**
+- [x] MathJax 3 integration for LaTeX rendering
+- [x] MathRenderer component (inline $...$ and display $$...$$)
+- [x] CitationAutocomplete (@trigger for Pandoc citations)
+- [x] ExportDialog (PDF, Word, LaTeX, HTML via Pandoc)
+- [x] BibTeX parser (Rust backend)
+- [x] Citation search API
+- [x] 5 citation styles (APA, Chicago, MLA, IEEE, Harvard)
+- [x] Academic.test.ts (67 new tests)
+- [x] AcademicComponents.test.tsx (25 new tests)
+- [x] **487 tests passing** (67 Academic + 16 Debug tests)
+- [x] React Error Boundary for crash resilience
+- [x] MathJax SVG rendering with rehype-raw integration
+
+**Sprint 10.5: Theme & Font System** ✅ Complete (earlier today)
 - [x] 10 built-in themes (5 dark, 5 light)
 - [x] Auto-theme by time of day
-- [x] Custom theme creator
-- [x] Theme import/export (JSON + Base16 YAML)
-- [x] Theme import from URL (GitHub Gists, raw URLs)
-- [x] Theme keyboard shortcuts (Cmd+Alt+0-9, editable)
-- [x] Font settings (family, size, line height)
+- [x] Theme colors apply to editor area
 - [x] 14 ADHD-friendly font recommendations
-- [x] One-click Homebrew font installation
-- [x] Font detection via fc-list
-- [x] Category filter tabs (All/Sans/Serif/Mono)
-- [x] Font preview with "Use" button
-- [x] **Theme colors apply to editor area** (fixed 2024-12-26)
-- [x] **407 tests passing** (101 new Theme & Font tests)
 
 **Sprint 10: Global Hotkey + Commands** ✅ Complete (2024-12-25)
 - [x] Global hotkey ⌘⇧N opens app from anywhere
@@ -52,15 +57,18 @@ tags:
 | Test File | Tests |
 |-----------|-------|
 | Themes.test.ts | 101 |
+| Academic.test.ts | 67 |
 | Validation.test.ts | 54 |
 | Tags.test.tsx | 52 |
+| HybridEditor.test.tsx | 37 |
 | BlockNoteEditor.test.tsx | 35 |
 | Autocomplete.test.tsx | 34 |
-| HybridEditor.test.tsx | 32 |
 | Integration.test.tsx | 32 |
+| AcademicComponents.test.tsx | 25 |
 | CommandPalette.test.tsx | 24 |
 | Components.test.tsx | 16 |
 | WikiLinks.test.tsx | 16 (7 skipped) |
+| Debug.test.ts | 16 |
 | NotesStore.test.tsx | 13 |
 
 ---
@@ -73,13 +81,13 @@ tags:
 | 1 | 9 | Editor Enhancement | ✅ 100% |
 | 1 | 10 | Hotkey + Commands | ✅ 100% |
 | 1 | 10.5 | Theme & Font System | ✅ 100% |
-| **2** | 11 | Academic Features | ⏳ Next |
-| 2 | 12 | Export (PDF/Word) | ○ 0% |
+| **2** | 11 | Academic Features | ✅ 100% |
+| 2 | 12 | Export Polish | ⏳ Next |
 | **3** | 13 | Project System | ○ 0% |
 | 3 | 14 | Templates + Daily | ○ 0% |
 | **4** | 15 | Search + Goals | ○ 0% |
 
-**Total: 80% complete (48h / 60h estimated)**
+**Total: 85% complete (51h / 60h estimated)**
 
 ---
 
@@ -94,6 +102,7 @@ tags:
 | 9 | Editor Enhancement | 125 |
 | 10 | Hotkey + Commands + Tests | 300 |
 | 10.5 | Theme & Font System | 407 |
+| 11 | Academic Features | 487 |
 
 ---
 
@@ -122,6 +131,13 @@ tags:
 - Command palette ⌘K
 - Quick actions: Create, Daily, Focus, Sync, Claude, Gemini
 - Keyboard shortcuts: ⌘N, ⌘D, ⌘B, ⌘⇧B
+
+**Academic:**
+- MathJax 3 for LaTeX rendering ($...$ inline, $$...$$ display)
+- Citation autocomplete (@trigger)
+- BibTeX/Zotero integration
+- Export to PDF, Word, LaTeX, HTML (via Pandoc)
+- 5 citation styles (APA, Chicago, MLA, IEEE, Harvard)
 
 **Accessibility:**
 - Screen reader support (DialogTitle, DialogDescription)

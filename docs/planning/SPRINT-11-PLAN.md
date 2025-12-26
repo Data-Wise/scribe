@@ -1,17 +1,17 @@
 # Sprint 11: Academic Features
 
 > **Status:** Ready to Start
-> **Effort:** 8 hours estimated
+> **Effort:** 9 hours estimated
 > **Priority:** P1
 > **Target Start:** 2024-12-26
-> **Prerequisites:** Sprint 10.5 (Theme & Font System) ✅ Complete
-> **Tests:** 407 passing (101 new Theme & Font tests added)
+> **Prerequisites:** Sprint 10.6 (Panel Menus) ✅ Complete
+> **Tests:** 407 passing
 
 ---
 
 ## Goal
 
-Add academic writing features: Zotero integration, Pandoc export, citation autocomplete, and KaTeX equations.
+Add academic writing features: Zotero integration, Pandoc export, citation autocomplete, and **powerful math rendering** with interactive editing.
 
 ---
 
@@ -20,7 +20,7 @@ Add academic writing features: Zotero integration, Pandoc export, citation autoc
 - [ ] Zotero integration via Better BibTeX
 - [ ] Citation autocomplete (`@cite` triggers suggestion)
 - [ ] Pandoc export (LaTeX, PDF, Word)
-- [ ] KaTeX equation rendering
+- [ ] MathJax 3 equation rendering (inline & block)
 - [ ] Tests for all new features
 - [ ] CHANGELOG updated
 - [ ] .STATUS updated
@@ -35,6 +35,7 @@ Add academic writing features: Zotero integration, Pandoc export, citation autoc
 
 **Files:**
 - `src-tauri/src/academic/zotero.rs` (NEW)
+- `src-tauri/src/academic/mod.rs` (NEW)
 - `src-tauri/src/commands.rs` (add Tauri commands)
 
 **Implementation:**
@@ -52,12 +53,16 @@ pub struct Citation {
     pub authors: Vec<String>,
     pub year: u16,
     pub journal: Option<String>,
+    pub doi: Option<String>,
 }
 ```
 
 **Tauri Commands:**
 - `get_citations` - Return all citations from configured .bib file
 - `search_citations` - Filter citations by query
+- `get_citation_by_key` - Get single citation details
+
+---
 
 ### 2. Citation Autocomplete (2h)
 
@@ -66,14 +71,6 @@ pub struct Citation {
 **Files:**
 - `src/renderer/src/components/CitationAutocomplete.tsx` (NEW)
 - `src/renderer/src/components/HybridEditor.tsx` (integrate)
-
-**Implementation:**
-```tsx
-// Similar to SimpleTagAutocomplete
-// Triggers on @ character
-// Shows citation key, title, authors, year
-// Inserts [@key] on selection
-```
 
 **UI:**
 ```
@@ -89,9 +86,121 @@ pub struct Citation {
 └─────────────────────────────────────┘
 ```
 
-### 3. Pandoc Export (2h)
+**Behavior:**
+- Trigger on `@` character
+- Show citation key, title, authors, year
+- Insert `[@key]` on selection (Pandoc citation format)
+- Highlight existing citations in editor
 
-**Goal:** Export notes to LaTeX, PDF, Word.
+---
+
+### 3. Math Rendering — MathJax 3 (2h)
+
+**Goal:** Full LaTeX math rendering with MathJax 3.
+
+**Why MathJax:**
+- Full LaTeX compatibility (amsmath, physics, etc.)
+- Single dependency (no hybrid complexity)
+- Excellent accessibility (screen readers)
+- SVG output (crisp at any scale)
+- Active development, widely used in academia
+
+**Architecture:**
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Math Pipeline                        │
+├─────────────────────────────────────────────────────────┤
+│  Input: $\int_0^\infty$  or  $$\sum_{n=1}^N$$          │
+│                         ↓                               │
+│                  ┌──────────────┐                       │
+│                  │   MathJax 3  │                       │
+│                  │  (tex2svg)   │                       │
+│                  └──────────────┘                       │
+│                         ↓                               │
+│              Rendered SVG / Error Message               │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Files:**
+- `src/renderer/src/components/MathRenderer.tsx` (NEW)
+- `src/renderer/src/components/MarkdownPreview.tsx` (integrate)
+- `src/renderer/src/lib/mathjax.ts` (NEW) - config & render
+
+**Implementation:**
+
+```tsx
+// lib/mathjax.ts - MathJax configuration
+import { mathjax } from 'mathjax-full/js/mathjax'
+import { TeX } from 'mathjax-full/js/input/tex'
+import { SVG } from 'mathjax-full/js/output/svg'
+import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages'
+
+const tex = new TeX({ packages: AllPackages })
+const svg = new SVG({ fontCache: 'local' })
+const adaptor = liteAdaptor()
+
+export function renderMath(latex: string, display: boolean): string {
+  const node = mathjax.document('', { InputJax: tex, OutputJax: svg })
+  const html = node.convert(latex, { display })
+  return adaptor.outerHTML(html)
+}
+```
+
+```tsx
+// MathRenderer.tsx - Display component
+interface MathRendererProps {
+  tex: string
+  display?: boolean  // inline ($) vs block ($$)
+}
+
+export function MathRenderer({ tex, display = false }: MathRendererProps) {
+  const [html, setHtml] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      const rendered = renderMath(tex, display)
+      setHtml(rendered)
+      setError(null)
+    } catch (e) {
+      setError(`Math error: ${e.message}`)
+    }
+  }, [tex, display])
+
+  if (error) {
+    return <span className="math-error">{error}</span>
+  }
+
+  return (
+    <span
+      className={display ? 'math-block' : 'math-inline'}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  )
+}
+```
+
+**Supported Syntax:**
+| Syntax | Type | Example |
+|--------|------|---------|
+| `$...$` | Inline | `$E = mc^2$` |
+| `$$...$$` | Block | `$$\int_0^\infty e^{-x^2} dx$$` |
+| `\begin{align}` | Multi-line | Aligned equations |
+| `\begin{cases}` | Piecewise | Conditional functions |
+| `\mathbf`, `\mathrm` | Fonts | Bold, roman text |
+
+**MathJax Packages Included:**
+- `amsmath` - Aligned equations, matrices
+- `amssymb` - Extended symbols
+- `physics` - Physics notation
+- `cancel` - Strike-through
+- `color` - Colored math
+
+---
+
+### 4. Pandoc Export (2h)
+
+**Goal:** Export notes to LaTeX, PDF, Word with citations.
 
 **Files:**
 - `src-tauri/src/academic/pandoc.rs` (NEW)
@@ -99,13 +208,12 @@ pub struct Citation {
 
 **Implementation:**
 ```rust
-// Execute pandoc command
 pub async fn export_document(
     input: &str,
     output_format: ExportFormat,
     bibliography: Option<&str>,
     csl: Option<&str>,
-) -> Result<String, Error>
+) -> Result<PathBuf, Error>
 
 pub enum ExportFormat {
     Latex,
@@ -115,37 +223,22 @@ pub enum ExportFormat {
 }
 ```
 
-**Pandoc Command:**
-```bash
-pandoc input.md -o output.pdf \
-  --citeproc \
-  --bibliography=refs.bib \
-  --csl=apa.csl
+**Export Dialog UI:**
 ```
-
-### 4. KaTeX Equations (1h)
-
-**Goal:** Render LaTeX equations in preview mode.
-
-**Files:**
-- `src/renderer/src/components/HybridEditor.tsx` (add KaTeX)
-
-**Implementation:**
-```tsx
-// Add KaTeX CSS import
-import 'katex/dist/katex.min.css';
-
-// Use react-katex for rendering
-import { InlineMath, BlockMath } from 'react-katex';
-
-// Detect equation patterns:
-// Inline: $...$
-// Block: $$...$$
+┌─────────────────────────────────────┐
+│  Export Note                    ✕   │
+├─────────────────────────────────────┤
+│  Format:  ○ PDF  ○ Word  ○ LaTeX   │
+│                                     │
+│  Bibliography: ~/Zotero/library.bib │
+│  Citation Style: APA 7th           │
+│                                     │
+│  [ ] Include metadata               │
+│  [ ] Process equations              │
+│                                     │
+│         [Cancel]  [Export]          │
+└─────────────────────────────────────┘
 ```
-
-**Examples:**
-- Inline: `$E = mc^2$` → E = mc²
-- Block: `$$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$$`
 
 ---
 
@@ -153,13 +246,13 @@ import { InlineMath, BlockMath } from 'react-katex';
 
 ### npm packages
 ```bash
-npm install katex react-katex
-npm install -D @types/katex
+# Math rendering (MathJax 3 - full version)
+npm install mathjax-full
 ```
 
-### User Requirements
-- Zotero + Better BibTeX installed
-- Pandoc installed (`brew install pandoc`)
+### User Requirements (optional)
+- Zotero + Better BibTeX (for citations)
+- Pandoc (`brew install pandoc`)
 - LaTeX for PDF export (`brew install --cask mactex-no-gui`)
 
 ---
@@ -169,33 +262,38 @@ npm install -D @types/katex
 ### Unit Tests
 - `Zotero.test.ts` - BibTeX parsing
 - `Citation.test.tsx` - Autocomplete component
+- `MathRenderer.test.tsx` - MathJax rendering (inline/block)
 - `Export.test.ts` - Pandoc command generation
-- `Equation.test.tsx` - KaTeX rendering
 
 ### Integration Tests
 - Citation workflow: type `@` → select → insert
+- Math workflow: type `$...$` → renders in preview
 - Export workflow: open dialog → select format → export
-- Equation rendering in preview mode
 
 ### Manual Testing
 - [ ] Configure .bib path in settings
 - [ ] Type `@` → see citation suggestions
 - [ ] Select citation → `[@key]` inserted
+- [ ] Type `$E=mc^2$` → renders inline in preview
+- [ ] Type `$$\int...$$` → renders block in preview
+- [ ] Complex LaTeX (`\begin{align}`) renders correctly
+- [ ] Math errors show helpful message
 - [ ] Export to PDF with citations
 - [ ] Export to Word with citations
-- [ ] Inline equation renders
-- [ ] Block equation renders
 
 ---
 
 ## Definition of Done
 
 - [ ] Zotero .bib file readable
-- [ ] Citation autocomplete works
+- [ ] Citation autocomplete works (`@` trigger)
+- [ ] MathJax renders inline `$...$` equations
+- [ ] MathJax renders block `$$...$$` equations
+- [ ] Complex LaTeX works (`\begin{align}`, etc.)
+- [ ] Math errors display gracefully
 - [ ] Pandoc export to LaTeX/PDF/Word
-- [ ] KaTeX equations render
-- [ ] 20+ new tests passing
-- [ ] Total tests > 320
+- [ ] 25+ new tests passing
+- [ ] Total tests > 430
 - [ ] No console errors
 - [ ] CHANGELOG updated
 - [ ] .STATUS updated
@@ -208,8 +306,55 @@ npm install -D @types/katex
 |------|------------|
 | Pandoc not installed | Graceful error + installation instructions |
 | .bib file not found | Settings dialog to configure path |
-| Large bibliography slow | Cache parsed entries |
-| KaTeX render errors | Fallback to raw text |
+| Large bibliography slow | Cache parsed entries, debounce search |
+| MathJax bundle size (~2MB) | Lazy load on first math render |
+| MathJax slow first render | Show loading indicator, cache SVG |
+| Invalid LaTeX syntax | Show error message with raw text |
+
+---
+
+## Implementation Order
+
+```
+Day 1 (3h):
+├── npm install mathjax-full
+├── MathRenderer component
+├── lib/mathjax.ts configuration
+└── Integrate into MarkdownPreview
+
+Day 2 (4h):
+├── Zotero BibTeX parsing (Rust)
+├── Citation autocomplete (@)
+└── Highlight citations in editor
+
+Day 3 (2h):
+├── Pandoc export dialog
+├── Export to PDF/Word/LaTeX
+└── Tests & polish
+```
+
+---
+
+## Sprint 10.6 Completed (Panel Menus) ✅
+
+Before Sprint 11, we completed:
+- **PanelMenu component** using Radix UI
+- **Left sidebar menu**: Sort (Name/Modified/Created), View (Default/Compact)
+- **Right sidebar menu**: Context-aware per tab
+  - Properties: Add property, Collapse all
+  - Backlinks: Sort (Name/Date), Toggle outgoing
+  - Tags: Sort (A-Z/Count), Bulk edit
+- **All preferences persist in localStorage**
+
+---
+
+## Follow-up (Sprint 12)
+
+After academic features:
+- Wire up sorting preferences to BacklinksPanel/TagsPanel
+- Obsidian sync improvements
+- Project system foundation
+- Settings persistence (move from localStorage to SQLite)
 
 ---
 
@@ -224,32 +369,20 @@ npm install -D @types/katex
 Default to APA 7th edition. CSL files from:
 https://www.zotero.org/styles
 
+### Math Syntax Support (MathJax 3)
+| Syntax | Type | Example |
+|--------|------|---------|
+| `$x^2$` | Inline | Renders in-line with text |
+| `$$\int_0^1$$` | Block | Centered, display mode |
+| `\begin{align}` | Multi-line | Aligned equations |
+| `\begin{cases}` | Piecewise | Conditional functions |
+| `\mathbf{x}` | Bold | Vector notation |
+| `\frac{a}{b}` | Fraction | Stacked fraction |
+
 ---
 
-## Follow-up (Sprint 12)
+## Current State
 
-After academic features:
-- Obsidian sync
-- Project system foundation
-- Settings persistence
-
----
-
-## Related Commits (Sprint 10.5 - Theme & Font System)
-
-```
-c1a0313 polish: Category filter tabs, font previews, and 'Use' button
-9a8560b polish: Font management UI improvements
-3ec70bc feat: Font management with Homebrew installation and ADHD-friendly recommendations
-a8557cd feat: Font settings with Homebrew fonts, editable theme shortcuts
-bf83a14 feat: URL theme import, font settings, and keyboard shortcuts
-b1c5427 feat: Theme import/export with Base16 support and live preview
-4ac7aca feat: Add auto-theme by time and custom theme creator
-641f5c5 feat: Add 10 ADHD-friendly themes (5 dark, 5 light)
-049a16f feat: Default note properties, word goal progress bar, and theme persistence
-```
-
-**Current State:**
-- 306 tests passing
-- TypeScript: 0 errors
-- Rust: Compiles (1 dead code warning)
+- **Tests:** 407 passing
+- **TypeScript:** 0 errors
+- **New packages:** @radix-ui/react-dropdown-menu (for panel menus)

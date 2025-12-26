@@ -29,4 +29,6 @@ regex = "1.10"
 tauri-plugin-global-shortcut = "2.3.1"
 tauri-plugin-dialog = "2.4.2"
 chrono = "0.4.42"
+lazy_static = "1.4"
+dirs = "5.0"
 

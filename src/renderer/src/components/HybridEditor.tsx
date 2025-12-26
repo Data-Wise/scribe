@@ -1,8 +1,11 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
+import { CitationAutocomplete } from './CitationAutocomplete'
+import { processMathInContent } from '../lib/mathjax'
 import { Note, Tag } from '../types'
 
 interface HybridEditorProps {
@@ -45,6 +48,7 @@ export function HybridEditor({
   // Autocomplete state with cursor position
   const [wikiLinkTrigger, setWikiLinkTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
   const [tagTrigger, setTagTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
+  const [citationTrigger, setCitationTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
 
   // Toggle between write and preview modes
   const toggleMode = useCallback(() => {
@@ -115,21 +119,41 @@ export function HybridEditor({
     if (tagMatch) {
       const query = tagMatch[1]
       console.log('[HybridEditor] Tag trigger detected:', query)
-      
+
       const rect = textarea.getBoundingClientRect()
       const position = {
         top: rect.top + 30,
         left: rect.left + 50
       }
-      
+
       setTagTrigger({ query, position })
       setWikiLinkTrigger(null)
+      setCitationTrigger(null)
+      return
+    }
+
+    // Check for citation trigger @
+    const citeMatch = textBeforeCursor.match(/@([a-zA-Z0-9_:-]*)$/)
+    if (citeMatch) {
+      const query = citeMatch[1]
+      console.log('[HybridEditor] Citation trigger detected:', query)
+
+      const rect = textarea.getBoundingClientRect()
+      const position = {
+        top: rect.top + 30,
+        left: rect.left + 50
+      }
+
+      setCitationTrigger({ query, position })
+      setWikiLinkTrigger(null)
+      setTagTrigger(null)
       return
     }
 
     // No triggers active
     setWikiLinkTrigger(null)
     setTagTrigger(null)
+    setCitationTrigger(null)
   }, [onChange])
 
   // Handle wiki-link selection from autocomplete
@@ -207,17 +231,48 @@ export function HybridEditor({
     setTagTrigger(null)
   }, [content, onChange])
 
+  // Handle citation selection from autocomplete
+  const handleCitationSelect = useCallback((key: string) => {
+    console.log('[HybridEditor] Citation selected:', key)
+
+    const textarea = textareaRef.current
+    if (!textarea) return
+
+    const text = content
+    const cursorPos = textarea.selectionStart
+
+    // Find the @ position before cursor
+    const textBeforeCursor = text.substring(0, cursorPos)
+    const atPos = textBeforeCursor.lastIndexOf('@')
+
+    if (atPos !== -1) {
+      // Replace @query with [@key] (Pandoc citation format)
+      const newText = text.substring(0, atPos) + `[@${key}]` + text.substring(cursorPos)
+      onChange(newText)
+
+      // Set cursor position after the inserted citation
+      const newCursorPos = atPos + key.length + 4 // [@key]
+      setTimeout(() => {
+        textarea.focus()
+        textarea.setSelectionRange(newCursorPos, newCursorPos)
+      }, 10)
+    }
+
+    setCitationTrigger(null)
+  }, [content, onChange])
+
   // Handle keyboard navigation in autocomplete
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Close autocomplete on Escape
     if (e.key === 'Escape') {
-      if (wikiLinkTrigger || tagTrigger) {
+      if (wikiLinkTrigger || tagTrigger || citationTrigger) {
         e.preventDefault()
         setWikiLinkTrigger(null)
         setTagTrigger(null)
+        setCitationTrigger(null)
       }
     }
-  }, [wikiLinkTrigger, tagTrigger])
+  }, [wikiLinkTrigger, tagTrigger, citationTrigger])
 
   // Word count
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
@@ -248,7 +303,7 @@ export function HybridEditor({
             value={content}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Start writing... Type [[ for wiki-links, # for tags"
+            placeholder="Start writing... [[ wiki-links, # tags, @ citations, $math$"
             className="hybrid-editor-textarea w-full h-full min-h-[calc(100vh-200px)] bg-transparent focus:outline-none resize-none"
             style={{
               fontFamily: 'var(--editor-font-family)',
@@ -299,6 +354,16 @@ export function HybridEditor({
         />
       )}
 
+      {/* Citation autocomplete */}
+      {citationTrigger && (
+        <CitationAutocomplete
+          query={citationTrigger.query}
+          position={citationTrigger.position}
+          onSelect={handleCitationSelect}
+          onClose={() => setCitationTrigger(null)}
+        />
+      )}
+
       {/* Status bar - minimal */}
       <div 
         className="px-4 py-2 text-xs flex justify-between"
@@ -332,12 +397,14 @@ function MarkdownPreview({
 }) {
   // Process wiki-links [[Title]] and tags #tag before rendering
   const processedContent = processWikiLinksAndTags(content)
-  
-  console.log('[MarkdownPreview] Rendering:', { original: content.slice(0, 50), processed: processedContent.slice(0, 50) })
+
+  // Process math expressions in content (converts $...$ and $$...$$ to SVG)
+  const contentWithMath = processMathInContent(processedContent)
 
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw]}  // Allow raw HTML for rendered math SVG
       components={{
         // Headings with theme-aware styling
         h1: ({ children }) => (
@@ -364,14 +431,11 @@ function MarkdownPreview({
         a: (props) => {
           const href = props.href || ''
           const children = props.children
-          
-          console.log('[MarkdownPreview] Link href:', href)
-          
+
           // Check for wiki-link (https://wikilink.internal/Title)
           if (href?.includes('wikilink.internal/')) {
             const titleEncoded = href.split('wikilink.internal/')[1]
             const title = decodeURIComponent(titleEncoded || '')
-            console.log('[MarkdownPreview] Wiki-link detected:', title)
             return (
               <span
                 role="button"
@@ -379,7 +443,6 @@ function MarkdownPreview({
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  console.log('[MarkdownPreview] Wiki-link clicked:', title)
                   onWikiLinkClick?.(title)
                 }}
                 onKeyDown={(e) => {
@@ -395,8 +458,8 @@ function MarkdownPreview({
             )
           }
           return (
-            <a 
-              href={href} 
+            <a
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
@@ -417,11 +480,10 @@ function MarkdownPreview({
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  console.log('[MarkdownPreview] Tag clicked:', text)
                   onTagClick?.(text.substring(1))
                 }}
                 className="inline-block px-2 py-0.5 rounded text-sm cursor-pointer"
-                style={{ 
+                style={{
                   backgroundColor: 'color-mix(in srgb, var(--nexus-accent) 20%, transparent)',
                   color: 'var(--nexus-accent)'
                 }}
@@ -460,7 +522,7 @@ function MarkdownPreview({
         )
       }}
     >
-      {processedContent}
+      {contentWithMath}
     </ReactMarkdown>
   )
 }

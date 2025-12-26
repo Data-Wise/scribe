@@ -44,8 +44,8 @@ src-tauri/target/release/bundle/
 
 - **Version**: 0.4.0-alpha.1
 - **Architecture**: aarch64 (Apple Silicon)
-- **DMG Size**: ~5.1 MB
-- **SHA256**: `27c96d532d13612a846872edf1ffd04f19bb7987f6002dae15b2ef74120ac589`
+- **DMG Size**: ~5.5 MB
+- **SHA256**: `a25e44a2ad3ff2b2659171d22693e593a7f70ccfb226d1f16eab23166d6571cf`
 
 ---
 

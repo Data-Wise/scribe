@@ -175,6 +175,27 @@ body {
    Ribbon Navigation
    ============================================================ */
 
+/* ============================================================
+   Titlebar Drag Region (for Tauri Overlay titlebar style)
+   ============================================================ */
+
+.titlebar-drag-region {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  -webkit-app-region: drag;
+  z-index: 1000;
+}
+
+/* Prevent dragging on interactive elements */
+.titlebar-drag-region button,
+.titlebar-drag-region a,
+.titlebar-drag-region input {
+  -webkit-app-region: no-drag;
+}
+
 .ribbon {
   width: 48px;
   background: theme('colors.nexus-bg-primary');
@@ -182,7 +203,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px 8px;
+  padding: 40px 8px 12px; /* Extra top padding for traffic lights */
   flex-shrink: 0;
   z-index: 50;
 }
@@ -223,7 +244,7 @@ body {
 .sidebar-tabs {
   display: flex;
   background: theme('colors.nexus-bg-secondary');
-  padding: 8px 12px 0;
+  padding: 40px 12px 0 16px; /* Extra top/left padding for macOS traffic lights */
   gap: 4px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -777,4 +798,129 @@ mark {
   background: rgba(255, 255, 255, 0.05);
   padding: 2px 6px;
   border-radius: 4px;
+}
+
+/* ============================================================
+   Panel Menu (Radix Dropdown)
+   ADHD-friendly: minimal, clean, keyboard accessible
+   ============================================================ */
+
+.panel-menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: theme('colors.nexus-text-muted');
+  cursor: pointer;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+
+.panel-menu-trigger:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: theme('colors.nexus-text-primary');
+}
+
+.panel-menu-trigger:focus-visible {
+  outline: 2px solid theme('colors.nexus-accent');
+  outline-offset: 2px;
+}
+
+.panel-menu-trigger[data-state='open'] {
+  background: rgba(255, 255, 255, 0.08);
+  color: theme('colors.nexus-accent');
+}
+
+.panel-menu-content {
+  min-width: 180px;
+  background: theme('colors.nexus-bg-tertiary');
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  animation: panelMenuFadeIn 150ms ease;
+  z-index: 100;
+}
+
+@keyframes panelMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel-menu-label {
+  padding: 6px 8px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: theme('colors.nexus-text-muted');
+}
+
+.panel-menu-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+}
+
+.panel-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: theme('colors.nexus-text-primary');
+  transition: all 100ms ease;
+  outline: none;
+  user-select: none;
+}
+
+.panel-menu-item:hover,
+.panel-menu-item[data-highlighted] {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.panel-menu-item:focus-visible {
+  background: rgba(56, 189, 248, 0.1);
+  color: theme('colors.nexus-accent');
+}
+
+.panel-menu-item[data-disabled] {
+  color: theme('colors.nexus-text-muted');
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.panel-menu-check {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: theme('colors.nexus-accent');
+}
+
+.panel-menu-item-label {
+  flex: 1;
+}
+
+.panel-menu-shortcut {
+  margin-left: auto;
+  padding-left: 16px;
+  font-size: 11px;
+  color: theme('colors.nexus-text-muted');
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
