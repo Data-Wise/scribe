@@ -4,8 +4,8 @@
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
 [![Version](https://img.shields.io/badge/version-1.3.0--dev-blue)]()
-[![Progress](https://img.shields.io/badge/progress-70%25-green)]()
-[![Tests](https://img.shields.io/badge/tests-300%20passing-brightgreen)]()
+[![Progress](https://img.shields.io/badge/progress-75%25-green)]()
+[![Tests](https://img.shields.io/badge/tests-407%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -21,6 +21,8 @@ Scribe is a **distraction-free writing app** designed for academics and research
  |---------|-------------|
  | **HybridEditor** | Markdown write mode + rich preview |
  | **Focus Mode** | Distraction-free, one note at a time |
+ | **Themes** | 10 ADHD-friendly themes + custom creator |
+ | **Fonts** | 14 recommended fonts + Homebrew install |
 | **Projects** | Research, Teaching, R-Package, R-Dev, Generic |
 | **Daily Notes** | Auto-created with templates |
 | **Wiki Links** | `[[link]]` to connect notes |
@@ -164,13 +166,13 @@ npm run build        # Production build
 
 | Phase | Sprints | Focus | Hours | Status |
 |-------|---------|-------|-------|--------|
-| 1 | 8-10 | Editor + Hotkey | 14h | ✅ Complete |
+| 1 | 8-10.5 | Editor + Hotkey + Themes | 17h | ✅ Complete |
 | 2 | 11-12 | Academic + Obsidian | 16h | 🔄 Next |
 | 3 | 13-14 | Export | 12h | Pending |
 | 4 | 15-16 | Projects + Daily Notes | 12h | Pending |
 | 5 | 17 | Polish | 4h | Pending |
 
-**Progress: 42h / 60h (70%) — Sprint 11 Next**
+**Progress: 45h / 60h (75%) — Sprint 11 Next**
 
 See [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) for detailed sprint breakdown.
 

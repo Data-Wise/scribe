@@ -1,7 +1,7 @@
 # Test Coverage Summary - Scribe Editor
 
-**Generated:** 2024-12-25
-**Total Tests:** 300 passing (10 test files)
+**Generated:** 2024-12-26
+**Total Tests:** 407 passing (11 test files)
 **Test Framework:** Vitest + Testing Library + happy-dom
 
 ---
@@ -10,16 +10,115 @@
 
 | Test File | Tests | Coverage Area |
 |-----------|-------|---------------|
+| **Themes.test.ts** | 101 | Theme system, fonts, import/export |
 | **Validation.test.ts** | 54 | Regex, data validation, security, performance |
 | **Tags.test.tsx** | 52 | Tag CRUD, colors, filtering |
 | **BlockNoteEditor.test.tsx** | 35 | Legacy editor tests |
 | **Autocomplete.test.tsx** | 34 | Wiki-link/tag autocomplete, keyboard nav |
 | **HybridEditor.test.tsx** | 32 | Editor rendering, modes, highlighting |
-| **Integration.test.tsx** | 31 | Workflows, ADHD design verification |
+| **Integration.test.tsx** | 32 | Workflows, ADHD design verification |
 | **CommandPalette.test.tsx** | 24 | Quick actions, accessibility |
 | **Components.test.tsx** | 16 | UI components |
 | **WikiLinks.test.tsx** | 16 | Wiki-link system (7 skipped) |
 | **NotesStore.test.tsx** | 13 | Zustand state management |
+
+---
+
+## New in Sprint 10.5: Theme & Font Tests
+
+### Themes.test.ts (101 tests)
+
+**Built-in Themes (10 tests):**
+- 10 themes (5 dark, 5 light)
+- Required fields validation
+- Color format validation (#RRGGBB)
+- Dark themes have dark backgrounds (luminance < 0.2)
+- Light themes have light backgrounds (luminance > 0.8)
+- Unique IDs and names
+
+**Color Validation (10 tests):**
+- `isValidHexColor`: valid/invalid hex colors
+- `adjustBrightness`: lighten/darken colors, clamping
+
+**Auto-Theme Settings (6 tests):**
+- Default settings validation
+- Time-based theme switching
+- Day/night boundary conditions
+
+**Theme Generation (5 tests):**
+- `generateThemeFromColor`: dark/light variants
+- `createCustomTheme`: unique IDs, custom flag
+
+**Scribe JSON Import/Export (8 tests):**
+- Export to JSON schema v1
+- Color mapping
+- Author attribution
+- Roundtrip preservation
+- Shareable theme generation
+
+**Base16 Import/Export (12 tests):**
+- YAML parsing (colors without # prefix)
+- Scheme-to-theme conversion
+- Dark/light detection
+- Author in description
+- Export to Base16 YAML format
+
+**Popular Base16 Schemes (3 tests):**
+- 8 schemes included
+- Valid colors
+- Well-known schemes (Dracula, Nord, Solarized, etc.)
+
+**Theme Format Detection (5 tests):**
+- Detect Scribe JSON
+- Detect Base16 YAML
+- Import from any format
+
+**URL Handling (6 tests):**
+- GitHub Gist → raw URL
+- GitHub blob → raw URL
+- URL validation
+
+**Theme Shortcuts (5 tests):**
+- 10 default shortcuts (0-9)
+- Maps to built-in themes
+- `getThemeForShortcut` function
+
+**Font Settings (12 tests):**
+- Default settings (family, size, line height)
+- Size range (12-24px)
+- Line height range (1.4-2.2)
+- FONT_FAMILIES structure (12+ fonts)
+- Category validation (sans/serif/mono)
+- CSS font-family values
+
+**Recommended Fonts (15 tests):**
+- 14 ADHD-friendly fonts
+- Required fields
+- Unique IDs
+- Homebrew cask names
+- Premium font websites
+- Accessibility fonts included
+- iA Writer family (3 fonts)
+- ADHD benefit descriptions
+
+**Font Grouping (7 tests):**
+- Groups: installed, available, premium
+- Premium always in premium group
+- Installed detection by name
+- Case-insensitive matching
+- Total equals RECOMMENDED_FONTS count
+
+**Font CSS Generation (5 tests):**
+- System font fallback chain
+- Monospace fonts have monospace fallback
+- Serif fonts have serif fallback
+- Valid CSS font-family values
+
+**Edge Cases & Performance (4 tests):**
+- Empty theme names
+- Special characters
+- Long names
+- Color validation performance (10k ops < 100ms)
 
 ---
 
@@ -160,7 +259,7 @@
 
 ---
 
-### Integration.test.tsx (31 tests)
+### Integration.test.tsx (32 tests)
 
 **Editor + Autocomplete Integration:**
 - Wiki-link display and click
@@ -261,10 +360,10 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Tests** | 300 |
+| **Total Tests** | 407 |
 | **Pass Rate** | 100% |
-| **Test Files** | 10 |
-| **Test Duration** | ~1.5s |
+| **Test Files** | 11 |
+| **Test Duration** | ~1.4s |
 | **Skipped** | 7 (WikiLinks legacy) |
 
 ---
@@ -273,6 +372,8 @@
 
 | Area | Status | Tests |
 |------|--------|-------|
+| Theme System | ✅ | 72 |
+| Font System | ✅ | 29 |
 | Component Rendering | ✅ | 80+ |
 | State Management | ✅ | 13 |
 | Tag System | ✅ | 52 |
@@ -280,8 +381,8 @@
 | Regex Validation | ✅ | 20+ |
 | Data Validation | ✅ | 15+ |
 | Security | ✅ | 4 |
-| Performance | ✅ | 6 |
-| Integration | ✅ | 31 |
+| Performance | ✅ | 8 |
+| Integration | ✅ | 32 |
 | Accessibility | ✅ | 10+ |
 | ADHD Design | ✅ | 6 |
 
@@ -297,7 +398,7 @@ npm test
 npm test -- --coverage
 
 # Run specific file
-npm test -- src/renderer/src/__tests__/HybridEditor.test.tsx
+npm test -- src/renderer/src/__tests__/Themes.test.ts
 
 # Run in watch mode
 npm test -- --watch
@@ -322,6 +423,7 @@ npm test -- --reporter=verbose
 
 ```
 src/renderer/src/__tests__/
+├── Themes.test.ts             # Theme & font system (NEW)
 ├── Autocomplete.test.tsx      # Autocomplete components
 ├── BlockNoteEditor.test.tsx   # Legacy editor
 ├── CommandPalette.test.tsx    # Command palette
