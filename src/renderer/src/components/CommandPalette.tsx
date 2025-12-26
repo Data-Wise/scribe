@@ -1,5 +1,7 @@
 import React from 'react'
 import { Command } from 'cmdk'
+import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { Title as DialogTitle, Description as DialogDescription } from '@radix-ui/react-dialog'
 import { 
   FileText, 
   Plus, 
@@ -65,9 +67,17 @@ export function CommandPalette({
       label="Global Command Menu"
       className="command-palette-overlay"
     >
-      <div className="command-palette-content glass-effect">
+      {/* Accessible title and description for screen readers */}
+      <VisuallyHidden asChild>
+        <DialogTitle>Command Palette</DialogTitle>
+      </VisuallyHidden>
+      <VisuallyHidden asChild>
+        <DialogDescription>Search and execute quick actions</DialogDescription>
+      </VisuallyHidden>
+      
+      <div className="command-palette-content glass-effect" role="dialog" aria-label="Command palette">
         <div className="command-palette-header">
-          <Command.Input placeholder="Search everything..." className="command-palette-input" />
+          <Command.Input placeholder="Search everything..." className="command-palette-input" aria-label="Search commands and notes" />
         </div>
         
         <Command.List className="command-palette-list">

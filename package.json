@@ -20,6 +20,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@radix-ui/react-visually-hidden": "^1.2.4",
     "@tauri-apps/plugin-dialog": "^2.4.2",
     "cmdk": "^1.1.1",
     "dompurify": "^3.3.1",

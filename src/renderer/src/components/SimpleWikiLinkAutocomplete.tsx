@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
-import { Command } from 'cmdk'
 import { Note } from '../types'
 import { api } from '../lib/api'
 
 interface SimpleWikiLinkAutocompleteProps {
   query: string
+  position?: { top: number; left: number }
   onSelect: (title: string) => void
   onClose: () => void
   onSearch?: (query: string) => Promise<Note[]>
@@ -12,6 +12,7 @@ interface SimpleWikiLinkAutocompleteProps {
 
 export function SimpleWikiLinkAutocomplete({
   query,
+  position = { top: 100, left: 100 },
   onSelect,
   onClose,
   onSearch
@@ -70,7 +71,7 @@ export function SimpleWikiLinkAutocomplete({
     <div
       ref={listRef}
       className="wiki-link-autocomplete fixed z-50 w-96 max-h-80 overflow-y-auto bg-gray-800 border border-gray-700 rounded-lg shadow-xl"
-      style={{ top: '100px', left: '100px' }}
+      style={{ top: `${position.top}px`, left: `${Math.min(position.left, window.innerWidth - 400)}px` }}
     >
       {loading ? (
         <div className="p-3 text-gray-400 text-sm">Loading notes...</div>

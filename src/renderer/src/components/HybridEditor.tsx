@@ -35,9 +35,24 @@ export function HybridEditor({
   const [mode, setMode] = useState<EditorMode>('write')
   const editorRef = useRef<HTMLDivElement>(null)
 
-  // Autocomplete state
-  const [wikiLinkTrigger, setWikiLinkTrigger] = useState<{ query: string } | null>(null)
-  const [tagTrigger, setTagTrigger] = useState<{ query: string } | null>(null)
+  // Autocomplete state with cursor position
+  const [wikiLinkTrigger, setWikiLinkTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
+  const [tagTrigger, setTagTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
+
+  // Get cursor position in viewport coordinates
+  const getCursorPosition = useCallback((): { top: number; left: number } => {
+    const selection = window.getSelection()
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
+      const rect = range.getBoundingClientRect()
+      return {
+        top: rect.bottom + window.scrollY + 4, // 4px below cursor
+        left: rect.left + window.scrollX
+      }
+    }
+    // Fallback position
+    return { top: 100, left: 100 }
+  }, [])
 
   // Toggle between write and preview modes
   const toggleMode = useCallback(() => {
@@ -89,13 +104,15 @@ export function HybridEditor({
 
       if (wikiMatch) {
         const query = wikiMatch[1]
-        setWikiLinkTrigger({ query })
+        const position = getCursorPosition()
+        setWikiLinkTrigger({ query, position })
         setTagTrigger(null)
       } else if (textBeforeCursor.match(/(?<![#\w])#[a-zA-Z][a-zA-Z0-9_-]*$/)) {
         const tagMatch = textBeforeCursor.match(/(?<![#\w])#([a-zA-Z][a-zA-Z0-9_-]*)$/)
         if (tagMatch) {
           const query = tagMatch[1]
-          setTagTrigger({ query })
+          const position = getCursorPosition()
+          setTagTrigger({ query, position })
         }
         setWikiLinkTrigger(null)
       } else {
@@ -258,6 +275,7 @@ export function HybridEditor({
       {wikiLinkTrigger && (
         <SimpleWikiLinkAutocomplete
           query={wikiLinkTrigger.query}
+          position={wikiLinkTrigger.position}
           onSelect={handleWikiLinkSelect}
           onClose={() => setWikiLinkTrigger(null)}
           onSearch={onSearchNotes}
@@ -268,6 +286,7 @@ export function HybridEditor({
       {tagTrigger && (
         <SimpleTagAutocomplete
           query={tagTrigger.query}
+          position={tagTrigger.position}
           onSelect={handleTagSelect}
           onClose={() => setTagTrigger(null)}
           onSearch={onSearchTags}

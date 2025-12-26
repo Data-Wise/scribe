@@ -4,6 +4,7 @@ import { api } from '../lib/api'
 
 interface SimpleTagAutocompleteProps {
   query: string
+  position?: { top: number; left: number }
   onSelect: (name: string) => void
   onClose: () => void
   onSearch?: (query: string) => Promise<Tag[]>
@@ -18,6 +19,7 @@ function generateTagColor(name: string): string {
 
 export function SimpleTagAutocomplete({
   query,
+  position = { top: 100, left: 100 },
   onSelect,
   onClose,
   onSearch
@@ -80,7 +82,7 @@ export function SimpleTagAutocomplete({
     <div
       ref={listRef}
       className="tag-autocomplete fixed z-50 w-80 max-h-80 overflow-y-auto bg-gray-800 border border-gray-700 rounded-lg shadow-xl"
-      style={{ top: '100px', left: '100px' }}
+      style={{ top: `${position.top}px`, left: `${Math.min(position.left, window.innerWidth - 340)}px` }}
     >
       {loading ? (
         <div className="p-3 text-gray-400 text-sm">Loading tags...</div>
