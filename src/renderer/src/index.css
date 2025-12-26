@@ -643,6 +643,12 @@ mark {
     HybridEditor (Contenteditable) Styles
     ============================================================ */
 
+/* Textarea placeholder styling - uses theme colors */
+.hybrid-editor-textarea::placeholder {
+  color: var(--nexus-text-muted);
+  opacity: 0.5;
+}
+
 .editor-content {
   white-space: pre-wrap;
   word-wrap: break-word;

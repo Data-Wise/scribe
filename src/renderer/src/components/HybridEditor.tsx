@@ -223,13 +223,17 @@ export function HybridEditor({
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
 
   return (
-    <div className="h-full flex flex-col bg-neutral-900 relative">
+    <div className="h-full flex flex-col relative" style={{ backgroundColor: 'var(--nexus-bg-primary)' }}>
       {/* Mode indicator - minimal, top-right */}
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-3 text-xs text-neutral-500">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-3 text-xs" style={{ color: 'var(--nexus-text-muted)' }}>
         <span>{wordCount} words</span>
         <button
           onClick={toggleMode}
-          className="px-2 py-1 rounded bg-neutral-800 hover:bg-neutral-700 transition-colors"
+          className="px-2 py-1 rounded transition-colors"
+          style={{ 
+            backgroundColor: 'var(--nexus-bg-tertiary)',
+            color: 'var(--nexus-text-primary)'
+          }}
           title="Toggle mode (Cmd+E)"
         >
           {mode === 'write' ? 'Preview' : 'Edit'}
@@ -237,7 +241,7 @@ export function HybridEditor({
       </div>
 
       {/* Editor area */}
-      <div className="flex-1 overflow-auto p-8 pt-16">
+      <div className="flex-1 overflow-auto p-8 pt-16" style={{ backgroundColor: 'var(--nexus-bg-primary)' }}>
         {mode === 'write' ? (
           <textarea
             ref={textareaRef}
@@ -245,22 +249,23 @@ export function HybridEditor({
             onChange={handleInput}
             onKeyDown={handleKeyDown}
             placeholder="Start writing... Type [[ for wiki-links, # for tags"
-            className="w-full h-full min-h-[calc(100vh-200px)] bg-transparent text-nexus-text-primary
-                       focus:outline-none resize-none placeholder:text-nexus-text-muted/50"
+            className="hybrid-editor-textarea w-full h-full min-h-[calc(100vh-200px)] bg-transparent focus:outline-none resize-none"
             style={{
               fontFamily: 'var(--editor-font-family)',
               fontSize: 'var(--editor-font-size)',
               lineHeight: 'var(--editor-line-height)',
+              color: 'var(--nexus-text-primary)',
             }}
             spellCheck={false}
           />
         ) : (
           <div 
-            className="prose prose-invert max-w-none"
+            className="prose max-w-none"
             style={{
               fontFamily: 'var(--editor-font-family)',
               fontSize: 'var(--editor-font-size)',
               lineHeight: 'var(--editor-line-height)',
+              color: 'var(--nexus-text-primary)',
             }}
           >
             <MarkdownPreview
@@ -295,10 +300,17 @@ export function HybridEditor({
       )}
 
       {/* Status bar - minimal */}
-      <div className="px-4 py-2 text-xs text-neutral-600 border-t border-neutral-800 flex justify-between">
+      <div 
+        className="px-4 py-2 text-xs flex justify-between"
+        style={{ 
+          color: 'var(--nexus-text-muted)',
+          borderTop: '1px solid var(--nexus-bg-tertiary)',
+          backgroundColor: 'var(--nexus-bg-secondary)'
+        }}
+      >
         <span>
           {mode === 'write' ? 'Writing' : 'Preview'}
-          <span className="text-neutral-700 ml-2">Cmd+E to toggle</span>
+          <span className="ml-2" style={{ opacity: 0.6 }}>Cmd+E to toggle</span>
         </span>
         <span>Markdown supported</span>
       </div>
@@ -327,26 +339,26 @@ function MarkdownPreview({
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        // Headings with explicit styling
+        // Headings with theme-aware styling
         h1: ({ children }) => (
-          <h1 className="text-3xl font-bold text-white mb-4 mt-6">{children}</h1>
+          <h1 className="text-3xl font-bold mb-4 mt-6" style={{ color: 'var(--nexus-text-primary)' }}>{children}</h1>
         ),
         h2: ({ children }) => (
-          <h2 className="text-2xl font-bold text-white mb-3 mt-5">{children}</h2>
+          <h2 className="text-2xl font-bold mb-3 mt-5" style={{ color: 'var(--nexus-text-primary)' }}>{children}</h2>
         ),
         h3: ({ children }) => (
-          <h3 className="text-xl font-bold text-white mb-2 mt-4">{children}</h3>
+          <h3 className="text-xl font-bold mb-2 mt-4" style={{ color: 'var(--nexus-text-primary)' }}>{children}</h3>
         ),
         // Paragraphs
         p: ({ children }) => (
-          <p className="text-neutral-200 mb-4 leading-relaxed">{children}</p>
+          <p className="mb-4 leading-relaxed" style={{ color: 'var(--nexus-text-primary)' }}>{children}</p>
         ),
         // Lists
         ul: ({ children }) => (
-          <ul className="list-disc list-inside text-neutral-200 mb-4 space-y-1">{children}</ul>
+          <ul className="list-disc list-inside mb-4 space-y-1" style={{ color: 'var(--nexus-text-primary)' }}>{children}</ul>
         ),
         ol: ({ children }) => (
-          <ol className="list-decimal list-inside text-neutral-200 mb-4 space-y-1">{children}</ol>
+          <ol className="list-decimal list-inside mb-4 space-y-1" style={{ color: 'var(--nexus-text-primary)' }}>{children}</ol>
         ),
         // Custom rendering for links (handles wiki-links)
         a: (props) => {
@@ -375,8 +387,8 @@ function MarkdownPreview({
                     onWikiLinkClick?.(title)
                   }
                 }}
-                className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
-                style={{ pointerEvents: 'auto' }}
+                className="underline cursor-pointer"
+                style={{ color: 'var(--nexus-accent)', pointerEvents: 'auto' }}
               >
                 {children}
               </span>
@@ -387,7 +399,8 @@ function MarkdownPreview({
               href={href} 
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 underline"
+              className="underline"
+              style={{ color: 'var(--nexus-accent)' }}
               onClick={(e) => e.stopPropagation()}
             >
               {children}
@@ -407,27 +420,40 @@ function MarkdownPreview({
                   console.log('[MarkdownPreview] Tag clicked:', text)
                   onTagClick?.(text.substring(1))
                 }}
-                className="inline-block px-2 py-0.5 rounded bg-purple-900/50 text-purple-300 text-sm cursor-pointer hover:bg-purple-900/70"
+                className="inline-block px-2 py-0.5 rounded text-sm cursor-pointer"
+                style={{ 
+                  backgroundColor: 'color-mix(in srgb, var(--nexus-accent) 20%, transparent)',
+                  color: 'var(--nexus-accent)'
+                }}
               >
                 {text}
               </button>
             )
           }
           return (
-            <code className={`${className || ''} bg-neutral-800 px-1 py-0.5 rounded text-sm`}>
+            <code 
+              className={`${className || ''} px-1 py-0.5 rounded text-sm`}
+              style={{ backgroundColor: 'var(--nexus-bg-tertiary)' }}
+            >
               {children}
             </code>
           )
         },
         // Blockquotes
         blockquote: ({ children }) => (
-          <blockquote className="border-l-4 border-neutral-600 pl-4 italic text-neutral-400 my-4">
+          <blockquote 
+            className="border-l-4 pl-4 italic my-4"
+            style={{ 
+              borderColor: 'var(--nexus-bg-tertiary)',
+              color: 'var(--nexus-text-muted)'
+            }}
+          >
             {children}
           </blockquote>
         ),
         // Bold and italic
         strong: ({ children }) => (
-          <strong className="font-bold text-white">{children}</strong>
+          <strong className="font-bold" style={{ color: 'var(--nexus-text-primary)' }}>{children}</strong>
         ),
         em: ({ children }) => (
           <em className="italic">{children}</em>
