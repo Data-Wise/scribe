@@ -14,7 +14,7 @@
 
 | What | How |
 |------|-----|
-| **Editor** | BlockNote (Notion-style blocks) |
+ | **Editor** | HybridEditor (markdown + preview) |
 | **Focus** | Distraction-free mode, global hotkey |
 | **Projects** | Research, Teaching, R-Package, R-Dev, Generic |
 | **Citations** | Zotero via Better BibTeX |
@@ -71,10 +71,10 @@ No dialogs. No choices. Just write.
 
 ## ✅ What Scribe IS
 
-| Principle | Implementation |
+ | Principle | Implementation |
 |-----------|----------------|
 | **Distraction-Free Writer** | Focus mode, minimal UI |
-| **Block-Based Editor** | BlockNote (Notion-style) |
+| **Markdown Editor** | Write/Preview mode with live markdown rendering |
 | **Project Manager** | Local folders, project settings |
 | **Academic Writing Tool** | Zotero + LaTeX + Quarto |
 | **Knowledge Notes** | Wiki links, tags, daily notes |
@@ -232,12 +232,12 @@ Working on [[Sensitivity Analysis]] section...
 
 | Feature | Sprint |
 |---------|--------|
-| BlockNote Editor | 8 |
+| HybridEditor (markdown + preview) | 8 |
 | Focus Mode | 8 |
 | Dark Mode | 8 |
 | Auto-Save | 8 |
-| Wiki Links | 8 |
-| Tags | 8 |
+| Wiki Links | 9 |
+| Tags | 9 |
 | Word Count | 8 |
 | Global Hotkey (⌘⇧N) | 10 |
 
@@ -366,11 +366,11 @@ quarto render input.qmd
 
 ### Locked
 
-| Layer | Technology |
+ | Layer | Technology |
 |-------|------------|
-| Shell | Electron 28+ |
+| Shell | Tauri 2 |
 | UI | React 18 |
-| Editor | BlockNote |
+| Editor | HybridEditor (ReactMarkdown) |
 | Styling | Tailwind CSS |
 | State | Zustand |
 | Database | SQLite |
@@ -398,8 +398,8 @@ quarto render input.qmd
 
 | Sprint | Focus | Hours |
 |--------|-------|-------|
-| 8 | BlockNote + Focus | 6h |
-| 9 | AI + Ecosystem | 8h |
+| 8 | Editor Foundation | 4h |
+| 9 | Editor Enhancement | 4h |
 | 10 | Hotkey + Commands | 6h |
 
 ### Phase 2: Integration (Weeks 3-4)
@@ -461,61 +461,62 @@ quarto render input.qmd
 
 ## 📁 Target Structure
 
-```
-scribe/
-├── src/
-│   ├── main/
-│   │   ├── index.ts
-│   │   ├── database/
-│   │   ├── ai/
-│   │   │   ├── claude.ts
-│   │   │   └── gemini.ts
-│   │   ├── academic/
-│   │   │   ├── zotero.ts
-│   │   │   ├── pandoc.ts
-│   │   │   └── quarto.ts
-│   │   ├── projects/
-│   │   │   ├── manager.ts       # Project CRUD
-│   │   │   ├── templates.ts     # Project templates
-│   │   │   └── settings.ts      # project.json
-│   │   ├── knowledge/
-│   │   │   ├── daily.ts         # Daily notes
-│   │   │   ├── backlinks.ts     # Backlink tracking
-│   │   │   └── search.ts        # Note search
-│   │   ├── ecosystem/
-│   │   │   ├── flow.ts
-│   │   │   ├── obs.ts
-│   │   │   └── aiterm.ts
-│   │   └── sync/
-│   │       └── obsidian.ts
-│   │
-│   ├── renderer/
-│   │   └── src/
-│   │       ├── App.tsx
-│   │       ├── components/
-│   │       │   ├── Editor/
-│   │       │   ├── Sidebar/
-│   │       │   │   ├── ProjectSwitcher.tsx
-│   │       │   │   ├── NoteList.tsx
-│   │       │   │   ├── BacklinksPanel.tsx
-│   │       │   │   └── EcosystemPanel.tsx
-│   │       │   ├── AIPanel/
-│   │       │   ├── FocusMode/
-│   │       │   ├── DailyNotes/
-│   │       │   └── ExportDialog/
-│   │       ├── blocks/
-│   │       │   ├── WikiLink.tsx
-│   │       │   ├── Tag.tsx
-│   │       │   ├── Citation.tsx
-│   │       │   └── Equation.tsx
-│   │       └── store/
-│   │
-│   └── preload/
-│
-├── PROJECT-DEFINITION.md
-├── README.md
-└── package.json
-```
+ ```
+ scribe/
+ ├── src/
+ │   ├── src-tauri/
+ │   │   ├── src/
+ │   │   │   ├── lib.rs
+ │   │   │   ├── main.rs
+ │   │   │   ├── database.rs
+ │   │   │   ├── commands.rs
+ │   │   │   ├── ai/
+ │   │   │   │   ├── claude.rs
+ │   │   │   │   └── gemini.rs
+ │   │   │   ├── academic/
+ │   │   │   │   ├── zotero.rs
+ │   │   │   │   ├── pandoc.rs
+ │   │   │   │   └── quarto.rs
+ │   │   │   ├── projects/
+ │   │   │   │   ├── manager.rs       # Project CRUD
+ │   │   │   │   ├── templates.rs     # Project templates
+ │   │   │   │   └── settings.rs      # project.json
+ │   │   │   ├── knowledge/
+ │   │   │   │   ├── daily.rs         # Daily notes
+ │   │   │   │   ├── backlinks.rs     # Backlink tracking
+ │   │   │   │   └── search.rs        # Note search
+ │   │   │   ├── ecosystem/
+ │   │   │   │   ├── flow.rs
+ │   │   │   │   ├── obs.rs
+ │   │   │   │   └── aiterm.rs
+ │   │   │   └── sync/
+ │   │   │       └── obsidian.rs
+ │   │
+ │   └── renderer/
+ │       └── src/
+ │           ├── App.tsx
+ │           ├── components/
+ │           │   ├── HybridEditor.tsx
+ │           │   ├── Sidebar/
+ │           │   │   ├── ProjectSwitcher.tsx
+ │           │   │   ├── NoteList.tsx
+ │           │   │   ├── BacklinksPanel.tsx
+ │           │   │   └── EcosystemPanel.tsx
+ │           │   ├── AIPanel/
+ │           │   ├── FocusMode/
+ │           │   ├── DailyNotes/
+ │           │   └── ExportDialog/
+ │           │   ├── blocks/
+ │           │   │   ├── WikiLink.tsx
+ │           │   │   ├── Tag.tsx
+ │           │   │   ├── Citation.tsx
+ │           │   │   └── Equation.tsx
+ │           │   └── store/
+ │
+ ├── PROJECT-DEFINITION.md
+ ├── README.md
+ └── package.json
+ ```
 
 ---
 
@@ -550,21 +551,22 @@ Only after v1.0 is stable:
 
 ---
 
-## 🎯 Summary
+ ## 🎯 Summary
 
-```
-Scribe v1.0 =
-  BlockNote Editor
-  + Focus Mode
-  + Projects (Research, Teaching, R-Package, R-Dev, Generic)
-  + Daily Notes
-  + Wiki Links + Tags + Backlinks
-  + Zotero + LaTeX + Quarto
-  + Claude/Gemini CLI
-  + Obsidian Sync
+ ```
+ Scribe v1.0 =
+   HybridEditor (markdown + preview)
+   + Focus Mode
+   + Projects (Research, Teaching, R-Package, R-Dev, Generic)
+   + Daily Notes
+   + Wiki Links + Tags + Backlinks
+   + Zotero + LaTeX + Quarto
+   + Claude/Gemini CLI
+   + Obsidian Sync
 
-Terminal = v2 (deferred)
-Graph View = Never (use Obsidian)
+ Terminal = v2 (deferred)
+ Graph View = Never (use Obsidian)
+ BlockNote = Optional (deferred if HybridEditor works well)
 
-64 hours. 10 sprints. ADHD-first.
-```
+ 64 hours. 10 sprints. ADHD-first.
+ ```

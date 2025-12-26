@@ -2,10 +2,10 @@
 
 > **ADHD-Friendly Distraction-Free Writer**
 
-[![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-0.4.0--dev-blue)]()
-[![Electron](https://img.shields.io/badge/electron-28-blue)]()
-[![React](https://img.shields.io/badge/react-18-blue)]()
+ [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
+ [![Version](https://img.shields.io/badge/version-0.4.0--dev-blue)]()
+ [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
+ [![React](https://img.shields.io/badge/react-18-blue)]()
 
 ---
 
@@ -15,10 +15,10 @@ Scribe is a **distraction-free writing app** designed for academics and research
 
 ### Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **BlockNote Editor** | Notion-style block-based writing |
-| **Focus Mode** | Distraction-free, one note at a time |
+ | Feature | Description |
+ |---------|-------------|
+ | **HybridEditor** | Markdown write mode + rich preview |
+ | **Focus Mode** | Distraction-free, one note at a time |
 | **Projects** | Research, Teaching, R-Package, R-Dev, Generic |
 | **Daily Notes** | Auto-created with templates |
 | **Wiki Links** | `[[link]]` to connect notes |
@@ -90,16 +90,16 @@ Zotero → Better BibTeX → @cite autocomplete → Pandoc → LaTeX/PDF/Word
 
 ## Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| Framework | Electron 28 + React 18 |
-| Editor | BlockNote |
-| Styling | Tailwind CSS |
-| State | Zustand |
-| Database | SQLite (better-sqlite3) |
-| AI | Claude/Gemini CLI |
-| Citations | Pandoc citeproc |
-| Math | KaTeX |
+ | Component | Technology |
+ |-----------|------------|
+ | Framework | Tauri 2 + React 18 |
+ | Editor | HybridEditor (ReactMarkdown) |
+ | Styling | Tailwind CSS |
+ | State | Zustand |
+ | Database | SQLite |
+ | AI | Claude/Gemini CLI |
+ | Citations | Pandoc citeproc |
+ | Math | KaTeX |
 
 ---
 
@@ -127,36 +127,39 @@ npm run build        # Production build
 
 ### Project Structure
 
-```
-scribe/
-├── src/
-│   ├── main/           # Electron main process
-│   │   ├── database/   # SQLite operations
-│   │   └── index.ts    # App lifecycle
-│   ├── preload/        # IPC bridge
-│   └── renderer/       # React app
-│       └── src/
-│           ├── components/
-│           ├── blocks/     # Custom BlockNote blocks
-│           └── store/      # Zustand state
-├── PROJECT-DEFINITION.md   # Scope control
-├── README.md
-└── package.json
-```
+ ```
+ scribe/
+ ├── src/
+ │   ├── src-tauri/      # Tauri backend (Rust)
+ │   │   ├── src/
+ │   │   │   ├── database.rs   # SQLite operations
+ │   │   │   ├── commands.rs   # IPC handlers
+ │   │   │   └── lib.rs
+ │   └── renderer/       # React app
+ │       └── src/
+ │           ├── components/
+ │           │   ├── HybridEditor.tsx
+ │           │   └── ...
+ │           ├── store/      # Zustand state
+ │           └── App.tsx
+ ├── PROJECT-DEFINITION.md   # Scope control
+ ├── README.md
+ └── package.json
+ ```
 
 ---
 
 ## Roadmap
 
-| Phase | Sprints | Focus | Hours |
-|-------|---------|-------|-------|
-| 1 | 8-10 | Editor + AI + Hotkey | 20h |
-| 2 | 11-12 | Obsidian + Zotero | 16h |
-| 3 | 13-14 | Export | 12h |
-| 4 | 15-16 | Projects + Daily Notes | 12h |
-| 5 | 17 | Polish | 4h |
+ | Phase | Sprints | Focus | Hours |
+ |-------|---------|-------|-------|
+ | 1 | 8-10 | Editor + Hotkey | 14h |
+ | 2 | 11-12 | Obsidian + Zotero | 16h |
+ | 3 | 13-14 | Export | 12h |
+ | 4 | 15-16 | Projects + Daily Notes | 12h |
+ | 5 | 17 | Polish | 4h |
 
-**Total: 64 hours over 10 sprints**
+ **Total: 58 hours over 10 sprints**
 
 See [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) for detailed sprint breakdown.
 

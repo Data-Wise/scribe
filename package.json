@@ -20,25 +20,14 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@blocknote/core": "^0.45.0",
-    "@blocknote/mantine": "^0.45.0",
-    "@blocknote/react": "^0.45.0",
-    "@mantine/core": "^8.3.10",
-    "@mantine/hooks": "^8.3.10",
     "@tauri-apps/plugin-dialog": "^2.4.2",
-    "@tiptap/extension-code-block-lowlight": "^3.14.0",
-    "@tiptap/extension-image": "^3.14.0",
-    "@tiptap/extension-link": "^3.14.0",
-    "@tiptap/extension-placeholder": "^3.14.0",
-    "@tiptap/react": "^3.14.0",
-    "@tiptap/starter-kit": "^3.14.0",
-    "@tiptap/suggestion": "^3.14.0",
     "cmdk": "^1.1.1",
     "dompurify": "^3.3.1",
-    "lowlight": "^3.3.0",
     "lucide-react": "^0.562.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "zustand": "^4.5.0"
   },
   "devDependencies": {

@@ -496,8 +496,54 @@ mark {
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 /* ============================================================
-   Command Palette (cmdk)
-   ============================================================ */
+    HybridEditor (Contenteditable) Styles
+    ============================================================ */
+
+.editor-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.editor-content:empty:before {
+  content: attr(data-placeholder);
+  color: theme('colors.nexus-text-muted');
+  pointer-events: none;
+}
+
+/* Wiki-link highlighting in write mode */
+.editor-content .wiki-link {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 2px 4px;
+  transition: all 150ms ease;
+}
+
+.editor-content .wiki-link:hover {
+  background: rgba(59, 130, 246, 0.25);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Tag highlighting in write mode */
+.editor-content .tag {
+  background: rgba(139, 92, 246, 0.15);
+  color: #c4b5fd;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 2px 6px;
+  transition: all 150ms ease;
+}
+
+.editor-content .tag:hover {
+  background: rgba(139, 92, 246, 0.25);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+    Command Palette (cmdk)
+    ============================================================ */
 
 .command-palette-overlay {
   position: fixed;

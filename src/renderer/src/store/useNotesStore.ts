@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { Note } from '../types'
-import { sanitizeHTML, sanitizeText } from '../utils/sanitize'
 import { api } from '../lib/api'
 
 interface NotesState {
@@ -37,14 +36,9 @@ export const useNotesStore = create<NotesState>((set) => ({
   createNote: async (note: Partial<Note>) => {
     set({ isLoading: true, error: null })
     try {
-      // Sanitize inputs before sending to backend
-      const sanitizedNote = {
-        ...note,
-        title: note.title ? sanitizeText(note.title) : undefined,
-        content: note.content ? sanitizeHTML(note.content) : undefined
-      }
-
-      const newNote = await api.createNote(sanitizedNote)
+      // For markdown content, skip HTML sanitization
+      // react-markdown handles escaping during render
+      const newNote = await api.createNote(note)
       set((state) => ({
         notes: [newNote, ...state.notes],
         selectedNoteId: newNote.id,
@@ -58,14 +52,9 @@ export const useNotesStore = create<NotesState>((set) => ({
   updateNote: async (id: string, updates: Partial<Note>) => {
     set({ isLoading: true, error: null })
     try {
-      // Sanitize inputs before sending to backend
-      const sanitizedUpdates = {
-        ...updates,
-        title: updates.title ? sanitizeText(updates.title) : undefined,
-        content: updates.content ? sanitizeHTML(updates.content) : undefined
-      }
-
-      const updatedNote = await api.updateNote(id, sanitizedUpdates)
+      // For markdown content, skip HTML sanitization
+      // react-markdown handles escaping during render
+      const updatedNote = await api.updateNote(id, updates)
       if (updatedNote) {
         set((state) => ({
           notes: state.notes.map((note) =>

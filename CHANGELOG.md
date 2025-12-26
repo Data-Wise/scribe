@@ -9,6 +9,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - v0.4.0-dev
 
+### Sprint 9: Editor Enhancement - Complete (2024-12-25)
+
+**HybridEditor++ Implementation:**
+
+**Write Mode Enhancements:**
+- Contenteditable editor (replaced textarea)
+- Live highlighting for wiki-links `[[...]]`
+- Live highlighting for tags `#tag`
+- Click handlers for wiki-links in write mode
+- Click handlers for tags in write mode
+- Autocomplete for wiki-links with cmdk
+- Autocomplete for tags with cmdk
+
+**Components:**
+- `SimpleWikiLinkAutocomplete.tsx` - New wiki-link autocomplete (TipTap-free)
+- `SimpleTagAutocomplete.tsx` - New tag autocomplete (TipTap-free)
+- Updated `HybridEditor.tsx` - Contenteditable with highlighting
+- Added CSS styles for `.editor-content`, `.wiki-link`, `.tag`
+
+**Dead Code Removed:**
+- Removed `BlockNoteEditor.tsx` (362 lines)
+- Removed `Editor.tsx` (TipTap, 269 lines)
+- Removed `TipTapEditor.tsx` (unused)
+- Removed `WikiLinkAutocomplete.tsx` (TipTap version)
+- Removed `TagAutocomplete.tsx` (TipTap version)
+- Removed `extensions/` directory (TipTap extensions)
+- Removed `TipTapEditor.test.tsx`
+
+**Styling:**
+- Wiki-link highlighting: Blue background (#93c5fd), cursor pointer, rounded
+- Tag highlighting: Purple background (#c4b5fd), cursor pointer, rounded
+- Hover effects: Underline for wiki-links, lift effect for tags
+- CSS added to `index.css` for contenteditable styling
+
+**Testing:**
+- All tests passing (125 tests, 7 todo)
+- No console errors
+
+**Technical Details:**
+- Used `contentEditable` div instead of textarea
+- `dangerouslySetInnerHTML` for highlighted content
+- Regex patterns:
+  - Wiki-links: `/\[\[([^\]]+)\]\]/g`
+  - Tags: `/(?<![#\w])#([a-zA-Z][a-zA-Z0-9_-]*)/g`
+- Click handlers detect span elements by class
+- Autocomplete positioned fixed, filtering notes/tags by query
+
+**Next:** Sprint 10 - Global hotkey + Commands
+
+---
+
+### Sprint 8 Assessment (2024-12-25)
+
+**Technical Assessment Revealed:**
+
+**Critical Issues:**
+- Sprint 8 marked complete but BlockNote migration never happened
+- BlockNote packages not installed in package.json
+- App using HybridEditor (markdown textarea + preview mode) instead of BlockNote
+- Dead code exists: BlockNoteEditor.tsx, Editor.tsx, extensions/
+- Wiki-link "[[" only works in preview mode, not write mode
+- No inline autocomplete for wiki-links or tags
+
+**What Actually Works:**
+- HybridEditor with write/preview mode toggle (⌘E)
+- Focus mode (⌘⇧F / Escape)
+- Word count footer
+- Dark theme default
+- PARA folder structure (Inbox, Projects, Areas, Resources, Archive)
+- SQLite database with notes, folders, links, tags
+- Full-text search (SQLite FTS5)
+- ReactMarkdown preview with basic wiki-link and tag rendering
+
+**What Needs Decision (Sprint 9):**
+Option A: Fix HybridEditor bugs (2-3h) - quick, stable
+Option B: Complete BlockNote migration (6-8h) - as planned, complex
+Option C: Switch to TipTap (4-6h) - alternative rich editor
+Option D: HybridEditor++ (3-4h) - enhance markdown with autocomplete
+
+**Decision:** Option D (HybridEditor++) implemented ✅
+
+---
+
+### Sprint 8 Partial (2024-12-25)
+
+**Completed:**
+- HybridEditor with write/preview toggle
+- Focus mode
+- Word count
+- Dark theme
+- PARA folders
+
+**Deferred to Sprint 9:**
+- Wiki-link/tag autocomplete
+- Write mode highlighting
+- BlockNote migration (cancelled in favor of HybridEditor++)
+
+---
+
 ### Project Redefinition (2024-12-24)
 
 **Major Direction Change:**
@@ -18,10 +117,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added project system (5 types: Research, Teaching, R-Package, R-Dev, Generic)
 - Added academic stack (Zotero, LaTeX, Quarto, KaTeX)
 - Added knowledge features (daily notes, backlinks)
-- Selected BlockNote to replace TipTap
+- Selected BlockNote to replace TipTap (planned but not executed)
 - Added CLI-based AI integration (Claude + Gemini)
 - Deferred terminal integration to v2
-- Created 10-sprint roadmap (64 hours)
+- Created 10-sprint roadmap (64 hours) - actual progress 35h
 
 **Documentation:**
 
@@ -31,7 +130,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated .STATUS
 - Archived Sprint 1-7 files to docs/archive/
 
-**Next:** Sprint 8 - BlockNote + Focus Mode
+**Note:** Project originally targeted Electron but uses Tauri 2
 
 ---
 
@@ -41,7 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Tags Features:**
 
-- Tag input with `#` autocomplete
+- Tag input with `#` autocomplete (TipTap editor)
 - Colored tag badges with hash-based consistent colors
 - Tags panel showing all tags with note counts
 - Multi-tag filtering with AND logic
@@ -77,7 +176,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Wiki Links Features:**
 
-- Wiki link input with `[[` autocomplete
+- Wiki link input with `[[` autocomplete (TipTap editor)
 - Real-time autocomplete as you type
 - Click to navigate to linked note
 - Backlinks panel showing incoming links
@@ -94,9 +193,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added - Sprints 1-5: Foundation
 
-**Sprint 1: Electron Setup**
+**Sprint 1: Tauri Setup**
 
-- Electron 28 + React 18 + TypeScript
+- Tauri 2 + React 18 + TypeScript
 - Vite build system
 - Tailwind CSS styling
 

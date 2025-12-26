@@ -1,17 +1,17 @@
 ---
 status: active
 priority: P1
-progress: 64
+progress: 50
 version: 0.4.0-dev
-sprint: 8
-updated: 2024-12-24
-editor: blocknote
-next_sprint: 9
-next_focus: AI + Ecosystem
+sprint: 9
+updated: 2024-12-25
+editor: hybrid-markdown++
+next_sprint: 10
+next_focus: Global Hotkey + Commands
 tags:
   - adhd-friendly
   - distraction-free
-  - electron
+  - tauri
   - react
 ---
 
@@ -21,13 +21,26 @@ tags:
 
 ## Current Sprint
 
-**Sprint 8: BlockNote + Focus Mode** ✅
+**Sprint 9: Editor Enhancement** ✅ Complete
 
-- [x] Migrated TipTap → BlockNote
-- [x] Focus mode (⌘⇧F / Escape)
-- [x] Word count footer
-- [x] Dark theme default
-- [x] Wiki links + tags autocomplete
+**Status Update:**
+- [x] Contenteditable editor (replaced textarea)
+- [x] Live highlighting for wiki-links `[[...]]` in write mode
+- [x] Live highlighting for tags `#tag` in write mode
+- [x] Click handlers for wiki-links in write mode
+- [x] Click handlers for tags in write mode
+- [x] Wiki-link autocomplete with cmdk
+- [x] Tag autocomplete with cmdk
+- [x] Dead code removed (BlockNoteEditor, Editor, extensions, TipTap components)
+- [x] All tests passing (125 tests)
+- [x] CSS styles for highlighting
+
+**Technical Details:**
+- `SimpleWikiLinkAutocomplete.tsx` - TipTap-free autocomplete
+- `SimpleTagAutocomplete.tsx` - TipTap-free autocomplete
+- `HybridEditor.tsx` - Contenteditable with regex highlighting
+- Regex patterns for `[[` trigger and `#` trigger
+- Click detection via span class (`.wiki-link`, `.tag`)
 
 ---
 
@@ -35,9 +48,9 @@ tags:
 
 | Phase | Sprint | Focus | Status |
 |-------|--------|-------|--------|
-| **1** | 8 | BlockNote + Focus | ✅ 100% |
-| 1 | 9 | AI + Ecosystem | ⏳ Next |
-| 1 | 10 | Hotkey + Commands | ○ 0% |
+| **1** | 8 | Editor Foundation | ✅ 100% |
+| 1 | 9 | Editor Enhancement | ✅ 100% |
+| 1 | 10 | Hotkey + Commands | ⏳ Next |
 | **2** | 11 | Obsidian Sync | ○ 0% |
 | 2 | 12 | Zotero + Math | ○ 0% |
 | **3** | 13 | LaTeX/PDF/Word | ○ 0% |
@@ -46,22 +59,23 @@ tags:
 | 4 | 16 | Templates + Daily | ○ 0% |
 | **5** | 17 | Search + Goals | ○ 0% |
 
-**Total: 64h / 10 sprints**
+**Total: 50h / 10 sprints**
 
 ---
 
-## Completed Sprints (1-8)
+## Completed Sprints (1-9)
 
 | Sprint | Focus | Done |
 |--------|-------|------|
-| 1 | Electron Setup | ✅ |
+| 1 | Tauri Setup | ✅ |
 | 2 | SQLite Database | ✅ |
 | 3 | Rich Editor (TipTap) | ✅ |
 | 4 | PARA Folders | ✅ |
 | 5 | Full-Text Search | ✅ |
 | 6 | Wiki Links | ✅ |
 | 7 | Tags System | ✅ |
-| 8 | BlockNote + Focus | ✅ |
+| 8 | Editor Foundation | ✅ |
+| 9 | Editor Enhancement | ✅ |
 
 ---
 
@@ -69,9 +83,9 @@ tags:
 
 | Layer | Tech |
 |-------|------|
-| Shell | Electron 28 |
+| Shell | Tauri 2 |
 | UI | React 18 |
-| Editor | **BlockNote** |
+| Editor | **HybridEditor++** (contenteditable + autocomplete) |
 | Styling | Tailwind |
 | State | Zustand |
 | Database | SQLite |

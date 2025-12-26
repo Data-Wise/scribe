@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNotesStore } from './store/useNotesStore'
-import { TipTapEditor } from './components/TipTapEditor'
+import { HybridEditor } from './components/HybridEditor'
 import { SearchBar } from './components/SearchBar'
 import { SearchResults } from './components/SearchResults'
 import { BacklinksPanel } from './components/BacklinksPanel'
@@ -76,7 +76,7 @@ function App() {
   const handleCreateNote = async () => {
     await createNote({
       title: `New Note`,
-      content: '<p>Start writing...</p>',
+      content: '',  // Empty markdown - user starts fresh
       folder: currentFolder || 'inbox'
     })
   }
@@ -134,7 +134,7 @@ function App() {
     } else {
       const newNote = await api.createNote({
         title,
-        content: '<p></p>',
+        content: '',  // Empty markdown
         folder: selectedNote?.folder || 'inbox'
       })
 
@@ -409,13 +409,16 @@ function App() {
                 <h2 onClick={() => setEditingTitle(true)} className="text-3xl font-bold cursor-pointer">{selectedNote.title}</h2>
               )}
             </div>
-            <div className="flex-1 overflow-hidden">
-              <TipTapEditor
+            <div className="flex-1 overflow-hidden relative">
+              <HybridEditor
                 key={selectedNote.id}
                 content={selectedNote.content}
                 onChange={handleContentChange}
-                onLinkClick={handleLinkClick}
+                onWikiLinkClick={handleLinkClick}
+                onTagClick={handleTagClickInEditor}
                 onSearchNotes={handleSearchNotesForAutocomplete}
+                onSearchTags={handleSearchTagsForAutocomplete}
+                placeholder="Start writing... (Cmd+E to preview)"
               />
             </div>
           </div>

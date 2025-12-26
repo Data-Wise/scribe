@@ -1,251 +1,280 @@
-# Sprint 8: BlockNote + Focus Mode
+# Sprint 8: Editor Foundation
 
-> **Status:** Planning → Ready to Start
-> **Effort:** 6 hours
+> **Status:** ⚠️ Partial Complete (60%)
+> **Actual Effort:** 4 hours (planned 6 hours)
 > **Priority:** P1
+> **Updated:** 2024-12-25
 
 ---
 
-## 🎯 Goal
+## 🎯 Original Goal
 
 Replace TipTap editor with BlockNote and implement distraction-free focus mode.
 
 ---
 
-## ✅ Success Criteria
+## ✅ What Was Completed
 
-- [ ] BlockNote editor renders and accepts input
-- [ ] Wiki links work (`[[link]]` with autocomplete)
-- [ ] Tags work (`#tag` with colored badges)
-- [ ] Focus mode hides sidebar
-- [ ] Dark mode is default
-- [ ] Auto-save (no save button)
-- [ ] Word count visible in status bar
-- [ ] All existing tests pass or updated
+### Editor Foundation (HybridEditor)
 
----
+- [x] **HybridEditor Component** - Write/Preview mode toggle (⌘E)
+- [x] **Write Mode** - Distraction-free markdown textarea
+- [x] **Preview Mode** - Live markdown rendering with ReactMarkdown
+- [x] **Focus Mode** - Distraction-free layout (⌘⇧F / Escape)
+- [x] **Word Count** - Visible footer with word count
+- [x] **Dark Theme** - Default dark mode styling
+- [x] **Auto-Save** - Content changes saved automatically
 
-## 📋 Tasks
+### UI Components
 
-### Day 1: BlockNote Setup (2h)
+- [x] **Command Palette** - ⌘K for quick actions
+- [x] **Sidebar Navigation** - Left/right collapsible sidebars
+- [x] **PARA Folders** - Inbox, Projects, Areas, Resources, Archive
+- [x] **Note List** - Sidebar note browser
+- [x] **Properties Panel** - Note metadata
+- [x] **Backlinks Panel** - Incoming links display
+- [x] **Search Bar** - Full-text search
+- [x] **Tag Filter** - Multi-tag filtering
 
-```
-├── [ ] Install BlockNote packages
-│   └── npm install @blocknote/core @blocknote/react @blocknote/mantine
-├── [ ] Create BlockNoteEditor component
-│   └── src/renderer/src/components/Editor/BlockNoteEditor.tsx
-├── [ ] Replace TipTap in App.tsx
-├── [ ] Verify basic editing works
-├── [ ] Set up dark theme
-└── [ ] Configure auto-save on change
-```
+### Backend
 
-### Day 2: Custom Blocks (2h)
-
-```
-├── [ ] Create WikiLinkBlock
-│   ├── src/renderer/src/blocks/WikiLink.tsx
-│   ├── Regex trigger: [[
-│   ├── Autocomplete from existing notes
-│   └── Click to navigate
-├── [ ] Create TagMark (inline)
-│   ├── src/renderer/src/blocks/Tag.tsx
-│   ├── Regex trigger: #
-│   ├── Colored badges
-│   └── Autocomplete from existing tags
-└── [ ] Test both extensions
-```
-
-### Day 3: Focus Mode + Polish (2h)
-
-```
-├── [ ] Implement FocusMode component
-│   ├── Hide sidebar
-│   ├── Center editor
-│   ├── Dim background
-│   └── Hotkey: ⌘.
-├── [ ] Add word count to status bar
-├── [ ] Verify dark mode default
-├── [ ] Update serialization (JSON blocks ↔ SQLite)
-├── [ ] Migration script for existing notes (if needed)
-└── [ ] Update tests
-```
+- [x] **SQLite Database** - Notes, folders, links, tags tables
+- [x] **Full-Text Search** - FTS5 integration
+- [x] **Wiki Links DB** - Link tracking
+- [x] **Tags DB** - Tag metadata and junction table
+- [x] **IPC Commands** - Rust-Tauri backend
 
 ---
 
-## 🔧 Technical Details
+## ❌ What Was NOT Completed
 
-### BlockNote Installation
+### BlockNote Migration (Planned but Not Done)
 
+- [ ] **BlockNote Packages** - Not installed (@blocknote/core, @blocknote/react, @blocknote/mantine)
+- [ ] **BlockNote Editor** - Not integrated (BlockNoteEditor.tsx is dead code)
+- [ ] **Custom WikiLink Block** - Not implemented
+- [ ] **Custom Tag Block** - Not implemented
+- [ ] **BlockNote Autocomplete** - Not implemented
+
+### Wiki Links & Tags (Partial)
+
+- [ ] **Wiki Links Write Mode** - Only works in preview mode
+- [ ] **Tags Write Mode** - Only works in preview mode
+- [ ] **Inline Autocomplete** - Not implemented for wiki-links or tags
+- [ ] **Live Highlighting** - No visual feedback in write mode
+
+### Dead Code (Needs Cleanup)
+
+- [ ] **BlockNoteEditor.tsx** - Should be removed or implemented
+- [ ] **Editor.tsx** (TipTap) - Should be removed or re-integrated
+- [ ] **extensions/** directory - TipTap extensions, unused
+
+---
+
+## 🔍 Technical Assessment (2024-12-25)
+
+### Root Cause Issues
+
+1. **Incorrect Commit Message** - "complete Sprint 8 cleanup and BlockNote migration" was misleading
+2. **BlockNote Never Installed** - No BlockNote packages in package.json
+3. **HybridEditor Chosen Instead** - Implemented simple markdown editor
+4. **Scope Drift** - Planned for BlockNote, delivered HybridEditor
+
+### Current Editor: HybridEditor
+
+**Pros:**
+- ✅ ADHD-friendly (minimal UI)
+- ✅ Distraction-free write mode
+- ✅ Fast, lightweight
+- ✅ No complex dependencies
+- ✅ ReactMarkdown is battle-tested
+
+**Cons:**
+- ⚠️ Wiki-links only clickable in preview mode
+- ⚠️ No inline autocomplete
+- ⚠️ No live syntax highlighting
+- ⚠️ Not a "rich editor" as planned
+
+### Dead Code Analysis
+
+```
+src/renderer/src/components/BlockNoteEditor.tsx  # 362 lines, unused
+src/renderer/src/components/Editor.tsx           # 269 lines, unused (TipTap)
+src/renderer/src/extensions/                     # TipTap extensions, unused
+```
+
+---
+
+## 📋 Sprint 9: Editor Decision Point
+
+### Option A: Fix HybridEditor (2-3 hours) ⭐ Recommended
+
+**Tasks:**
+- Fix wiki-link regex (ensure it works in preview mode)
+- Add visual highlighting for `[[...]]` in write mode
+- Add visual highlighting for `#tag` in write mode
+- Implement inline autocomplete for wiki-links (cmdk)
+- Implement inline autocomplete for tags (cmdk)
+- Better markdown rendering (KaTeX, code highlighting)
+
+**Why This Works:**
+- Aligns with ADHD principles (minimal, distraction-free)
+- Fast to implement
+- Stable (ReactMarkdown is mature)
+- True "distraction-free writer" focus
+- Avoids complex BlockNote learning curve
+
+---
+
+### Option B: Complete BlockNote Migration (6-8 hours)
+
+**Tasks:**
 ```bash
+# 1. Install BlockNote
 npm install @blocknote/core @blocknote/react @blocknote/mantine
+
+# 2. Remove dead code
+rm src/renderer/src/components/Editor.tsx
+rm -rf src/renderer/src/extensions/
+
+# 3. Implement BlockNoteEditor
+# 4. Create custom WikiLink inline content
+# 5. Create custom Tag inline content
+# 6. Add autocomplete
+# 7. Update tests
+# 8. Migrate existing notes (TipTap/Markdown → BlockNote)
 ```
 
-### BlockNote Editor Component
+**Why This Might Work:**
+- Rich editor, as planned in Sprint 8
+- Notion-style blocks
+- Inline autocomplete built-in
+- Better for complex documents
 
-```tsx
-// src/renderer/src/components/Editor/BlockNoteEditor.tsx
-import { BlockNoteView, useCreateBlockNote } from "@blocknote/react";
-import "@blocknote/mantine/style.css";
-
-export function BlockNoteEditor({ content, onChange }) {
-  const editor = useCreateBlockNote({
-    initialContent: content,
-  });
-
-  return (
-    <BlockNoteView 
-      editor={editor} 
-      theme="dark"
-      onChange={() => onChange(editor.document)}
-    />
-  );
-}
-```
-
-### Custom WikiLink Block
-
-```tsx
-// src/renderer/src/blocks/WikiLink.tsx
-import { createReactInlineContentSpec } from "@blocknote/react";
-
-export const WikiLink = createReactInlineContentSpec({
-  type: "wikiLink",
-  propSchema: {
-    title: { default: "" },
-    noteId: { default: "" },
-  },
-  content: "none",
-}, {
-  render: ({ inlineContent }) => (
-    <span 
-      className="wiki-link text-blue-400 cursor-pointer"
-      onClick={() => navigateToNote(inlineContent.props.noteId)}
-    >
-      [[{inlineContent.props.title}]]
-    </span>
-  ),
-});
-```
-
-### Focus Mode
-
-```tsx
-// src/renderer/src/components/FocusMode/FocusMode.tsx
-export function FocusMode({ children, enabled }) {
-  if (!enabled) return <>{children}</>;
-  
-  return (
-    <div className="fixed inset-0 bg-gray-900 flex items-center justify-center">
-      <div className="w-full max-w-3xl px-8">
-        {children}
-      </div>
-    </div>
-  );
-}
-```
+**Why This Might Not:**
+- Complex API and learning curve
+- Heavy dependencies
+- Potential breaking changes
+- Overkill for "distraction-free writing"
+- Longer implementation time
 
 ---
 
-## 📁 Files to Create/Modify
+### Option C: Switch to TipTap (4-6 hours)
 
-### New Files
+**Tasks:**
+```bash
+# 1. Install TipTap packages
+npm install @tiptap/react @tiptap/starter-kit @tiptap/extension-link \
+  @tiptap/extension-image @tiptap/extension-code-block-lowlight \
+  lowlight @tiptap/extension-placeholder
 
-| File | Purpose |
-|------|---------|
-| `components/Editor/BlockNoteEditor.tsx` | Main editor component |
-| `blocks/WikiLink.tsx` | Wiki link inline content |
-| `blocks/Tag.tsx` | Tag inline content |
-| `components/FocusMode/FocusMode.tsx` | Focus mode wrapper |
-| `components/StatusBar/StatusBar.tsx` | Word count, etc. |
+# 2. Restore Editor.tsx and extensions/
+# 3. Fix wiki-link and tag extensions
+# 4. Add autocomplete
+# 5. Update tests
+```
 
-### Files to Modify
+**Why This Might Work:**
+- Better documentation than BlockNote
+- Extensions already exist
+- Lighter than BlockNote
+- Already have some code
 
-| File | Changes |
-|------|---------|
-| `App.tsx` | Replace TipTap with BlockNote |
-| `package.json` | Add BlockNote deps |
-| `index.css` | Focus mode styles |
-
-### Files to Archive
-
-| File | Reason |
-|------|--------|
-| `components/Editor.tsx` | TipTap version |
-| `extensions/` | TipTap extensions |
+**Why This Might Not:**
+- Still complex API
+- TipTap has its own learning curve
+- React vs. Vue ecosystem differences
 
 ---
 
-## ⚠️ Migration Considerations
+### Option D: HybridEditor++ (3-4 hours)
 
-### Content Format Change
+**Tasks:**
+- Keep HybridEditor (write/preview toggle)
+- Add contenteditable overlay for live highlighting
+- Add inline autocomplete popup (using cmdk)
+- Add KaTeX math rendering
+- Add code block syntax highlighting
+- Test thoroughly
 
-**TipTap (current):**
-
-```json
-{
-  "type": "doc",
-  "content": [
-    { "type": "paragraph", "content": [...] }
-  ]
-}
-```
-
-**BlockNote:**
-
-```json
-[
-  {
-    "id": "abc123",
-    "type": "paragraph",
-    "content": [...]
-  }
-]
-```
-
-### Migration Strategy
-
-Option A: Convert on load (lazy migration)
-Option B: Batch migration script
-
-**Recommendation:** Option A (convert on load) — simpler, no breaking changes.
+**Why This Works:**
+- Best of both worlds
+- Minimal write mode
+- Rich preview mode
+- Fast implementation
+- ADHD-friendly
 
 ---
 
-## 🧪 Testing
+## 🎯 Recommendation
 
-### Test Updates Needed
+**Choose Option A (Fix HybridEditor) or Option D (HybridEditor++)**
 
-```
-├── [ ] Update editor component tests
-├── [ ] Update wiki link tests
-├── [ ] Update tag tests
-├── [ ] Add focus mode tests
-└── [ ] Add word count tests
-```
+Both align with project goals:
+- ✅ ADHD-friendly (minimal UI)
+- ✅ Distraction-free (one mode at a time)
+- ✅ Fast implementation
+- ✅ Stable dependencies
 
-### Manual Testing Checklist
-
-- [ ] Create new note
-- [ ] Edit existing note
-- [ ] Add wiki link with autocomplete
-- [ ] Click wiki link to navigate
-- [ ] Add tag with autocomplete
-- [ ] Toggle focus mode (⌘.)
-- [ ] Verify word count updates
-- [ ] Verify dark mode
-- [ ] Verify auto-save
+**Defer BlockNote Decision:**
+If HybridEditor works well after Sprint 9, consider BlockNote as optional feature for v2.
 
 ---
 
-## 🎯 Definition of Done
+## 📁 Files Modified
 
-- [ ] BlockNote replaces TipTap
-- [ ] Wiki links work
-- [ ] Tags work
-- [ ] Focus mode implemented
-- [ ] Word count visible
-- [ ] All tests passing
-- [ ] No console errors
-- [ ] CHANGELOG updated
-- [ ] .STATUS updated
+| File | Status | Notes |
+|------|--------|-------|
+| `src/renderer/src/components/HybridEditor.tsx` | ✅ Implemented | Markdown editor + preview |
+| `src/renderer/src/App.tsx` | ✅ Updated | Uses HybridEditor |
+| `src/renderer/src/components/BlockNoteEditor.tsx` | ⚠️ Dead code | 362 lines, not used |
+| `src/renderer/src/components/Editor.tsx` | ⚠️ Dead code | 269 lines, not used |
+| `src/renderer/src/extensions/` | ⚠️ Dead code | TipTap extensions |
+| `package.json` | ⚠️ Missing BlockNote | No @blocknote packages |
+
+---
+
+## 📊 Metrics
+
+| Metric | Planned | Actual |
+|--------|---------|--------|
+| Time | 6 hours | 4 hours |
+| Features Complete | 100% | 60% |
+| Tests Passing | 100% | Unknown (need to run) |
+| Editor | BlockNote | HybridEditor |
+
+---
+
+## ✅ Definition of Done (Not Met)
+
+- [ ] BlockNote replaces TipTap → ❌ HybridEditor created instead
+- [ ] Wiki links work → ⚠️ Preview mode only
+- [ ] Tags work → ⚠️ Preview mode only
+- [ ] Focus mode implemented → ✅ Complete
+- [ ] Word count visible → ✅ Complete
+- [ ] All tests passing → ❌ Unknown
+- [ ] No console errors → ❌ Unknown
+- [ ] CHANGELOG updated → ⚠️ Needs Sprint 9 update
+- [ ] .STATUS updated → ⚠️ Needs Sprint 9 update
+
+---
+
+## 🔄 Next Steps
+
+1. **Review Sprint 9 options** (A, B, C, or D)
+2. **Choose editor path** based on ADHD principles
+3. **Clean up dead code** (BlockNoteEditor.tsx, Editor.tsx, extensions/)
+4. **Run tests** to assess current state
+5. **Implement chosen option**
+6. **Update docs** with accurate progress
+
+---
+
+## 📝 Lessons Learned
+
+1. **Commit messages matter** - "complete" was misleading
+2. **Verify installations** - Check package.json before marking complete
+3. **Align with goals** - ADHD-friendly = simple, not complex
+4. **Dead code accrues** - Clean up abandoned paths
+5. **Technical debt** - HybridEditor is simpler but meets goals better
