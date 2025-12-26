@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, act, waitFor } from '@testing-library/react'
+import { renderHook, act } from '@testing-library/react'
 import { useNotesStore } from '../store/useNotesStore'
 import { api } from '../lib/api'
 
-// Use the mock from setup.ts
-const mockApi = api as {
+// Use the mock from setup.ts - cast via unknown for test flexibility
+const mockApi = api as unknown as {
   listNotes: ReturnType<typeof vi.fn>
   createNote: ReturnType<typeof vi.fn>
   updateNote: ReturnType<typeof vi.fn>
@@ -173,7 +173,7 @@ describe('useNotesStore', () => {
       })
 
       act(() => {
-        result.current.selectNote(null)
+        result.current.selectNote(null as unknown as string)
       })
 
       expect(result.current.selectedNoteId).toBeNull()

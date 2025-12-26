@@ -46,48 +46,6 @@ export function HybridEditor({
   const [wikiLinkTrigger, setWikiLinkTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
   const [tagTrigger, setTagTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
 
-  // Get cursor position from textarea
-  const getCursorPosition = useCallback((): { top: number; left: number } => {
-    const textarea = textareaRef.current
-    if (!textarea) return { top: 100, left: 100 }
-
-    // Create a mirror element to measure cursor position
-    const mirror = document.createElement('div')
-    const style = window.getComputedStyle(textarea)
-    
-    // Copy textarea styles
-    mirror.style.cssText = `
-      position: absolute;
-      visibility: hidden;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-family: ${style.fontFamily};
-      font-size: ${style.fontSize};
-      line-height: ${style.lineHeight};
-      padding: ${style.padding};
-      width: ${textarea.clientWidth}px;
-    `
-    
-    // Get text before cursor
-    const textBeforeCursor = content.substring(0, textarea.selectionStart)
-    mirror.textContent = textBeforeCursor
-    
-    // Add a span to mark cursor position
-    const marker = document.createElement('span')
-    marker.textContent = '|'
-    mirror.appendChild(marker)
-    
-    document.body.appendChild(mirror)
-    const markerRect = marker.getBoundingClientRect()
-    const textareaRect = textarea.getBoundingClientRect()
-    document.body.removeChild(mirror)
-    
-    return {
-      top: textareaRect.top + (markerRect.top - mirror.getBoundingClientRect().top) + 24,
-      left: textareaRect.left + (markerRect.left - mirror.getBoundingClientRect().left)
-    }
-  }, [content])
-
   // Toggle between write and preview modes
   const toggleMode = useCallback(() => {
     setMode(prev => prev === 'write' ? 'preview' : 'write')

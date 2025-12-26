@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { Note } from '../../../main/database/DatabaseService'
+import { Note } from '../types'
 
 /**
  * Tags System Test Suite
@@ -410,7 +410,7 @@ describe('Tags - Filtering Logic', () => {
 
     return notes.filter(note => {
       const tagRegex = /#([a-zA-Z0-9_-]+)/g
-      const noteTags = Array.from(note.content.matchAll(tagRegex)).map(m => m[1].toLowerCase())
+      const noteTags = Array.from(note.content.matchAll(tagRegex)).map((m: RegExpMatchArray) => m[1].toLowerCase())
 
       if (matchAll) {
         // AND logic: note must have all filter tags

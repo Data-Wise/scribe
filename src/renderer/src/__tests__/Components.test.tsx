@@ -159,8 +159,8 @@ describe('TagFilter Component', () => {
 
   it('renders selected tags', () => {
     const tags = [
-      { id: '1', name: 'important', color: '#ff0000' },
-      { id: '2', name: 'work', color: '#00ff00' },
+      { id: '1', name: 'important', color: '#ff0000', created_at: Date.now() },
+      { id: '2', name: 'work', color: '#00ff00', created_at: Date.now() },
     ]
 
     render(
@@ -176,7 +176,7 @@ describe('TagFilter Component', () => {
   })
 
   it('shows clear all button when tags selected', () => {
-    const tags = [{ id: '1', name: 'test', color: '#000' }]
+    const tags = [{ id: '1', name: 'test', color: '#000', created_at: Date.now() }]
 
     render(
       <TagFilter
@@ -190,7 +190,7 @@ describe('TagFilter Component', () => {
   })
 
   it('calls onRemoveTag when tag clicked', () => {
-    const tags = [{ id: '1', name: 'test', color: '#000' }]
+    const tags = [{ id: '1', name: 'test', color: '#000', created_at: Date.now() }]
 
     render(
       <TagFilter
@@ -205,7 +205,7 @@ describe('TagFilter Component', () => {
   })
 
   it('calls onClearAll when clear all clicked', () => {
-    const tags = [{ id: '1', name: 'test', color: '#000' }]
+    const tags = [{ id: '1', name: 'test', color: '#000', created_at: Date.now() }]
 
     render(
       <TagFilter
@@ -241,8 +241,8 @@ describe('PropertiesPanel Component', () => {
 
   it('displays existing properties', () => {
     const properties = {
-      status: 'draft',
-      priority: 'high',
+      status: { key: 'status', value: 'draft', type: 'list' as const },
+      priority: { key: 'priority', value: 'high', type: 'list' as const },
     }
 
     render(

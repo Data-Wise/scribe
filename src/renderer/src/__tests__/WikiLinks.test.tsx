@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { Note } from '../../../main/database/DatabaseService'
+import { Note } from '../types'
 
 /**
  * WikiLinks Test Suite
