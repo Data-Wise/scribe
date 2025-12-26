@@ -1,7 +1,7 @@
 {
-  "name": "nexus-desktop",
-  "version": "0.3.0",
-  "description": "Nexus - Desktop knowledge management application",
+  "name": "scribe",
+  "version": "0.4.0-alpha.1",
+  "description": "Scribe - ADHD-friendly distraction-free writer",
   "main": "dist-electron/main/index.js",
   "author": "Stat-Wise",
   "license": "MIT",

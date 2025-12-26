@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import {
   Theme,
   ThemeColors,
@@ -27,11 +27,9 @@ import {
   getThemeForShortcut,
   ThemeShortcut,
   // Font exports
-  FontSettings,
   DEFAULT_FONT_SETTINGS,
   FONT_FAMILIES,
   RECOMMENDED_FONTS,
-  RecommendedFont,
   groupRecommendedFonts,
 } from '../lib/themes'
 

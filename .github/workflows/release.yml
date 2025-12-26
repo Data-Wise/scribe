@@ -1,0 +1,143 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+            arch: x64
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            arch: aarch64
+
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-action@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'Scribe v__VERSION__'
+          releaseBody: |
+            ## Scribe v__VERSION__
+            
+            ADHD-friendly distraction-free writer for academics and researchers.
+            
+            ### Installation
+            
+            **Homebrew (recommended):**
+            ```bash
+            brew tap data-wise/tap
+            brew install --cask data-wise/tap/scribe
+            ```
+            
+            **Direct Download:**
+            - macOS Intel: `Scribe___VERSION___x64.dmg`
+            - macOS Apple Silicon: `Scribe___VERSION___aarch64.dmg`
+            
+            ### What's New
+            
+            See [CHANGELOG.md](https://github.com/Data-Wise/scribe/blob/main/CHANGELOG.md) for details.
+            
+            ### Keyboard Shortcuts
+            
+            | Shortcut | Action |
+            |----------|--------|
+            | ⌘⇧N | Open Scribe from anywhere |
+            | ⌘K | Command palette |
+            | ⌘⇧F | Toggle focus mode |
+            
+            ---
+            
+            ⚠️ **Alpha Release**: This is a pre-release version. Please report issues at https://github.com/Data-Wise/scribe/issues
+          releaseDraft: true
+          prerelease: true
+          args: --target ${{ matrix.target }}
+
+  update-homebrew:
+    needs: build
+    runs-on: macos-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+      - name: Checkout homebrew-tap
+        uses: actions/checkout@v4
+        with:
+          repository: Data-Wise/homebrew-tap
+          token: ${{ secrets.TAP_GITHUB_TOKEN }}
+          path: homebrew-tap
+
+      - name: Get version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Download release assets
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          
+          # Download x64 DMG
+          curl -L -o x64.dmg \
+            "https://github.com/Data-Wise/scribe/releases/download/v${VERSION}/Scribe_${VERSION}_x64.dmg"
+          
+          # Download aarch64 DMG
+          curl -L -o aarch64.dmg \
+            "https://github.com/Data-Wise/scribe/releases/download/v${VERSION}/Scribe_${VERSION}_aarch64.dmg"
+          
+          # Calculate SHA256
+          X64_SHA=$(shasum -a 256 x64.dmg | cut -d' ' -f1)
+          ARM64_SHA=$(shasum -a 256 aarch64.dmg | cut -d' ' -f1)
+          
+          echo "x64_sha=$X64_SHA" >> $GITHUB_OUTPUT
+          echo "arm64_sha=$ARM64_SHA" >> $GITHUB_OUTPUT
+
+      - name: Update Cask
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          X64_SHA=${{ steps.download.outputs.x64_sha }}
+          ARM64_SHA=${{ steps.download.outputs.arm64_sha }}
+          
+          cd homebrew-tap
+          
+          # Update version and SHAs in cask
+          sed -i '' "s/version \".*\"/version \"${VERSION}\"/" Casks/scribe.rb
+          sed -i '' "s/PLACEHOLDER_X64_SHA256/${X64_SHA}/" Casks/scribe.rb
+          sed -i '' "s/PLACEHOLDER_ARM64_SHA256/${ARM64_SHA}/" Casks/scribe.rb
+
+      - name: Commit and push
+        run: |
+          cd homebrew-tap
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add Casks/scribe.rb
+          git commit -m "Update Scribe to v${{ steps.version.outputs.version }}"
+          git push
