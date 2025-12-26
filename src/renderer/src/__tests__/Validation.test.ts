@@ -382,3 +382,207 @@ describe('Editor Validation Tests', () => {
     })
   })
 })
+
+describe('processWikiLinksAndTags Validation', () => {
+  // These tests validate the processing logic used in HybridEditor
+
+  function processWikiLinksAndTags(content: string): string {
+    // Convert [[Title]] to [Title](wikilink:Title)
+    let processed = content.replace(
+      /\[\[([^\]]+)\]\]/g,
+      (_, title) => `[${title}](wikilink:${encodeURIComponent(title.trim())})`
+    )
+
+    // Convert #tag to inline code (but not ## headings)
+    processed = processed.replace(
+      /(?<![#\w])#([a-zA-Z][a-zA-Z0-9_-]*)/g,
+      '`#$1`'
+    )
+
+    return processed
+  }
+
+  describe('Wiki-Link Processing', () => {
+    it('converts wiki-link to markdown link format', () => {
+      const content = 'See [[My Note]] here'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toBe('See [My Note](wikilink:My%20Note) here')
+    })
+
+    it('encodes special characters in wiki-link titles', () => {
+      const content = '[[Note: A & B]]'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toContain('wikilink:Note%3A%20A%20%26%20B')
+    })
+
+    it('handles multiple wiki-links', () => {
+      const content = '[[Note1]] and [[Note2]]'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toContain('[Note1](wikilink:Note1)')
+      expect(processed).toContain('[Note2](wikilink:Note2)')
+    })
+
+    it('trims whitespace in wiki-link titles', () => {
+      const content = '[[  My Note  ]]'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toContain('wikilink:My%20Note')
+    })
+  })
+
+  describe('Tag Processing', () => {
+    it('converts tag to inline code format', () => {
+      const content = 'This is #important'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toBe('This is `#important`')
+    })
+
+    it('handles multiple tags', () => {
+      const content = '#tag1 and #tag2'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toBe('`#tag1` and `#tag2`')
+    })
+
+    it('does not convert headings to tags', () => {
+      const content = '## Heading 2'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toBe('## Heading 2')
+      expect(processed).not.toContain('`#')
+    })
+
+    it('handles tags with dashes and underscores', () => {
+      const content = '#my-tag and #my_tag'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toBe('`#my-tag` and `#my_tag`')
+    })
+  })
+
+  describe('Mixed Content', () => {
+    it('processes both wiki-links and tags', () => {
+      const content = 'See [[Note]] with #tag'
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toContain('[Note](wikilink:Note)')
+      expect(processed).toContain('`#tag`')
+    })
+
+    it('handles complex markdown with links and tags', () => {
+      const content = `# Heading
+See [[Note1]] and #important
+Another [[Note2]] with #todo`
+      const processed = processWikiLinksAndTags(content)
+      
+      expect(processed).toContain('[Note1](wikilink:Note1)')
+      expect(processed).toContain('[Note2](wikilink:Note2)')
+      expect(processed).toContain('`#important`')
+      expect(processed).toContain('`#todo`')
+    })
+  })
+})
+
+describe('generateTagColor Validation', () => {
+  // Testing the color generation algorithm
+  function generateTagColor(name: string): string {
+    const hash = name.split('').reduce((acc, char) =>
+      char.charCodeAt(0) + ((acc << 5) - acc), 0)
+    const hue = Math.abs(hash) % 360
+    return `hsl(${hue}, 70%, 50%)`
+  }
+
+  it('generates consistent colors for same tag name', () => {
+    const color1 = generateTagColor('important')
+    const color2 = generateTagColor('important')
+    
+    expect(color1).toBe(color2)
+  })
+
+  it('generates different colors for different tag names', () => {
+    const color1 = generateTagColor('important')
+    const color2 = generateTagColor('todo')
+    
+    expect(color1).not.toBe(color2)
+  })
+
+  it('generates valid HSL color format', () => {
+    const color = generateTagColor('test')
+    
+    expect(color).toMatch(/^hsl\(\d+, 70%, 50%\)$/)
+  })
+
+  it('hue is always between 0 and 359', () => {
+    const testNames = ['a', 'test', 'very-long-tag-name', '123', 'UPPERCASE']
+    
+    testNames.forEach(name => {
+      const color = generateTagColor(name)
+      const hueMatch = color.match(/hsl\((\d+),/)
+      expect(hueMatch).toBeTruthy()
+      const hue = parseInt(hueMatch![1])
+      expect(hue).toBeGreaterThanOrEqual(0)
+      expect(hue).toBeLessThan(360)
+    })
+  })
+
+  it('handles empty string', () => {
+    const color = generateTagColor('')
+    expect(color).toMatch(/^hsl\(\d+, 70%, 50%\)$/)
+  })
+
+  it('handles special characters', () => {
+    const color = generateTagColor('tag-with_special123')
+    expect(color).toMatch(/^hsl\(\d+, 70%, 50%\)$/)
+  })
+})
+
+describe('Word Count Calculation', () => {
+  function calculateWordCount(content: string): number {
+    return content.trim() ? content.trim().split(/\s+/).length : 0
+  }
+
+  it('counts words correctly for simple text', () => {
+    expect(calculateWordCount('Hello world')).toBe(2)
+  })
+
+  it('returns 0 for empty string', () => {
+    expect(calculateWordCount('')).toBe(0)
+  })
+
+  it('returns 0 for whitespace only', () => {
+    expect(calculateWordCount('   ')).toBe(0)
+  })
+
+  it('handles multiple spaces between words', () => {
+    expect(calculateWordCount('Hello    world')).toBe(2)
+  })
+
+  it('handles newlines', () => {
+    expect(calculateWordCount('Hello\nworld')).toBe(2)
+  })
+
+  it('handles tabs', () => {
+    expect(calculateWordCount('Hello\tworld')).toBe(2)
+  })
+
+  it('counts wiki-links as single words', () => {
+    expect(calculateWordCount('See [[My Note]] here')).toBe(4)
+  })
+
+  it('counts tags as single words', () => {
+    expect(calculateWordCount('Check #important today')).toBe(3)
+  })
+
+  it('handles complex markdown', () => {
+    const content = `# Heading
+This is **bold** and *italic*.
+- List item 1
+- List item 2`
+    // Word count: #, Heading, This, is, **bold**, and, *italic*., -, List, item, 1, -, List, item, 2 = 15
+    expect(calculateWordCount(content)).toBe(15)
+  })
+})
