@@ -25,7 +25,7 @@ tags:
 
 **Sprint 12: UI Polish & Micro-interactions** 🚀 In Progress
 
-**Latest Updates (2024-12-26):**
+**Completed (2024-12-26):**
 - [x] Migrated MathJax to KaTeX (browser-native, 1.7MB smaller)
 - [x] Fixed tags panel theme variables (brightness issue)
 - [x] Fixed act() warnings in tests
@@ -35,6 +35,14 @@ tags:
 - [x] Engaging empty state with action buttons
 - [x] Loading spinner & success flash animations
 - [x] Reduced-motion accessibility support
+- [x] Fixed daily note template (HTML → Markdown)
+
+**Remaining Sprint 12 Items:**
+- [ ] Writing progress visualization (word goals, streaks)
+- [ ] Focus mode enhancements (typewriter scrolling)
+- [ ] Recent notes quick access
+- [ ] Theme preview cards in settings
+- [ ] Panel slide transitions
 
 **Sprint 11: Academic Features** ✅ Complete
 - [x] 10 built-in themes (5 dark, 5 light)

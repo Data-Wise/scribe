@@ -353,10 +353,25 @@ After analyzing Scribe's UI in the browser, I identified **strengths to build on
 
 ## Next Steps
 
-### Immediate Actions
-1. [ ] Implement button micro-interactions (CSS only)
-2. [ ] Design engaging empty state mockup
-3. [ ] Add tooltip labels to sidebar icons
+### ✅ Completed (2024-12-26)
+1. [x] Implement button micro-interactions (CSS only)
+2. [x] Design engaging empty state with animated pen, quotes
+3. [x] Add tooltip labels to sidebar icons
+4. [x] Reduced-motion accessibility support
+5. [x] Fixed daily note template (HTML → Markdown)
+
+### 🚀 In Progress - Sprint 12 Remaining
+1. [ ] Writing progress visualization (word goals, streaks)
+2. [ ] Focus mode enhancements (typewriter scrolling)
+3. [ ] Recent notes quick access
+4. [ ] Theme preview cards in settings
+5. [ ] Panel slide transitions
+
+### 📋 Sprint 13 - Project System
+1. [ ] Project creation/management UI
+2. [ ] Project-specific settings
+3. [ ] Project switching in sidebar
+4. [ ] Per-project templates
 
 ### Research Needed
 - [ ] User feedback on current pain points
