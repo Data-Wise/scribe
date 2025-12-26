@@ -9,6 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - v0.4.0-dev
 
+### Sprint 10 Enhancements (2024-12-25)
+
+**Autocomplete Positioning Fix:**
+- Autocomplete dropdowns now follow cursor position
+- Uses `getBoundingClientRect()` for accurate positioning
+- Clamps horizontal position to prevent viewport overflow
+- Position passed from HybridEditor to autocomplete components
+
+**Accessibility Improvements:**
+- Added `@radix-ui/react-visually-hidden` for screen reader support
+- DialogTitle and DialogDescription for command palette
+- Aria-labels on search input and interactive elements
+- Removed console warnings about missing accessibility elements
+
+**Comprehensive Test Suite (300 tests):**
+- HybridEditor.test.tsx: 32 tests (rendering, modes, highlighting, word count)
+- Autocomplete.test.tsx: 34 tests (wiki-link, tag, keyboard nav, edge cases)
+- CommandPalette.test.tsx: 24 tests (actions, selection, accessibility)
+- Integration.test.tsx: 31 tests (workflows, ADHD-friendly design)
+- Validation.test.ts: 54 tests (regex, data, security, performance)
+- Total: **300 tests passing** (up from 154)
+
+**Test Categories Added:**
+- processWikiLinksAndTags function validation
+- generateTagColor algorithm validation
+- Word count calculation edge cases
+- Editor + Autocomplete integration
+- Command Palette quick actions
+- ADHD-friendly design verification
+
+---
+
 ### Sprint 10: Global Hotkey + Commands - Complete (2024-12-25)
 
 **Global Hotkey Implementation:**
@@ -38,16 +70,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ⌘D: Open daily note
 - Escape: Exit focus mode
 
-**Testing:**
-- All tests passing (154 tests, 7 todo)
-- No console errors
-- Hotkey response < 50ms
-- Command palette latency < 100ms
-
 **Technical Details:**
 - `src-tauri/src/lib.rs` - Global hotkey registration
 - `src/renderer/src/components/CommandPalette.tsx` - cmdk-based palette
-- Dependencies: `cmdk`, `tauri_plugin_global_shortcut`
+- Dependencies: `cmdk`, `tauri_plugin_global_shortcut`, `@radix-ui/react-visually-hidden`
 
 **ADHD-Friendly Design:**
 - Zero friction: ⌘⇧N → App appears instantly

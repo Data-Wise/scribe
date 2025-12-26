@@ -2,10 +2,12 @@
 
 > **ADHD-Friendly Distraction-Free Writer**
 
- [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
- [![Version](https://img.shields.io/badge/version-0.4.0--dev-blue)]()
- [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
- [![React](https://img.shields.io/badge/react-18-blue)]()
+[![Status](https://img.shields.io/badge/status-active-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.3.0--dev-blue)]()
+[![Progress](https://img.shields.io/badge/progress-70%25-green)]()
+[![Tests](https://img.shields.io/badge/tests-300%20passing-brightgreen)]()
+[![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
+[![React](https://img.shields.io/badge/react-18-blue)]()
 
 ---
 
@@ -45,7 +47,16 @@ npm run build
 
 ### Global Hotkey
 
-**⌘⇧N** — Open Scribe from anywhere (coming in Sprint 10)
+**⌘⇧N** — Open Scribe from anywhere ✅
+
+### Command Palette
+
+**⌘K** — Quick access to all features:
+- Create New Note (⌘N)
+- Open Daily Note (⌘D)
+- Toggle Focus Mode (⌘⇧F)
+- Sync to Obsidian
+- Ask Claude / Gemini
 
 ---
 
@@ -151,15 +162,15 @@ npm run build        # Production build
 
 ## Roadmap
 
- | Phase | Sprints | Focus | Hours |
- |-------|---------|-------|-------|
- | 1 | 8-10 | Editor + Hotkey | 14h |
- | 2 | 11-12 | Obsidian + Zotero | 16h |
- | 3 | 13-14 | Export | 12h |
- | 4 | 15-16 | Projects + Daily Notes | 12h |
- | 5 | 17 | Polish | 4h |
+| Phase | Sprints | Focus | Hours | Status |
+|-------|---------|-------|-------|--------|
+| 1 | 8-10 | Editor + Hotkey | 14h | ✅ Complete |
+| 2 | 11-12 | Academic + Obsidian | 16h | 🔄 Next |
+| 3 | 13-14 | Export | 12h | Pending |
+| 4 | 15-16 | Projects + Daily Notes | 12h | Pending |
+| 5 | 17 | Polish | 4h | Pending |
 
- **Total: 58 hours over 10 sprints**
+**Progress: 42h / 60h (70%) — Sprint 11 Next**
 
 See [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) for detailed sprint breakdown.
 

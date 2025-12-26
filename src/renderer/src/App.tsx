@@ -1,10 +1,8 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { HybridEditor } from './components/HybridEditor'
 import { SearchBar } from './components/SearchBar'
-import { SearchResults } from './components/SearchResults'
 import { BacklinksPanel } from './components/BacklinksPanel'
-import { TagsPanel } from './components/TagsPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { Ribbon } from './components/Ribbon'
@@ -15,17 +13,9 @@ import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
 import { Plus } from 'lucide-react'
 
-const FOLDERS = [
-  { path: 'inbox', name: '📥 Inbox', color: '#8b5cf6' },
-  { path: 'projects', name: '📁 Projects', color: '#3b82f6' },
-  { path: 'areas', name: '🎯 Areas', color: '#10b981' },
-  { path: 'resources', name: '📚 Resources', color: '#f59e0b' },
-  { path: 'archive', name: '📦 Archive', color: '#6b7280' }
-]
-
 function App() {
-  const { notes, isLoading, error, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
-  const [currentFolder, setCurrentFolder] = useState<string | undefined>(undefined)
+  const { notes, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
+  const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
 
   // Focus mode state
@@ -52,10 +42,10 @@ function App() {
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
 
   // Search state
-  const [searchQuery, setSearchQuery] = useState('')
+  const [, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Note[]>([])
   const [isSearching, setIsSearching] = useState(false)
-  const [searchLoading, setSearchLoading] = useState(false)
+  const [, setSearchLoading] = useState(false)
 
   // Tag filtering state
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])

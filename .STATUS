@@ -1,19 +1,20 @@
 ---
 status: active
 priority: P1
-progress: 65
+progress: 70
 version: 0.4.0-dev
 sprint: 10
 updated: 2024-12-25
 editor: hybrid-markdown++
 next_sprint: 11
 next_focus: Academic Features
+tests: 300
 tags:
   - adhd-friendly
   - distraction-free
   - tauri
   - react
-  ---
+---
 
 # Scribe
 
@@ -23,25 +24,27 @@ tags:
 
 **Sprint 10: Global Hotkey + Commands** ✅ Complete
 
-**Status Update:**
-- [x] Global hotkey ⌘⇧N (already implemented)
-- [x] Command palette ⌘K (already implemented)
-- [x] Quick actions:
-  - [x] Create new note
-  - [x] Open daily note
-  - [x] Toggle focus mode
-  - [x] Obsidian sync
-  - [x] Run Claude/Gemini
-- [x] Recent notes in command palette
-- [x] All tests passing (154 tests)
-- [x] ADHD-friendly keyboard navigation
+**Latest Updates (2024-12-25):**
+- [x] Global hotkey ⌘⇧N opens app from anywhere
+- [x] Command palette ⌘K with 6 quick actions
+- [x] Autocomplete positioning follows cursor (fixed)
+- [x] Accessibility improvements (DialogTitle, aria-labels)
+- [x] Comprehensive test suite: **300 tests passing**
+- [x] Integration tests added (31 new tests)
 
-**Technical Details:**
-- `src-tauri/src/lib.rs` - Global hotkey with tauri_plugin_global_shortcut
-- `src/renderer/src/components/CommandPalette.tsx` - cmdk-based palette
-- `src/renderer/src/App.tsx` - Keyboard shortcuts (⌘⇧F, ⌘B, ⌘N, ⌘D)
-- Zero friction: ⌘⇧N → App appears in < 3 seconds
-- Escape hatches: Esc exits focus mode
+**Test Coverage:**
+| Test File | Tests |
+|-----------|-------|
+| Validation.test.ts | 54 |
+| Tags.test.tsx | 52 |
+| BlockNoteEditor.test.tsx | 35 |
+| Autocomplete.test.tsx | 34 |
+| HybridEditor.test.tsx | 32 |
+| Integration.test.tsx | 31 |
+| CommandPalette.test.tsx | 24 |
+| Components.test.tsx | 16 |
+| WikiLinks.test.tsx | 16 (7 skipped) |
+| NotesStore.test.tsx | 13 |
 
 ---
 
@@ -52,31 +55,48 @@ tags:
 | **1** | 8 | Editor Foundation | ✅ 100% |
 | 1 | 9 | Editor Enhancement | ✅ 100% |
 | 1 | 10 | Hotkey + Commands | ✅ 100% |
-| **2** | 11 | Obsidian Sync | ⏳ Next |
-| 2 | 12 | Zotero + Math | ○ 0% |
-| **3** | 13 | LaTeX/PDF/Word | ○ 0% |
-| 3 | 14 | Quarto | ○ 0% |
-| **4** | 15 | Project System | ○ 0% |
-| 4 | 16 | Templates + Daily | ○ 0% |
-| **5** | 17 | Search + Goals | ○ 0% |
+| **2** | 11 | Academic Features | ⏳ Next |
+| 2 | 12 | Export (PDF/Word) | ○ 0% |
+| **3** | 13 | Project System | ○ 0% |
+| 3 | 14 | Templates + Daily | ○ 0% |
+| **4** | 15 | Search + Goals | ○ 0% |
 
-**Total: 65% complete (38.5h / 65h estimated)**
+**Total: 70% complete (42h / 60h estimated)**
 
 ---
 
-## Completed Sprints (1-9)
+## Completed Sprints
 
-| Sprint | Focus | Done |
-|--------|-------|------|
-| 1 | Tauri Setup | ✅ |
-| 2 | SQLite Database | ✅ |
-| 3 | Rich Editor (TipTap) | ✅ |
-| 4 | PARA Folders | ✅ |
-| 5 | Full-Text Search | ✅ |
-| 6 | Wiki Links | ✅ |
-| 7 | Tags System | ✅ |
+| Sprint | Focus | Tests |
+|--------|-------|-------|
+| 1-5 | Foundation (Tauri, SQLite, Editor, PARA, Search) | ✅ |
+| 6 | Wiki Links & Backlinks | ✅ |
+| 7 | Tags System | 52 |
 | 8 | Editor Foundation | ✅ |
-| 9 | Editor Enhancement | ✅ |
+| 9 | Editor Enhancement | 125 |
+| 10 | Hotkey + Commands + Tests | 300 |
+
+---
+
+## Key Features
+
+**Editor:**
+- HybridEditor++ (contenteditable + markdown preview)
+- Live wiki-link `[[...]]` highlighting with cursor-following autocomplete
+- Live tag `#tag` highlighting with autocomplete
+- Word count, mode toggle (⌘E)
+- Focus mode (⌘⇧F)
+
+**Commands:**
+- Global hotkey ⌘⇧N
+- Command palette ⌘K
+- Quick actions: Create, Daily, Focus, Sync, Claude, Gemini
+- Keyboard shortcuts: ⌘N, ⌘D, ⌘B, ⌘⇧B
+
+**Accessibility:**
+- Screen reader support (DialogTitle, DialogDescription)
+- Aria labels on interactive elements
+- Keyboard navigation
 
 ---
 
@@ -86,16 +106,19 @@ tags:
 |-------|------|
 | Shell | Tauri 2 |
 | UI | React 18 |
-| Editor | **HybridEditor++** (contenteditable + autocomplete) |
+| Editor | HybridEditor++ |
 | Styling | Tailwind |
 | State | Zustand |
-| Database | SQLite |
+| Database | SQLite (rusqlite) |
 | AI | Claude/Gemini CLI |
+| Testing | Vitest + Testing Library |
 
 ---
 
 ## Files
 
-- [PROJECT-DEFINITION.md](file:///Users/dt/projects/dev-tools/scribe/PROJECT-DEFINITION.md) - Scope & roadmap
-- [CHANGELOG.md](file:///Users/dt/projects/dev-tools/scribe/CHANGELOG.md) - Version history
-- [CLAUDE.md](file:///Users/dt/projects/dev-tools/scribe/CLAUDE.md) - AI guidance
+- [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) - Scope & roadmap
+- [CHANGELOG.md](CHANGELOG.md) - Version history
+- [TESTS_SUMMARY.md](TESTS_SUMMARY.md) - Test coverage
+- [CLAUDE.md](CLAUDE.md) - AI guidance
+- [docs/planning/](docs/planning/) - Sprint plans
