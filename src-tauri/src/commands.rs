@@ -272,8 +272,8 @@ pub fn get_or_create_daily_note(state: State<AppState>, date: String) -> Result<
         return Ok(note);
     }
     
-    // Create it
-    let content = format!("<h2>{}</h2>\n<p></p>", date);
+    // Create it with Markdown format
+    let content = format!("## {}\n\n", date);
     
     let note = db.create_note(&date, &content, "daily").map_err(|e| e.to_string())?;
     Ok(note)
