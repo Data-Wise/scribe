@@ -11,11 +11,29 @@ import {
   BookOpen
 } from 'lucide-react'
 
+// Theme definitions - must match App.tsx
+const THEMES = {
+  // Dark themes
+  'oxford-dark': { name: 'Oxford Dark', type: 'dark' as const, description: 'Cool academic blues', preview: '#0a0c10' },
+  'forest-night': { name: 'Forest Night', type: 'dark' as const, description: 'Calming deep greens', preview: '#0d1210' },
+  'warm-cocoa': { name: 'Warm Cocoa', type: 'dark' as const, description: 'Cozy warm browns', preview: '#121010' },
+  'midnight-purple': { name: 'Midnight Purple', type: 'dark' as const, description: 'Dreamy soft purples', preview: '#0e0c12' },
+  'deep-ocean': { name: 'Deep Ocean', type: 'dark' as const, description: 'Stable navy blues', preview: '#0a0e14' },
+  // Light themes
+  'soft-paper': { name: 'Soft Paper', type: 'light' as const, description: 'Warm off-white', preview: '#faf8f5' },
+  'morning-fog': { name: 'Morning Fog', type: 'light' as const, description: 'Minimal cool grays', preview: '#f4f6f8' },
+  'sage-garden': { name: 'Sage Garden', type: 'light' as const, description: 'Natural calm greens', preview: '#f5f8f5' },
+  'lavender-mist': { name: 'Lavender Mist', type: 'light' as const, description: 'Soothing soft purples', preview: '#f8f6fa' },
+  'sand-dune': { name: 'Sand Dune', type: 'light' as const, description: 'Grounding warm neutrals', preview: '#f9f7f4' },
+}
+
+type ThemeId = keyof typeof THEMES
+
 interface SettingsModalProps {
   isOpen: boolean
   onClose: () => void
-  theme: 'dark' | 'light'
-  onThemeChange: (theme: 'dark' | 'light') => void
+  theme: ThemeId
+  onThemeChange: (theme: ThemeId) => void
 }
 
 type SettingsTab = 'general' | 'editor' | 'appearance' | 'files' | 'academic'
@@ -142,39 +160,85 @@ export function SettingsModal({ isOpen, onClose, theme, onThemeChange }: Setting
 
             {activeTab === 'appearance' && (
               <div className="space-y-6">
+                {/* Dark Themes */}
                 <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Themes</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      onClick={() => onThemeChange('dark')}
-                      className={`p-4 rounded-lg border-2 transition-colors text-left ${
-                        theme === 'dark' 
-                          ? 'border-nexus-accent bg-nexus-bg-primary' 
-                          : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20'
-                      }`}
-                    >
-                      <div className="text-sm font-medium text-nexus-text-primary mb-1">Oxford Dark</div>
-                      <div className={`text-[10px] uppercase font-bold tracking-widest ${
-                        theme === 'dark' ? 'text-nexus-accent' : 'text-nexus-text-muted'
-                      }`}>
-                        {theme === 'dark' ? 'Active' : 'Select'}
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => onThemeChange('light')}
-                      className={`p-4 rounded-lg border-2 transition-colors text-left ${
-                        theme === 'light' 
-                          ? 'border-nexus-accent bg-nexus-bg-primary' 
-                          : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20'
-                      }`}
-                    >
-                      <div className="text-sm font-medium text-nexus-text-primary mb-1">Classic Light</div>
-                      <div className={`text-[10px] uppercase font-bold tracking-widest ${
-                        theme === 'light' ? 'text-nexus-accent' : 'text-nexus-text-muted'
-                      }`}>
-                        {theme === 'light' ? 'Active' : 'Select'}
-                      </div>
-                    </button>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    Dark Themes
+                    <span className="ml-2 text-[10px] normal-case tracking-normal font-normal opacity-60">
+                      — reduced eye strain
+                    </span>
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {Object.entries(THEMES)
+                      .filter(([, t]) => t.type === 'dark')
+                      .map(([id, t]) => (
+                        <button
+                          key={id}
+                          onClick={() => onThemeChange(id as ThemeId)}
+                          className={`p-3 rounded-lg border-2 transition-all text-left group ${
+                            theme === id 
+                              ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10' 
+                              : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20 hover:bg-nexus-bg-secondary'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div 
+                              className="w-8 h-8 rounded-md border border-white/10 flex-shrink-0"
+                              style={{ backgroundColor: t.preview }}
+                            />
+                            <div className="min-w-0">
+                              <div className="text-sm font-medium text-nexus-text-primary truncate">{t.name}</div>
+                              <div className="text-[10px] text-nexus-text-muted truncate">{t.description}</div>
+                            </div>
+                          </div>
+                          {theme === id && (
+                            <div className="mt-2 text-[10px] text-nexus-accent uppercase font-bold tracking-widest">
+                              Active
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                  </div>
+                </section>
+
+                {/* Light Themes */}
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    Light Themes
+                    <span className="ml-2 text-[10px] normal-case tracking-normal font-normal opacity-60">
+                      — natural daylight
+                    </span>
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {Object.entries(THEMES)
+                      .filter(([, t]) => t.type === 'light')
+                      .map(([id, t]) => (
+                        <button
+                          key={id}
+                          onClick={() => onThemeChange(id as ThemeId)}
+                          className={`p-3 rounded-lg border-2 transition-all text-left group ${
+                            theme === id 
+                              ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10' 
+                              : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20 hover:bg-nexus-bg-secondary'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div 
+                              className="w-8 h-8 rounded-md border border-black/10 flex-shrink-0"
+                              style={{ backgroundColor: t.preview }}
+                            />
+                            <div className="min-w-0">
+                              <div className="text-sm font-medium text-nexus-text-primary truncate">{t.name}</div>
+                              <div className="text-[10px] text-nexus-text-muted truncate">{t.description}</div>
+                            </div>
+                          </div>
+                          {theme === id && (
+                            <div className="mt-2 text-[10px] text-nexus-accent uppercase font-bold tracking-widest">
+                              Active
+                            </div>
+                          )}
+                        </button>
+                      ))}
                   </div>
                 </section>
                 

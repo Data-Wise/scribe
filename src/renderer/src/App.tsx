@@ -67,19 +67,36 @@ function App() {
   // Tags for current note (for PropertiesPanel display)
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
   
+  // Theme definitions - ADHD-friendly themes
+  const THEMES = {
+    // Dark themes
+    'oxford-dark': { name: 'Oxford Dark', type: 'dark' as const, description: 'Cool academic blues' },
+    'forest-night': { name: 'Forest Night', type: 'dark' as const, description: 'Calming deep greens' },
+    'warm-cocoa': { name: 'Warm Cocoa', type: 'dark' as const, description: 'Cozy warm browns' },
+    'midnight-purple': { name: 'Midnight Purple', type: 'dark' as const, description: 'Dreamy soft purples' },
+    'deep-ocean': { name: 'Deep Ocean', type: 'dark' as const, description: 'Stable navy blues' },
+    // Light themes
+    'soft-paper': { name: 'Soft Paper', type: 'light' as const, description: 'Warm off-white' },
+    'morning-fog': { name: 'Morning Fog', type: 'light' as const, description: 'Minimal cool grays' },
+    'sage-garden': { name: 'Sage Garden', type: 'light' as const, description: 'Natural calm greens' },
+    'lavender-mist': { name: 'Lavender Mist', type: 'light' as const, description: 'Soothing soft purples' },
+    'sand-dune': { name: 'Sand Dune', type: 'light' as const, description: 'Grounding warm neutrals' },
+  }
+  
+  type ThemeId = keyof typeof THEMES
+  
   // Theme state with localStorage persistence
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+  const [theme, setTheme] = useState<ThemeId>(() => {
     const saved = localStorage.getItem('scribe-theme')
-    return (saved === 'light' ? 'light' : 'dark') as 'dark' | 'light'
+    return (saved && saved in THEMES ? saved : 'oxford-dark') as ThemeId
   })
   
   // Apply theme to document root
   useEffect(() => {
-    if (theme === 'light') {
-      document.documentElement.classList.add('light')
-    } else {
-      document.documentElement.classList.remove('light')
-    }
+    // Remove all theme classes
+    document.documentElement.className = ''
+    // Add the selected theme class
+    document.documentElement.classList.add(theme)
     localStorage.setItem('scribe-theme', theme)
   }, [theme])
 

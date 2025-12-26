@@ -5,27 +5,142 @@
 @tailwind utilities;
 
 /* ============================================================
-   Theme Variables - Oxford Dark (default)
+   ADHD-Friendly Theme System
+   
+   Design Principles:
+   - Low-to-medium contrast (reduces eye strain)
+   - Warm or neutral tones (calming, less stimulating)
+   - Subtle accent colors (not distracting)
+   - Consistent visual hierarchy
    ============================================================ */
-:root {
+
+/* ============================================================
+   DARK THEMES (5)
+   ============================================================ */
+
+/* 1. Oxford Dark - Default (cool, academic) */
+:root,
+:root.oxford-dark {
   --nexus-bg-primary: #0a0c10;
   --nexus-bg-secondary: #12161c;
   --nexus-bg-tertiary: #1a1f26;
-  --nexus-text-primary: #f1f5f9;
+  --nexus-text-primary: #e2e8f0;
   --nexus-text-muted: #94a3b8;
   --nexus-accent: #38bdf8;
   --nexus-accent-hover: #7dd3fc;
+  --theme-name: 'Oxford Dark';
 }
 
-/* Classic Light Theme */
-:root.light {
-  --nexus-bg-primary: #f8fafc;
+/* 2. Forest Night - Deep greens, calming nature vibes */
+:root.forest-night {
+  --nexus-bg-primary: #0d1210;
+  --nexus-bg-secondary: #141e1a;
+  --nexus-bg-tertiary: #1c2922;
+  --nexus-text-primary: #d4e4dc;
+  --nexus-text-muted: #8fa89b;
+  --nexus-accent: #4ade80;
+  --nexus-accent-hover: #86efac;
+  --theme-name: 'Forest Night';
+}
+
+/* 3. Warm Cocoa - Soft browns, cozy and grounding */
+:root.warm-cocoa {
+  --nexus-bg-primary: #121010;
+  --nexus-bg-secondary: #1c1816;
+  --nexus-bg-tertiary: #262220;
+  --nexus-text-primary: #e8e0d8;
+  --nexus-text-muted: #a89890;
+  --nexus-accent: #d4a574;
+  --nexus-accent-hover: #e4c4a4;
+  --theme-name: 'Warm Cocoa';
+}
+
+/* 4. Midnight Purple - Gentle purples, dreamy focus */
+:root.midnight-purple {
+  --nexus-bg-primary: #0e0c12;
+  --nexus-bg-secondary: #16141c;
+  --nexus-bg-tertiary: #201c28;
+  --nexus-text-primary: #e4e0ec;
+  --nexus-text-muted: #9b94a8;
+  --nexus-accent: #a78bfa;
+  --nexus-accent-hover: #c4b5fd;
+  --theme-name: 'Midnight Purple';
+}
+
+/* 5. Deep Ocean - Navy blues, calm and stable */
+:root.deep-ocean {
+  --nexus-bg-primary: #0a0e14;
+  --nexus-bg-secondary: #101820;
+  --nexus-bg-tertiary: #182028;
+  --nexus-text-primary: #d8e4ec;
+  --nexus-text-muted: #8898a8;
+  --nexus-accent: #60a5fa;
+  --nexus-accent-hover: #93c5fd;
+  --theme-name: 'Deep Ocean';
+}
+
+/* ============================================================
+   LIGHT THEMES (5)
+   ============================================================ */
+
+/* 6. Soft Paper - Warm off-white, easy on eyes */
+:root.soft-paper {
+  --nexus-bg-primary: #faf8f5;
   --nexus-bg-secondary: #ffffff;
-  --nexus-bg-tertiary: #f1f5f9;
-  --nexus-text-primary: #0f172a;
-  --nexus-text-muted: #64748b;
-  --nexus-accent: #0284c7;
-  --nexus-accent-hover: #0ea5e9;
+  --nexus-bg-tertiary: #f5f2ed;
+  --nexus-text-primary: #2c2416;
+  --nexus-text-muted: #6b5d4d;
+  --nexus-accent: #b45309;
+  --nexus-accent-hover: #d97706;
+  --theme-name: 'Soft Paper';
+}
+
+/* 7. Morning Fog - Cool grays, minimal distraction */
+:root.morning-fog {
+  --nexus-bg-primary: #f4f6f8;
+  --nexus-bg-secondary: #ffffff;
+  --nexus-bg-tertiary: #e8eaed;
+  --nexus-text-primary: #1e2328;
+  --nexus-text-muted: #5c6670;
+  --nexus-accent: #4b5563;
+  --nexus-accent-hover: #6b7280;
+  --theme-name: 'Morning Fog';
+}
+
+/* 8. Sage Garden - Gentle greens, natural calm */
+:root.sage-garden {
+  --nexus-bg-primary: #f5f8f5;
+  --nexus-bg-secondary: #ffffff;
+  --nexus-bg-tertiary: #e8f0e8;
+  --nexus-text-primary: #1a2e1a;
+  --nexus-text-muted: #4a6a4a;
+  --nexus-accent: #16a34a;
+  --nexus-accent-hover: #22c55e;
+  --theme-name: 'Sage Garden';
+}
+
+/* 9. Lavender Mist - Soft purples, soothing focus */
+:root.lavender-mist {
+  --nexus-bg-primary: #f8f6fa;
+  --nexus-bg-secondary: #ffffff;
+  --nexus-bg-tertiary: #f0ecf4;
+  --nexus-text-primary: #1e1a24;
+  --nexus-text-muted: #635a70;
+  --nexus-accent: #7c3aed;
+  --nexus-accent-hover: #8b5cf6;
+  --theme-name: 'Lavender Mist';
+}
+
+/* 10. Sand Dune - Warm neutrals, grounding */
+:root.sand-dune {
+  --nexus-bg-primary: #f9f7f4;
+  --nexus-bg-secondary: #ffffff;
+  --nexus-bg-tertiary: #f0ebe4;
+  --nexus-text-primary: #2a2520;
+  --nexus-text-muted: #6b6055;
+  --nexus-accent: #92400e;
+  --nexus-accent-hover: #b45309;
+  --theme-name: 'Sand Dune';
 }
 
 * {
