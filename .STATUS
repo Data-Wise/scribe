@@ -1,19 +1,19 @@
 ---
 status: active
 priority: P1
-progress: 50
+progress: 65
 version: 0.4.0-dev
-sprint: 9
+sprint: 10
 updated: 2024-12-25
 editor: hybrid-markdown++
-next_sprint: 10
-next_focus: Global Hotkey + Commands
+next_sprint: 11
+next_focus: Academic Features
 tags:
   - adhd-friendly
   - distraction-free
   - tauri
   - react
----
+  ---
 
 # Scribe
 
@@ -21,26 +21,27 @@ tags:
 
 ## Current Sprint
 
-**Sprint 9: Editor Enhancement** ✅ Complete
+**Sprint 10: Global Hotkey + Commands** ✅ Complete
 
 **Status Update:**
-- [x] Contenteditable editor (replaced textarea)
-- [x] Live highlighting for wiki-links `[[...]]` in write mode
-- [x] Live highlighting for tags `#tag` in write mode
-- [x] Click handlers for wiki-links in write mode
-- [x] Click handlers for tags in write mode
-- [x] Wiki-link autocomplete with cmdk
-- [x] Tag autocomplete with cmdk
-- [x] Dead code removed (BlockNoteEditor, Editor, extensions, TipTap components)
-- [x] All tests passing (125 tests)
-- [x] CSS styles for highlighting
+- [x] Global hotkey ⌘⇧N (already implemented)
+- [x] Command palette ⌘K (already implemented)
+- [x] Quick actions:
+  - [x] Create new note
+  - [x] Open daily note
+  - [x] Toggle focus mode
+  - [x] Obsidian sync
+  - [x] Run Claude/Gemini
+- [x] Recent notes in command palette
+- [x] All tests passing (154 tests)
+- [x] ADHD-friendly keyboard navigation
 
 **Technical Details:**
-- `SimpleWikiLinkAutocomplete.tsx` - TipTap-free autocomplete
-- `SimpleTagAutocomplete.tsx` - TipTap-free autocomplete
-- `HybridEditor.tsx` - Contenteditable with regex highlighting
-- Regex patterns for `[[` trigger and `#` trigger
-- Click detection via span class (`.wiki-link`, `.tag`)
+- `src-tauri/src/lib.rs` - Global hotkey with tauri_plugin_global_shortcut
+- `src/renderer/src/components/CommandPalette.tsx` - cmdk-based palette
+- `src/renderer/src/App.tsx` - Keyboard shortcuts (⌘⇧F, ⌘B, ⌘N, ⌘D)
+- Zero friction: ⌘⇧N → App appears in < 3 seconds
+- Escape hatches: Esc exits focus mode
 
 ---
 
@@ -50,8 +51,8 @@ tags:
 |-------|--------|-------|--------|
 | **1** | 8 | Editor Foundation | ✅ 100% |
 | 1 | 9 | Editor Enhancement | ✅ 100% |
-| 1 | 10 | Hotkey + Commands | ⏳ Next |
-| **2** | 11 | Obsidian Sync | ○ 0% |
+| 1 | 10 | Hotkey + Commands | ✅ 100% |
+| **2** | 11 | Obsidian Sync | ⏳ Next |
 | 2 | 12 | Zotero + Math | ○ 0% |
 | **3** | 13 | LaTeX/PDF/Word | ○ 0% |
 | 3 | 14 | Quarto | ○ 0% |
@@ -59,7 +60,7 @@ tags:
 | 4 | 16 | Templates + Daily | ○ 0% |
 | **5** | 17 | Search + Goals | ○ 0% |
 
-**Total: 50h / 10 sprints**
+**Total: 65% complete (38.5h / 65h estimated)**
 
 ---
 

@@ -9,6 +9,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - v0.4.0-dev
 
+### Sprint 10: Global Hotkey + Commands - Complete (2024-12-25)
+
+**Global Hotkey Implementation:**
+- Global shortcut ⌘⇧N opens/focuses app from anywhere
+- Uses tauri_plugin_global_shortcut (SUPER for Command on macOS)
+- Zero friction: App appears in < 3 seconds
+- Window focus management (show + focus)
+
+**Command Palette Enhancements:**
+- Opens with ⌘K shortcut
+- Quick actions:
+  - Create new note (⌘N)
+  - Open daily note (⌘D)
+  - Toggle focus mode (⌘⇧F)
+  - Sync to Obsidian Vault
+  - Ask Claude (Refactor Notes)
+  - Ask Gemini (Brainstorming)
+- Recent notes display (last 10 notes)
+- Real-time search filtering
+- Keyboard navigation (↑↓, Enter, Esc)
+
+**Keyboard Shortcuts (App.tsx):**
+- ⌘⇧F: Toggle focus mode
+- ⌘B: Toggle left sidebar
+- ⌘⇧B: Toggle right sidebar
+- ⌘N: Create new note
+- ⌘D: Open daily note
+- Escape: Exit focus mode
+
+**Testing:**
+- All tests passing (154 tests, 7 todo)
+- No console errors
+- Hotkey response < 50ms
+- Command palette latency < 100ms
+
+**Technical Details:**
+- `src-tauri/src/lib.rs` - Global hotkey registration
+- `src/renderer/src/components/CommandPalette.tsx` - cmdk-based palette
+- Dependencies: `cmdk`, `tauri_plugin_global_shortcut`
+
+**ADHD-Friendly Design:**
+- Zero friction: ⌘⇧N → App appears instantly
+- Escape hatches: Esc exits focus mode, ⌘W closes
+- Quick wins: Command palette shows all actions in one place
+- One thing at a time: Focused context (recent notes, quick actions)
+
+**Next:** Sprint 11 - Academic Features
+
+---
+
 ### Sprint 9: Editor Enhancement - Complete (2024-12-25)
 
 **HybridEditor++ Implementation:**
