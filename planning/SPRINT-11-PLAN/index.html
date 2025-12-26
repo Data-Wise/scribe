@@ -1135,10 +1135,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-pandoc-export-2h" class="md-nav__link">
+  <a href="#3-math-rendering-mathjax-3-2h" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Pandoc Export (2h)
+        3. Math Rendering — MathJax 3 (2h)
       
     </span>
   </a>
@@ -1146,10 +1146,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-katex-equations-1h" class="md-nav__link">
+  <a href="#4-pandoc-export-2h" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. KaTeX Equations (1h)
+        4. Pandoc Export (2h)
       
     </span>
   </a>
@@ -1185,10 +1185,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#user-requirements" class="md-nav__link">
+  <a href="#user-requirements-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        User Requirements
+        User Requirements (optional)
       
     </span>
   </a>
@@ -1273,6 +1273,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sprint-106-completed-panel-menus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 10.6 Completed (Panel Menus) ✅
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#follow-up-sprint-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Follow-up (Sprint 12)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1306,27 +1339,27 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#math-syntax-support-mathjax-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Math Syntax Support (MathJax 3)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#follow-up-sprint-12" class="md-nav__link">
+  <a href="#current-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Follow-up (Sprint 12)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-commits-sprint-105-theme-font-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Commits (Sprint 10.5 - Theme &amp; Font System)
+        Current State
       
     </span>
   </a>
@@ -1356,22 +1389,22 @@
 <h1 id="sprint-11-academic-features">Sprint 11: Academic Features</h1>
 <blockquote>
 <p><strong>Status:</strong> Ready to Start
-<strong>Effort:</strong> 8 hours estimated
+<strong>Effort:</strong> 9 hours estimated
 <strong>Priority:</strong> P1
 <strong>Target Start:</strong> 2024-12-26
-<strong>Prerequisites:</strong> Sprint 10.5 (Theme &amp; Font System) ✅ Complete
-<strong>Tests:</strong> 407 passing (101 new Theme &amp; Font tests added)</p>
+<strong>Prerequisites:</strong> Sprint 10.6 (Panel Menus) ✅ Complete
+<strong>Tests:</strong> 407 passing</p>
 </blockquote>
 <hr />
 <h2 id="goal">Goal</h2>
-<p>Add academic writing features: Zotero integration, Pandoc export, citation autocomplete, and KaTeX equations.</p>
+<p>Add academic writing features: Zotero integration, Pandoc export, citation autocomplete, and <strong>powerful math rendering</strong> with interactive editing.</p>
 <hr />
 <h2 id="success-criteria">Success Criteria</h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Zotero integration via Better BibTeX</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Citation autocomplete (<code>@cite</code> triggers suggestion)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Pandoc export (LaTeX, PDF, Word)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> KaTeX equation rendering</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> MathJax 3 equation rendering (inline &amp; block)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Tests for all new features</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> CHANGELOG updated</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> .STATUS updated</li>
@@ -1382,6 +1415,7 @@
 <p><strong>Goal:</strong> Read bibliography from Better BibTeX export.</p>
 <p><strong>Files:</strong>
 - <code>src-tauri/src/academic/zotero.rs</code> (NEW)
+- <code>src-tauri/src/academic/mod.rs</code> (NEW)
 - <code>src-tauri/src/commands.rs</code> (add Tauri commands)</p>
 <p><strong>Implementation:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Read .bib file from configured path</span>
@@ -1397,89 +1431,172 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">authors</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">year</span><span class="p">:</span><span class="w"> </span><span class="kt">u16</span><span class="p">,</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">journal</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">}</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">doi</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span>
 </code></pre></div></p>
 <p><strong>Tauri Commands:</strong>
 - <code>get_citations</code> - Return all citations from configured .bib file
-- <code>search_citations</code> - Filter citations by query</p>
+- <code>search_citations</code> - Filter citations by query
+- <code>get_citation_by_key</code> - Get single citation details</p>
+<hr />
 <h3 id="2-citation-autocomplete-2h">2. Citation Autocomplete (2h)</h3>
 <p><strong>Goal:</strong> Trigger autocomplete when typing <code>@</code>.</p>
 <p><strong>Files:</strong>
 - <code>src/renderer/src/components/CitationAutocomplete.tsx</code> (NEW)
 - <code>src/renderer/src/components/HybridEditor.tsx</code> (integrate)</p>
-<p><strong>Implementation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Similar to SimpleTagAutocomplete</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">// Triggers on @ character</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">// Shows citation key, title, authors, year</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// Inserts [@key] on selection</span>
-</code></pre></div></p>
 <p><strong>UI:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>@vander...
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>┌─────────────────────────────────────┐
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│ vanderweele2015                     │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   Explanation and Sensitivity       │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   VanderWeele, Ding (2017)         │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>├─────────────────────────────────────┤
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│ vanderweele2016                     │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   Mediation Analysis                │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   VanderWeele (2016)               │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>└─────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@vander...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>┌─────────────────────────────────────┐
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│ vanderweele2015                     │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   Explanation and Sensitivity       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   VanderWeele, Ding (2017)         │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>├─────────────────────────────────────┤
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ vanderweele2016                     │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   Mediation Analysis                │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   VanderWeele (2016)               │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>└─────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="3-pandoc-export-2h">3. Pandoc Export (2h)</h3>
-<p><strong>Goal:</strong> Export notes to LaTeX, PDF, Word.</p>
+<p><strong>Behavior:</strong>
+- Trigger on <code>@</code> character
+- Show citation key, title, authors, year
+- Insert <code>[@key]</code> on selection (Pandoc citation format)
+- Highlight existing citations in editor</p>
+<hr />
+<h3 id="3-math-rendering-mathjax-3-2h">3. Math Rendering — MathJax 3 (2h)</h3>
+<p><strong>Goal:</strong> Full LaTeX math rendering with MathJax 3.</p>
+<p><strong>Why MathJax:</strong>
+- Full LaTeX compatibility (amsmath, physics, etc.)
+- Single dependency (no hybrid complexity)
+- Excellent accessibility (screen readers)
+- SVG output (crisp at any scale)
+- Active development, widely used in academia</p>
+<p><strong>Architecture:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌─────────────────────────────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                    Math Pipeline                        │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├─────────────────────────────────────────────────────────┤
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  Input: $\int_0^\infty$  or  $$\sum_{n=1}^N$$          │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                         ↓                               │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│                  ┌──────────────┐                       │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│                  │   MathJax 3  │                       │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│                  │  (tex2svg)   │                       │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│                  └──────────────┘                       │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│                         ↓                               │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│              Rendered SVG / Error Message               │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>└─────────────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p><strong>Files:</strong>
+- <code>src/renderer/src/components/MathRenderer.tsx</code> (NEW)
+- <code>src/renderer/src/components/MarkdownPreview.tsx</code> (integrate)
+- <code>src/renderer/src/lib/mathjax.ts</code> (NEW) - config &amp; render</p>
+<p><strong>Implementation:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// lib/mathjax.ts - MathJax configuration</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">mathjax</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;mathjax-full/js/mathjax&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">TeX</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;mathjax-full/js/input/tex&#39;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SVG</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;mathjax-full/js/output/svg&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AllPackages</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;mathjax-full/js/input/tex/AllPackages&#39;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">tex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">TeX</span><span class="p">({</span><span class="w"> </span><span class="nx">packages</span><span class="o">:</span><span class="w"> </span><span class="kt">AllPackages</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">svg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">SVG</span><span class="p">({</span><span class="w"> </span><span class="nx">fontCache</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;local&#39;</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="kd">const</span><span class="w"> </span><span class="nx">adaptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">liteAdaptor</span><span class="p">()</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">renderMath</span><span class="p">(</span><span class="nx">latex</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">display</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mathjax</span><span class="p">.</span><span class="nb">document</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">InputJax</span><span class="o">:</span><span class="w"> </span><span class="kt">tex</span><span class="p">,</span><span class="w"> </span><span class="nx">OutputJax</span><span class="o">:</span><span class="w"> </span><span class="kt">svg</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">node</span><span class="p">.</span><span class="nx">convert</span><span class="p">(</span><span class="nx">latex</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">display</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">adaptor</span><span class="p">.</span><span class="nx">outerHTML</span><span class="p">(</span><span class="nx">html</span><span class="p">)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// MathRenderer.tsx - Display component</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">MathRendererProps</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nx">tex</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nx">display?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w">  </span><span class="c1">// inline ($) vs block ($$)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">MathRenderer</span><span class="p">({</span><span class="w"> </span><span class="nx">tex</span><span class="p">,</span><span class="w"> </span><span class="nx">display</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="nx">MathRendererProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">html</span><span class="p">,</span><span class="w"> </span><span class="nx">setHtml</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">&lt;</span><span class="nt">string</span><span class="p">&gt;(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">error</span><span class="p">,</span><span class="w"> </span><span class="nx">setError</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">&lt;</span><span class="nt">string</span><span class="w"> </span><span class="err">|</span><span class="w"> </span><span class="na">null</span><span class="p">&gt;(</span><span class="kc">null</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">rendered</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">renderMath</span><span class="p">(</span><span class="nx">tex</span><span class="p">,</span><span class="w"> </span><span class="nx">display</span><span class="p">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="nx">setHtml</span><span class="p">(</span><span class="nx">rendered</span><span class="p">)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="nx">setError</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="nx">setError</span><span class="p">(</span><span class="sb">`Math error: </span><span class="si">${</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">[</span><span class="nx">tex</span><span class="p">,</span><span class="w"> </span><span class="nx">display</span><span class="p">])</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">&lt;</span><span class="nt">span</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">&quot;math-error&quot;</span><span class="p">&gt;{</span><span class="nx">error</span><span class="p">}&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">span</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">      </span><span class="na">className</span><span class="o">=</span><span class="p">{</span><span class="nx">display</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;math-block&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;math-inline&#39;</span><span class="p">}</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">      </span><span class="na">dangerouslySetInnerHTML</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">__html</span><span class="o">:</span><span class="w"> </span><span class="kt">html</span><span class="w"> </span><span class="p">}}</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">    </span><span class="p">/&gt;</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">  </span><span class="p">)</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Supported Syntax:</strong>
+| Syntax | Type | Example |
+|--------|------|---------|
+| <code>$...$</code> | Inline | <code>$E = mc^2$</code> |
+| <code>$$...$$</code> | Block | <code>$$\int_0^\infty e^{-x^2} dx$$</code> |
+| <code>\begin{align}</code> | Multi-line | Aligned equations |
+| <code>\begin{cases}</code> | Piecewise | Conditional functions |
+| <code>\mathbf</code>, <code>\mathrm</code> | Fonts | Bold, roman text |</p>
+<p><strong>MathJax Packages Included:</strong>
+- <code>amsmath</code> - Aligned equations, matrices
+- <code>amssymb</code> - Extended symbols
+- <code>physics</code> - Physics notation
+- <code>cancel</code> - Strike-through
+- <code>color</code> - Colored math</p>
+<hr />
+<h3 id="4-pandoc-export-2h">4. Pandoc Export (2h)</h3>
+<p><strong>Goal:</strong> Export notes to LaTeX, PDF, Word with citations.</p>
 <p><strong>Files:</strong>
 - <code>src-tauri/src/academic/pandoc.rs</code> (NEW)
 - <code>src/renderer/src/components/ExportDialog.tsx</code> (NEW)</p>
 <p><strong>Implementation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Execute pandoc command</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">export_document</span><span class="p">(</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">output_format</span><span class="p">:</span><span class="w"> </span><span class="nc">ExportFormat</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">bibliography</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">csl</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">ExportFormat</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="n">Latex</span><span class="p">,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">Pdf</span><span class="p">,</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="n">Docx</span><span class="p">,</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="n">Html</span><span class="p">,</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">export_document</span><span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="n">output_format</span><span class="p">:</span><span class="w"> </span><span class="nc">ExportFormat</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">bibliography</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">csl</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">PathBuf</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">ExportFormat</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="n">Latex</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="n">Pdf</span><span class="p">,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="n">Docx</span><span class="p">,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">Html</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p">}</span>
 </code></pre></div></p>
-<p><strong>Pandoc Command:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pandoc<span class="w"> </span>input.md<span class="w"> </span>-o<span class="w"> </span>output.pdf<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--citeproc<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--bibliography<span class="o">=</span>refs.bib<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--csl<span class="o">=</span>apa.csl
+<p><strong>Export Dialog UI:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌─────────────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│  Export Note                    ✕   │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├─────────────────────────────────────┤
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│  Format:  ○ PDF  ○ Word  ○ LaTeX   │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│                                     │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│  Bibliography: ~/Zotero/library.bib │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│  Citation Style: APA 7th           │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│                                     │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│  [ ] Include metadata               │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│  [ ] Process equations              │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│                                     │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│         [Cancel]  [Export]          │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>└─────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="4-katex-equations-1h">4. KaTeX Equations (1h)</h3>
-<p><strong>Goal:</strong> Render LaTeX equations in preview mode.</p>
-<p><strong>Files:</strong>
-- <code>src/renderer/src/components/HybridEditor.tsx</code> (add KaTeX)</p>
-<p><strong>Implementation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Add KaTeX CSS import</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="s1">&#39;katex/dist/katex.min.css&#39;</span><span class="p">;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">// Use react-katex for rendering</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">InlineMath</span><span class="p">,</span><span class="w"> </span><span class="nx">BlockMath</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react-katex&#39;</span><span class="p">;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">// Detect equation patterns:</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1">// Inline: $...$</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1">// Block: $$...$$</span>
-</code></pre></div></p>
-<p><strong>Examples:</strong>
-- Inline: <code>$E = mc^2$</code> → E = mc²
-- Block: <code>$$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$$</code></p>
 <hr />
 <h2 id="dependencies">Dependencies</h2>
 <h3 id="npm-packages">npm packages</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>npm<span class="w"> </span>install<span class="w"> </span>katex<span class="w"> </span>react-katex
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>@types/katex
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Math rendering (MathJax 3 - full version)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>npm<span class="w"> </span>install<span class="w"> </span>mathjax-full
 </code></pre></div>
-<h3 id="user-requirements">User Requirements</h3>
+<h3 id="user-requirements-optional">User Requirements (optional)</h3>
 <ul>
-<li>Zotero + Better BibTeX installed</li>
-<li>Pandoc installed (<code>brew install pandoc</code>)</li>
+<li>Zotero + Better BibTeX (for citations)</li>
+<li>Pandoc (<code>brew install pandoc</code>)</li>
 <li>LaTeX for PDF export (<code>brew install --cask mactex-no-gui</code>)</li>
 </ul>
 <hr />
@@ -1488,34 +1605,39 @@
 <ul>
 <li><code>Zotero.test.ts</code> - BibTeX parsing</li>
 <li><code>Citation.test.tsx</code> - Autocomplete component</li>
+<li><code>MathRenderer.test.tsx</code> - MathJax rendering (inline/block)</li>
 <li><code>Export.test.ts</code> - Pandoc command generation</li>
-<li><code>Equation.test.tsx</code> - KaTeX rendering</li>
 </ul>
 <h3 id="integration-tests">Integration Tests</h3>
 <ul>
 <li>Citation workflow: type <code>@</code> → select → insert</li>
+<li>Math workflow: type <code>$...$</code> → renders in preview</li>
 <li>Export workflow: open dialog → select format → export</li>
-<li>Equation rendering in preview mode</li>
 </ul>
 <h3 id="manual-testing">Manual Testing</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Configure .bib path in settings</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Type <code>@</code> → see citation suggestions</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Select citation → <code>[@key]</code> inserted</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Type <code>$E=mc^2$</code> → renders inline in preview</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Type <code>$$\int...$$</code> → renders block in preview</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Complex LaTeX (<code>\begin{align}</code>) renders correctly</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Math errors show helpful message</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Export to PDF with citations</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Export to Word with citations</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Inline equation renders</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Block equation renders</li>
 </ul>
 <hr />
 <h2 id="definition-of-done">Definition of Done</h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Zotero .bib file readable</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Citation autocomplete works</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Citation autocomplete works (<code>@</code> trigger)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> MathJax renders inline <code>$...$</code> equations</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> MathJax renders block <code>$$...$$</code> equations</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Complex LaTeX works (<code>\begin{align}</code>, etc.)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Math errors display gracefully</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Pandoc export to LaTeX/PDF/Word</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> KaTeX equations render</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 20+ new tests passing</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Total tests &gt; 320</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 25+ new tests passing</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Total tests &gt; 430</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No console errors</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> CHANGELOG updated</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> .STATUS updated</li>
@@ -1540,14 +1662,57 @@
 </tr>
 <tr>
 <td>Large bibliography slow</td>
-<td>Cache parsed entries</td>
+<td>Cache parsed entries, debounce search</td>
 </tr>
 <tr>
-<td>KaTeX render errors</td>
-<td>Fallback to raw text</td>
+<td>MathJax bundle size (~2MB)</td>
+<td>Lazy load on first math render</td>
+</tr>
+<tr>
+<td>MathJax slow first render</td>
+<td>Show loading indicator, cache SVG</td>
+</tr>
+<tr>
+<td>Invalid LaTeX syntax</td>
+<td>Show error message with raw text</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="implementation-order">Implementation Order</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Day 1 (3h):
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── npm install mathjax-full
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├── MathRenderer component
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>├── lib/mathjax.ts configuration
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>└── Integrate into MarkdownPreview
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Day 2 (4h):
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>├── Zotero BibTeX parsing (Rust)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>├── Citation autocomplete (@)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>└── Highlight citations in editor
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Day 3 (2h):
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>├── Pandoc export dialog
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>├── Export to PDF/Word/LaTeX
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>└── Tests &amp; polish
+</code></pre></div>
+<hr />
+<h2 id="sprint-106-completed-panel-menus">Sprint 10.6 Completed (Panel Menus) ✅</h2>
+<p>Before Sprint 11, we completed:
+- <strong>PanelMenu component</strong> using Radix UI
+- <strong>Left sidebar menu</strong>: Sort (Name/Modified/Created), View (Default/Compact)
+- <strong>Right sidebar menu</strong>: Context-aware per tab
+  - Properties: Add property, Collapse all
+  - Backlinks: Sort (Name/Date), Toggle outgoing
+  - Tags: Sort (A-Z/Count), Bulk edit
+- <strong>All preferences persist in localStorage</strong></p>
+<hr />
+<h2 id="follow-up-sprint-12">Follow-up (Sprint 12)</h2>
+<p>After academic features:
+- Wire up sorting preferences to BacklinksPanel/TagsPanel
+- Obsidian sync improvements
+- Project system foundation
+- Settings persistence (move from localStorage to SQLite)</p>
 <hr />
 <h2 id="notes">Notes</h2>
 <h3 id="better-bibtex-export">Better BibTeX Export</h3>
@@ -1559,28 +1724,55 @@
 <h3 id="citation-style">Citation Style</h3>
 <p>Default to APA 7th edition. CSL files from:
 https://www.zotero.org/styles</p>
+<h3 id="math-syntax-support-mathjax-3">Math Syntax Support (MathJax 3)</h3>
+<table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$x^2$</code></td>
+<td>Inline</td>
+<td>Renders in-line with text</td>
+</tr>
+<tr>
+<td><code>$$\int_0^1$$</code></td>
+<td>Block</td>
+<td>Centered, display mode</td>
+</tr>
+<tr>
+<td><code>\begin{align}</code></td>
+<td>Multi-line</td>
+<td>Aligned equations</td>
+</tr>
+<tr>
+<td><code>\begin{cases}</code></td>
+<td>Piecewise</td>
+<td>Conditional functions</td>
+</tr>
+<tr>
+<td><code>\mathbf{x}</code></td>
+<td>Bold</td>
+<td>Vector notation</td>
+</tr>
+<tr>
+<td><code>\frac{a}{b}</code></td>
+<td>Fraction</td>
+<td>Stacked fraction</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="follow-up-sprint-12">Follow-up (Sprint 12)</h2>
-<p>After academic features:
-- Obsidian sync
-- Project system foundation
-- Settings persistence</p>
-<hr />
-<h2 id="related-commits-sprint-105-theme-font-system">Related Commits (Sprint 10.5 - Theme &amp; Font System)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>c1a0313 polish: Category filter tabs, font previews, and &#39;Use&#39; button
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>9a8560b polish: Font management UI improvements
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>3ec70bc feat: Font management with Homebrew installation and ADHD-friendly recommendations
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>a8557cd feat: Font settings with Homebrew fonts, editable theme shortcuts
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>bf83a14 feat: URL theme import, font settings, and keyboard shortcuts
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>b1c5427 feat: Theme import/export with Base16 support and live preview
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>4ac7aca feat: Add auto-theme by time and custom theme creator
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>641f5c5 feat: Add 10 ADHD-friendly themes (5 dark, 5 light)
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>049a16f feat: Default note properties, word goal progress bar, and theme persistence
-</code></pre></div>
-<p><strong>Current State:</strong>
-- 306 tests passing
-- TypeScript: 0 errors
-- Rust: Compiles (1 dead code warning)</p>
+<h2 id="current-state">Current State</h2>
+<ul>
+<li><strong>Tests:</strong> 407 passing</li>
+<li><strong>TypeScript:</strong> 0 errors</li>
+<li><strong>New packages:</strong> @radix-ui/react-dropdown-menu (for panel menus)</li>
+</ul>
 
 
 
