@@ -8,7 +8,7 @@ updated: 2024-12-26
 editor: hybrid-markdown++
 next_sprint: 11
 next_focus: Academic Features
-tests: 306
+tests: 407
 tags:
   - adhd-friendly
   - distraction-free
@@ -37,7 +37,7 @@ tags:
 - [x] Font detection via fc-list
 - [x] Category filter tabs (All/Sans/Serif/Mono)
 - [x] Font preview with "Use" button
-- [x] **306 tests passing**
+- [x] **407 tests passing** (101 new Theme & Font tests)
 
 **Sprint 10: Global Hotkey + Commands** ✅ Complete (2024-12-25)
 - [x] Global hotkey ⌘⇧N opens app from anywhere
@@ -91,7 +91,7 @@ tags:
 | 8 | Editor Foundation | ✅ |
 | 9 | Editor Enhancement | 125 |
 | 10 | Hotkey + Commands + Tests | 300 |
-| 10.5 | Theme & Font System | 306 |
+| 10.5 | Theme & Font System | 407 |
 
 ---
 

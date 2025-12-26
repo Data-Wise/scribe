@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/renderer/src/components/SettingsModal.tsx` - Font UI, theme shortcuts
 - CSS variables: `--editor-font-family`, `--editor-font-size`, `--editor-line-height`
 
-**Tests:** 306 passing
+**Tests:** 407 passing (101 new Theme & Font unit tests)
 
 ---
 
