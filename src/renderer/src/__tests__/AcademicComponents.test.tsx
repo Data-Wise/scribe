@@ -49,10 +49,15 @@ describe('CitationAutocomplete Component', () => {
     ;(api.searchCitations as ReturnType<typeof vi.fn>).mockResolvedValue(mockCitations)
   })
 
-  it('renders loading state initially', () => {
+  it('renders loading state initially', async () => {
     render(<CitationAutocomplete {...defaultProps} />)
 
     expect(screen.getByText('Loading citations...')).toBeInTheDocument()
+
+    // Wait for loading to complete to avoid act() warnings
+    await waitFor(() => {
+      expect(screen.queryByText('Loading citations...')).not.toBeInTheDocument()
+    })
   })
 
   it('displays citations after loading', async () => {

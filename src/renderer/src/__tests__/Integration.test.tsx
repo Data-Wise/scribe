@@ -65,15 +65,20 @@ describe('Editor + Autocomplete Integration', () => {
 
     it('shows wiki-link autocomplete when typing [[', async () => {
       render(<HybridEditor {...editorProps} content="" />)
-      
+
       const textarea = screen.getByRole('textbox')
       expect(textarea).toBeInTheDocument()
-      
+
       // Simulate typing [[ to trigger autocomplete
       fireEvent.change(textarea, { target: { value: '[[test', selectionStart: 6 } })
-      
+
       // Verify the input was accepted
       expect(editorProps.onChange).toHaveBeenCalledWith('[[test')
+
+      // Wait for autocomplete to finish loading to avoid act() warnings
+      await waitFor(() => {
+        expect(screen.queryByText('Loading notes...')).not.toBeInTheDocument()
+      })
     })
   })
 

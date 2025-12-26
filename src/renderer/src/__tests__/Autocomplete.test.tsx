@@ -39,10 +39,15 @@ describe('SimpleWikiLinkAutocomplete', () => {
       })
     })
 
-    it('shows loading state initially', () => {
+    it('shows loading state initially', async () => {
       render(<SimpleWikiLinkAutocomplete {...defaultProps} query="test" />)
-      
+
       expect(screen.getByText('Loading notes...')).toBeInTheDocument()
+
+      // Wait for loading to complete to avoid act() warnings
+      await waitFor(() => {
+        expect(screen.queryByText('Loading notes...')).not.toBeInTheDocument()
+      })
     })
 
     it('displays filtered notes based on query', async () => {
@@ -193,10 +198,15 @@ describe('SimpleTagAutocomplete', () => {
       })
     })
 
-    it('shows loading state initially', () => {
+    it('shows loading state initially', async () => {
       render(<SimpleTagAutocomplete {...defaultProps} query="test" />)
-      
+
       expect(screen.getByText('Loading tags...')).toBeInTheDocument()
+
+      // Wait for loading to complete to avoid act() warnings
+      await waitFor(() => {
+        expect(screen.queryByText('Loading tags...')).not.toBeInTheDocument()
+      })
     })
 
     it('displays all tags when query is empty', async () => {

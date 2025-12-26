@@ -234,30 +234,40 @@ three`
     it('triggers wiki-link autocomplete on [[ input', async () => {
       const onSearchNotes = vi.fn().mockResolvedValue([mockNote])
       render(<HybridEditor {...defaultProps} content="" onSearchNotes={onSearchNotes} />)
-      
+
       const textarea = screen.getByRole('textbox')
-      
+
       // Simulate typing [[ to trigger autocomplete
       fireEvent.change(textarea, { target: { value: '[[', selectionStart: 2 } })
-      
+
       // Give time for async search
       await waitFor(() => {
         expect(onSearchNotes).toHaveBeenCalledWith('')
+      })
+
+      // Wait for autocomplete to finish loading to avoid act() warnings
+      await waitFor(() => {
+        expect(screen.queryByText('Loading notes...')).not.toBeInTheDocument()
       })
     })
 
     it('triggers tag autocomplete on # input', async () => {
       const onSearchTags = vi.fn().mockResolvedValue([mockTag])
       render(<HybridEditor {...defaultProps} content="" onSearchTags={onSearchTags} />)
-      
+
       const textarea = screen.getByRole('textbox')
-      
+
       // Simulate typing #t to trigger autocomplete
       fireEvent.change(textarea, { target: { value: '#t', selectionStart: 2 } })
-      
+
       // Give time for async search
       await waitFor(() => {
         expect(onSearchTags).toHaveBeenCalledWith('t')
+      })
+
+      // Wait for autocomplete to finish loading to avoid act() warnings
+      await waitFor(() => {
+        expect(screen.queryByText('Loading tags...')).not.toBeInTheDocument()
       })
     })
   })
