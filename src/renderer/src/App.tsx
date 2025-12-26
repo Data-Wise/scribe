@@ -13,6 +13,19 @@ import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
 import { Plus } from 'lucide-react'
+import {
+  Theme,
+  AutoThemeSettings,
+  getAllThemes,
+  loadCustomThemes,
+  saveCustomThemes,
+  loadAutoThemeSettings,
+  saveAutoThemeSettings,
+  loadSelectedTheme,
+  saveSelectedTheme,
+  applyTheme,
+  getAutoTheme,
+} from './lib/themes'
 
 function App() {
   const { notes, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
@@ -67,38 +80,69 @@ function App() {
   // Tags for current note (for PropertiesPanel display)
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
   
-  // Theme definitions - ADHD-friendly themes
-  const THEMES = {
-    // Dark themes
-    'oxford-dark': { name: 'Oxford Dark', type: 'dark' as const, description: 'Cool academic blues' },
-    'forest-night': { name: 'Forest Night', type: 'dark' as const, description: 'Calming deep greens' },
-    'warm-cocoa': { name: 'Warm Cocoa', type: 'dark' as const, description: 'Cozy warm browns' },
-    'midnight-purple': { name: 'Midnight Purple', type: 'dark' as const, description: 'Dreamy soft purples' },
-    'deep-ocean': { name: 'Deep Ocean', type: 'dark' as const, description: 'Stable navy blues' },
-    // Light themes
-    'soft-paper': { name: 'Soft Paper', type: 'light' as const, description: 'Warm off-white' },
-    'morning-fog': { name: 'Morning Fog', type: 'light' as const, description: 'Minimal cool grays' },
-    'sage-garden': { name: 'Sage Garden', type: 'light' as const, description: 'Natural calm greens' },
-    'lavender-mist': { name: 'Lavender Mist', type: 'light' as const, description: 'Soothing soft purples' },
-    'sand-dune': { name: 'Sand Dune', type: 'light' as const, description: 'Grounding warm neutrals' },
-  }
-  
-  type ThemeId = keyof typeof THEMES
-  
-  // Theme state with localStorage persistence
-  const [theme, setTheme] = useState<ThemeId>(() => {
-    const saved = localStorage.getItem('scribe-theme')
-    return (saved && saved in THEMES ? saved : 'oxford-dark') as ThemeId
-  })
+  // Theme state
+  const [allThemes, setAllThemes] = useState<Record<string, Theme>>(() => getAllThemes())
+  const [theme, setTheme] = useState<string>(() => loadSelectedTheme())
+  const [autoThemeSettings, setAutoThemeSettings] = useState<AutoThemeSettings>(() => loadAutoThemeSettings())
   
   // Apply theme to document root
   useEffect(() => {
-    // Remove all theme classes
-    document.documentElement.className = ''
-    // Add the selected theme class
-    document.documentElement.classList.add(theme)
-    localStorage.setItem('scribe-theme', theme)
-  }, [theme])
+    let activeThemeId = theme
+    
+    // If auto-theme is enabled, determine theme based on time
+    if (autoThemeSettings.enabled) {
+      activeThemeId = getAutoTheme(autoThemeSettings)
+    }
+    
+    const activeTheme = allThemes[activeThemeId] || allThemes['oxford-dark']
+    if (activeTheme) {
+      applyTheme(activeTheme)
+    }
+    
+    saveSelectedTheme(theme)
+  }, [theme, autoThemeSettings, allThemes])
+  
+  // Auto-theme time check (every minute)
+  useEffect(() => {
+    if (!autoThemeSettings.enabled) return
+    
+    const checkTime = () => {
+      const newThemeId = getAutoTheme(autoThemeSettings)
+      const activeTheme = allThemes[newThemeId]
+      if (activeTheme) {
+        applyTheme(activeTheme)
+      }
+    }
+    
+    const interval = setInterval(checkTime, 60000) // Check every minute
+    return () => clearInterval(interval)
+  }, [autoThemeSettings, allThemes])
+  
+  // Handle auto-theme settings change
+  const handleAutoThemeChange = (settings: AutoThemeSettings) => {
+    setAutoThemeSettings(settings)
+    saveAutoThemeSettings(settings)
+  }
+  
+  // Handle custom theme save
+  const handleSaveCustomTheme = (newTheme: Theme) => {
+    const customs = loadCustomThemes()
+    customs[newTheme.id] = newTheme
+    saveCustomThemes(customs)
+    setAllThemes(getAllThemes())
+  }
+  
+  // Handle custom theme delete
+  const handleDeleteCustomTheme = (themeId: string) => {
+    const customs = loadCustomThemes()
+    delete customs[themeId]
+    saveCustomThemes(customs)
+    setAllThemes(getAllThemes())
+    // If deleted theme was selected, switch to default
+    if (theme === themeId) {
+      setTheme('oxford-dark')
+    }
+  }
 
 
   useEffect(() => {
@@ -564,8 +608,13 @@ function App() {
       <SettingsModal 
         isOpen={isSettingsOpen} 
         onClose={() => setIsSettingsOpen(false)} 
-        theme={theme}
+        themes={allThemes}
+        currentTheme={theme}
         onThemeChange={setTheme}
+        autoThemeSettings={autoThemeSettings}
+        onAutoThemeChange={handleAutoThemeChange}
+        onSaveCustomTheme={handleSaveCustomTheme}
+        onDeleteCustomTheme={handleDeleteCustomTheme}
       />
     </div>
   )
