@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   X, 
   Settings as SettingsIcon, 
@@ -14,14 +14,26 @@ import {
   Clock,
   Plus,
   Trash2,
-  Palette
+  Palette,
+  Download,
+  Upload,
+  Copy,
+  Check,
+  Eye
 } from 'lucide-react'
 import { 
   Theme, 
   AutoThemeSettings,
   createCustomTheme,
   generateThemeFromColor,
-  isValidHexColor
+  isValidHexColor,
+  applyTheme,
+  importTheme,
+  generateShareableTheme,
+  exportThemeToBase16,
+  importThemeFromBase16,
+  POPULAR_BASE16_SCHEMES,
+  Base16Scheme
 } from '../lib/themes'
 
 interface SettingsModalProps {
@@ -54,6 +66,85 @@ export function SettingsModal({
   const [customThemeName, setCustomThemeName] = useState('')
   const [customThemeType, setCustomThemeType] = useState<'dark' | 'light'>('dark')
   const [customBaseColor, setCustomBaseColor] = useState('#38bdf8')
+  
+  // Preview state
+  const [previewTheme, setPreviewTheme] = useState<string | null>(null)
+  const [originalTheme, setOriginalTheme] = useState<string>(currentTheme)
+  
+  // Import/Export state
+  const [showImportModal, setShowImportModal] = useState(false)
+  const [showExportModal, setShowExportModal] = useState(false)
+  const [importText, setImportText] = useState('')
+  const [importError, setImportError] = useState('')
+  const [exportText, setExportText] = useState('')
+  const [copied, setCopied] = useState(false)
+  const [showPopularSchemes, setShowPopularSchemes] = useState(false)
+  
+  // Apply preview theme
+  useEffect(() => {
+    if (previewTheme && themes[previewTheme]) {
+      applyTheme(themes[previewTheme])
+    }
+  }, [previewTheme, themes])
+  
+  // Reset preview on close or when canceling
+  const handleCancelPreview = () => {
+    if (originalTheme && themes[originalTheme]) {
+      applyTheme(themes[originalTheme])
+    }
+    setPreviewTheme(null)
+  }
+  
+  // Apply previewed theme
+  const handleApplyPreview = () => {
+    if (previewTheme) {
+      onThemeChange(previewTheme)
+      setOriginalTheme(previewTheme)
+      setPreviewTheme(null)
+    }
+  }
+  
+  // Handle import
+  const handleImport = () => {
+    setImportError('')
+    const imported = importTheme(importText)
+    if (imported) {
+      onSaveCustomTheme(imported)
+      onThemeChange(imported.id)
+      setShowImportModal(false)
+      setImportText('')
+    } else {
+      setImportError('Invalid theme format. Supports Scribe JSON or Base16 YAML.')
+    }
+  }
+  
+  // Handle import from popular schemes
+  const handleImportPopular = (scheme: Base16Scheme) => {
+    const imported = importThemeFromBase16(scheme)
+    onSaveCustomTheme(imported)
+    onThemeChange(imported.id)
+    setShowPopularSchemes(false)
+  }
+  
+  // Handle export
+  const handleExport = (format: 'json' | 'base16') => {
+    const theme = themes[currentTheme]
+    if (!theme) return
+    
+    if (format === 'json') {
+      setExportText(generateShareableTheme(theme))
+    } else {
+      setExportText(exportThemeToBase16(theme))
+    }
+    setShowExportModal(true)
+  }
+  
+  // Copy to clipboard
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(exportText)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   if (!isOpen) return null
 
@@ -286,6 +377,59 @@ export function SettingsModal({
                   </div>
                 </section>
 
+                {/* Import/Export */}
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    <Share2 className="w-3 h-3 inline mr-2" />
+                    Import & Export
+                  </h4>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowImportModal(true)}
+                      className="flex-1 p-3 bg-nexus-bg-tertiary rounded-lg border border-white/10 hover:border-nexus-accent/50 transition-colors flex items-center justify-center gap-2 text-nexus-text-muted hover:text-nexus-accent"
+                    >
+                      <Upload className="w-4 h-4" />
+                      <span className="text-sm font-medium">Import Theme</span>
+                    </button>
+                    <button
+                      onClick={() => handleExport('json')}
+                      className="flex-1 p-3 bg-nexus-bg-tertiary rounded-lg border border-white/10 hover:border-nexus-accent/50 transition-colors flex items-center justify-center gap-2 text-nexus-text-muted hover:text-nexus-accent"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span className="text-sm font-medium">Export Theme</span>
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => setShowPopularSchemes(!showPopularSchemes)}
+                    className="w-full mt-3 p-3 bg-nexus-bg-tertiary rounded-lg border border-white/10 hover:border-nexus-accent/50 transition-colors flex items-center justify-center gap-2 text-nexus-text-muted hover:text-nexus-accent"
+                  >
+                    <Palette className="w-4 h-4" />
+                    <span className="text-sm font-medium">Browse Popular Schemes (Base16)</span>
+                  </button>
+                  
+                  {showPopularSchemes && (
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {Object.entries(POPULAR_BASE16_SCHEMES).map(([key, scheme]) => (
+                        <button
+                          key={key}
+                          onClick={() => handleImportPopular(scheme)}
+                          className="p-2 bg-nexus-bg-primary rounded-lg border border-white/10 hover:border-nexus-accent/30 transition-all text-left flex items-center gap-2"
+                        >
+                          <div 
+                            className="w-5 h-5 rounded border border-white/10" 
+                            style={{ backgroundColor: scheme.base00 }}
+                          />
+                          <div 
+                            className="w-3 h-3 rounded-full" 
+                            style={{ backgroundColor: scheme.base0D }}
+                          />
+                          <span className="text-xs text-nexus-text-primary truncate">{scheme.scheme}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </section>
+
                 {/* Custom Theme Creator */}
                 <section>
                   <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
@@ -420,14 +564,23 @@ export function SettingsModal({
                     <Moon className="w-3 h-3 inline mr-2" />
                     Dark Themes
                     <span className="ml-2 text-[10px] normal-case tracking-normal font-normal opacity-60">
-                      — reduced eye strain
+                      — reduced eye strain • hover to preview
                     </span>
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
                     {darkThemes.filter(t => !t.isCustom).map((t) => (
                       <button
                         key={t.id}
-                        onClick={() => onThemeChange(t.id)}
+                        onClick={() => {
+                          onThemeChange(t.id)
+                          setOriginalTheme(t.id)
+                          setPreviewTheme(null)
+                        }}
+                        onMouseEnter={() => setPreviewTheme(t.id)}
+                        onMouseLeave={() => {
+                          setPreviewTheme(null)
+                          if (themes[originalTheme]) applyTheme(themes[originalTheme])
+                        }}
                         className={`p-3 rounded-lg border-2 transition-all text-left ${
                           currentTheme === t.id 
                             ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10' 
@@ -460,14 +613,23 @@ export function SettingsModal({
                     <Sun className="w-3 h-3 inline mr-2" />
                     Light Themes
                     <span className="ml-2 text-[10px] normal-case tracking-normal font-normal opacity-60">
-                      — natural daylight
+                      — natural daylight • hover to preview
                     </span>
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
                     {lightThemes.filter(t => !t.isCustom).map((t) => (
                       <button
                         key={t.id}
-                        onClick={() => onThemeChange(t.id)}
+                        onClick={() => {
+                          onThemeChange(t.id)
+                          setOriginalTheme(t.id)
+                          setPreviewTheme(null)
+                        }}
+                        onMouseEnter={() => setPreviewTheme(t.id)}
+                        onMouseLeave={() => {
+                          setPreviewTheme(null)
+                          if (themes[originalTheme]) applyTheme(themes[originalTheme])
+                        }}
                         className={`p-3 rounded-lg border-2 transition-all text-left ${
                           currentTheme === t.id 
                             ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10' 
@@ -580,6 +742,155 @@ export function SettingsModal({
           </div>
         </div>
       </div>
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => {
+              setShowImportModal(false)
+              setImportText('')
+              setImportError('')
+            }}
+          />
+          <div className="relative w-full max-w-lg bg-nexus-bg-secondary border border-white/10 rounded-xl shadow-2xl p-6">
+            <h3 className="text-lg font-display font-bold text-nexus-text-primary mb-4 flex items-center gap-2">
+              <Upload className="w-5 h-5" />
+              Import Theme
+            </h3>
+            <p className="text-sm text-nexus-text-muted mb-4">
+              Paste a Scribe JSON theme or Base16 YAML scheme below.
+            </p>
+            <textarea
+              value={importText}
+              onChange={(e) => {
+                setImportText(e.target.value)
+                setImportError('')
+              }}
+              placeholder={`Scribe JSON:\n{\n  "name": "My Theme",\n  "type": "dark",\n  "colors": { ... }\n}\n\nOr Base16 YAML:\nscheme: "My Scheme"\nbase00: "#1d1f21"\nbase05: "#c5c8c6"\n...`}
+              className="w-full h-48 bg-nexus-bg-primary border border-white/10 rounded-lg p-3 text-sm text-nexus-text-primary font-mono placeholder:text-nexus-text-muted/40 resize-none focus:outline-none focus:border-nexus-accent/50"
+            />
+            {importError && (
+              <p className="text-sm text-red-400 mt-2">{importError}</p>
+            )}
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => {
+                  setShowImportModal(false)
+                  setImportText('')
+                  setImportError('')
+                }}
+                className="flex-1 p-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm font-medium text-nexus-text-muted transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleImport}
+                disabled={!importText.trim()}
+                className="flex-1 p-2 bg-nexus-accent hover:bg-nexus-accent-hover rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Import Theme
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Export Modal */}
+      {showExportModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => {
+              setShowExportModal(false)
+              setExportText('')
+            }}
+          />
+          <div className="relative w-full max-w-lg bg-nexus-bg-secondary border border-white/10 rounded-xl shadow-2xl p-6">
+            <h3 className="text-lg font-display font-bold text-nexus-text-primary mb-4 flex items-center gap-2">
+              <Download className="w-5 h-5" />
+              Export Theme
+            </h3>
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={() => handleExport('json')}
+                className={`flex-1 p-2 rounded-lg text-sm font-medium transition-colors ${
+                  exportText.startsWith('{') 
+                    ? 'bg-nexus-accent text-white' 
+                    : 'bg-white/5 text-nexus-text-muted hover:bg-white/10'
+                }`}
+              >
+                Scribe JSON
+              </button>
+              <button
+                onClick={() => handleExport('base16')}
+                className={`flex-1 p-2 rounded-lg text-sm font-medium transition-colors ${
+                  exportText.startsWith('scheme:') 
+                    ? 'bg-nexus-accent text-white' 
+                    : 'bg-white/5 text-nexus-text-muted hover:bg-white/10'
+                }`}
+              >
+                Base16 YAML
+              </button>
+            </div>
+            <div className="relative">
+              <textarea
+                value={exportText}
+                readOnly
+                className="w-full h-64 bg-nexus-bg-primary border border-white/10 rounded-lg p-3 text-sm text-nexus-text-primary font-mono resize-none focus:outline-none"
+              />
+              <button
+                onClick={handleCopy}
+                className="absolute top-2 right-2 p-2 bg-nexus-bg-tertiary hover:bg-white/10 rounded-md transition-colors"
+                title="Copy to clipboard"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4 text-green-400" />
+                ) : (
+                  <Copy className="w-4 h-4 text-nexus-text-muted" />
+                )}
+              </button>
+            </div>
+            <p className="text-xs text-nexus-text-muted mt-2">
+              Share this with others or save it for backup.
+            </p>
+            <button
+              onClick={() => {
+                setShowExportModal(false)
+                setExportText('')
+              }}
+              className="w-full mt-4 p-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm font-medium text-nexus-text-muted transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Theme Preview Bar */}
+      {previewTheme && previewTheme !== currentTheme && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[120] bg-nexus-bg-secondary border border-white/10 rounded-xl shadow-2xl px-4 py-3 flex items-center gap-4">
+          <Eye className="w-5 h-5 text-nexus-accent" />
+          <span className="text-sm text-nexus-text-primary">
+            Previewing: <strong>{themes[previewTheme]?.name}</strong>
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={handleCancelPreview}
+              className="px-3 py-1 bg-white/5 hover:bg-white/10 rounded-md text-sm text-nexus-text-muted transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleApplyPreview}
+              className="px-3 py-1 bg-nexus-accent hover:bg-nexus-accent-hover rounded-md text-sm text-white transition-colors"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

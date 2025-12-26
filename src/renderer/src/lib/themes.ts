@@ -329,3 +329,481 @@ export function generateThemeFromColor(baseColor: string, type: 'dark' | 'light'
     }
   }
 }
+
+// ============================================================
+// Theme Import/Export System
+// Supports: Scribe JSON, Base16 YAML
+// ============================================================
+
+/**
+ * Scribe Theme JSON Schema (v1)
+ * 
+ * {
+ *   "$schema": "https://scribe.app/schemas/theme-v1.json",
+ *   "version": 1,
+ *   "name": "Theme Name",
+ *   "author": "Author Name",
+ *   "type": "dark" | "light",
+ *   "colors": {
+ *     "background": { "primary": "#...", "secondary": "#...", "tertiary": "#..." },
+ *     "text": { "primary": "#...", "muted": "#..." },
+ *     "accent": { "default": "#...", "hover": "#..." }
+ *   }
+ * }
+ */
+export interface ScribeThemeJSON {
+  $schema?: string
+  version: number
+  name: string
+  author?: string
+  type: 'dark' | 'light'
+  colors: {
+    background: {
+      primary: string
+      secondary: string
+      tertiary: string
+    }
+    text: {
+      primary: string
+      muted: string
+    }
+    accent: {
+      default: string
+      hover: string
+    }
+  }
+}
+
+/**
+ * Base16 Color Scheme
+ * https://github.com/chriskempson/base16
+ * 
+ * 16 colors that map to semantic roles:
+ * base00 - Default Background
+ * base01 - Lighter Background (status bars, line numbers)
+ * base02 - Selection Background
+ * base03 - Comments, Invisibles
+ * base04 - Dark Foreground (status bars)
+ * base05 - Default Foreground
+ * base06 - Light Foreground
+ * base07 - Light Background
+ * base08 - Variables, Tags, Errors
+ * base09 - Integers, Constants
+ * base0A - Classes, Bold
+ * base0B - Strings, Inherited
+ * base0C - Support, Regex
+ * base0D - Functions, Methods
+ * base0E - Keywords
+ * base0F - Deprecated, Special
+ */
+export interface Base16Scheme {
+  scheme: string
+  author?: string
+  base00: string
+  base01: string
+  base02: string
+  base03: string
+  base04: string
+  base05: string
+  base06: string
+  base07: string
+  base08: string
+  base09: string
+  base0A: string
+  base0B: string
+  base0C: string
+  base0D: string
+  base0E: string
+  base0F: string
+}
+
+// Export theme to Scribe JSON format
+export function exportThemeToJSON(theme: Theme): ScribeThemeJSON {
+  return {
+    $schema: 'https://scribe.app/schemas/theme-v1.json',
+    version: 1,
+    name: theme.name,
+    author: theme.isCustom ? 'Custom' : 'Scribe',
+    type: theme.type,
+    colors: {
+      background: {
+        primary: theme.colors.bgPrimary,
+        secondary: theme.colors.bgSecondary,
+        tertiary: theme.colors.bgTertiary,
+      },
+      text: {
+        primary: theme.colors.textPrimary,
+        muted: theme.colors.textMuted,
+      },
+      accent: {
+        default: theme.colors.accent,
+        hover: theme.colors.accentHover,
+      },
+    },
+  }
+}
+
+// Import theme from Scribe JSON format
+export function importThemeFromJSON(json: ScribeThemeJSON): Theme {
+  const id = `imported-${Date.now()}`
+  return {
+    id,
+    name: json.name,
+    type: json.type,
+    description: json.author ? `By ${json.author}` : 'Imported theme',
+    colors: {
+      bgPrimary: json.colors.background.primary,
+      bgSecondary: json.colors.background.secondary,
+      bgTertiary: json.colors.background.tertiary,
+      textPrimary: json.colors.text.primary,
+      textMuted: json.colors.text.muted,
+      accent: json.colors.accent.default,
+      accentHover: json.colors.accent.hover,
+    },
+    isCustom: true,
+  }
+}
+
+// Parse Base16 YAML (simple parser for the format)
+export function parseBase16YAML(yaml: string): Base16Scheme | null {
+  try {
+    const lines = yaml.split('\n')
+    const scheme: Partial<Base16Scheme> = {}
+    
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed || trimmed.startsWith('#')) continue
+      
+      const match = trimmed.match(/^(\w+):\s*["']?([^"'\s#]+)["']?/)
+      if (match) {
+        const [, key, value] = match
+        if (key === 'scheme') {
+          scheme.scheme = value
+        } else if (key === 'author') {
+          scheme.author = value
+        } else if (key.startsWith('base')) {
+          const colorValue = value.startsWith('#') ? value : `#${value}`
+          ;(scheme as Record<string, string>)[key] = colorValue
+        }
+      }
+    }
+    
+    // Validate required fields
+    if (!scheme.scheme || !scheme.base00 || !scheme.base05) {
+      return null
+    }
+    
+    return scheme as Base16Scheme
+  } catch {
+    return null
+  }
+}
+
+// Convert Base16 scheme to Scribe theme
+export function importThemeFromBase16(base16: Base16Scheme): Theme {
+  const id = `base16-${Date.now()}`
+  
+  // Determine if dark or light based on background luminance
+  const bgLum = getLuminance(base16.base00)
+  const type = bgLum < 0.5 ? 'dark' : 'light'
+  
+  return {
+    id,
+    name: base16.scheme,
+    type,
+    description: base16.author ? `Base16 by ${base16.author}` : 'Base16 scheme',
+    colors: {
+      bgPrimary: base16.base00,      // Default background
+      bgSecondary: base16.base01,    // Lighter background
+      bgTertiary: base16.base02,     // Selection background
+      textPrimary: base16.base05,    // Default foreground
+      textMuted: base16.base04,      // Dark foreground
+      accent: base16.base0D,         // Functions/Methods (usually a nice blue)
+      accentHover: base16.base0C,    // Support/Regex (complementary)
+    },
+    isCustom: true,
+  }
+}
+
+// Export theme to Base16 YAML format
+export function exportThemeToBase16(theme: Theme): string {
+  // Generate the 16 colors from our 7
+  const base00 = theme.colors.bgPrimary
+  const base01 = theme.colors.bgSecondary
+  const base02 = theme.colors.bgTertiary
+  const base03 = theme.colors.textMuted
+  const base04 = theme.colors.textMuted
+  const base05 = theme.colors.textPrimary
+  const base06 = adjustBrightness(theme.colors.textPrimary, 10)
+  const base07 = adjustBrightness(theme.colors.textPrimary, 20)
+  const base08 = adjustBrightness(theme.colors.accent, -20) // Errors/Variables
+  const base09 = adjustBrightness(theme.colors.accent, -10) // Constants
+  const base0A = theme.colors.accentHover                    // Classes
+  const base0B = adjustBrightness(theme.colors.accent, 10)   // Strings
+  const base0C = adjustBrightness(theme.colors.accent, 20)   // Support
+  const base0D = theme.colors.accent                         // Functions
+  const base0E = adjustBrightness(theme.colors.accent, -15)  // Keywords
+  const base0F = adjustBrightness(theme.colors.accent, -25)  // Deprecated
+  
+  return `scheme: "${theme.name}"
+author: "Scribe Export"
+base00: "${base00}"
+base01: "${base01}"
+base02: "${base02}"
+base03: "${base03}"
+base04: "${base04}"
+base05: "${base05}"
+base06: "${base06}"
+base07: "${base07}"
+base08: "${base08}"
+base09: "${base09}"
+base0A: "${base0A}"
+base0B: "${base0B}"
+base0C: "${base0C}"
+base0D: "${base0D}"
+base0E: "${base0E}"
+base0F: "${base0F}"
+`
+}
+
+// Calculate relative luminance of a hex color
+function getLuminance(hex: string): number {
+  const rgb = hexToRgb(hex)
+  if (!rgb) return 0
+  
+  const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(v => {
+    v /= 255
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+  })
+  
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+// Convert hex to RGB
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  } : null
+}
+
+// Validate and detect theme format
+export function detectThemeFormat(content: string): 'scribe-json' | 'base16-yaml' | 'unknown' {
+  const trimmed = content.trim()
+  
+  // Try JSON first
+  if (trimmed.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(trimmed)
+      if (parsed.colors && parsed.name && parsed.type) {
+        return 'scribe-json'
+      }
+    } catch {
+      // Not valid JSON
+    }
+  }
+  
+  // Try Base16 YAML
+  if (trimmed.includes('base00:') && trimmed.includes('base05:')) {
+    return 'base16-yaml'
+  }
+  
+  return 'unknown'
+}
+
+// Import theme from any supported format
+export function importTheme(content: string): Theme | null {
+  const format = detectThemeFormat(content)
+  
+  switch (format) {
+    case 'scribe-json':
+      try {
+        const json = JSON.parse(content) as ScribeThemeJSON
+        return importThemeFromJSON(json)
+      } catch {
+        return null
+      }
+    
+    case 'base16-yaml':
+      const base16 = parseBase16YAML(content)
+      if (base16) {
+        return importThemeFromBase16(base16)
+      }
+      return null
+    
+    default:
+      return null
+  }
+}
+
+// Generate shareable theme string (JSON)
+export function generateShareableTheme(theme: Theme): string {
+  const json = exportThemeToJSON(theme)
+  return JSON.stringify(json, null, 2)
+}
+
+// Popular Base16 schemes for quick import
+export const POPULAR_BASE16_SCHEMES: Record<string, Base16Scheme> = {
+  'dracula': {
+    scheme: 'Dracula',
+    author: 'Zeno Rocha',
+    base00: '#282936',
+    base01: '#3a3c4e',
+    base02: '#4d4f68',
+    base03: '#626483',
+    base04: '#62d6e8',
+    base05: '#e9e9f4',
+    base06: '#f1f2f8',
+    base07: '#f7f7fb',
+    base08: '#ea51b2',
+    base09: '#b45bcf',
+    base0A: '#00f769',
+    base0B: '#ebff87',
+    base0C: '#a1efe4',
+    base0D: '#62d6e8',
+    base0E: '#b45bcf',
+    base0F: '#00f769',
+  },
+  'nord': {
+    scheme: 'Nord',
+    author: 'arcticicestudio',
+    base00: '#2e3440',
+    base01: '#3b4252',
+    base02: '#434c5e',
+    base03: '#4c566a',
+    base04: '#d8dee9',
+    base05: '#e5e9f0',
+    base06: '#eceff4',
+    base07: '#8fbcbb',
+    base08: '#bf616a',
+    base09: '#d08770',
+    base0A: '#ebcb8b',
+    base0B: '#a3be8c',
+    base0C: '#88c0d0',
+    base0D: '#81a1c1',
+    base0E: '#b48ead',
+    base0F: '#5e81ac',
+  },
+  'solarized-dark': {
+    scheme: 'Solarized Dark',
+    author: 'Ethan Schoonover',
+    base00: '#002b36',
+    base01: '#073642',
+    base02: '#586e75',
+    base03: '#657b83',
+    base04: '#839496',
+    base05: '#93a1a1',
+    base06: '#eee8d5',
+    base07: '#fdf6e3',
+    base08: '#dc322f',
+    base09: '#cb4b16',
+    base0A: '#b58900',
+    base0B: '#859900',
+    base0C: '#2aa198',
+    base0D: '#268bd2',
+    base0E: '#6c71c4',
+    base0F: '#d33682',
+  },
+  'solarized-light': {
+    scheme: 'Solarized Light',
+    author: 'Ethan Schoonover',
+    base00: '#fdf6e3',
+    base01: '#eee8d5',
+    base02: '#93a1a1',
+    base03: '#839496',
+    base04: '#657b83',
+    base05: '#586e75',
+    base06: '#073642',
+    base07: '#002b36',
+    base08: '#dc322f',
+    base09: '#cb4b16',
+    base0A: '#b58900',
+    base0B: '#859900',
+    base0C: '#2aa198',
+    base0D: '#268bd2',
+    base0E: '#6c71c4',
+    base0F: '#d33682',
+  },
+  'gruvbox-dark': {
+    scheme: 'Gruvbox Dark',
+    author: 'morhetz',
+    base00: '#282828',
+    base01: '#3c3836',
+    base02: '#504945',
+    base03: '#665c54',
+    base04: '#bdae93',
+    base05: '#d5c4a1',
+    base06: '#ebdbb2',
+    base07: '#fbf1c7',
+    base08: '#fb4934',
+    base09: '#fe8019',
+    base0A: '#fabd2f',
+    base0B: '#b8bb26',
+    base0C: '#8ec07c',
+    base0D: '#83a598',
+    base0E: '#d3869b',
+    base0F: '#d65d0e',
+  },
+  'tokyo-night': {
+    scheme: 'Tokyo Night',
+    author: 'enkia',
+    base00: '#1a1b26',
+    base01: '#16161e',
+    base02: '#2f3549',
+    base03: '#444b6a',
+    base04: '#787c99',
+    base05: '#a9b1d6',
+    base06: '#cbccd1',
+    base07: '#d5d6db',
+    base08: '#f7768e',
+    base09: '#ff9e64',
+    base0A: '#e0af68',
+    base0B: '#9ece6a',
+    base0C: '#73daca',
+    base0D: '#7aa2f7',
+    base0E: '#bb9af7',
+    base0F: '#db4b4b',
+  },
+  'catppuccin-mocha': {
+    scheme: 'Catppuccin Mocha',
+    author: 'Catppuccin',
+    base00: '#1e1e2e',
+    base01: '#181825',
+    base02: '#313244',
+    base03: '#45475a',
+    base04: '#585b70',
+    base05: '#cdd6f4',
+    base06: '#f5e0dc',
+    base07: '#b4befe',
+    base08: '#f38ba8',
+    base09: '#fab387',
+    base0A: '#f9e2af',
+    base0B: '#a6e3a1',
+    base0C: '#94e2d5',
+    base0D: '#89b4fa',
+    base0E: '#cba6f7',
+    base0F: '#f2cdcd',
+  },
+  'catppuccin-latte': {
+    scheme: 'Catppuccin Latte',
+    author: 'Catppuccin',
+    base00: '#eff1f5',
+    base01: '#e6e9ef',
+    base02: '#ccd0da',
+    base03: '#bcc0cc',
+    base04: '#acb0be',
+    base05: '#4c4f69',
+    base06: '#dc8a78',
+    base07: '#7287fd',
+    base08: '#d20f39',
+    base09: '#fe640b',
+    base0A: '#df8e1d',
+    base0B: '#40a02b',
+    base0C: '#179299',
+    base0D: '#1e66f5',
+    base0E: '#8839ef',
+    base0F: '#dd7878',
+  },
+}
