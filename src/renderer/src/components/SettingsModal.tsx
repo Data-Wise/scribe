@@ -117,6 +117,7 @@ export function SettingsModal({
   const [showRecommendedFonts, setShowRecommendedFonts] = useState(false)
   const [fontSearchQuery, setFontSearchQuery] = useState('')
   const [expandedFontPreview, setExpandedFontPreview] = useState<string | null>(null)
+  const [fontCategoryFilter, setFontCategoryFilter] = useState<'all' | 'sans' | 'serif' | 'mono'>('all')
   
   // Load installed fonts on mount
   useEffect(() => {
@@ -163,17 +164,24 @@ export function SettingsModal({
     }
   }
   
-  // Group recommended fonts by status, with optional filtering
+  // Group recommended fonts by status, with search and category filtering
   const fontGroups = (() => {
     const groups = groupRecommendedFonts(installedFonts)
-    if (!fontSearchQuery.trim()) return groups
     
-    const query = fontSearchQuery.toLowerCase()
-    const filterFont = (font: RecommendedFont) => 
-      font.name.toLowerCase().includes(query) ||
-      font.description.toLowerCase().includes(query) ||
-      font.adhdBenefit.toLowerCase().includes(query) ||
-      font.category.toLowerCase().includes(query)
+    const filterFont = (font: RecommendedFont) => {
+      // Category filter
+      if (fontCategoryFilter !== 'all' && font.category !== fontCategoryFilter) {
+        return false
+      }
+      // Search filter
+      if (fontSearchQuery.trim()) {
+        const query = fontSearchQuery.toLowerCase()
+        return font.name.toLowerCase().includes(query) ||
+          font.description.toLowerCase().includes(query) ||
+          font.adhdBenefit.toLowerCase().includes(query)
+      }
+      return true
+    }
     
     return {
       installed: groups.installed.filter(filterFont),
@@ -181,6 +189,25 @@ export function SettingsModal({
       premium: groups.premium.filter(filterFont),
     }
   })()
+  
+  // Handle "Use this font" - applies font directly to CSS variables
+  const handleUseFont = (font: RecommendedFont) => {
+    // Apply directly to CSS custom properties
+    const root = document.documentElement
+    root.style.setProperty('--editor-font-family', font.fontFamily)
+    
+    // Show a brief feedback
+    setFontInstallResult({
+      id: font.id,
+      success: true,
+      message: `Now using ${font.name}! (Changes will reset on reload unless you select it from Typography above)`
+    })
+    
+    // Clear message after 3 seconds
+    setTimeout(() => {
+      setFontInstallResult(null)
+    }, 3000)
+  }
   
   // Apply preview theme
   useEffect(() => {
@@ -541,6 +568,23 @@ export function SettingsModal({
                   
                   {showRecommendedFonts && (
                     <div className="space-y-4">
+                      {/* Category Filter Tabs */}
+                      <div className="flex gap-1 p-1 bg-nexus-bg-primary rounded-lg">
+                        {(['all', 'sans', 'serif', 'mono'] as const).map((cat) => (
+                          <button
+                            key={cat}
+                            onClick={() => setFontCategoryFilter(cat)}
+                            className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                              fontCategoryFilter === cat
+                                ? 'bg-nexus-accent text-white'
+                                : 'text-nexus-text-muted hover:text-nexus-text-primary hover:bg-white/5'
+                            }`}
+                          >
+                            {cat === 'all' ? 'All' : cat === 'sans' ? 'Sans' : cat === 'serif' ? 'Serif' : 'Mono'}
+                          </button>
+                        ))}
+                      </div>
+                      
                       {/* Search/Filter */}
                       <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-nexus-text-muted" />
@@ -548,7 +592,7 @@ export function SettingsModal({
                           type="text"
                           value={fontSearchQuery}
                           onChange={(e) => setFontSearchQuery(e.target.value)}
-                          placeholder="Search fonts (e.g., 'dyslexic', 'mono', 'reading')..."
+                          placeholder="Search fonts..."
                           className="w-full pl-9 pr-3 py-2 bg-nexus-bg-primary border border-white/10 rounded-lg text-sm text-nexus-text-primary placeholder:text-nexus-text-muted/50 focus:outline-none focus:border-nexus-accent/50"
                         />
                         {fontSearchQuery && (
@@ -582,10 +626,23 @@ export function SettingsModal({
                       )}
                       
                       {/* No results */}
-                      {fontSearchQuery && fontGroups.installed.length === 0 && fontGroups.available.length === 0 && fontGroups.premium.length === 0 && (
+                      {(fontSearchQuery || fontCategoryFilter !== 'all') && fontGroups.installed.length === 0 && fontGroups.available.length === 0 && fontGroups.premium.length === 0 && (
                         <div className="text-center py-8 text-nexus-text-muted">
                           <Type className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">No fonts match "{fontSearchQuery}"</p>
+                          <p className="text-sm">
+                            {fontSearchQuery 
+                              ? `No fonts match "${fontSearchQuery}"${fontCategoryFilter !== 'all' ? ` in ${fontCategoryFilter}` : ''}`
+                              : `No ${fontCategoryFilter} fonts available`
+                            }
+                          </p>
+                          {(fontSearchQuery || fontCategoryFilter !== 'all') && (
+                            <button
+                              onClick={() => { setFontSearchQuery(''); setFontCategoryFilter('all'); }}
+                              className="mt-2 text-xs text-nexus-accent hover:text-nexus-accent-hover"
+                            >
+                              Clear filters
+                            </button>
+                          )}
                         </div>
                       )}
                       
@@ -604,18 +661,29 @@ export function SettingsModal({
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-medium text-nexus-text-primary">{font.name}</div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm font-medium text-nexus-text-primary">{font.name}</span>
+                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-nexus-text-muted uppercase">
+                                        {font.category}
+                                      </span>
+                                    </div>
                                     <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
                                   </div>
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-1">
                                     <button
                                       onClick={() => setExpandedFontPreview(expandedFontPreview === font.id ? null : font.id)}
-                                      className="p-1 text-nexus-text-muted hover:text-nexus-accent rounded transition-colors"
+                                      className="p-1.5 text-nexus-text-muted hover:text-nexus-accent rounded transition-colors"
                                       title="Preview font"
                                     >
                                       <Eye className="w-4 h-4" />
                                     </button>
-                                    <CheckCircle2 className="w-4 h-4 text-green-400" />
+                                    <button
+                                      onClick={() => handleUseFont(font)}
+                                      className="px-2 py-1 text-[10px] font-medium bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded transition-colors"
+                                      title="Use this font in editor"
+                                    >
+                                      Use
+                                    </button>
                                   </div>
                                 </div>
                                 {/* Font Preview */}
@@ -630,6 +698,12 @@ export function SettingsModal({
                                     <p className="text-sm text-nexus-text-muted mt-1">
                                       0123456789 — AaBbCcDdEeFf IlL1 O0o
                                     </p>
+                                    <button
+                                      onClick={() => handleUseFont(font)}
+                                      className="mt-3 w-full py-2 text-xs font-medium bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-md transition-colors"
+                                    >
+                                      Use {font.name} in Editor
+                                    </button>
                                   </div>
                                 )}
                                 <div className="mt-2 text-[10px] text-green-300/80 italic">
@@ -644,7 +718,8 @@ export function SettingsModal({
                       {/* Available for installation */}
                       {fontGroups.available.length > 0 && (
                         <div>
-                          <h5 className="text-[10px] uppercase tracking-widest text-nexus-text-muted font-bold mb-2">
+                          <h5 className="text-[10px] uppercase tracking-widest text-nexus-text-muted font-bold mb-2 flex items-center gap-1">
+                            <Download className="w-3 h-3" />
                             Available via Homebrew ({fontGroups.available.length})
                           </h5>
                           <div className="space-y-2">
@@ -655,27 +730,58 @@ export function SettingsModal({
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-medium text-nexus-text-primary">{font.name}</div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm font-medium text-nexus-text-primary">{font.name}</span>
+                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-nexus-text-muted uppercase">
+                                        {font.category}
+                                      </span>
+                                    </div>
                                     <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
                                   </div>
-                                  <button
-                                    onClick={() => handleInstallFont(font)}
-                                    disabled={!hasHomebrew || installingFont !== null}
-                                    className="ml-3 px-3 py-1.5 bg-nexus-accent hover:bg-nexus-accent-hover text-white text-xs font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                                  >
-                                    {installingFont === font.id ? (
-                                      <>
-                                        <Loader2 className="w-3 h-3 animate-spin" />
-                                        Installing...
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Download className="w-3 h-3" />
-                                        Install
-                                      </>
-                                    )}
-                                  </button>
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      onClick={() => setExpandedFontPreview(expandedFontPreview === font.id ? null : font.id)}
+                                      className="p-1.5 text-nexus-text-muted hover:text-nexus-accent rounded transition-colors"
+                                      title="Preview font (with fallback)"
+                                    >
+                                      <Eye className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleInstallFont(font)}
+                                      disabled={!hasHomebrew || installingFont !== null}
+                                      className="px-3 py-1.5 bg-nexus-accent hover:bg-nexus-accent-hover text-white text-xs font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                                    >
+                                      {installingFont === font.id ? (
+                                        <>
+                                          <Loader2 className="w-3 h-3 animate-spin" />
+                                          Installing...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Download className="w-3 h-3" />
+                                          Install
+                                        </>
+                                      )}
+                                    </button>
+                                  </div>
                                 </div>
+                                {/* Font Preview (with fallback since not installed) */}
+                                {expandedFontPreview === font.id && (
+                                  <div 
+                                    className="mt-3 p-3 bg-nexus-bg-primary rounded-md border border-white/10"
+                                    style={{ fontFamily: font.fontFamily }}
+                                  >
+                                    <p className="text-xs text-nexus-text-muted mb-1 italic">
+                                      Preview (using system fallback - install for actual font)
+                                    </p>
+                                    <p className="text-lg text-nexus-text-primary leading-relaxed">
+                                      The quick brown fox jumps over the lazy dog.
+                                    </p>
+                                    <p className="text-sm text-nexus-text-muted mt-1">
+                                      0123456789 — AaBbCcDdEeFf IlL1 O0o
+                                    </p>
+                                  </div>
+                                )}
                                 <div className="mt-2 text-[10px] text-nexus-accent/80 italic">
                                   {font.adhdBenefit}
                                 </div>
@@ -697,7 +803,8 @@ export function SettingsModal({
                       {/* Premium fonts */}
                       {fontGroups.premium.length > 0 && (
                         <div>
-                          <h5 className="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-2">
+                          <h5 className="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-2 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
                             Premium Fonts ({fontGroups.premium.length})
                           </h5>
                           <div className="space-y-2">
@@ -708,7 +815,12 @@ export function SettingsModal({
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-medium text-nexus-text-primary">{font.name}</div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm font-medium text-nexus-text-primary">{font.name}</span>
+                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 uppercase">
+                                        {font.category}
+                                      </span>
+                                    </div>
                                     <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
                                   </div>
                                   {font.website && (
