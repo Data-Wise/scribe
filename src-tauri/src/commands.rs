@@ -305,5 +305,97 @@ pub fn export_to_obsidian(state: State<AppState>, target_path: String) -> Result
     Ok(format!("Successfully exported {} notes to {}", count, target_path))
 }
 
+// Font management commands
+
+/// Get list of installed font families using fc-list
+#[tauri::command]
+pub fn get_installed_fonts() -> Result<Vec<String>, String> {
+    let output = Command::new("fc-list")
+        .args([":", "family"])
+        .output()
+        .map_err(|e| format!("Failed to execute fc-list: {}", e))?;
+    
+    if !output.status.success() {
+        return Err("fc-list command failed".to_string());
+    }
+    
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let mut fonts: Vec<String> = stdout
+        .lines()
+        .map(|line| {
+            // fc-list returns "Family,Variant" format, we want just the family
+            line.split(',').next().unwrap_or(line).trim().to_string()
+        })
+        .filter(|f| !f.is_empty() && !f.starts_with('.')) // Filter hidden fonts
+        .collect();
+    
+    fonts.sort();
+    fonts.dedup();
+    
+    Ok(fonts)
+}
+
+/// Check if a specific font family is installed
+#[tauri::command]
+pub fn is_font_installed(font_family: String) -> Result<bool, String> {
+    let output = Command::new("fc-list")
+        .args([":", "family"])
+        .output()
+        .map_err(|e| format!("Failed to execute fc-list: {}", e))?;
+    
+    if !output.status.success() {
+        return Err("fc-list command failed".to_string());
+    }
+    
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let font_lower = font_family.to_lowercase();
+    
+    Ok(stdout.lines().any(|line| {
+        line.to_lowercase().contains(&font_lower)
+    }))
+}
+
+/// Install a font via Homebrew cask
+#[tauri::command]
+pub fn install_font_via_homebrew(cask_name: String) -> Result<String, String> {
+    // Validate cask name (must start with "font-" for safety)
+    if !cask_name.starts_with("font-") {
+        return Err("Invalid font cask name - must start with 'font-'".to_string());
+    }
+    
+    // Check if Homebrew is available
+    let brew_check = Command::new("which")
+        .arg("brew")
+        .output()
+        .map_err(|e| format!("Failed to check for Homebrew: {}", e))?;
+    
+    if !brew_check.status.success() {
+        return Err("Homebrew is not installed. Please install it from https://brew.sh".to_string());
+    }
+    
+    // Run brew install
+    let output = Command::new("brew")
+        .args(["install", "--cask", &cask_name])
+        .output()
+        .map_err(|e| format!("Failed to run brew install: {}", e))?;
+    
+    if output.status.success() {
+        Ok(format!("Successfully installed {}", cask_name))
+    } else {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        Err(format!("Failed to install {}: {}", cask_name, stderr))
+    }
+}
+
+/// Check if Homebrew is available
+#[tauri::command]
+pub fn is_homebrew_available() -> bool {
+    Command::new("which")
+        .arg("brew")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
 
 

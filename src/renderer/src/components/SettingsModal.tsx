@@ -19,13 +19,18 @@ import {
   Upload,
   Copy,
   Check,
-  Eye
+  Eye,
+  ExternalLink,
+  Loader2,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react'
 import { 
   Theme, 
   AutoThemeSettings,
   FontSettings,
   ThemeShortcut,
+  RecommendedFont,
   createCustomTheme,
   generateThemeFromColor,
   isValidHexColor,
@@ -38,8 +43,11 @@ import {
   isValidThemeUrl,
   POPULAR_BASE16_SCHEMES,
   FONT_FAMILIES,
+  RECOMMENDED_FONTS,
+  groupRecommendedFonts,
   Base16Scheme
 } from '../lib/themes'
+import { api } from '../lib/api'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -96,6 +104,62 @@ export function SettingsModal({
   // URL import state
   const [importUrl, setImportUrl] = useState('')
   const [isLoadingUrl, setIsLoadingUrl] = useState(false)
+  
+  // Font management state
+  const [installedFonts, setInstalledFonts] = useState<string[]>([])
+  const [isLoadingFonts, setIsLoadingFonts] = useState(false)
+  const [installingFont, setInstallingFont] = useState<string | null>(null)
+  const [fontInstallResult, setFontInstallResult] = useState<{ id: string; success: boolean; message: string } | null>(null)
+  const [hasHomebrew, setHasHomebrew] = useState<boolean | null>(null)
+  const [showRecommendedFonts, setShowRecommendedFonts] = useState(false)
+  
+  // Load installed fonts on mount
+  useEffect(() => {
+    if (isOpen && activeTab === 'editor') {
+      loadInstalledFonts()
+    }
+  }, [isOpen, activeTab])
+  
+  const loadInstalledFonts = async () => {
+    setIsLoadingFonts(true)
+    try {
+      const [fonts, brewAvailable] = await Promise.all([
+        api.getInstalledFonts(),
+        api.isHomebrewAvailable()
+      ])
+      setInstalledFonts(fonts)
+      setHasHomebrew(brewAvailable)
+    } catch (error) {
+      console.error('Failed to load fonts:', error)
+    } finally {
+      setIsLoadingFonts(false)
+    }
+  }
+  
+  const handleInstallFont = async (font: RecommendedFont) => {
+    if (!font.cask || installingFont) return
+    
+    setInstallingFont(font.id)
+    setFontInstallResult(null)
+    
+    try {
+      const result = await api.installFontViaHomebrew(font.cask)
+      setFontInstallResult({ id: font.id, success: true, message: result })
+      // Reload fonts after install
+      await loadInstalledFonts()
+    } catch (error) {
+      setFontInstallResult({ 
+        id: font.id, 
+        success: false, 
+        message: error instanceof Error ? error.message : 'Installation failed' 
+      })
+    } finally {
+      setInstallingFont(null)
+    }
+  }
+  
+  // Group recommended fonts by status
+  const fontGroups = groupRecommendedFonts(installedFonts)
   
   // Apply preview theme
   useEffect(() => {
@@ -424,6 +488,166 @@ export function SettingsModal({
                       </div>
                     </div>
                   </div>
+                </section>
+                
+                {/* Recommended ADHD-Friendly Fonts */}
+                <section>
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold">
+                      <Type className="w-3 h-3 inline mr-2" />
+                      ADHD-Friendly Fonts
+                    </h4>
+                    <button
+                      onClick={() => setShowRecommendedFonts(!showRecommendedFonts)}
+                      className="text-xs text-nexus-accent hover:text-nexus-accent-hover"
+                    >
+                      {showRecommendedFonts ? 'Hide' : 'Show'} ({RECOMMENDED_FONTS.length} fonts)
+                    </button>
+                  </div>
+                  
+                  {showRecommendedFonts && (
+                    <div className="space-y-4">
+                      {/* Homebrew status */}
+                      {hasHomebrew === false && (
+                        <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-start gap-2">
+                          <AlertCircle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                          <div className="text-xs text-yellow-200">
+                            <strong>Homebrew not found.</strong> Install it from{' '}
+                            <a href="https://brew.sh" target="_blank" rel="noopener" className="underline">brew.sh</a>
+                            {' '}to enable font installation.
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Loading state */}
+                      {isLoadingFonts && (
+                        <div className="flex items-center gap-2 text-xs text-nexus-text-muted p-4">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Loading installed fonts...
+                        </div>
+                      )}
+                      
+                      {/* Installed recommended fonts */}
+                      {fontGroups.installed.length > 0 && (
+                        <div>
+                          <h5 className="text-[10px] uppercase tracking-widest text-green-400 font-bold mb-2 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Installed ({fontGroups.installed.length})
+                          </h5>
+                          <div className="space-y-2">
+                            {fontGroups.installed.map(font => (
+                              <div
+                                key={font.id}
+                                className="p-3 bg-nexus-bg-tertiary rounded-lg border border-green-500/20"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <div className="text-sm font-medium text-nexus-text-primary">{font.name}</div>
+                                    <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
+                                  </div>
+                                  <CheckCircle2 className="w-4 h-4 text-green-400" />
+                                </div>
+                                <div className="mt-2 text-[10px] text-green-300/80 italic">
+                                  {font.adhdBenefit}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Available for installation */}
+                      {fontGroups.available.length > 0 && (
+                        <div>
+                          <h5 className="text-[10px] uppercase tracking-widest text-nexus-text-muted font-bold mb-2">
+                            Available via Homebrew ({fontGroups.available.length})
+                          </h5>
+                          <div className="space-y-2">
+                            {fontGroups.available.map(font => (
+                              <div
+                                key={font.id}
+                                className="p-3 bg-nexus-bg-tertiary rounded-lg border border-white/5"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-medium text-nexus-text-primary">{font.name}</div>
+                                    <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
+                                  </div>
+                                  <button
+                                    onClick={() => handleInstallFont(font)}
+                                    disabled={!hasHomebrew || installingFont !== null}
+                                    className="ml-3 px-3 py-1.5 bg-nexus-accent hover:bg-nexus-accent-hover text-white text-xs font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                                  >
+                                    {installingFont === font.id ? (
+                                      <>
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                        Installing...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Download className="w-3 h-3" />
+                                        Install
+                                      </>
+                                    )}
+                                  </button>
+                                </div>
+                                <div className="mt-2 text-[10px] text-nexus-accent/80 italic">
+                                  {font.adhdBenefit}
+                                </div>
+                                {fontInstallResult?.id === font.id && (
+                                  <div className={`mt-2 text-[10px] p-2 rounded ${
+                                    fontInstallResult.success 
+                                      ? 'bg-green-500/10 text-green-300' 
+                                      : 'bg-red-500/10 text-red-300'
+                                  }`}>
+                                    {fontInstallResult.message}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Premium fonts */}
+                      {fontGroups.premium.length > 0 && (
+                        <div>
+                          <h5 className="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-2">
+                            Premium Fonts ({fontGroups.premium.length})
+                          </h5>
+                          <div className="space-y-2">
+                            {fontGroups.premium.map(font => (
+                              <div
+                                key={font.id}
+                                className="p-3 bg-nexus-bg-tertiary rounded-lg border border-purple-500/20"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-medium text-nexus-text-primary">{font.name}</div>
+                                    <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
+                                  </div>
+                                  {font.website && (
+                                    <a
+                                      href={font.website}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="ml-3 px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-xs font-medium rounded-md transition-colors flex items-center gap-1"
+                                    >
+                                      <ExternalLink className="w-3 h-3" />
+                                      Get
+                                    </a>
+                                  )}
+                                </div>
+                                <div className="mt-2 text-[10px] text-purple-300/80 italic">
+                                  {font.adhdBenefit}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </section>
               </div>
             )}

@@ -75,6 +75,11 @@ pub fn run() {
       commands::run_gemini,
       commands::get_or_create_daily_note,
       commands::export_to_obsidian,
+      // Font management
+      commands::get_installed_fonts,
+      commands::is_font_installed,
+      commands::install_font_via_homebrew,
+      commands::is_homebrew_available,
     ])
 
 

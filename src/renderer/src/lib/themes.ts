@@ -1000,6 +1000,203 @@ export function applyFontSettings(settings: FontSettings): void {
 }
 
 // ============================================================
+// Recommended Fonts (ADHD-Friendly)
+// ============================================================
+
+export interface RecommendedFont {
+  id: string
+  name: string
+  fontFamily: string  // CSS font-family value
+  cask?: string       // Homebrew cask name (if installable)
+  category: 'sans' | 'serif' | 'mono'
+  description: string
+  adhdBenefit: string
+  website?: string    // For premium/external fonts
+  isPremium?: boolean
+}
+
+/**
+ * Curated list of ADHD-friendly fonts
+ * - Fonts with clear letterforms that reduce misreading
+ * - Research-backed fonts for reading proficiency
+ * - Distraction-free writing fonts
+ */
+export const RECOMMENDED_FONTS: RecommendedFont[] = [
+  // === Accessibility-Focused Sans ===
+  {
+    id: 'atkinson',
+    name: 'Atkinson Hyperlegible',
+    fontFamily: '"Atkinson Hyperlegible", sans-serif',
+    cask: 'font-atkinson-hyperlegible',
+    category: 'sans',
+    description: 'Braille Institute\'s accessible font',
+    adhdBenefit: 'Distinct letterforms (I/l/1, O/0) reduce misreading and cognitive load'
+  },
+  {
+    id: 'lexend',
+    name: 'Lexend',
+    fontFamily: '"Lexend", sans-serif',
+    cask: 'font-lexend',
+    category: 'sans',
+    description: 'Research-backed for reading proficiency',
+    adhdBenefit: 'Optimized letter spacing improves reading speed and comprehension'
+  },
+  {
+    id: 'opendyslexic',
+    name: 'OpenDyslexic',
+    fontFamily: '"OpenDyslexic", sans-serif',
+    cask: 'font-open-dyslexic',
+    category: 'sans',
+    description: 'Designed for dyslexic readers',
+    adhdBenefit: 'Weighted bottoms prevent letter rotation; helps with visual processing'
+  },
+  
+  // === iA Writer Family (Distraction-Free) ===
+  {
+    id: 'ia-writer-mono',
+    name: 'iA Writer Mono',
+    fontFamily: '"iA Writer Mono", monospace',
+    cask: 'font-ia-writer-mono',
+    category: 'mono',
+    description: 'Classic monospace for focused writing',
+    adhdBenefit: 'Even letter spacing creates calm visual rhythm; reduces distractions'
+  },
+  {
+    id: 'ia-writer-duo',
+    name: 'iA Writer Duo',
+    fontFamily: '"iA Writer Duo", monospace',
+    cask: 'font-ia-writer-duo',
+    category: 'mono',
+    description: 'Duospace - between mono and proportional',
+    adhdBenefit: 'Best of both worlds: readable prose with consistent rhythm'
+  },
+  {
+    id: 'ia-writer-quattro',
+    name: 'iA Writer Quattro',
+    fontFamily: '"iA Writer Quattro", sans-serif',
+    cask: 'font-ia-writer-quattro',
+    category: 'sans',
+    description: 'Proportional with monospace rhythm',
+    adhdBenefit: 'Natural reading flow without the chaos of variable widths'
+  },
+  
+  // === Modern Coding Fonts ===
+  {
+    id: 'monaspace',
+    name: 'Monaspace',
+    fontFamily: '"Monaspace Neon", "Monaspace Argon", monospace',
+    cask: 'font-monaspace',
+    category: 'mono',
+    description: 'GitHub\'s superfamily (5 variants)',
+    adhdBenefit: 'Texture healing reduces visual noise in code'
+  },
+  {
+    id: 'commit-mono',
+    name: 'Commit Mono',
+    fontFamily: '"Commit Mono", monospace',
+    cask: 'font-commit-mono',
+    category: 'mono',
+    description: 'Neutral, anonymous coding font',
+    adhdBenefit: 'Calm, neutral design minimizes visual distraction'
+  },
+  {
+    id: 'intel-one-mono',
+    name: 'Intel One Mono',
+    fontFamily: '"Intel One Mono", monospace',
+    cask: 'font-intel-one-mono',
+    category: 'mono',
+    description: 'Clear, legible coding font',
+    adhdBenefit: 'High clarity letterforms reduce eye strain during long sessions'
+  },
+  {
+    id: 'recursive',
+    name: 'Recursive',
+    fontFamily: '"Recursive", sans-serif',
+    cask: 'font-recursive',
+    category: 'sans',
+    description: 'Variable font with casual/mono axes',
+    adhdBenefit: 'Adjustable casualness helps maintain focus without being sterile'
+  },
+  
+  // === Premium Fonts (Links Only) ===
+  {
+    id: 'berkeley-mono',
+    name: 'Berkeley Mono',
+    fontFamily: '"Berkeley Mono", monospace',
+    category: 'mono',
+    description: 'Premium coding font ($75)',
+    adhdBenefit: 'Exceptional clarity; worth it for heavy coders',
+    website: 'https://berkeleygraphics.com/typefaces/berkeley-mono/',
+    isPremium: true
+  },
+  {
+    id: 'monolisa',
+    name: 'MonoLisa',
+    fontFamily: '"MonoLisa", monospace',
+    category: 'mono',
+    description: 'Premium font for developers ($59+)',
+    adhdBenefit: 'Designed to reduce eye fatigue; great for long coding sessions',
+    website: 'https://www.monolisa.dev/',
+    isPremium: true
+  },
+  {
+    id: 'operator-mono',
+    name: 'Operator Mono',
+    fontFamily: '"Operator Mono", monospace',
+    category: 'mono',
+    description: 'Stylish premium coding font ($199)',
+    adhdBenefit: 'Italic cursive style makes comments visually distinct',
+    website: 'https://www.typography.com/fonts/operator/overview',
+    isPremium: true
+  },
+  {
+    id: 'input',
+    name: 'Input',
+    fontFamily: '"Input Mono", "Input Sans", monospace',
+    category: 'mono',
+    description: 'Highly customizable coding font (Free for personal)',
+    adhdBenefit: 'Customize width, weight, and line height to your exact preferences',
+    website: 'https://input.djr.com/',
+    isPremium: false
+  },
+]
+
+/**
+ * Get recommended fonts grouped by installation status
+ */
+export function groupRecommendedFonts(installedFonts: string[]): {
+  installed: RecommendedFont[]
+  available: RecommendedFont[]
+  premium: RecommendedFont[]
+} {
+  const installedLower = installedFonts.map(f => f.toLowerCase())
+  
+  const installed: RecommendedFont[] = []
+  const available: RecommendedFont[] = []
+  const premium: RecommendedFont[] = []
+  
+  for (const font of RECOMMENDED_FONTS) {
+    if (font.isPremium) {
+      premium.push(font)
+    } else {
+      // Check if font is installed by matching font family name
+      const fontNameLower = font.name.toLowerCase()
+      const isInstalled = installedLower.some(f => 
+        f.includes(fontNameLower) || fontNameLower.includes(f.split(',')[0].trim())
+      )
+      
+      if (isInstalled) {
+        installed.push(font)
+      } else {
+        available.push(font)
+      }
+    }
+  }
+  
+  return { installed, available, premium }
+}
+
+// ============================================================
 // Theme Keyboard Shortcuts
 // ============================================================
 

@@ -84,7 +84,20 @@ export const api = {
     invoke('get_or_create_daily_note', { date }),
 
   exportToObsidian: (targetPath: string): Promise<string> => 
-    invoke('export_to_obsidian', { targetPath })
+    invoke('export_to_obsidian', { targetPath }),
+
+  // Font management
+  getInstalledFonts: (): Promise<string[]> => 
+    invoke('get_installed_fonts'),
+    
+  isFontInstalled: (fontFamily: string): Promise<boolean> => 
+    invoke('is_font_installed', { fontFamily }),
+    
+  installFontViaHomebrew: (caskName: string): Promise<string> => 
+    invoke('install_font_via_homebrew', { caskName }),
+    
+  isHomebrewAvailable: (): Promise<boolean> => 
+    invoke('is_homebrew_available'),
 };
 
 
