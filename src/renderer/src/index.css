@@ -283,16 +283,55 @@ body {
   background: theme('colors.nexus-bg-primary');
 }
 
+/* ============================================================
+   Panel Slide Transitions
+
+   ADHD-friendly: Smooth, predictable animations that help
+   users track where UI elements are moving
+   ============================================================ */
+
 .sidebar-collapsed {
   width: 0 !important;
   min-width: 0 !important;
   opacity: 0;
   overflow: hidden;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-8px);
+  transition:
+    width 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 150ms ease-out,
+    transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Right sidebar collapses to the right */
+.sidebar-collapsed:last-of-type {
+  transform: translateX(8px);
 }
 
 .sidebar-expanded {
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    width 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    min-width 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 200ms ease-in 50ms,
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Content fade-in when sidebar expands */
+.sidebar-expanded .tab-content {
+  animation: sidebarContentFadeIn 300ms ease-out 100ms both;
+}
+
+@keyframes sidebarContentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Resize handles */
@@ -534,6 +573,9 @@ body {
 
 /* ============================================================
    Focus Mode Enhancements
+
+   ADHD-friendly: Reduces visual noise and keeps attention
+   centered on the current writing position
    ============================================================ */
 
 .focus-mode-transition {
@@ -557,6 +599,47 @@ body {
   );
   pointer-events: none;
   z-index: 10;
+}
+
+/* Typewriter scrolling mode - keeps cursor centered */
+.typewriter-mode {
+  scroll-behavior: smooth;
+}
+
+.typewriter-mode textarea {
+  /* Add padding so cursor can reach center when near top/bottom */
+  padding-top: 40vh !important;
+  padding-bottom: 40vh !important;
+}
+
+/* Subtle vignette effect in typewriter mode */
+.typewriter-mode::before,
+.typewriter-mode::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 60px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.typewriter-mode::before {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--nexus-bg-primary) 0%,
+    transparent 100%
+  );
+}
+
+.typewriter-mode::after {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    var(--nexus-bg-primary) 0%,
+    transparent 100%
+  );
 }
 
 /* ============================================================
@@ -1142,6 +1225,9 @@ mark {
   .btn-icon,
   .ribbon-button,
   .sidebar-tab,
+  .sidebar-collapsed,
+  .sidebar-expanded,
+  .sidebar-expanded .tab-content,
   .tooltip-trigger::after,
   .tooltip-trigger::before {
     transition: none !important;
@@ -1154,6 +1240,15 @@ mark {
   .ribbon-button:active:not(:disabled),
   .sidebar-tab:active:not(:disabled) {
     transform: none !important;
+  }
+
+  .sidebar-collapsed,
+  .sidebar-expanded {
+    transform: none !important;
+  }
+
+  .typewriter-mode {
+    scroll-behavior: auto !important;
   }
 }
 

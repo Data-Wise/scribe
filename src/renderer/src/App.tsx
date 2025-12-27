@@ -749,6 +749,7 @@ function App() {
                 onSearchTags={handleSearchTagsForAutocomplete}
                 placeholder="Start writing... (Cmd+E to preview)"
                 initialMode={editorMode}
+                focusMode={focusMode}
               />
             </div>
           </div>

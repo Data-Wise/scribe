@@ -1197,26 +1197,54 @@ export function SettingsModal({
                           if (themes[originalTheme]) applyTheme(themes[originalTheme])
                         }}
                         className={`p-3 rounded-lg border-2 transition-all text-left ${
-                          currentTheme === t.id 
-                            ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10' 
+                          currentTheme === t.id
+                            ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10'
                             : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20 hover:bg-nexus-bg-secondary'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <div 
-                            className="w-8 h-8 rounded-md border border-white/10 flex-shrink-0"
-                            style={{ backgroundColor: t.colors.bgPrimary }}
-                          />
+                        {/* Mini Theme Preview Card */}
+                        <div
+                          className="w-full h-16 rounded-md mb-2 p-2 border border-white/5 overflow-hidden"
+                          style={{ backgroundColor: t.colors.bgPrimary }}
+                        >
+                          {/* Mini sidebar */}
+                          <div className="flex gap-1.5 h-full">
+                            <div
+                              className="w-6 rounded-sm"
+                              style={{ backgroundColor: t.colors.bgSecondary }}
+                            />
+                            {/* Mini editor area */}
+                            <div className="flex-1 flex flex-col gap-1 p-1">
+                              <div
+                                className="h-1.5 w-3/4 rounded-full"
+                                style={{ backgroundColor: t.colors.textPrimary, opacity: 0.8 }}
+                              />
+                              <div
+                                className="h-1 w-full rounded-full"
+                                style={{ backgroundColor: t.colors.textMuted, opacity: 0.5 }}
+                              />
+                              <div
+                                className="h-1 w-2/3 rounded-full"
+                                style={{ backgroundColor: t.colors.textMuted, opacity: 0.5 }}
+                              />
+                              <div
+                                className="h-1 w-8 rounded-full mt-auto"
+                                style={{ backgroundColor: t.colors.accent }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
                           <div className="min-w-0">
                             <div className="text-sm font-medium text-nexus-text-primary truncate">{t.name}</div>
                             <div className="text-[10px] text-nexus-text-muted truncate">{t.description}</div>
                           </div>
+                          {currentTheme === t.id && (
+                            <div className="ml-2 px-1.5 py-0.5 text-[9px] bg-nexus-accent/20 text-nexus-accent rounded uppercase font-bold">
+                              Active
+                            </div>
+                          )}
                         </div>
-                        {currentTheme === t.id && (
-                          <div className="mt-2 text-[10px] text-nexus-accent uppercase font-bold tracking-widest">
-                            Active
-                          </div>
-                        )}
                       </button>
                     ))}
                   </div>
@@ -1246,26 +1274,54 @@ export function SettingsModal({
                           if (themes[originalTheme]) applyTheme(themes[originalTheme])
                         }}
                         className={`p-3 rounded-lg border-2 transition-all text-left ${
-                          currentTheme === t.id 
-                            ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10' 
+                          currentTheme === t.id
+                            ? 'border-nexus-accent bg-nexus-bg-primary shadow-lg shadow-nexus-accent/10'
                             : 'border-white/10 bg-nexus-bg-tertiary hover:border-white/20 hover:bg-nexus-bg-secondary'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <div 
-                            className="w-8 h-8 rounded-md border border-black/10 flex-shrink-0"
-                            style={{ backgroundColor: t.colors.bgPrimary }}
-                          />
+                        {/* Mini Theme Preview Card */}
+                        <div
+                          className="w-full h-16 rounded-md mb-2 p-2 border border-black/10 overflow-hidden"
+                          style={{ backgroundColor: t.colors.bgPrimary }}
+                        >
+                          {/* Mini sidebar */}
+                          <div className="flex gap-1.5 h-full">
+                            <div
+                              className="w-6 rounded-sm"
+                              style={{ backgroundColor: t.colors.bgSecondary }}
+                            />
+                            {/* Mini editor area */}
+                            <div className="flex-1 flex flex-col gap-1 p-1">
+                              <div
+                                className="h-1.5 w-3/4 rounded-full"
+                                style={{ backgroundColor: t.colors.textPrimary, opacity: 0.8 }}
+                              />
+                              <div
+                                className="h-1 w-full rounded-full"
+                                style={{ backgroundColor: t.colors.textMuted, opacity: 0.5 }}
+                              />
+                              <div
+                                className="h-1 w-2/3 rounded-full"
+                                style={{ backgroundColor: t.colors.textMuted, opacity: 0.5 }}
+                              />
+                              <div
+                                className="h-1 w-8 rounded-full mt-auto"
+                                style={{ backgroundColor: t.colors.accent }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
                           <div className="min-w-0">
                             <div className="text-sm font-medium text-nexus-text-primary truncate">{t.name}</div>
                             <div className="text-[10px] text-nexus-text-muted truncate">{t.description}</div>
                           </div>
+                          {currentTheme === t.id && (
+                            <div className="ml-2 px-1.5 py-0.5 text-[9px] bg-nexus-accent/20 text-nexus-accent rounded uppercase font-bold">
+                              Active
+                            </div>
+                          )}
                         </div>
-                        {currentTheme === t.id && (
-                          <div className="mt-2 text-[10px] text-nexus-accent uppercase font-bold tracking-widest">
-                            Active
-                          </div>
-                        )}
                       </button>
                     ))}
                   </div>

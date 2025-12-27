@@ -5,6 +5,7 @@ import rehypeRaw from 'rehype-raw'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
+import { WritingProgressCompact } from './WritingProgress'
 import { processMathInContent } from '../lib/mathjax'
 import { Note, Tag } from '../types'
 
@@ -17,6 +18,8 @@ interface HybridEditorProps {
   onSearchTags?: (query: string) => Promise<Tag[]>
   placeholder?: string
   initialMode?: 'write' | 'preview'
+  focusMode?: boolean // When true, enables typewriter scrolling
+  wordGoal?: number // Daily word goal for progress visualization
 }
 
 type EditorMode = 'write' | 'preview'
@@ -35,15 +38,18 @@ export function HybridEditor({
   onTagClick,
   onSearchNotes = async () => [],
   onSearchTags = async () => [],
-  initialMode = 'write'
+  initialMode = 'write',
+  focusMode = false,
+  wordGoal = 500
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>(initialMode)
-  
+
   // Update mode when initialMode prop changes (e.g., when navigating via wiki-link)
   useEffect(() => {
     setMode(initialMode)
   }, [initialMode])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const editorContainerRef = useRef<HTMLDivElement>(null)
 
   // Autocomplete state with cursor position
   const [wikiLinkTrigger, setWikiLinkTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
@@ -80,6 +86,37 @@ export function HybridEditor({
       textareaRef.current.focus()
     }
   }, [mode])
+
+  // Typewriter scrolling - keeps cursor centered in viewport during focus mode
+  const scrollToCursor = useCallback(() => {
+    if (!focusMode || mode !== 'write') return
+
+    const textarea = textareaRef.current
+    const container = editorContainerRef.current
+    if (!textarea || !container) return
+
+    // Get cursor position
+    const cursorPos = textarea.selectionStart
+
+    // Create a temporary element to measure cursor position
+    const textBeforeCursor = content.substring(0, cursorPos)
+    const lines = textBeforeCursor.split('\n')
+    const currentLineIndex = lines.length - 1
+
+    // Calculate approximate cursor Y position
+    const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight) || 28
+    const cursorY = currentLineIndex * lineHeight
+
+    // Calculate center of viewport
+    const containerHeight = container.clientHeight
+    const targetScroll = cursorY - (containerHeight / 2) + lineHeight
+
+    // Smooth scroll to center cursor
+    container.scrollTo({
+      top: Math.max(0, targetScroll),
+      behavior: 'smooth'
+    })
+  }, [focusMode, mode, content])
 
   // Handle textarea input and check for autocomplete triggers
   const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -154,7 +191,12 @@ export function HybridEditor({
     setWikiLinkTrigger(null)
     setTagTrigger(null)
     setCitationTrigger(null)
-  }, [onChange])
+
+    // Typewriter scroll in focus mode
+    if (focusMode) {
+      requestAnimationFrame(scrollToCursor)
+    }
+  }, [onChange, focusMode, scrollToCursor])
 
   // Handle wiki-link selection from autocomplete
   const handleWikiLinkSelect = useCallback((title: string) => {
@@ -296,7 +338,11 @@ export function HybridEditor({
       </div>
 
       {/* Editor area */}
-      <div className="flex-1 overflow-auto p-8 pt-16" style={{ backgroundColor: 'var(--nexus-bg-primary)' }}>
+      <div
+        ref={editorContainerRef}
+        className={`flex-1 overflow-auto p-8 pt-16 ${focusMode ? 'typewriter-mode' : ''}`}
+        style={{ backgroundColor: 'var(--nexus-bg-primary)' }}
+      >
         {mode === 'write' ? (
           <textarea
             ref={textareaRef}
@@ -364,20 +410,29 @@ export function HybridEditor({
         />
       )}
 
-      {/* Status bar - minimal */}
-      <div 
-        className="px-4 py-2 text-xs flex justify-between"
-        style={{ 
+      {/* Status bar - with writing progress */}
+      <div
+        className="px-4 py-2 text-xs flex items-center justify-between gap-4"
+        style={{
           color: 'var(--nexus-text-muted)',
           borderTop: '1px solid var(--nexus-bg-tertiary)',
           backgroundColor: 'var(--nexus-bg-secondary)'
         }}
       >
-        <span>
+        <span className="flex items-center gap-2">
           {mode === 'write' ? 'Writing' : 'Preview'}
-          <span className="ml-2" style={{ opacity: 0.6 }}>Cmd+E to toggle</span>
+          <span style={{ opacity: 0.6 }}>⌘E</span>
         </span>
-        <span>Markdown supported</span>
+
+        {/* Writing progress */}
+        <WritingProgressCompact wordCount={wordCount} wordGoal={wordGoal} />
+
+        <span className="flex items-center gap-3">
+          <span className="tabular-nums">{wordCount} words</span>
+          {focusMode && (
+            <span className="text-nexus-accent">Focus Mode</span>
+          )}
+        </span>
       </div>
     </div>
   )

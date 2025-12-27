@@ -2,15 +2,33 @@ import React from 'react'
 import { Command } from 'cmdk'
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Title as DialogTitle, Description as DialogDescription } from '@radix-ui/react-dialog'
-import { 
-  FileText, 
-  Plus, 
+import {
+  FileText,
+  Plus,
   Calendar,
   Zap,
   Share,
   Sparkles,
-  Brain
+  Brain,
+  Clock,
+  Folder
 } from 'lucide-react'
+
+// Format relative time (e.g., "2m ago", "1h ago", "Yesterday")
+function formatRelativeTime(timestamp: number): string {
+  const now = Date.now()
+  const diff = now - timestamp
+  const minutes = Math.floor(diff / 60000)
+  const hours = Math.floor(diff / 3600000)
+  const days = Math.floor(diff / 86400000)
+
+  if (minutes < 1) return 'Just now'
+  if (minutes < 60) return `${minutes}m ago`
+  if (hours < 24) return `${hours}h ago`
+  if (days === 1) return 'Yesterday'
+  if (days < 7) return `${days}d ago`
+  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
 
 
 interface Note {
@@ -134,14 +152,29 @@ export function CommandPalette({
 
           {notes.length > 0 && (
             <Command.Group heading="Recent Notes" className="command-palette-group">
-              {notes.slice(0, 10).map((note) => (
-                <Command.Item 
-                  key={note.id} 
+              {notes
+                .sort((a, b) => b.updated_at - a.updated_at)
+                .slice(0, 10)
+                .map((note) => (
+                <Command.Item
+                  key={note.id}
                   onSelect={() => { onSelectNote(note.id); setOpen(false); }}
                   className="command-palette-item"
                 >
-                  <FileText className="mr-3 h-4 w-4 text-slate-400" />
-                  <span>{note.title || 'Untitled Note'}</span>
+                  <FileText className="mr-3 h-4 w-4 text-slate-400 flex-shrink-0" />
+                  <div className="flex-1 min-w-0 flex items-center gap-2">
+                    <span className="truncate">{note.title || 'Untitled Note'}</span>
+                    {note.folder && note.folder !== 'inbox' && (
+                      <span className="flex items-center gap-1 text-[10px] text-nexus-text-muted bg-white/5 px-1.5 py-0.5 rounded">
+                        <Folder className="w-2.5 h-2.5" />
+                        {note.folder}
+                      </span>
+                    )}
+                  </div>
+                  <span className="flex items-center gap-1 text-[10px] text-nexus-text-muted ml-2 flex-shrink-0">
+                    <Clock className="w-3 h-3" />
+                    {formatRelativeTime(note.updated_at)}
+                  </span>
                 </Command.Item>
               ))}
             </Command.Group>

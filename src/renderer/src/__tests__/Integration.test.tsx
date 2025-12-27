@@ -299,24 +299,25 @@ describe('Word Count Integration', () => {
     const { rerender } = render(
       <HybridEditor content="One two" onChange={vi.fn()} />
     )
-    
-    expect(screen.getByText('2 words')).toBeInTheDocument()
-    
+
+    // Word count appears in multiple places (header and status bar)
+    expect(screen.getAllByText('2 words').length).toBeGreaterThan(0)
+
     rerender(<HybridEditor content="One two three four" onChange={vi.fn()} />)
-    
-    expect(screen.getByText('4 words')).toBeInTheDocument()
+
+    expect(screen.getAllByText('4 words').length).toBeGreaterThan(0)
   })
 
   it('counts wiki-links as words', () => {
     render(<HybridEditor content="See [[Note]] here" onChange={vi.fn()} />)
-    
-    expect(screen.getByText('3 words')).toBeInTheDocument()
+
+    expect(screen.getAllByText('3 words').length).toBeGreaterThan(0)
   })
 
   it('counts tags as words', () => {
     render(<HybridEditor content="Check #todo today" onChange={vi.fn()} />)
-    
-    expect(screen.getByText('3 words')).toBeInTheDocument()
+
+    expect(screen.getAllByText('3 words').length).toBeGreaterThan(0)
   })
 })
 
@@ -415,16 +416,18 @@ describe('ADHD-Friendly Design Verification', () => {
 
     it('shows mode toggle hint', () => {
       render(<HybridEditor content="" onChange={vi.fn()} />)
-      
-      expect(screen.getByText('Cmd+E to toggle')).toBeInTheDocument()
+
+      // Status bar shows ⌘E keyboard hint
+      expect(screen.getByText('⌘E')).toBeInTheDocument()
     })
   })
 
   describe('Visible Progress', () => {
     it('always shows word count', () => {
       render(<HybridEditor content="Hello world" onChange={vi.fn()} />)
-      
-      expect(screen.getByText('2 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places
+      expect(screen.getAllByText('2 words').length).toBeGreaterThan(0)
     })
 
     it('shows current mode', () => {

@@ -47,14 +47,16 @@ describe('HybridEditor Component', () => {
 
     it('displays word count', () => {
       render(<HybridEditor {...defaultProps} content="Hello world test" />)
-      
-      expect(screen.getByText('3 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places (header and status bar)
+      expect(screen.getAllByText('3 words').length).toBeGreaterThan(0)
     })
 
     it('displays 0 words for empty content', () => {
       render(<HybridEditor {...defaultProps} content="" />)
-      
-      expect(screen.getByText('0 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places (header and status bar)
+      expect(screen.getAllByText('0 words').length).toBeGreaterThan(0)
     })
 
     it('renders content in textarea', () => {
@@ -64,10 +66,11 @@ describe('HybridEditor Component', () => {
       expect(textarea).toHaveValue('Hello world')
     })
 
-    it('shows markdown supported message in status bar', () => {
+    it('shows keyboard shortcut hint in status bar', () => {
       render(<HybridEditor {...defaultProps} />)
-      
-      expect(screen.getByText('Markdown supported')).toBeInTheDocument()
+
+      // Status bar shows ⌘E keyboard hint
+      expect(screen.getByText('⌘E')).toBeInTheDocument()
     })
 
     it('renders textarea in write mode', () => {
@@ -176,14 +179,16 @@ describe('HybridEditor Component', () => {
   describe('Word Count Calculation', () => {
     it('counts words correctly for simple text', () => {
       render(<HybridEditor {...defaultProps} content="One two three four five" />)
-      
-      expect(screen.getByText('5 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places
+      expect(screen.getAllByText('5 words').length).toBeGreaterThan(0)
     })
 
     it('counts words correctly with multiple spaces', () => {
       render(<HybridEditor {...defaultProps} content="One   two    three" />)
-      
-      expect(screen.getByText('3 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places
+      expect(screen.getAllByText('3 words').length).toBeGreaterThan(0)
     })
 
     it('counts words correctly with newlines', () => {
@@ -191,20 +196,23 @@ describe('HybridEditor Component', () => {
 two
 three`
       render(<HybridEditor {...defaultProps} content={content} />)
-      
-      expect(screen.getByText('3 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places
+      expect(screen.getAllByText('3 words').length).toBeGreaterThan(0)
     })
 
     it('counts wiki-links as words', () => {
       render(<HybridEditor {...defaultProps} content="See [[Note]] here" />)
-      
-      expect(screen.getByText('3 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places
+      expect(screen.getAllByText('3 words').length).toBeGreaterThan(0)
     })
 
     it('counts tags as words', () => {
       render(<HybridEditor {...defaultProps} content="Check #todo today" />)
-      
-      expect(screen.getByText('3 words')).toBeInTheDocument()
+
+      // Word count appears in multiple places
+      expect(screen.getAllByText('3 words').length).toBeGreaterThan(0)
     })
   })
 
