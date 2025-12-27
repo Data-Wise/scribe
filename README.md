@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.3.0--dev-blue)]()
-[![Progress](https://img.shields.io/badge/progress-75%25-green)]()
-[![Tests](https://img.shields.io/badge/tests-407%20passing-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-0.4.0--alpha.1-blue)]()
+[![Progress](https://img.shields.io/badge/progress-87%25-green)]()
+[![Tests](https://img.shields.io/badge/tests-483%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -13,23 +13,24 @@
 
 ## What is Scribe?
 
-Scribe is a **distraction-free writing app** designed for academics and researchers with ADHD. It combines a modern block-based editor with project management, academic writing tools, and CLI-based AI integration.
+Scribe is a **distraction-free writing app** designed for academics and researchers with ADHD. It combines a custom markdown editor with academic writing tools, themes, and CLI-based AI integration.
 
 ### Key Features
 
- | Feature | Description |
- |---------|-------------|
- | **HybridEditor** | Markdown write mode + rich preview |
- | **Focus Mode** | Distraction-free, one note at a time |
- | **Themes** | 10 ADHD-friendly themes + custom creator |
- | **Fonts** | 14 recommended fonts + Homebrew install |
-| **Projects** | Research, Teaching, R-Package, R-Dev, Generic |
-| **Daily Notes** | Auto-created with templates |
-| **Wiki Links** | `[[link]]` to connect notes |
-| **Zotero** | Citations via Better BibTeX |
-| **Export** | LaTeX, PDF, Word, Quarto |
+| Feature | Description |
+|---------|-------------|
+| **HybridEditor++** | Markdown write mode + rich preview |
+| **Focus Mode** | Distraction-free, one note at a time |
+| **10 Themes** | 5 dark + 5 light ADHD-friendly themes |
+| **14 Fonts** | Recommended fonts + one-click Homebrew install |
+| **Wiki Links** | `[[link]]` with autocomplete |
+| **Tags** | `#tag` inline with autocomplete |
+| **Citations** | `@cite` with BibTeX/Zotero integration |
+| **Math** | KaTeX for LaTeX ($...$ and $$...$$) |
+| **Export** | PDF, Word, LaTeX, HTML via Pandoc |
 | **AI** | Claude + Gemini CLI (no API keys) |
-| **Obsidian Sync** | Export notes to vault |
+| **Command Palette** | ⌘K quick actions |
+| **Global Hotkey** | ⌘⇧N opens from anywhere |
 
 ---
 
@@ -37,28 +38,33 @@ Scribe is a **distraction-free writing app** designed for academics and research
 
 ```bash
 # Clone and install
-cd ~/projects/dev-tools/scribe
+git clone https://github.com/Data-Wise/scribe.git
+cd scribe
 npm install
 
 # Run development
 npm run dev
 
+# Run tests
+npm test
+
 # Build for production
 npm run build
 ```
 
-### Global Hotkey
+### Keyboard Shortcuts
 
-**⌘⇧N** — Open Scribe from anywhere ✅
-
-### Command Palette
-
-**⌘K** — Quick access to all features:
-- Create New Note (⌘N)
-- Open Daily Note (⌘D)
-- Toggle Focus Mode (⌘⇧F)
-- Sync to Obsidian
-- Ask Claude / Gemini
+| Shortcut | Action |
+|----------|--------|
+| **⌘⇧N** | Open Scribe (global) |
+| **⌘K** | Command palette |
+| **⌘N** | New note |
+| **⌘D** | Daily note |
+| **⌘E** | Toggle edit/preview |
+| **⌘⇧F** | Focus mode |
+| **⌘B** | Toggle file list |
+| **⌘⇧B** | Toggle tags panel |
+| **⌘Alt+0-9** | Switch themes |
 
 ---
 
@@ -67,52 +73,38 @@ npm run build
 1. **Zero Friction** — < 3 seconds to start writing
 2. **One Thing at a Time** — Single note visible
 3. **Escape Hatches** — ⌘W closes, auto-saves
-4. **Visible Progress** — Word count, session timer
-5. **Sensory-Friendly** — Dark mode, no animations
-6. **Quick Wins** — Milestone celebrations
+4. **Visible Progress** — Word count, mode toggle
+5. **Sensory-Friendly** — Dark mode default
+6. **Reduced Motion** — Respects system preferences
 
 ---
 
-## Project Types
+## Screenshots
 
-| Type | Use Case |
-|------|----------|
-| **Research** | Papers, analysis |
-| **Teaching** | Courses, lectures |
-| **R-Package** | R package documentation |
-| **R-Dev** | Dev tools projects |
-| **Generic** | Everything else |
+### Empty State
+Engaging empty state with animated pen icon, action buttons, and inspirational writing quotes.
 
----
+### Editor
+Clean markdown editor with live wiki-link and tag highlighting.
 
-## Academic Stack
-
-```
-Zotero → Better BibTeX → @cite autocomplete → Pandoc → LaTeX/PDF/Word
-```
-
-### Supported Exports
-
-- **Markdown** (.md)
-- **LaTeX** (.tex)
-- **PDF** (via Pandoc + LaTeX)
-- **Word** (.docx)
-- **Quarto** (.qmd → render)
+### Settings
+Theme picker, ADHD-friendly font recommendations, and typography controls.
 
 ---
 
 ## Tech Stack
 
- | Component | Technology |
- |-----------|------------|
- | Framework | Tauri 2 + React 18 |
- | Editor | HybridEditor (ReactMarkdown) |
- | Styling | Tailwind CSS |
- | State | Zustand |
- | Database | SQLite |
- | AI | Claude/Gemini CLI |
- | Citations | Pandoc citeproc |
- | Math | KaTeX |
+| Component | Technology |
+|-----------|------------|
+| Framework | Tauri 2 + React 18 |
+| Editor | HybridEditor++ (custom) |
+| Styling | Tailwind CSS |
+| State | Zustand |
+| Database | SQLite (rusqlite) |
+| Math | KaTeX |
+| AI | Claude/Gemini CLI |
+| Citations | Pandoc citeproc |
+| Testing | Vitest + Testing Library |
 
 ---
 
@@ -120,9 +112,13 @@ Zotero → Better BibTeX → @cite autocomplete → Pandoc → LaTeX/PDF/Word
 
 | File | Purpose |
 |------|---------|
-| [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) | Complete scope, roadmap, anti-drift rules |
+| [docs/API.md](docs/API.md) | Complete API reference |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture |
+| [docs/planning/](docs/planning/) | Sprint planning |
+| [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) | Scope control |
+| [PROPOSAL-UI-IMPROVEMENTS.md](PROPOSAL-UI-IMPROVEMENTS.md) | UI improvement plan |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
-| [GETTING-STARTED.md](GETTING-STARTED.md) | User guide |
+| [CLAUDE.md](CLAUDE.md) | AI assistant guidance |
 
 ---
 
@@ -130,8 +126,9 @@ Zotero → Better BibTeX → @cite autocomplete → Pandoc → LaTeX/PDF/Word
 
 ```bash
 # Development
-npm run dev          # Start dev server
-npm run test         # Run tests
+npm run dev          # Start Tauri dev server
+npm run dev:vite     # Vite frontend only
+npm run test         # Run 483 tests
 npm run lint         # Lint code
 
 # Build
@@ -140,41 +137,102 @@ npm run build        # Production build
 
 ### Project Structure
 
- ```
- scribe/
- ├── src/
- │   ├── src-tauri/      # Tauri backend (Rust)
- │   │   ├── src/
- │   │   │   ├── database.rs   # SQLite operations
- │   │   │   ├── commands.rs   # IPC handlers
- │   │   │   └── lib.rs
- │   └── renderer/       # React app
- │       └── src/
- │           ├── components/
- │           │   ├── HybridEditor.tsx
- │           │   └── ...
- │           ├── store/      # Zustand state
- │           └── App.tsx
- ├── PROJECT-DEFINITION.md   # Scope control
- ├── README.md
- └── package.json
- ```
+```
+scribe/
+├── src/
+│   └── renderer/src/          # React frontend
+│       ├── components/        # UI components
+│       ├── lib/               # API, themes, utils
+│       ├── store/             # Zustand state
+│       └── __tests__/         # Test files
+│
+├── src-tauri/src/             # Rust backend
+│   ├── commands.rs            # IPC handlers
+│   ├── database.rs            # SQLite operations
+│   └── academic.rs            # Citations + export
+│
+└── docs/                      # Documentation
+    ├── API.md
+    ├── ARCHITECTURE.md
+    └── planning/
+```
 
 ---
 
-## Roadmap
+## Sprint Progress
 
-| Phase | Sprints | Focus | Hours | Status |
-|-------|---------|-------|-------|--------|
-| 1 | 8-10.5 | Editor + Hotkey + Themes | 17h | ✅ Complete |
-| 2 | 11-12 | Academic + Obsidian | 16h | 🔄 Next |
-| 3 | 13-14 | Export | 12h | Pending |
-| 4 | 15-16 | Projects + Daily Notes | 12h | Pending |
-| 5 | 17 | Polish | 4h | Pending |
+| Phase | Sprint | Focus | Status |
+|-------|--------|-------|--------|
+| **1** | 8-10.5 | Editor + Hotkey + Themes | ✅ Complete |
+| **2** | 11 | Academic Features | ✅ Complete |
+| **2** | 12 | UI Polish & Micro-interactions | 🚀 80% |
+| **3** | 13 | Project System | ○ Next |
+| **3** | 14 | Templates + Daily | ○ Pending |
+| **4** | 15 | Search + Goals | ○ Pending |
 
-**Progress: 45h / 60h (75%) — Sprint 11 Next**
+**Progress: 87% complete — Sprint 12 in progress**
 
-See [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) for detailed sprint breakdown.
+---
+
+## Test Coverage
+
+**483 tests passing** across 14 test files:
+
+| Test File | Tests |
+|-----------|-------|
+| Themes.test.ts | 101 |
+| Academic.test.ts | 67 |
+| Validation.test.ts | 54 |
+| Tags.test.tsx | 52 |
+| HybridEditor.test.tsx | 37 |
+| Integration.test.tsx | 32 |
+| And 8 more... | 140 |
+
+---
+
+## Academic Workflow
+
+```
+Zotero → Better BibTeX → @cite autocomplete → Pandoc → PDF/Word/LaTeX
+```
+
+### Supported Exports
+
+- **PDF** (via Pandoc + LaTeX)
+- **Word** (.docx)
+- **LaTeX** (.tex)
+- **HTML**
+
+### Citation Styles
+
+- APA
+- Chicago
+- MLA
+- IEEE
+- Harvard
+
+---
+
+## Requirements
+
+- **macOS** (primary platform)
+- **Node.js** 18+
+- **Rust** (for Tauri)
+- **Homebrew** (optional, for font installation)
+- **Pandoc** (optional, for export)
+- **Claude/Gemini CLI** (optional, for AI features)
+
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing`)
+5. Open Pull Request
+
+**Note:** Main branch is protected. PRs require review.
 
 ---
 
@@ -188,4 +246,3 @@ MIT
 
 - [aiterm](https://github.com/Data-Wise/aiterm) — Terminal optimizer
 - [obsidian-cli-ops](https://github.com/Data-Wise/obsidian-cli-ops) — Obsidian vault manager
-- [claude-plugins](https://github.com/Data-Wise/claude-plugins) — Claude Code plugins
