@@ -7,7 +7,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as d3 from 'd3'
-import { X, ZoomIn, ZoomOut, Maximize2, RefreshCw } from 'lucide-react'
+import { X, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react'
 
 interface GraphNode {
   id: string

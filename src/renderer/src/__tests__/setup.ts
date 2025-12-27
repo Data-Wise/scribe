@@ -56,7 +56,18 @@ const apiMock = {
   setBibliographyPath: vi.fn(),
   getBibliographyPath: vi.fn(),
   exportDocument: vi.fn(),
-  isPandocAvailable: vi.fn()
+  isPandocAvailable: vi.fn(),
+
+  // Project operations
+  listProjects: vi.fn(),
+  createProject: vi.fn(),
+  getProject: vi.fn(),
+  updateProject: vi.fn(),
+  deleteProject: vi.fn(),
+  getProjectSettings: vi.fn(),
+  updateProjectSettings: vi.fn(),
+  getProjectNotes: vi.fn(),
+  setNoteProject: vi.fn()
 }
 
 // Mock the api library

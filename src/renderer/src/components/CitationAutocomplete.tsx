@@ -5,7 +5,7 @@
  * Inserts [@key] format for Pandoc citeproc.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { api } from '../lib/api'
 
 export interface Citation {

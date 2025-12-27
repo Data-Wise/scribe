@@ -133,7 +133,7 @@ export function SettingsModal({
   const [bibSaveResult, setBibSaveResult] = useState<{ success: boolean; message: string } | null>(null)
 
   // Daily note templates state
-  const [templates, setTemplates] = useState<DailyNoteTemplate[]>(() => loadTemplates())
+  const [templates, _setTemplates] = useState<DailyNoteTemplate[]>(() => loadTemplates())
   const [selectedTemplateId, setSelectedTemplate] = useState<string>(() => getSelectedTemplateId())
   const [showTemplatePreview, setShowTemplatePreview] = useState(false)
 

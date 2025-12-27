@@ -7,7 +7,141 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] - v0.4.0-dev
+## [1.1.0-beta] - 2025-12-27
+
+### v1.1 Feature Release
+
+**Three major features to enhance workflow and productivity:**
+
+### Added
+
+**Project System (Sprint 18):**
+- 5 project types: research, teaching, r-package, r-dev, generic
+- Project switcher dropdown in left sidebar
+- Project-scoped note filtering
+- Create Project modal with type selector
+- Database migration for projects table (migration_004)
+- Zustand store with localStorage persistence
+- Rust CRUD commands for project management
+
+**Note Search (Sprint 19):**
+- SearchPanel component with ⌘F shortcut
+- Scope selector (All Notes / Current Project)
+- Debounced 150ms real-time search using FTS5
+- Keyboard navigation (↑↓ Navigate, ↵ Open, Esc Close)
+- Highlighted search matches with content snippets
+- Added to keyboard shortcuts cheatsheet
+
+**Scribe CLI (Sprint 20):**
+- Terminal-based note access via `scribe` command
+- 10 commands: new, daily, search, capture, list, open, edit, tags, folders, stats
+- Quick aliases: sd (daily), sc (capture), ss (search), sl (list), sn (new)
+- FTS5 full-text search integration
+- Tab completion for commands and folders
+- Color-coded output with folder indicators
+- Auto-sourced in `.zshrc`
+- Location: `~/.config/zsh/functions/scribe.zsh`
+
+### Fixed
+- Cleaned 16 TypeScript unused variable warnings (TS6133)
+- Rust compilation warnings (unused imports)
+
+### Technical
+- New components: SearchPanel.tsx, ProjectSwitcher.tsx, CreateProjectModal.tsx
+- New store: useProjectStore.ts
+- Database: migration_004 adds projects table and note.project_id
+- CSS: Search panel styles with animations
+- Tests: 483 passing
+
+---
+
+## [1.0.0] - 2025-12-27
+
+### First Stable Release
+
+**Scribe v1.0 is the first stable release of the ADHD-friendly distraction-free writer.**
+
+### Highlights
+
+- **Zero-friction writing** - Start writing in < 3 seconds with global hotkey (⌘⇧N)
+- **ADHD-friendly design** - Minimal UI, focus mode, celebration micro-interactions
+- **Academic features** - LaTeX math, citation autocomplete, BibTeX/Zotero integration
+- **Knowledge management** - Wiki-links, backlinks, hierarchical tags, daily notes
+- **Beautiful themes** - 10 built-in themes (5 dark, 5 light) with auto-switching
+- **Comprehensive testing** - 483 tests passing
+
+### Features
+
+**Editor:**
+- HybridEditor++ (contenteditable + markdown preview)
+- Live wiki-link `[[...]]` highlighting with cursor-following autocomplete
+- Live tag `#tag` highlighting with hierarchical support (`#project/research`)
+- Pill-style Write/Preview mode toggle (⌘E)
+- Focus mode with typewriter scrolling (⌘⇧F)
+- Word count with goal tracking and celebration animations
+
+**ADHD-Friendly Enhancements:**
+- Celebration micro-interactions at word milestones (100, 250, 500, 750, 1000+)
+- Session timer and word delta tracking (+127 ⬆️)
+- Keyboard shortcut cheatsheet (⌘?)
+- Skeleton loading states (subtle, non-distracting)
+- All animations respect `prefers-reduced-motion`
+
+**Tags System:**
+- Hierarchical tags with path notation (`#research/statistics`)
+- Tag sorting options (alphabetical, by count, by recent)
+- Tag color indicators and count badges
+- Orphan tag detection and registration
+- Recent tags section (tracks last 8, shows top 5)
+- Right-click context menu (Rename/Delete)
+
+**Themes & Fonts:**
+- 10 built-in ADHD-friendly themes
+- Auto-theme by time of day (light 6am-6pm)
+- Custom theme creator with live preview
+- Import/export themes (JSON, Base16 YAML, URL)
+- 14 recommended ADHD-friendly fonts with one-click install
+
+**Knowledge Graph & Templates:**
+- D3 force-directed knowledge graph visualization
+- Daily notes with 5 built-in templates + custom
+- Backlinks panel with link statistics
+- Markdown export with frontmatter
+
+**Academic:**
+- MathJax 3 for LaTeX rendering ($...$ inline, $$...$$ display)
+- Citation autocomplete (@trigger)
+- BibTeX/Zotero integration
+- Export to PDF, Word, LaTeX, HTML (via Pandoc)
+- 5 citation styles (APA, Chicago, MLA, IEEE, Harvard)
+
+**Commands:**
+- Global hotkey ⌘⇧N opens app from anywhere
+- Command palette ⌘K with 6 quick actions
+- Keyboard shortcuts: ⌘N, ⌘D, ⌘B, ⌘⇧B, ⌘⇧E, ⌘⇧G
+
+### Technical Stack
+
+| Layer | Technology |
+|-------|------------|
+| Shell | Tauri 2 |
+| UI | React 18 |
+| Editor | HybridEditor++ |
+| Styling | Tailwind CSS |
+| State | Zustand |
+| Database | SQLite (rusqlite) |
+| AI | Claude/Gemini CLI |
+| Testing | Vitest + Testing Library |
+
+### Test Coverage
+
+- 483 tests passing
+- 14 test files covering all major components
+- Integration tests for ADHD-friendly design verification
+
+---
+
+## [Unreleased]
 
 ### Sprint 10.5: Theme & Font System (2024-12-26)
 

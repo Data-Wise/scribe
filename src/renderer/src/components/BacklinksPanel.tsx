@@ -17,7 +17,7 @@ interface LinkWithContext extends Note {
 /**
  * Extract context around a wiki-link or mention in content
  */
-function extractContext(content: string, targetTitle: string, maxLength = 80): string | undefined {
+function extractContext(content: string, targetTitle: string, _maxLength = 80): string | undefined {
   if (!content || !targetTitle) return undefined
 
   // Look for wiki-link first
@@ -153,7 +153,15 @@ export function BacklinksPanel({ noteId, noteTitle, onSelectNote, refreshKey = 0
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="p-4 text-center text-nexus-text-muted text-sm">Loading links...</div>
+          <div className="p-4 space-y-3">
+            {/* Skeleton loading state */}
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="space-y-2">
+                <div className="skeleton skeleton-text" style={{ width: `${50 + Math.random() * 30}%` }} />
+                <div className="skeleton skeleton-text-sm" style={{ width: `${30 + Math.random() * 20}%` }} />
+              </div>
+            ))}
+          </div>
         ) : (
           <>
             {/* Backlinks Section */}

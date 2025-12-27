@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNotesStore } from './store/useNotesStore'
+import { useProjectStore } from './store/useProjectStore'
 import { HybridEditor } from './components/HybridEditor'
 import { SearchBar } from './components/SearchBar'
 import { BacklinksPanel } from './components/BacklinksPanel'
@@ -11,12 +12,16 @@ import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
+import { ProjectSwitcher } from './components/ProjectSwitcher'
+import { CreateProjectModal } from './components/CreateProjectModal'
 import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
 import { Plus } from 'lucide-react'
+import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
+import { SearchPanel } from './components/SearchPanel'
 import {
   Theme,
   AutoThemeSettings,
@@ -70,6 +75,13 @@ function extractTagsFromContent(content: string): string[] {
 
 function App() {
   const { notes, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
+  const {
+    projects,
+    currentProjectId,
+    loadProjects,
+    setCurrentProject,
+    createProject
+  } = useProjectStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
 
@@ -150,8 +162,15 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false)
   const [isGraphViewOpen, setIsGraphViewOpen] = useState(false)
+  const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false)
+  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false)
+  const [isSearchPanelOpen, setIsSearchPanelOpen] = useState(false)
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([])
   const [isFiltering, setIsFiltering] = useState(false)
+  const [projectNotes, setProjectNotes] = useState<Note[]>([])
+
+  // Session tracking - time when first keystroke occurred
+  const [sessionStartTime, setSessionStartTime] = useState<number | null>(null)
   
   // Backlinks refresh key - increment to force BacklinksPanel refresh
   const [backlinksRefreshKey, setBacklinksRefreshKey] = useState(0)
@@ -271,6 +290,29 @@ function App() {
     loadNotes(currentFolder)
   }, [loadNotes, currentFolder])
 
+  // Load projects on startup
+  useEffect(() => {
+    loadProjects()
+  }, [loadProjects])
+
+  // Load project-specific notes when project changes
+  useEffect(() => {
+    const loadProjectNotes = async () => {
+      if (currentProjectId) {
+        try {
+          const notes = await api.getProjectNotes(currentProjectId)
+          setProjectNotes(notes)
+        } catch (error) {
+          console.error('Failed to load project notes:', error)
+          setProjectNotes([])
+        }
+      } else {
+        setProjectNotes([])
+      }
+    }
+    loadProjectNotes()
+  }, [currentProjectId])
+
   // Load tags for the current note
   useEffect(() => {
     const loadCurrentNoteTags = async () => {
@@ -336,11 +378,13 @@ function App() {
     setLastWordCount(wordCount)
   }, [wordCount])
 
-  // Calculate session words for current note
-  const sessionWords = selectedNoteId ? Math.max(0, wordCount - (sessionStartWords[selectedNoteId] || wordCount)) : 0
-
   const handleContentChange = async (content: string) => {
     if (selectedNote) {
+      // Start session timer on first keystroke
+      if (!sessionStartTime && content.length > 0) {
+        setSessionStartTime(Date.now())
+      }
+
       // Extract tags from content and sync to YAML properties
       const extractedTags = extractTagsFromContent(content)
       const currentProperties = selectedNote.properties || {}
@@ -555,6 +599,18 @@ function App() {
         e.preventDefault()
         handleDailyNote()
       }
+
+      // Keyboard shortcuts panel (⌘? or ⌘/)
+      if ((e.metaKey || e.ctrlKey) && (e.key === '?' || e.key === '/')) {
+        e.preventDefault()
+        setIsKeyboardShortcutsOpen(true)
+      }
+
+      // Search panel (⌘F) - note: Cmd+Shift+F is focus mode, Cmd+F is search
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'f') {
+        e.preventDefault()
+        setIsSearchPanelOpen(true)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -685,7 +741,14 @@ function App() {
     })
   }
 
-  const displayNotes = getSortedNotes(isSearching ? searchResults : isFiltering ? filteredNotes : notes)
+  // Determine which notes to display based on current filters
+  const getBaseNotes = () => {
+    if (isSearching) return searchResults
+    if (isFiltering) return filteredNotes
+    if (currentProjectId) return projectNotes
+    return notes
+  }
+  const displayNotes = getSortedNotes(getBaseNotes())
 
   // Build left sidebar menu sections
   const leftMenuSections: MenuSection[] = [
@@ -801,8 +864,27 @@ function App() {
             {leftActiveTab === 'files' ? (
               <div className="flex flex-col h-full">
                 <div className="p-4 border-b border-white/5">
+                  {/* Project Switcher */}
+                  <div className="mb-3">
+                    <ProjectSwitcher
+                      projects={projects.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        type: p.type,
+                        description: p.description,
+                        color: p.color || '#38bdf8',
+                        createdAt: p.created_at,
+                        updatedAt: p.updated_at,
+                      }))}
+                      currentProjectId={currentProjectId}
+                      onSelectProject={setCurrentProject}
+                      onCreateProject={() => setIsCreateProjectModalOpen(true)}
+                    />
+                  </div>
                   <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-xl font-display font-semibold">Library</h1>
+                    <h1 className="text-xl font-display font-semibold">
+                      {currentProjectId ? projects.find(p => p.id === currentProjectId)?.name || 'Notes' : 'Library'}
+                    </h1>
                     <button onClick={handleCreateNote} className="p-1.5 hover:bg-white/5 rounded-md"><Plus className="w-5 h-5" /></button>
                   </div>
                   <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
@@ -866,6 +948,7 @@ function App() {
                 wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
                 sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
                 streak={streakInfo.streak}
+                sessionStartTime={sessionStartTime || undefined}
               />
             </div>
           </div>
@@ -873,7 +956,7 @@ function App() {
           <EmptyState
             onCreateNote={handleCreateNote}
             onOpenDaily={handleDailyNote}
-            onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+            onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
           />
         )}
       </div>
@@ -965,6 +1048,43 @@ function App() {
         notes={notes}
         onSelectNote={selectNote}
         currentNoteId={selectedNoteId || undefined}
+      />
+
+      {/* Keyboard Shortcuts Cheatsheet */}
+      <KeyboardShortcuts
+        isOpen={isKeyboardShortcutsOpen}
+        onClose={() => setIsKeyboardShortcutsOpen(false)}
+      />
+
+      {/* Search Panel (Cmd+F) */}
+      <SearchPanel
+        isOpen={isSearchPanelOpen}
+        onClose={() => setIsSearchPanelOpen(false)}
+        onSelectNote={(noteId) => {
+          setEditorMode('write')
+          selectNote(noteId)
+        }}
+        currentProject={currentProjectId ? projects.find(p => p.id === currentProjectId) : null}
+        projects={projects}
+      />
+
+      {/* Create Project Modal */}
+      <CreateProjectModal
+        isOpen={isCreateProjectModalOpen}
+        onClose={() => setIsCreateProjectModalOpen(false)}
+        onCreateProject={async (projectData) => {
+          try {
+            await createProject(
+              projectData.name,
+              projectData.type,
+              projectData.description,
+              projectData.color
+            )
+          } catch (error) {
+            console.error('Failed to create project:', error)
+          }
+        }}
+        existingProjectNames={projects.map(p => p.name.toLowerCase())}
       />
     </div>
   )

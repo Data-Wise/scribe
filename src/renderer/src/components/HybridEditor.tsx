@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -22,6 +22,7 @@ interface HybridEditorProps {
   wordGoal?: number // Daily word goal for progress visualization
   sessionStartWords?: number // Words at session start for tracking session progress
   streak?: number // Current writing streak in days
+  sessionStartTime?: number // Timestamp when session started (for timer display)
 }
 
 type EditorMode = 'write' | 'preview'
@@ -44,7 +45,8 @@ export function HybridEditor({
   focusMode = false,
   wordGoal = 500,
   sessionStartWords = 0,
-  streak = 0
+  streak = 0,
+  sessionStartTime
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>(initialMode)
 
@@ -325,20 +327,35 @@ export function HybridEditor({
 
   return (
     <div className="h-full flex flex-col relative" style={{ backgroundColor: 'var(--nexus-bg-primary)' }}>
-      {/* Mode indicator - minimal, top-right */}
+      {/* Mode toggle - pill style, top-right */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-3 text-xs" style={{ color: 'var(--nexus-text-muted)' }}>
-        <span>{wordCount} words</span>
-        <button
-          onClick={toggleMode}
-          className="px-2 py-1 rounded transition-colors"
-          style={{ 
-            backgroundColor: 'var(--nexus-bg-tertiary)',
-            color: 'var(--nexus-text-primary)'
-          }}
-          title="Toggle mode (Cmd+E)"
+        <span className="tabular-nums">{wordCount} words</span>
+        <div
+          className="flex rounded-full p-0.5"
+          style={{ backgroundColor: 'var(--nexus-bg-tertiary)' }}
+          title="Toggle mode (⌘E)"
         >
-          {mode === 'write' ? 'Preview' : 'Edit'}
-        </button>
+          <button
+            onClick={() => setMode('write')}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+              mode === 'write'
+                ? 'bg-nexus-accent text-white shadow-sm'
+                : 'text-nexus-text-muted hover:text-nexus-text-primary'
+            }`}
+          >
+            Write
+          </button>
+          <button
+            onClick={() => setMode('preview')}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+              mode === 'preview'
+                ? 'bg-nexus-accent text-white shadow-sm'
+                : 'text-nexus-text-muted hover:text-nexus-text-primary'
+            }`}
+          >
+            Preview
+          </button>
+        </div>
       </div>
 
       {/* Editor area */}
@@ -434,6 +451,7 @@ export function HybridEditor({
           wordGoal={wordGoal}
           sessionStartWords={sessionStartWords}
           streak={streak}
+          sessionStartTime={sessionStartTime}
         />
 
         <span className="flex items-center gap-3">

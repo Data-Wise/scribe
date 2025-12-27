@@ -1,4 +1,4 @@
-use crate::database::{Database, Note, Tag, Folder};
+use crate::database::{Database, Note, Tag, Folder, Project};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
 use tauri::State;
@@ -231,6 +231,118 @@ pub fn get_outgoing_links(
 ) -> Result<Vec<Note>, String> {
     let db = state.db.lock().unwrap();
     db.get_outgoing_links(&noteId).map_err(|e| e.to_string())
+}
+
+// Project commands
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateProjectInput {
+    pub name: String,
+    pub description: Option<String>,
+    #[serde(rename = "type")]
+    pub project_type: Option<String>,
+    pub color: Option<String>,
+    pub settings: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateProjectInput {
+    pub name: Option<String>,
+    pub description: Option<String>,
+    #[serde(rename = "type")]
+    pub project_type: Option<String>,
+    pub color: Option<String>,
+    pub settings: Option<String>,
+}
+
+#[tauri::command]
+pub fn create_project(
+    state: State<AppState>,
+    project: CreateProjectInput,
+) -> Result<Project, String> {
+    let db = state.db.lock().unwrap();
+    db.create_project(
+        &project.name,
+        project.description.as_deref(),
+        project.project_type.as_deref().unwrap_or("generic"),
+        project.color.as_deref(),
+        project.settings.as_deref(),
+    )
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn get_project(
+    state: State<AppState>,
+    id: String,
+) -> Result<Option<Project>, String> {
+    let db = state.db.lock().unwrap();
+    db.get_project(&id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn list_projects(
+    state: State<AppState>,
+    project_type: Option<String>,
+) -> Result<Vec<Project>, String> {
+    let db = state.db.lock().unwrap();
+    db.list_projects(project_type.as_deref()).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn update_project(
+    state: State<AppState>,
+    id: String,
+    updates: UpdateProjectInput,
+) -> Result<Option<Project>, String> {
+    let db = state.db.lock().unwrap();
+    db.update_project(
+        &id,
+        updates.name.as_deref(),
+        updates.description.as_deref(),
+        updates.project_type.as_deref(),
+        updates.color.as_deref(),
+        updates.settings.as_deref(),
+    )
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn delete_project(
+    state: State<AppState>,
+    id: String,
+) -> Result<bool, String> {
+    let db = state.db.lock().unwrap();
+    db.delete_project(&id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn get_notes_by_project(
+    state: State<AppState>,
+    project_id: String,
+) -> Result<Vec<Note>, String> {
+    let db = state.db.lock().unwrap();
+    db.get_notes_by_project(&project_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn assign_note_to_project(
+    state: State<AppState>,
+    note_id: String,
+    project_id: Option<String>,
+) -> Result<bool, String> {
+    let db = state.db.lock().unwrap();
+    db.assign_note_to_project(&note_id, project_id.as_deref())
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn get_project_note_count(
+    state: State<AppState>,
+    project_id: String,
+) -> Result<i64, String> {
+    let db = state.db.lock().unwrap();
+    db.get_project_note_count(&project_id).map_err(|e| e.to_string())
 }
 
 // AI commands

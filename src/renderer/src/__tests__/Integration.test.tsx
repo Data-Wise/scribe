@@ -49,15 +49,16 @@ describe('Editor + Autocomplete Integration', () => {
 
     it('switches to preview mode to view wiki-links', async () => {
       render(<HybridEditor {...editorProps} content="See [[Project Plan]] here" />)
-      
-      // Switch to preview mode
-      fireEvent.click(screen.getByText('Preview'))
-      
+
+      // Switch to preview mode (pill-style toggle has multiple Preview text elements)
+      const previewButtons = screen.getAllByText('Preview')
+      fireEvent.click(previewButtons[0])
+
       await waitFor(() => {
-        // Preview mode shows Edit button
-        expect(screen.getByText('Edit')).toBeInTheDocument()
+        // Pill-style toggle always shows both Write and Preview buttons
+        expect(screen.getByText('Write')).toBeInTheDocument()
       })
-      
+
       // Prose container should be visible in preview mode
       const proseDiv = document.querySelector('.prose')
       expect(proseDiv).toBeInTheDocument()
@@ -92,15 +93,16 @@ describe('Editor + Autocomplete Integration', () => {
 
     it('switches to preview mode to view tags', async () => {
       render(<HybridEditor {...editorProps} content="Check #todo" />)
-      
-      // Switch to preview mode
-      fireEvent.click(screen.getByText('Preview'))
-      
+
+      // Switch to preview mode (pill-style toggle has multiple Preview text elements)
+      const previewButtons = screen.getAllByText('Preview')
+      fireEvent.click(previewButtons[0])
+
       await waitFor(() => {
-        // Preview mode shows Edit button
-        expect(screen.getByText('Edit')).toBeInTheDocument()
+        // Pill-style toggle always shows both Write and Preview buttons
+        expect(screen.getByText('Write')).toBeInTheDocument()
       })
-      
+
       // Prose container should be visible in preview mode
       const proseDiv = document.querySelector('.prose')
       expect(proseDiv).toBeInTheDocument()
@@ -263,31 +265,35 @@ describe('Editor Mode Integration', () => {
 
   it('toggles to preview mode', async () => {
     render(<HybridEditor {...editorProps} />)
-    
-    fireEvent.click(screen.getByText('Preview'))
-    
+
+    // Pill-style toggle has multiple Preview text elements
+    const previewButtons = screen.getAllByText('Preview')
+    fireEvent.click(previewButtons[0])
+
     await waitFor(() => {
-      expect(screen.getByText('Edit')).toBeInTheDocument()
+      // In preview mode, textarea is hidden
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     })
   })
 
   it('maintains content when switching modes', async () => {
     render(<HybridEditor {...editorProps} />)
-    
+
     // Go to preview
-    fireEvent.click(screen.getByText('Preview'))
-    
+    const previewButtons = screen.getAllByText('Preview')
+    fireEvent.click(previewButtons[0])
+
     await waitFor(() => {
-      expect(screen.getByText('Edit')).toBeInTheDocument()
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     })
-    
+
     // Go back to write
-    fireEvent.click(screen.getByText('Edit'))
-    
+    fireEvent.click(screen.getByText('Write'))
+
     await waitFor(() => {
-      expect(screen.getByText('Preview')).toBeInTheDocument()
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
     })
-    
+
     // Content should still be there in textarea
     const textarea = screen.getByRole('textbox')
     expect(textarea).toHaveValue('Test content with [[Link]] and #tag')
@@ -353,8 +359,9 @@ describe('Accessibility Integration', () => {
 
   it('buttons have proper labels', () => {
     render(<HybridEditor content="" onChange={vi.fn()} />)
-    
-    const toggleButton = screen.getByTitle('Toggle mode (Cmd+E)')
+
+    // The pill-style toggle container has the title
+    const toggleButton = screen.getByTitle('Toggle mode (⌘E)')
     expect(toggleButton).toBeInTheDocument()
   })
 })

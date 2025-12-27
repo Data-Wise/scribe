@@ -74,6 +74,30 @@ export interface TagWithCount extends Tag {
   note_count: number
 }
 
+// Project types (also exported from store/useProjectStore.ts)
+export type ProjectType = 'research' | 'teaching' | 'r-package' | 'r-dev' | 'generic'
+
+export interface ProjectSettings {
+  theme?: string
+  font?: string
+  fontSize?: number
+  bibliographyPath?: string
+  citationStyle?: string
+  dailyNoteTemplate?: string
+  wordGoal?: number
+}
+
+export interface Project {
+  id: string
+  name: string
+  description?: string
+  type: ProjectType
+  color?: string
+  settings?: ProjectSettings
+  created_at: number
+  updated_at: number
+}
+
 // Extend Window interface to include our custom API
 declare global {
   interface Window {
@@ -109,6 +133,17 @@ declare global {
       updateNoteLinks: (noteId: string, content: string) => Promise<void>
       getBacklinks: (noteId: string) => Promise<Note[]>
       getOutgoingLinks: (noteId: string) => Promise<Note[]>
+
+      // Project operations
+      listProjects: () => Promise<Project[]>
+      createProject: (project: { name: string; type: ProjectType; description?: string; color?: string }) => Promise<Project>
+      getProject: (id: string) => Promise<Project | null>
+      updateProject: (id: string, updates: Partial<Project>) => Promise<Project | null>
+      deleteProject: (id: string) => Promise<boolean>
+      getProjectSettings: (id: string) => Promise<ProjectSettings | null>
+      updateProjectSettings: (id: string, settings: Partial<ProjectSettings>) => Promise<void>
+      getProjectNotes: (projectId: string) => Promise<Note[]>
+      setNoteProject: (noteId: string, projectId: string | null) => Promise<void>
     }
   }
 }

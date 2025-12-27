@@ -1,13 +1,13 @@
 ---
 status: active
 priority: P1
-progress: 94
-version: 0.5.0-beta.1
-sprint: 17
-updated: 2025-12-26
+progress: 100
+version: 1.1.0-beta
+sprint: 20
+updated: 2025-12-27
 editor: hybrid-markdown++
-next_sprint: 18
-next_focus: Release Prep (v1.0)
+next_sprint: 21
+next_focus: v1.1 Polish & Testing
 tests: 483
 tags:
   - adhd-friendly
@@ -15,6 +15,8 @@ tags:
   - tauri
   - react
   - academic
+  - projects
+  - cli
 ---
 
 # Scribe
@@ -23,9 +25,42 @@ tags:
 
 ## Current Sprint
 
-**Sprint 16: Tags Panel Core Features** ✅ Complete
+**v1.1 Release** ✅ Complete (2025-12-27)
 
-**Completed (2025-12-26):**
+### Sprint 20: Scribe CLI ✅
+- [x] `scribe.zsh` CLI script (607 lines)
+- [x] Commands: new, daily, search, capture, list, open, edit, tags, folders, stats
+- [x] FTS5 full-text search integration
+- [x] Aliases: sd, sc, ss, sl, sn
+- [x] Tab completion for commands/folders
+- [x] Auto-sourced in `.zshrc`
+
+### Sprint 19: Note Search ✅
+- [x] SearchPanel.tsx component
+- [x] ⌘F keyboard shortcut
+- [x] Scope selector (All Notes / Current Project)
+- [x] Debounced 150ms real-time search
+- [x] Keyboard navigation (↑↓ Navigate, ↵ Open, Esc Close)
+- [x] Highlighted search matches with snippets
+
+### Sprint 18: Project System ✅
+- [x] Database schema (migration_004: projects table, note.project_id)
+- [x] Rust CRUD commands (create/get/list/update/delete/assign)
+- [x] Zustand store with localStorage persistence
+- [x] ProjectSwitcher dropdown component
+- [x] CreateProjectModal component
+- [x] Project-scoped note loading in App.tsx
+- [x] 5 project types: research, teaching, r-package, r-dev, generic
+
+### Sprint 17: UI Polish + ADHD Enhancements ✅
+- [x] Celebration micro-interactions (pulse at milestones)
+- [x] Enhanced status bar (session timer, word delta, streak)
+- [x] Keyboard shortcut cheatsheet (⌘?)
+- [x] CSS animations for celebrations (respects reduced-motion)
+- [x] Session tracking (time since first keystroke)
+- [x] Better mode toggle (pill-style)
+
+**Sprint 16: Tags Panel Core Features** ✅ Complete
 - [x] Orphan tag detection (scans notes for unregistered `#tags`)
 - [x] Unregistered Tags section with warning styling
 - [x] Register single/all tags buttons
@@ -88,13 +123,15 @@ tags:
 | 1 | 10.5 | Theme & Font System | ✅ 100% |
 | **2** | 11 | Academic Features | ✅ 100% |
 | 2 | 12 | UI Polish & Micro-interactions | ✅ 100% |
-| **3** | 13 | Project System | ○ 0% |
-| 3 | 14 | Knowledge Graph & Templates | ✅ 100% |
+| **3** | 14 | Knowledge Graph & Templates | ✅ 100% |
 | **4** | 15 | Tags Panel Quick Wins | ✅ 100% |
 | 4 | 16 | Tags Panel Core Features | ✅ 100% |
-| **5** | 17 | Tags Visual Improvements | ○ 0% |
+| **5** | 17 | UI Polish + ADHD Enhancements | ✅ 100% |
+| **v1.1** | 18 | Project System | ✅ 100% |
+| v1.1 | 19 | Note Search (⌘F) | ✅ 100% |
+| v1.1 | 20 | Scribe CLI | ✅ 100% |
 
-**Total: 92% complete**
+**Total: 100% complete (v1.1)**
 
 ---
 
@@ -114,6 +151,10 @@ tags:
 | 14 | Knowledge Graph & Templates | 483 |
 | 15 | Tags Panel Quick Wins | 483 |
 | 16 | Tags Panel Core Features | 483 |
+| 17 | UI Polish + ADHD Enhancements | 483 |
+| 18 | Project System | 483 |
+| 19 | Note Search (⌘F) | 483 |
+| 20 | Scribe CLI | 483 |
 
 ---
 
@@ -125,6 +166,27 @@ tags:
 - Live tag `#tag` highlighting with autocomplete
 - Word count, mode toggle (⌘E)
 - Focus mode (⌘⇧F)
+
+**Project System (v1.1):**
+- 5 project types: research, teaching, r-package, r-dev, generic
+- Project switcher dropdown in sidebar
+- Project-scoped note filtering
+- Zustand store with localStorage persistence
+- Database migration for projects table
+
+**Note Search (v1.1):**
+- SearchPanel with ⌘F shortcut
+- Scope selector (All Notes / Current Project)
+- Debounced 150ms real-time search
+- Keyboard navigation (↑↓/↵/Esc)
+- Highlighted matches with snippets
+
+**Scribe CLI (v1.1):**
+- Terminal-based note access via `scribe` command
+- Commands: new, daily, search, capture, list, open, edit, tags, folders, stats
+- Aliases: sd, sc, ss, sl, sn
+- FTS5 full-text search
+- Tab completion
 
 **Themes & Fonts:**
 - 10 built-in ADHD-friendly themes (5 dark, 5 light)
@@ -141,13 +203,13 @@ tags:
 - Global hotkey ⌘⇧N
 - Command palette ⌘K
 - Quick actions: Create, Daily, Focus, Sync, Claude, Gemini
-- Keyboard shortcuts: ⌘N, ⌘D, ⌘B, ⌘⇧B
+- Keyboard shortcuts: ⌘N, ⌘D, ⌘B, ⌘⇧B, ⌘F, ⌘?
 
 **Academic:**
 - MathJax 3 for LaTeX rendering ($...$ inline, $$...$$ display)
 - Citation autocomplete (@trigger)
 - BibTeX/Zotero integration
-- Export to PDF, Word, LaTeX, HTML (via Pandoc)
+- Export to PDF, Word, LaTeX, HTML, Markdown (via Pandoc)
 - 5 citation styles (APA, Chicago, MLA, IEEE, Harvard)
 
 **Accessibility:**

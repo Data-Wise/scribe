@@ -8,9 +8,23 @@ pub struct Note {
     pub title: String,
     pub content: String,
     pub folder: String,
+    pub project_id: Option<String>,
     pub created_at: i64,
     pub updated_at: i64,
     pub deleted_at: Option<i64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Project {
+    pub id: String,
+    pub name: String,
+    pub description: Option<String>,
+    #[serde(rename = "type")]
+    pub project_type: String,
+    pub color: Option<String>,
+    pub settings: Option<String>,
+    pub created_at: i64,
+    pub updated_at: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -80,7 +94,12 @@ impl Database {
             self.run_migration_003()?;
             self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [3])?;
         }
-        
+
+        if current_version < 4 {
+            self.run_migration_004()?;
+            self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [4])?;
+        }
+
         Ok(())
     }
     
@@ -210,10 +229,41 @@ impl Database {
             CREATE INDEX IF NOT EXISTS idx_note_tags_note ON note_tags(note_id);
             CREATE INDEX IF NOT EXISTS idx_note_tags_tag ON note_tags(tag_id);",
         )?;
-        
+
         Ok(())
     }
-    
+
+    fn run_migration_004(&self) -> SqlResult<()> {
+        println!("Running database migration 004 (projects system)");
+
+        self.conn.execute_batch(
+            "-- Create projects table
+            CREATE TABLE IF NOT EXISTS projects (
+                id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+                name TEXT NOT NULL,
+                description TEXT,
+                type TEXT CHECK(type IN ('research', 'teaching', 'r-package', 'r-dev', 'generic')) DEFAULT 'generic',
+                color TEXT,
+                settings TEXT,
+                created_at INTEGER DEFAULT (strftime('%s', 'now')),
+                updated_at INTEGER DEFAULT (strftime('%s', 'now'))
+            );
+
+            -- Add project_id column to notes table
+            ALTER TABLE notes ADD COLUMN project_id TEXT REFERENCES projects(id) ON DELETE SET NULL;
+
+            -- Create index for efficient project-based note lookups
+            CREATE INDEX IF NOT EXISTS idx_notes_project ON notes(project_id);
+
+            -- Create index for project name lookups
+            CREATE INDEX IF NOT EXISTS idx_projects_name ON projects(name);
+            CREATE INDEX IF NOT EXISTS idx_projects_type ON projects(type);",
+        )?;
+
+        println!("Database migration 004 completed (projects system)");
+        Ok(())
+    }
+
     // Note CRUD operations
     
     pub fn create_note(&self, title: &str, content: &str, folder: &str) -> SqlResult<Note> {
@@ -221,9 +271,9 @@ impl Database {
             "INSERT INTO notes (title, content, folder) VALUES (?, ?, ?)",
             [title, content, folder],
         )?;
-        
+
         let note = self.conn.query_row(
-            "SELECT id, title, content, folder, created_at, updated_at, deleted_at 
+            "SELECT id, title, content, folder, project_id, created_at, updated_at, deleted_at
              FROM notes WHERE rowid = last_insert_rowid()",
             [],
             |row| {
@@ -232,9 +282,10 @@ impl Database {
                     title: row.get(1)?,
                     content: row.get(2)?,
                     folder: row.get(3)?,
-                    created_at: row.get(4)?,
-                    updated_at: row.get(5)?,
-                    deleted_at: row.get(6)?,
+                    project_id: row.get(4)?,
+                    created_at: row.get(5)?,
+                    updated_at: row.get(6)?,
+                    deleted_at: row.get(7)?,
                 })
             },
         )?;
@@ -248,7 +299,7 @@ impl Database {
     
     pub fn get_note(&self, id: &str) -> SqlResult<Option<Note>> {
         let result = self.conn.query_row(
-            "SELECT id, title, content, folder, created_at, updated_at, deleted_at 
+            "SELECT id, title, content, folder, project_id, created_at, updated_at, deleted_at
              FROM notes WHERE id = ? AND deleted_at IS NULL",
             [id],
             |row| {
@@ -257,13 +308,14 @@ impl Database {
                     title: row.get(1)?,
                     content: row.get(2)?,
                     folder: row.get(3)?,
-                    created_at: row.get(4)?,
-                    updated_at: row.get(5)?,
-                    deleted_at: row.get(6)?,
+                    project_id: row.get(4)?,
+                    created_at: row.get(5)?,
+                    updated_at: row.get(6)?,
+                    deleted_at: row.get(7)?,
                 })
             },
         );
-        
+
         match result {
             Ok(note) => Ok(Some(note)),
             Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
@@ -274,43 +326,45 @@ impl Database {
     pub fn list_notes(&self, folder: Option<&str>) -> SqlResult<Vec<Note>> {
         if let Some(f) = folder {
             let mut stmt = self.conn.prepare(
-                "SELECT id, title, content, folder, created_at, updated_at, deleted_at 
-                 FROM notes WHERE folder = ? AND deleted_at IS NULL 
+                "SELECT id, title, content, folder, project_id, created_at, updated_at, deleted_at
+                 FROM notes WHERE folder = ? AND deleted_at IS NULL
                  ORDER BY updated_at DESC",
             )?;
-            
+
             let notes = stmt.query_map([f], |row| {
                 Ok(Note {
                     id: row.get(0)?,
                     title: row.get(1)?,
                     content: row.get(2)?,
                     folder: row.get(3)?,
-                    created_at: row.get(4)?,
-                    updated_at: row.get(5)?,
-                    deleted_at: row.get(6)?,
+                    project_id: row.get(4)?,
+                    created_at: row.get(5)?,
+                    updated_at: row.get(6)?,
+                    deleted_at: row.get(7)?,
                 })
             })?;
-            
+
             notes.collect()
         } else {
             let mut stmt = self.conn.prepare(
-                "SELECT id, title, content, folder, created_at, updated_at, deleted_at 
-                 FROM notes WHERE deleted_at IS NULL 
+                "SELECT id, title, content, folder, project_id, created_at, updated_at, deleted_at
+                 FROM notes WHERE deleted_at IS NULL
                  ORDER BY updated_at DESC",
             )?;
-            
+
             let notes = stmt.query_map([], |row| {
                 Ok(Note {
                     id: row.get(0)?,
                     title: row.get(1)?,
                     content: row.get(2)?,
                     folder: row.get(3)?,
-                    created_at: row.get(4)?,
-                    updated_at: row.get(5)?,
-                    deleted_at: row.get(6)?,
+                    project_id: row.get(4)?,
+                    created_at: row.get(5)?,
+                    updated_at: row.get(6)?,
+                    deleted_at: row.get(7)?,
                 })
             })?;
-            
+
             notes.collect()
         }
     }
@@ -366,7 +420,7 @@ impl Database {
     
     pub fn search_notes(&self, query: &str) -> SqlResult<Vec<Note>> {
         let mut stmt = self.conn.prepare(
-            "SELECT notes.id, notes.title, notes.content, notes.folder, 
+            "SELECT notes.id, notes.title, notes.content, notes.folder, notes.project_id,
                     notes.created_at, notes.updated_at, notes.deleted_at
              FROM notes
              JOIN notes_fts ON notes.id = notes_fts.note_id
@@ -374,19 +428,20 @@ impl Database {
              ORDER BY rank
              LIMIT 50",
         )?;
-        
+
         let notes = stmt.query_map([query], |row| {
             Ok(Note {
                 id: row.get(0)?,
                 title: row.get(1)?,
                 content: row.get(2)?,
                 folder: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
-                deleted_at: row.get(6)?,
+                project_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+                deleted_at: row.get(7)?,
             })
         })?;
-        
+
         notes.collect()
     }
     
@@ -558,26 +613,27 @@ impl Database {
 
     pub fn get_notes_by_tag(&self, tag_id: &str) -> SqlResult<Vec<Note>> {
         let mut stmt = self.conn.prepare(
-            "SELECT notes.id, notes.title, notes.content, notes.folder, 
+            "SELECT notes.id, notes.title, notes.content, notes.folder, notes.project_id,
                     notes.created_at, notes.updated_at, notes.deleted_at
              FROM notes
              JOIN note_tags ON notes.id = note_tags.note_id
              WHERE note_tags.tag_id = ? AND notes.deleted_at IS NULL
              ORDER BY notes.updated_at DESC",
         )?;
-        
+
         let notes = stmt.query_map([tag_id], |row| {
             Ok(Note {
                 id: row.get(0)?,
                 title: row.get(1)?,
                 content: row.get(2)?,
                 folder: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
-                deleted_at: row.get(6)?,
+                project_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+                deleted_at: row.get(7)?,
             })
         })?;
-        
+
         notes.collect()
     }
 
@@ -628,12 +684,13 @@ impl Database {
                 title: row.get(1)?,
                 content: row.get(2)?,
                 folder: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
-                deleted_at: row.get(6)?,
+                project_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+                deleted_at: row.get(7)?,
             })
         })?;
-        
+
         notes_iter.collect()
     }
 
@@ -700,64 +757,70 @@ impl Database {
 
     pub fn get_backlinks(&self, note_id: &str) -> SqlResult<Vec<Note>> {
         let mut stmt = self.conn.prepare(
-            "SELECT notes.id, notes.title, notes.content, notes.folder, 
+            "SELECT notes.id, notes.title, notes.content, notes.folder, notes.project_id,
                     notes.created_at, notes.updated_at, notes.deleted_at
              FROM notes
              JOIN links ON notes.id = links.source_note_id
              WHERE links.target_note_id = ? AND notes.deleted_at IS NULL
              ORDER BY notes.updated_at DESC",
         )?;
-        
+
         let notes = stmt.query_map([note_id], |row| {
             Ok(Note {
                 id: row.get(0)?,
                 title: row.get(1)?,
                 content: row.get(2)?,
                 folder: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
-                deleted_at: row.get(6)?,
+                project_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+                deleted_at: row.get(7)?,
             })
         })?;
-        
+
         notes.collect()
     }
 
     pub fn get_outgoing_links(&self, note_id: &str) -> SqlResult<Vec<Note>> {
         let mut stmt = self.conn.prepare(
-            "SELECT notes.id, notes.title, notes.content, notes.folder, 
+            "SELECT notes.id, notes.title, notes.content, notes.folder, notes.project_id,
                     notes.created_at, notes.updated_at, notes.deleted_at
              FROM notes
              JOIN links ON notes.id = links.target_note_id
              WHERE links.source_note_id = ? AND notes.deleted_at IS NULL
              ORDER BY notes.updated_at DESC",
         )?;
-        
+
         let notes = stmt.query_map([note_id], |row| {
             Ok(Note {
                 id: row.get(0)?,
                 title: row.get(1)?,
                 content: row.get(2)?,
                 folder: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
-                deleted_at: row.get(6)?,
+                project_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+                deleted_at: row.get(7)?,
             })
         })?;
-        
+
         notes.collect()
     }
     pub fn get_note_by_title_and_folder(&self, title: &str, folder: &str) -> SqlResult<Option<Note>> {
-        let mut stmt = self.conn.prepare("SELECT id, title, content, folder, created_at, updated_at, deleted_at FROM notes WHERE title = ? AND folder = ? AND deleted_at IS NULL LIMIT 1")?;
+        let mut stmt = self.conn.prepare(
+            "SELECT id, title, content, folder, project_id, created_at, updated_at, deleted_at
+             FROM notes WHERE title = ? AND folder = ? AND deleted_at IS NULL LIMIT 1"
+        )?;
         let note = stmt.query_row([title, folder], |row| {
             Ok(Note {
                 id: row.get(0)?,
                 title: row.get(1)?,
                 content: row.get(2)?,
                 folder: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
-                deleted_at: row.get(6)?,
+                project_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+                deleted_at: row.get(7)?,
             })
         });
 
@@ -775,6 +838,211 @@ impl Database {
         });
         let hue = hash % 360;
         format!("hsl({}, 70%, 50%)", hue)
+    }
+
+    // Project CRUD operations
+
+    pub fn create_project(
+        &self,
+        name: &str,
+        description: Option<&str>,
+        project_type: &str,
+        color: Option<&str>,
+        settings: Option<&str>,
+    ) -> SqlResult<Project> {
+        self.conn.execute(
+            "INSERT INTO projects (name, description, type, color, settings) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![name, description, project_type, color, settings],
+        )?;
+
+        let project = self.conn.query_row(
+            "SELECT id, name, description, type, color, settings, created_at, updated_at
+             FROM projects WHERE rowid = last_insert_rowid()",
+            [],
+            |row| {
+                Ok(Project {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    description: row.get(2)?,
+                    project_type: row.get(3)?,
+                    color: row.get(4)?,
+                    settings: row.get(5)?,
+                    created_at: row.get(6)?,
+                    updated_at: row.get(7)?,
+                })
+            },
+        )?;
+
+        Ok(project)
+    }
+
+    pub fn get_project(&self, id: &str) -> SqlResult<Option<Project>> {
+        let result = self.conn.query_row(
+            "SELECT id, name, description, type, color, settings, created_at, updated_at
+             FROM projects WHERE id = ?",
+            [id],
+            |row| {
+                Ok(Project {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    description: row.get(2)?,
+                    project_type: row.get(3)?,
+                    color: row.get(4)?,
+                    settings: row.get(5)?,
+                    created_at: row.get(6)?,
+                    updated_at: row.get(7)?,
+                })
+            },
+        );
+
+        match result {
+            Ok(project) => Ok(Some(project)),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+            Err(e) => Err(e),
+        }
+    }
+
+    pub fn list_projects(&self, project_type: Option<&str>) -> SqlResult<Vec<Project>> {
+        if let Some(pt) = project_type {
+            let mut stmt = self.conn.prepare(
+                "SELECT id, name, description, type, color, settings, created_at, updated_at
+                 FROM projects WHERE type = ?
+                 ORDER BY name COLLATE NOCASE",
+            )?;
+
+            let projects = stmt.query_map([pt], |row| {
+                Ok(Project {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    description: row.get(2)?,
+                    project_type: row.get(3)?,
+                    color: row.get(4)?,
+                    settings: row.get(5)?,
+                    created_at: row.get(6)?,
+                    updated_at: row.get(7)?,
+                })
+            })?;
+
+            projects.collect()
+        } else {
+            let mut stmt = self.conn.prepare(
+                "SELECT id, name, description, type, color, settings, created_at, updated_at
+                 FROM projects
+                 ORDER BY name COLLATE NOCASE",
+            )?;
+
+            let projects = stmt.query_map([], |row| {
+                Ok(Project {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    description: row.get(2)?,
+                    project_type: row.get(3)?,
+                    color: row.get(4)?,
+                    settings: row.get(5)?,
+                    created_at: row.get(6)?,
+                    updated_at: row.get(7)?,
+                })
+            })?;
+
+            projects.collect()
+        }
+    }
+
+    pub fn update_project(
+        &self,
+        id: &str,
+        name: Option<&str>,
+        description: Option<&str>,
+        project_type: Option<&str>,
+        color: Option<&str>,
+        settings: Option<&str>,
+    ) -> SqlResult<Option<Project>> {
+        let mut sql_parts = Vec::new();
+        let mut params: Vec<Box<dyn rusqlite::ToSql>> = Vec::new();
+
+        if let Some(n) = name {
+            sql_parts.push("name = ?");
+            params.push(Box::new(n.to_string()));
+        }
+        if let Some(d) = description {
+            sql_parts.push("description = ?");
+            params.push(Box::new(d.to_string()));
+        }
+        if let Some(pt) = project_type {
+            sql_parts.push("type = ?");
+            params.push(Box::new(pt.to_string()));
+        }
+        if let Some(c) = color {
+            sql_parts.push("color = ?");
+            params.push(Box::new(c.to_string()));
+        }
+        if let Some(s) = settings {
+            sql_parts.push("settings = ?");
+            params.push(Box::new(s.to_string()));
+        }
+
+        if sql_parts.is_empty() {
+            return self.get_project(id);
+        }
+
+        sql_parts.push("updated_at = strftime('%s', 'now')");
+        params.push(Box::new(id.to_string()));
+
+        let sql = format!("UPDATE projects SET {} WHERE id = ?", sql_parts.join(", "));
+        self.conn.execute(&sql, params_from_iter(params))?;
+
+        self.get_project(id)
+    }
+
+    pub fn delete_project(&self, id: &str) -> SqlResult<bool> {
+        // First, unassign all notes from this project
+        self.conn.execute(
+            "UPDATE notes SET project_id = NULL WHERE project_id = ?",
+            [id],
+        )?;
+
+        let changes = self.conn.execute("DELETE FROM projects WHERE id = ?", [id])?;
+        Ok(changes > 0)
+    }
+
+    pub fn get_notes_by_project(&self, project_id: &str) -> SqlResult<Vec<Note>> {
+        let mut stmt = self.conn.prepare(
+            "SELECT id, title, content, folder, project_id, created_at, updated_at, deleted_at
+             FROM notes
+             WHERE project_id = ? AND deleted_at IS NULL
+             ORDER BY updated_at DESC",
+        )?;
+
+        let notes = stmt.query_map([project_id], |row| {
+            Ok(Note {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                content: row.get(2)?,
+                folder: row.get(3)?,
+                project_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
+                deleted_at: row.get(7)?,
+            })
+        })?;
+
+        notes.collect()
+    }
+
+    pub fn assign_note_to_project(&self, note_id: &str, project_id: Option<&str>) -> SqlResult<bool> {
+        let changes = self.conn.execute(
+            "UPDATE notes SET project_id = ?, updated_at = strftime('%s', 'now') WHERE id = ?",
+            rusqlite::params![project_id, note_id],
+        )?;
+        Ok(changes > 0)
+    }
+
+    pub fn get_project_note_count(&self, project_id: &str) -> SqlResult<i64> {
+        self.conn.query_row(
+            "SELECT COUNT(*) FROM notes WHERE project_id = ? AND deleted_at IS NULL",
+            [project_id],
+            |row| row.get(0),
+        )
     }
 }
 

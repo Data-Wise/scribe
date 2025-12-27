@@ -85,39 +85,40 @@ describe('HybridEditor Component', () => {
   describe('Mode Toggling', () => {
     it('toggles to preview mode when clicking Preview button', async () => {
       render(<HybridEditor {...defaultProps} />)
-      
-      const previewButton = screen.getByText('Preview')
-      fireEvent.click(previewButton)
-      
+
+      // Pill-style toggle shows both Write and Preview buttons
+      const previewButtons = screen.getAllByText('Preview')
+      fireEvent.click(previewButtons[0])
+
       await waitFor(() => {
-        expect(screen.getByText('Edit')).toBeInTheDocument()
+        // In preview mode, textarea is hidden
+        expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
       })
     })
 
-    it('toggles back to write mode when clicking Edit button', async () => {
+    it('toggles back to write mode when clicking Write button', async () => {
       render(<HybridEditor {...defaultProps} />)
-      
+
       // Go to preview
-      fireEvent.click(screen.getByText('Preview'))
+      const previewButtons = screen.getAllByText('Preview')
+      fireEvent.click(previewButtons[0])
       await waitFor(() => {
-        expect(screen.getByText('Edit')).toBeInTheDocument()
+        expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
       })
-      
+
       // Go back to write
-      fireEvent.click(screen.getByText('Edit'))
+      fireEvent.click(screen.getByText('Write'))
       await waitFor(() => {
-        expect(screen.getByText('Preview')).toBeInTheDocument()
+        expect(screen.getByRole('textbox')).toBeInTheDocument()
       })
     })
 
-    it('shows "Preview" status in preview mode', async () => {
+    it('shows Write and Preview toggle buttons', async () => {
       render(<HybridEditor {...defaultProps} />)
-      
-      fireEvent.click(screen.getByText('Preview'))
-      
-      await waitFor(() => {
-        expect(screen.getByText(/Preview/)).toBeInTheDocument()
-      })
+
+      // Pill-style toggle always shows both buttons
+      expect(screen.getByText('Write')).toBeInTheDocument()
+      expect(screen.getAllByText('Preview').length).toBeGreaterThan(0)
     })
 
     it('hides textarea in preview mode', async () => {
@@ -365,23 +366,27 @@ describe('HybridEditor Preview Mode', () => {
 
   it('enters preview mode and shows prose container', async () => {
     render(<HybridEditor {...defaultProps} content="See [[My Note]] here" />)
-    
-    fireEvent.click(screen.getByText('Preview'))
-    
+
+    const previewButtons = screen.getAllByText('Preview')
+    fireEvent.click(previewButtons[0])
+
     await waitFor(() => {
-      expect(screen.getByText('Edit')).toBeInTheDocument()
+      // In pill-style toggle, Write button is always visible
+      expect(screen.getByText('Write')).toBeInTheDocument()
       const proseDiv = document.querySelector('.prose')
       expect(proseDiv).toBeInTheDocument()
     })
   })
 
-  it('shows Edit button in preview mode', async () => {
+  it('shows Write button in preview mode (pill-style toggle)', async () => {
     render(<HybridEditor {...defaultProps} content="See [[My Note]]" />)
-    
-    fireEvent.click(screen.getByText('Preview'))
-    
+
+    const previewButtons = screen.getAllByText('Preview')
+    fireEvent.click(previewButtons[0])
+
     await waitFor(() => {
-      expect(screen.getByText('Edit')).toBeInTheDocument()
+      // Pill-style toggle always shows both Write and Preview
+      expect(screen.getByText('Write')).toBeInTheDocument()
     })
   })
 

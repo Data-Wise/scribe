@@ -5,7 +5,7 @@
  * Shows error message for invalid LaTeX.
  */
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { renderMath } from '../lib/mathjax'
 
 interface MathRendererProps {

@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { ChevronRight, ChevronDown, List, Network, Search, X, Clock, Minimize2, Maximize2, AlertTriangle, Plus, MoreVertical, Pencil, Trash2 } from 'lucide-react'
-import { TagWithCount, Note } from '../types'
+import { ChevronRight, ChevronDown, List, Network, Search, X, Clock, Minimize2, Maximize2, AlertTriangle, Plus, Pencil, Trash2, SortAsc, Hash } from 'lucide-react'
+import { TagWithCount } from '../types'
 import { api } from '../lib/api'
-import { buildTagTree, TagTreeNode, getLeafName } from '../lib/tagHierarchy'
+import { buildTagTree, TagTreeNode } from '../lib/tagHierarchy'
 
 // Track recent tags in localStorage
 const RECENT_TAGS_KEY = 'tagsPanelRecentTags'
@@ -166,12 +166,16 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
   const [noteTags, setNoteTags] = useState<TagWithCount[]>([])
   const [unregisteredTags, setUnregisteredTags] = useState<UnregisteredTag[]>([])
   const [loading, setLoading] = useState(false)
-  const [scanningTags, setScanningTags] = useState(false)
+  const [, setScanningTags] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [recentTagIds, setRecentTagIds] = useState<string[]>(() => getRecentTags())
   const [viewMode, setViewMode] = useState<'tree' | 'flat'>(() => {
     const saved = localStorage.getItem('tagsPanelViewMode')
     return (saved as 'tree' | 'flat') || 'tree'
+  })
+  const [sortMode, setSortMode] = useState<'alpha' | 'count' | 'recent'>(() => {
+    const saved = localStorage.getItem('tagsPanelSortMode')
+    return (saved as 'alpha' | 'count' | 'recent') || 'alpha'
   })
   const [compactMode, setCompactMode] = useState(() => {
     const saved = localStorage.getItem('tagsPanelCompactMode')
@@ -193,6 +197,11 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
     localStorage.setItem('tagsPanelCompactMode', String(compactMode))
   }, [compactMode])
 
+  // Save sort mode preference
+  useEffect(() => {
+    localStorage.setItem('tagsPanelSortMode', sortMode)
+  }, [sortMode])
+
   // Save expanded paths
   useEffect(() => {
     localStorage.setItem('tagsPanelExpandedPaths', JSON.stringify([...expandedPaths]))
@@ -211,14 +220,40 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
     })
   }, [])
 
-  // Filter tags based on search query
+  // Filter and sort tags based on search query and sort mode
   const filteredTags = useMemo(() => {
-    if (!searchQuery.trim()) return allTags
-    const query = searchQuery.toLowerCase()
-    return allTags.filter(tag =>
-      tag.name.toLowerCase().includes(query)
-    )
-  }, [allTags, searchQuery])
+    let tags = allTags
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      tags = tags.filter(tag => tag.name.toLowerCase().includes(query))
+    }
+
+    // Sort based on sort mode
+    const sorted = [...tags]
+    switch (sortMode) {
+      case 'alpha':
+        sorted.sort((a, b) => a.name.localeCompare(b.name))
+        break
+      case 'count':
+        sorted.sort((a, b) => b.note_count - a.note_count || a.name.localeCompare(b.name))
+        break
+      case 'recent':
+        // Sort by recent usage (tags in recentTagIds first, then alphabetically)
+        sorted.sort((a, b) => {
+          const aRecent = recentTagIds.indexOf(a.id)
+          const bRecent = recentTagIds.indexOf(b.id)
+          if (aRecent !== -1 && bRecent !== -1) return aRecent - bRecent
+          if (aRecent !== -1) return -1
+          if (bRecent !== -1) return 1
+          return a.name.localeCompare(b.name)
+        })
+        break
+    }
+
+    return sorted
+  }, [allTags, searchQuery, sortMode, recentTagIds])
 
   // Get recent tags (only those that still exist)
   const recentTags = useMemo(() => {
@@ -425,7 +460,19 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
           borderLeft: '1px solid var(--nexus-bg-tertiary)'
         }}
       >
-        <div className="text-sm" style={{ color: 'var(--nexus-text-muted)' }}>Loading tags...</div>
+        {/* Skeleton loading state */}
+        <div className="space-y-4">
+          <div className="skeleton skeleton-title" style={{ width: '40%' }} />
+          <div className="space-y-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center gap-2">
+                <div className="skeleton" style={{ width: '0.75rem', height: '0.75rem', borderRadius: '50%' }} />
+                <div className="skeleton skeleton-text flex-1" style={{ width: `${60 + Math.random() * 30}%` }} />
+                <div className="skeleton skeleton-text-sm" style={{ width: '1.5rem' }} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     )
   }
@@ -481,9 +528,38 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
             </button>
           </div>
         </div>
-        <p className="text-xs" style={{ color: 'var(--nexus-text-muted)' }}>
-          {allTags.length} {allTags.length === 1 ? 'tag' : 'tags'} total
-        </p>
+        {/* Sort options */}
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-xs" style={{ color: 'var(--nexus-text-muted)' }}>
+            {allTags.length} {allTags.length === 1 ? 'tag' : 'tags'} total
+          </p>
+          <div className="flex items-center rounded-full p-0.5" style={{ backgroundColor: 'var(--nexus-bg-tertiary)' }}>
+            <button
+              onClick={() => setSortMode('alpha')}
+              className={`p-1 rounded-full transition-all duration-200 ${sortMode === 'alpha' ? 'bg-nexus-accent text-white shadow-sm' : ''}`}
+              style={{ color: sortMode === 'alpha' ? 'white' : 'var(--nexus-text-muted)' }}
+              title="Sort alphabetically"
+            >
+              <SortAsc className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => setSortMode('count')}
+              className={`p-1 rounded-full transition-all duration-200 ${sortMode === 'count' ? 'bg-nexus-accent text-white shadow-sm' : ''}`}
+              style={{ color: sortMode === 'count' ? 'white' : 'var(--nexus-text-muted)' }}
+              title="Sort by note count"
+            >
+              <Hash className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => setSortMode('recent')}
+              className={`p-1 rounded-full transition-all duration-200 ${sortMode === 'recent' ? 'bg-nexus-accent text-white shadow-sm' : ''}`}
+              style={{ color: sortMode === 'recent' ? 'white' : 'var(--nexus-text-muted)' }}
+              title="Sort by recent usage"
+            >
+              <Clock className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Search Bar */}

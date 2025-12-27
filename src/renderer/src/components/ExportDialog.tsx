@@ -8,7 +8,7 @@ import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X, FileText, File, Code, FileDown } from 'lucide-react'
 import { api } from '../lib/api'
-import { Note, Property } from '../types'
+import { Property } from '../types'
 
 export type ExportFormat = 'pdf' | 'docx' | 'latex' | 'html' | 'md'
 
@@ -103,17 +103,18 @@ export function ExportDialog({
           content = `${frontmatter}\n\n${content}`
         }
 
-        // Export via API (will save to file)
-        const result = await api.exportDocument({
-          noteId,
-          content,
-          title: noteTitle,
-          format: 'md',
-          includeMetadata: false, // Already handled via frontmatter
-          processEquations: false, // Keep raw for markdown
-        })
+        // For markdown, create a downloadable blob
+        const blob = new Blob([content], { type: 'text/markdown' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${noteTitle.replace(/[^a-zA-Z0-9-_]/g, '_')}.md`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
 
-        setSuccess(`Exported to: ${result.path}`)
+        setSuccess('Markdown file downloaded')
       } else {
         // Standard Pandoc export for other formats
         const result = await api.exportDocument({

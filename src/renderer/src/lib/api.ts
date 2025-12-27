@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import { Note, Tag, TagWithCount, Folder } from '../types';
+import { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types';
 
 // Citation type from BibTeX
 export interface Citation {
@@ -148,6 +148,41 @@ export const api = {
 
   isPandocAvailable: (): Promise<boolean> =>
     invoke('is_pandoc_available'),
+
+  // Project operations
+  listProjects: (): Promise<Project[]> =>
+    invoke('list_projects'),
+
+  createProject: (project: {
+    name: string;
+    type: ProjectType;
+    description?: string;
+    color?: string;
+  }): Promise<Project> =>
+    invoke('create_project', { project }),
+
+  getProject: (id: string): Promise<Project | null> =>
+    invoke('get_project', { id }),
+
+  updateProject: (id: string, updates: Partial<Project>): Promise<Project | null> =>
+    invoke('update_project', { id, updates }),
+
+  deleteProject: (id: string): Promise<boolean> =>
+    invoke('delete_project', { id }),
+
+  getProjectSettings: (id: string): Promise<ProjectSettings | null> =>
+    invoke('get_project_settings', { id }),
+
+  updateProjectSettings: (id: string, settings: Partial<ProjectSettings>): Promise<void> =>
+    invoke('update_project_settings', { id, settings }),
+
+  // Get notes for a specific project
+  getProjectNotes: (projectId: string): Promise<Note[]> =>
+    invoke('get_project_notes', { projectId }),
+
+  // Associate a note with a project
+  setNoteProject: (noteId: string, projectId: string | null): Promise<void> =>
+    invoke('set_note_project', { noteId, projectId }),
 };
 
 

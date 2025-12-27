@@ -48,8 +48,8 @@ export function PropertiesPanel({
   noteTags = [],
   wordCount = 0,
   wordGoal,
-  defaultWordGoal = 500,
-  streak = 0,
+  defaultWordGoal: _defaultWordGoal = 500,
+  streak: _streak = 0,
   createdAt,
   updatedAt
 }: PropertiesPanelProps) {

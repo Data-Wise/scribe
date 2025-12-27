@@ -89,6 +89,15 @@ pub fn run() {
       commands::get_bibliography_path,
       commands::export_document,
       commands::is_pandoc_available,
+      // Project management
+      commands::create_project,
+      commands::get_project,
+      commands::list_projects,
+      commands::update_project,
+      commands::delete_project,
+      commands::get_notes_by_project,
+      commands::assign_note_to_project,
+      commands::get_project_note_count,
     ])
 
 
