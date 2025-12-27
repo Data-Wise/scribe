@@ -883,6 +883,26 @@ mark {
   border-radius: 4px;
 }
 
+.command-palette-number {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--nexus-accent);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 8px;
+  min-width: 18px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.command-palette-item:hover .command-palette-number,
+.command-palette-item[aria-selected="true"] .command-palette-number {
+  opacity: 1;
+  background: var(--nexus-accent);
+  color: var(--nexus-bg-primary);
+}
+
 /* ============================================================
    Panel Menu (Radix Dropdown)
    ADHD-friendly: minimal, clean, keyboard accessible

@@ -5,7 +5,7 @@ import rehypeRaw from 'rehype-raw'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
-import { WritingProgressCompact } from './WritingProgress'
+import { WritingProgress } from './WritingProgress'
 import { processMathInContent } from '../lib/mathjax'
 import { Note, Tag } from '../types'
 
@@ -20,6 +20,8 @@ interface HybridEditorProps {
   initialMode?: 'write' | 'preview'
   focusMode?: boolean // When true, enables typewriter scrolling
   wordGoal?: number // Daily word goal for progress visualization
+  sessionStartWords?: number // Words at session start for tracking session progress
+  streak?: number // Current writing streak in days
 }
 
 type EditorMode = 'write' | 'preview'
@@ -40,7 +42,9 @@ export function HybridEditor({
   onSearchTags = async () => [],
   initialMode = 'write',
   focusMode = false,
-  wordGoal = 500
+  wordGoal = 500,
+  sessionStartWords = 0,
+  streak = 0
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>(initialMode)
 
@@ -425,7 +429,12 @@ export function HybridEditor({
         </span>
 
         {/* Writing progress */}
-        <WritingProgressCompact wordCount={wordCount} wordGoal={wordGoal} />
+        <WritingProgress
+          wordCount={wordCount}
+          wordGoal={wordGoal}
+          sessionStartWords={sessionStartWords}
+          streak={streak}
+        />
 
         <span className="flex items-center gap-3">
           <span className="tabular-nums">{wordCount} words</span>

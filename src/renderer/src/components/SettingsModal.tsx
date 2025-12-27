@@ -118,6 +118,11 @@ export function SettingsModal({
   const [fontSearchQuery, setFontSearchQuery] = useState('')
   const [expandedFontPreview, setExpandedFontPreview] = useState<string | null>(null)
   const [fontCategoryFilter, setFontCategoryFilter] = useState<'all' | 'sans' | 'serif' | 'mono'>('all')
+
+  // Zotero/Bibliography state
+  const [bibliographyPath, setBibliographyPath] = useState('')
+  const [isSavingBib, setIsSavingBib] = useState(false)
+  const [bibSaveResult, setBibSaveResult] = useState<{ success: boolean; message: string } | null>(null)
   
   // Load installed fonts on mount
   useEffect(() => {
@@ -125,6 +130,36 @@ export function SettingsModal({
       loadInstalledFonts()
     }
   }, [isOpen, activeTab])
+
+  // Load bibliography path when academic tab is opened
+  useEffect(() => {
+    if (isOpen && activeTab === 'academic') {
+      loadBibliographyPath()
+    }
+  }, [isOpen, activeTab])
+
+  const loadBibliographyPath = async () => {
+    try {
+      const path = await api.getBibliographyPath()
+      if (path) setBibliographyPath(path)
+    } catch (e) {
+      console.error('Failed to load bibliography path:', e)
+    }
+  }
+
+  const saveBibliographyPath = async () => {
+    setIsSavingBib(true)
+    setBibSaveResult(null)
+    try {
+      await api.setBibliographyPath(bibliographyPath)
+      setBibSaveResult({ success: true, message: 'Bibliography path saved' })
+      setTimeout(() => setBibSaveResult(null), 3000)
+    } catch (e) {
+      setBibSaveResult({ success: false, message: 'Failed to save path' })
+    } finally {
+      setIsSavingBib(false)
+    }
+  }
   
   const loadInstalledFonts = async () => {
     setIsLoadingFonts(true)
@@ -1362,20 +1397,46 @@ export function SettingsModal({
             {activeTab === 'academic' && (
               <div className="space-y-6">
                 <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Integrations</h4>
-                  <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Zotero / BibTeX Citations</h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-red-400/10 rounded text-red-400">
-                        <Share2 className="w-5 h-5" />
+                        <BookOpen className="w-5 h-5" />
                       </div>
-                      <div>
-                        <div className="text-sm font-medium text-nexus-text-primary">Zotero Bridge</div>
-                        <div className="text-xs text-nexus-text-muted">Auto-import citations from Zotero.</div>
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-nexus-text-primary">Bibliography File</div>
+                        <div className="text-xs text-nexus-text-muted">Type @ in editor to insert citations</div>
                       </div>
                     </div>
-                    <button className="px-3 py-1 bg-white/5 hover:bg-white/10 text-xs font-bold rounded-md transition-colors">
-                      Configure
-                    </button>
+
+                    <div className="space-y-2">
+                      <label className="text-xs text-nexus-text-muted block">Path to .bib file</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={bibliographyPath}
+                          onChange={(e) => setBibliographyPath(e.target.value)}
+                          placeholder="~/Zotero/My Library.bib"
+                          className="flex-1 bg-nexus-bg-primary border border-white/10 rounded-lg px-3 py-2 text-sm text-nexus-text-primary placeholder:text-nexus-text-muted/40 focus:outline-none focus:border-nexus-accent/50"
+                        />
+                        <button
+                          onClick={saveBibliographyPath}
+                          disabled={isSavingBib}
+                          className="px-4 py-2 bg-nexus-accent hover:bg-nexus-accent-hover rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-50"
+                        >
+                          {isSavingBib ? 'Saving...' : 'Save'}
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted">
+                        Export from Zotero: File → Export Library → BibTeX format
+                      </p>
+                      {bibSaveResult && (
+                        <div className={`flex items-center gap-2 text-xs ${bibSaveResult.success ? 'text-green-400' : 'text-red-400'}`}>
+                          {bibSaveResult.success ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                          {bibSaveResult.message}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </section>
 

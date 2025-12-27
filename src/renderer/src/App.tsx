@@ -9,6 +9,7 @@ import { TagsPanel } from './components/TagsPanel'
 import { Ribbon } from './components/Ribbon'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
+import { ExportDialog } from './components/ExportDialog'
 import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
@@ -36,14 +37,32 @@ import {
   saveThemeShortcuts,
   getThemeForShortcut,
 } from './lib/themes'
+import {
+  loadPreferences,
+  updatePreferences,
+  updateStreak,
+  getStreakInfo,
+  UserPreferences,
+} from './lib/preferences'
 
 function App() {
   const { notes, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
 
-  // Focus mode state
-  const [focusMode, setFocusMode] = useState(false)
+  // User preferences with persistence
+  const [preferences, setPreferences] = useState<UserPreferences>(() => loadPreferences())
+  const [streakInfo, setStreakInfo] = useState(() => getStreakInfo())
+
+  // Focus mode state (persisted)
+  const [focusMode, setFocusMode] = useState(() => preferences.focusModeEnabled)
+
+  // Persist focus mode changes
+  const handleFocusModeChange = (enabled: boolean) => {
+    setFocusMode(enabled)
+    const updated = updatePreferences({ focusModeEnabled: enabled })
+    setPreferences(updated)
+  }
   
   // Sidebar collapse state
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false)
@@ -106,6 +125,7 @@ function App() {
   // Command Palette & Settings state
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false)
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([])
   const [isFiltering, setIsFiltering] = useState(false)
   
@@ -262,11 +282,38 @@ function App() {
   }
 
   const selectedNote = notes.find(n => n.id === selectedNoteId)
-  
+
   // Calculate word count for current note
-  const wordCount = selectedNote?.content 
-    ? selectedNote.content.trim().split(/\s+/).filter(word => word.length > 0).length 
+  const wordCount = selectedNote?.content
+    ? selectedNote.content.trim().split(/\s+/).filter(word => word.length > 0).length
     : 0
+
+  // Session tracking - words written in current session
+  const [sessionStartWords, setSessionStartWords] = useState<Record<string, number>>({})
+  const [lastWordCount, setLastWordCount] = useState(0)
+
+  // Track session start words when switching notes
+  useEffect(() => {
+    if (selectedNoteId && wordCount > 0 && !sessionStartWords[selectedNoteId]) {
+      setSessionStartWords(prev => ({ ...prev, [selectedNoteId]: wordCount }))
+    }
+    setLastWordCount(wordCount)
+  }, [selectedNoteId])
+
+  // Update streak when words are written
+  useEffect(() => {
+    if (wordCount > lastWordCount) {
+      const wordsAdded = wordCount - lastWordCount
+      if (wordsAdded > 0) {
+        const updated = updateStreak(wordsAdded)
+        setStreakInfo({ streak: updated.currentStreak, isActiveToday: true })
+      }
+    }
+    setLastWordCount(wordCount)
+  }, [wordCount])
+
+  // Calculate session words for current note
+  const sessionWords = selectedNoteId ? Math.max(0, wordCount - (sessionStartWords[selectedNoteId] || wordCount)) : 0
 
   const handleContentChange = async (content: string) => {
     if (selectedNote) {
@@ -419,9 +466,17 @@ function App() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'F') {
         e.preventDefault()
-        setFocusMode(prev => !prev)
+        handleFocusModeChange(!focusMode)
       }
-      
+
+      // Export shortcut (Cmd+Shift+E)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'E') {
+        e.preventDefault()
+        if (selectedNote) {
+          setIsExportDialogOpen(true)
+        }
+      }
+
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'b') {
         e.preventDefault()
         setLeftSidebarCollapsed(prev => !prev)
@@ -433,7 +488,7 @@ function App() {
       }
       
       if (e.key === 'Escape' && focusMode) {
-        setFocusMode(false)
+        handleFocusModeChange(false)
       }
 
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'n') {
@@ -449,7 +504,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleCreateNote, handleDailyNote])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote])
 
   // Sidebar resize handlers
   useEffect(() => {
@@ -659,17 +714,19 @@ function App() {
         />
       )}
 
-      <CommandPalette 
+      <CommandPalette
         open={isCommandPaletteOpen}
         setOpen={setIsCommandPaletteOpen}
         notes={notes}
         onSelectNote={selectNote}
         onCreateNote={handleCreateNote}
         onDailyNote={handleDailyNote}
-        onToggleFocus={() => setFocusMode(prev => !prev)}
+        onToggleFocus={() => handleFocusModeChange(!focusMode)}
         onObsidianSync={handleObsidianSync}
         onRunClaude={handleRunClaude}
         onRunGemini={handleRunGemini}
+        onExport={() => setIsExportDialogOpen(true)}
+        hasSelectedNote={!!selectedNote}
       />
 
       {!focusMode && (
@@ -750,6 +807,9 @@ function App() {
                 placeholder="Start writing... (Cmd+E to preview)"
                 initialMode={editorMode}
                 focusMode={focusMode}
+                wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
+                sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
+                streak={streakInfo.streak}
               />
             </div>
           </div>
@@ -780,12 +840,14 @@ function App() {
           </div>
           <div className="tab-content flex-1">
             {rightActiveTab === 'properties' ? (
-              <PropertiesPanel 
-                properties={selectedNote.properties || {}} 
+              <PropertiesPanel
+                properties={selectedNote.properties || {}}
                 onChange={(p) => updateNote(selectedNote.id, { properties: p })}
                 noteTags={currentNoteTags}
                 wordCount={wordCount}
                 wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
+                defaultWordGoal={preferences.defaultWordGoal}
+                streak={streakInfo.streak}
                 createdAt={selectedNote.created_at}
                 updatedAt={selectedNote.updated_at}
               />
@@ -810,9 +872,9 @@ function App() {
         </div>
       )}
 
-      <SettingsModal 
-        isOpen={isSettingsOpen} 
-        onClose={() => setIsSettingsOpen(false)} 
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
         themes={allThemes}
         currentTheme={theme}
         onThemeChange={setTheme}
@@ -825,6 +887,17 @@ function App() {
         themeShortcuts={themeShortcuts}
         onThemeShortcutsChange={handleThemeShortcutsChange}
       />
+
+      {/* Export Dialog */}
+      {selectedNote && (
+        <ExportDialog
+          isOpen={isExportDialogOpen}
+          onClose={() => setIsExportDialogOpen(false)}
+          noteId={selectedNote.id}
+          noteTitle={selectedNote.title}
+          noteContent={selectedNote.content}
+        />
+      )}
     </div>
   )
 }

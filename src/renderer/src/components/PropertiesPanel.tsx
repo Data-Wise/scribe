@@ -8,6 +8,8 @@ interface PropertiesPanelProps {
   noteTags?: Tag[]
   wordCount?: number
   wordGoal?: number
+  defaultWordGoal?: number
+  streak?: number
   createdAt?: number
   updatedAt?: number
 }
@@ -39,13 +41,15 @@ const LIST_OPTIONS: Record<string, string[]> = {
   priority: ['high', 'medium', 'low'],
 }
 
-export function PropertiesPanel({ 
-  properties, 
-  onChange, 
+export function PropertiesPanel({
+  properties,
+  onChange,
   editable = true,
   noteTags = [],
   wordCount = 0,
   wordGoal,
+  defaultWordGoal = 500,
+  streak = 0,
   createdAt,
   updatedAt
 }: PropertiesPanelProps) {

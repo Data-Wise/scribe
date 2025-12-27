@@ -11,7 +11,8 @@ import {
   Sparkles,
   Brain,
   Clock,
-  Folder
+  Folder,
+  Download
 } from 'lucide-react'
 
 // Format relative time (e.g., "2m ago", "1h ago", "Yesterday")
@@ -51,6 +52,8 @@ interface CommandPaletteProps {
   onObsidianSync: () => void
   onRunClaude: () => void
   onRunGemini: () => void
+  onExport?: () => void
+  hasSelectedNote?: boolean
 }
 
 export function CommandPalette({
@@ -63,20 +66,55 @@ export function CommandPalette({
   onToggleFocus,
   onObsidianSync,
   onRunClaude,
-  onRunGemini
+  onRunGemini,
+  onExport,
+  hasSelectedNote = false
 }: CommandPaletteProps) {
+
+  // Track filtered/visible items for number shortcuts
+  const [filteredItems, setFilteredItems] = React.useState<{ id: string; action: () => void }[]>([])
+
+  // Build item list for number shortcuts
+  React.useEffect(() => {
+    if (open) {
+      const items: { id: string; action: () => void }[] = [
+        { id: 'create', action: () => { onCreateNote(); setOpen(false) } },
+        { id: 'daily', action: () => { onDailyNote(); setOpen(false) } },
+        { id: 'sync', action: () => { onObsidianSync(); setOpen(false) } },
+        { id: 'claude', action: () => { onRunClaude(); setOpen(false) } },
+        { id: 'gemini', action: () => { onRunGemini(); setOpen(false) } },
+        { id: 'focus', action: () => { onToggleFocus(); setOpen(false) } },
+        ...notes.slice(0, 4).map(note => ({
+          id: note.id,
+          action: () => { onSelectNote(note.id); setOpen(false) }
+        }))
+      ]
+      setFilteredItems(items)
+    }
+  }, [open, notes, onCreateNote, onDailyNote, onObsidianSync, onRunClaude, onRunGemini, onToggleFocus, onSelectNote, setOpen])
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
+      // Toggle palette with Cmd+K
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         setOpen(!open)
+        return
+      }
+
+      // Number shortcuts (1-9) when palette is open
+      if (open && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const num = parseInt(e.key)
+        if (num >= 1 && num <= 9 && filteredItems[num - 1]) {
+          e.preventDefault()
+          filteredItems[num - 1].action()
+        }
       }
     }
 
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [open, setOpen])
+  }, [open, setOpen, filteredItems])
 
   return (
     <Command.Dialog 
@@ -102,52 +140,68 @@ export function CommandPalette({
           <Command.Empty className="command-palette-empty">No results found.</Command.Empty>
           
           <Command.Group heading="Main Actions" className="command-palette-group">
-            <Command.Item 
+            <Command.Item
               onSelect={() => { onCreateNote(); setOpen(false); }}
               className="command-palette-item"
             >
+              <kbd className="command-palette-number">1</kbd>
               <Plus className="mr-3 h-4 w-4 text-green-400" />
               <span>Create New Note</span>
               <kbd className="command-palette-shortcut">⌘N</kbd>
             </Command.Item>
-            <Command.Item 
+            <Command.Item
               onSelect={() => { onDailyNote(); setOpen(false); }}
               className="command-palette-item"
             >
+              <kbd className="command-palette-number">2</kbd>
               <Calendar className="mr-3 h-4 w-4 text-blue-400" />
               <span>Open Today's Daily Note</span>
               <kbd className="command-palette-shortcut">⌘D</kbd>
             </Command.Item>
-            <Command.Item 
+            <Command.Item
               onSelect={() => { onObsidianSync(); setOpen(false); }}
               className="command-palette-item"
             >
+              <kbd className="command-palette-number">3</kbd>
               <Share className="mr-3 h-4 w-4 text-purple-400" />
               <span>Sync to Obsidian Vault</span>
             </Command.Item>
-            <Command.Item 
+            <Command.Item
               onSelect={() => { onRunClaude(); setOpen(false); }}
               className="command-palette-item"
             >
+              <kbd className="command-palette-number">4</kbd>
               <Sparkles className="mr-3 h-4 w-4 text-orange-400" />
               <span>Ask Claude (Refactor Notes)</span>
             </Command.Item>
-            <Command.Item 
+            <Command.Item
               onSelect={() => { onRunGemini(); setOpen(false); }}
               className="command-palette-item"
             >
+              <kbd className="command-palette-number">5</kbd>
               <Brain className="mr-3 h-4 w-4 text-blue-400" />
               <span>Ask Gemini (Brainstorming)</span>
             </Command.Item>
-            <Command.Item 
+            <Command.Item
               onSelect={() => { onToggleFocus(); setOpen(false); }}
               className="command-palette-item"
             >
-
+              <kbd className="command-palette-number">6</kbd>
               <Zap className="mr-3 h-4 w-4 text-yellow-400" />
               <span>Toggle Focus Mode</span>
               <kbd className="command-palette-shortcut">⌘⇧F</kbd>
             </Command.Item>
+            {hasSelectedNote && onExport && (
+              <Command.Item
+                onSelect={() => { onExport(); setOpen(false); }}
+                className="command-palette-item"
+              >
+                <kbd className="command-palette-number">7</kbd>
+                <Download className="mr-3 h-4 w-4 text-emerald-400" />
+                <span>Export Note (PDF/Word/LaTeX)</span>
+                <kbd className="command-palette-shortcut">⌘⇧E</kbd>
+              </Command.Item>
+            )}
           </Command.Group>
 
           {notes.length > 0 && (
