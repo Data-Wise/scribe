@@ -4,7 +4,7 @@
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
 [![Version](https://img.shields.io/badge/version-0.4.0--alpha.1-blue)]()
-[![Progress](https://img.shields.io/badge/progress-87%25-green)]()
+[![Progress](https://img.shields.io/badge/progress-92%25-green)]()
 [![Tests](https://img.shields.io/badge/tests-483%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
@@ -164,13 +164,13 @@ scribe/
 | Phase | Sprint | Focus | Status |
 |-------|--------|-------|--------|
 | **1** | 8-10.5 | Editor + Hotkey + Themes | ✅ Complete |
-| **2** | 11 | Academic Features | ✅ Complete |
-| **2** | 12 | UI Polish & Micro-interactions | 🚀 80% |
-| **3** | 13 | Project System | ○ Next |
-| **3** | 14 | Templates + Daily | ○ Pending |
-| **4** | 15 | Search + Goals | ○ Pending |
+| **2** | 11-12 | Academic + UI Polish | ✅ Complete |
+| **3** | 14 | Knowledge Graph + Templates | ✅ Complete |
+| **4** | 15-16 | Tags Panel Redesign | ✅ Complete |
+| **5** | 17 | Tags Visual Improvements | ○ Next |
+| - | 13 | Project System | ○ Deferred |
 
-**Progress: 87% complete — Sprint 12 in progress**
+**Progress: 92% complete — Sprint 16 complete**
 
 ---
 

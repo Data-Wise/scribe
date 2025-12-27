@@ -1,13 +1,13 @@
 ---
 status: active
 priority: P1
-progress: 87
+progress: 92
 version: 0.4.0-alpha.1
-sprint: 12
-updated: 2024-12-26
+sprint: 16
+updated: 2025-12-26
 editor: hybrid-markdown++
-next_sprint: 13
-next_focus: Project System
+next_sprint: 17
+next_focus: Tags Visual Improvements
 tests: 483
 tags:
   - adhd-friendly
@@ -23,26 +23,26 @@ tags:
 
 ## Current Sprint
 
-**Sprint 12: UI Polish & Micro-interactions** 🚀 In Progress
+**Sprint 16: Tags Panel Core Features** ✅ Complete
 
-**Completed (2024-12-26):**
-- [x] Migrated MathJax to KaTeX (browser-native, 1.7MB smaller)
-- [x] Fixed tags panel theme variables (brightness issue)
-- [x] Fixed act() warnings in tests
-- [x] UI analysis & improvement proposal created
-- [x] Button micro-interactions (CSS feedback)
-- [x] Sidebar icon tooltips & active states
-- [x] Engaging empty state with action buttons
-- [x] Loading spinner & success flash animations
-- [x] Reduced-motion accessibility support
-- [x] Fixed daily note template (HTML → Markdown)
+**Completed (2025-12-26):**
+- [x] Orphan tag detection (scans notes for unregistered `#tags`)
+- [x] Unregistered Tags section with warning styling
+- [x] Register single/all tags buttons
+- [x] Right-click context menu (Rename/Delete)
+- [x] `tags` added to DEFAULT_NOTE_PROPERTIES (YAML key)
 
-**Remaining Sprint 12 Items:**
-- [ ] Writing progress visualization (word goals, streaks)
-- [ ] Focus mode enhancements (typewriter scrolling)
-- [ ] Recent notes quick access
-- [ ] Theme preview cards in settings
-- [ ] Panel slide transitions
+**Sprint 15: Tags Panel Quick Wins** ✅ Complete
+- [x] Search/filter bar with real-time filtering
+- [x] Recent tags section (tracks last 8, shows top 5)
+- [x] Compact mode toggle (reduces padding/fonts)
+
+**Sprint 14: Knowledge Graph & Templates** ✅ Complete
+- [x] Knowledge Graph visualization (D3 force-directed)
+- [x] Daily Notes templates (5 built-in + custom)
+- [x] Markdown export with frontmatter
+- [x] Tag hierarchy (path notation: `research/statistics`)
+- [x] Backlinks panel improvements
 
 **Sprint 11: Academic Features** ✅ Complete
 - [x] 10 built-in themes (5 dark, 5 light)
@@ -87,12 +87,14 @@ tags:
 | 1 | 10 | Hotkey + Commands | ✅ 100% |
 | 1 | 10.5 | Theme & Font System | ✅ 100% |
 | **2** | 11 | Academic Features | ✅ 100% |
-| 2 | 12 | UI Polish & Micro-interactions | 🚀 80% |
+| 2 | 12 | UI Polish & Micro-interactions | ✅ 100% |
 | **3** | 13 | Project System | ○ 0% |
-| 3 | 14 | Templates + Daily | ○ 0% |
-| **4** | 15 | Search + Goals | ○ 0% |
+| 3 | 14 | Knowledge Graph & Templates | ✅ 100% |
+| **4** | 15 | Tags Panel Quick Wins | ✅ 100% |
+| 4 | 16 | Tags Panel Core Features | ✅ 100% |
+| **5** | 17 | Tags Visual Improvements | ○ 0% |
 
-**Total: 87% complete (52h / 60h estimated)**
+**Total: 92% complete**
 
 ---
 
@@ -108,6 +110,10 @@ tags:
 | 10 | Hotkey + Commands + Tests | 300 |
 | 10.5 | Theme & Font System | 407 |
 | 11 | Academic Features | 487 |
+| 12 | UI Polish & Micro-interactions | 483 |
+| 14 | Knowledge Graph & Templates | 483 |
+| 15 | Tags Panel Quick Wins | 483 |
+| 16 | Tags Panel Core Features | 483 |
 
 ---
 
