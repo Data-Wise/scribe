@@ -71,6 +71,9 @@ nav:
     - Editor: guide/editor.md
     - Keyboard Shortcuts: guide/shortcuts.md
   - Reference:
+    - API Reference: API.md
+    - Architecture: ARCHITECTURE.md
+    - Components: COMPONENTS.md
     - Project Definition: reference/PROJECT-DEFINITION.md
     - Changelog: reference/CHANGELOG.md
     - Test Summary: reference/TESTS_SUMMARY.md
@@ -78,6 +81,11 @@ nav:
     - Architecture: development/architecture.md
     - Sprint Planning: development/sprints.md
     - Contributing: development/contributing.md
+  - Planning:
+    - Sprint 13 - Project System: planning/SPRINT-13-PROJECT-SYSTEM.md
+    - Sprint 12 - UI Polish: planning/SPRINT-12-UI-POLISH.md
+    - Sprint 11: planning/SPRINT-11-PLAN.md
+    - Sprint 10: planning/SPRINT-10-COMPLETE.md
 
 extra:
   social:
