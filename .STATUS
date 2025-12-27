@@ -1,13 +1,13 @@
 ---
 status: active
 priority: P1
-progress: 92
+progress: 94
 version: 0.4.0-alpha.1
-sprint: 16
+sprint: 17
 updated: 2025-12-26
 editor: hybrid-markdown++
-next_sprint: 17
-next_focus: Tags Visual Improvements
+next_sprint: 18
+next_focus: Release Prep (v1.0)
 tests: 483
 tags:
   - adhd-friendly

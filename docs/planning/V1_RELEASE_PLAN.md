@@ -34,7 +34,12 @@
 | Daily Notes | ✅ Done | Templates |
 | Backlinks | ✅ Done | Panel |
 | Tags Panel | ✅ Done | Search, compact, orphan detection |
-| **Project System** | ⏳ 0% | Sprint 13 (deferred) |
+
+### Deferred to v1.1
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| **Project System** | ⏳ 0% | Sprint 13 → v1.1 |
 
 ### Should Have (v1.0 Polish)
 
@@ -59,17 +64,7 @@
 
 ## Sprint Roadmap to v1.0
 
-### Sprint 13: Project System (Required)
-
-**Estimated:** 8 hours
-
-- [ ] Project Switcher UI
-- [ ] Project Settings (project.json)
-- [ ] Project Templates (5 types)
-- [ ] Local Folder Save
-- [ ] Project-aware wiki links
-
-### Sprint 17: Tags Visual + Polish
+### Sprint 17: Tags Visual + Polish (Current)
 
 **Estimated:** 4 hours
 
@@ -103,11 +98,12 @@
 
 ```
 0.4.0-alpha.1  ← Current
-0.5.0-alpha.1  ← Sprint 13 (Project System)
-0.6.0-beta.1   ← Sprint 17 (Polish)
+0.5.0-beta.1   ← Sprint 17 (Polish)
 1.0.0-rc.1     ← Sprint 18 (Release prep)
 1.0.0          ← Stable release
 ```
+
+> **Note:** Project System deferred to v1.1
 
 ---
 
@@ -145,21 +141,11 @@
 
 ---
 
-## Decision: Project System for v1.0?
+## Decision Log
 
-The PROJECT-DEFINITION.md lists Project System as Tier 4 (v1.0). However:
-
-**Option A: Include Project System**
-- Matches original v1.0 scope
-- Adds 8+ hours of work
-- Risk of scope creep
-
-**Option B: Defer Project System to v1.1**
-- Ship v1.0 sooner
-- Current features are already substantial
-- Project System can be v1.1 focus
-
-**Recommendation:** Evaluate if current feature set (editor + themes + academic + knowledge) is sufficient for a v1.0 without projects. If yes, ship v1.0 with current features and add Project System in v1.1.
+| Date | Decision |
+|------|----------|
+| 2025-12-26 | **Defer Project System to v1.1** - Ship v1.0 with current features |
 
 ---
 
@@ -167,12 +153,11 @@ The PROJECT-DEFINITION.md lists Project System as Tier 4 (v1.0). However:
 
 | Week | Sprint | Focus |
 |------|--------|-------|
-| 1 | 13 | Project System (if included) |
-| 2 | 17 | Tags Visual + Polish |
-| 3 | 18 | Release Prep + Testing |
-| 4 | - | v1.0.0 Release |
+| 1 | 17 | Tags Visual + Polish |
+| 2 | 18 | Release Prep + Testing |
+| 3 | - | v1.0.0 Release |
 
-**Estimated:** 3-4 weeks to v1.0
+**Estimated:** 2-3 weeks to v1.0
 
 ---
 
