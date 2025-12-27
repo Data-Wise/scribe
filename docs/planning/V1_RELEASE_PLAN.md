@@ -40,6 +40,7 @@
 | Feature | Status | Notes |
 |---------|--------|-------|
 | **Project System** | ⏳ 0% | Sprint 13 → v1.1 |
+| **Scribe CLI** | 💡 Idea | Brainstorm CLI companion tool |
 
 ### Should Have (v1.0 Polish)
 
@@ -172,3 +173,33 @@
 | `CHANGELOG.md` | v1.0.0 entry |
 | `README.md` | Remove alpha badges |
 | `homebrew-tap/Casks/scribe.rb` | Update SHA256 |
+
+---
+
+## v1.1 Brainstorm
+
+### Scribe CLI
+
+**Concept:** CLI companion for Scribe - quick capture, note access, AI from terminal
+
+**Potential Features:**
+- `scribe new` - Create note (opens in Scribe or stays in terminal)
+- `scribe daily` - Open/create today's daily note
+- `scribe search <query>` - Search notes
+- `scribe ai <prompt>` - Quick AI query with note context
+- `scribe sync` - Sync with Obsidian vault
+- `scribe export <note> --format pdf` - Export from CLI
+- `scribe capture "idea"` - Quick capture without opening app
+
+**Questions to Answer:**
+- Standalone CLI or integrated with Scribe app?
+- Rust CLI (consistent with Tauri) or Node CLI (faster dev)?
+- How does it interact with Scribe's SQLite database?
+- Integration with flow-cli workflow?
+
+### Project System
+
+- Project Switcher UI
+- Project Settings (project.json)
+- 5 project types: Research, Teaching, R-Package, R-Dev, Generic
+- Project-aware wiki links and tags
