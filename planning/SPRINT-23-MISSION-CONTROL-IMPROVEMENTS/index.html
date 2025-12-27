@@ -1872,6 +1872,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bugfix-dashboard-navigation-2025-12-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugfix: Dashboard Navigation (2025-12-27)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2394,13 +2405,25 @@
 <hr />
 <h2 id="success-criteria">Success Criteria</h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> "New Project" button visible in Mission Control</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Empty state guides user to create project</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Native macOS menu bar works</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All keyboard shortcuts accessible via menu</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Menu events trigger correct actions</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Feels native on macOS</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> "New Project" button visible in Mission Control</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Empty state guides user to create project</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Native macOS menu bar works</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> All keyboard shortcuts accessible via menu</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Menu events trigger correct actions</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Feels native on macOS</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Mission Control button in Ribbon (added in bugfix)</li>
 </ul>
+<hr />
+<h2 id="bugfix-dashboard-navigation-2025-12-27">Bugfix: Dashboard Navigation (2025-12-27)</h2>
+<p><strong>Issue:</strong> Users couldn't access Mission Control from editor view. Only options were:
+1. ⌘0 keyboard shortcut
+2. View → Mission Control menu
+3. Wait &gt;4 hours for session timeout</p>
+<p><strong>Fix:</strong> Added Home icon button to Ribbon (first button, before Files toggle)</p>
+<p><strong>Files changed:</strong>
+- <code>src/renderer/src/components/Ribbon.tsx</code> - Added <code>onMissionControl</code> prop and button
+- <code>src/renderer/src/App.tsx</code> - Pass <code>toggleViewMode</code> to Ribbon
+- <code>src/renderer/src/__tests__/Components.test.tsx</code> - Added test for new button</p>
 <hr />
 <h2 id="dependencies">Dependencies</h2>
 <ul>
