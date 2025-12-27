@@ -1,5 +1,6 @@
 export { MissionSidebar, cycleSidebarMode } from './MissionSidebar'
 export { IconBarMode } from './IconBarMode'
 export { CompactListMode } from './CompactListMode'
+export { CardViewMode } from './CardViewMode'
 export { StatusDot, getStatusColor } from './StatusDot'
 export { ResizeHandle } from './ResizeHandle'

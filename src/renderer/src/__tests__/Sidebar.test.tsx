@@ -67,9 +67,9 @@ describe('StatusDot Component', () => {
 
 describe('IconBarMode Component', () => {
   const mockProjects: Project[] = [
-    { id: '1', name: 'Project A', type: 'general', status: 'active', created_at: Date.now(), updated_at: Date.now() },
+    { id: '1', name: 'Project A', type: 'generic', status: 'active', created_at: Date.now(), updated_at: Date.now() },
     { id: '2', name: 'Project B', type: 'research', status: 'planning', created_at: Date.now(), updated_at: Date.now() - 1000 },
-    { id: '3', name: 'Project C', type: 'manuscript', status: 'archive', created_at: Date.now(), updated_at: Date.now() - 2000 },
+    { id: '3', name: 'Project C', type: 'teaching', status: 'archive', created_at: Date.now(), updated_at: Date.now() - 2000 },
   ]
 
   const mockHandlers = {
@@ -179,7 +179,7 @@ describe('IconBarMode Component', () => {
     const manyProjects: Project[] = Array.from({ length: 15 }, (_, i) => ({
       id: `${i}`,
       name: `Project ${i}`,
-      type: 'general' as const,
+      type: 'generic' as const,
       status: 'active' as const,
       created_at: Date.now(),
       updated_at: Date.now() - i * 1000,
@@ -205,12 +205,12 @@ describe('IconBarMode Component', () => {
 describe('CompactListMode Component', () => {
   const mockProjects: Project[] = [
     { id: '1', name: 'Research Paper', type: 'research', status: 'active', progress: 75, created_at: Date.now(), updated_at: Date.now() },
-    { id: '2', name: 'Blog Post', type: 'general', status: 'planning', created_at: Date.now(), updated_at: Date.now() - 1000 },
+    { id: '2', name: 'Blog Post', type: 'generic', status: 'planning', created_at: Date.now(), updated_at: Date.now() - 1000 },
   ]
 
   const mockNotes: Note[] = [
-    { id: 'n1', title: 'Note 1', content: 'Some content here', created_at: Date.now(), updated_at: Date.now(), properties: { project_id: { key: 'project_id', value: '1', type: 'text' } } },
-    { id: 'n2', title: 'Note 2', content: 'More content', created_at: Date.now(), updated_at: Date.now() - 500, properties: {} },
+    { id: 'n1', title: 'Note 1', content: 'Some content here', folder: '/', created_at: Date.now(), updated_at: Date.now(), deleted_at: null, properties: { project_id: { key: 'project_id', value: '1', type: 'text' } } },
+    { id: 'n2', title: 'Note 2', content: 'More content', folder: '/', created_at: Date.now(), updated_at: Date.now() - 500, deleted_at: null, properties: {} },
   ]
 
   const mockHandlers = {
@@ -303,7 +303,7 @@ describe('CompactListMode Component', () => {
     const manyProjects: Project[] = Array.from({ length: 6 }, (_, i) => ({
       id: `${i}`,
       name: `Project ${i}`,
-      type: 'general' as const,
+      type: 'generic' as const,
       status: 'active' as const,
       created_at: Date.now(),
       updated_at: Date.now(),
@@ -339,11 +339,11 @@ describe('CompactListMode Component', () => {
   it('filters projects by search query', () => {
     const manyProjects: Project[] = [
       { id: '1', name: 'Research Paper', type: 'research', created_at: Date.now(), updated_at: Date.now() },
-      { id: '2', name: 'Blog Post', type: 'general', created_at: Date.now(), updated_at: Date.now() },
+      { id: '2', name: 'Blog Post', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
       { id: '3', name: 'Another Research', type: 'research', created_at: Date.now(), updated_at: Date.now() },
-      { id: '4', name: 'Notes', type: 'general', created_at: Date.now(), updated_at: Date.now() },
-      { id: '5', name: 'Draft', type: 'general', created_at: Date.now(), updated_at: Date.now() },
-      { id: '6', name: 'Final', type: 'general', created_at: Date.now(), updated_at: Date.now() },
+      { id: '4', name: 'Notes', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
+      { id: '5', name: 'Draft', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
+      { id: '6', name: 'Final', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
     ]
 
     render(
@@ -368,7 +368,7 @@ describe('CompactListMode Component', () => {
     const manyProjects: Project[] = Array.from({ length: 6 }, (_, i) => ({
       id: `${i}`,
       name: `Project ${i}`,
-      type: 'general' as const,
+      type: 'generic' as const,
       created_at: Date.now(),
       updated_at: Date.now(),
     }))
@@ -469,7 +469,7 @@ describe('CompactListMode Component', () => {
   it('excludes archived projects from display', () => {
     const projectsWithArchived: Project[] = [
       ...mockProjects,
-      { id: '3', name: 'Archived Project', type: 'general', status: 'archive', created_at: Date.now(), updated_at: Date.now() },
+      { id: '3', name: 'Archived Project', type: 'generic', status: 'archive', created_at: Date.now(), updated_at: Date.now() },
     ]
 
     render(

@@ -113,16 +113,11 @@ function App() {
   const [, setLeftSidebarCollapsed] = useState(false)  // Keep setter for potential future use
   const [, setRightSidebarCollapsed] = useState(false)  // Keep setter for potential future use
   
-  // Sidebar width state with localStorage persistence
-  const [leftSidebarWidth, setLeftSidebarWidth] = useState(() => {
-    const saved = localStorage.getItem('leftSidebarWidth')
-    return saved ? parseInt(saved) : 256
-  })
+  // Right sidebar width state with localStorage persistence
   const [rightSidebarWidth, setRightSidebarWidth] = useState(() => {
     const saved = localStorage.getItem('rightSidebarWidth')
     return saved ? parseInt(saved) : 320
   })
-  const [isResizingLeft, setIsResizingLeft] = useState(false)
   const [isResizingRight, setIsResizingRight] = useState(false)
   
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
@@ -432,30 +427,6 @@ function App() {
     }
   }
 
-  // Search handlers
-  const handleSearch = async (query: string) => {
-    setSearchQuery(query)
-    setIsSearching(true)
-    setSearchLoading(true)
-
-    try {
-      const results = await api.searchNotes(query)
-      setSearchResults(results)
-    } catch (error) {
-      console.error('Search failed:', error)
-      setSearchResults([])
-    } finally {
-      setSearchLoading(false)
-    }
-  }
-
-  const handleClearSearch = () => {
-    setSearchQuery('')
-    setSearchResults([])
-    setIsSearching(false)
-    setSearchLoading(false)
-  }
-
   // Wiki link handlers - preserves preview mode when navigating
   const handleLinkClick = async (title: string) => {
     console.log('[App] handleLinkClick called with title:', title)
@@ -730,35 +701,27 @@ function App() {
     cycleSidebarMode,
   ])
 
-  // Sidebar resize handlers
+  // Right sidebar resize handler (left sidebar handled by MissionSidebar)
   useEffect(() => {
+    if (!isResizingRight) return
+
     const handleMouseMove = (e: MouseEvent) => {
-      if (isResizingLeft) {
-        const newWidth = Math.min(Math.max(e.clientX - 48, 200), 500)
-        setLeftSidebarWidth(newWidth)
-        localStorage.setItem('leftSidebarWidth', newWidth.toString())
-      }
-      if (isResizingRight) {
-        const newWidth = Math.min(Math.max(window.innerWidth - e.clientX, 250), 600)
-        setRightSidebarWidth(newWidth)
-        localStorage.setItem('rightSidebarWidth', newWidth.toString())
-      }
+      const newWidth = Math.min(Math.max(window.innerWidth - e.clientX, 250), 600)
+      setRightSidebarWidth(newWidth)
+      localStorage.setItem('rightSidebarWidth', newWidth.toString())
     }
 
     const handleMouseUp = () => {
-      setIsResizingLeft(false)
       setIsResizingRight(false)
     }
 
-    if (isResizingLeft || isResizingRight) {
-      window.addEventListener('mousemove', handleMouseMove)
-      window.addEventListener('mouseup', handleMouseUp)
-      return () => {
-        window.removeEventListener('mousemove', handleMouseMove)
-        window.removeEventListener('mouseup', handleMouseUp)
-      }
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isResizingLeft, isResizingRight])
+  }, [isResizingRight])
 
   const handleTagClick = async (tagId: string) => {
     const newSelectedIds = selectedTagIds.includes(tagId)
@@ -860,16 +823,7 @@ function App() {
     })
   }
 
-  // Determine which notes to display based on current filters
-  const getBaseNotes = () => {
-    if (isSearching) return searchResults
-    if (isFiltering) return filteredNotes
-    if (currentProjectId) return projectNotes
-    return notes
-  }
-  const displayNotes = getSortedNotes(getBaseNotes())
-
-  // leftMenuSections removed - notes list is now in DashboardShell
+  // Notes list is now handled in MissionSidebar
 
   // Build right sidebar menu sections based on active tab
   const getRightMenuSections = (): MenuSection[] => {

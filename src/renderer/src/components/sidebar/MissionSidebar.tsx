@@ -3,6 +3,7 @@ import { Project, Note } from '../../types'
 import { useAppViewStore, SIDEBAR_WIDTHS } from '../../store/useAppViewStore'
 import { IconBarMode } from './IconBarMode'
 import { CompactListMode } from './CompactListMode'
+import { CardViewMode } from './CardViewMode'
 import { ResizeHandle } from './ResizeHandle'
 
 interface MissionSidebarProps {
@@ -85,8 +86,7 @@ export function MissionSidebar({
       )}
 
       {sidebarMode === 'card' && (
-        // CardViewMode will be added in Sprint 25
-        <CompactListMode
+        <CardViewMode
           projects={projects}
           notes={notes}
           currentProjectId={currentProjectId}
