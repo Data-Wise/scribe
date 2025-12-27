@@ -73,6 +73,7 @@ pub fn run() {
       commands::get_notes_by_tag,
       commands::filter_notes_by_tags,
       commands::get_tag_by_name,
+      commands::get_tag,
       commands::update_note_tags,
       commands::update_note_links,
       commands::get_backlinks,

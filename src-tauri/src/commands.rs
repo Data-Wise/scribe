@@ -191,6 +191,15 @@ pub fn get_tag_by_name(
 }
 
 #[tauri::command]
+pub fn get_tag(
+    state: State<AppState>,
+    id: String,
+) -> Result<Option<Tag>, String> {
+    let db = state.db.lock().unwrap();
+    db.get_tag(&id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub fn update_note_tags(
     state: State<AppState>,
     note_id: String,
