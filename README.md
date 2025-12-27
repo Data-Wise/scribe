@@ -3,8 +3,8 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-0.5.0--beta.1-blue)]()
-[![Progress](https://img.shields.io/badge/progress-92%25-green)]()
+[![Version](https://img.shields.io/badge/version-1.1.0-blue)]()
+[![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
 [![Tests](https://img.shields.io/badge/tests-483%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
@@ -29,6 +29,7 @@ Scribe is a **distraction-free writing app** designed for academics and research
 | **Math** | KaTeX for LaTeX ($...$ and $$...$$) |
 | **Export** | PDF, Word, LaTeX, HTML via Pandoc |
 | **AI** | Claude + Gemini CLI (no API keys) |
+| **CLI** | Terminal access via `scribe` command |
 | **Command Palette** | ⌘K quick actions |
 | **Global Hotkey** | ⌘⇧N opens from anywhere |
 
@@ -86,6 +87,41 @@ npm run build
 | **⌘B** | Toggle file list |
 | **⌘⇧B** | Toggle tags panel |
 | **⌘Alt+0-9** | Switch themes |
+
+---
+
+## CLI Access
+
+Scribe includes a terminal CLI for quick note access without opening the app:
+
+```bash
+# Quick commands
+scribe daily              # Open today's daily note
+scribe capture "idea"     # Quick capture to inbox
+scribe search "query"     # Full-text search (FTS5)
+scribe list               # List recent notes
+
+# Aliases
+sd  # scribe daily
+sc  # scribe capture
+ss  # scribe search
+sl  # scribe list
+```
+
+### Installation
+
+```bash
+# Source the CLI (add to .zshrc)
+source ~/.config/zsh/functions/scribe.zsh
+
+# View man page
+man scribe
+
+# See all commands
+scribe help --all
+```
+
+> The CLI is part of [flow-cli](https://github.com/Data-Wise/flow-cli) and operates directly on the SQLite database.
 
 ---
 
@@ -188,10 +224,9 @@ scribe/
 | **2** | 11-12 | Academic + UI Polish | ✅ Complete |
 | **3** | 14 | Knowledge Graph + Templates | ✅ Complete |
 | **4** | 15-16 | Tags Panel Redesign | ✅ Complete |
-| **5** | 17 | Tags Visual Improvements | ○ Next |
-| - | 13 | Project System | ○ Deferred |
+| **5** | 17-20 | CLI + Polish | ✅ Complete |
 
-**Progress: 92% complete — Sprint 16 complete**
+**Progress: 100% complete — v1.1.0 Released**
 
 ---
 
