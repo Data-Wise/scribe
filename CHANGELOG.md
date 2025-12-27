@@ -43,10 +43,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `useAppViewStore.ts` - View mode state
 
 ### Fixed
+
 - Window dragging now works (added `core:window:allow-start-dragging` permission)
 - Changed `⌘H` to `⌘0` (⌘H is macOS "Hide Window")
 
 ### Technical
+
 - Tauri 2 `startDragging()` API for reliable window dragging
 - Zustand store for view mode with localStorage persistence
 - Session timestamp tracking for smart startup
@@ -89,10 +91,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Location: `~/.config/zsh/functions/scribe.zsh`
 
 ### Fixed
+
 - Cleaned 16 TypeScript unused variable warnings (TS6133)
 - Rust compilation warnings (unused imports)
 
 ### Technical
+
 - New components: SearchPanel.tsx, ProjectSwitcher.tsx, CreateProjectModal.tsx
 - New store: useProjectStore.ts
 - Database: migration_004 adds projects table and note.project_id

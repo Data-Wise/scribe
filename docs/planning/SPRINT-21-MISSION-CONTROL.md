@@ -117,6 +117,7 @@ const handleMouseDown = async (e: React.MouseEvent) => {
 ```
 
 Required permission in `capabilities/default.json`:
+
 ```json
 "permissions": ["core:default", "core:window:allow-start-dragging"]
 ```
