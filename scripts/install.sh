@@ -196,10 +196,31 @@ echo "╔═══════════════════════�
 echo "║                 Installation Complete!                    ║"
 echo "╚═══════════════════════════════════════════════════════════╝"
 echo ""
+
+# Install CLI if available
+CLI_INSTALLER=""
+if [ -f "./cli/install.sh" ]; then
+    CLI_INSTALLER="./cli/install.sh"
+elif [ -f "$(dirname "$0")/../cli/install.sh" ]; then
+    CLI_INSTALLER="$(dirname "$0")/../cli/install.sh"
+fi
+
+if [ -n "$CLI_INSTALLER" ]; then
+    echo ""
+    read -p "📝 Install Scribe CLI for terminal access? [Y/n]: " INSTALL_CLI
+    if [[ ! "$INSTALL_CLI" =~ ^[Nn]$ ]]; then
+        bash "$CLI_INSTALLER"
+    fi
+    echo ""
+fi
+
 echo "🚀 Quick Start:"
 echo "   • Global hotkey: ⌘⇧N (opens Scribe from anywhere)"
 echo "   • Command palette: ⌘K"
 echo "   • Focus mode: ⌘⇧F"
+if [ -n "$CLI_INSTALLER" ]; then
+echo "   • Terminal: scribe help"
+fi
 echo ""
 echo "📚 Documentation:"
 echo "   https://github.com/Data-Wise/scribe#readme"
