@@ -8,9 +8,95 @@
 
 | Version | Date | Focus |
 |---------|------|-------|
+| **v1.3.0** | TBD | Three-State Collapsible Sidebar |
 | **v1.2.0** | 2025-12-27 | Mission Control Dashboard |
 | **v1.1.0** | 2025-12-27 | Project System, Note Search, Scribe CLI |
 | **v1.0.0** | 2025-12-27 | Initial stable release |
+
+---
+
+## v1.3.0 - Three-State Collapsible Sidebar (Next)
+
+| Metric | Value |
+|--------|-------|
+| **Version** | 1.3.0 |
+| **Sprint** | 24-25 |
+| **Status** | 🔄 In Progress |
+| **Estimated** | 2 weeks |
+
+### Overview
+
+Replace the current Mission Control toggle view with a **persistent collapsible sidebar** that has three states:
+
+```
+Icon (48px) ←→ Compact (240px) ←→ Cards (320px+)
+```
+
+### Three States
+
+| State | Width | Purpose |
+|-------|-------|---------|
+| **Icon Bar** | 48px | Maximum writing space, project dots only |
+| **Compact List** | 240px | Project names, progress bars, recent pages |
+| **Card View** | 320px+ | Full project cards with metadata |
+
+### Core Features (Sprint 24) - 28 hours
+
+| Feature | Hours | Priority |
+|---------|-------|----------|
+| Icon bar mode + tooltips | 4h | P0 |
+| Compact list mode | 6h | P0 |
+| Project switching | 2h | P0 |
+| Collapse/expand toggle (⌘0) | 3h | P0 |
+| Active project indicator | 2h | P0 |
+| Status color coding | 3h | P0 |
+| Note count display | 1h | P0 |
+| Basic tooltips | 2h | P0 |
+| Resize handle | 3h | P0 |
+| State persistence | 2h | P0 |
+
+### Advanced Features (Sprint 25) - 34 hours
+
+| Feature | Hours | Priority |
+|---------|-------|----------|
+| Card view mode | 8h | P1 |
+| Progress bars | 4h | P1 |
+| Recent pages widget | 6h | P1 |
+| Next action preview | 3h | P1 |
+| Word count display | 1h | P1 |
+| Last modified time | 2h | P1 |
+| View mode toggle | 4h | P1 |
+| Keyboard navigation (⌘1-9, ⌘↑/↓) | 6h | P1 |
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| ⌘0 | Cycle sidebar: Icon → Compact → Card |
+| ⌘1-9 | Jump to project 1-9 |
+| ⌘↑/↓ | Navigate projects |
+| ⌘[ / ⌘] | Previous/next sidebar mode |
+
+### Files to Create
+
+| File | Purpose |
+|------|---------|
+| `MissionSidebar.tsx` | Main sidebar container |
+| `IconBarMode.tsx` | 48px icon view |
+| `CompactListMode.tsx` | 240px list view |
+| `CardViewMode.tsx` | 320px+ card grid |
+| `ResizeHandle.tsx` | Drag to resize |
+
+### Deprecations
+
+| Component | Status |
+|-----------|--------|
+| `MissionControl.tsx` | Deprecate (full-page view no longer needed) |
+| Toggle view logic in `useAppViewStore` | Remove |
+
+### Documentation
+
+- See: `docs/planning/MISSION-CONTROL-SIDEBAR-PLAN.md` for full specs
 
 ---
 

@@ -95,7 +95,7 @@ export function MissionControl({
             Mission Control
           </h1>
           <p className="text-sm text-nexus-text-muted mt-1">
-            {projects.length} {projects.length === 1 ? 'project' : 'projects'} • {totalNotes} {totalNotes === 1 ? 'note' : 'notes'} • {totalWords.toLocaleString()} words
+            {projects.length} {projects.length === 1 ? 'project' : 'projects'} • {totalNotes} {totalNotes === 1 ? 'page' : 'pages'} • {totalWords.toLocaleString()} words
           </p>
         </div>
         <button
@@ -151,7 +151,7 @@ export function MissionControl({
                 No projects yet
               </h3>
               <p className="text-sm text-nexus-text-muted mb-6 max-w-xs mx-auto">
-                Projects help you organize notes by topic, course, or research area
+                Projects help you organize pages by topic, course, or research area
               </p>
               <button
                 onClick={onCreateProject}

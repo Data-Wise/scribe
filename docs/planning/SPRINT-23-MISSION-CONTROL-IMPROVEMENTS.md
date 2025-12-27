@@ -300,12 +300,29 @@ Help
 
 ## Success Criteria
 
-- [ ] "New Project" button visible in Mission Control
-- [ ] Empty state guides user to create project
-- [ ] Native macOS menu bar works
-- [ ] All keyboard shortcuts accessible via menu
-- [ ] Menu events trigger correct actions
-- [ ] Feels native on macOS
+- [x] "New Project" button visible in Mission Control
+- [x] Empty state guides user to create project
+- [x] Native macOS menu bar works
+- [x] All keyboard shortcuts accessible via menu
+- [x] Menu events trigger correct actions
+- [x] Feels native on macOS
+- [x] Mission Control button in Ribbon (added in bugfix)
+
+---
+
+## Bugfix: Dashboard Navigation (2025-12-27)
+
+**Issue:** Users couldn't access Mission Control from editor view. Only options were:
+1. ⌘0 keyboard shortcut
+2. View → Mission Control menu
+3. Wait >4 hours for session timeout
+
+**Fix:** Added Home icon button to Ribbon (first button, before Files toggle)
+
+**Files changed:**
+- `src/renderer/src/components/Ribbon.tsx` - Added `onMissionControl` prop and button
+- `src/renderer/src/App.tsx` - Pass `toggleViewMode` to Ribbon
+- `src/renderer/src/__tests__/Components.test.tsx` - Added test for new button
 
 ---
 

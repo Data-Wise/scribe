@@ -57,7 +57,7 @@ export function RecentNotes({
     <section className="mb-8">
       <h2 className="text-sm font-medium text-nexus-text-muted uppercase tracking-wide mb-3 flex items-center gap-2">
         <Clock className="w-4 h-4" />
-        Recent Notes
+        Recent Pages
       </h2>
       <div className="space-y-2">
         {recentNotes.map((note) => {

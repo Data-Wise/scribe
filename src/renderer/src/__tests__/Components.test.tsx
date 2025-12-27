@@ -11,6 +11,7 @@ describe('Ribbon Component', () => {
     onToggleRight: vi.fn(),
     onSearch: vi.fn(),
     onSettings: vi.fn(),
+    onMissionControl: vi.fn(),
   }
 
   beforeEach(() => {
@@ -83,6 +84,19 @@ describe('Ribbon Component', () => {
 
     fireEvent.click(screen.getByLabelText(/Settings/))
     expect(mockHandlers.onSettings).toHaveBeenCalled()
+  })
+
+  it('calls onMissionControl when Mission Control button clicked', () => {
+    render(
+      <Ribbon
+        {...mockHandlers}
+        leftCollapsed={false}
+        rightCollapsed={false}
+      />
+    )
+
+    fireEvent.click(screen.getByLabelText(/Mission Control/))
+    expect(mockHandlers.onMissionControl).toHaveBeenCalled()
   })
 
   it('shows active state when sidebar is expanded', () => {

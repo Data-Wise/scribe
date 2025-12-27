@@ -7,8 +7,8 @@ sprint: 23
 updated: 2025-12-27
 editor: hybrid-markdown++
 next_sprint: 24
-next_focus: Quick Filters and Polish
-tests: 483
+next_focus: Three-State Collapsible Sidebar (Core)
+tests: 491
 tags:
   - adhd-friendly
   - distraction-free
@@ -35,6 +35,7 @@ tags:
 - [x] RecentNotes component (5 most recent)
 - [x] Project stats (note count, word count)
 - [x] Total stats in Mission Control header
+- [x] Mission Control button in Ribbon (navigation fix)
 
 ### Sprint 22: Editor Modes & Custom CSS ✅
 - [x] Three-mode editor toggle (Source / Live Preview / Reading)
@@ -149,8 +150,10 @@ tags:
 | v1.1 | 20 | Scribe CLI | ✅ 100% |
 | **v1.3** | 22 | Editor Modes + Custom CSS | ✅ 100% |
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
+| **v1.5** | 24 | Three-State Sidebar (Core) | 🔄 0% |
+| v1.5 | 25 | Three-State Sidebar (Advanced) | ⏳ 0% |
 
-**Total: 100% complete (v1.4)**
+**Total: v1.4 complete, v1.5 in progress**
 
 ---
 
@@ -286,3 +289,5 @@ tags:
 - [TESTS_SUMMARY.md](TESTS_SUMMARY.md) - Test coverage
 - [CLAUDE.md](CLAUDE.md) - AI guidance
 - [docs/planning/](docs/planning/) - Sprint plans
+## last_active: 2025-12-27 14:22
+## streak: 0

@@ -19,7 +19,7 @@ export function QuickActions({ onDailyNote, onNewNote, onQuickCapture, onNewProj
           <Calendar className="w-5 h-5" />
         </span>
         <div className="text-left">
-          <div className="font-medium text-nexus-text-primary">Daily Note</div>
+          <div className="font-medium text-nexus-text-primary">Today</div>
           <div className="text-xs text-nexus-text-muted">⌘D</div>
         </div>
       </button>
@@ -33,7 +33,7 @@ export function QuickActions({ onDailyNote, onNewNote, onQuickCapture, onNewProj
           <FilePlus className="w-5 h-5" />
         </span>
         <div className="text-left">
-          <div className="font-medium text-nexus-text-primary">New Note</div>
+          <div className="font-medium text-nexus-text-primary">New Page</div>
           <div className="text-xs text-nexus-text-muted">⌘N</div>
         </div>
       </button>

@@ -166,7 +166,7 @@ export function SearchPanel({
   if (!isOpen) return null
 
   const scopeLabel = scope === 'all'
-    ? 'All Notes'
+    ? 'All Pages'
     : currentProject
       ? currentProject.name
       : 'Project'
@@ -177,7 +177,7 @@ export function SearchPanel({
         className="search-panel-content glass-effect"
         onClick={e => e.stopPropagation()}
         role="dialog"
-        aria-label="Search notes"
+        aria-label="Search pages"
       >
         {/* Search Header */}
         <div className="search-panel-header">
@@ -188,7 +188,7 @@ export function SearchPanel({
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Search notes..."
+              placeholder="Search pages..."
               className="search-panel-input"
               aria-label="Search query"
             />
@@ -226,7 +226,7 @@ export function SearchPanel({
                   role="option"
                   aria-selected={scope === 'all'}
                 >
-                  All Notes
+                  All Pages
                 </button>
                 {currentProject && (
                   <button
@@ -254,13 +254,13 @@ export function SearchPanel({
 
           {!isLoading && query.trim() && results.length === 0 && (
             <div className="search-panel-empty">
-              No notes found for "{query}"
+              No pages found for "{query}"
             </div>
           )}
 
           {!query.trim() && (
             <div className="search-panel-hint">
-              Start typing to search across your notes
+              Start typing to search across your pages
             </div>
           )}
 

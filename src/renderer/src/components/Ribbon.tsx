@@ -3,6 +3,7 @@ interface RibbonProps {
   onToggleRight: () => void
   onSearch: () => void
   onSettings: () => void
+  onMissionControl: () => void
   leftCollapsed: boolean
   rightCollapsed: boolean
 }
@@ -12,6 +13,7 @@ export function Ribbon({
   onToggleRight,
   onSearch,
   onSettings,
+  onMissionControl,
   leftCollapsed,
   rightCollapsed
 }: RibbonProps) {
@@ -19,6 +21,22 @@ export function Ribbon({
 
   return (
     <div className="ribbon">
+      {/* Mission Control (Home/Dashboard) */}
+      <button
+        onClick={onMissionControl}
+        className="ribbon-button tooltip-trigger"
+        data-tooltip="Mission Control"
+        data-shortcut="⌘0"
+        aria-label="Mission Control"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      </button>
+
+      {/* Divider */}
+      <div className="w-px h-5 bg-white/10 my-auto" />
+
       {/* Files toggle */}
       <button
         onClick={onToggleLeft}

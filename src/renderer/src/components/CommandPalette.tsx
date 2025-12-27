@@ -150,7 +150,7 @@ export function CommandPalette({
             >
               <kbd className="command-palette-number">1</kbd>
               <Plus className="mr-3 h-4 w-4 text-green-400" />
-              <span>Create New Note</span>
+              <span>Create New Page</span>
               <kbd className="command-palette-shortcut">⌘N</kbd>
             </Command.Item>
             <Command.Item
@@ -159,7 +159,7 @@ export function CommandPalette({
             >
               <kbd className="command-palette-number">2</kbd>
               <Calendar className="mr-3 h-4 w-4 text-blue-400" />
-              <span>Open Today's Daily Note</span>
+              <span>Open Today's Journal</span>
               <kbd className="command-palette-shortcut">⌘D</kbd>
             </Command.Item>
             <Command.Item
@@ -213,14 +213,14 @@ export function CommandPalette({
               >
                 <kbd className="command-palette-number">8</kbd>
                 <Download className="mr-3 h-4 w-4 text-emerald-400" />
-                <span>Export Note (PDF/Word/LaTeX)</span>
+                <span>Export Page (PDF/Word/LaTeX)</span>
                 <kbd className="command-palette-shortcut">⌘⇧E</kbd>
               </Command.Item>
             )}
           </Command.Group>
 
           {notes.length > 0 && (
-            <Command.Group heading="Recent Notes" className="command-palette-group">
+            <Command.Group heading="Recent Pages" className="command-palette-group">
               {notes
                 .sort((a, b) => b.updated_at - a.updated_at)
                 .slice(0, 10)
@@ -232,7 +232,7 @@ export function CommandPalette({
                 >
                   <FileText className="mr-3 h-4 w-4 text-slate-400 flex-shrink-0" />
                   <div className="flex-1 min-w-0 flex items-center gap-2">
-                    <span className="truncate">{note.title || 'Untitled Note'}</span>
+                    <span className="truncate">{note.title || 'Untitled'}</span>
                     {note.folder && note.folder !== 'inbox' && (
                       <span className="flex items-center gap-1 text-[10px] text-nexus-text-muted bg-white/5 px-1.5 py-0.5 rounded">
                         <Folder className="w-2.5 h-2.5" />

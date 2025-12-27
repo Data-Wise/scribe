@@ -452,7 +452,7 @@ export function SettingsModal({
                   <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Startup</h4>
                   <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
                     <div>
-                      <div className="text-sm font-medium text-nexus-text-primary">Open last note on startup</div>
+                      <div className="text-sm font-medium text-nexus-text-primary">Open last page on startup</div>
                       <div className="text-xs text-nexus-text-muted">Return to exactly where you left off.</div>
                     </div>
                     <div className="w-10 h-5 bg-nexus-accent rounded-full relative cursor-pointer">
@@ -624,7 +624,7 @@ export function SettingsModal({
                 <section>
                   <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
                     <Calendar className="w-3 h-3 inline mr-2" />
-                    Daily Notes Template
+                    Journal Template
                   </h4>
                   <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
                     <div>
@@ -639,7 +639,7 @@ export function SettingsModal({
                         ))}
                       </select>
                       <p className="text-[10px] text-nexus-text-muted mt-1">
-                        This template will be used when creating new daily notes (⌘D)
+                        This template will be used when creating new journal entries (⌘D)
                       </p>
                     </div>
 
@@ -1542,7 +1542,7 @@ export function SettingsModal({
                   <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
                     <div>
                       <div className="text-sm font-medium text-nexus-text-primary">Use [[WikiLinks]]</div>
-                      <div className="text-xs text-nexus-text-muted">Standard for peer-to-peer note linking.</div>
+                      <div className="text-xs text-nexus-text-muted">Standard for peer-to-peer page linking.</div>
                     </div>
                     <div className="w-10 h-5 bg-nexus-accent rounded-full relative cursor-pointer">
                       <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full" />

@@ -55,7 +55,7 @@ export function EmptyState({ onCreateNote, onOpenDaily, onOpenCommandPalette }: 
         Ready to write
       </h2>
       <p className="text-nexus-text-muted mb-8 text-center max-w-md">
-        Capture your thoughts, one note at a time
+        Capture your thoughts, one page at a time
       </p>
 
       {/* Action buttons */}
@@ -67,7 +67,7 @@ export function EmptyState({ onCreateNote, onOpenDaily, onOpenCommandPalette }: 
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          New Note
+          New Page
           <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-white/20 rounded">⌘N</kbd>
         </button>
 
@@ -78,7 +78,7 @@ export function EmptyState({ onCreateNote, onOpenDaily, onOpenCommandPalette }: 
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          Daily Note
+          Today
           <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-white/10 rounded">⌘D</kbd>
         </button>
       </div>
