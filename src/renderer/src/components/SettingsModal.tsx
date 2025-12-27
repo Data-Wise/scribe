@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { 
-  X, 
-  Settings as SettingsIcon, 
-  Type, 
-  FileCode, 
-  Share2, 
-  User, 
+import {
+  X,
+  Settings as SettingsIcon,
+  Type,
+  FileCode,
+  Share2,
+  User,
   Sparkles,
   Search,
   BookOpen,
@@ -26,8 +26,16 @@ import {
   AlertCircle,
   RefreshCw,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Calendar
 } from 'lucide-react'
+import {
+  loadTemplates,
+  getSelectedTemplateId,
+  setSelectedTemplateId,
+  processTemplate,
+  DailyNoteTemplate,
+} from '../lib/dailyNoteTemplates'
 import { 
   Theme, 
   AutoThemeSettings,
@@ -123,7 +131,22 @@ export function SettingsModal({
   const [bibliographyPath, setBibliographyPath] = useState('')
   const [isSavingBib, setIsSavingBib] = useState(false)
   const [bibSaveResult, setBibSaveResult] = useState<{ success: boolean; message: string } | null>(null)
-  
+
+  // Daily note templates state
+  const [templates, setTemplates] = useState<DailyNoteTemplate[]>(() => loadTemplates())
+  const [selectedTemplateId, setSelectedTemplate] = useState<string>(() => getSelectedTemplateId())
+  const [showTemplatePreview, setShowTemplatePreview] = useState(false)
+
+  // Handle template selection
+  const handleTemplateChange = (id: string) => {
+    setSelectedTemplate(id)
+    setSelectedTemplateId(id)
+  }
+
+  // Get currently selected template for preview
+  const selectedTemplate = templates.find(t => t.id === selectedTemplateId) || templates[0]
+  const templatePreview = processTemplate(selectedTemplate?.content || '', new Date())
+
   // Load installed fonts on mount
   useEffect(() => {
     if (isOpen && activeTab === 'editor') {
@@ -572,7 +595,59 @@ export function SettingsModal({
                     </div>
                   </div>
                 </section>
-                
+
+                {/* Daily Notes Templates */}
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    <Calendar className="w-3 h-3 inline mr-2" />
+                    Daily Notes Template
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
+                    <div>
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Template</label>
+                      <select
+                        value={selectedTemplateId}
+                        onChange={(e) => handleTemplateChange(e.target.value)}
+                        className="w-full bg-nexus-bg-primary border border-white/10 rounded-md p-2 text-sm text-nexus-text-primary"
+                      >
+                        {templates.map((t) => (
+                          <option key={t.id} value={t.id}>{t.name}</option>
+                        ))}
+                      </select>
+                      <p className="text-[10px] text-nexus-text-muted mt-1">
+                        This template will be used when creating new daily notes (⌘D)
+                      </p>
+                    </div>
+
+                    <div>
+                      <button
+                        onClick={() => setShowTemplatePreview(!showTemplatePreview)}
+                        className="text-xs text-nexus-accent hover:text-nexus-accent-hover flex items-center gap-1"
+                      >
+                        {showTemplatePreview ? 'Hide Preview' : 'Show Preview'}
+                        {showTemplatePreview ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      </button>
+
+                      {showTemplatePreview && (
+                        <div className="mt-3 p-3 bg-nexus-bg-primary rounded-md border border-white/5 max-h-48 overflow-y-auto">
+                          <pre className="text-xs text-nexus-text-muted whitespace-pre-wrap font-mono">
+                            {templatePreview}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="text-[10px] text-nexus-text-muted pt-2 border-t border-white/5">
+                      <div className="font-medium mb-1">Available variables:</div>
+                      <code className="text-nexus-accent">{'{{date}}'}</code> Full date,{' '}
+                      <code className="text-nexus-accent">{'{{date_short}}'}</code> YYYY-MM-DD,{' '}
+                      <code className="text-nexus-accent">{'{{day}}'}</code> Weekday,{' '}
+                      <code className="text-nexus-accent">{'{{time}}'}</code> HH:MM,{' '}
+                      <code className="text-nexus-accent">{'{{week}}'}</code> Week #
+                    </div>
+                  </div>
+                </section>
+
                 {/* Recommended ADHD-Friendly Fonts */}
                 <section>
                   <div className="flex items-center justify-between mb-4">

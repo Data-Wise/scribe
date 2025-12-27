@@ -12,7 +12,8 @@ import {
   Brain,
   Clock,
   Folder,
-  Download
+  Download,
+  Network
 } from 'lucide-react'
 
 // Format relative time (e.g., "2m ago", "1h ago", "Yesterday")
@@ -53,6 +54,7 @@ interface CommandPaletteProps {
   onRunClaude: () => void
   onRunGemini: () => void
   onExport?: () => void
+  onOpenGraph?: () => void
   hasSelectedNote?: boolean
 }
 
@@ -68,6 +70,7 @@ export function CommandPalette({
   onRunClaude,
   onRunGemini,
   onExport,
+  onOpenGraph,
   hasSelectedNote = false
 }: CommandPaletteProps) {
 
@@ -84,14 +87,15 @@ export function CommandPalette({
         { id: 'claude', action: () => { onRunClaude(); setOpen(false) } },
         { id: 'gemini', action: () => { onRunGemini(); setOpen(false) } },
         { id: 'focus', action: () => { onToggleFocus(); setOpen(false) } },
-        ...notes.slice(0, 4).map(note => ({
+        ...(onOpenGraph ? [{ id: 'graph', action: () => { onOpenGraph(); setOpen(false) } }] : []),
+        ...notes.slice(0, 3).map(note => ({
           id: note.id,
           action: () => { onSelectNote(note.id); setOpen(false) }
         }))
       ]
       setFilteredItems(items)
     }
-  }, [open, notes, onCreateNote, onDailyNote, onObsidianSync, onRunClaude, onRunGemini, onToggleFocus, onSelectNote, setOpen])
+  }, [open, notes, onCreateNote, onDailyNote, onObsidianSync, onRunClaude, onRunGemini, onToggleFocus, onOpenGraph, onSelectNote, setOpen])
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -191,12 +195,23 @@ export function CommandPalette({
               <span>Toggle Focus Mode</span>
               <kbd className="command-palette-shortcut">⌘⇧F</kbd>
             </Command.Item>
+            {onOpenGraph && (
+              <Command.Item
+                onSelect={() => { onOpenGraph(); setOpen(false); }}
+                className="command-palette-item"
+              >
+                <kbd className="command-palette-number">7</kbd>
+                <Network className="mr-3 h-4 w-4 text-cyan-400" />
+                <span>Open Knowledge Graph</span>
+                <kbd className="command-palette-shortcut">⌘⇧G</kbd>
+              </Command.Item>
+            )}
             {hasSelectedNote && onExport && (
               <Command.Item
                 onSelect={() => { onExport(); setOpen(false); }}
                 className="command-palette-item"
               >
-                <kbd className="command-palette-number">7</kbd>
+                <kbd className="command-palette-number">8</kbd>
                 <Download className="mr-3 h-4 w-4 text-emerald-400" />
                 <span>Export Note (PDF/Word/LaTeX)</span>
                 <kbd className="command-palette-shortcut">⌘⇧E</kbd>

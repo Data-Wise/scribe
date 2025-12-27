@@ -6,10 +6,57 @@
 
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { X, FileText, File, Code } from 'lucide-react'
+import { X, FileText, File, Code, FileDown } from 'lucide-react'
 import { api } from '../lib/api'
+import { Note, Property } from '../types'
 
-export type ExportFormat = 'pdf' | 'docx' | 'latex' | 'html'
+export type ExportFormat = 'pdf' | 'docx' | 'latex' | 'html' | 'md'
+
+/**
+ * Generate YAML frontmatter from note properties
+ */
+function generateFrontmatter(
+  title: string,
+  properties?: Record<string, Property>,
+  tags?: string[]
+): string {
+  const lines: string[] = ['---']
+
+  // Title
+  lines.push(`title: "${title.replace(/"/g, '\\"')}"`)
+
+  // Add properties if available
+  if (properties) {
+    for (const [key, prop] of Object.entries(properties)) {
+      if (prop.value === undefined || prop.value === null || prop.value === '') continue
+
+      if (Array.isArray(prop.value)) {
+        if (prop.value.length > 0) {
+          lines.push(`${key}:`)
+          prop.value.forEach(v => lines.push(`  - "${v}"`))
+        }
+      } else if (typeof prop.value === 'boolean') {
+        lines.push(`${key}: ${prop.value}`)
+      } else if (typeof prop.value === 'number') {
+        lines.push(`${key}: ${prop.value}`)
+      } else {
+        lines.push(`${key}: "${String(prop.value).replace(/"/g, '\\"')}"`)
+      }
+    }
+  }
+
+  // Add tags if available
+  if (tags && tags.length > 0) {
+    lines.push('tags:')
+    tags.forEach(tag => lines.push(`  - "${tag}"`))
+  }
+
+  // Add export date
+  lines.push(`date: "${new Date().toISOString().split('T')[0]}"`)
+
+  lines.push('---')
+  return lines.join('\n')
+}
 
 interface ExportDialogProps {
   isOpen: boolean
@@ -17,6 +64,8 @@ interface ExportDialogProps {
   noteId: string
   noteTitle: string
   noteContent: string
+  noteProperties?: Record<string, Property>
+  noteTags?: string[]
 }
 
 export function ExportDialog({
@@ -25,11 +74,14 @@ export function ExportDialog({
   noteId,
   noteTitle,
   noteContent,
+  noteProperties,
+  noteTags,
 }: ExportDialogProps) {
   const [format, setFormat] = useState<ExportFormat>('pdf')
   const [bibliographyPath, setBibliographyPath] = useState('')
   const [citationStyle, setCitationStyle] = useState('apa')
   const [includeMetadata, setIncludeMetadata] = useState(true)
+  const [includeFrontmatter, setIncludeFrontmatter] = useState(true)
   const [processEquations, setProcessEquations] = useState(true)
   const [exporting, setExporting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -41,18 +93,42 @@ export function ExportDialog({
     setSuccess(null)
 
     try {
-      const result = await api.exportDocument({
-        noteId,
-        content: noteContent,
-        title: noteTitle,
-        format,
-        bibliography: bibliographyPath || undefined,
-        csl: citationStyle,
-        includeMetadata,
-        processEquations,
-      })
+      // Handle markdown export with frontmatter directly
+      if (format === 'md') {
+        let content = noteContent
 
-      setSuccess(`Exported to: ${result.path}`)
+        // Add frontmatter if enabled
+        if (includeFrontmatter) {
+          const frontmatter = generateFrontmatter(noteTitle, noteProperties, noteTags)
+          content = `${frontmatter}\n\n${content}`
+        }
+
+        // Export via API (will save to file)
+        const result = await api.exportDocument({
+          noteId,
+          content,
+          title: noteTitle,
+          format: 'md',
+          includeMetadata: false, // Already handled via frontmatter
+          processEquations: false, // Keep raw for markdown
+        })
+
+        setSuccess(`Exported to: ${result.path}`)
+      } else {
+        // Standard Pandoc export for other formats
+        const result = await api.exportDocument({
+          noteId,
+          content: noteContent,
+          title: noteTitle,
+          format,
+          bibliography: bibliographyPath || undefined,
+          csl: citationStyle,
+          includeMetadata,
+          processEquations,
+        })
+
+        setSuccess(`Exported to: ${result.path}`)
+      }
 
       // Close after short delay
       setTimeout(() => {
@@ -70,6 +146,7 @@ export function ExportDialog({
   const formatOptions: { value: ExportFormat; label: string; icon: React.ReactNode }[] = [
     { value: 'pdf', label: 'PDF', icon: <FileText className="w-4 h-4" /> },
     { value: 'docx', label: 'Word', icon: <File className="w-4 h-4" /> },
+    { value: 'md', label: 'Markdown', icon: <FileDown className="w-4 h-4" /> },
     { value: 'latex', label: 'LaTeX', icon: <Code className="w-4 h-4" /> },
     { value: 'html', label: 'HTML', icon: <Code className="w-4 h-4" /> },
   ]
@@ -179,26 +256,43 @@ export function ExportDialog({
               </select>
             </div>
 
-            {/* Options */}
+            {/* Options - Show different options based on format */}
             <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={includeMetadata}
-                  onChange={(e) => setIncludeMetadata(e.target.checked)}
-                  className="rounded"
-                />
-                <span style={{ color: 'var(--nexus-text-primary)' }}>Include metadata</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={processEquations}
-                  onChange={(e) => setProcessEquations(e.target.checked)}
-                  className="rounded"
-                />
-                <span style={{ color: 'var(--nexus-text-primary)' }}>Process equations</span>
-              </label>
+              {format === 'md' ? (
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={includeFrontmatter}
+                    onChange={(e) => setIncludeFrontmatter(e.target.checked)}
+                    className="rounded"
+                  />
+                  <span style={{ color: 'var(--nexus-text-primary)' }}>Include YAML frontmatter</span>
+                  <span className="text-xs ml-1" style={{ color: 'var(--nexus-text-muted)' }}>
+                    (title, properties, tags)
+                  </span>
+                </label>
+              ) : (
+                <>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={includeMetadata}
+                      onChange={(e) => setIncludeMetadata(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span style={{ color: 'var(--nexus-text-primary)' }}>Include metadata</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={processEquations}
+                      onChange={(e) => setProcessEquations(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span style={{ color: 'var(--nexus-text-primary)' }}>Process equations</span>
+                  </label>
+                </>
+              )}
             </div>
 
             {/* Error/Success Messages */}

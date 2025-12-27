@@ -10,6 +10,7 @@ import { Ribbon } from './components/Ribbon'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { ExportDialog } from './components/ExportDialog'
+import { GraphView } from './components/GraphView'
 import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
@@ -44,6 +45,10 @@ import {
   getStreakInfo,
   UserPreferences,
 } from './lib/preferences'
+import {
+  getDailyNoteContent,
+  isContentEmpty,
+} from './lib/dailyNoteTemplates'
 
 function App() {
   const { notes, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
@@ -126,6 +131,7 @@ function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false)
+  const [isGraphViewOpen, setIsGraphViewOpen] = useState(false)
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([])
   const [isFiltering, setIsFiltering] = useState(false)
   
@@ -401,9 +407,18 @@ function App() {
   }
 
   const handleDailyNote = async () => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = new Date()
+    const dateStr = today.toISOString().split('T')[0]
     try {
-      const dailyNote = await api.getOrCreateDailyNote(today)
+      const dailyNote = await api.getOrCreateDailyNote(dateStr)
+
+      // If note is empty (newly created), apply template
+      if (isContentEmpty(dailyNote.content)) {
+        const templateContent = getDailyNoteContent(today)
+        await api.updateNote(dailyNote.id, { content: templateContent })
+        dailyNote.content = templateContent
+      }
+
       selectNote(dailyNote.id)
       loadNotes(currentFolder)
     } catch (error) {
@@ -475,6 +490,12 @@ function App() {
         if (selectedNote) {
           setIsExportDialogOpen(true)
         }
+      }
+
+      // Graph view shortcut (Cmd+Shift+G)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'G') {
+        e.preventDefault()
+        setIsGraphViewOpen(true)
       }
 
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'b') {
@@ -726,6 +747,7 @@ function App() {
         onRunClaude={handleRunClaude}
         onRunGemini={handleRunGemini}
         onExport={() => setIsExportDialogOpen(true)}
+        onOpenGraph={() => setIsGraphViewOpen(true)}
         hasSelectedNote={!!selectedNote}
       />
 
@@ -852,14 +874,15 @@ function App() {
                 updatedAt={selectedNote.updated_at}
               />
             ) : rightActiveTab === 'backlinks' ? (
-              <BacklinksPanel 
-                noteId={selectedNote.id} 
+              <BacklinksPanel
+                noteId={selectedNote.id}
+                noteTitle={selectedNote.title}
                 onSelectNote={(noteId) => {
                   // Stay in preview mode when clicking backlinks
                   setEditorMode('preview')
                   selectNote(noteId)
-                }} 
-                refreshKey={backlinksRefreshKey} 
+                }}
+                refreshKey={backlinksRefreshKey}
               />
             ) : (
               <TagsPanel
@@ -896,8 +919,19 @@ function App() {
           noteId={selectedNote.id}
           noteTitle={selectedNote.title}
           noteContent={selectedNote.content}
+          noteProperties={selectedNote.properties}
+          noteTags={currentNoteTags.map(t => t.name)}
         />
       )}
+
+      {/* Graph View */}
+      <GraphView
+        isOpen={isGraphViewOpen}
+        onClose={() => setIsGraphViewOpen(false)}
+        notes={notes}
+        onSelectNote={selectNote}
+        currentNoteId={selectedNoteId || undefined}
+      />
     </div>
   )
 }

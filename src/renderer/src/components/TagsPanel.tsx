@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { ChevronRight, ChevronDown, List, Network } from 'lucide-react'
 import { TagWithCount } from '../types'
 import { api } from '../lib/api'
+import { buildTagTree, TagTreeNode, getLeafName } from '../lib/tagHierarchy'
 
 export interface TagsPanelProps {
   noteId: string | null
@@ -8,10 +10,159 @@ export interface TagsPanelProps {
   onTagClick: (tagId: string) => void
 }
 
+// Recursive component for rendering tag tree
+function TagTreeItem({
+  node,
+  selectedTagIds,
+  expandedPaths,
+  onTagClick,
+  onToggleExpand,
+  depth = 0
+}: {
+  node: TagTreeNode
+  selectedTagIds: string[]
+  expandedPaths: Set<string>
+  onTagClick: (tagId: string) => void
+  onToggleExpand: (path: string) => void
+  depth?: number
+}) {
+  const hasChildren = node.children.length > 0
+  const isExpanded = expandedPaths.has(node.fullPath)
+  const isSelected = node.tag && selectedTagIds.includes(node.tag.id)
+
+  return (
+    <div>
+      <div
+        className="flex items-center gap-1 py-1 rounded-lg transition-colors cursor-pointer"
+        style={{
+          paddingLeft: `${depth * 16 + 8}px`,
+          backgroundColor: isSelected ? 'var(--nexus-bg-tertiary)' : 'transparent',
+          outline: isSelected ? '1px solid var(--nexus-accent)' : 'none'
+        }}
+        onClick={() => {
+          if (node.tag) {
+            onTagClick(node.tag.id)
+          } else if (hasChildren) {
+            onToggleExpand(node.fullPath)
+          }
+        }}
+        onMouseEnter={(e) => {
+          if (!isSelected) {
+            e.currentTarget.style.backgroundColor = 'var(--nexus-bg-tertiary)'
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isSelected) {
+            e.currentTarget.style.backgroundColor = 'transparent'
+          }
+        }}
+      >
+        {/* Expand/collapse button */}
+        {hasChildren ? (
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onToggleExpand(node.fullPath)
+            }}
+            className="p-0.5 rounded hover:bg-white/10"
+            style={{ color: 'var(--nexus-text-muted)' }}
+          >
+            {isExpanded ? (
+              <ChevronDown className="w-3.5 h-3.5" />
+            ) : (
+              <ChevronRight className="w-3.5 h-3.5" />
+            )}
+          </button>
+        ) : (
+          <span className="w-4" />
+        )}
+
+        {/* Tag color dot */}
+        {node.tag && (
+          <span
+            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+            style={{ backgroundColor: node.tag.color || 'var(--nexus-accent)' }}
+          />
+        )}
+
+        {/* Tag name */}
+        <span
+          className="text-sm flex-1 min-w-0 truncate"
+          style={{
+            color: node.tag ? 'var(--nexus-text-primary)' : 'var(--nexus-text-muted)',
+            fontStyle: node.tag ? 'normal' : 'italic'
+          }}
+        >
+          {node.name}
+        </span>
+
+        {/* Count */}
+        <span
+          className="text-xs mr-2 flex-shrink-0"
+          style={{ color: 'var(--nexus-text-muted)' }}
+        >
+          {node.tag ? node.tag.note_count : node.totalCount}
+        </span>
+      </div>
+
+      {/* Children */}
+      {hasChildren && isExpanded && (
+        <div>
+          {node.children.map((child) => (
+            <TagTreeItem
+              key={child.fullPath}
+              node={child}
+              selectedTagIds={selectedTagIds}
+              expandedPaths={expandedPaths}
+              onTagClick={onTagClick}
+              onToggleExpand={onToggleExpand}
+              depth={depth + 1}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps) {
   const [allTags, setAllTags] = useState<TagWithCount[]>([])
   const [noteTags, setNoteTags] = useState<TagWithCount[]>([])
   const [loading, setLoading] = useState(false)
+  const [viewMode, setViewMode] = useState<'tree' | 'flat'>(() => {
+    const saved = localStorage.getItem('tagsPanelViewMode')
+    return (saved as 'tree' | 'flat') || 'tree'
+  })
+  const [expandedPaths, setExpandedPaths] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('tagsPanelExpandedPaths')
+    return saved ? new Set(JSON.parse(saved)) : new Set()
+  })
+
+  // Save view mode preference
+  useEffect(() => {
+    localStorage.setItem('tagsPanelViewMode', viewMode)
+  }, [viewMode])
+
+  // Save expanded paths
+  useEffect(() => {
+    localStorage.setItem('tagsPanelExpandedPaths', JSON.stringify([...expandedPaths]))
+  }, [expandedPaths])
+
+  // Toggle expand/collapse
+  const handleToggleExpand = useCallback((path: string) => {
+    setExpandedPaths(prev => {
+      const next = new Set(prev)
+      if (next.has(path)) {
+        next.delete(path)
+      } else {
+        next.add(path)
+      }
+      return next
+    })
+  }, [])
+
+  // Build tag tree when tags change
+  const tagTree = buildTagTree(allTags)
 
   // Load all tags
   useEffect(() => {
@@ -83,8 +234,34 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
         className="p-4"
         style={{ borderBottom: '1px solid var(--nexus-bg-tertiary)' }}
       >
-        <h2 className="text-lg font-semibold" style={{ color: 'var(--nexus-text-primary)' }}>Tags</h2>
-        <p className="text-xs mt-1" style={{ color: 'var(--nexus-text-muted)' }}>
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--nexus-text-primary)' }}>Tags</h2>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setViewMode('tree')}
+              className="p-1.5 rounded transition-colors"
+              style={{
+                backgroundColor: viewMode === 'tree' ? 'var(--nexus-bg-tertiary)' : 'transparent',
+                color: viewMode === 'tree' ? 'var(--nexus-accent)' : 'var(--nexus-text-muted)'
+              }}
+              title="Tree view"
+            >
+              <Network className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode('flat')}
+              className="p-1.5 rounded transition-colors"
+              style={{
+                backgroundColor: viewMode === 'flat' ? 'var(--nexus-bg-tertiary)' : 'transparent',
+                color: viewMode === 'flat' ? 'var(--nexus-accent)' : 'var(--nexus-text-muted)'
+              }}
+              title="List view"
+            >
+              <List className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+        <p className="text-xs" style={{ color: 'var(--nexus-text-muted)' }}>
           {allTags.length} {allTags.length === 1 ? 'tag' : 'tags'} total
         </p>
       </div>
@@ -118,12 +295,34 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
 
       {/* All tags */}
       <div className="flex-1 overflow-y-auto p-4">
-        <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--nexus-text-muted)' }}>All Tags</h3>
+        <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--nexus-text-muted)' }}>
+          All Tags {viewMode === 'tree' && tagTree.some(n => n.children.length > 0) && (
+            <span className="text-[10px] font-normal ml-1">(hierarchical)</span>
+          )}
+        </h3>
         {allTags.length === 0 ? (
           <div className="text-sm" style={{ color: 'var(--nexus-text-muted)' }}>
             No tags yet. Start typing #tag in your notes!
+            <div className="mt-2 text-xs">
+              Use / for nested tags: #project/research
+            </div>
+          </div>
+        ) : viewMode === 'tree' ? (
+          /* Tree View */
+          <div className="space-y-0.5">
+            {tagTree.map((node) => (
+              <TagTreeItem
+                key={node.fullPath}
+                node={node}
+                selectedTagIds={selectedTagIds}
+                expandedPaths={expandedPaths}
+                onTagClick={onTagClick}
+                onToggleExpand={handleToggleExpand}
+              />
+            ))}
           </div>
         ) : (
+          /* Flat View */
           <div className="space-y-1">
             {allTags.map((tag) => (
               <button
