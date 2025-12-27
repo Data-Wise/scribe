@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
+import { useAppViewStore } from './store/useAppViewStore'
 import { HybridEditor } from './components/HybridEditor'
 import { SearchBar } from './components/SearchBar'
 import { BacklinksPanel } from './components/BacklinksPanel'
@@ -14,6 +15,9 @@ import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { ProjectSwitcher } from './components/ProjectSwitcher'
 import { CreateProjectModal } from './components/CreateProjectModal'
+import { MissionControl } from './components/MissionControl'
+import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
+import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
@@ -82,6 +86,9 @@ function App() {
     setCurrentProject,
     createProject
   } = useProjectStore()
+
+  // View mode state (dashboard vs editor)
+  const { viewMode, toggleViewMode, setLastActiveNote, updateSessionTimestamp } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
 
@@ -165,6 +172,7 @@ function App() {
   const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false)
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false)
   const [isSearchPanelOpen, setIsSearchPanelOpen] = useState(false)
+  const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false)
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([])
   const [isFiltering, setIsFiltering] = useState(false)
   const [projectNotes, setProjectNotes] = useState<Note[]>([])
@@ -611,11 +619,32 @@ function App() {
         e.preventDefault()
         setIsSearchPanelOpen(true)
       }
+
+      // Mission Control toggle (⌘0) - zero for "home"/dashboard
+      // Note: ⌘H is macOS system "Hide Window", so we use ⌘0 instead
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === '0') {
+        e.preventDefault()
+        toggleViewMode()
+      }
+
+      // Quick Capture (⌘⇧C)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'C') {
+        e.preventDefault()
+        setIsQuickCaptureOpen(true)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, toggleViewMode])
+
+  // Track selected note for smart startup (session context)
+  useEffect(() => {
+    if (selectedNoteId) {
+      setLastActiveNote(selectedNoteId)
+      updateSessionTimestamp()
+    }
+  }, [selectedNoteId, setLastActiveNote, updateSessionTimestamp])
 
   // Sidebar resize handlers
   useEffect(() => {
@@ -683,6 +712,21 @@ function App() {
     if (query.trim() === '') return allTags
     const lowerQuery = query.toLowerCase()
     return allTags.filter((tag) => tag.name.toLowerCase().includes(lowerQuery))
+  }
+
+  // Quick capture handler - creates a new note with the captured content
+  const handleQuickCapture = async (content: string, title?: string) => {
+    const defaultProperties: Record<string, Property> = {
+      status: { key: 'status', value: 'draft', type: 'list' },
+      type: { key: 'type', value: 'note', type: 'list' },
+    }
+
+    await createNote({
+      title: title || 'Quick capture',
+      content,
+      folder: 'inbox',
+      properties: defaultProperties
+    })
   }
 
   const handleTagClickInEditor = async (tagName: string) => {
@@ -818,10 +862,10 @@ function App() {
 
   return (
     <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex overflow-hidden" style={{ height: '100vh' }}>
-      {/* Titlebar drag region for window moving */}
-      <div className="titlebar-drag-region" data-tauri-drag-region />
+      {/* Titlebar drag region for window moving - uses Tauri API */}
+      <DragRegion className="titlebar-drag-region" />
 
-      {!focusMode && (
+      {viewMode === 'editor' && !focusMode && (
         <Ribbon
           onToggleLeft={() => setLeftSidebarCollapsed(prev => !prev)}
           onToggleRight={() => setRightSidebarCollapsed(prev => !prev)}
@@ -836,7 +880,13 @@ function App() {
         open={isCommandPaletteOpen}
         setOpen={setIsCommandPaletteOpen}
         notes={notes}
-        onSelectNote={selectNote}
+        onSelectNote={(noteId) => {
+          selectNote(noteId)
+          // Switch to editor view when selecting a note from command palette
+          if (viewMode === 'dashboard') {
+            toggleViewMode()
+          }
+        }}
         onCreateNote={handleCreateNote}
         onDailyNote={handleDailyNote}
         onToggleFocus={() => handleFocusModeChange(!focusMode)}
@@ -848,8 +898,25 @@ function App() {
         hasSelectedNote={!!selectedNote}
       />
 
-      {!focusMode && (
-        <div 
+      {/* Dashboard Mode: Mission Control */}
+      {viewMode === 'dashboard' && (
+        <MissionControl
+          projects={projects}
+          currentProjectId={currentProjectId}
+          onSelectProject={(projectId) => {
+            setCurrentProject(projectId)
+            toggleViewMode()
+          }}
+          onCreateNote={handleCreateNote}
+          onDailyNote={handleDailyNote}
+          onQuickCapture={() => setIsQuickCaptureOpen(true)}
+          onSettings={() => setIsSettingsOpen(true)}
+        />
+      )}
+
+      {/* Editor Mode: Full editor layout */}
+      {viewMode === 'editor' && !focusMode && (
+        <div
           className={`bg-nexus-bg-secondary flex flex-col ${leftSidebarCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}
           style={{ width: leftSidebarCollapsed ? 0 : `${leftSidebarWidth}px` }}
         >
@@ -911,10 +978,11 @@ function App() {
         </div>
       )}
 
-      {!focusMode && !leftSidebarCollapsed && (
+      {viewMode === 'editor' && !focusMode && !leftSidebarCollapsed && (
         <div className={`resize-handle ${isResizingLeft ? 'resizing' : ''}`} onMouseDown={() => setIsResizingLeft(true)} />
       )}
 
+      {viewMode === 'editor' && (
       <div className={`flex-1 flex flex-col ${focusMode ? 'max-w-4xl mx-auto' : ''}`}>
         <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
 
@@ -960,13 +1028,14 @@ function App() {
           />
         )}
       </div>
+      )}
 
-      {!focusMode && !rightSidebarCollapsed && selectedNote && (
+      {viewMode === 'editor' && !focusMode && !rightSidebarCollapsed && selectedNote && (
         <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
       )}
 
-      {!focusMode && selectedNote && (
-        <div 
+      {viewMode === 'editor' && !focusMode && selectedNote && (
+        <div
           className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}
           style={{ width: rightSidebarCollapsed ? 0 : `${rightSidebarWidth}px` }}
         >
@@ -1085,6 +1154,13 @@ function App() {
           }
         }}
         existingProjectNames={projects.map(p => p.name.toLowerCase())}
+      />
+
+      {/* Quick Capture Overlay (⌘⇧C) */}
+      <QuickCaptureOverlay
+        isOpen={isQuickCaptureOpen}
+        onClose={() => setIsQuickCaptureOpen(false)}
+        onCapture={handleQuickCapture}
       />
     </div>
   )

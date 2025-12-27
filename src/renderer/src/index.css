@@ -1811,3 +1811,119 @@ mark {
   font-size: 10px;
   margin-right: 4px;
 }
+
+/* ============================================================
+   Mission Control Dashboard
+   v1.2 - Dashboard-first experience
+   ============================================================ */
+
+.mission-control {
+  display: flex;
+  flex-direction: column;
+  background: var(--nexus-bg-primary);
+  overflow: hidden;
+}
+
+.mission-control-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  padding-top: 2.5rem; /* Extra padding for macOS traffic lights */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  -webkit-app-region: drag;
+  cursor: grab;
+}
+
+.mission-control-header button {
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+}
+
+/* Project Cards */
+.project-card {
+  transition: all 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+}
+
+.project-card:active {
+  transform: translateY(0);
+}
+
+/* Quick Action Buttons */
+.quick-action-btn {
+  transition: all 0.2s ease;
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.quick-action-icon {
+  transition: background-color 0.2s ease;
+}
+
+/* Quick Capture Overlay */
+.quick-capture-overlay {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.quick-capture-overlay > div:last-child {
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Streak Display */
+.streak-display {
+  transition: all 0.3s ease;
+}
+
+/* Subtle pulse animation for milestone celebrations */
+@keyframes pulseSoft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSoft 2s ease-in-out infinite;
+}
+
+/* Reduced motion: disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .project-card,
+  .quick-action-btn,
+  .quick-capture-overlay,
+  .quick-capture-overlay > div:last-child,
+  .streak-display,
+  .animate-pulse-subtle {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}

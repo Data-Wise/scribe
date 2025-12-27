@@ -20,6 +20,7 @@ export interface UserPreferences {
   // UI preferences
   showWordGoalProgress: boolean  // Show progress bar in editor
   celebrateMilestones: boolean   // Show milestone celebrations
+  streakDisplayOptIn: boolean    // Show streak milestones (7/30/100/365) - default OFF
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -30,6 +31,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   totalWordsWritten: 0,
   showWordGoalProgress: true,
   celebrateMilestones: true,
+  streakDisplayOptIn: false, // OFF by default - avoids ADHD anxiety
 }
 
 /**

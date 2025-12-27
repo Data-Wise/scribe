@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2025-12-27
+
+### Mission Control - Dashboard-First Experience
+
+**ADHD-friendly dashboard with quick actions and project overview.**
+
+### Added
+
+**Mission Control Dashboard:**
+- Dashboard-first experience with project overview
+- Smart startup: >4 hours away → Dashboard, else resume editor
+- View mode toggle with `⌘0` (zero key)
+- Project cards grid with type icons, status dots, timestamps
+- Quick Actions bar: Daily Note (⌘D), New Note (⌘N), Quick Capture (⌘⇧C)
+
+**Quick Capture Overlay:**
+- `⌘⇧C` opens quick capture modal
+- Cmd+Enter to save, Escape to cancel
+- Auto-generates title from first line
+- Saves to inbox
+
+**Streak Display (Opt-in):**
+- Milestone celebrations at 7/30/100/365 days
+- Default OFF (ADHD-friendly, avoids anxiety)
+- Toggle in Settings → General → "Show streak milestones"
+
+**New Components:**
+- `MissionControl.tsx` - Dashboard container
+- `ProjectCard.tsx` - Project display cards
+- `QuickActions.tsx` - Action buttons
+- `QuickCaptureOverlay.tsx` - Capture modal
+- `StreakDisplay.tsx` - Milestone display
+- `DragRegion.tsx` - Window dragging component
+- `useAppViewStore.ts` - View mode state
+
+### Fixed
+- Window dragging now works (added `core:window:allow-start-dragging` permission)
+- Changed `⌘H` to `⌘0` (⌘H is macOS "Hide Window")
+
+### Technical
+- Tauri 2 `startDragging()` API for reliable window dragging
+- Zustand store for view mode with localStorage persistence
+- Session timestamp tracking for smart startup
+
+---
+
 ## [1.1.0] - 2025-12-27
 
 ### v1.1 Feature Release
