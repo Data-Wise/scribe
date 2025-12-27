@@ -9,6 +9,95 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - v0.4.0-dev
 
+### Sprint 16: Tags Panel Core Features (2025-12-26)
+
+**Orphan Tag Detection:**
+- Scans all notes for unregistered `#tags`
+- "Unregistered Tags" section with warning styling
+- Register single tag or "Register All" buttons
+- Warning icon for visual distinction
+
+**Tag Management:**
+- Right-click context menu on tags
+- Rename tags (with prompt)
+- Delete tags (with confirmation)
+
+**Technical Debt Fixes:**
+- Hierarchical tag regex now captures `/` (e.g., `#research/statistics`)
+- Tag-YAML sync: inline `#tags` automatically update `properties.tags`
+
+**Files Changed:**
+- `src/renderer/src/components/TagsPanel.tsx` (major additions)
+- `src/renderer/src/types/index.ts` (added tags to DEFAULT_NOTE_PROPERTIES)
+- `src-tauri/src/database.rs` (regex fix)
+- `src/renderer/src/App.tsx` (Tag-YAML sync)
+
+---
+
+### Sprint 15: Tags Panel Quick Wins (2025-12-26)
+
+**Search & Filter:**
+- Real-time search/filter bar for tags
+- Match count display
+- Clear button
+
+**Recent Tags:**
+- Tracks last 8 recently clicked tags
+- Shows top 5 in dedicated section
+- localStorage persistence
+
+**Compact Mode:**
+- Toggle for reduced padding/font sizes
+- Fits more tags in view
+
+---
+
+### Sprint 14: Knowledge Graph & Templates (2025-12-26)
+
+**Knowledge Graph:**
+- D3 force-directed graph visualization
+- Shows notes as nodes, links as edges
+- Interactive pan/zoom
+
+**Daily Note Templates:**
+- 5 built-in templates (Minimal, Journaling, Research, Meeting, Focus)
+- Custom template support
+- Template picker in settings
+
+**Tag Hierarchy:**
+- Path notation support (`research/statistics`)
+- Tree view with expand/collapse
+- Flat view toggle
+
+**Markdown Export:**
+- Export notes with YAML frontmatter
+- Preserves properties and metadata
+
+---
+
+### Sprint 13: Preferences, Stats, Keyboard, Export, Zotero (2025-12-26)
+
+**User Preferences:**
+- localStorage-based persistence
+- Writing goals (per-note and default)
+- Focus mode state persistence
+
+**Writing Stats:**
+- Streak tracking (days written)
+- Word count goals with progress bar
+- Session words counter
+
+**Zotero Integration:**
+- BibTeX file path configuration
+- Citation autocomplete (@trigger)
+- 5 citation styles (APA, Chicago, MLA, IEEE, Harvard)
+
+**Export:**
+- PDF, Word, LaTeX, HTML via Pandoc
+- Pandoc availability check
+
+---
+
 ### Sprint 12: UI Polish & Micro-interactions (2024-12-26)
 
 **EmptyState Component:**

@@ -50,13 +50,60 @@ This is about #research and #causal-inference.
 - Tags get consistent colors based on name
 - Filter notes by clicking tags in the sidebar
 
+### Tags Panel
+
+The Tags Panel (right sidebar, click "Tags" tab) provides powerful tag management:
+
+**Views:**
+- **Tree View**: Hierarchical display for nested tags (`research/statistics`)
+- **Flat View**: Alphabetical list of all tags
+
+**Features:**
+- **Search**: Filter tags in real-time
+- **Recent Tags**: Quick access to recently used tags
+- **Compact Mode**: Reduce padding for more tags on screen
+- **Note Counts**: See how many notes use each tag
+
+**Tag Management:**
+- Right-click any tag to **Rename** or **Delete**
+- **Orphan Detection**: Unregistered `#tags` found in notes are highlighted
+- **Register Tags**: One-click to add orphan tags to your tag library
+
+### Hierarchical Tags
+
+Use path notation for tag hierarchies:
+
+```markdown
+#research/statistics/mediation
+#teaching/stat-440
+```
+
+Hierarchical tags appear as expandable trees in the Tags Panel.
+
 ## Daily Notes
 
 Quick capture for daily thoughts:
 
 - Press `⌘D` to open/create today's note
 - Template auto-applied
-- Per-project configuration
+- 5 built-in templates:
+  - **Minimal**: Just the date heading
+  - **Journaling**: Gratitude, focus, reflections
+  - **Research**: Notes, papers, ideas sections
+  - **Meeting**: Attendees, agenda, action items
+  - **Focus**: Single priority with blockers
+
+Configure templates in Settings → Writing → Daily Note Template.
+
+## Knowledge Graph
+
+Visualize connections between your notes:
+
+- Access via command palette or ribbon
+- Interactive D3 force-directed graph
+- Notes appear as nodes, links as edges
+- Pan, zoom, and click to navigate
+- See clusters of related ideas
 
 ## Command Palette
 
