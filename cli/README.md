@@ -4,6 +4,14 @@ Terminal-based note access for the Scribe app.
 
 ## Installation
 
+### Quick Install
+
+```bash
+./cli/install.sh
+```
+
+### Manual Install
+
 Copy `scribe.zsh` to your ZSH functions directory:
 
 ```bash
