@@ -1,10 +1,12 @@
 import { Project, ProjectType } from '../types'
-import { Beaker, GraduationCap, Package, Code2, Folder } from 'lucide-react'
+import { Beaker, GraduationCap, Package, Code2, Folder, FileText, LetterText } from 'lucide-react'
 
 interface ProjectCardProps {
   project: Project
   isActive: boolean
   onClick: () => void
+  noteCount?: number
+  wordCount?: number
 }
 
 // Icons for each project type (matches ProjectType: research | teaching | r-package | r-dev | generic)
@@ -25,7 +27,7 @@ const TYPE_LABELS: Record<ProjectType, string> = {
   generic: 'General',
 }
 
-export function ProjectCard({ project, isActive, onClick }: ProjectCardProps) {
+export function ProjectCard({ project, isActive, onClick, noteCount, wordCount }: ProjectCardProps) {
   const color = project.color || '#38bdf8'
   const icon = TYPE_ICONS[project.type] || TYPE_ICONS.generic
   const label = TYPE_LABELS[project.type] || 'Project'
@@ -43,6 +45,14 @@ export function ProjectCard({ project, isActive, onClick }: ProjectCardProps) {
     if (hours < 24) return `${hours}h ago`
     if (days < 7) return `${days}d ago`
     return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
+
+  // Format word count (1.2k for thousands)
+  const formatWords = (count: number): string => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}k`
+    }
+    return count.toString()
   }
 
   return (
@@ -85,9 +95,23 @@ export function ProjectCard({ project, isActive, onClick }: ProjectCardProps) {
         </p>
       )}
 
-      {/* Footer with last updated */}
-      <div className="mt-3 pt-2 border-t border-white/5 text-xs text-nexus-text-muted">
-        Updated {formatTime(project.updated_at)}
+      {/* Footer with stats */}
+      <div className="mt-3 pt-2 border-t border-white/5 text-xs text-nexus-text-muted flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {noteCount !== undefined && (
+            <span className="flex items-center gap-1">
+              <FileText className="w-3 h-3" />
+              {noteCount}
+            </span>
+          )}
+          {wordCount !== undefined && wordCount > 0 && (
+            <span className="flex items-center gap-1">
+              <LetterText className="w-3 h-3" />
+              {formatWords(wordCount)}
+            </span>
+          )}
+        </div>
+        <span>{formatTime(project.updated_at)}</span>
       </div>
     </button>
   )

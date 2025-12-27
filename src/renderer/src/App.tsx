@@ -22,6 +22,7 @@ import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
+import { listen } from '@tauri-apps/api/event'
 import { Plus } from 'lucide-react'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
@@ -636,6 +637,12 @@ function App() {
         e.preventDefault()
         setIsQuickCaptureOpen(true)
       }
+
+      // New Project (⌘⇧P)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'P') {
+        e.preventDefault()
+        setIsCreateProjectModalOpen(true)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -649,6 +656,83 @@ function App() {
       updateSessionTimestamp()
     }
   }, [selectedNoteId, setLastActiveNote, updateSessionTimestamp])
+
+  // Handle native menu events from Tauri
+  useEffect(() => {
+    const unlisten = listen<string>('menu-event', (event) => {
+      const menuId = event.payload
+
+      switch (menuId) {
+        // File menu
+        case 'new_note':
+          handleCreateNote()
+          break
+        case 'new_project':
+          setIsCreateProjectModalOpen(true)
+          break
+        case 'daily_note':
+          handleDailyNote()
+          break
+        case 'quick_capture':
+          setIsQuickCaptureOpen(true)
+          break
+        case 'search':
+          setIsSearchPanelOpen(true)
+          break
+        case 'export':
+          setIsExportDialogOpen(true)
+          break
+
+        // View menu
+        case 'mission_control':
+          toggleViewMode()
+          break
+        case 'focus_mode':
+          handleFocusModeChange(!focusMode)
+          break
+        case 'source_mode':
+          setEditorMode('source')
+          updatePreferences({ editorMode: 'source' })
+          break
+        case 'live_preview':
+          setEditorMode('live-preview')
+          updatePreferences({ editorMode: 'live-preview' })
+          break
+        case 'reading_mode':
+          setEditorMode('reading')
+          updatePreferences({ editorMode: 'reading' })
+          break
+        case 'toggle_sidebar':
+          setLeftSidebarCollapsed(!leftSidebarCollapsed)
+          break
+        case 'knowledge_graph':
+          setIsGraphViewOpen(true)
+          break
+
+        // Scribe menu
+        case 'preferences':
+          setIsSettingsOpen(true)
+          break
+        case 'shortcuts':
+          setIsKeyboardShortcutsOpen(true)
+          break
+        case 'about':
+          // TODO: Show about dialog
+          break
+      }
+    })
+
+    return () => {
+      unlisten.then(fn => fn())
+    }
+  }, [
+    handleCreateNote,
+    handleDailyNote,
+    handleFocusModeChange,
+    focusMode,
+    toggleViewMode,
+    leftSidebarCollapsed,
+  ])
 
   // Sidebar resize handlers
   useEffect(() => {
@@ -911,15 +995,21 @@ function App() {
       {viewMode === 'dashboard' && (
         <MissionControl
           projects={projects}
+          notes={notes}
           currentProjectId={currentProjectId}
           onSelectProject={(projectId) => {
             setCurrentProject(projectId)
+            toggleViewMode()
+          }}
+          onSelectNote={(noteId) => {
+            selectNote(noteId)
             toggleViewMode()
           }}
           onCreateNote={handleCreateNote}
           onDailyNote={handleDailyNote}
           onQuickCapture={() => setIsQuickCaptureOpen(true)}
           onSettings={() => setIsSettingsOpen(true)}
+          onCreateProject={() => setIsCreateProjectModalOpen(true)}
         />
       )}
 
