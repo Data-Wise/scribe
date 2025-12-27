@@ -51,6 +51,10 @@ Before making ANY changes, read:
 
 ```
 scribe/
+├── cli/                       # Terminal CLI (ZSH)
+│   ├── scribe.zsh            # Main CLI implementation
+│   ├── install.sh            # CLI installer
+│   └── README.md             # CLI documentation
 ├── src/
 │   ├── main/                  # Electron main process
 │   │   ├── database/          # SQLite operations
@@ -82,12 +86,30 @@ scribe/
 
 ## 🚀 Commands
 
+### App Development
+
 ```bash
 npm run dev      # Development
 npm run build    # Production build
 npm run test     # Run tests
 npm run lint     # Lint code
 ```
+
+### Terminal CLI
+
+```bash
+# Install CLI
+./cli/install.sh
+
+# Quick commands
+scribe daily           # Open today's daily note
+scribe capture "idea"  # Quick capture to inbox
+scribe search "query"  # Full-text search
+scribe list            # List recent notes
+scribe help --all      # Full reference
+```
+
+**Aliases:** `sd` (daily), `sc` (capture), `ss` (search), `sl` (list)
 
 ---
 
@@ -212,3 +234,5 @@ async function askClaude(prompt: string, context: string): Promise<string> {
 | README.md | User-facing overview |
 | .STATUS | Progress tracking |
 | CHANGELOG.md | Version history |
+| cli/scribe.zsh | Terminal CLI implementation |
+| cli/README.md | CLI documentation |
