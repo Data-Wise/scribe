@@ -1,10 +1,55 @@
-# Scribe v1.0 Release Plan
+# Scribe Release Plan
 
-> **Status: ✅ RELEASED** - 2025-12-27
+> **Current Version: v1.2.0** - 2025-12-27
 
 ---
 
-## Release Summary
+## Release History
+
+| Version | Date | Focus |
+|---------|------|-------|
+| **v1.2.0** | 2025-12-27 | Mission Control Dashboard |
+| **v1.1.0** | 2025-12-27 | Project System, Note Search, Scribe CLI |
+| **v1.0.0** | 2025-12-27 | Initial stable release |
+
+---
+
+## v1.2.0 - Mission Control ✅ Complete
+
+| Metric | Value |
+|--------|-------|
+| **Version** | 1.2.0 |
+| **Sprint** | 21 |
+| **Release Date** | 2025-12-27 |
+
+### Features
+
+- **Mission Control Dashboard** - Card-based project overview
+- **Smart Startup** - >4 hours away → Dashboard, else resume editor
+- **Quick Capture Overlay** - `⌘⇧C` for instant capture
+- **Streak Display** - Opt-in milestones (7/30/100/365 days)
+- **View Toggle** - `⌘0` switches Dashboard ↔ Editor
+- **Window Dragging** - Fixed with Tauri 2 API
+
+---
+
+## v1.1.0 - Project System ✅ Complete
+
+| Metric | Value |
+|--------|-------|
+| **Version** | 1.1.0 |
+| **Sprints** | 18-20 |
+| **Release Date** | 2025-12-27 |
+
+### Features
+
+- **Project System** - 5 types, switcher, project-scoped notes
+- **Note Search** - `⌘F`, FTS5, keyboard navigation
+- **Scribe CLI** - 10 commands, ZSH integration
+
+---
+
+## v1.0.0 - Initial Release ✅ Complete
 
 | Metric | Value |
 |--------|-------|
