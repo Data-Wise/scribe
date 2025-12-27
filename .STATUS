@@ -2,13 +2,13 @@
 status: active
 priority: P1
 progress: 100
-version: 1.4.0
-sprint: 23
+version: 1.5.0
+sprint: 24
 updated: 2025-12-27
 editor: hybrid-markdown++
-next_sprint: 24
-next_focus: Three-State Collapsible Sidebar (Core)
-tests: 491
+next_sprint: 25
+next_focus: Quick Capture & Daily Notes
+tests: 518
 tags:
   - adhd-friendly
   - distraction-free
@@ -25,7 +25,20 @@ tags:
 
 ## Current Sprint
 
-**v1.4 Release** ✅ Complete (2025-12-27)
+**v1.5 Release** ✅ Complete (2025-12-27)
+
+### Sprint 24: Three-State Collapsible Sidebar ✅
+- [x] Icon mode (48px) - status dots only
+- [x] Compact mode (240px) - project list with stats
+- [x] Card mode (320px+) - full project cards
+- [x] Resize handle with snap points
+- [x] ⌘0 keyboard shortcut to cycle modes
+- [x] State persistence (localStorage + Zustand)
+- [x] Project switching with toggle behavior
+- [x] Active project indicator (all modes)
+- [x] Progress bars in sidebar
+- [x] Rich tooltips on icon hover (name, status, note count)
+- [x] Recent Notes filtered by selected project
 
 ### Sprint 23: Mission Control & Native Menu ✅
 - [x] New Project button in QuickActions (⌘⇧P)
@@ -150,10 +163,10 @@ tags:
 | v1.1 | 20 | Scribe CLI | ✅ 100% |
 | **v1.3** | 22 | Editor Modes + Custom CSS | ✅ 100% |
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
-| **v1.5** | 24 | Three-State Sidebar (Core) | 🔄 0% |
-| v1.5 | 25 | Three-State Sidebar (Advanced) | ⏳ 0% |
+| **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
+| v1.6 | 25 | Quick Capture & Daily Notes | ⏳ 0% |
 
-**Total: v1.4 complete, v1.5 in progress**
+**Total: v1.5 complete, v1.6 planning**
 
 ---
 
@@ -179,10 +192,20 @@ tags:
 | 20 | Scribe CLI | 483 |
 | 22 | Editor Modes + Custom CSS | 483 |
 | 23 | Mission Control + Native Menu | 483 |
+| 24 | Three-State Collapsible Sidebar | 518 |
 
 ---
 
 ## Key Features
+
+**Three-State Sidebar (v1.5):**
+- Icon mode (48px) - minimal, status dots only
+- Compact mode (240px) - project list with stats
+- Card mode (320px+) - full project cards with details
+- ⌘0 cycles through modes
+- Resize handle with snap points
+- Project switching with toggle behavior
+- Recent Notes filtered by selected project
 
 **Mission Control (v1.4):**
 - Dashboard with project cards and stats
@@ -289,5 +312,5 @@ tags:
 - [TESTS_SUMMARY.md](TESTS_SUMMARY.md) - Test coverage
 - [CLAUDE.md](CLAUDE.md) - AI guidance
 - [docs/planning/](docs/planning/) - Sprint plans
-## last_active: 2025-12-27 14:22
-## streak: 0
+## last_active: 2025-12-27 17:15
+## streak: 1
