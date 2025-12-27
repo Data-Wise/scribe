@@ -12,7 +12,7 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/scribe/archive/sprints-1-7/PROPOSAL-ERROR-FIXES/">
+        <link rel="canonical" href="https://data-wise.github.io/scribe/archive/proposals/PROPOSAL-TAGS-PANEL-REDESIGN/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Error Fixes Proposal - Scribe</title>
+        <title>Tags Panel Redesign - Brainstorm Proposal - Scribe</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#error-fixes-proposal" class="md-skip">
+        <a href="#tags-panel-redesign-brainstorm-proposal" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Error Fixes Proposal
+              Tags Panel Redesign - Brainstorm Proposal
             
           </span>
         </div>
@@ -1545,33 +1545,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#current-state-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Current State Analysis
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#issues-identified" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Issues Identified
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Issues Identified">
+    <nav class="md-nav" aria-label="Current State Analysis">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-migration-logging-appears-alarming" class="md-nav__link">
+  <a href="#what-exists-now" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Migration Logging Appears Alarming
+        What Exists Now
       
     </span>
   </a>
@@ -1579,10 +1568,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-macos-spell-server-warning" class="md-nav__link">
+  <a href="#pain-points-identified" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. macOS Spell Server Warning
+        Pain Points Identified
       
     </span>
   </a>
@@ -1595,22 +1584,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#proposed-fixes" class="md-nav__link">
+  <a href="#brainstorm-ideas-by-category" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Proposed Fixes
+        Brainstorm: Ideas by Category
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposed Fixes">
+    <nav class="md-nav" aria-label="Brainstorm: Ideas by Category">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fix-1-improve-migration-logging" class="md-nav__link">
+  <a href="#tag-discovery-navigation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fix 1: Improve Migration Logging
+        🏷️ Tag Discovery &amp; Navigation
       
     </span>
   </a>
@@ -1618,10 +1607,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fix-2-suppress-spell-server-warning" class="md-nav__link">
+  <a href="#tag-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fix 2: Suppress Spell Server Warning
+        🔧 Tag Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎨 Visual Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adhd-friendly-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 ADHD-Friendly Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Advanced Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orphan-tag-handling-users-specific-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🐛 Orphan Tag Handling (User's Specific Request)
       
     </span>
   </a>
@@ -1634,22 +1667,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
+  <a href="#combined-feature-sets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementation Plan
+        Combined Feature Sets
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Implementation Plan">
+    <nav class="md-nav" aria-label="Combined Feature Sets">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-wins-5-minutes" class="md-nav__link">
+  <a href="#quick-win-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Wins (5 minutes)
+        "Quick Win" Package
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#power-user-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Power User" Package
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Visual" Package
       
     </span>
   </a>
@@ -1662,44 +1717,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
+  <a href="#design-mockups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Testing
+        Design Mockups
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#files-to-modify" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Files to Modify
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recommendations">
+    <nav class="md-nav" aria-label="Design Mockups">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#recommended-path" class="md-nav__link">
+  <a href="#option-a-enhanced-current-design" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended Path
+        Option A: Enhanced Current Design
       
     </span>
   </a>
@@ -1707,10 +1740,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alternative-fix-just-the-logging" class="md-nav__link">
+  <a href="#option-b-minimalcompact" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alternative: Fix just the logging
+        Option B: Minimal/Compact ⭐
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-tag-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C: Tag Cloud ⭐
       
     </span>
   </a>
@@ -1723,10 +1767,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
+  <a href="#technical-constraints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Technical Constraints
       
     </span>
   </a>
@@ -1734,10 +1778,199 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#questions" class="md-nav__link">
+  <a href="#trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Questions?
+        Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-3-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top 3 Recommendations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Top 3 Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-orphan-tag-detection-user-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. ⭐⭐ Orphan Tag Detection (User Request)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-search-recent-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ⭐⭐ Search + Recent Tags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-compact-mode-visual-polish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ⭐ Compact Mode + Visual Polish
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sprint-15-quick-wins-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 15 (Quick Wins) ✅ COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sprint-16-core-feature-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 16 (Core Feature) ✅ COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Enhancements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Enhancements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sprint-17-visual-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 17: Visual Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sprint-18-power-user-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 18: Power User Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sprint-19-advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 19: Advanced Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backlog-low-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backlog (Low Priority)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-debt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Debt
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Debt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend-improvements-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Improvements Needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#completed-features-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completed Features Summary
       
     </span>
   </a>
@@ -1764,159 +1997,633 @@
   
 
 
-<h1 id="error-fixes-proposal">Error Fixes Proposal</h1>
-<p><strong>Generated:</strong> 2024-12-24
-<strong>Context:</strong> Nexus Desktop - Post Sprint 7</p>
+<h1 id="tags-panel-redesign-brainstorm-proposal">Tags Panel Redesign - Brainstorm Proposal</h1>
+<p><strong>Generated:</strong> December 26, 2025
+<strong>Context:</strong> Scribe - ADHD-friendly note-taking app
+<strong>Current Location:</strong> <code>src/renderer/src/components/TagsPanel.tsx</code></p>
 <hr />
-<h2 id="overview">Overview</h2>
-<p>Two improvements to reduce console noise and improve user experience during app startup.</p>
-<hr />
-<h2 id="issues-identified">Issues Identified</h2>
-<h3 id="1-migration-logging-appears-alarming">1. Migration Logging Appears Alarming</h3>
-<p><strong>Current behavior:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Running migration 003: Tags system (new schema)
-</code></pre></div></p>
-<p><strong>Why it's confusing:</strong>
-- Sounds like something is "running" or in-progress
-- Users might think something is wrong
-- Appears on every fresh database initialization</p>
-<p><strong>Impact:</strong> Low priority - purely cosmetic</p>
-<h3 id="2-macos-spell-server-warning">2. macOS Spell Server Warning</h3>
-<p><strong>Current behavior:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Electron[38809:1850642] Spell server connection error sending _proxyDataFromCheckingString
-</code></pre></div></p>
-<p><strong>Why it happens:</strong>
-- Electron tries to connect to macOS spell-checking service
-- This is a harmless system warning
-- Appears in almost all Electron apps on macOS
-- Does not affect functionality</p>
-<p><strong>Impact:</strong> Low priority - can be safely ignored, but reduces noise</p>
-<hr />
-<h2 id="proposed-fixes">Proposed Fixes</h2>
-<h3 id="fix-1-improve-migration-logging">Fix 1: Improve Migration Logging</h3>
-<p><strong>Option A: Make it success-oriented</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// In DatabaseService.ts line 197</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database ready (schema version 3)&#39;</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Option B: Use debug logging</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Only log in development</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Running migration 003: Tags system (new schema)&#39;</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Option C: Silent migrations</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Remove the console.log entirely</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">// Migration happens silently in background</span>
-</code></pre></div></p>
-<p><strong>Recommendation:</strong> <strong>Option A</strong> - Positive, informative, reassuring</p>
-<hr />
-<h3 id="fix-2-suppress-spell-server-warning">Fix 2: Suppress Spell Server Warning</h3>
-<p><strong>Implementation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// In src/main/index.ts before app.whenReady()</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">platform</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;darwin&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">commandLine</span><span class="p">.</span><span class="nx">appendSwitch</span><span class="p">(</span><span class="s1">&#39;disable-features&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SpellcheckService&#39;</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Trade-off:</strong>
-- ✅ Eliminates the warning
-- ❌ Disables macOS system spell-checking in the editor
-- Note: Most users don't rely on system spell-check in note-taking apps</p>
-<p><strong>Alternative:</strong> Keep spell-checking, ignore warning
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Do nothing - warning is harmless</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// Most Electron apps have this</span>
-</code></pre></div></p>
-<p><strong>Recommendation:</strong> <strong>Suppress the warning</strong> - cleaner console, spell-checking not critical for PKM app</p>
-<hr />
-<h2 id="implementation-plan">Implementation Plan</h2>
-<h3 id="quick-wins-5-minutes">Quick Wins (5 minutes)</h3>
-<p><strong>Option 1: Just fix the logging</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// DatabaseService.ts line 197 (all 3 migrations)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database initialized (schema version 3)&#39;</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Option 2: Fix both issues</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// 1. Add to src/main/index.ts line 1 (top of file)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">platform</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;darwin&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">commandLine</span><span class="p">.</span><span class="nx">appendSwitch</span><span class="p">(</span><span class="s1">&#39;disable-features&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SpellcheckService&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">}</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">// 2. Update DatabaseService.ts migrations</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nx">runMigration001</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database initialized (schema version 1)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nx">runMigration002</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database updated (schema version 2)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">}</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="nx">runMigration003</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database updated (schema version 3)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="p">}</span>
-</code></pre></div></p>
-<hr />
-<h2 id="testing">Testing</h2>
-<p><strong>Before fix:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>npm<span class="w"> </span>start
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Console shows:</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Running migration 003: Tags system (new schema)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Spell server connection error...</span>
-</code></pre></div></p>
-<p><strong>After fix:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>npm<span class="w"> </span>start
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Console shows:</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># ✅ Database updated (schema version 3)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># (No spell server warning)</span>
-</code></pre></div></p>
-<hr />
-<h2 id="files-to-modify">Files to Modify</h2>
-<ol>
-<li><strong><code>src/main/index.ts</code></strong> - Add spell-check suppression (3 lines)</li>
-<li><strong><code>src/main/database/DatabaseService.ts</code></strong> - Update migration logs (3 lines)</li>
-</ol>
-<p>Total changes: 6 lines across 2 files</p>
-<hr />
-<h2 id="recommendations">Recommendations</h2>
-<h3 id="recommended-path">Recommended Path</h3>
-<p>✅ <strong>Fix both issues</strong> (Option 2 above)</p>
-<p><strong>Reasoning:</strong>
-1. Takes only 5 minutes
-2. Cleaner console output
-3. More professional user experience
-4. No functional trade-offs (spell-checking not essential for PKM)</p>
-<h3 id="alternative-fix-just-the-logging">Alternative: Fix just the logging</h3>
-<p>If you prefer to keep macOS spell-checking available, just fix the migration logs (Option 1).</p>
-<hr />
-<h2 id="next-steps">Next Steps</h2>
-<p><strong>If approved:</strong>
-1. [ ] Update <code>src/main/index.ts</code> with spell-check suppression
-2. [ ] Update <code>DatabaseService.ts</code> migration logs
-3. [ ] Test with <code>npm start</code>
-4. [ ] Commit changes
-5. [ ] Update CHANGELOG.md (patch version 0.3.1)</p>
-<p><strong>Estimated time:</strong> 5 minutes</p>
-<hr />
-<h2 id="questions">Questions?</h2>
+<h2 id="current-state-analysis">Current State Analysis</h2>
+<h3 id="what-exists-now">What Exists Now</h3>
 <ul>
+<li>Tree/flat view toggle (Network/List icons)</li>
+<li>"This Note" section showing tags on current note</li>
+<li>"All Tags" section with hierarchical display</li>
+<li>Tag color dots</li>
+<li>Note counts per tag</li>
+<li>Expandable tree for nested tags (e.g., <code>research/statistics</code>)</li>
+<li>"Clear Filters" button when tags selected</li>
+<li>localStorage persistence for view mode and expanded paths</li>
+</ul>
+<h3 id="pain-points-identified">Pain Points Identified</h3>
+<ol>
+<li><strong>Orphan/Ghost Tags</strong> - Tags referenced in notes but possibly not in database</li>
+<li><strong>No search/filter</strong> for tags</li>
+<li><strong>No tag management</strong> (rename, delete, merge)</li>
+<li><strong>Limited visual hierarchy</strong> - just indentation</li>
+<li><strong>No recent/frequent tags</strong> section</li>
+<li><strong>Can't create tags from panel</strong></li>
+<li><strong>No tag suggestions</strong> based on content</li>
+</ol>
+<hr />
+<h2 id="brainstorm-ideas-by-category">Brainstorm: Ideas by Category</h2>
+<h3 id="tag-discovery-navigation">🏷️ Tag Discovery &amp; Navigation</h3>
+<ol>
+<li><strong>Search/Filter Bar</strong> ⭐</li>
+<li>Instant filter as you type</li>
+<li>Fuzzy matching for typos</li>
 <li>
-<p><strong>Q: Will this affect spell-checking in the editor?</strong>
-  A: Yes, but most users don't rely on system spell-check. TipTap/ProseMirror can add their own spell-checking plugins if needed.</p>
+<p>Highlight matching characters</p>
 </li>
 <li>
-<p><strong>Q: Is the spell server warning harmful?</strong>
-  A: No, completely harmless. It's just macOS reporting that Electron couldn't connect to the spell service.</p>
+<p><strong>Recently Used Tags</strong> ⭐</p>
+</li>
+<li>Top 5-10 most recently used</li>
+<li>Configurable count</li>
+<li>
+<p>One-click to filter</p>
 </li>
 <li>
-<p><strong>Q: Should migrations be completely silent?</strong>
-  A: No - it's helpful to see database initialization confirmation, just with positive phrasing.</p>
+<p><strong>Frequently Used Tags</strong></p>
 </li>
+<li>Show most common tags prominently</li>
+<li>
+<p>Heat map visualization option</p>
+</li>
+<li>
+<p><strong>Alphabetical Jump</strong></p>
+</li>
+<li>A-Z sidebar for quick navigation</li>
+<li>
+<p>Like iOS contacts</p>
+</li>
+<li>
+<p><strong>Tag Cloud View</strong> ⭐</p>
+</li>
+<li>Size based on frequency</li>
+<li>Alternative to tree/flat</li>
+<li>
+<p>ADHD-friendly visual scanning</p>
+</li>
+<li>
+<p><strong>Smart Sections</strong></p>
+</li>
+<li>"This Note" (current)</li>
+<li>"Recent" (new)</li>
+<li>"Favorites" (pinned)</li>
+<li>"All Tags" (current)</li>
+</ol>
+<h3 id="tag-management">🔧 Tag Management</h3>
+<ol>
+<li><strong>Inline Tag Editing</strong> ⭐</li>
+<li>Right-click → Rename/Delete/Merge</li>
+<li>Double-click to edit name</li>
+<li>
+<p>Confirmation for destructive actions</p>
+</li>
+<li>
+<p><strong>Tag Merging</strong></p>
+</li>
+<li>Select multiple → Merge into one</li>
+<li>Preserve all note associations</li>
+<li>
+<p>Handle hierarchy conflicts</p>
+</li>
+<li>
+<p><strong>Orphan Tag Detection</strong> ⭐⭐</p>
+</li>
+<li>Scan notes for <code>#tag</code> patterns not in DB</li>
+<li>Show in separate "Unregistered Tags" section</li>
+<li>One-click to register them</li>
+<li>
+<p>Strikethrough for deleted tags still referenced</p>
+</li>
+<li>
+<p><strong>Bulk Operations</strong></p>
+<ul>
+<li>Multi-select tags</li>
+<li>Bulk delete/rename/color change</li>
+<li>Export tag list</li>
+</ul>
+</li>
+<li>
+<p><strong>Tag Color Picker</strong></p>
+<ul>
+<li>Click color dot to change</li>
+<li>Preset palettes</li>
+<li>Custom hex input</li>
+</ul>
+</li>
+<li>
+<p><strong>Create Tag Button</strong></p>
+<ul>
+<li>"+" button in header</li>
+<li>Quick create without note context</li>
+<li>Set name, color, parent</li>
+</ul>
+</li>
+</ol>
+<h3 id="visual-design">🎨 Visual Design</h3>
+<ol>
+<li>
+<p><strong>Compact Mode</strong> ⭐</p>
+<ul>
+<li>Smaller text, tighter spacing</li>
+<li>More tags visible</li>
+<li>Toggle in header</li>
+</ul>
+</li>
+<li>
+<p><strong>Badge Style Tags</strong></p>
+<ul>
+<li>Pill/chip style like in notes</li>
+<li>Consistent visual language</li>
+<li>Optional: just dots for minimal</li>
+</ul>
+</li>
+<li>
+<p><strong>Progress Indicators</strong></p>
+<ul>
+<li>Small bar showing % of notes tagged</li>
+<li>Visual feedback on tag coverage</li>
+</ul>
+</li>
+<li>
+<p><strong>Drag &amp; Drop Reordering</strong></p>
+<ul>
+<li>Manual sort option</li>
+<li>Drag to create hierarchy</li>
+<li>Drag tag onto note</li>
+</ul>
+</li>
+<li>
+<p><strong>Collapsible Sections</strong></p>
+<ul>
+<li>Collapse "This Note" when not needed</li>
+<li>Remember state per-session</li>
+</ul>
+</li>
+<li>
+<p><strong>Tag Icons</strong> ⭐</p>
+<ul>
+<li>Optional emoji/icon per tag</li>
+<li>Visual differentiation</li>
+<li>Category indicators</li>
+</ul>
+</li>
+<li>
+<p><strong>Dark/Light Indicators</strong></p>
+<ul>
+<li>Different visual weight for used vs unused</li>
+<li>Fade out zero-count tags</li>
+</ul>
+</li>
+</ol>
+<h3 id="adhd-friendly-features">🧠 ADHD-Friendly Features</h3>
+<ol>
+<li>
+<p><strong>Focus Mode Integration</strong> ⭐</p>
+<ul>
+<li>Hide panel in focus mode</li>
+<li>Or show only current note's tags</li>
+</ul>
+</li>
+<li>
+<p><strong>Visual Hierarchy Enhancement</strong></p>
+<ul>
+<li>Color-coded depth levels</li>
+<li>Connecting lines (like file trees)</li>
+<li>Indentation guides</li>
+</ul>
+</li>
+<li>
+<p><strong>Quick Actions</strong></p>
+<ul>
+<li>Keyboard shortcuts for common actions</li>
+<li><code>t</code> to open tag panel</li>
+<li><code>/</code> to focus search</li>
+<li>Number keys for recent tags</li>
+</ul>
+</li>
+<li>
+<p><strong>Reduced Cognitive Load</strong></p>
+<ul>
+<li>Hide zero-count tags option</li>
+<li>"Essentials only" mode</li>
+<li>Progressive disclosure</li>
+</ul>
+</li>
+<li>
+<p><strong>Tag Suggestions Panel</strong></p>
+<ul>
+<li>AI-suggested tags for current note</li>
+<li>Based on content analysis</li>
+<li>One-click to apply</li>
+</ul>
+</li>
+</ol>
+<h3 id="advanced-features">🔍 Advanced Features</h3>
+<ol>
+<li>
+<p><strong>Tag Relationships</strong></p>
+<ul>
+<li>Show related tags (often used together)</li>
+<li>"People who use X also use Y"</li>
+</ul>
+</li>
+<li>
+<p><strong>Tag Statistics</strong></p>
+<ul>
+<li>Expandable stats per tag</li>
+<li>Last used date</li>
+<li>Growth over time</li>
+</ul>
+</li>
+<li>
+<p><strong>Tag Templates</strong></p>
+<ul>
+<li>Preset tag groups for projects</li>
+<li>Apply template to note</li>
+<li>"Research Project" = #research, #todo, #reading</li>
+</ul>
+</li>
+<li>
+<p><strong>Exclusion Filters</strong></p>
+<ul>
+<li>Filter notes WITHOUT certain tags</li>
+<li>"Show untagged notes"</li>
+</ul>
+</li>
+<li>
+<p><strong>Tag Aliases</strong></p>
+<ul>
+<li>Multiple names → same tag</li>
+<li>Handle typos automatically</li>
+</ul>
+</li>
+<li>
+<p><strong>Export/Import Tags</strong></p>
+<ul>
+<li>Backup tag structure</li>
+<li>Share between vaults</li>
+<li>Import from Obsidian</li>
+</ul>
+</li>
+</ol>
+<h3 id="orphan-tag-handling-users-specific-request">🐛 Orphan Tag Handling (User's Specific Request)</h3>
+<ol>
+<li>
+<p><strong>Orphan Detection System</strong> ⭐⭐
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│ ⚠️ Unregistered Tags (3)        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─────────────────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ ○ #newproject    [Register]     │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ ○ #meeting-notes [Register]     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│ ○ #2024          [Register]     │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                  [Register All] │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└─────────────────────────────────┘
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Ghost Tag Highlighting</strong></p>
+<ul>
+<li>Different color for orphan tags</li>
+<li>Yellow/warning indicator</li>
+<li>Tooltip explaining status</li>
+</ul>
+</li>
+<li>
+<p><strong>Cleanup Wizard</strong></p>
+<ul>
+<li>Scan all notes</li>
+<li>Find orphan tags</li>
+<li>Batch register/ignore</li>
+</ul>
+</li>
+<li>
+<p><strong>Auto-Register Option</strong></p>
+<ul>
+<li>Setting to auto-create tags when typed</li>
+<li>Toggle per-user preference</li>
+</ul>
+</li>
+<li>
+<p><strong>Tag Validation</strong></p>
+<ul>
+<li>Mark invalid tag names (spaces, special chars)</li>
+<li>Suggest corrections</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="combined-feature-sets">Combined Feature Sets</h2>
+<h3 id="quick-win-package">"Quick Win" Package</h3>
+<ul>
+<li>Search/filter bar (#1)</li>
+<li>Compact mode toggle (#13)</li>
+<li>Recently used section (#2)</li>
+<li>Orphan detection (#31)</li>
+</ul>
+<h3 id="power-user-package">"Power User" Package</h3>
+<ul>
+<li>Tag management (rename/delete/merge)</li>
+<li>Bulk operations</li>
+<li>Keyboard shortcuts</li>
+<li>Statistics</li>
+</ul>
+<h3 id="visual-package">"Visual" Package</h3>
+<ul>
+<li>Tag cloud view</li>
+<li>Tag icons</li>
+<li>Color picker improvements</li>
+<li>Connecting lines</li>
 </ul>
 <hr />
-<p><strong>Ready to implement? Choose:</strong>
-1. Fix both issues (recommended)
-2. Fix just the migration logging
-3. Leave as-is (both are harmless)</p>
+<h2 id="design-mockups">Design Mockups</h2>
+<h3 id="option-a-enhanced-current-design">Option A: Enhanced Current Design</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│ Tags                    🔍 ≡ ⊞  │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├──────────────────────────────────┤
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│ [Search tags...]                 │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>├──────────────────────────────────┤
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│ ⏱ RECENT                         │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   • research  • meeting  • todo  │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>├──────────────────────────────────┤
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│ 📄 THIS NOTE                     │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   #statistics  #mediation        │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>├──────────────────────────────────┤
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│ ⚠️ UNREGISTERED (2)       [+All] │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   ○ #newproject           [+]    │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ○ #draft                [+]    │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>├──────────────────────────────────┤
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│ 📁 ALL TAGS (15)                 │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│ ▼ research (8)                   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ├─ statistics (3)              │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─ methods (2)                 │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│ ▶ personal (5)                   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│ • todo (12)                      │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│ • reading (7)                    │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>└──────────────────────────────────┘
+</code></pre></div>
+<h3 id="option-b-minimalcompact">Option B: Minimal/Compact ⭐</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│ Tags      🔍  ≡  +     │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├────────────────────────┤
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│ [Filter...]            │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                        │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│ research/stats    3    │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│ research/methods  2    │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│ • todo           12    │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│ • reading         7    │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│ ○ unregistered    2 ⚠️  │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│                        │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│ [Clear filters]        │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>└────────────────────────┘
+</code></pre></div>
+<h3 id="option-c-tag-cloud">Option C: Tag Cloud ⭐</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌──────────────────────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│ Tags                    ☁️ ≡ ⊞  │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├──────────────────────────────────┤
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│                                  │
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   research    TODO    meeting    │
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│      statistics   reading        │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│  personal  methods   draft       │
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│     notes    project   2024      │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│                                  │
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│ ⚠️ 2 unregistered tags [Review]  │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>└──────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="technical-constraints">Technical Constraints</h2>
+<ol>
+<li><strong>Performance</strong> - Tag scanning needs to be efficient</li>
+<li><strong>Backward Compatibility</strong> - Don't break existing tag data</li>
+<li><strong>localStorage Limits</strong> - Can't store too much state</li>
+<li><strong>Tauri IPC</strong> - Need backend support for orphan detection</li>
+<li><strong>Real-time Updates</strong> - Tags should sync when notes change</li>
+</ol>
+<hr />
+<h2 id="trade-offs">Trade-offs</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tag Cloud</td>
+<td>Visual, scannable</td>
+<td>Less precise, takes space</td>
+</tr>
+<tr>
+<td>Orphan Detection</td>
+<td>Data integrity</td>
+<td>Performance on large vaults</td>
+</tr>
+<tr>
+<td>Inline Editing</td>
+<td>Quick workflow</td>
+<td>Accidental edits risk</td>
+</tr>
+<tr>
+<td>AI Suggestions</td>
+<td>Helpful</td>
+<td>Needs AI integration</td>
+</tr>
+<tr>
+<td>Compact Mode</td>
+<td>More visible</td>
+<td>Harder to read</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="top-3-recommendations">Top 3 Recommendations</h2>
+<h3 id="1-orphan-tag-detection-user-request">1. ⭐⭐ Orphan Tag Detection (User Request)</h3>
+<p><strong>Complexity:</strong> Medium
+<strong>First Steps:</strong>
+1. Add API endpoint to scan notes for <code>#tag</code> patterns
+2. Compare against registered tags in DB
+3. Create "Unregistered Tags" section in panel
+4. Add "Register" and "Register All" buttons
+5. Style with warning indicator</p>
+<h3 id="2-search-recent-tags">2. ⭐⭐ Search + Recent Tags</h3>
+<p><strong>Complexity:</strong> Low-Medium
+<strong>First Steps:</strong>
+1. Add search input at top of panel
+2. Filter tags as user types (client-side)
+3. Track recent tags in localStorage (last 10)
+4. Display "Recent" section above "All Tags"</p>
+<h3 id="3-compact-mode-visual-polish">3. ⭐ Compact Mode + Visual Polish</h3>
+<p><strong>Complexity:</strong> Low
+<strong>First Steps:</strong>
+1. Add compact mode toggle to header
+2. Reduce padding/font when active
+3. Add connecting lines for tree view
+4. Improve visual hierarchy with subtle colors</p>
+<hr />
+<h2 id="implementation-status">Implementation Status</h2>
+<h3 id="sprint-15-quick-wins-complete">Sprint 15 (Quick Wins) ✅ COMPLETE</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Search/filter bar - Real-time filtering with match count</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Recent tags section - Tracks last 8 clicked, shows top 5</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Compact mode toggle - Reduces padding/font sizes</li>
+</ul>
+<h3 id="sprint-16-core-feature-complete">Sprint 16 (Core Feature) ✅ COMPLETE</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Orphan tag detection - Scans all notes for unregistered <code>#tags</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Register unregistered tags - Single + "Register All" buttons</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Tag management (rename/delete) - Right-click context menu</li>
+</ul>
+<hr />
+<h2 id="future-enhancements">Future Enhancements</h2>
+<h3 id="sprint-17-visual-improvements">Sprint 17: Visual Improvements</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Effort</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tag cloud view</td>
+<td>Medium</td>
+<td>Size-based frequency visualization</td>
+</tr>
+<tr>
+<td>Tag icons/emoji</td>
+<td>Low</td>
+<td>Optional icon per tag for visual differentiation</td>
+</tr>
+<tr>
+<td>Connecting lines</td>
+<td>Low</td>
+<td>Tree view indentation guides</td>
+</tr>
+<tr>
+<td>Color picker</td>
+<td>Low</td>
+<td>Click color dot to change tag color</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sprint-18-power-user-features">Sprint 18: Power User Features</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Effort</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bulk operations</td>
+<td>Medium</td>
+<td>Multi-select tags for batch rename/delete/color</td>
+</tr>
+<tr>
+<td>Keyboard shortcuts</td>
+<td>Low</td>
+<td><code>t</code> to focus panel, <code>/</code> to search, numbers for recent</td>
+</tr>
+<tr>
+<td>Tag merging</td>
+<td>Medium</td>
+<td>Select multiple → merge into one</td>
+</tr>
+<tr>
+<td>Exclusion filters</td>
+<td>Low</td>
+<td>Filter notes WITHOUT certain tags</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sprint-19-advanced-features">Sprint 19: Advanced Features</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Effort</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI tag suggestions</td>
+<td>High</td>
+<td>Suggest tags based on note content</td>
+</tr>
+<tr>
+<td>Tag templates</td>
+<td>Medium</td>
+<td>Preset tag groups for project types</td>
+</tr>
+<tr>
+<td>Tag statistics</td>
+<td>Low</td>
+<td>Expandable stats per tag (last used, growth)</td>
+</tr>
+<tr>
+<td>Tag relationships</td>
+<td>Medium</td>
+<td>Show related tags (often used together)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="backlog-low-priority">Backlog (Low Priority)</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Tag aliases (multiple names → same tag)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Export/import tags</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Alphabetical jump (A-Z sidebar)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Progress indicators (% of notes tagged)</li>
+</ul>
+<hr />
+<h2 id="technical-debt">Technical Debt</h2>
+<h3 id="backend-improvements-needed">Backend Improvements Needed</h3>
+<ol>
+<li>~~<strong>Hierarchical tag regex</strong>~~ ✅ Fixed - Regex updated to <code>#([a-zA-Z0-9_/-]+)</code> in database.rs</li>
+<li>~~<strong>Tag-YAML sync</strong>~~ ✅ Fixed - Inline #tags now sync to <code>properties.tags</code> in YAML frontmatter (App.tsx)</li>
+<li><strong>Performance</strong> - Orphan detection scans all notes; consider caching or incremental updates</li>
+</ol>
+<hr />
+<h2 id="completed-features-summary">Completed Features Summary</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>TagsPanel Features (as of Sprint 16):
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── Header
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│   ├── Title + tag count
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│   ├── Compact mode toggle (Minimize2/Maximize2)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│   ├── Tree view toggle (Network icon)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   └── Flat view toggle (List icon)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>├── Search Bar
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   ├── Real-time filtering
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   ├── Clear button (X)
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   └── Match count display
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>├── Recent Tags Section
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│   ├── Clock icon header
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│   ├── Last 5 recently clicked
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│   └── localStorage persistence
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>├── Unregistered Tags Section (warning style)
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│   ├── AlertTriangle icon
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│   ├── Individual register buttons
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│   ├── &quot;Register All&quot; button
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│   └── Note count per tag
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>├── This Note Section
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│   └── Tags on current note (pill style)
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>├── All Tags Section
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│   ├── Tree view (hierarchical)
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│   ├── Flat view (alphabetical)
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│   └── Right-click context menu
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>├── Context Menu
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│   ├── Rename (with prompt)
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│   └── Delete (with confirm)
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>└── Clear Filters Button
+</code></pre></div>
+<hr />
+<p><em>Last updated: December 26, 2025 - Sprint 16 complete</em></p>
 
 
 

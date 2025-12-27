@@ -12,7 +12,7 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/scribe/archive/sprints-1-7/PROPOSAL-ERROR-FIXES/">
+        <link rel="canonical" href="https://data-wise.github.io/scribe/archive/proposals/PROPOSAL-EDITOR-ALTERNATIVES/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Error Fixes Proposal - Scribe</title>
+        <title>Editor Alternatives Research - Scribe</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#error-fixes-proposal" class="md-skip">
+        <a href="#editor-alternatives-research" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Error Fixes Proposal
+              Editor Alternatives Research
             
           </span>
         </div>
@@ -1545,10 +1545,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#the-problem-with-blocknote" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        The Problem with BlockNote
       
     </span>
   </a>
@@ -1556,22 +1556,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#issues-identified" class="md-nav__link">
+  <a href="#options-compared" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Issues Identified
+        Options Compared
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Issues Identified">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-a-lexical-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Lexical (Recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option A: Lexical (Recommended)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-migration-logging-appears-alarming" class="md-nav__link">
+  <a href="#why-lexical" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Migration Logging Appears Alarming
+        Why Lexical?
       
     </span>
   </a>
@@ -1579,10 +1590,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-macos-spell-server-warning" class="md-nav__link">
+  <a href="#pros" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. macOS Spell Server Warning
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Path
       
     </span>
   </a>
@@ -1595,22 +1639,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#proposed-fixes" class="md-nav__link">
+  <a href="#option-b-tiptap-headless" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Proposed Fixes
+        Option B: TipTap (Headless)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposed Fixes">
+    <nav class="md-nav" aria-label="Option B: TipTap (Headless)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fix-1-improve-migration-logging" class="md-nav__link">
+  <a href="#why-tiptap-headless" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fix 1: Improve Migration Logging
+        Why TipTap Headless?
       
     </span>
   </a>
@@ -1618,10 +1662,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fix-2-suppress-spell-server-warning" class="md-nav__link">
+  <a href="#pros_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fix 2: Suppress Spell Server Warning
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-path_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Path
       
     </span>
   </a>
@@ -1634,22 +1700,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
+  <a href="#option-c-novel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementation Plan
+        Option C: Novel
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Implementation Plan">
+    <nav class="md-nav" aria-label="Option C: Novel">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-wins-5-minutes" class="md-nav__link">
+  <a href="#why-novel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Wins (5 minutes)
+        Why Novel?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pros_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-path_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Path
       
     </span>
   </a>
@@ -1662,44 +1761,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
+  <a href="#option-d-plain-textarea-markdown" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Testing
+        Option D: Plain Textarea + Markdown
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#files-to-modify" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Files to Modify
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recommendations">
+    <nav class="md-nav" aria-label="Option D: Plain Textarea + Markdown">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#recommended-path" class="md-nav__link">
+  <a href="#why-plain" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended Path
+        Why Plain?
       
     </span>
   </a>
@@ -1707,10 +1784,110 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alternative-fix-just-the-logging" class="md-nav__link">
+  <a href="#pros_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alternative: Fix just the logging
+        Pros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-e-hybrid-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option E: Hybrid Approach
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option E: Hybrid Approach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-hybrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Hybrid?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-maximum-adhd-friendliness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Maximum ADHD-Friendliness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Matrix
       
     </span>
   </a>
@@ -1734,10 +1911,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#questions" class="md-nav__link">
+  <a href="#sources" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Questions?
+        Sources
       
     </span>
   </a>
@@ -1764,159 +1941,292 @@
   
 
 
-<h1 id="error-fixes-proposal">Error Fixes Proposal</h1>
-<p><strong>Generated:</strong> 2024-12-24
-<strong>Context:</strong> Nexus Desktop - Post Sprint 7</p>
-<hr />
-<h2 id="overview">Overview</h2>
-<p>Two improvements to reduce console noise and improve user experience during app startup.</p>
-<hr />
-<h2 id="issues-identified">Issues Identified</h2>
-<h3 id="1-migration-logging-appears-alarming">1. Migration Logging Appears Alarming</h3>
-<p><strong>Current behavior:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Running migration 003: Tags system (new schema)
-</code></pre></div></p>
-<p><strong>Why it's confusing:</strong>
-- Sounds like something is "running" or in-progress
-- Users might think something is wrong
-- Appears on every fresh database initialization</p>
-<p><strong>Impact:</strong> Low priority - purely cosmetic</p>
-<h3 id="2-macos-spell-server-warning">2. macOS Spell Server Warning</h3>
-<p><strong>Current behavior:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Electron[38809:1850642] Spell server connection error sending _proxyDataFromCheckingString
-</code></pre></div></p>
-<p><strong>Why it happens:</strong>
-- Electron tries to connect to macOS spell-checking service
-- This is a harmless system warning
-- Appears in almost all Electron apps on macOS
-- Does not affect functionality</p>
-<p><strong>Impact:</strong> Low priority - can be safely ignored, but reduces noise</p>
-<hr />
-<h2 id="proposed-fixes">Proposed Fixes</h2>
-<h3 id="fix-1-improve-migration-logging">Fix 1: Improve Migration Logging</h3>
-<p><strong>Option A: Make it success-oriented</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// In DatabaseService.ts line 197</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database ready (schema version 3)&#39;</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Option B: Use debug logging</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Only log in development</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Running migration 003: Tags system (new schema)&#39;</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Option C: Silent migrations</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Remove the console.log entirely</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">// Migration happens silently in background</span>
-</code></pre></div></p>
-<p><strong>Recommendation:</strong> <strong>Option A</strong> - Positive, informative, reassuring</p>
-<hr />
-<h3 id="fix-2-suppress-spell-server-warning">Fix 2: Suppress Spell Server Warning</h3>
-<p><strong>Implementation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// In src/main/index.ts before app.whenReady()</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">platform</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;darwin&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">commandLine</span><span class="p">.</span><span class="nx">appendSwitch</span><span class="p">(</span><span class="s1">&#39;disable-features&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SpellcheckService&#39;</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Trade-off:</strong>
-- ✅ Eliminates the warning
-- ❌ Disables macOS system spell-checking in the editor
-- Note: Most users don't rely on system spell-check in note-taking apps</p>
-<p><strong>Alternative:</strong> Keep spell-checking, ignore warning
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Do nothing - warning is harmless</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// Most Electron apps have this</span>
-</code></pre></div></p>
-<p><strong>Recommendation:</strong> <strong>Suppress the warning</strong> - cleaner console, spell-checking not critical for PKM app</p>
-<hr />
-<h2 id="implementation-plan">Implementation Plan</h2>
-<h3 id="quick-wins-5-minutes">Quick Wins (5 minutes)</h3>
-<p><strong>Option 1: Just fix the logging</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// DatabaseService.ts line 197 (all 3 migrations)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database initialized (schema version 3)&#39;</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Option 2: Fix both issues</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// 1. Add to src/main/index.ts line 1 (top of file)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">platform</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;darwin&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">commandLine</span><span class="p">.</span><span class="nx">appendSwitch</span><span class="p">(</span><span class="s1">&#39;disable-features&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SpellcheckService&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">}</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">// 2. Update DatabaseService.ts migrations</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nx">runMigration001</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database initialized (schema version 1)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nx">runMigration002</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database updated (schema version 2)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">}</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="nx">runMigration003</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database updated (schema version 3)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="p">}</span>
-</code></pre></div></p>
-<hr />
-<h2 id="testing">Testing</h2>
-<p><strong>Before fix:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>npm<span class="w"> </span>start
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Console shows:</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Running migration 003: Tags system (new schema)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Spell server connection error...</span>
-</code></pre></div></p>
-<p><strong>After fix:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>npm<span class="w"> </span>start
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Console shows:</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># ✅ Database updated (schema version 3)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># (No spell server warning)</span>
-</code></pre></div></p>
-<hr />
-<h2 id="files-to-modify">Files to Modify</h2>
-<ol>
-<li><strong><code>src/main/index.ts</code></strong> - Add spell-check suppression (3 lines)</li>
-<li><strong><code>src/main/database/DatabaseService.ts</code></strong> - Update migration logs (3 lines)</li>
-</ol>
-<p>Total changes: 6 lines across 2 files</p>
-<hr />
-<h2 id="recommendations">Recommendations</h2>
-<h3 id="recommended-path">Recommended Path</h3>
-<p>✅ <strong>Fix both issues</strong> (Option 2 above)</p>
-<p><strong>Reasoning:</strong>
-1. Takes only 5 minutes
-2. Cleaner console output
-3. More professional user experience
-4. No functional trade-offs (spell-checking not essential for PKM)</p>
-<h3 id="alternative-fix-just-the-logging">Alternative: Fix just the logging</h3>
-<p>If you prefer to keep macOS spell-checking available, just fix the migration logs (Option 1).</p>
-<hr />
-<h2 id="next-steps">Next Steps</h2>
-<p><strong>If approved:</strong>
-1. [ ] Update <code>src/main/index.ts</code> with spell-check suppression
-2. [ ] Update <code>DatabaseService.ts</code> migration logs
-3. [ ] Test with <code>npm start</code>
-4. [ ] Commit changes
-5. [ ] Update CHANGELOG.md (patch version 0.3.1)</p>
-<p><strong>Estimated time:</strong> 5 minutes</p>
-<hr />
-<h2 id="questions">Questions?</h2>
+<h1 id="editor-alternatives-research">Editor Alternatives Research</h1>
+<blockquote>
+<p><strong>Generated:</strong> 2024-12-25
+<strong>Context:</strong> Scribe - ADHD-friendly distraction-free writer
+<strong>Current:</strong> BlockNote (built on TipTap/ProseMirror)</p>
+</blockquote>
+<h2 id="the-problem-with-blocknote">The Problem with BlockNote</h2>
+<p>BlockNote is an abstraction on top of TipTap, which is itself an abstraction on top of ProseMirror. This means:</p>
 <ul>
-<li>
-<p><strong>Q: Will this affect spell-checking in the editor?</strong>
-  A: Yes, but most users don't rely on system spell-check. TipTap/ProseMirror can add their own spell-checking plugins if needed.</p>
-</li>
-<li>
-<p><strong>Q: Is the spell server warning harmful?</strong>
-  A: No, completely harmless. It's just macOS reporting that Electron couldn't connect to the spell service.</p>
-</li>
-<li>
-<p><strong>Q: Should migrations be completely silent?</strong>
-  A: No - it's helpful to see database initialization confirmation, just with positive phrasing.</p>
-</li>
+<li>3 layers of abstraction = harder to customize deeply</li>
+<li>Opinionated Notion-style UI that may not fit minimalist needs</li>
+<li>Some features (DOCX/PDF export) require paid subscription</li>
+<li>Block-based paradigm adds friction for pure writing flow</li>
 </ul>
 <hr />
-<p><strong>Ready to implement? Choose:</strong>
-1. Fix both issues (recommended)
-2. Fix just the migration logging
-3. Leave as-is (both are harmless)</p>
+<h2 id="options-compared">Options Compared</h2>
+<table>
+<thead>
+<tr>
+<th>Editor</th>
+<th>Foundation</th>
+<th>Setup</th>
+<th>Customization</th>
+<th>ADHD-Friendly</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lexical</strong></td>
+<td>Standalone (Meta)</td>
+<td>Medium</td>
+<td>Maximum</td>
+<td>Best</td>
+</tr>
+<tr>
+<td><strong>TipTap (headless)</strong></td>
+<td>ProseMirror</td>
+<td>Medium</td>
+<td>High</td>
+<td>Good</td>
+</tr>
+<tr>
+<td><strong>Novel</strong></td>
+<td>TipTap</td>
+<td>Easy</td>
+<td>Medium</td>
+<td>Good</td>
+</tr>
+<tr>
+<td><strong>Minimal TipTap</strong></td>
+<td>TipTap</td>
+<td>Easy</td>
+<td>Medium</td>
+<td>Very Good</td>
+</tr>
+<tr>
+<td><strong>Yoopta</strong></td>
+<td>Custom</td>
+<td>Medium</td>
+<td>High</td>
+<td>Good</td>
+</tr>
+<tr>
+<td><strong>Plain Textarea</strong></td>
+<td>Native</td>
+<td>Trivial</td>
+<td>Limited</td>
+<td>Perfect</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="option-a-lexical-recommended">Option A: Lexical (Recommended)</h2>
+<p><strong>Effort:</strong> Medium | <strong>Risk:</strong> Low | <strong>ADHD Score:</strong> 9/10</p>
+<h3 id="why-lexical">Why Lexical?</h3>
+<ul>
+<li><strong>Minimal core</strong> — Only add what you need</li>
+<li><strong>Meta-backed</strong> — Powers Facebook, Instagram (battle-tested)</li>
+<li><strong>Performance</strong> — Optimized for speed</li>
+<li><strong>Accessibility</strong> — Built-in WCAG compliance</li>
+<li><strong>TypeScript</strong> — First-class support</li>
+<li><strong>No abstraction layers</strong> — Direct control</li>
+</ul>
+<h3 id="pros">Pros</h3>
+<ul>
+<li>Start with plain text, add features incrementally</li>
+<li>Immutable state model (undo/redo built-in)</li>
+<li>Plugin architecture = add only what matters</li>
+<li>No opinionated UI to fight against</li>
+<li>React bindings official (<code>@lexical/react</code>)</li>
+</ul>
+<h3 id="cons">Cons</h3>
+<ul>
+<li>More initial setup than BlockNote</li>
+<li>Documentation could be better</li>
+<li>Collaborative editing needs more work</li>
+</ul>
+<h3 id="sample-setup">Sample Setup</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">LexicalComposer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@lexical/react/LexicalComposer&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PlainTextPlugin</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@lexical/react/LexicalPlainTextPlugin&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ContentEditable</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@lexical/react/LexicalContentEditable&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">HistoryPlugin</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@lexical/react/LexicalHistoryPlugin&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kd">function</span><span class="w"> </span><span class="nx">Editor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">LexicalComposer</span><span class="w"> </span><span class="nx">initialConfig</span><span class="o">=</span><span class="p">{</span><span class="nx">config</span><span class="p">}</span><span class="o">&gt;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">PlainTextPlugin</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nx">contentEditable</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">ContentEditable</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;editor-input&quot;</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="nx">placeholder</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;placeholder&quot;</span><span class="o">&gt;</span><span class="nx">Start</span><span class="w"> </span><span class="nx">writing</span><span class="p">...</span><span class="o">&lt;</span><span class="err">/div&gt;}</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="err">/&gt;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">HistoryPlugin</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="o">&lt;</span><span class="err">/LexicalComposer&gt;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="migration-path">Migration Path</h3>
+<ol>
+<li>Install: <code>npm install lexical @lexical/react</code></li>
+<li>Create minimal editor component</li>
+<li>Add plugins incrementally: markdown, wiki-links, tags</li>
+<li>Port existing features one at a time</li>
+</ol>
+<hr />
+<h2 id="option-b-tiptap-headless">Option B: TipTap (Headless)</h2>
+<p><strong>Effort:</strong> Medium | <strong>Risk:</strong> Low | <strong>ADHD Score:</strong> 8/10</p>
+<h3 id="why-tiptap-headless">Why TipTap Headless?</h3>
+<p>You already have TipTap experience from Sprint 3. Going headless means:</p>
+<ul>
+<li>Keep the familiar API</li>
+<li>Remove Notion-style UI</li>
+<li>Build exactly the UI you want</li>
+<li>Use their <a href="https://minimal-tiptap.aslamh.dev/">Minimal Template</a></li>
+</ul>
+<h3 id="pros_1">Pros</h3>
+<ul>
+<li>Familiar from previous work</li>
+<li>Extensive extension library (100+)</li>
+<li>Strong collaboration support</li>
+<li>Good mobile/Android support (ProseMirror battle-tested)</li>
+</ul>
+<h3 id="cons_1">Cons</h3>
+<ul>
+<li>Still ProseMirror under the hood (complex)</li>
+<li>Extension ecosystem can be overwhelming</li>
+<li>Some advanced extensions are paid</li>
+</ul>
+<h3 id="migration-path_1">Migration Path</h3>
+<ol>
+<li>Remove BlockNote, keep TipTap core</li>
+<li>Use <code>@tiptap/starter-kit</code> minimal setup</li>
+<li>Build custom minimal toolbar (or none)</li>
+<li>Port wiki-links/tags as TipTap extensions</li>
+</ol>
+<hr />
+<h2 id="option-c-novel">Option C: Novel</h2>
+<p><strong>Effort:</strong> Low | <strong>Risk:</strong> Low | <strong>ADHD Score:</strong> 7/10</p>
+<h3 id="why-novel">Why Novel?</h3>
+<ul>
+<li><strong>AI-powered</strong> — Autocomplete suggestions (optional)</li>
+<li><strong>Beautiful defaults</strong> — Polished out of the box</li>
+<li><strong>Minimal setup</strong> — Works immediately</li>
+<li><strong>Tailwind-styled</strong> — Matches your stack</li>
+</ul>
+<h3 id="pros_2">Pros</h3>
+<ul>
+<li>Fastest to implement</li>
+<li>Looks great immediately</li>
+<li>AI features could help ADHD writing flow</li>
+<li>Built on TipTap (familiar)</li>
+</ul>
+<h3 id="cons_2">Cons</h3>
+<ul>
+<li>Less customizable than raw TipTap</li>
+<li>AI features may be distracting (can disable)</li>
+<li>Notion-style (similar to BlockNote)</li>
+</ul>
+<h3 id="migration-path_2">Migration Path</h3>
+<ol>
+<li><code>npm install novel</code></li>
+<li>Replace BlockNote with Novel component</li>
+<li>Customize theme to be more minimal</li>
+</ol>
+<hr />
+<h2 id="option-d-plain-textarea-markdown">Option D: Plain Textarea + Markdown</h2>
+<p><strong>Effort:</strong> Low | <strong>Risk:</strong> None | <strong>ADHD Score:</strong> 10/10</p>
+<h3 id="why-plain">Why Plain?</h3>
+<p>Ultimate distraction-free. Just text. Period.</p>
+<h3 id="pros_3">Pros</h3>
+<ul>
+<li>Zero dependencies</li>
+<li>Instant startup</li>
+<li>No learning curve</li>
+<li>Maximum focus</li>
+</ul>
+<h3 id="cons_3">Cons</h3>
+<ul>
+<li>No rich formatting</li>
+<li>No wiki-links inline preview</li>
+<li>Must handle markdown yourself</li>
+</ul>
+<h3 id="implementation">Implementation</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">Editor</span><span class="p">({</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">onChange</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">textarea</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;w-full h-full bg-transparent resize-none focus:outline-none font-mono&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nx">onChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">onChange</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nx">placeholder</span><span class="o">=</span><span class="s2">&quot;Start writing...&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="o">/&gt;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="option-e-hybrid-approach">Option E: Hybrid Approach</h2>
+<p><strong>Effort:</strong> Medium | <strong>Risk:</strong> Low | <strong>ADHD Score:</strong> 9/10</p>
+<h3 id="concept">Concept</h3>
+<ul>
+<li><strong>Writing mode:</strong> Plain textarea (zero distractions)</li>
+<li><strong>Review mode:</strong> Rendered markdown with rich preview</li>
+<li><strong>Toggle:</strong> Single keypress to switch (e.g., <code>Cmd+E</code>)</li>
+</ul>
+<h3 id="why-hybrid">Why Hybrid?</h3>
+<ul>
+<li>Write in plain text (maximum focus)</li>
+<li>Preview when needed (see formatting)</li>
+<li>Best of both worlds</li>
+</ul>
+<hr />
+<h2 id="recommendation">Recommendation</h2>
+<h3 id="for-maximum-adhd-friendliness">For Maximum ADHD-Friendliness</h3>
+<p><strong>Option A: Lexical</strong> or <strong>Option E: Hybrid</strong></p>
+<p>Both prioritize:
+- Minimal interface
+- Fast startup
+- Add features only when needed
+- User controls the experience</p>
+<h3 id="decision-matrix">Decision Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Best Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fastest to implement</td>
+<td>Novel or Minimal TipTap</td>
+</tr>
+<tr>
+<td>Maximum customization</td>
+<td>Lexical</td>
+</tr>
+<tr>
+<td>Zero distractions</td>
+<td>Plain Textarea + Hybrid</td>
+</tr>
+<tr>
+<td>Keep current work</td>
+<td>TipTap Headless</td>
+</tr>
+<tr>
+<td>AI assistance</td>
+<td>Novel</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<ol>
+<li><strong>Try Lexical</strong> — Spike a minimal editor (2-3 hours)</li>
+<li><strong>Compare UX</strong> — Side-by-side with current BlockNote</li>
+<li><strong>Decide</strong> — Based on actual typing feel</li>
+<li><strong>Migrate</strong> — Sprint 9 or new sprint</li>
+</ol>
+<hr />
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://liveblocks.io/blog/which-rich-text-editor-framework-should-you-choose-in-2025">Liveblocks: Which RTE Framework in 2025?</a></li>
+<li><a href="https://tiptap.dev/alternatives/blocknote-vs-tiptap">TipTap: BlockNote vs TipTap</a></li>
+<li><a href="https://lexical.dev/docs/getting-started/react">Lexical Official Docs</a></li>
+<li><a href="https://github.com/steven-tey/novel">Novel Editor (GitHub)</a></li>
+<li><a href="https://minimal-tiptap.aslamh.dev/">Minimal TipTap</a></li>
+<li><a href="https://github.com/yoopta-editor/Yoopta-Editor">Yoopta Editor</a></li>
+<li><a href="https://blog.logrocket.com/build-rich-text-editor-lexical-react/">LogRocket: Build with Lexical</a></li>
+</ul>
 
 
 

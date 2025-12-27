@@ -12,7 +12,7 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/scribe/archive/sprints-1-7/PROPOSAL-ERROR-FIXES/">
+        <link rel="canonical" href="https://data-wise.github.io/scribe/archive/proposals/PROPOSAL-UI-IMPROVEMENTS/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Error Fixes Proposal - Scribe</title>
+        <title>Scribe UI Improvement Proposals - Scribe</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#error-fixes-proposal" class="md-skip">
+        <a href="#scribe-ui-improvement-proposals" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Error Fixes Proposal
+              Scribe UI Improvement Proposals
             
           </span>
         </div>
@@ -1545,10 +1545,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#executive-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Executive Summary
       
     </span>
   </a>
@@ -1556,22 +1556,45 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#issues-identified" class="md-nav__link">
+  <a href="#current-ui-strengths" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Issues Identified
+        Current UI Strengths
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Issues Identified">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#improvement-proposals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Improvement Proposals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Improvement Proposals">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-migration-logging-appears-alarming" class="md-nav__link">
+  <a href="#category-1-empty-states-onboarding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Migration Logging Appears Alarming
+        Category 1: Empty States &amp; Onboarding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 1: Empty States &amp; Onboarding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-engaging-empty-state-quick-win" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 ⭐ Engaging Empty State (Quick Win)
       
     </span>
   </a>
@@ -1579,10 +1602,315 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-macos-spell-server-warning" class="md-nav__link">
+  <a href="#12-first-run-onboarding-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. macOS Spell Server Warning
+        1.2 First-Run Onboarding Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-2-visual-hierarchy-polish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 2: Visual Hierarchy &amp; Polish
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 2: Visual Hierarchy &amp; Polish">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-sidebar-visual-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 ⭐ Sidebar Visual Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-button-feedback-micro-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 ⭐ Button Feedback &amp; Micro-interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-panel-transitions-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Panel Transitions &amp; Animations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-3-editor-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 3: Editor Experience
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 3: Editor Experience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-focus-mode-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 ⭐ Focus Mode Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-writing-progress-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Writing Progress Visualization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-smart-formatting-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Smart Formatting Toolbar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-4-adhd-specific-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 4: ADHD-Specific Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 4: ADHD-Specific Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-distraction-shield-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 ⭐ Distraction Shield Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-quick-capture-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Quick Capture Widget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-reading-mode-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Reading Mode Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-5-visual-refinements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 5: Visual Refinements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 5: Visual Refinements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-icon-consistency-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Icon Consistency Update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-theme-preview-cards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 ⭐ Theme Preview Cards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-custom-accent-color-picker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Custom Accent Color Picker
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-6-navigation-information-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category 6: Navigation &amp; Information Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category 6: Navigation &amp; Information Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-breadcrumb-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Breadcrumb Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-recent-notes-quick-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Recent Notes Quick Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-split-view-deferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Split View (Deferred)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Implementation Order
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended Implementation Order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-quick-wins-this-sprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Quick Wins (This Sprint)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-high-value-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: High-Value Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-polish-delight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Polish &amp; Delight
       
     </span>
   </a>
@@ -1595,22 +1923,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#proposed-fixes" class="md-nav__link">
+  <a href="#trade-offs-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Proposed Fixes
+        Trade-offs &amp; Considerations
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposed Fixes">
+    <nav class="md-nav" aria-label="Trade-offs &amp; Considerations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fix-1-improve-migration-logging" class="md-nav__link">
+  <a href="#performance-vs-polish" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fix 1: Improve Migration Logging
+        Performance vs. Polish
       
     </span>
   </a>
@@ -1618,88 +1946,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fix-2-suppress-spell-server-warning" class="md-nav__link">
+  <a href="#simplicity-vs-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fix 2: Suppress Spell Server Warning
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Implementation Plan
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation Plan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#quick-wins-5-minutes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Wins (5 minutes)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#files-to-modify" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Files to Modify
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recommendations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommended-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommended Path
+        Simplicity vs. Features
       
     </span>
   </a>
@@ -1707,10 +1957,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alternative-fix-just-the-logging" class="md-nav__link">
+  <a href="#consistency-vs-customization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alternative: Fix just the logging
+        Consistency vs. Customization
       
     </span>
   </a>
@@ -1731,13 +1981,74 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#completed-2024-12-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Completed (2024-12-26)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-progress-sprint-12-remaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 In Progress - Sprint 12 Remaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sprint-13-project-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Sprint 13 - Project System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research Needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-debt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Debt
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#questions" class="md-nav__link">
+  <a href="#appendix-screenshots-analyzed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Questions?
+        Appendix: Screenshots Analyzed
       
     </span>
   </a>
@@ -1764,159 +2075,441 @@
   
 
 
-<h1 id="error-fixes-proposal">Error Fixes Proposal</h1>
-<p><strong>Generated:</strong> 2024-12-24
-<strong>Context:</strong> Nexus Desktop - Post Sprint 7</p>
+<h1 id="scribe-ui-improvement-proposals">Scribe UI Improvement Proposals</h1>
+<p><strong>Generated:</strong> 2025-12-26
+<strong>Context:</strong> Front-end/UI Expert Analysis
+<strong>Mode:</strong> Comprehensive Brainstorm</p>
 <hr />
-<h2 id="overview">Overview</h2>
-<p>Two improvements to reduce console noise and improve user experience during app startup.</p>
+<h2 id="executive-summary">Executive Summary</h2>
+<p>After analyzing Scribe's UI in the browser, I identified <strong>strengths to build on</strong> and <strong>opportunities for improvement</strong>. The app already has excellent foundations: a clean dark theme system, thoughtful ADHD-friendly font options, and well-organized settings. The proposals below focus on <strong>polish, delight, and friction reduction</strong>.</p>
 <hr />
-<h2 id="issues-identified">Issues Identified</h2>
-<h3 id="1-migration-logging-appears-alarming">1. Migration Logging Appears Alarming</h3>
-<p><strong>Current behavior:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Running migration 003: Tags system (new schema)
-</code></pre></div></p>
-<p><strong>Why it's confusing:</strong>
-- Sounds like something is "running" or in-progress
-- Users might think something is wrong
-- Appears on every fresh database initialization</p>
-<p><strong>Impact:</strong> Low priority - purely cosmetic</p>
-<h3 id="2-macos-spell-server-warning">2. macOS Spell Server Warning</h3>
-<p><strong>Current behavior:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Electron[38809:1850642] Spell server connection error sending _proxyDataFromCheckingString
-</code></pre></div></p>
-<p><strong>Why it happens:</strong>
-- Electron tries to connect to macOS spell-checking service
-- This is a harmless system warning
-- Appears in almost all Electron apps on macOS
-- Does not affect functionality</p>
-<p><strong>Impact:</strong> Low priority - can be safely ignored, but reduces noise</p>
+<h2 id="current-ui-strengths">Current UI Strengths</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>What's Working Well</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Theme System</strong></td>
+<td>10 beautiful themes with ADHD-friendly design principles</td>
+</tr>
+<tr>
+<td><strong>Settings Organization</strong></td>
+<td>Clear tabs, intuitive groupings</td>
+</tr>
+<tr>
+<td><strong>ADHD-Friendly Fonts</strong></td>
+<td>14 fonts with Homebrew install, excellent descriptions</td>
+</tr>
+<tr>
+<td><strong>Command Palette</strong></td>
+<td>Clean design, good keyboard shortcuts</td>
+</tr>
+<tr>
+<td><strong>Typography Controls</strong></td>
+<td>Live preview, intuitive sliders</td>
+</tr>
+<tr>
+<td><strong>Keyboard Shortcuts</strong></td>
+<td>Theme switching (Cmd+Alt+#) is clever</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="proposed-fixes">Proposed Fixes</h2>
-<h3 id="fix-1-improve-migration-logging">Fix 1: Improve Migration Logging</h3>
-<p><strong>Option A: Make it success-oriented</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// In DatabaseService.ts line 197</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database ready (schema version 3)&#39;</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Option B: Use debug logging</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Only log in development</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Running migration 003: Tags system (new schema)&#39;</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Option C: Silent migrations</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Remove the console.log entirely</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">// Migration happens silently in background</span>
-</code></pre></div></p>
-<p><strong>Recommendation:</strong> <strong>Option A</strong> - Positive, informative, reassuring</p>
+<h2 id="improvement-proposals">Improvement Proposals</h2>
+<h3 id="category-1-empty-states-onboarding">Category 1: Empty States &amp; Onboarding</h3>
+<h4 id="11-engaging-empty-state-quick-win">1.1 ⭐ Engaging Empty State (Quick Win)</h4>
+<p><strong>Current:</strong> "Select a note to begin" - functional but cold
+<strong>Proposed:</strong> Rich empty state with:
+- Animated writing illustration (subtle, CSS-only)
+- Quick action buttons: "Create First Note" / "Open Daily Note"
+- Keyboard shortcut hints: "Press ⌘N to create a note"
+- Random writing prompt/quote for inspiration</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│         ✍️ (animated pen)          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                     │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│     Ready to capture your thoughts  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                     │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ┌──────────────┐ ┌─────────────┐  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │ + New Note   │ │ Daily Note  │  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │    ⌘N       │ │     ⌘D      │  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────┘ └─────────────┘  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                     │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   &quot;The scariest moment is always    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    just before you start.&quot;          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│         — Stephen King              │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>└─────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Effort:</strong> ⚡ Quick (2-3 hours)
+<strong>Impact:</strong> High - First impression matters</p>
 <hr />
-<h3 id="fix-2-suppress-spell-server-warning">Fix 2: Suppress Spell Server Warning</h3>
-<p><strong>Implementation:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// In src/main/index.ts before app.whenReady()</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">platform</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;darwin&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">commandLine</span><span class="p">.</span><span class="nx">appendSwitch</span><span class="p">(</span><span class="s1">&#39;disable-features&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SpellcheckService&#39;</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Trade-off:</strong>
-- ✅ Eliminates the warning
-- ❌ Disables macOS system spell-checking in the editor
-- Note: Most users don't rely on system spell-check in note-taking apps</p>
-<p><strong>Alternative:</strong> Keep spell-checking, ignore warning
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Do nothing - warning is harmless</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// Most Electron apps have this</span>
-</code></pre></div></p>
-<p><strong>Recommendation:</strong> <strong>Suppress the warning</strong> - cleaner console, spell-checking not critical for PKM app</p>
+<h4 id="12-first-run-onboarding-flow">1.2 First-Run Onboarding Flow</h4>
+<p><strong>Current:</strong> No guided introduction
+<strong>Proposed:</strong> Optional 4-step onboarding:
+1. "Welcome to Scribe" - Choose theme (shows all 10)
+2. "Your Writing Style" - Set font, size, line height
+3. "Quick Tour" - Highlight command palette, daily notes
+4. "Ready to Write" - Create first note</p>
+<p><strong>Effort:</strong> 🔧 Medium (1-2 days)
+<strong>Impact:</strong> Medium - Reduces time-to-value</p>
 <hr />
-<h2 id="implementation-plan">Implementation Plan</h2>
-<h3 id="quick-wins-5-minutes">Quick Wins (5 minutes)</h3>
-<p><strong>Option 1: Just fix the logging</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// DatabaseService.ts line 197 (all 3 migrations)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database initialized (schema version 3)&#39;</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Option 2: Fix both issues</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// 1. Add to src/main/index.ts line 1 (top of file)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">platform</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;darwin&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">commandLine</span><span class="p">.</span><span class="nx">appendSwitch</span><span class="p">(</span><span class="s1">&#39;disable-features&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SpellcheckService&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">}</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">// 2. Update DatabaseService.ts migrations</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nx">runMigration001</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database initialized (schema version 1)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nx">runMigration002</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database updated (schema version 2)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">}</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="nx">runMigration003</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;✅ Database updated (schema version 3)&#39;</span><span class="p">)</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="c1">// ... rest of code</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="p">}</span>
-</code></pre></div></p>
+<h3 id="category-2-visual-hierarchy-polish">Category 2: Visual Hierarchy &amp; Polish</h3>
+<h4 id="21-sidebar-visual-improvements">2.1 ⭐ Sidebar Visual Improvements</h4>
+<p><strong>Issues Observed:</strong>
+- Icon bar icons lack hover states with labels
+- "Library" heading doesn't stand out enough
+- No visual distinction between active/inactive states</p>
+<p><strong>Proposed:</strong>
+- Add tooltip labels on icon hover
+- Add subtle glow/highlight to active sidebar icon
+- Add note count badge to Library heading
+- Add folder/tag icons for organization</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c">/* Active sidebar icon */</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">.</span><span class="nc">sidebar-icon</span><span class="p">.</span><span class="nc">active</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--nexus-bg-tertiary</span><span class="p">);</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="k">box-shadow</span><span class="p">:</span><span class="w"> </span><span class="kc">inset</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--nexus-accent</span><span class="p">);</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Effort:</strong> ⚡ Quick (1-2 hours)
+<strong>Impact:</strong> Medium - Clearer navigation</p>
 <hr />
-<h2 id="testing">Testing</h2>
-<p><strong>Before fix:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>npm<span class="w"> </span>start
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Console shows:</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Running migration 003: Tags system (new schema)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Spell server connection error...</span>
-</code></pre></div></p>
-<p><strong>After fix:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>npm<span class="w"> </span>start
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Console shows:</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># ✅ Database updated (schema version 3)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># (No spell server warning)</span>
-</code></pre></div></p>
+<h4 id="22-button-feedback-micro-interactions">2.2 ⭐ Button Feedback &amp; Micro-interactions</h4>
+<p><strong>Issues:</strong>
+- + button has no visible click feedback
+- No loading states visible
+- Buttons feel static</p>
+<p><strong>Proposed:</strong>
+- Add press states (scale 0.95 on click)
+- Add subtle hover transitions
+- Add loading spinner for async operations
+- Add success/error toast notifications</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">.</span><span class="nc">btn-action</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="k">transition</span><span class="p">:</span><span class="w"> </span><span class="k">transform</span><span class="w"> </span><span class="mf">0.1</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease</span><span class="p">,</span><span class="w"> </span><span class="k">background</span><span class="w"> </span><span class="mf">0.2</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">}</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">.</span><span class="nc">btn-action</span><span class="p">:</span><span class="nd">active</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="k">transform</span><span class="p">:</span><span class="w"> </span><span class="nb">scale</span><span class="p">(</span><span class="mf">0.95</span><span class="p">);</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Effort:</strong> ⚡ Quick (1-2 hours)
+<strong>Impact:</strong> High - Feels more responsive</p>
 <hr />
-<h2 id="files-to-modify">Files to Modify</h2>
-<ol>
-<li><strong><code>src/main/index.ts</code></strong> - Add spell-check suppression (3 lines)</li>
-<li><strong><code>src/main/database/DatabaseService.ts</code></strong> - Update migration logs (3 lines)</li>
-</ol>
-<p>Total changes: 6 lines across 2 files</p>
+<h4 id="23-panel-transitions-animations">2.3 Panel Transitions &amp; Animations</h4>
+<p><strong>Current:</strong> Panels appear/disappear instantly
+<strong>Proposed:</strong>
+- Slide-in animation for side panels (200ms ease-out)
+- Fade-in for modal overlays
+- Subtle spring animation for command palette</p>
+<p><strong>Effort:</strong> ⚡ Quick (1 hour)
+<strong>Impact:</strong> Medium - More polished feel</p>
 <hr />
-<h2 id="recommendations">Recommendations</h2>
-<h3 id="recommended-path">Recommended Path</h3>
-<p>✅ <strong>Fix both issues</strong> (Option 2 above)</p>
-<p><strong>Reasoning:</strong>
-1. Takes only 5 minutes
-2. Cleaner console output
-3. More professional user experience
-4. No functional trade-offs (spell-checking not essential for PKM)</p>
-<h3 id="alternative-fix-just-the-logging">Alternative: Fix just the logging</h3>
-<p>If you prefer to keep macOS spell-checking available, just fix the migration logs (Option 1).</p>
+<h3 id="category-3-editor-experience">Category 3: Editor Experience</h3>
+<h4 id="31-focus-mode-enhancements">3.1 ⭐ Focus Mode Enhancements</h4>
+<p><strong>Proposed additions:</strong>
+- Typewriter scrolling (keep cursor vertically centered)
+- Sentence/paragraph highlighting
+- Ambient sound toggle (rain, cafe, etc.)
+- Writing streak indicator
+- Pomodoro timer integration</p>
+<p><strong>Effort:</strong> 🔧 Medium (varies per feature)
+<strong>Impact:</strong> High - Core differentiator for ADHD users</p>
 <hr />
-<h2 id="next-steps">Next Steps</h2>
-<p><strong>If approved:</strong>
-1. [ ] Update <code>src/main/index.ts</code> with spell-check suppression
-2. [ ] Update <code>DatabaseService.ts</code> migration logs
-3. [ ] Test with <code>npm start</code>
-4. [ ] Commit changes
-5. [ ] Update CHANGELOG.md (patch version 0.3.1)</p>
-<p><strong>Estimated time:</strong> 5 minutes</p>
+<h4 id="32-writing-progress-visualization">3.2 Writing Progress Visualization</h4>
+<p><strong>Current:</strong> Word count in status bar
+<strong>Proposed:</strong>
+- Mini progress bar for daily/session goal
+- Streak calendar (GitHub-style heatmap)
+- "Time spent writing today" metric
+- Milestone celebrations (100 words, 500 words, etc.)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌─────────────────────────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│ Today: 347 words │ Goal: ████░░ 70% │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│ 🔥 5 day streak │ ⏱️ 23 min        │
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>└─────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Effort:</strong> 🔧 Medium (1-2 days)
+<strong>Impact:</strong> High - ADHD users need visible progress</p>
 <hr />
-<h2 id="questions">Questions?</h2>
+<h4 id="33-smart-formatting-toolbar">3.3 Smart Formatting Toolbar</h4>
+<p><strong>Current:</strong> Markdown-based (invisible formatting)
+<strong>Proposed:</strong> Floating toolbar on text selection:
+- Bold/Italic/Strikethrough buttons
+- Heading selector
+- Link/wiki-link quick insert
+- Citation quick search
+- AI assist button</p>
+<p><strong>Effort:</strong> 🔧 Medium (1 day)
+<strong>Impact:</strong> Medium - Reduces friction</p>
+<hr />
+<h3 id="category-4-adhd-specific-features">Category 4: ADHD-Specific Features</h3>
+<h4 id="41-distraction-shield-mode">4.1 ⭐ Distraction Shield Mode</h4>
+<p><strong>Beyond Focus Mode:</strong>
+- Hide all UI except editor
+- Disable notifications
+- Lock to current note (prevent tab switching)
+- Optional "break reminder" after X minutes
+- Gentle fade-to-focus transition</p>
+<p><strong>Effort:</strong> 🔧 Medium (1 day)
+<strong>Impact:</strong> High - Key differentiator</p>
+<hr />
+<h4 id="42-quick-capture-widget">4.2 Quick Capture Widget</h4>
+<p><strong>Problem:</strong> Friction to capture fleeting thoughts
+<strong>Solution:</strong>
+- Global hotkey (even when app minimized)
+- Floating mini-editor overlay
+- Auto-saves to "Inbox" or daily note
+- Speech-to-text option</p>
+<p><strong>Effort:</strong> 🏗️ Large (2-3 days)
+<strong>Impact:</strong> High - Captures more ideas</p>
+<hr />
+<h4 id="43-reading-mode-enhancements">4.3 Reading Mode Enhancements</h4>
+<p><strong>For reviewing notes:</strong>
+- Bionic reading toggle (bold first part of words)
+- Text-to-speech button
+- Adjustable reading ruler/highlight line
+- High contrast mode toggle</p>
+<p><strong>Effort:</strong> 🔧 Medium (1 day)
+<strong>Impact:</strong> Medium - Accessibility win</p>
+<hr />
+<h3 id="category-5-visual-refinements">Category 5: Visual Refinements</h3>
+<h4 id="51-icon-consistency-update">5.1 Icon Consistency Update</h4>
+<p><strong>Current:</strong> Mix of icon styles
+<strong>Proposed:</strong>
+- Standardize on one icon family (Lucide or Phosphor)
+- Consistent stroke width
+- Add missing icons (backlinks, graph, export)</p>
+<p><strong>Effort:</strong> ⚡ Quick (2-3 hours)
+<strong>Impact:</strong> Medium - More cohesive look</p>
+<hr />
+<h4 id="52-theme-preview-cards">5.2 ⭐ Theme Preview Cards</h4>
+<p><strong>In Settings &gt; Appearance:</strong>
+- Show mini previews of each theme
+- Live preview on hover
+- "Preview in editor" button
+- Mark current theme with checkmark</p>
+<p><strong>Effort:</strong> ⚡ Quick (2-3 hours)
+<strong>Impact:</strong> Medium - Easier theme selection</p>
+<hr />
+<h4 id="53-custom-accent-color-picker">5.3 Custom Accent Color Picker</h4>
+<p><strong>Current:</strong> Fixed accent per theme
+<strong>Proposed:</strong>
+- Color picker for accent color
+- Preset accent palettes
+- Auto-generate complementary colors</p>
+<p><strong>Effort:</strong> 🔧 Medium (half day)
+<strong>Impact:</strong> Low-Medium - Personalization</p>
+<hr />
+<h3 id="category-6-navigation-information-architecture">Category 6: Navigation &amp; Information Architecture</h3>
+<h4 id="61-breadcrumb-navigation">6.1 Breadcrumb Navigation</h4>
+<p><strong>For nested notes/folders:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>📁 Research &gt; 📁 JASA Paper &gt; 📄 Methods Section
+</code></pre></div>
+- Clickable path segments
+- Shows current location context</p>
+<p><strong>Effort:</strong> ⚡ Quick (2-3 hours)
+<strong>Impact:</strong> Medium - Better orientation</p>
+<hr />
+<h4 id="62-recent-notes-quick-access">6.2 Recent Notes Quick Access</h4>
+<p><strong>Problem:</strong> No quick way to access recent notes
+<strong>Solution:</strong>
+- "Recent" section in sidebar
+- Keyboard shortcut for recent notes picker
+- Pin frequently-used notes</p>
+<p><strong>Effort:</strong> ⚡ Quick (half day)
+<strong>Impact:</strong> High - Common workflow</p>
+<hr />
+<h4 id="63-split-view-deferred">6.3 Split View (Deferred)</h4>
+<p><strong>For referencing while writing:</strong>
+- Side-by-side note view
+- Reference panel (read-only)
+- Drag to resize</p>
+<p><strong>Effort:</strong> 🏗️ Large (2-3 days)
+<strong>Impact:</strong> High - Power user feature
+<strong>Note:</strong> Deferred per PROJECT-DEFINITION.md</p>
+<hr />
+<h2 id="recommended-implementation-order">Recommended Implementation Order</h2>
+<h3 id="phase-1-quick-wins-this-sprint">Phase 1: Quick Wins (This Sprint)</h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Feature</th>
+<th>Effort</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Button feedback &amp; micro-interactions</td>
+<td>1-2h</td>
+<td>High</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Engaging empty state</td>
+<td>2-3h</td>
+<td>High</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sidebar visual improvements</td>
+<td>1-2h</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Panel transitions</td>
+<td>1h</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-2-high-value-features">Phase 2: High-Value Features</h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Feature</th>
+<th>Effort</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Writing progress visualization</td>
+<td>1-2 days</td>
+<td>High</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Distraction Shield Mode</td>
+<td>1 day</td>
+<td>High</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Focus mode enhancements</td>
+<td>varies</td>
+<td>High</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Recent notes quick access</td>
+<td>half day</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-3-polish-delight">Phase 3: Polish &amp; Delight</h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Feature</th>
+<th>Effort</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>First-run onboarding</td>
+<td>1-2 days</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Theme preview cards</td>
+<td>2-3h</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Smart formatting toolbar</td>
+<td>1 day</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Bionic reading mode</td>
+<td>half day</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="trade-offs-considerations">Trade-offs &amp; Considerations</h2>
+<h3 id="performance-vs-polish">Performance vs. Polish</h3>
 <ul>
-<li>
-<p><strong>Q: Will this affect spell-checking in the editor?</strong>
-  A: Yes, but most users don't rely on system spell-check. TipTap/ProseMirror can add their own spell-checking plugins if needed.</p>
-</li>
-<li>
-<p><strong>Q: Is the spell server warning harmful?</strong>
-  A: No, completely harmless. It's just macOS reporting that Electron couldn't connect to the spell service.</p>
-</li>
-<li>
-<p><strong>Q: Should migrations be completely silent?</strong>
-  A: No - it's helpful to see database initialization confirmation, just with positive phrasing.</p>
-</li>
+<li>Animations should be CSS-only where possible</li>
+<li>Avoid JavaScript-heavy animations</li>
+<li>Consider reduced-motion media query</li>
+</ul>
+<h3 id="simplicity-vs-features">Simplicity vs. Features</h3>
+<ul>
+<li>Each feature should pass the "ADHD test": Does it reduce or add cognitive load?</li>
+<li>Prefer progressive disclosure over visible complexity</li>
+<li>Settings should have sensible defaults</li>
+</ul>
+<h3 id="consistency-vs-customization">Consistency vs. Customization</h3>
+<ul>
+<li>Theme system is great, but too many options can overwhelm</li>
+<li>Consider "Featured themes" section</li>
+<li>Hide advanced options behind expandable sections</li>
 </ul>
 <hr />
-<p><strong>Ready to implement? Choose:</strong>
-1. Fix both issues (recommended)
-2. Fix just the migration logging
-3. Leave as-is (both are harmless)</p>
+<h2 id="next-steps">Next Steps</h2>
+<h3 id="completed-2024-12-26">✅ Completed (2024-12-26)</h3>
+<ol class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Implement button micro-interactions (CSS only)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Design engaging empty state with animated pen, quotes</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Add tooltip labels to sidebar icons</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Reduced-motion accessibility support</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Fixed daily note template (HTML → Markdown)</li>
+</ol>
+<h3 id="in-progress-sprint-12-remaining">🚀 In Progress - Sprint 12 Remaining</h3>
+<ol class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Writing progress visualization (word goals, streaks)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Focus mode enhancements (typewriter scrolling)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Recent notes quick access</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Theme preview cards in settings</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Panel slide transitions</li>
+</ol>
+<h3 id="sprint-13-project-system">📋 Sprint 13 - Project System</h3>
+<ol class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Project creation/management UI</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Project-specific settings</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Project switching in sidebar</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Per-project templates</li>
+</ol>
+<h3 id="research-needed">Research Needed</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> User feedback on current pain points</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Benchmark against iA Writer, Bear, Notion for best practices</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test with actual ADHD users</li>
+</ul>
+<h3 id="technical-debt">Technical Debt</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Audit icon usage and standardize</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Review z-index management</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Document CSS variable naming conventions</li>
+</ul>
+<hr />
+<h2 id="appendix-screenshots-analyzed">Appendix: Screenshots Analyzed</h2>
+<ol>
+<li>Main interface with empty state</li>
+<li>Command palette (⌘K)</li>
+<li>Settings &gt; General</li>
+<li>Settings &gt; Appearance (theme shortcuts)</li>
+<li>Settings &gt; Editor (typography, ADHD fonts)</li>
+<li>ADHD-friendly fonts list</li>
+</ol>
+<hr />
+<p><em>This proposal prioritizes ADHD-friendly improvements that reduce friction and increase focus. All suggestions align with the project's core principle: "Does it help ADHD focus?"</em></p>
 
 
 
