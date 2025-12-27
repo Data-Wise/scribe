@@ -50,6 +50,24 @@ import {
   isContentEmpty,
 } from './lib/dailyNoteTemplates'
 
+// Tag extraction regex - supports hierarchical tags (e.g., #research/statistics)
+const TAG_REGEX = /#([a-zA-Z0-9_/-]+)/g
+
+/**
+ * Extract unique tags from note content
+ * Used to sync inline #tags with YAML properties.tags
+ */
+function extractTagsFromContent(content: string): string[] {
+  const tags = new Set<string>()
+  let match
+  while ((match = TAG_REGEX.exec(content)) !== null) {
+    const tag = match[1].toLowerCase().replace(/\/+$/, '') // normalize and trim trailing slashes
+    if (tag) tags.add(tag)
+  }
+  TAG_REGEX.lastIndex = 0 // reset regex state
+  return Array.from(tags).sort()
+}
+
 function App() {
   const { notes, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
   const [currentFolder] = useState<string | undefined>(undefined)
@@ -323,9 +341,25 @@ function App() {
 
   const handleContentChange = async (content: string) => {
     if (selectedNote) {
-      updateNote(selectedNote.id, { content })
-      
-      // Update links when content changes (debounced effect would be better for performance)
+      // Extract tags from content and sync to YAML properties
+      const extractedTags = extractTagsFromContent(content)
+      const currentProperties = selectedNote.properties || {}
+
+      // Update properties.tags if different (avoid unnecessary updates)
+      const currentYamlTags = currentProperties.tags?.value as string[] || []
+      const tagsChanged = JSON.stringify(extractedTags) !== JSON.stringify(currentYamlTags.sort())
+
+      if (tagsChanged) {
+        const updatedProperties: Record<string, Property> = {
+          ...currentProperties,
+          tags: { key: 'tags', value: extractedTags, type: 'tags' }
+        }
+        updateNote(selectedNote.id, { content, properties: updatedProperties })
+      } else {
+        updateNote(selectedNote.id, { content })
+      }
+
+      // Update links and tags in database
       try {
         await api.updateNoteLinks(selectedNote.id, content)
         await api.updateNoteTags(selectedNote.id, content)

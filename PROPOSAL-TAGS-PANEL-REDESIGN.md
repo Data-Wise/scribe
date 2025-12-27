@@ -406,8 +406,8 @@
 ## Technical Debt
 
 ### Backend Improvements Needed
-1. **Hierarchical tag regex** - Current backend regex `#([a-zA-Z0-9_-]+)` doesn't capture `/` for hierarchical tags
-2. **Tag-YAML sync** - Tags exist in DB tables AND can be in YAML frontmatter; needs unification
+1. ~~**Hierarchical tag regex**~~ ✅ Fixed - Regex updated to `#([a-zA-Z0-9_/-]+)` in database.rs
+2. ~~**Tag-YAML sync**~~ ✅ Fixed - Inline #tags now sync to `properties.tags` in YAML frontmatter (App.tsx)
 3. **Performance** - Orphan detection scans all notes; consider caching or incremental updates
 
 ---

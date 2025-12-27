@@ -638,7 +638,8 @@ impl Database {
     }
 
     pub fn update_note_tags(&self, note_id: &str, content: &str) -> SqlResult<()> {
-        let tag_regex = regex::Regex::new(r"#([a-zA-Z0-9_-]+)").unwrap();
+        // Support hierarchical tags with / (e.g., #research/statistics/mediation)
+        let tag_regex = regex::Regex::new(r"#([a-zA-Z0-9_/-]+)").unwrap();
         let tags: std::collections::HashSet<String> = tag_regex
             .captures_iter(content)
             .map(|cap| cap[1].to_string())
