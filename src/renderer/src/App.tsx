@@ -123,12 +123,7 @@ function App() {
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
 
-  // Left sidebar preferences (persisted in localStorage)
-  const [leftSortBy] = useState<'name' | 'modified' | 'created'>(() => {
-    const saved = localStorage.getItem('leftSortBy')
-    return (saved as 'name' | 'modified' | 'created') || 'modified'
-  })
-  // Left view mode removed - now using DashboardShell collapsed state
+  // Left sidebar sorting is now handled in MissionSidebar
 
   // Right sidebar preferences (persisted in localStorage)
   const [backlinksSort, setBacklinksSort] = useState<'name' | 'date'>(() => {
@@ -148,11 +143,7 @@ function App() {
     return saved === 'true'
   })
 
-  // Search state
-  const [, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<Note[]>([])
-  const [isSearching, setIsSearching] = useState(false)
-  const [, setSearchLoading] = useState(false)
+  // Search state (used by Search Panel)
 
   // Tag filtering state
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
@@ -167,9 +158,8 @@ function App() {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false)
   const [isSearchPanelOpen, setIsSearchPanelOpen] = useState(false)
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false)
-  const [filteredNotes, setFilteredNotes] = useState<Note[]>([])
-  const [isFiltering, setIsFiltering] = useState(false)
-  const [projectNotes, setProjectNotes] = useState<Note[]>([])
+
+  // Tag filtering - filteredNotes now handled by MissionSidebar
 
   // Session tracking - time when first keystroke occurred
   const [sessionStartTime, setSessionStartTime] = useState<number | null>(null)
@@ -300,23 +290,7 @@ function App() {
     loadProjects()
   }, [loadProjects])
 
-  // Load project-specific notes when project changes
-  useEffect(() => {
-    const loadProjectNotes = async () => {
-      if (currentProjectId) {
-        try {
-          const notes = await api.getProjectNotes(currentProjectId)
-          setProjectNotes(notes)
-        } catch (error) {
-          console.error('Failed to load project notes:', error)
-          setProjectNotes([])
-        }
-      } else {
-        setProjectNotes([])
-      }
-    }
-    loadProjectNotes()
-  }, [currentProjectId])
+  // Project-specific notes are now filtered in MissionSidebar
 
   // Load tags for the current note
   useEffect(() => {
@@ -731,14 +705,9 @@ function App() {
     setSelectedTagIds(newSelectedIds)
 
     if (newSelectedIds.length === 0) {
-      setIsFiltering(false)
-      setFilteredNotes([])
       setSelectedTags([])
     } else {
-      setIsFiltering(true)
       try {
-        const filtered = await api.filterNotesByTags(newSelectedIds, true)
-        setFilteredNotes(filtered)
         const tags = await Promise.all(newSelectedIds.map(id => api.getTag(id)))
         setSelectedTags(tags.filter((t): t is Tag => t !== null))
       } catch (error) {
@@ -750,8 +719,6 @@ function App() {
   const handleClearTagFilters = () => {
     setSelectedTagIds([])
     setSelectedTags([])
-    setIsFiltering(false)
-    setFilteredNotes([])
   }
 
   const handleSearchTagsForAutocomplete = async (query: string): Promise<Tag[]> => {
@@ -808,22 +775,7 @@ function App() {
     localStorage.setItem('propertiesCollapsed', String(newValue))
   }
 
-  // Sort and filter notes based on preferences
-  const getSortedNotes = (notesToSort: Note[]) => {
-    return [...notesToSort].sort((a, b) => {
-      switch (leftSortBy) {
-        case 'name':
-          return (a.title || '').localeCompare(b.title || '')
-        case 'created':
-          return b.created_at - a.created_at
-        case 'modified':
-        default:
-          return b.updated_at - a.updated_at
-      }
-    })
-  }
-
-  // Notes list is now handled in MissionSidebar
+  // Notes list sorting is now handled in MissionSidebar
 
   // Build right sidebar menu sections based on active tab
   const getRightMenuSections = (): MenuSection[] => {

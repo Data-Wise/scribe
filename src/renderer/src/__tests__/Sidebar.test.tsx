@@ -86,6 +86,7 @@ describe('IconBarMode Component', () => {
     render(
       <IconBarMode
         projects={[]}
+        notes={[]}
         currentProjectId={null}
         {...mockHandlers}
       />
@@ -99,6 +100,7 @@ describe('IconBarMode Component', () => {
     render(
       <IconBarMode
         projects={[]}
+        notes={[]}
         currentProjectId={null}
         {...mockHandlers}
       />
@@ -112,6 +114,7 @@ describe('IconBarMode Component', () => {
     render(
       <IconBarMode
         projects={[]}
+        notes={[]}
         currentProjectId={null}
         {...mockHandlers}
       />
@@ -125,6 +128,7 @@ describe('IconBarMode Component', () => {
     render(
       <IconBarMode
         projects={[]}
+        notes={[]}
         currentProjectId={null}
         {...mockHandlers}
       />
@@ -138,27 +142,30 @@ describe('IconBarMode Component', () => {
     render(
       <IconBarMode
         projects={mockProjects}
+        notes={[]}
         currentProjectId={null}
         {...mockHandlers}
       />
     )
 
     // Should render Project A and B (active, planning) but not C (archive)
-    expect(screen.getByTitle('Project A')).toBeInTheDocument()
-    expect(screen.getByTitle('Project B')).toBeInTheDocument()
-    expect(screen.queryByTitle('Project C')).not.toBeInTheDocument()
+    // Tooltips now show: "Name\nStatus • N notes"
+    expect(screen.getByTitle(/Project A/)).toBeInTheDocument()
+    expect(screen.getByTitle(/Project B/)).toBeInTheDocument()
+    expect(screen.queryByTitle(/Project C/)).not.toBeInTheDocument()
   })
 
   it('calls onSelectProject when project icon clicked', () => {
     render(
       <IconBarMode
         projects={mockProjects}
+        notes={[]}
         currentProjectId={null}
         {...mockHandlers}
       />
     )
 
-    fireEvent.click(screen.getByTitle('Project A'))
+    fireEvent.click(screen.getByTitle(/Project A/))
     expect(mockHandlers.onSelectProject).toHaveBeenCalledWith('1')
   })
 
@@ -166,6 +173,7 @@ describe('IconBarMode Component', () => {
     const { container } = render(
       <IconBarMode
         projects={mockProjects}
+        notes={[]}
         currentProjectId="1"
         {...mockHandlers}
       />
@@ -188,6 +196,7 @@ describe('IconBarMode Component', () => {
     const { container } = render(
       <IconBarMode
         projects={manyProjects}
+        notes={[]}
         currentProjectId={null}
         {...mockHandlers}
       />

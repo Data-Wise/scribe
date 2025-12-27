@@ -1,11 +1,13 @@
+import { useMemo } from 'react'
 import { Menu, Plus } from 'lucide-react'
-import { Project } from '../../types'
+import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 
 interface IconBarModeProps {
   projects: Project[]
+  notes: Note[]
   currentProjectId: string | null
-  onSelectProject: (id: string) => void
+  onSelectProject: (id: string | null) => void
   onCreateProject: () => void
   onExpand: () => void
 }
@@ -14,6 +16,7 @@ const MAX_VISIBLE_PROJECTS = 8
 
 export function IconBarMode({
   projects,
+  notes,
   currentProjectId,
   onSelectProject,
   onCreateProject,
@@ -28,6 +31,19 @@ export function IconBarMode({
       return b.updated_at - a.updated_at
     })
     .slice(0, MAX_VISIBLE_PROJECTS)
+
+  // Compute note counts per project for tooltips
+  const noteCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    projects.forEach(p => { counts[p.id] = 0 })
+    notes.filter(n => !n.deleted_at).forEach(note => {
+      const projectId = note.properties?.project_id?.value as string | undefined
+      if (projectId && counts[projectId] !== undefined) {
+        counts[projectId]++
+      }
+    })
+    return counts
+  }, [projects, notes])
 
   return (
     <div className="mission-sidebar-icon">
@@ -44,14 +60,18 @@ export function IconBarMode({
 
       {/* Project icons */}
       <div className="project-icons">
-        {sortedProjects.map(project => (
-          <ProjectIconButton
-            key={project.id}
-            project={project}
-            isActive={project.id === currentProjectId}
-            onClick={() => onSelectProject(project.id)}
-          />
-        ))}
+        {sortedProjects.map(project => {
+          const isActive = project.id === currentProjectId
+          return (
+            <ProjectIconButton
+              key={project.id}
+              project={project}
+              isActive={isActive}
+              noteCount={noteCounts[project.id] || 0}
+              onClick={() => onSelectProject(isActive ? null : project.id)}
+            />
+          )
+        })}
       </div>
 
       <div className="sidebar-spacer" />
@@ -71,16 +91,20 @@ export function IconBarMode({
 interface ProjectIconButtonProps {
   project: Project
   isActive: boolean
+  noteCount: number
   onClick: () => void
 }
 
-function ProjectIconButton({ project, isActive, onClick }: ProjectIconButtonProps) {
+function ProjectIconButton({ project, isActive, noteCount, onClick }: ProjectIconButtonProps) {
   const status = project.status || 'active'
+  const statusLabel = formatStatus(status)
+  const tooltip = `${project.name}\n${statusLabel} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
+
   return (
     <button
       className={`project-icon-btn ${isActive ? 'active' : ''}`}
       onClick={onClick}
-      title={`${project.name}`}
+      title={tooltip}
       data-status={status}
     >
       {/* Status dot */}
@@ -90,4 +114,14 @@ function ProjectIconButton({ project, isActive, onClick }: ProjectIconButtonProp
       {isActive && <span className="active-indicator" />}
     </button>
   )
+}
+
+function formatStatus(status: string): string {
+  const labels: Record<string, string> = {
+    'active': 'Active',
+    'paused': 'Paused',
+    'complete': 'Complete',
+    'archive': 'Archived'
+  }
+  return labels[status] || status
 }

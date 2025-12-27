@@ -10,7 +10,7 @@ interface MissionSidebarProps {
   projects: Project[]
   notes: Note[]
   currentProjectId: string | null
-  onSelectProject: (id: string) => void
+  onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
 }
@@ -65,6 +65,7 @@ export function MissionSidebar({
       {sidebarMode === 'icon' && (
         <IconBarMode
           projects={projects}
+          notes={notes}
           currentProjectId={currentProjectId}
           onSelectProject={onSelectProject}
           onCreateProject={onCreateProject}
