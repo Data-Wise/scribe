@@ -11,8 +11,9 @@
 | **Sprint** | 22 |
 | **Focus** | Editor Modes + Custom CSS |
 | **Version** | v1.3.0 |
-| **Status** | Planning |
+| **Status** | ✅ Complete |
 | **Started** | 2025-12-27 |
+| **Completed** | 2025-12-27 |
 
 ---
 
@@ -214,12 +215,12 @@ if ((e.metaKey || e.ctrlKey) && e.key === '3') {
 
 ## Success Criteria
 
-- [ ] Three modes toggle correctly
-- [ ] Keyboard shortcuts work
-- [ ] Custom CSS applies to editor
-- [ ] Preferences persist across sessions
-- [ ] Mode persists across sessions
-- [ ] No performance regression
+- [x] Three modes toggle correctly
+- [x] Keyboard shortcuts work (⌘1, ⌘2, ⌘3, ⌘E)
+- [x] Custom CSS applies to editor
+- [x] Preferences persist across sessions
+- [x] Mode persists across sessions
+- [x] No performance regression
 
 ---
 
