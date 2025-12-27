@@ -3,7 +3,7 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-0.4.0--alpha.1-blue)]()
+[![Version](https://img.shields.io/badge/version-0.5.0--beta.1-blue)]()
 [![Progress](https://img.shields.io/badge/progress-92%25-green)]()
 [![Tests](https://img.shields.io/badge/tests-483%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
