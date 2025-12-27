@@ -3,7 +3,6 @@ import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
 import { useAppViewStore } from './store/useAppViewStore'
 import { HybridEditor } from './components/HybridEditor'
-import { SearchBar } from './components/SearchBar'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
@@ -21,7 +20,6 @@ import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
 import { listen } from '@tauri-apps/api/event'
-import { Plus } from 'lucide-react'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
 import { SearchPanel } from './components/SearchPanel'
@@ -1034,41 +1032,6 @@ function App() {
 
       {/* Main content area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Notes list sidebar (only in compact/card mode) */}
-        {sidebarMode !== 'icon' && (
-          <>
-            <div
-              className="bg-nexus-bg-secondary flex flex-col border-r border-white/5"
-              style={{ width: `${leftSidebarWidth}px`, minWidth: '200px' }}
-            >
-              <div className="p-3 pt-10 border-b border-white/5">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium text-nexus-text-muted">
-                    {currentProjectId ? projects.find(p => p.id === currentProjectId)?.name || 'Notes' : 'All Notes'}
-                  </h3>
-                  <button onClick={handleCreateNote} className="p-1 hover:bg-white/5 rounded"><Plus className="w-4 h-4" /></button>
-                </div>
-                <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
-              </div>
-              <div className="flex-1 overflow-y-auto">
-                {displayNotes.map((note) => (
-                  <div
-                    key={note.id}
-                    onClick={() => {
-                      setEditorMode('source')
-                      selectNote(note.id)
-                    }}
-                    className={`px-3 py-2 border-b border-white/[0.03] cursor-pointer hover:bg-white/[0.02] ${selectedNoteId === note.id ? 'bg-nexus-accent/5 text-nexus-accent' : ''}`}
-                  >
-                    <div className="text-sm font-medium truncate">{note.title || 'Untitled'}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className={`resize-handle ${isResizingLeft ? 'resizing' : ''}`} onMouseDown={() => setIsResizingLeft(true)} />
-          </>
-        )}
-
         {/* Main editor area */}
         <div className="flex-1 flex flex-col min-w-0">
           <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
