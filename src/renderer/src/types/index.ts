@@ -76,6 +76,7 @@ export interface TagWithCount extends Tag {
 
 // Project types (also exported from store/useProjectStore.ts)
 export type ProjectType = 'research' | 'teaching' | 'r-package' | 'r-dev' | 'generic'
+export type ProjectStatus = 'active' | 'planning' | 'complete' | 'archive'
 
 export interface ProjectSettings {
   theme?: string
@@ -92,6 +93,8 @@ export interface Project {
   name: string
   description?: string
   type: ProjectType
+  status?: ProjectStatus // Optional - defaults to 'active' in UI
+  progress?: number // 0-100 percentage
   color?: string
   settings?: ProjectSettings
   created_at: number

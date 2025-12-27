@@ -1,23 +1,30 @@
 import { create } from 'zustand'
 
 /**
- * App View Store - Manages dashboard vs editor view mode
+ * App View Store - Manages sidebar state and session tracking
  *
- * Smart startup behavior:
- * - > 4 hours since last use → show dashboard
- * - < 4 hours with last note → resume editor
- * - Fresh start → show dashboard
+ * Sidebar modes:
+ * - icon: 48px, project dots only
+ * - compact: 240px, project list with stats
+ * - card: 320px+, full project cards
  */
 
-type ViewMode = 'dashboard' | 'editor'
+export type SidebarMode = 'icon' | 'compact' | 'card'
 
 interface AppViewState {
-  viewMode: ViewMode
+  // Sidebar state
+  sidebarMode: SidebarMode
+  sidebarWidth: number
+
+  // Session tracking
   lastActiveNoteId: string | null
 
-  // Actions
-  setViewMode: (mode: ViewMode) => void
-  toggleViewMode: () => void
+  // Sidebar actions
+  setSidebarMode: (mode: SidebarMode) => void
+  cycleSidebarMode: () => void
+  setSidebarWidth: (width: number) => void
+
+  // Session actions
   setLastActiveNote: (noteId: string | null) => void
   updateSessionTimestamp: () => void
 }
@@ -25,10 +32,15 @@ interface AppViewState {
 // localStorage keys
 const SESSION_KEY = 'scribe:lastSessionTimestamp'
 const LAST_NOTE_KEY = 'scribe:lastActiveNoteId'
-const VIEW_MODE_KEY = 'scribe:viewMode'
+const SIDEBAR_MODE_KEY = 'scribe:sidebarMode'
+const SIDEBAR_WIDTH_KEY = 'scribe:sidebarWidth'
 
-// 4 hours in milliseconds
-const SESSION_TIMEOUT_MS = 4 * 60 * 60 * 1000
+// Sidebar width constraints
+export const SIDEBAR_WIDTHS = {
+  icon: 48,
+  compact: { default: 240, min: 200, max: 300 },
+  card: { default: 320, min: 320, max: 500 }
+}
 
 // Helper functions for localStorage
 const getLastSessionTimestamp = (): number | null => {
@@ -68,59 +80,107 @@ const saveLastActiveNoteId = (noteId: string | null): void => {
   }
 }
 
-const saveViewMode = (mode: ViewMode): void => {
+const getSavedSidebarMode = (): SidebarMode => {
   try {
-    localStorage.setItem(VIEW_MODE_KEY, mode)
+    const saved = localStorage.getItem(SIDEBAR_MODE_KEY)
+    if (saved === 'icon' || saved === 'compact' || saved === 'card') {
+      return saved
+    }
+    return 'compact' // default
+  } catch {
+    return 'compact'
+  }
+}
+
+const saveSidebarMode = (mode: SidebarMode): void => {
+  try {
+    localStorage.setItem(SIDEBAR_MODE_KEY, mode)
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getSavedSidebarWidth = (): number => {
+  try {
+    const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY)
+    if (saved) {
+      const width = parseInt(saved, 10)
+      if (!isNaN(width) && width >= SIDEBAR_WIDTHS.compact.min) {
+        return width
+      }
+    }
+    return SIDEBAR_WIDTHS.compact.default
+  } catch {
+    return SIDEBAR_WIDTHS.compact.default
+  }
+}
+
+const saveSidebarWidth = (width: number): void => {
+  try {
+    localStorage.setItem(SIDEBAR_WIDTH_KEY, width.toString())
   } catch {
     // Ignore localStorage errors
   }
 }
 
 /**
- * Determine initial view mode based on session context
- * - Fresh start or > 4 hours → dashboard (get bearings)
- * - < 4 hours with last note → editor (resume work)
+ * Determine initial sidebar mode based on session context
+ * - Fresh start or > 4 hours → compact (get bearings)
+ * - Recent session → restore saved mode
  */
-const determineInitialViewMode = (): ViewMode => {
+const determineInitialSidebarMode = (): SidebarMode => {
   const lastTimestamp = getLastSessionTimestamp()
-  const lastNoteId = getLastActiveNoteId()
   const now = Date.now()
+  const SESSION_TIMEOUT_MS = 4 * 60 * 60 * 1000 // 4 hours
 
-  // Fresh start - no previous session
+  // Fresh start - show compact to get oriented
   if (!lastTimestamp) {
-    return 'dashboard'
+    return 'compact'
   }
 
   const timeSinceLastSession = now - lastTimestamp
 
-  // Long break (> 4 hours) - show dashboard to get bearings
+  // Long break (> 4 hours) - show compact
   if (timeSinceLastSession > SESSION_TIMEOUT_MS) {
-    return 'dashboard'
+    return 'compact'
   }
 
-  // Recent session with active note - resume editor
-  if (lastNoteId) {
-    return 'editor'
-  }
-
-  // Recent session but no active note - dashboard
-  return 'dashboard'
+  // Recent session - restore saved mode
+  return getSavedSidebarMode()
 }
 
 export const useAppViewStore = create<AppViewState>((set, get) => ({
-  viewMode: determineInitialViewMode(),
+  sidebarMode: determineInitialSidebarMode(),
+  sidebarWidth: getSavedSidebarWidth(),
   lastActiveNoteId: getLastActiveNoteId(),
 
-  setViewMode: (mode: ViewMode) => {
-    set({ viewMode: mode })
-    saveViewMode(mode)
+  setSidebarMode: (mode: SidebarMode) => {
+    set({ sidebarMode: mode })
+    saveSidebarMode(mode)
   },
 
-  toggleViewMode: () => {
-    const current = get().viewMode
-    const next: ViewMode = current === 'dashboard' ? 'editor' : 'dashboard'
-    set({ viewMode: next })
-    saveViewMode(next)
+  cycleSidebarMode: () => {
+    const current = get().sidebarMode
+    const modes: SidebarMode[] = ['icon', 'compact', 'card']
+    const currentIndex = modes.indexOf(current)
+    const nextIndex = (currentIndex + 1) % modes.length
+    const next = modes[nextIndex]
+    set({ sidebarMode: next })
+    saveSidebarMode(next)
+  },
+
+  setSidebarWidth: (width: number) => {
+    const mode = get().sidebarMode
+    let constrainedWidth = width
+
+    if (mode === 'compact') {
+      constrainedWidth = Math.max(SIDEBAR_WIDTHS.compact.min, Math.min(SIDEBAR_WIDTHS.compact.max, width))
+    } else if (mode === 'card') {
+      constrainedWidth = Math.max(SIDEBAR_WIDTHS.card.min, Math.min(SIDEBAR_WIDTHS.card.max, width))
+    }
+
+    set({ sidebarWidth: constrainedWidth })
+    saveSidebarWidth(constrainedWidth)
   },
 
   setLastActiveNote: (noteId: string | null) => {

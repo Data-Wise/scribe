@@ -8,14 +8,12 @@ import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
-import { Ribbon } from './components/Ribbon'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
-import { ProjectSwitcher } from './components/ProjectSwitcher'
 import { CreateProjectModal } from './components/CreateProjectModal'
-import { MissionControl } from './components/MissionControl'
+import { MissionSidebar } from './components/sidebar'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
@@ -89,8 +87,13 @@ function App() {
     createProject
   } = useProjectStore()
 
-  // View mode state (dashboard vs editor)
-  const { viewMode, toggleViewMode, setLastActiveNote, updateSessionTimestamp } = useAppViewStore()
+  // Sidebar mode from app view store (replaces dashboardCollapsed toggle)
+  const {
+    sidebarMode,
+    cycleSidebarMode,
+    setLastActiveNote,
+    updateSessionTimestamp
+  } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
 
@@ -108,9 +111,9 @@ function App() {
     setPreferences(updated)
   }
   
-  // Sidebar collapse state
-  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false)
-  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(false)
+  // Sidebar collapse state (leftSidebarCollapsed now handled by DashboardShell)
+  const [, setLeftSidebarCollapsed] = useState(false)  // Keep setter for potential future use
+  const [, setRightSidebarCollapsed] = useState(false)  // Keep setter for potential future use
   
   // Sidebar width state with localStorage persistence
   const [leftSidebarWidth, setLeftSidebarWidth] = useState(() => {
@@ -124,19 +127,15 @@ function App() {
   const [isResizingLeft, setIsResizingLeft] = useState(false)
   const [isResizingRight, setIsResizingRight] = useState(false)
   
-  // Tab state
-  const [leftActiveTab, setLeftActiveTab] = useState<'files' | 'search'>('files')
+  // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
 
   // Left sidebar preferences (persisted in localStorage)
-  const [leftSortBy, setLeftSortBy] = useState<'name' | 'modified' | 'created'>(() => {
+  const [leftSortBy] = useState<'name' | 'modified' | 'created'>(() => {
     const saved = localStorage.getItem('leftSortBy')
     return (saved as 'name' | 'modified' | 'created') || 'modified'
   })
-  const [leftViewMode, setLeftViewMode] = useState<'default' | 'compact'>(() => {
-    const saved = localStorage.getItem('leftViewMode')
-    return (saved as 'default' | 'compact') || 'default'
-  })
+  // Left view mode removed - now using DashboardShell collapsed state
 
   // Right sidebar preferences (persisted in localStorage)
   const [backlinksSort, setBacklinksSort] = useState<'name' | 'date'>(() => {
@@ -625,11 +624,11 @@ function App() {
         setIsSearchPanelOpen(true)
       }
 
-      // Mission Control toggle (⌘0) - zero for "home"/dashboard
+      // Sidebar mode cycle (⌘0) - cycles through icon/compact/card
       // Note: ⌘H is macOS system "Hide Window", so we use ⌘0 instead
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === '0') {
         e.preventDefault()
-        toggleViewMode()
+        cycleSidebarMode()
       }
 
       // Quick Capture (⌘⇧C)
@@ -647,7 +646,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, toggleViewMode])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -685,7 +684,7 @@ function App() {
 
         // View menu
         case 'mission_control':
-          toggleViewMode()
+          cycleSidebarMode()
           break
         case 'focus_mode':
           handleFocusModeChange(!focusMode)
@@ -703,7 +702,7 @@ function App() {
           updatePreferences({ editorMode: 'reading' })
           break
         case 'toggle_sidebar':
-          setLeftSidebarCollapsed(!leftSidebarCollapsed)
+          cycleSidebarMode()
           break
         case 'knowledge_graph':
           setIsGraphViewOpen(true)
@@ -730,8 +729,7 @@ function App() {
     handleDailyNote,
     handleFocusModeChange,
     focusMode,
-    toggleViewMode,
-    leftSidebarCollapsed,
+    cycleSidebarMode,
   ])
 
   // Sidebar resize handlers
@@ -824,16 +822,7 @@ function App() {
     }
   }
 
-  // Handlers for left sidebar preferences
-  const handleLeftSortChange = (sortBy: 'name' | 'modified' | 'created') => {
-    setLeftSortBy(sortBy)
-    localStorage.setItem('leftSortBy', sortBy)
-  }
-
-  const handleLeftViewChange = (viewMode: 'default' | 'compact') => {
-    setLeftViewMode(viewMode)
-    localStorage.setItem('leftViewMode', viewMode)
-  }
+  // Left sidebar preference handlers removed - DashboardShell handles its own state
 
   // Handlers for right sidebar preferences
   const handleBacklinksSortChange = (sortBy: 'name' | 'date') => {
@@ -882,24 +871,7 @@ function App() {
   }
   const displayNotes = getSortedNotes(getBaseNotes())
 
-  // Build left sidebar menu sections
-  const leftMenuSections: MenuSection[] = [
-    {
-      title: 'Sort by',
-      items: [
-        { id: 'sort-name', label: 'Name', action: () => handleLeftSortChange('name'), checked: leftSortBy === 'name' },
-        { id: 'sort-modified', label: 'Modified', action: () => handleLeftSortChange('modified'), checked: leftSortBy === 'modified' },
-        { id: 'sort-created', label: 'Created', action: () => handleLeftSortChange('created'), checked: leftSortBy === 'created' },
-      ]
-    },
-    {
-      title: 'View',
-      items: [
-        { id: 'view-default', label: 'Default', action: () => handleLeftViewChange('default'), checked: leftViewMode === 'default' },
-        { id: 'view-compact', label: 'Compact', action: () => handleLeftViewChange('compact'), checked: leftViewMode === 'compact' },
-      ]
-    }
-  ]
+  // leftMenuSections removed - notes list is now in DashboardShell
 
   // Build right sidebar menu sections based on active tab
   const getRightMenuSections = (): MenuSection[] => {
@@ -948,6 +920,95 @@ function App() {
     }
   }
 
+  // Focus mode completely hides the dashboard shell
+  if (focusMode) {
+    return (
+      <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex flex-col overflow-hidden" style={{ height: '100vh' }}>
+        {/* Custom CSS injection */}
+        {preferences.customCSSEnabled && preferences.customCSS && (
+          <style id="custom-user-css">{preferences.customCSS}</style>
+        )}
+
+        {/* Minimal focus mode header */}
+        <header className="flex items-center justify-between px-4 py-2 border-b border-white/5">
+          <span className="text-sm text-nexus-text-muted">Focus Mode</span>
+          <button
+            onClick={() => handleFocusModeChange(false)}
+            className="text-xs text-nexus-text-muted hover:text-nexus-text-primary"
+          >
+            Exit (⌘⇧F)
+          </button>
+        </header>
+
+        {/* Focus mode editor */}
+        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+          {selectedNote ? (
+            <div className="flex-1 flex flex-col min-h-0">
+              <div className="p-6">
+                <h2 className="text-3xl font-bold">{selectedNote.title}</h2>
+              </div>
+              <div className="flex-1 overflow-hidden relative">
+                <HybridEditor
+                  key={selectedNote.id}
+                  content={selectedNote.content}
+                  onChange={handleContentChange}
+                  onWikiLinkClick={handleLinkClick}
+                  onTagClick={handleTagClickInEditor}
+                  onSearchNotes={handleSearchNotesForAutocomplete}
+                  onSearchTags={handleSearchTagsForAutocomplete}
+                  placeholder="Start writing..."
+                  editorMode={editorMode}
+                  onEditorModeChange={(mode) => {
+                    setEditorMode(mode)
+                    updatePreferences({ editorMode: mode })
+                  }}
+                  focusMode={true}
+                  wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
+                  sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
+                  streak={streakInfo.streak}
+                  sessionStartTime={sessionStartTime || undefined}
+                />
+              </div>
+            </div>
+          ) : (
+            <EmptyState
+              onCreateNote={handleCreateNote}
+              onOpenDaily={handleDailyNote}
+              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+            />
+          )}
+        </div>
+
+        {/* Modals */}
+        <CommandPalette
+          open={isCommandPaletteOpen}
+          setOpen={setIsCommandPaletteOpen}
+          notes={notes}
+          onSelectNote={(noteId) => selectNote(noteId)}
+          onCreateNote={handleCreateNote}
+          onDailyNote={handleDailyNote}
+          onToggleFocus={() => handleFocusModeChange(!focusMode)}
+          onObsidianSync={handleObsidianSync}
+          onRunClaude={handleRunClaude}
+          onRunGemini={handleRunGemini}
+          onExport={() => setIsExportDialogOpen(true)}
+          onOpenGraph={() => setIsGraphViewOpen(true)}
+          hasSelectedNote={!!selectedNote}
+        />
+        <QuickCaptureOverlay
+          isOpen={isQuickCaptureOpen}
+          onClose={() => setIsQuickCaptureOpen(false)}
+          onCapture={handleQuickCapture}
+        />
+        <KeyboardShortcuts
+          isOpen={isKeyboardShortcutsOpen}
+          onClose={() => setIsKeyboardShortcutsOpen(false)}
+        />
+      </div>
+    )
+  }
+
+  // Normal mode: Three-state collapsible sidebar + main content
   return (
     <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex overflow-hidden" style={{ height: '100vh' }}>
       {/* Custom CSS injection from user preferences */}
@@ -958,28 +1019,164 @@ function App() {
       {/* Titlebar drag region for window moving - uses Tauri API */}
       <DragRegion className="titlebar-drag-region" />
 
-      {viewMode === 'editor' && !focusMode && (
-        <Ribbon
-          onToggleLeft={() => setLeftSidebarCollapsed(prev => !prev)}
-          onToggleRight={() => setRightSidebarCollapsed(prev => !prev)}
-          onSearch={() => setIsCommandPaletteOpen(true)}
-          onSettings={() => setIsSettingsOpen(true)}
-          leftCollapsed={leftSidebarCollapsed}
-          rightCollapsed={rightSidebarCollapsed}
-        />
-      )}
+      {/* Three-state collapsible sidebar (icon/compact/card) */}
+      <MissionSidebar
+        projects={projects}
+        notes={notes}
+        currentProjectId={currentProjectId}
+        onSelectProject={setCurrentProject}
+        onSelectNote={(noteId) => {
+          setEditorMode('source')
+          selectNote(noteId)
+        }}
+        onCreateProject={() => setIsCreateProjectModalOpen(true)}
+      />
 
+      {/* Main content area */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Notes list sidebar (only in compact/card mode) */}
+        {sidebarMode !== 'icon' && (
+          <>
+            <div
+              className="bg-nexus-bg-secondary flex flex-col border-r border-white/5"
+              style={{ width: `${leftSidebarWidth}px`, minWidth: '200px' }}
+            >
+              <div className="p-3 pt-10 border-b border-white/5">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-nexus-text-muted">
+                    {currentProjectId ? projects.find(p => p.id === currentProjectId)?.name || 'Notes' : 'All Notes'}
+                  </h3>
+                  <button onClick={handleCreateNote} className="p-1 hover:bg-white/5 rounded"><Plus className="w-4 h-4" /></button>
+                </div>
+                <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                {displayNotes.map((note) => (
+                  <div
+                    key={note.id}
+                    onClick={() => {
+                      setEditorMode('source')
+                      selectNote(note.id)
+                    }}
+                    className={`px-3 py-2 border-b border-white/[0.03] cursor-pointer hover:bg-white/[0.02] ${selectedNoteId === note.id ? 'bg-nexus-accent/5 text-nexus-accent' : ''}`}
+                  >
+                    <div className="text-sm font-medium truncate">{note.title || 'Untitled'}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={`resize-handle ${isResizingLeft ? 'resizing' : ''}`} onMouseDown={() => setIsResizingLeft(true)} />
+          </>
+        )}
+
+        {/* Main editor area */}
+        <div className="flex-1 flex flex-col min-w-0">
+          <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
+
+          {selectedNote ? (
+            <div className="flex-1 flex flex-col min-h-0">
+              <div className="px-6 py-4 border-b border-white/5">
+                {editingTitle ? (
+                  <input
+                    autoFocus
+                    className="text-2xl font-bold bg-transparent outline-none w-full border-b border-nexus-accent"
+                    defaultValue={selectedNote.title}
+                    onBlur={(e) => handleTitleChange(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleTitleChange(e.currentTarget.value)}
+                  />
+                ) : (
+                  <h2 onClick={() => setEditingTitle(true)} className="text-2xl font-bold cursor-pointer">{selectedNote.title}</h2>
+                )}
+              </div>
+              <div className="flex-1 overflow-hidden relative">
+                <HybridEditor
+                  key={selectedNote.id}
+                  content={selectedNote.content}
+                  onChange={handleContentChange}
+                  onWikiLinkClick={handleLinkClick}
+                  onTagClick={handleTagClickInEditor}
+                  onSearchNotes={handleSearchNotesForAutocomplete}
+                  onSearchTags={handleSearchTagsForAutocomplete}
+                  placeholder="Start writing... (Cmd+E to preview)"
+                  editorMode={editorMode}
+                  onEditorModeChange={(mode) => {
+                    setEditorMode(mode)
+                    updatePreferences({ editorMode: mode })
+                  }}
+                  focusMode={false}
+                  wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
+                  sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
+                  streak={streakInfo.streak}
+                  sessionStartTime={sessionStartTime || undefined}
+                />
+              </div>
+            </div>
+          ) : (
+            <EmptyState
+              onCreateNote={handleCreateNote}
+              onOpenDaily={handleDailyNote}
+              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+            />
+          )}
+        </div>
+
+        {/* Right sidebar (properties/backlinks/tags) - only in compact/card mode */}
+        {sidebarMode !== 'icon' && selectedNote && (
+          <>
+            <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
+            <div
+              className="bg-nexus-bg-secondary flex flex-col"
+              style={{ width: `${rightSidebarWidth}px` }}
+            >
+              <div className="sidebar-tabs pt-10">
+                <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
+                <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
+                <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
+                <div className="flex-1" />
+                <PanelMenu sections={getRightMenuSections()} />
+              </div>
+              <div className="tab-content flex-1">
+                {rightActiveTab === 'properties' ? (
+                  <PropertiesPanel
+                    properties={selectedNote.properties || {}}
+                    onChange={(p) => updateNote(selectedNote.id, { properties: p })}
+                    noteTags={currentNoteTags}
+                    wordCount={wordCount}
+                    wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
+                    defaultWordGoal={preferences.defaultWordGoal}
+                    streak={streakInfo.streak}
+                    createdAt={selectedNote.created_at}
+                    updatedAt={selectedNote.updated_at}
+                  />
+                ) : rightActiveTab === 'backlinks' ? (
+                  <BacklinksPanel
+                    noteId={selectedNote.id}
+                    noteTitle={selectedNote.title}
+                    onSelectNote={(noteId) => {
+                      setEditorMode('reading')
+                      selectNote(noteId)
+                    }}
+                    refreshKey={backlinksRefreshKey}
+                  />
+                ) : (
+                  <TagsPanel
+                    noteId={selectedNote.id}
+                    selectedTagIds={selectedTagIds}
+                    onTagClick={handleTagClick}
+                  />
+                )}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Command Palette */}
       <CommandPalette
         open={isCommandPaletteOpen}
         setOpen={setIsCommandPaletteOpen}
         notes={notes}
-        onSelectNote={(noteId) => {
-          selectNote(noteId)
-          // Switch to editor view when selecting a note from command palette
-          if (viewMode === 'dashboard') {
-            toggleViewMode()
-          }
-        }}
+        onSelectNote={(noteId) => selectNote(noteId)}
         onCreateNote={handleCreateNote}
         onDailyNote={handleDailyNote}
         onToggleFocus={() => handleFocusModeChange(!focusMode)}
@@ -990,199 +1187,6 @@ function App() {
         onOpenGraph={() => setIsGraphViewOpen(true)}
         hasSelectedNote={!!selectedNote}
       />
-
-      {/* Dashboard Mode: Mission Control */}
-      {viewMode === 'dashboard' && (
-        <MissionControl
-          projects={projects}
-          notes={notes}
-          currentProjectId={currentProjectId}
-          onSelectProject={(projectId) => {
-            setCurrentProject(projectId)
-            toggleViewMode()
-          }}
-          onSelectNote={(noteId) => {
-            selectNote(noteId)
-            toggleViewMode()
-          }}
-          onCreateNote={handleCreateNote}
-          onDailyNote={handleDailyNote}
-          onQuickCapture={() => setIsQuickCaptureOpen(true)}
-          onSettings={() => setIsSettingsOpen(true)}
-          onCreateProject={() => setIsCreateProjectModalOpen(true)}
-        />
-      )}
-
-      {/* Editor Mode: Full editor layout */}
-      {viewMode === 'editor' && !focusMode && (
-        <div
-          className={`bg-nexus-bg-secondary flex flex-col ${leftSidebarCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}
-          style={{ width: leftSidebarCollapsed ? 0 : `${leftSidebarWidth}px` }}
-        >
-          <div className="sidebar-tabs">
-            <button className={`sidebar-tab ${leftActiveTab === 'files' ? 'active' : ''}`} onClick={() => setLeftActiveTab('files')}>Files</button>
-            <button className={`sidebar-tab ${leftActiveTab === 'search' ? 'active' : ''}`} onClick={() => setLeftActiveTab('search')}>Search</button>
-            <div className="flex-1" />
-            <PanelMenu sections={leftMenuSections} />
-          </div>
-
-          <div className="tab-content">
-            {leftActiveTab === 'files' ? (
-              <div className="flex flex-col h-full">
-                <div className="p-4 border-b border-white/5">
-                  {/* Project Switcher */}
-                  <div className="mb-3">
-                    <ProjectSwitcher
-                      projects={projects.map(p => ({
-                        id: p.id,
-                        name: p.name,
-                        type: p.type,
-                        description: p.description,
-                        color: p.color || '#38bdf8',
-                        createdAt: p.created_at,
-                        updatedAt: p.updated_at,
-                      }))}
-                      currentProjectId={currentProjectId}
-                      onSelectProject={setCurrentProject}
-                      onCreateProject={() => setIsCreateProjectModalOpen(true)}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-xl font-display font-semibold">
-                      {currentProjectId ? projects.find(p => p.id === currentProjectId)?.name || 'Notes' : 'Library'}
-                    </h1>
-                    <button onClick={handleCreateNote} className="p-1.5 hover:bg-white/5 rounded-md"><Plus className="w-5 h-5" /></button>
-                  </div>
-                  <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
-                </div>
-                <div className="flex-1 overflow-y-auto">
-                  {displayNotes.map((note) => (
-                    <div
-                      key={note.id}
-                      onClick={() => {
-                        setEditorMode('source')  // Reset to write mode when clicking sidebar
-                        selectNote(note.id)
-                      }}
-                      className={`${leftViewMode === 'compact' ? 'px-4 py-2' : 'px-4 py-3'} border-b border-white/[0.03] cursor-pointer hover:bg-white/[0.02] ${selectedNoteId === note.id ? 'bg-nexus-accent/5 text-nexus-accent' : ''}`}
-                    >
-                      <div className={`font-medium truncate ${leftViewMode === 'compact' ? 'text-sm' : ''}`}>{note.title || 'Untitled'}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="p-4 text-gray-400">Search coming soon...</div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {viewMode === 'editor' && !focusMode && !leftSidebarCollapsed && (
-        <div className={`resize-handle ${isResizingLeft ? 'resizing' : ''}`} onMouseDown={() => setIsResizingLeft(true)} />
-      )}
-
-      {viewMode === 'editor' && (
-      <div className={`flex-1 flex flex-col ${focusMode ? 'max-w-4xl mx-auto' : ''}`}>
-        <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
-
-        {selectedNote ? (
-          <div className="flex-1 flex flex-col min-h-0">
-            <div className="p-6 border-b border-white/5">
-              {editingTitle ? (
-                <input
-                  autoFocus
-                  className="text-3xl font-bold bg-transparent outline-none w-full border-b border-nexus-accent"
-                  defaultValue={selectedNote.title}
-                  onBlur={(e) => handleTitleChange(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleTitleChange(e.currentTarget.value)}
-                />
-              ) : (
-                <h2 onClick={() => setEditingTitle(true)} className="text-3xl font-bold cursor-pointer">{selectedNote.title}</h2>
-              )}
-            </div>
-            <div className="flex-1 overflow-hidden relative">
-              <HybridEditor
-                key={selectedNote.id}
-                content={selectedNote.content}
-                onChange={handleContentChange}
-                onWikiLinkClick={handleLinkClick}
-                onTagClick={handleTagClickInEditor}
-                onSearchNotes={handleSearchNotesForAutocomplete}
-                onSearchTags={handleSearchTagsForAutocomplete}
-                placeholder="Start writing... (Cmd+E to preview)"
-                editorMode={editorMode}
-                onEditorModeChange={(mode) => {
-                  setEditorMode(mode)
-                  updatePreferences({ editorMode: mode })
-                }}
-                focusMode={focusMode}
-                wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
-                sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
-                streak={streakInfo.streak}
-                sessionStartTime={sessionStartTime || undefined}
-              />
-            </div>
-          </div>
-        ) : (
-          <EmptyState
-            onCreateNote={handleCreateNote}
-            onOpenDaily={handleDailyNote}
-            onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
-          />
-        )}
-      </div>
-      )}
-
-      {viewMode === 'editor' && !focusMode && !rightSidebarCollapsed && selectedNote && (
-        <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
-      )}
-
-      {viewMode === 'editor' && !focusMode && selectedNote && (
-        <div
-          className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}
-          style={{ width: rightSidebarCollapsed ? 0 : `${rightSidebarWidth}px` }}
-        >
-          <div className="sidebar-tabs">
-            <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
-            <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
-            <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
-            <div className="flex-1" />
-            <PanelMenu sections={getRightMenuSections()} />
-          </div>
-          <div className="tab-content flex-1">
-            {rightActiveTab === 'properties' ? (
-              <PropertiesPanel
-                properties={selectedNote.properties || {}}
-                onChange={(p) => updateNote(selectedNote.id, { properties: p })}
-                noteTags={currentNoteTags}
-                wordCount={wordCount}
-                wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
-                defaultWordGoal={preferences.defaultWordGoal}
-                streak={streakInfo.streak}
-                createdAt={selectedNote.created_at}
-                updatedAt={selectedNote.updated_at}
-              />
-            ) : rightActiveTab === 'backlinks' ? (
-              <BacklinksPanel
-                noteId={selectedNote.id}
-                noteTitle={selectedNote.title}
-                onSelectNote={(noteId) => {
-                  // Stay in preview mode when clicking backlinks
-                  setEditorMode('reading')
-                  selectNote(noteId)
-                }}
-                refreshKey={backlinksRefreshKey}
-              />
-            ) : (
-              <TagsPanel
-                noteId={selectedNote.id}
-                selectedTagIds={selectedTagIds}
-                onTagClick={handleTagClick}
-              />
-            )}
-          </div>
-        </div>
-      )}
 
       <SettingsModal
         isOpen={isSettingsOpen}
