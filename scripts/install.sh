@@ -32,8 +32,21 @@ case "$OS" in
     Darwin)
         PLATFORM="macos"
         case "$ARCH" in
-            x86_64) ARCH_SUFFIX="x64" ;;
             arm64)  ARCH_SUFFIX="aarch64" ;;
+            x86_64)
+                echo "⚠️  Intel Macs not yet supported (Apple Silicon only)"
+                echo "   Intel builds coming in a future release."
+                echo ""
+                echo "📦 Options:"
+                echo "   1) Build from source (see option 3)"
+                echo "   2) Use Rosetta 2 (experimental)"
+                echo ""
+                read -p "Continue anyway? [y/N]: " CONTINUE
+                if [[ ! "$CONTINUE" =~ ^[Yy]$ ]]; then
+                    exit 0
+                fi
+                ARCH_SUFFIX="aarch64"  # Try ARM build under Rosetta
+                ;;
             *)
                 echo "❌ Unsupported architecture: $ARCH"
                 exit 1
@@ -41,9 +54,9 @@ case "$OS" in
         esac
         ;;
     Linux)
-        PLATFORM="linux"
-        ARCH_SUFFIX="$ARCH"
-        INSTALL_DIR="$HOME/.local/share/applications"
+        echo "❌ Linux not yet supported"
+        echo "   macOS (Apple Silicon) only for now."
+        exit 1
         ;;
     *)
         echo "❌ Unsupported operating system: $OS"
