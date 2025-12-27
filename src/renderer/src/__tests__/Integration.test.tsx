@@ -47,19 +47,18 @@ describe('Editor + Autocomplete Integration', () => {
       expect(textarea).toHaveValue('See [[Project Plan]] for details')
     })
 
-    it('switches to preview mode to view wiki-links', async () => {
+    it('switches to reading mode to view wiki-links', async () => {
       render(<HybridEditor {...editorProps} content="See [[Project Plan]] here" />)
 
-      // Switch to preview mode (pill-style toggle has multiple Preview text elements)
-      const previewButtons = screen.getAllByText('Preview')
-      fireEvent.click(previewButtons[0])
+      // Switch to reading mode (Obsidian-style modes)
+      fireEvent.click(screen.getByText('Reading'))
 
       await waitFor(() => {
-        // Pill-style toggle always shows both Write and Preview buttons
-        expect(screen.getByText('Write')).toBeInTheDocument()
+        // All mode buttons remain visible
+        expect(screen.getAllByText('Source').length).toBeGreaterThan(0)
       })
 
-      // Prose container should be visible in preview mode
+      // Prose container should be visible in reading mode
       const proseDiv = document.querySelector('.prose')
       expect(proseDiv).toBeInTheDocument()
     })
@@ -91,19 +90,18 @@ describe('Editor + Autocomplete Integration', () => {
       expect(textarea).toHaveValue('This is #important')
     })
 
-    it('switches to preview mode to view tags', async () => {
+    it('switches to reading mode to view tags', async () => {
       render(<HybridEditor {...editorProps} content="Check #todo" />)
 
-      // Switch to preview mode (pill-style toggle has multiple Preview text elements)
-      const previewButtons = screen.getAllByText('Preview')
-      fireEvent.click(previewButtons[0])
+      // Switch to reading mode (Obsidian-style modes)
+      fireEvent.click(screen.getByText('Reading'))
 
       await waitFor(() => {
-        // Pill-style toggle always shows both Write and Preview buttons
-        expect(screen.getByText('Write')).toBeInTheDocument()
+        // All mode buttons remain visible
+        expect(screen.getAllByText('Source').length).toBeGreaterThan(0)
       })
 
-      // Prose container should be visible in preview mode
+      // Prose container should be visible in reading mode
       const proseDiv = document.querySelector('.prose')
       expect(proseDiv).toBeInTheDocument()
     })
@@ -135,13 +133,13 @@ More text with [[Link2]] and #tag2`
       expect(textarea).toHaveValue(content)
     })
 
-    it('renders mixed content correctly in preview mode', async () => {
+    it('renders mixed content correctly in reading mode', async () => {
       render(<HybridEditor {...editorProps} content="See [[Note]] and #tag here" />)
-      
-      fireEvent.click(screen.getByText('Preview'))
-      
+
+      fireEvent.click(screen.getByText('Reading'))
+
       await waitFor(() => {
-        // In preview mode, wiki-links become clickable buttons
+        // In reading mode, wiki-links become clickable buttons
         const buttons = screen.getAllByRole('button')
         // Should have at least the mode toggle + wiki-link + tag buttons
         expect(buttons.length).toBeGreaterThanOrEqual(2)
@@ -172,7 +170,7 @@ describe('Command Palette Integration', () => {
     it('creates new note and closes palette', () => {
       render(<CommandPalette {...paletteProps} />)
       
-      fireEvent.click(screen.getByText('Create New Note'))
+      fireEvent.click(screen.getByText('Create New Page'))
       
       expect(paletteProps.onCreateNote).toHaveBeenCalled()
       expect(paletteProps.setOpen).toHaveBeenCalledWith(false)
@@ -181,7 +179,7 @@ describe('Command Palette Integration', () => {
     it('opens daily note and closes palette', () => {
       render(<CommandPalette {...paletteProps} />)
       
-      fireEvent.click(screen.getByText("Open Today's Daily Note"))
+      fireEvent.click(screen.getByText("Open Today's Journal"))
       
       expect(paletteProps.onDailyNote).toHaveBeenCalled()
       expect(paletteProps.setOpen).toHaveBeenCalledWith(false)
@@ -256,22 +254,23 @@ describe('Editor Mode Integration', () => {
     onTagClick: vi.fn()
   }
 
-  it('starts in write mode', () => {
+  it('starts in source mode', () => {
     render(<HybridEditor {...editorProps} />)
-    
-    expect(screen.getByText('Writing')).toBeInTheDocument()
-    expect(screen.getByText('Preview')).toBeInTheDocument()
+
+    // Obsidian-style modes: Source, Live Preview, Reading
+    // Multiple elements may contain "Source" (button + status bar)
+    expect(screen.getAllByText('Source').length).toBeGreaterThan(0)
+    expect(screen.getByText('Reading')).toBeInTheDocument()
   })
 
-  it('toggles to preview mode', async () => {
+  it('toggles to reading mode', async () => {
     render(<HybridEditor {...editorProps} />)
 
-    // Pill-style toggle has multiple Preview text elements
-    const previewButtons = screen.getAllByText('Preview')
-    fireEvent.click(previewButtons[0])
+    // Click Reading mode button
+    fireEvent.click(screen.getByText('Reading'))
 
     await waitFor(() => {
-      // In preview mode, textarea is hidden
+      // In reading mode, textarea is hidden
       expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     })
   })
@@ -279,16 +278,15 @@ describe('Editor Mode Integration', () => {
   it('maintains content when switching modes', async () => {
     render(<HybridEditor {...editorProps} />)
 
-    // Go to preview
-    const previewButtons = screen.getAllByText('Preview')
-    fireEvent.click(previewButtons[0])
+    // Go to reading mode
+    fireEvent.click(screen.getByText('Reading'))
 
     await waitFor(() => {
       expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     })
 
-    // Go back to write
-    fireEvent.click(screen.getByText('Write'))
+    // Go back to source mode
+    fireEvent.click(screen.getByText('Source'))
 
     await waitFor(() => {
       expect(screen.getByRole('textbox')).toBeInTheDocument()
@@ -360,9 +358,9 @@ describe('Accessibility Integration', () => {
   it('buttons have proper labels', () => {
     render(<HybridEditor content="" onChange={vi.fn()} />)
 
-    // The pill-style toggle container has the title
-    const toggleButton = screen.getByTitle('Toggle mode (⌘E)')
-    expect(toggleButton).toBeInTheDocument()
+    // The mode toggle container has keyboard shortcut hints
+    const toggleContainer = screen.getByTitle('⌘1 Source, ⌘2 Live Preview, ⌘3 Reading, ⌘E cycle')
+    expect(toggleContainer).toBeInTheDocument()
   })
 })
 
@@ -393,8 +391,8 @@ describe('ADHD-Friendly Design Verification', () => {
       )
       
       // All main actions visible without scrolling
-      expect(screen.getByText('Create New Note')).toBeInTheDocument()
-      expect(screen.getByText("Open Today's Daily Note")).toBeInTheDocument()
+      expect(screen.getByText('Create New Page')).toBeInTheDocument()
+      expect(screen.getByText("Open Today's Journal")).toBeInTheDocument()
       expect(screen.getByText('Toggle Focus Mode')).toBeInTheDocument()
     })
   })
@@ -439,8 +437,10 @@ describe('ADHD-Friendly Design Verification', () => {
 
     it('shows current mode', () => {
       render(<HybridEditor content="" onChange={vi.fn()} />)
-      
-      expect(screen.getByText('Writing')).toBeInTheDocument()
+
+      // Default mode is Source (Obsidian-style modes)
+      // Multiple elements may have "Source" text (button + status bar)
+      expect(screen.getAllByText('Source').length).toBeGreaterThan(0)
     })
   })
 })

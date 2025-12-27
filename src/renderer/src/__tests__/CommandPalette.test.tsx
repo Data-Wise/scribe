@@ -44,8 +44,8 @@ describe('CommandPalette Component', () => {
     it('renders all main action items', () => {
       render(<CommandPalette {...defaultProps} />)
       
-      expect(screen.getByText('Create New Note')).toBeInTheDocument()
-      expect(screen.getByText("Open Today's Daily Note")).toBeInTheDocument()
+      expect(screen.getByText('Create New Page')).toBeInTheDocument()
+      expect(screen.getByText("Open Today's Journal")).toBeInTheDocument()
       expect(screen.getByText('Sync to Obsidian Vault')).toBeInTheDocument()
       expect(screen.getByText('Ask Claude (Refactor Notes)')).toBeInTheDocument()
       expect(screen.getByText('Ask Gemini (Brainstorming)')).toBeInTheDocument()
@@ -63,7 +63,7 @@ describe('CommandPalette Component', () => {
     it('renders recent notes section', () => {
       render(<CommandPalette {...defaultProps} />)
       
-      expect(screen.getByText('Recent Notes')).toBeInTheDocument()
+      expect(screen.getByText('Recent Pages')).toBeInTheDocument()
       expect(screen.getByText('Project Plan')).toBeInTheDocument()
       expect(screen.getByText('Meeting Notes')).toBeInTheDocument()
       expect(screen.getByText('Research Paper')).toBeInTheDocument()
@@ -72,7 +72,7 @@ describe('CommandPalette Component', () => {
     it('does not show recent notes section when no notes', () => {
       render(<CommandPalette {...defaultProps} notes={[]} />)
       
-      expect(screen.queryByText('Recent Notes')).not.toBeInTheDocument()
+      expect(screen.queryByText('Recent Pages')).not.toBeInTheDocument()
     })
 
     it('shows "Main Actions" group heading', () => {
@@ -83,10 +83,10 @@ describe('CommandPalette Component', () => {
   })
 
   describe('Actions', () => {
-    it('calls onCreateNote and closes palette when clicking Create New Note', async () => {
+    it('calls onCreateNote and closes palette when clicking Create New Page', async () => {
       render(<CommandPalette {...defaultProps} />)
       
-      fireEvent.click(screen.getByText('Create New Note'))
+      fireEvent.click(screen.getByText('Create New Page'))
       
       expect(defaultProps.onCreateNote).toHaveBeenCalled()
       expect(defaultProps.setOpen).toHaveBeenCalledWith(false)
@@ -95,7 +95,7 @@ describe('CommandPalette Component', () => {
     it('calls onDailyNote and closes palette when clicking Daily Note', async () => {
       render(<CommandPalette {...defaultProps} />)
       
-      fireEvent.click(screen.getByText("Open Today's Daily Note"))
+      fireEvent.click(screen.getByText("Open Today's Journal"))
       
       expect(defaultProps.onDailyNote).toHaveBeenCalled()
       expect(defaultProps.setOpen).toHaveBeenCalledWith(false)
@@ -216,14 +216,14 @@ describe('CommandPalette Component', () => {
       expect(screen.queryByText('Note 11')).not.toBeInTheDocument()
     })
 
-    it('shows "Untitled Note" for notes without title', () => {
+    it('shows "Untitled" for notes without title', () => {
       const noteWithoutTitle = [
         { id: '1', title: '', content: '', folder: 'inbox', created_at: Date.now(), updated_at: Date.now() }
       ]
 
       render(<CommandPalette {...defaultProps} notes={noteWithoutTitle} />)
-      
-      expect(screen.getByText('Untitled Note')).toBeInTheDocument()
+
+      expect(screen.getByText('Untitled')).toBeInTheDocument()
     })
   })
 })
@@ -247,7 +247,7 @@ describe('CommandPalette Integration', () => {
       )
       
       expect(screen.getByText('Main Actions')).toBeInTheDocument()
-      expect(screen.getByText('Recent Notes')).toBeInTheDocument()
+      expect(screen.getByText('Recent Pages')).toBeInTheDocument()
     })
 
     it('provides quick access to common actions', () => {
@@ -267,8 +267,8 @@ describe('CommandPalette Integration', () => {
       )
       
       // All main actions should be visible immediately
-      expect(screen.getByText('Create New Note')).toBeInTheDocument()
-      expect(screen.getByText("Open Today's Daily Note")).toBeInTheDocument()
+      expect(screen.getByText('Create New Page')).toBeInTheDocument()
+      expect(screen.getByText("Open Today's Journal")).toBeInTheDocument()
       expect(screen.getByText('Toggle Focus Mode')).toBeInTheDocument()
     })
 
