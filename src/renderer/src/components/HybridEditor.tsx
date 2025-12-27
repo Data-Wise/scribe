@@ -8,6 +8,7 @@ import { CitationAutocomplete } from './CitationAutocomplete'
 import { WritingProgress } from './WritingProgress'
 import { processMathInContent } from '../lib/mathjax'
 import { Note, Tag } from '../types'
+import { EditorMode } from '../lib/preferences'
 
 interface HybridEditorProps {
   content: string
@@ -17,7 +18,8 @@ interface HybridEditorProps {
   onSearchNotes?: (query: string) => Promise<Note[]>
   onSearchTags?: (query: string) => Promise<Tag[]>
   placeholder?: string
-  initialMode?: 'write' | 'preview'
+  editorMode?: EditorMode // source, live-preview, or reading
+  onEditorModeChange?: (mode: EditorMode) => void // Callback when mode changes
   focusMode?: boolean // When true, enables typewriter scrolling
   wordGoal?: number // Daily word goal for progress visualization
   sessionStartWords?: number // Words at session start for tracking session progress
@@ -25,14 +27,15 @@ interface HybridEditorProps {
   sessionStartTime?: number // Timestamp when session started (for timer display)
 }
 
-type EditorMode = 'write' | 'preview'
-
 /**
  * HybridEditor - ADHD-friendly distraction-free editor
  *
- * Write mode: Plain textarea for reliable input
- * Preview mode: Rendered markdown with clickable links
- * Toggle: Cmd+E (Mac) or Ctrl+E (Windows/Linux)
+ * Three modes (Obsidian-style):
+ * - Source: Plain textarea, raw markdown
+ * - Live Preview: WYSIWYG-like with inline rendering (current line shows raw)
+ * - Reading: Fully rendered, read-only
+ *
+ * Shortcuts: ⌘1 Source, ⌘2 Live Preview, ⌘3 Reading, ⌘E cycles modes
  */
 export function HybridEditor({
   content,
@@ -41,19 +44,26 @@ export function HybridEditor({
   onTagClick,
   onSearchNotes = async () => [],
   onSearchTags = async () => [],
-  initialMode = 'write',
+  editorMode = 'source',
+  onEditorModeChange,
   focusMode = false,
   wordGoal = 500,
   sessionStartWords = 0,
   streak = 0,
   sessionStartTime
 }: HybridEditorProps) {
-  const [mode, setMode] = useState<EditorMode>(initialMode)
+  const [mode, setMode] = useState<EditorMode>(editorMode)
 
-  // Update mode when initialMode prop changes (e.g., when navigating via wiki-link)
+  // Update mode when editorMode prop changes
   useEffect(() => {
-    setMode(initialMode)
-  }, [initialMode])
+    setMode(editorMode)
+  }, [editorMode])
+
+  // Notify parent when mode changes
+  const handleModeChange = useCallback((newMode: EditorMode) => {
+    setMode(newMode)
+    onEditorModeChange?.(newMode)
+  }, [onEditorModeChange])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const editorContainerRef = useRef<HTMLDivElement>(null)
 
@@ -62,40 +72,56 @@ export function HybridEditor({
   const [tagTrigger, setTagTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
   const [citationTrigger, setCitationTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
 
-  // Toggle between write and preview modes
-  const toggleMode = useCallback(() => {
-    setMode(prev => prev === 'write' ? 'preview' : 'write')
-  }, [])
+  // Cycle between modes: source → live-preview → reading → source
+  const cycleMode = useCallback(() => {
+    const modes: EditorMode[] = ['source', 'live-preview', 'reading']
+    const currentIndex = modes.indexOf(mode)
+    const nextMode = modes[(currentIndex + 1) % modes.length]
+    handleModeChange(nextMode)
+  }, [mode, handleModeChange])
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts for editor modes
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd+E or Ctrl+E to toggle mode
+      // Cmd+E or Ctrl+E to cycle modes
       if ((e.metaKey || e.ctrlKey) && e.key === 'e') {
         e.preventDefault()
-        toggleMode()
+        cycleMode()
       }
-      // Escape in preview mode returns to write mode
-      if (e.key === 'Escape' && mode === 'preview') {
+      // Cmd+1/2/3 to switch to specific mode
+      if ((e.metaKey || e.ctrlKey) && e.key === '1') {
         e.preventDefault()
-        setMode('write')
+        handleModeChange('source')
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '2') {
+        e.preventDefault()
+        handleModeChange('live-preview')
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '3') {
+        e.preventDefault()
+        handleModeChange('reading')
+      }
+      // Escape in reading mode returns to source mode
+      if (e.key === 'Escape' && mode === 'reading') {
+        e.preventDefault()
+        handleModeChange('source')
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [mode, toggleMode])
+  }, [mode, cycleMode, handleModeChange])
 
-  // Focus editor when entering write mode
+  // Focus editor when entering source or live-preview mode
   useEffect(() => {
-    if (mode === 'write' && textareaRef.current) {
+    if ((mode === 'source' || mode === 'live-preview') && textareaRef.current) {
       textareaRef.current.focus()
     }
   }, [mode])
 
   // Typewriter scrolling - keeps cursor centered in viewport during focus mode
   const scrollToCursor = useCallback(() => {
-    if (!focusMode || mode !== 'write') return
+    if (!focusMode || mode === 'reading') return
 
     const textarea = textareaRef.current
     const container = editorContainerRef.current
@@ -333,27 +359,40 @@ export function HybridEditor({
         <div
           className="flex rounded-full p-0.5"
           style={{ backgroundColor: 'var(--nexus-bg-tertiary)' }}
-          title="Toggle mode (⌘E)"
+          title="⌘1 Source, ⌘2 Live Preview, ⌘3 Reading, ⌘E cycle"
         >
           <button
-            onClick={() => setMode('write')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-              mode === 'write'
+            onClick={() => handleModeChange('source')}
+            className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+              mode === 'source'
                 ? 'bg-nexus-accent text-white shadow-sm'
                 : 'text-nexus-text-muted hover:text-nexus-text-primary'
             }`}
+            title="Source mode (⌘1)"
           >
-            Write
+            Source
           </button>
           <button
-            onClick={() => setMode('preview')}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-              mode === 'preview'
+            onClick={() => handleModeChange('live-preview')}
+            className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+              mode === 'live-preview'
                 ? 'bg-nexus-accent text-white shadow-sm'
                 : 'text-nexus-text-muted hover:text-nexus-text-primary'
             }`}
+            title="Live Preview mode (⌘2)"
           >
-            Preview
+            Live
+          </button>
+          <button
+            onClick={() => handleModeChange('reading')}
+            className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+              mode === 'reading'
+                ? 'bg-nexus-accent text-white shadow-sm'
+                : 'text-nexus-text-muted hover:text-nexus-text-primary'
+            }`}
+            title="Reading mode (⌘3)"
+          >
+            Reading
           </button>
         </div>
       </div>
@@ -364,7 +403,8 @@ export function HybridEditor({
         className={`flex-1 overflow-auto p-8 pt-16 ${focusMode ? 'typewriter-mode' : ''}`}
         style={{ backgroundColor: 'var(--nexus-bg-primary)' }}
       >
-        {mode === 'write' ? (
+        {/* Source and Live Preview modes use textarea (Live Preview cursor tracking deferred to v1.4) */}
+        {(mode === 'source' || mode === 'live-preview') ? (
           <textarea
             ref={textareaRef}
             value={content}
@@ -381,7 +421,8 @@ export function HybridEditor({
             spellCheck={false}
           />
         ) : (
-          <div 
+          /* Reading mode: fully rendered, read-only */
+          <div
             className="prose max-w-none"
             style={{
               fontFamily: 'var(--editor-font-family)',
@@ -441,7 +482,9 @@ export function HybridEditor({
         }}
       >
         <span className="flex items-center gap-2">
-          {mode === 'write' ? 'Writing' : 'Preview'}
+          {mode === 'source' && 'Source'}
+          {mode === 'live-preview' && 'Live Preview'}
+          {mode === 'reading' && 'Reading'}
           <span style={{ opacity: 0.6 }}>⌘E</span>
         </span>
 

@@ -2,6 +2,7 @@
 
 > **Last Updated:** 2025-12-27
 > **Current Version:** v1.2.0
+> **Next Sprint:** 22 (Editor Modes)
 > **Status:** Active planning document
 
 ---
@@ -63,6 +64,8 @@ This document consolidates all UI improvement proposals into a single roadmap. I
 
 | Feature | Effort | Impact | Description |
 |---------|--------|--------|-------------|
+| **Editor Modes (Source/Live/Reading)** | Quick | High | Obsidian-style three-mode toggle (⌘1/2/3) |
+| **Custom CSS Support** | Quick | High | User CSS injection in settings |
 | **Focus Mode Options** | Quick | High | Sentence/paragraph/typewriter modes (iA Writer-style) |
 | **Reading Time Estimate** | Quick | Medium | "~5 min read" in status bar |
 | **Panel Slide Transitions** | Quick | Medium | 200ms ease-out for panels |
@@ -100,27 +103,27 @@ This document consolidates all UI improvement proposals into a single roadmap. I
 
 ---
 
-## v1.3 Recommended Scope
+## v1.3 Recommended Scope (Sprint 22)
 
 Based on impact and ADHD-friendliness, recommend for v1.3:
 
 ### Must Have
 
-1. **Focus Mode Options** - Sentence/paragraph/typewriter toggle
-2. **File List Preview Snippets** - Better note discovery
-3. **Global Quick Capture** - `⌘⇧C` works from any app (Tauri global shortcut)
+1. **Editor Modes** - Source/Live Preview/Reading toggle (⌘1/2/3)
+2. **Custom CSS Support** - User CSS injection in settings
+3. **Focus Mode Options** - Sentence/paragraph/typewriter toggle
 
 ### Nice to Have
 
 4. **Reading Time Estimate** - Simple addition
 5. **Panel Transitions** - Polish
-6. **Project Stats on Cards** - Word count, note count
+6. **Global Quick Capture** - `⌘⇧C` works from any app
 
 ### Defer to v1.4+
 
+- Live Preview cursor tracking (complex per-block rendering)
 - Syntax Dimming (requires NLP library)
 - Voice Input (macOS integration)
-- Custom CSS Editor (low priority)
 - AI Tag Suggestions (requires AI integration)
 
 ---
@@ -129,6 +132,9 @@ Based on impact and ADHD-friendliness, recommend for v1.3:
 
 | Feature | Scribe | iA Writer | Ulysses | Bear | Obsidian |
 |---------|--------|-----------|---------|------|----------|
+| Editor Modes | **v1.3** | No | No | No | **Yes** |
+| Live Preview | **v1.3** | No | No | No | **Yes** |
+| Custom CSS | **v1.3** | No | No | No | **Yes** |
 | Focus Mode | Basic | Advanced | Yes | Yes | Plugin |
 | Sentence Focus | **No** | Yes | No | No | No |
 | Typewriter | Yes | Yes | Yes | Yes | Plugin |
@@ -140,7 +146,7 @@ Based on impact and ADHD-friendliness, recommend for v1.3:
 | Projects | **Yes** | No | Yes | No | Plugin |
 | Dashboard | **Yes** | No | No | No | No |
 
-**Scribe's Unique Position:** Academic features + ADHD design + Dashboard in one app
+**Scribe's Unique Position:** Academic features + ADHD design + Obsidian-like editing in one app
 
 ---
 
@@ -186,11 +192,21 @@ Move to `docs/archive/proposals/`:
 
 ## Next Steps
 
-1. [ ] Review this consolidated roadmap
-2. [ ] Prioritize v1.3 scope
-3. [ ] Create Sprint 22 plan
-4. [ ] Implement Focus Mode Options first (highest ADHD impact)
+### Sprint 22: Editor Modes (In Progress)
+
+1. [x] Create Sprint 22 plan (`SPRINT-22-EDITOR-MODES.md`)
+2. [ ] Implement three-mode toggle (Source/Live Preview/Reading)
+3. [ ] Add keyboard shortcuts (⌘1/2/3)
+4. [ ] Add Custom CSS support in settings
+5. [ ] Update preferences schema
+
+### Sprint 23: Focus Enhancements
+
+- [ ] Focus Mode Options (sentence/paragraph/typewriter)
+- [ ] Reading Time Estimate
+- [ ] Panel Transitions
 
 ---
 
 *Consolidated from 4 proposal documents on 2025-12-27*
+*Updated: Sprint 22 planning added*

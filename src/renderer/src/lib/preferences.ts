@@ -7,6 +7,9 @@
 
 const PREFERENCES_KEY = 'scribe-preferences'
 
+// Editor modes: Source (raw markdown), Live Preview (WYSIWYG), Reading (rendered, read-only)
+export type EditorMode = 'source' | 'live-preview' | 'reading'
+
 export interface UserPreferences {
   // Writing settings
   defaultWordGoal: number        // Default daily word goal (500)
@@ -21,6 +24,11 @@ export interface UserPreferences {
   showWordGoalProgress: boolean  // Show progress bar in editor
   celebrateMilestones: boolean   // Show milestone celebrations
   streakDisplayOptIn: boolean    // Show streak milestones (7/30/100/365) - default OFF
+
+  // Editor preferences (v1.3)
+  editorMode: EditorMode         // Source, Live Preview, or Reading mode
+  customCSS: string              // User's custom CSS for editor
+  customCSSEnabled: boolean      // Whether custom CSS is active
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -32,6 +40,10 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   showWordGoalProgress: true,
   celebrateMilestones: true,
   streakDisplayOptIn: false, // OFF by default - avoids ADHD anxiety
+  // Editor preferences (v1.3)
+  editorMode: 'source',      // Start with source mode (familiar)
+  customCSS: '',             // No custom CSS by default
+  customCSSEnabled: false,   // Disabled by default
 }
 
 /**

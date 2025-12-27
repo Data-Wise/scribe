@@ -53,6 +53,7 @@ import {
   updateStreak,
   getStreakInfo,
   UserPreferences,
+  EditorMode,
 } from './lib/preferences'
 import {
   getDailyNoteContent,
@@ -183,8 +184,11 @@ function App() {
   // Backlinks refresh key - increment to force BacklinksPanel refresh
   const [backlinksRefreshKey, setBacklinksRefreshKey] = useState(0)
   
-  // Editor mode - track to preserve mode when navigating via wiki-links
-  const [editorMode, setEditorMode] = useState<'write' | 'preview'>('write')
+  // Editor mode - source, live-preview, or reading (persisted in preferences)
+  const [editorMode, setEditorMode] = useState<EditorMode>(() => {
+    const prefs = loadPreferences()
+    return prefs.editorMode || 'source'
+  })
   
   // Tags for current note (for PropertiesPanel display)
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
@@ -468,7 +472,7 @@ function App() {
       if (targetNote) {
         console.log('[App] Found target note:', targetNote.id)
         // Keep preview mode when navigating via wiki-link click
-        setEditorMode('preview')
+        setEditorMode('reading')
         selectNote(targetNote.id)
       } else {
         console.log('[App] Creating new note for:', title)
@@ -483,7 +487,7 @@ function App() {
         }
 
         // New note opens in write mode
-        setEditorMode('write')
+        setEditorMode('source')
         selectNote(newNote.id)
         loadNotes(currentFolder)
       }
@@ -862,6 +866,11 @@ function App() {
 
   return (
     <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex overflow-hidden" style={{ height: '100vh' }}>
+      {/* Custom CSS injection from user preferences */}
+      {preferences.customCSSEnabled && preferences.customCSS && (
+        <style id="custom-user-css">{preferences.customCSS}</style>
+      )}
+
       {/* Titlebar drag region for window moving - uses Tauri API */}
       <DragRegion className="titlebar-drag-region" />
 
@@ -961,7 +970,7 @@ function App() {
                     <div
                       key={note.id}
                       onClick={() => {
-                        setEditorMode('write')  // Reset to write mode when clicking sidebar
+                        setEditorMode('source')  // Reset to write mode when clicking sidebar
                         selectNote(note.id)
                       }}
                       className={`${leftViewMode === 'compact' ? 'px-4 py-2' : 'px-4 py-3'} border-b border-white/[0.03] cursor-pointer hover:bg-white/[0.02] ${selectedNoteId === note.id ? 'bg-nexus-accent/5 text-nexus-accent' : ''}`}
@@ -1011,7 +1020,11 @@ function App() {
                 onSearchNotes={handleSearchNotesForAutocomplete}
                 onSearchTags={handleSearchTagsForAutocomplete}
                 placeholder="Start writing... (Cmd+E to preview)"
-                initialMode={editorMode}
+                editorMode={editorMode}
+                onEditorModeChange={(mode) => {
+                  setEditorMode(mode)
+                  updatePreferences({ editorMode: mode })
+                }}
                 focusMode={focusMode}
                 wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
                 sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
@@ -1065,7 +1078,7 @@ function App() {
                 noteTitle={selectedNote.title}
                 onSelectNote={(noteId) => {
                   // Stay in preview mode when clicking backlinks
-                  setEditorMode('preview')
+                  setEditorMode('reading')
                   selectNote(noteId)
                 }}
                 refreshKey={backlinksRefreshKey}
@@ -1130,7 +1143,7 @@ function App() {
         isOpen={isSearchPanelOpen}
         onClose={() => setIsSearchPanelOpen(false)}
         onSelectNote={(noteId) => {
-          setEditorMode('write')
+          setEditorMode('source')
           selectNote(noteId)
         }}
         currentProject={currentProjectId ? projects.find(p => p.id === currentProjectId) : null}

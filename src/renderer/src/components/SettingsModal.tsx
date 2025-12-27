@@ -1460,7 +1460,66 @@ export function SettingsModal({
                     ))}
                   </div>
                 </section>
-                
+
+                {/* Custom CSS */}
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    <FileCode className="w-3 h-3 inline mr-2" />
+                    Custom CSS
+                    <span className="ml-2 text-[10px] normal-case tracking-normal font-normal opacity-60">
+                      — advanced styling for power users
+                    </span>
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium text-nexus-text-primary">Enable Custom CSS</div>
+                        <div className="text-xs text-nexus-text-muted">Apply your own styles to the editor</div>
+                      </div>
+                      <button
+                        onClick={() => {
+                          const prefs = loadPreferences()
+                          updatePreferences({ customCSSEnabled: !prefs.customCSSEnabled })
+                        }}
+                        className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
+                          loadPreferences().customCSSEnabled ? 'bg-nexus-accent' : 'bg-white/10'
+                        }`}
+                      >
+                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
+                          loadPreferences().customCSSEnabled ? 'right-1' : 'left-1'
+                        }`} />
+                      </button>
+                    </div>
+                    <div>
+                      <textarea
+                        value={loadPreferences().customCSS}
+                        onChange={(e) => updatePreferences({ customCSS: e.target.value })}
+                        placeholder={`/* Custom CSS for Scribe editor */
+.editor-content {
+  /* Your styles here */
+}
+
+/* Example: Larger headings */
+.prose h1 { font-size: 2.5rem; }
+.prose h2 { font-size: 2rem; }`}
+                        className="w-full h-40 bg-nexus-bg-primary border border-white/10 rounded-md p-3 text-sm font-mono text-nexus-text-primary placeholder:text-nexus-text-muted/30 focus:outline-none focus:border-nexus-accent resize-y"
+                        spellCheck={false}
+                      />
+                      <div className="flex justify-between items-center mt-2">
+                        <span className="text-xs text-nexus-text-muted">
+                          Changes apply immediately when enabled
+                        </span>
+                        <button
+                          onClick={() => updatePreferences({ customCSS: '' })}
+                          className="text-xs text-nexus-text-muted hover:text-nexus-error transition-colors"
+                        >
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
               </div>
             )}
 
