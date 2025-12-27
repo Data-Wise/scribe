@@ -87,3 +87,58 @@ No API keys needed - uses your CLI subscriptions.
 Open Scribe from anywhere: `⌘⇧N`
 
 Works even when Scribe is minimized or closed.
+
+## Empty State
+
+When no note is selected, Scribe shows an engaging empty state:
+
+- Animated pen icon
+- "Ready to write" heading
+- Quick action buttons (New Note, Daily Note)
+- Random inspirational writing quote
+- Command palette hint
+
+## UI Polish
+
+### Micro-interactions
+
+All interactive elements provide tactile feedback:
+
+- **Buttons**: Scale down slightly on click (0.95x)
+- **Ribbon icons**: Press feedback with background change
+- **Transitions**: Smooth 150ms animations
+
+### Sidebar Tooltips
+
+Hover over sidebar icons to see:
+
+- Icon name
+- Keyboard shortcut
+
+Tooltips appear after 200ms delay to avoid flickering.
+
+### Accessibility
+
+Scribe respects your system preferences:
+
+- **Reduced motion**: All animations disabled when `prefers-reduced-motion` is set
+- **Screen readers**: Proper ARIA labels on all interactive elements
+- **Keyboard navigation**: Full support for keyboard-only users
+
+## Math Support
+
+Write math using LaTeX syntax:
+
+**Inline math:**
+```markdown
+The formula $E = mc^2$ is famous.
+```
+
+**Display math:**
+```markdown
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
+```
+
+Powered by KaTeX for fast, native rendering.

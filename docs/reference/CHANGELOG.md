@@ -9,6 +9,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - v0.4.0-dev
 
+### Sprint 12: UI Polish & Micro-interactions (2024-12-26)
+
+**EmptyState Component:**
+- New engaging empty state when no note is selected
+- Animated pen icon (CSS keyframes)
+- "Ready to write" heading with action buttons
+- Quick actions: New Note (⌘N), Daily Note (⌘D)
+- Command palette hint (⌘K)
+- Random inspirational writing quotes (10 quotes from famous authors)
+
+**Micro-interactions:**
+- Button press feedback (scale 0.95 on click)
+- Ribbon button animations (scale 0.92, background change)
+- Smooth transitions on all interactive elements
+- Loading spinner and success flash animations
+
+**Sidebar Tooltips:**
+- CSS-only tooltip system using `::after` pseudo-element
+- Shows icon name + keyboard shortcut on hover
+- 200ms delay, smooth fade-in animation
+- Positioned to the right of icons
+
+**Accessibility:**
+- `prefers-reduced-motion` media query support
+- Disables all animations for users who prefer reduced motion
+- Maintains functionality without visual effects
+
+**Bug Fixes:**
+- Fixed daily note template using HTML instead of Markdown
+- Changed from `<h2>{date}</h2>\n<p></p>` to `## {date}\n\n`
+
+**Files Changed:**
+- `src/renderer/src/components/EmptyState.tsx` (NEW)
+- `src/renderer/src/components/Ribbon.tsx` (tooltips)
+- `src/renderer/src/index.css` (micro-interactions CSS)
+- `src/renderer/src/App.tsx` (EmptyState integration)
+- `src-tauri/src/commands.rs` (daily note fix)
+
+**Tests:** 483 passing (no new tests, existing tests updated)
+
+---
+
+### Sprint 11: Academic Features (2024-12-26)
+
+**KaTeX Migration:**
+- Replaced MathJax 3 with KaTeX for math rendering
+- 1.7MB smaller bundle size
+- Faster rendering (browser-native)
+- Supports inline `$...$` and display `$$...$$` math
+
+**Theme Improvements:**
+- Fixed tags panel theme variables (brightness issue)
+- Theme colors now apply to entire editor area
+
+**Test Fixes:**
+- Fixed act() warnings in async component tests
+- All 483 tests passing
+
+**Files Changed:**
+- `src/renderer/src/lib/mathjax.ts` (KaTeX integration)
+- `src/renderer/src/components/MathRenderer.tsx` (updated)
+- `src/renderer/src/components/TagsPanel.tsx` (theme fix)
+- Multiple test files (act() warnings)
+
+---
+
 ### Sprint 10.5: Theme & Font System (2024-12-26)
 
 **Theme System:**
