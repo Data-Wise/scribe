@@ -10,9 +10,19 @@ The easiest way to install Scribe on macOS:
 # Add the tap
 brew tap data-wise/tap
 
-# Install Scribe
-brew install --cask data-wise/tap/scribe
+# Install Scribe (dev channel - current)
+brew install --cask data-wise/tap/scribe-dev
+
+# Or stable channel (when v1.0 releases)
+# brew install --cask data-wise/tap/scribe
 ```
+
+### Release Channels
+
+| Channel | Cask | Tracks | Status |
+|---------|------|--------|--------|
+| **Dev** | `scribe-dev` | Alpha/beta releases | Current |
+| **Stable** | `scribe` | v1.0+ releases | Coming soon |
 
 ## One-Line Install
 
@@ -89,7 +99,11 @@ brew install --cask zotero
 ### Homebrew
 
 ```bash
-brew upgrade --cask data-wise/tap/scribe
+# Dev channel
+brew upgrade --cask scribe-dev
+
+# Stable channel (when available)
+brew upgrade --cask scribe
 ```
 
 ### Manual
@@ -97,12 +111,28 @@ brew upgrade --cask data-wise/tap/scribe
 1. Download the latest DMG from GitHub Releases
 2. Replace the existing Scribe.app in Applications
 
+## Switching Channels
+
+```bash
+# Switch from dev to stable
+brew uninstall --cask scribe-dev
+brew install --cask data-wise/tap/scribe
+
+# Switch from stable to dev
+brew uninstall --cask scribe
+brew install --cask data-wise/tap/scribe-dev
+```
+
 ## Uninstalling
 
 ### Homebrew
 
 ```bash
-brew uninstall --cask data-wise/tap/scribe
+# Dev channel
+brew uninstall --cask scribe-dev
+
+# Stable channel
+brew uninstall --cask scribe
 ```
 
 ### Manual

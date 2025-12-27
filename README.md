@@ -34,7 +34,24 @@ Scribe is a **distraction-free writing app** designed for academics and research
 
 ---
 
-## Quick Start
+## Installation
+
+### Homebrew (Recommended)
+
+```bash
+# Add the tap
+brew tap data-wise/tap
+
+# Install dev channel (current)
+brew install --cask data-wise/tap/scribe-dev
+```
+
+### Download
+
+Download from [GitHub Releases](https://github.com/Data-Wise/scribe/releases):
+- `Scribe_x.x.x_aarch64.dmg` (Apple Silicon)
+
+### Build from Source
 
 ```bash
 # Clone and install
@@ -52,7 +69,11 @@ npm test
 npm run build
 ```
 
-### Keyboard Shortcuts
+> See [docs/installation/install.md](docs/installation/install.md) for detailed instructions.
+
+---
+
+## Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
