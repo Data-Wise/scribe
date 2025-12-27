@@ -12,13 +12,13 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/scribe/planning/SPRINT-12-UI-POLISH/">
+        <link rel="canonical" href="https://data-wise.github.io/scribe/planning/SPRINT-22-EDITOR-MODES/">
       
       
-        <link rel="prev" href="../SPRINT-13-PROJECT-SYSTEM/">
+        <link rel="prev" href="../UI-IMPROVEMENTS-CONSOLIDATED/">
       
       
-        <link rel="next" href="../SPRINT-11-PLAN/">
+        <link rel="next" href="../SPRINT-21-MISSION-CONTROL/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Sprint 12 - UI Polish - Scribe</title>
+        <title>Sprint 22 - Editor Modes - Scribe</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sprint-12-ui-polish-micro-interactions" class="md-skip">
+        <a href="#sprint-22-editor-modes-custom-css" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Sprint 12 - UI Polish
+              Sprint 22 - Editor Modes
             
           </span>
         </div>
@@ -1299,10 +1299,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../SPRINT-22-EDITOR-MODES/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 22 - Editor Modes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1318,6 +1345,292 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Background
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Background">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obsidians-three-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obsidian's Three Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-scribe-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Scribe State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-mode-editor-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three-Mode Editor Toggle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-css-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom CSS Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-wins-30-min-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Wins (&lt; 30 min each)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-effort-1-2-hours-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium Effort (1-2 hours each)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#larger-effort-defer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Larger Effort (Defer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#editor-mode-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editor Mode Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mode-toggle-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mode Toggle Component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-css-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom CSS Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Create
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyboard-shortcuts_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1383,37 +1696,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 12 - UI Polish
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../SPRINT-12-UI-POLISH/" class="md-nav__link">
         
   
   
@@ -1429,126 +1715,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#completed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Completed
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#remaining" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Remaining
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Remaining">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#high-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Priority
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#medium-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Medium Priority
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Technical Notes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Technical Notes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#css-approach" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CSS Approach
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#files-modified" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Files Modified
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#definition-of-done" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Definition of Done
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1731,10 +1897,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#completed" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Completed
+        Overview
       
     </span>
   </a>
@@ -1742,22 +1908,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#remaining" class="md-nav__link">
+  <a href="#background" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Remaining
+        Background
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Remaining">
+    <nav class="md-nav" aria-label="Background">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#high-priority" class="md-nav__link">
+  <a href="#obsidians-three-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        High Priority
+        Obsidian's Three Modes
       
     </span>
   </a>
@@ -1765,10 +1931,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#medium-priority" class="md-nav__link">
+  <a href="#current-scribe-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Medium Priority
+        Current Scribe State
       
     </span>
   </a>
@@ -1781,22 +1947,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#technical-notes" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Technical Notes
+        Features
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Technical Notes">
+    <nav class="md-nav" aria-label="Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#css-approach" class="md-nav__link">
+  <a href="#three-mode-editor-toggle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CSS Approach
+        Three-Mode Editor Toggle
       
     </span>
   </a>
@@ -1804,10 +1970,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#files-modified" class="md-nav__link">
+  <a href="#custom-css-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Files Modified
+        Custom CSS Support
       
     </span>
   </a>
@@ -1820,10 +1986,176 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#definition-of-done" class="md-nav__link">
+  <a href="#implementation-plan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Definition of Done
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-wins-30-min-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Wins (&lt; 30 min each)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-effort-1-2-hours-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium Effort (1-2 hours each)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#larger-effort-defer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Larger Effort (Defer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#editor-mode-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editor Mode Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mode-toggle-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mode Toggle Component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-css-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom CSS Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Create
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyboard-shortcuts_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
       
     </span>
   </a>
@@ -1850,142 +2182,345 @@
   
 
 
-<h1 id="sprint-12-ui-polish-micro-interactions">Sprint 12: UI Polish &amp; Micro-interactions</h1>
-<p><strong>Status:</strong> 🚀 In Progress
-<strong>Started:</strong> 2024-12-26
-<strong>Focus:</strong> Visual polish, micro-interactions, ADHD-friendly UX</p>
+<h1 id="sprint-22-editor-modes-custom-css">Sprint 22: Editor Modes &amp; Custom CSS</h1>
+<blockquote>
+<p><strong>Goal:</strong> Obsidian-style editing modes with Live Preview and Custom CSS support</p>
+</blockquote>
 <hr />
-<h2 id="completed">Completed</h2>
+<h2 id="overview">Overview</h2>
 <table>
 <thead>
 <tr>
-<th>Task</th>
-<th>Description</th>
-<th>PR</th>
+<th>Field</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>✅ Button micro-interactions</td>
-<td>CSS scale feedback on click</td>
-<td>#1</td>
+<td><strong>Sprint</strong></td>
+<td>22</td>
 </tr>
 <tr>
-<td>✅ Sidebar tooltips</td>
-<td>Icon labels with keyboard shortcuts</td>
-<td>#1</td>
+<td><strong>Focus</strong></td>
+<td>Editor Modes + Custom CSS</td>
 </tr>
 <tr>
-<td>✅ EmptyState component</td>
-<td>Animated pen, action buttons, quotes</td>
-<td>#1</td>
+<td><strong>Version</strong></td>
+<td>v1.3.0</td>
 </tr>
 <tr>
-<td>✅ Reduced-motion support</td>
-<td>Respects <code>prefers-reduced-motion</code></td>
-<td>#1</td>
+<td><strong>Status</strong></td>
+<td>Planning</td>
 </tr>
 <tr>
-<td>✅ Daily note fix</td>
-<td>HTML → Markdown template</td>
-<td>#1</td>
-</tr>
-<tr>
-<td>✅ KaTeX migration</td>
-<td>Replaced MathJax (1.7MB smaller)</td>
-<td>-</td>
-</tr>
-<tr>
-<td>✅ Tags panel theme fix</td>
-<td>Brightness variable issue</td>
-<td>-</td>
-</tr>
-<tr>
-<td>✅ Test act() warnings</td>
-<td>Fixed async test warnings</td>
-<td>-</td>
+<td><strong>Started</strong></td>
+<td>2025-12-27</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="remaining">Remaining</h2>
-<h3 id="high-priority">High Priority</h3>
+<h2 id="background">Background</h2>
+<h3 id="obsidians-three-modes">Obsidian's Three Modes</h3>
 <table>
 <thead>
 <tr>
-<th>Task</th>
-<th>Description</th>
-<th>Effort</th>
+<th>Mode</th>
+<th>What You See</th>
+<th>Cursor Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Writing progress</td>
-<td>Word goals, session stats, streaks</td>
-<td>1-2 days</td>
+<td><strong>Source</strong></td>
+<td>Raw markdown only</td>
+<td>Always see <code>**bold**</code>, <code>[[links]]</code></td>
 </tr>
 <tr>
-<td>Focus mode enhancements</td>
-<td>Typewriter scrolling, sentence highlight</td>
-<td>1 day</td>
+<td><strong>Live Preview</strong></td>
+<td>Rendered + editable</td>
+<td>Current line shows raw markdown</td>
 </tr>
 <tr>
-<td>Recent notes</td>
-<td>Quick access panel/keyboard shortcut</td>
-<td>0.5 day</td>
+<td><strong>Reading</strong></td>
+<td>Fully rendered</td>
+<td>Read-only, no editing</td>
 </tr>
 </tbody>
 </table>
-<h3 id="medium-priority">Medium Priority</h3>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Description</th>
-<th>Effort</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Theme preview cards</td>
-<td>Mini previews in settings</td>
-<td>2-3 hours</td>
-</tr>
-<tr>
-<td>Panel transitions</td>
-<td>Slide-in animations for sidebars</td>
-<td>1 hour</td>
-</tr>
-<tr>
-<td>Icon consistency</td>
-<td>Standardize on Lucide icons</td>
-<td>2-3 hours</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="technical-notes">Technical Notes</h2>
-<h3 id="css-approach">CSS Approach</h3>
+<h3 id="current-scribe-state">Current Scribe State</h3>
 <ul>
-<li>All animations CSS-only (no JS)</li>
-<li><code>prefers-reduced-motion</code> respected</li>
-<li>Tailwind classes with custom animations in <code>index.css</code></li>
-</ul>
-<h3 id="files-modified">Files Modified</h3>
-<ul>
-<li><code>src/renderer/src/index.css</code> - Micro-interaction CSS</li>
-<li><code>src/renderer/src/components/EmptyState.tsx</code> - New component</li>
-<li><code>src/renderer/src/components/Ribbon.tsx</code> - Tooltip support</li>
-<li><code>src-tauri/src/commands.rs</code> - Daily note fix</li>
+<li><strong>Write mode</strong> = Raw markdown (Source-like)</li>
+<li><strong>Preview mode</strong> = Read-only rendered (Reading-like)</li>
+<li><strong>Missing</strong> = Live Preview (WYSIWYG hybrid)</li>
 </ul>
 <hr />
-<h2 id="definition-of-done">Definition of Done</h2>
+<h2 id="features">Features</h2>
+<h3 id="three-mode-editor-toggle">Three-Mode Editor Toggle</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  [Source] [Live Preview] [Reading]      │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│     ⌘1        ⌘2            ⌘3          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└─────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Source Mode (⌘1):</strong>
+- Raw markdown textarea
+- Syntax highlighting
+- Maximum control</p>
+<p><strong>Live Preview Mode (⌘2):</strong>
+- Renders markdown inline
+- Current block shows raw markdown
+- Wiki-links/tags clickable when unfocused</p>
+<p><strong>Reading Mode (⌘3):</strong>
+- Full rendered view
+- No editing
+- Clean reading experience</p>
+<h3 id="custom-css-support">Custom CSS Support</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Settings &gt; Appearance &gt; Custom CSS
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>┌─────────────────────────────────────────┐
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│ ☑ Enable Custom CSS                     │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│ ┌─────────────────────────────────────┐ │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│ │ .editor-content {                   │ │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│ │   font-size: 18px;                  │ │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ │ }                                   │ │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│ └─────────────────────────────────────┘ │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│ [Reset to Default] [Import] [Export]    │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>└─────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="implementation-plan">Implementation Plan</h2>
+<h3 id="quick-wins-30-min-each">Quick Wins (&lt; 30 min each)</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EditorMode type</td>
+<td><code>types.ts</code></td>
+<td><code>'source' \| 'live-preview' \| 'reading'</code></td>
+</tr>
+<tr>
+<td>Mode toggle UI</td>
+<td><code>HybridEditor.tsx</code></td>
+<td>Three-button pill toggle</td>
+</tr>
+<tr>
+<td>Keyboard shortcuts</td>
+<td><code>App.tsx</code></td>
+<td><code>⌘1</code>, <code>⌘2</code>, <code>⌘3</code></td>
+</tr>
+<tr>
+<td>Preferences field</td>
+<td><code>preferences.ts</code></td>
+<td><code>editorMode</code>, <code>customCSS</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="medium-effort-1-2-hours-each">Medium Effort (1-2 hours each)</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source mode view</td>
+<td><code>HybridEditor.tsx</code></td>
+<td>Raw textarea with syntax highlighting</td>
+</tr>
+<tr>
+<td>Custom CSS injection</td>
+<td><code>App.tsx</code></td>
+<td>Inject user CSS into editor</td>
+</tr>
+<tr>
+<td>CSS settings UI</td>
+<td><code>SettingsModal.tsx</code></td>
+<td>Textarea + enable toggle</td>
+</tr>
+<tr>
+<td>Live Preview cursor</td>
+<td><code>HybridEditor.tsx</code></td>
+<td>Track focused block, render others</td>
+</tr>
+</tbody>
+</table>
+<h3 id="larger-effort-defer">Larger Effort (Defer)</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Per-block rendering</td>
+<td>Only show raw markdown on focused block</td>
+</tr>
+<tr>
+<td>CSS live preview</td>
+<td>Real-time preview as you edit CSS</td>
+</tr>
+<tr>
+<td>CSS import/export</td>
+<td>File-based CSS management</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="technical-design">Technical Design</h2>
+<h3 id="editor-mode-type">Editor Mode Type</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// src/renderer/src/types.ts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">EditorMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;source&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;live-preview&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;reading&#39;</span>
+</code></pre></div>
+<h3 id="preferences">Preferences</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// src/renderer/src/lib/preferences.ts</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">UserPreferences</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="c1">// ... existing</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nx">editorMode</span><span class="o">:</span><span class="w"> </span><span class="kt">EditorMode</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nx">customCSS</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nx">customCSSEnabled</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="mode-toggle-component">Mode Toggle Component</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// In HybridEditor.tsx</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;mode-toggle&quot;</span><span class="o">&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">button</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">mode</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;source&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">}</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">setMode</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">)}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="o">&gt;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nx">Source</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="o">&lt;</span><span class="err">/button&gt;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">button</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">mode</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;live-preview&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">setMode</span><span class="p">(</span><span class="s1">&#39;live-preview&#39;</span><span class="p">)}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="o">&gt;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nx">Live</span><span class="w"> </span><span class="nx">Preview</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="o">&lt;</span><span class="err">/button&gt;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">button</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">mode</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;reading&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">}</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">setMode</span><span class="p">(</span><span class="s1">&#39;reading&#39;</span><span class="p">)}</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="o">&gt;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="nx">Reading</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="o">&lt;</span><span class="err">/button&gt;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="o">&lt;</span><span class="err">/div&gt;</span>
+</code></pre></div>
+<h3 id="custom-css-injection">Custom CSS Injection</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// In App.tsx or HybridEditor.tsx</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">{</span><span class="nx">preferences</span><span class="p">.</span><span class="nx">customCSSEnabled</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">preferences</span><span class="p">.</span><span class="nx">customCSS</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">style</span><span class="w"> </span><span class="nx">id</span><span class="o">=</span><span class="s2">&quot;custom-user-css&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">preferences</span><span class="p">.</span><span class="nx">customCSS</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/style&gt;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">)}</span>
+</code></pre></div>
+<h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// In App.tsx</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// Editor modes (⌘1/2/3)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="nx">e</span><span class="p">.</span><span class="nx">metaKey</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ctrlKey</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nx">setEditorMode</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">}</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="nx">e</span><span class="p">.</span><span class="nx">metaKey</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ctrlKey</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nx">setEditorMode</span><span class="p">(</span><span class="s1">&#39;live-preview&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">}</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="nx">e</span><span class="p">.</span><span class="nx">metaKey</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ctrlKey</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nx">setEditorMode</span><span class="p">(</span><span class="s1">&#39;reading&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="files-to-create">Files to Create</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(none - modifications only)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="files-to-modify">Files to Modify</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/renderer/src/components/HybridEditor.tsx</code></td>
+<td>Mode toggle, source view</td>
+</tr>
+<tr>
+<td><code>src/renderer/src/App.tsx</code></td>
+<td>Shortcuts, CSS injection</td>
+</tr>
+<tr>
+<td><code>src/renderer/src/lib/preferences.ts</code></td>
+<td>New preferences</td>
+</tr>
+<tr>
+<td><code>src/renderer/src/components/SettingsModal.tsx</code></td>
+<td>Custom CSS UI</td>
+</tr>
+<tr>
+<td><code>src/renderer/src/index.css</code></td>
+<td>Mode toggle styles</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="keyboard-shortcuts_1">Keyboard Shortcuts</h2>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘1</code></td>
+<td>Source mode</td>
+</tr>
+<tr>
+<td><code>⌘2</code></td>
+<td>Live Preview mode</td>
+</tr>
+<tr>
+<td><code>⌘3</code></td>
+<td>Reading mode</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="success-criteria">Success Criteria</h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All remaining items implemented</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 483+ tests passing</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Visual verification in browser</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> PR merged to main</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> .STATUS updated to Sprint 13</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Three modes toggle correctly</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Keyboard shortcuts work</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Custom CSS applies to editor</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Preferences persist across sessions</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Mode persists across sessions</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No performance regression</li>
+</ul>
+<hr />
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Live Preview cursor tracking deferred to v1.4 (complex)</li>
+<li>Start with mode switching, add cursor-aware rendering later</li>
+<li>Custom CSS is independent feature, low risk</li>
 </ul>
 
 

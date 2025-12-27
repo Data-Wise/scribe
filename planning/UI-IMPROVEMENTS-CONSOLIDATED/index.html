@@ -18,7 +18,7 @@
         <link rel="prev" href="../V1_RELEASE_PLAN/">
       
       
-        <link rel="next" href="../SPRINT-21-MISSION-CONTROL/">
+        <link rel="next" href="../SPRINT-22-EDITOR-MODES/">
       
       
         
@@ -1456,15 +1456,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#v13-recommended-scope" class="md-nav__link">
+  <a href="#v13-recommended-scope-sprint-22" class="md-nav__link">
     <span class="md-ellipsis">
       
-        v1.3 Recommended Scope
+        v1.3 Recommended Scope (Sprint 22)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v1.3 Recommended Scope">
+    <nav class="md-nav" aria-label="v1.3 Recommended Scope (Sprint 22)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1575,12 +1575,68 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sprint-22-editor-modes-in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 22: Editor Modes (In Progress)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sprint-23-focus-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 23: Focus Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SPRINT-22-EDITOR-MODES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 22 - Editor Modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1969,15 +2025,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#v13-recommended-scope" class="md-nav__link">
+  <a href="#v13-recommended-scope-sprint-22" class="md-nav__link">
     <span class="md-ellipsis">
       
-        v1.3 Recommended Scope
+        v1.3 Recommended Scope (Sprint 22)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v1.3 Recommended Scope">
+    <nav class="md-nav" aria-label="v1.3 Recommended Scope (Sprint 22)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2088,6 +2144,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sprint-22-editor-modes-in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 22: Editor Modes (In Progress)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sprint-23-focus-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprint 23: Focus Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2114,6 +2198,7 @@
 <blockquote>
 <p><strong>Last Updated:</strong> 2025-12-27
 <strong>Current Version:</strong> v1.2.0
+<strong>Next Sprint:</strong> 22 (Editor Modes)
 <strong>Status:</strong> Active planning document</p>
 </blockquote>
 <hr />
@@ -2285,6 +2370,18 @@
 </thead>
 <tbody>
 <tr>
+<td><strong>Editor Modes (Source/Live/Reading)</strong></td>
+<td>Quick</td>
+<td>High</td>
+<td>Obsidian-style three-mode toggle (⌘1/2/3)</td>
+</tr>
+<tr>
+<td><strong>Custom CSS Support</strong></td>
+<td>Quick</td>
+<td>High</td>
+<td>User CSS injection in settings</td>
+</tr>
+<tr>
 <td><strong>Focus Mode Options</strong></td>
 <td>Quick</td>
 <td>High</td>
@@ -2433,25 +2530,25 @@
 </tbody>
 </table>
 <hr />
-<h2 id="v13-recommended-scope">v1.3 Recommended Scope</h2>
+<h2 id="v13-recommended-scope-sprint-22">v1.3 Recommended Scope (Sprint 22)</h2>
 <p>Based on impact and ADHD-friendliness, recommend for v1.3:</p>
 <h3 id="must-have">Must Have</h3>
 <ol>
+<li><strong>Editor Modes</strong> - Source/Live Preview/Reading toggle (⌘1/2/3)</li>
+<li><strong>Custom CSS Support</strong> - User CSS injection in settings</li>
 <li><strong>Focus Mode Options</strong> - Sentence/paragraph/typewriter toggle</li>
-<li><strong>File List Preview Snippets</strong> - Better note discovery</li>
-<li><strong>Global Quick Capture</strong> - <code>⌘⇧C</code> works from any app (Tauri global shortcut)</li>
 </ol>
 <h3 id="nice-to-have">Nice to Have</h3>
 <ol>
 <li><strong>Reading Time Estimate</strong> - Simple addition</li>
 <li><strong>Panel Transitions</strong> - Polish</li>
-<li><strong>Project Stats on Cards</strong> - Word count, note count</li>
+<li><strong>Global Quick Capture</strong> - <code>⌘⇧C</code> works from any app</li>
 </ol>
 <h3 id="defer-to-v14">Defer to v1.4+</h3>
 <ul>
+<li>Live Preview cursor tracking (complex per-block rendering)</li>
 <li>Syntax Dimming (requires NLP library)</li>
 <li>Voice Input (macOS integration)</li>
-<li>Custom CSS Editor (low priority)</li>
 <li>AI Tag Suggestions (requires AI integration)</li>
 </ul>
 <hr />
@@ -2468,6 +2565,30 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Editor Modes</td>
+<td><strong>v1.3</strong></td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>Live Preview</td>
+<td><strong>v1.3</strong></td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>Custom CSS</td>
+<td><strong>v1.3</strong></td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
 <tr>
 <td>Focus Mode</td>
 <td>Basic</td>
@@ -2550,7 +2671,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Scribe's Unique Position:</strong> Academic features + ADHD design + Dashboard in one app</p>
+<p><strong>Scribe's Unique Position:</strong> Academic features + ADHD design + Obsidian-like editing in one app</p>
 <hr />
 <h2 id="implementation-notes">Implementation Notes</h2>
 <h3 id="focus-mode-enhancement">Focus Mode Enhancement</h3>
@@ -2582,14 +2703,23 @@
 - <code>docs/UI-IMPROVEMENTS-PROPOSAL.md</code></p>
 <hr />
 <h2 id="next-steps">Next Steps</h2>
+<h3 id="sprint-22-editor-modes-in-progress">Sprint 22: Editor Modes (In Progress)</h3>
 <ol class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Review this consolidated roadmap</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Prioritize v1.3 scope</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Create Sprint 22 plan</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement Focus Mode Options first (highest ADHD impact)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Create Sprint 22 plan (<code>SPRINT-22-EDITOR-MODES.md</code>)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement three-mode toggle (Source/Live Preview/Reading)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Add keyboard shortcuts (⌘1/2/3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Add Custom CSS support in settings</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Update preferences schema</li>
 </ol>
+<h3 id="sprint-23-focus-enhancements">Sprint 23: Focus Enhancements</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Focus Mode Options (sentence/paragraph/typewriter)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Reading Time Estimate</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Panel Transitions</li>
+</ul>
 <hr />
-<p><em>Consolidated from 4 proposal documents on 2025-12-27</em></p>
+<p><em>Consolidated from 4 proposal documents on 2025-12-27</em>
+<em>Updated: Sprint 22 planning added</em></p>
 
 
 
