@@ -972,6 +972,11 @@ function App() {
             content: '',
             folder: 'inbox'
           })
+          // Guard against undefined (createNote may fail)
+          if (!newNote) {
+            console.error('[Scribe] Failed to create note')
+            return
+          }
           // Assign note to project
           await api.setNoteProject(newNote.id, projectId)
           // Select the new note
