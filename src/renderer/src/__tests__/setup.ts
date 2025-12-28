@@ -21,6 +21,8 @@ const apiMock = {
   createNote: vi.fn(),
   updateNote: vi.fn(),
   deleteNote: vi.fn(),
+  restoreNote: vi.fn(),
+  permanentDeleteNote: vi.fn(),
   getNote: vi.fn(),
   listNotes: vi.fn(),
   searchNotes: vi.fn(),

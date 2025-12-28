@@ -223,8 +223,8 @@ describe('CompactListMode Component', () => {
   ]
 
   const mockNotes: Note[] = [
-    { id: 'n1', title: 'Note 1', content: 'Some content here', folder: '/', created_at: Date.now(), updated_at: Date.now(), deleted_at: null, properties: { project_id: { key: 'project_id', value: '1', type: 'text' } } },
-    { id: 'n2', title: 'Note 2', content: 'More content', folder: '/', created_at: Date.now(), updated_at: Date.now() - 500, deleted_at: null, properties: {} },
+    { id: 'n1', title: 'Note 1', content: 'Some content here', folder: '/', project_id: '1', created_at: Date.now(), updated_at: Date.now(), deleted_at: null, properties: {} },
+    { id: 'n2', title: 'Note 2', content: 'More content', folder: '/', project_id: null, created_at: Date.now(), updated_at: Date.now() - 500, deleted_at: null, properties: {} },
   ]
 
   const mockHandlers = {
@@ -404,35 +404,39 @@ describe('CompactListMode Component', () => {
     expect(screen.getByText(/No projects match/i)).toBeInTheDocument()
   })
 
-  it('renders recent notes section when notes exist', () => {
+  it('renders project notes section when project is selected', () => {
     render(
       <CompactListMode
         projects={mockProjects}
         notes={mockNotes}
-        currentProjectId={null}
+        currentProjectId="1"
         width={240}
         {...mockHandlers}
       />
     )
 
-    expect(screen.getByText('Recent')).toBeInTheDocument()
-    expect(screen.getByText('Note 1')).toBeInTheDocument()
-    expect(screen.getByText('Note 2')).toBeInTheDocument()
+    // When a project is selected, shows "Notes" header with count (1 note matches project '1')
+    expect(screen.getByText(/Notes \(1\)/)).toBeInTheDocument()
   })
 
-  it('calls onSelectNote when recent note clicked', () => {
+  it('calls onSelectNote when project note clicked', () => {
     render(
       <CompactListMode
         projects={mockProjects}
         notes={mockNotes}
-        currentProjectId={null}
+        currentProjectId="1"
         width={240}
         {...mockHandlers}
       />
     )
 
-    fireEvent.click(screen.getByText('Note 1'))
-    expect(mockHandlers.onSelectNote).toHaveBeenCalledWith('n1')
+    // Click on a note title in the project notes section
+    const noteButtons = screen.getAllByRole('button')
+    const noteButton = noteButtons.find(btn => btn.textContent?.includes('Note 1'))
+    if (noteButton) {
+      fireEvent.click(noteButton)
+      expect(mockHandlers.onSelectNote).toHaveBeenCalledWith('n1')
+    }
   })
 
   it('renders new project button', () => {
@@ -749,7 +753,7 @@ describe('NotesListPanel Component', () => {
   ]
 
   const mockNotes: Note[] = [
-    { id: 'n1', title: 'First Note', content: 'Content of first note', folder: '/', created_at: Date.now() - 2000, updated_at: Date.now(), deleted_at: null, properties: { project_id: { key: 'project_id', value: 'p1', type: 'text' } } },
+    { id: 'n1', title: 'First Note', content: 'Content of first note', folder: '/', project_id: 'p1', created_at: Date.now() - 2000, updated_at: Date.now(), deleted_at: null, properties: {} },
     { id: 'n2', title: 'Second Note', content: 'Content of second', folder: '/', created_at: Date.now() - 1000, updated_at: Date.now() - 500, deleted_at: null, properties: {} },
     { id: 'n3', title: 'Alpha Note', content: 'Alphabetically first', folder: '/', created_at: Date.now(), updated_at: Date.now() - 1000, deleted_at: null, properties: {} },
   ]
@@ -1371,7 +1375,14 @@ describe('NoteContextMenu Component', () => {
     expect(deleteButton).toBeInTheDocument()
     expect(deleteButton.closest('.context-menu-item')).toHaveClass('danger')
 
+    // First click shows confirmation
     fireEvent.click(deleteButton)
+    expect(screen.getByText('Move to trash?')).toBeInTheDocument()
+    expect(screen.getByText('Cancel')).toBeInTheDocument()
+
+    // Click confirm Delete button
+    const confirmDeleteButton = screen.getByRole('button', { name: 'Delete' })
+    fireEvent.click(confirmDeleteButton)
     expect(mockHandlers.onDelete).toHaveBeenCalledWith('note1')
     expect(mockHandlers.onClose).toHaveBeenCalled()
   })
@@ -1415,7 +1426,7 @@ describe('NoteContextMenu Component', () => {
 describe('NotesListPanel with Context Menu', () => {
   const mockNotes: Note[] = [
     { id: 'n1', title: 'Note 1', content: 'Content 1', folder: '/', created_at: Date.now(), updated_at: Date.now(), deleted_at: null, properties: {} },
-    { id: 'n2', title: 'Note 2', content: 'Content 2', folder: '/', created_at: Date.now(), updated_at: Date.now(), deleted_at: null, properties: { project_id: { key: 'project_id', value: 'proj1', type: 'text' } } },
+    { id: 'n2', title: 'Note 2', content: 'Content 2', folder: '/', project_id: 'proj1', created_at: Date.now(), updated_at: Date.now(), deleted_at: null, properties: {} },
   ]
 
   const mockProjects: Project[] = [

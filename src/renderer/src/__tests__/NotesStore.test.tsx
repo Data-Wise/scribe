@@ -9,6 +9,8 @@ const mockApi = api as unknown as {
   createNote: ReturnType<typeof vi.fn>
   updateNote: ReturnType<typeof vi.fn>
   deleteNote: ReturnType<typeof vi.fn>
+  restoreNote: ReturnType<typeof vi.fn>
+  permanentDeleteNote: ReturnType<typeof vi.fn>
   getNote: ReturnType<typeof vi.fn>
 }
 
@@ -208,9 +210,9 @@ describe('useNotesStore', () => {
         const initialNotes = [
           { id: '1', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
-        const deletedNote = { ...initialNotes[0], deleted_at: Date.now() }
 
-        mockApi.updateNote.mockResolvedValue(deletedNote)
+        // softDeleteNote uses api.deleteNote which sets deleted_at on the backend
+        mockApi.deleteNote.mockResolvedValue(true)
 
         // Set initial state
         useNotesStore.setState({ notes: initialNotes })
@@ -221,9 +223,9 @@ describe('useNotesStore', () => {
           await result.current.softDeleteNote('1')
         })
 
-        expect(mockApi.updateNote).toHaveBeenCalledWith('1', expect.objectContaining({
-          deleted_at: expect.any(Number)
-        }))
+        expect(mockApi.deleteNote).toHaveBeenCalledWith('1')
+        // Local state should be updated with deleted_at
+        expect(result.current.notes[0].deleted_at).toBeTruthy()
       })
     })
 
@@ -234,7 +236,8 @@ describe('useNotesStore', () => {
         ]
         const restoredNote = { ...initialNotes[0], deleted_at: null }
 
-        mockApi.updateNote.mockResolvedValue(restoredNote)
+        // restoreNote uses api.restoreNote
+        mockApi.restoreNote.mockResolvedValue(restoredNote)
 
         // Set initial state with deleted note
         useNotesStore.setState({ notes: initialNotes })
@@ -245,7 +248,8 @@ describe('useNotesStore', () => {
           await result.current.restoreNote('1')
         })
 
-        expect(mockApi.updateNote).toHaveBeenCalledWith('1', { deleted_at: null })
+        expect(mockApi.restoreNote).toHaveBeenCalledWith('1')
+        expect(result.current.notes[0].deleted_at).toBeNull()
       })
     })
 
@@ -256,7 +260,8 @@ describe('useNotesStore', () => {
           { id: '2', title: 'Keep', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
 
-        mockApi.deleteNote.mockResolvedValue(undefined)
+        // permanentlyDeleteNote uses api.permanentDeleteNote
+        mockApi.permanentDeleteNote.mockResolvedValue(undefined)
 
         // Set initial state
         useNotesStore.setState({ notes: initialNotes })
@@ -267,7 +272,7 @@ describe('useNotesStore', () => {
           await result.current.permanentlyDeleteNote('1')
         })
 
-        expect(mockApi.deleteNote).toHaveBeenCalledWith('1')
+        expect(mockApi.permanentDeleteNote).toHaveBeenCalledWith('1')
         expect(result.current.notes).toHaveLength(1)
         expect(result.current.notes[0].id).toBe('2')
       })
@@ -277,7 +282,7 @@ describe('useNotesStore', () => {
           { id: '1', title: 'Selected & Deleted', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
         ]
 
-        mockApi.deleteNote.mockResolvedValue(undefined)
+        mockApi.permanentDeleteNote.mockResolvedValue(undefined)
 
         // Set initial state with selected note
         useNotesStore.setState({ notes: initialNotes, selectedNoteId: '1' })
@@ -300,7 +305,8 @@ describe('useNotesStore', () => {
           { id: '3', title: 'Trashed 2', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
         ]
 
-        mockApi.deleteNote.mockResolvedValue(undefined)
+        // emptyTrash uses api.permanentDeleteNote for each trashed note
+        mockApi.permanentDeleteNote.mockResolvedValue(undefined)
 
         // Set initial state
         useNotesStore.setState({ notes: initialNotes })
@@ -311,10 +317,10 @@ describe('useNotesStore', () => {
           await result.current.emptyTrash()
         })
 
-        // Should have called deleteNote for each trashed note
-        expect(mockApi.deleteNote).toHaveBeenCalledTimes(2)
-        expect(mockApi.deleteNote).toHaveBeenCalledWith('1')
-        expect(mockApi.deleteNote).toHaveBeenCalledWith('3')
+        // Should have called permanentDeleteNote for each trashed note
+        expect(mockApi.permanentDeleteNote).toHaveBeenCalledTimes(2)
+        expect(mockApi.permanentDeleteNote).toHaveBeenCalledWith('1')
+        expect(mockApi.permanentDeleteNote).toHaveBeenCalledWith('3')
 
         // Only active note should remain
         expect(result.current.notes).toHaveLength(1)
