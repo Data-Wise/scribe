@@ -177,7 +177,7 @@ export function loadTemplates(): DailyNoteTemplate[] {
   } catch (e) {
     console.error('[Templates] Failed to load templates:', e)
   }
-  return DEFAULT_TEMPLATES
+  return [...DEFAULT_TEMPLATES]
 }
 
 /**
