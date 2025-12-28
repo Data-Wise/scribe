@@ -6,6 +6,7 @@ HEADER="#!/bin/zsh
 # ============================================================================
 # Scribe CLI - Terminal-based note access for Scribe app
 # ============================================================================
+#
 # Location: ~/.config/zsh/functions/scribe.zsh
 # Source:   source ~/.config/zsh/functions/scribe.zsh
 # Man page: ~/.local/share/man/man1/scribe.1

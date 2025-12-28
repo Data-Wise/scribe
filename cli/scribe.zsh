@@ -2,11 +2,12 @@
 # ============================================================================
 # Scribe CLI - Terminal-based note access for Scribe app
 # ============================================================================
+#
 # Location: ~/.config/zsh/functions/scribe.zsh
 # Source:   source ~/.config/zsh/functions/scribe.zsh
 # Man page: ~/.local/share/man/man1/scribe.1
 #
-# Generated: Sat Dec 27 20:13:53 EST 2025
+# Generated: Sat Dec 27 20:16:46 EST 2025
 # ============================================================================
 
 # ============================================================================
@@ -841,11 +842,11 @@ ${_C_GREEN}🔥 QUICK START${_C_NC} ${_C_DIM}(80% of daily use)${_C_NC}:
   ${_C_CYAN}list${_C_NC}, ${_C_CYAN}ls${_C_NC} [folder]     List recent notes
 
 ${_C_YELLOW}💡 QUICK EXAMPLES${_C_NC}:
-  ${_C_DIM}\\$${_C_NC} scribe daily                  ${_C_DIM}# Open today's note${_C_NC}
-  ${_C_DIM}\\$${_C_NC} scribe c \"Buy milk\"           ${_C_DIM}# Quick capture${_C_NC}
-  ${_C_DIM}\\$${_C_NC} scribe s \"ADHD focus\"         ${_C_DIM}# Search notes${_C_NC}
-  ${_C_DIM}\\$${_C_NC} echo \"idea\" | scribe c        ${_C_DIM}# Pipe to capture${_C_NC}
-  ${_C_DIM}\\$${_C_NC} scribe list inbox             ${_C_DIM}# Show inbox notes${_C_NC}"
+  ${_C_DIM}\$${_C_NC} scribe daily                  ${_C_DIM}# Open today's note${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe c "Buy milk"           ${_C_DIM}# Quick capture${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe s "ADHD focus"         ${_C_DIM}# Search notes${_C_NC}
+  ${_C_DIM}\$${_C_NC} echo "idea" | scribe c        ${_C_DIM}# Pipe to capture${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe list inbox             ${_C_DIM}# Show inbox notes${_C_NC}"
 
   if [[ "$show_all" == "true" ]]; then
     echo -e "
@@ -875,10 +876,10 @@ ${_C_BLUE}⚙️  OPTIONS${_C_NC}:
   ${_C_CYAN}--limit${_C_NC}, ${_C_CYAN}-l${_C_NC} <n>       Limit results (default: 20)
 
 ${_C_MAGENTA}🚀 WORKFLOWS${_C_NC}:
-  ${_C_DIM}\\$${_C_NC} pbpaste | scribe c           ${_C_DIM}# Capture from clipboard${_C_NC}
-  ${_C_DIM}\\$${_C_NC} scribe s \"TODO\" | head       ${_C_DIM}# Quick grep through notes${_C_NC}
-  ${_C_DIM}\\$${_C_NC} scribe list | fzf            ${_C_DIM}# Interactive note picker${_C_NC}
-  ${_C_DIM}\\$${_C_NC} scribe export \"My Note\" > out.md ${_C_DIM}# Export to file${_C_NC}
+  ${_C_DIM}\$${_C_NC} pbpaste | scribe c           ${_C_DIM}# Capture from clipboard${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe s "TODO" | head       ${_C_DIM}# Quick grep through notes${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe list | fzf            ${_C_DIM}# Interactive note picker${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe export "My Note" > out.md ${_C_DIM}# Export to file${_C_NC}
 
 ${_C_MAGENTA}📁 SHELL ALIASES${_C_NC}:
   ${_C_DIM}sd${_C_NC} = scribe daily      ${_C_DIM}sc${_C_NC} = scribe capture
