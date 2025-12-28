@@ -10,7 +10,7 @@ _scribe_generate_id() {
 
 # Escape single quotes for SQL
 _scribe_escape() {
-  echo "${1//'/""}"
+  echo "${1//\'/''}"
 }
 
 # Format timestamp for display

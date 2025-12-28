@@ -6,7 +6,7 @@
 # Source:   source ~/.config/zsh/functions/scribe.zsh
 # Man page: ~/.local/share/man/man1/scribe.1
 #
-# Generated: Sat Dec 27 19:54:35 EST 2025
+# Generated: Sat Dec 27 19:58:41 EST 2025
 # ============================================================================
 
 # ============================================================================
@@ -66,7 +66,7 @@ _scribe_generate_id() {
 
 # Escape single quotes for SQL
 _scribe_escape() {
-  echo "${1//'/""}"
+  echo "${1//\'/''}"
 }
 
 # Format timestamp for display
