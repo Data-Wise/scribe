@@ -178,11 +178,11 @@ export const api = {
 
   // Get notes for a specific project
   getProjectNotes: (projectId: string): Promise<Note[]> =>
-    invoke('get_project_notes', { projectId }),
+    invoke('get_notes_by_project', { projectId }),
 
   // Associate a note with a project
   setNoteProject: (noteId: string, projectId: string | null): Promise<void> =>
-    invoke('set_note_project', { noteId, projectId }),
+    invoke('assign_note_to_project', { noteId, projectId }),
 };
 
 
