@@ -943,14 +943,13 @@ function App() {
         }}
         onCreateProject={() => setIsCreateProjectModalOpen(true)}
         onNewNote={async (projectId) => {
-          // Create new note and assign to project
+          // Create new note directly with project association
           const newNote = await createNote({
             title: 'New Note',
             content: '',
-            folder: 'inbox'
+            folder: 'inbox',
+            project_id: projectId
           })
-          // Assign note to project
-          await api.setNoteProject(newNote.id, projectId)
           // Select the new note
           selectNote(newNote.id)
           setEditorMode('source')
