@@ -409,20 +409,39 @@ quarto render input.qmd
 
 ### 🚧 Sprint 27: PWA/Browser Support (Next)
 
-| Feature | Priority | Status |
-|---------|----------|--------|
-| IStorage interface (IndexedDB) | P1 | Planned |
-| PWA manifest | P2 | Planned |
-| Service worker | P2 | Planned |
-| Offline sync queue | P3 | Planned |
+**Goal:** Enable Scribe to run in the browser without Tauri, using IndexedDB for storage.
+
+#### Core Storage (P1)
+| Task | Description |
+|------|-------------|
+| IStorage interface | Abstract storage operations (CRUD for notes, projects, tags) |
+| IndexedDB adapter | Implement IStorage using IndexedDB + Dexie.js |
+| Storage factory | Auto-detect environment (Tauri vs Browser) |
+| Migration support | Import/export data between storage backends |
+
+#### PWA Infrastructure (P2)
+| Task | Description |
+|------|-------------|
+| manifest.json | App name, icons, theme color, display mode |
+| Service worker | Cache app shell, static assets |
+| Install prompt | "Add to Home Screen" support |
+| Update flow | Notify user of new versions |
+
+#### Offline Support (P3)
+| Task | Description |
+|------|-------------|
+| Offline indicator | Show connection status in UI |
+| Sync queue | Queue changes when offline |
+| Conflict resolution | Last-write-wins or merge strategy |
+| Background sync | Sync when connection restored |
 
 ### 📋 Future Sprints
 
 | Sprint | Focus | Features |
 |--------|-------|----------|
-| 28 | Cloud Sync | Optional cloud backup, sync across devices |
-| 29 | Mobile PWA | Responsive design, touch-friendly UI |
-| 30 | Collaboration | Real-time co-editing (stretch goal) |
+| 28 | Cloud Sync | Optional Supabase/Firebase backup, cross-device sync |
+| 29 | Mobile PWA | Responsive design, touch gestures, swipe navigation |
+| 30 | Collaboration | Real-time co-editing via CRDT (stretch goal) |
 
 **Progress: 677 tests passing — 26 sprints complete**
 

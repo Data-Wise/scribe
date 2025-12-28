@@ -38,10 +38,36 @@ tags:
 #### Planned
 (Sprint 26 complete!)
 
-#### Future Considerations
-- [ ] IStorage implementation for browser (IndexedDB)
-- [ ] PWA manifest and service worker
-- [ ] Offline support with sync queue
+---
+
+## Next Sprint
+
+**Sprint 27: PWA/Browser Support** (Planned)
+
+### Sprint 27 Tasks
+
+#### Core (P1)
+- [ ] IStorage interface abstraction (FileSystem vs IndexedDB)
+- [ ] IndexedDB implementation for browser storage
+- [ ] Storage adapter pattern for seamless switching
+
+#### PWA Infrastructure (P2)
+- [ ] PWA manifest (name, icons, theme, display mode)
+- [ ] Service worker for asset caching
+- [ ] App shell architecture for fast load
+
+#### Offline Support (P3)
+- [ ] Offline detection and UI indicator
+- [ ] Sync queue for pending changes
+- [ ] Conflict resolution strategy
+
+### Future Sprints
+
+| Sprint | Focus | Priority |
+|--------|-------|----------|
+| 28 | Cloud Sync | Optional backup, cross-device sync |
+| 29 | Mobile PWA | Responsive design, touch UI |
+| 30 | Collaboration | Real-time co-editing (stretch)
 
 ---
 
