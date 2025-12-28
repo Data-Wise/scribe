@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { Menu, Plus, Search, Clock, FileText, MoreHorizontal } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
+import { ProjectContextMenu } from './ProjectContextMenu'
+import { NoteContextMenu } from './NoteContextMenu'
 
 interface CardViewModeProps {
   projects: Project[]
@@ -10,9 +12,17 @@ interface CardViewModeProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
-  onNewNote: (projectId: string) => void  // NEW: Create note in project
+  onNewNote: (projectId: string) => void
   onCollapse: () => void
   width: number
+  // Context menu handlers (optional)
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
+  onRenameNote?: (noteId: string) => void
+  onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
+  onDuplicateNote?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
 }
 
 export function CardViewMode({
@@ -24,9 +34,36 @@ export function CardViewMode({
   onCreateProject,
   onNewNote,
   onCollapse,
-  width
+  width,
+  onEditProject,
+  onArchiveProject,
+  onDeleteProject,
+  onRenameNote,
+  onMoveNoteToProject,
+  onDuplicateNote,
+  onDeleteNote
 }: CardViewModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+
+  // Context menu state
+  const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
+  const [noteContextMenu, setNoteContextMenu] = useState<{ note: Note; position: { x: number; y: number } } | null>(null)
+
+  // Context menu handlers
+  const handleProjectContextMenu = (e: React.MouseEvent, project: Project) => {
+    e.preventDefault()
+    setProjectContextMenu({ project, position: { x: e.clientX, y: e.clientY } })
+  }
+
+  const handleNoteContextMenu = (e: React.MouseEvent, note: Note) => {
+    e.preventDefault()
+    setNoteContextMenu({ note, position: { x: e.clientX, y: e.clientY } })
+  }
+
+  const handleMenuClick = (e: React.MouseEvent, project: Project) => {
+    e.stopPropagation()
+    setProjectContextMenu({ project, position: { x: e.clientX, y: e.clientY } })
+  }
 
   // Filter projects by search (treat undefined status as 'active')
   const filteredProjects = useMemo(() => {
@@ -118,6 +155,8 @@ export function CardViewMode({
               wordCount={stats?.wordCount || 0}
               onClick={() => onSelectProject(isActive ? null : project.id)}
               onQuickAdd={() => onNewNote(project.id)}
+              onContextMenu={(e) => handleProjectContextMenu(e, project)}
+              onMenuClick={(e) => handleMenuClick(e, project)}
             />
           )
         })}
@@ -149,6 +188,7 @@ export function CardViewMode({
                 key={note.id}
                 className="recent-note-item"
                 onClick={() => onSelectNote(note.id)}
+                onContextMenu={(e) => handleNoteContextMenu(e, note)}
               >
                 <FileText size={12} className="note-icon" />
                 <span className="note-title">{note.title || 'Untitled'}</span>
@@ -167,6 +207,33 @@ export function CardViewMode({
         <Plus size={16} />
         <span>New Project</span>
       </button>
+
+      {/* Context Menus */}
+      {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (
+        <ProjectContextMenu
+          project={projectContextMenu.project}
+          position={projectContextMenu.position}
+          onClose={() => setProjectContextMenu(null)}
+          onNewNote={onNewNote}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+        />
+      )}
+
+      {noteContextMenu && onRenameNote && onMoveNoteToProject && onDuplicateNote && onDeleteNote && (
+        <NoteContextMenu
+          note={noteContextMenu.note}
+          projects={projects}
+          position={noteContextMenu.position}
+          onClose={() => setNoteContextMenu(null)}
+          onOpenNote={onSelectNote}
+          onRenameNote={onRenameNote}
+          onMoveToProject={onMoveNoteToProject}
+          onDuplicateNote={onDuplicateNote}
+          onDeleteNote={onDeleteNote}
+        />
+      )}
     </div>
   )
 }
@@ -177,10 +244,12 @@ interface ProjectCardProps {
   noteCount: number
   wordCount: number
   onClick: () => void
-  onQuickAdd: () => void  // NEW: Quick add note to this project
+  onQuickAdd: () => void
+  onContextMenu: (e: React.MouseEvent) => void
+  onMenuClick: (e: React.MouseEvent) => void
 }
 
-function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuickAdd }: ProjectCardProps) {
+function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuickAdd, onContextMenu, onMenuClick }: ProjectCardProps) {
   const status = project.status || 'active'
   const progress = project.progress || 0
   const color = project.color || '#3b82f6'
@@ -189,6 +258,7 @@ function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuick
     <button
       className={`project-card ${isActive ? 'active' : ''}`}
       onClick={onClick}
+      onContextMenu={onContextMenu}
       data-status={status}
       style={{ '--project-color': color } as React.CSSProperties}
     >
@@ -209,10 +279,8 @@ function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuick
           </button>
           <button
             className="card-menu-btn"
-            onClick={(e) => {
-              e.stopPropagation()
-              // TODO: Open project menu
-            }}
+            onClick={onMenuClick}
+            title="Project options"
           >
             <MoreHorizontal size={14} />
           </button>
