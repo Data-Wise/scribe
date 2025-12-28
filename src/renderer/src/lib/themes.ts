@@ -242,7 +242,7 @@ export function saveAutoThemeSettings(settings: AutoThemeSettings): void {
 }
 
 export function loadSelectedTheme(): string {
-  return localStorage.getItem(SELECTED_THEME_KEY) || 'oxford-dark'
+  return localStorage.getItem(SELECTED_THEME_KEY) || 'sage-garden'
 }
 
 export function saveSelectedTheme(themeId: string): void {
@@ -259,6 +259,8 @@ export function applyTheme(theme: Theme): void {
   root.style.setProperty('--nexus-text-muted', theme.colors.textMuted)
   root.style.setProperty('--nexus-accent', theme.colors.accent)
   root.style.setProperty('--nexus-accent-hover', theme.colors.accentHover)
+  // Set theme type attribute for CSS selectors (light vs dark)
+  root.setAttribute('data-theme-type', theme.type)
 }
 
 // Get all themes (built-in + custom)

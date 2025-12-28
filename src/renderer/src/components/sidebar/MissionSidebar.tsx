@@ -13,6 +13,7 @@ interface MissionSidebarProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onNewNote: (projectId: string) => void  // NEW: Create note in project
 }
 
 export function MissionSidebar({
@@ -21,7 +22,8 @@ export function MissionSidebar({
   currentProjectId,
   onSelectProject,
   onSelectNote,
-  onCreateProject
+  onCreateProject,
+  onNewNote
 }: MissionSidebarProps) {
   const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
 
@@ -81,6 +83,7 @@ export function MissionSidebar({
           onSelectProject={onSelectProject}
           onSelectNote={onSelectNote}
           onCreateProject={onCreateProject}
+          onNewNote={onNewNote}
           onCollapse={handleCollapse}
           width={width}
         />
@@ -94,6 +97,7 @@ export function MissionSidebar({
           onSelectProject={onSelectProject}
           onSelectNote={onSelectNote}
           onCreateProject={onCreateProject}
+          onNewNote={onNewNote}
           onCollapse={handleCollapse}
           width={width}
         />

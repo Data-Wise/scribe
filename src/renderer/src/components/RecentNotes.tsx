@@ -42,12 +42,10 @@ export function RecentNotes({
     return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
-  // Get project name by note properties
+  // Get project name by note's project_id field
   const getProjectName = (note: Note): string | null => {
-    // Check if note has a project_id property
-    const projectId = note.properties?.project_id?.value as string | undefined
-    if (projectId) {
-      const project = projects.find(p => p.id === projectId)
+    if (note.project_id) {
+      const project = projects.find(p => p.id === note.project_id)
       return project?.name || null
     }
     return null

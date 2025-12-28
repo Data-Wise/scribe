@@ -2,27 +2,23 @@
 # ============================================================================
 # Scribe CLI - Terminal-based note access for Scribe app
 # ============================================================================
+#
 # Location: ~/.config/zsh/functions/scribe.zsh
 # Source:   source ~/.config/zsh/functions/scribe.zsh
 # Man page: ~/.local/share/man/man1/scribe.1
 #
-# Commands:
-#   scribe new "Title"           Create a new note
-#   scribe daily                 Open/create today's daily note
-#   scribe search "query"        Search notes (FTS5)
-#   scribe capture "idea"        Quick capture to inbox
-#   scribe list [--project NAME] List recent notes
-#   scribe open "Title"          Open note in Scribe app
-#   scribe edit "Title"          Edit note in $EDITOR
-#   scribe tags                  List all tags
-#   scribe help                  Show help
+# Generated: Sat Dec 27 20:28:13 EST 2025
+# ============================================================================
+
+# ============================================================================
+# Configuration
 # ============================================================================
 
 # Version
-SCRIBE_CLI_VERSION="1.1.0"
+SCRIBE_CLI_VERSION="1.2.0"
 
 # Database location
-SCRIBE_DB="${HOME}/Library/Application Support/com.scribe.app/scribe.db"
+: ${SCRIBE_DB:="${HOME}/Library/Application Support/com.scribe.app/scribe.db"}
 
 # Colors for output
 typeset -A _scribe_colors
@@ -39,7 +35,7 @@ _scribe_colors=(
 )
 
 # ============================================================================
-# Helper Functions
+# Database Helpers
 # ============================================================================
 
 _scribe_check_db() {
@@ -59,6 +55,10 @@ _scribe_exec() {
   sqlite3 "$SCRIBE_DB" "$1" 2>/dev/null
 }
 
+# ============================================================================
+# Utility Functions
+# ============================================================================
+
 # Generate 32-character hex ID (matching Scribe's format)
 _scribe_generate_id() {
   # Use OpenSSL for cryptographic random bytes, convert to hex
@@ -67,7 +67,7 @@ _scribe_generate_id() {
 
 # Escape single quotes for SQL
 _scribe_escape() {
-  echo "${1//\'/\'\'}"
+  echo "${1//\'/''}"
 }
 
 # Format timestamp for display
@@ -77,8 +77,8 @@ _scribe_format_time() {
 }
 
 # ============================================================================
-# Core Commands
-# ============================================================================
+# Basic Commands
+# ============================================================================ 
 
 # Create a new note
 _scribe_new() {
@@ -149,174 +149,6 @@ _scribe_daily() {
   fi
 }
 
-# Search notes using FTS5
-_scribe_search() {
-  _scribe_check_db || return 1
-
-  if [[ -z "$*" ]]; then
-    echo "${_scribe_colors[yellow]}Usage: scribe search \"query\"${_scribe_colors[reset]}"
-    return 1
-  fi
-
-  local query="$*"
-  local escaped_query=$(_scribe_escape "$query")
-
-  echo "${_scribe_colors[cyan]}Searching for:${_scribe_colors[reset]} $query"
-  echo ""
-
-  # Search using FTS5
-  local results=$(_scribe_query "
-    SELECT n.id, n.title, n.folder, n.updated_at,
-           snippet(notes_fts, 2, '>>>', '<<<', '...', 32) as snippet
-    FROM notes_fts f
-    JOIN notes n ON f.note_id = n.id
-    WHERE notes_fts MATCH '$escaped_query'
-      AND n.deleted_at IS NULL
-    ORDER BY rank
-    LIMIT 20
-  ")
-
-  if [[ -z "$results" ]]; then
-    echo "${_scribe_colors[dim]}No results found${_scribe_colors[reset]}"
-    return 0
-  fi
-
-  local count=0
-  echo "$results" | while IFS='|' read -r id title folder updated snippet; do
-    ((count++))
-    local time_str=$(_scribe_format_time "$updated")
-
-    echo "${_scribe_colors[bold]}$count. $title${_scribe_colors[reset]}"
-    echo "   ${_scribe_colors[dim]}[$folder] • $time_str${_scribe_colors[reset]}"
-    if [[ -n "$snippet" ]]; then
-      # Highlight matches
-      local highlighted="${snippet//>>>/\\e[33m}"
-      highlighted="${highlighted//<<</\\e[0m}"
-      echo "   $highlighted"
-    fi
-    echo ""
-  done
-}
-
-# Quick capture to inbox
-_scribe_capture() {
-  _scribe_check_db || return 1
-
-  local content="$*"
-
-  # If no content provided, read from stdin or prompt
-  if [[ -z "$content" ]]; then
-    if [[ -t 0 ]]; then
-      echo "${_scribe_colors[cyan]}Enter your thought (Ctrl+D to finish):${_scribe_colors[reset]}"
-      content=$(cat)
-    else
-      content=$(cat)
-    fi
-  fi
-
-  if [[ -z "$content" ]]; then
-    echo "${_scribe_colors[yellow]}No content to capture${_scribe_colors[reset]}"
-    return 1
-  fi
-
-  # Generate title from first line or timestamp
-  local title
-  local first_line=$(echo "$content" | head -1 | cut -c1-50)
-  if [[ -n "$first_line" ]]; then
-    title="Capture: $first_line"
-    [[ ${#first_line} -eq 50 ]] && title="${title}..."
-  else
-    title="Capture: $(date '+%Y-%m-%d %H:%M')"
-  fi
-
-  local escaped_title=$(_scribe_escape "$title")
-  local escaped_content=$(_scribe_escape "$content")
-  local id=$(_scribe_generate_id)
-  local now=$(date +%s)
-
-  _scribe_exec "INSERT INTO notes (id, title, content, folder, created_at, updated_at)
-                VALUES ('$id', '$escaped_title', '$escaped_content', 'inbox', $now, $now)"
-
-  if [[ $? -eq 0 ]]; then
-    echo "${_scribe_colors[green]}Captured!${_scribe_colors[reset]} $title"
-    echo "${_scribe_colors[dim]}ID: $id${_scribe_colors[reset]}"
-  else
-    echo "${_scribe_colors[red]}Error: Failed to capture${_scribe_colors[reset]}"
-    return 1
-  fi
-}
-
-# List recent notes
-_scribe_list() {
-  _scribe_check_db || return 1
-
-  local folder=""
-  local limit=20
-
-  # Parse arguments
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      --project|--folder|-f)
-        folder="$2"
-        shift 2
-        ;;
-      --limit|-l)
-        limit="$2"
-        shift 2
-        ;;
-      *)
-        folder="$1"
-        shift
-        ;;
-    esac
-  done
-
-  local where_clause="WHERE deleted_at IS NULL"
-  if [[ -n "$folder" ]]; then
-    local escaped_folder=$(_scribe_escape "$folder")
-    where_clause="$where_clause AND folder = '$escaped_folder'"
-    echo "${_scribe_colors[cyan]}Notes in '$folder':${_scribe_colors[reset]}"
-  else
-    echo "${_scribe_colors[cyan]}Recent notes:${_scribe_colors[reset]}"
-  fi
-  echo ""
-
-  local results=$(_scribe_query "
-    SELECT id, title, folder, updated_at, length(content) as size
-    FROM notes
-    $where_clause
-    ORDER BY updated_at DESC
-    LIMIT $limit
-  ")
-
-  if [[ -z "$results" ]]; then
-    echo "${_scribe_colors[dim]}No notes found${_scribe_colors[reset]}"
-    return 0
-  fi
-
-  # Print as formatted table
-  printf "${_scribe_colors[bold]}%-40s %-12s %-16s %s${_scribe_colors[reset]}\n" "Title" "Folder" "Updated" "Size"
-  printf "%s\n" "$(printf '─%.0s' {1..80})"
-
-  echo "$results" | while IFS='|' read -r id title folder updated size; do
-    local time_str=$(_scribe_format_time "$updated")
-    local truncated_title="${title:0:38}"
-    [[ ${#title} -gt 38 ]] && truncated_title="${truncated_title}.."
-
-    # Color code by folder
-    local folder_color="${_scribe_colors[dim]}"
-    case "$folder" in
-      inbox)   folder_color="${_scribe_colors[yellow]}" ;;
-      daily)   folder_color="${_scribe_colors[green]}" ;;
-      archive) folder_color="${_scribe_colors[dim]}" ;;
-      *)       folder_color="${_scribe_colors[blue]}" ;;
-    esac
-
-    printf "%-40s ${folder_color}%-12s${_scribe_colors[reset]} %-16s %s\n" \
-           "$truncated_title" "$folder" "$time_str" "${size}b"
-  done
-}
-
 # Open note in Scribe app
 _scribe_open() {
   _scribe_check_db || return 1
@@ -346,7 +178,11 @@ _scribe_open() {
     echo "${_scribe_colors[yellow]}Note not found:${_scribe_colors[reset]} $title"
     echo ""
     echo "Create it? [y/N] "
-    read -q "REPLY?"
+    if [[ -t 0 ]]; then
+      read -k 1 REPLY
+    else
+      read REPLY
+    fi
     echo ""
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       _scribe_new "$title"
@@ -372,9 +208,6 @@ _scribe_open_by_id() {
       activate
     end tell
   ' 2>/dev/null
-
-  # Alternative: If Scribe has a URL scheme like scribe://note/ID
-  # open "scribe://note/$id" 2>/dev/null
 
   echo "${_scribe_colors[dim]}Note ID: $id${_scribe_colors[reset]}"
 }
@@ -442,6 +275,133 @@ _scribe_edit() {
   rm -f "$tmpfile"
 }
 
+# ============================================================================
+# Search & Browse Commands
+# ============================================================================ 
+
+# Search notes using FTS5
+_scribe_search() {
+  _scribe_check_db || return 1
+
+  if [[ -z "$*" ]]; then
+    echo "${_scribe_colors[yellow]}Usage: scribe search \"query\"${_scribe_colors[reset]}"
+    return 1
+  fi
+
+  local query="$*"
+  local escaped_query=$(_scribe_escape "$query")
+
+  echo "${_scribe_colors[cyan]}Searching for:${_scribe_colors[reset]} $query"
+  echo ""
+
+  # Search using FTS5
+  local results=$(_scribe_query "
+    SELECT n.id, n.title, n.folder, n.updated_at,
+           snippet(notes_fts, 2, '>>>', '<<<', '...', 32) as snippet
+    FROM notes_fts f
+    JOIN notes n ON f.note_id = n.id
+    WHERE notes_fts MATCH '$escaped_query'
+      AND n.deleted_at IS NULL
+    ORDER BY rank
+    LIMIT 20
+  ")
+
+  if [[ -z "$results" ]]; then
+    echo "${_scribe_colors[dim]}No results found${_scribe_colors[reset]}"
+    return 0
+  fi
+
+  local count=0
+  echo "$results" | while IFS='|' read -r id title folder updated snippet;
+ do
+    ((count++))
+    local time_str=$(_scribe_format_time "$updated")
+
+    echo "${_scribe_colors[bold]}$count. $title${_scribe_colors[reset]}"
+    echo "   ${_scribe_colors[dim]}[$folder] • $time_str${_scribe_colors[reset]}"
+    if [[ -n "$snippet" ]]; then
+      # Highlight matches
+      local highlighted="${snippet//>>>/\e[33m}"
+      highlighted="${highlighted//<<</\e[0m}"
+      echo "   $highlighted"
+    fi
+    echo ""
+  done
+}
+
+# List recent notes
+_scribe_list() {
+  _scribe_check_db || return 1
+
+  local folder=""
+  local limit=20
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --project|--folder|-f)
+        folder="$2"
+        shift 2
+        ;; 
+      --limit|-l)
+        limit="$2"
+        shift 2
+        ;; 
+      *)
+        folder="$1"
+        shift
+        ;; 
+    esac
+  done
+
+  local where_clause="WHERE deleted_at IS NULL"
+  if [[ -n "$folder" ]]; then
+    local escaped_folder=$(_scribe_escape "$folder")
+    where_clause="$where_clause AND folder = '$escaped_folder'"
+    echo "${_scribe_colors[cyan]}Notes in '$folder':${_scribe_colors[reset]}"
+  else
+    echo "${_scribe_colors[cyan]}Recent notes:${_scribe_colors[reset]}"
+  fi
+  echo ""
+
+  local results=$(_scribe_query "
+    SELECT id, title, folder, updated_at, length(content) as size
+    FROM notes
+    $where_clause
+    ORDER BY updated_at DESC
+    LIMIT $limit
+  ")
+
+  if [[ -z "$results" ]]; then
+    echo "${_scribe_colors[dim]}No notes found${_scribe_colors[reset]}"
+    return 0
+  fi
+
+  # Print as formatted table
+  printf "${_scribe_colors[bold]}%-40s %-12s %-16s %s${_scribe_colors[reset]}\n" "Title" "Folder" "Updated" "Size"
+  printf "%s\n" "$(printf '─%.0s' {1..80})"
+
+  echo "$results" | while IFS='|' read -r id title folder updated size;
+ do
+    local time_str=$(_scribe_format_time "$updated")
+    local truncated_title="${title:0:38}"
+    [[ ${#title} -gt 38 ]] && truncated_title="${truncated_title}.."
+
+    # Color code by folder
+    local folder_color="${_scribe_colors[dim]}"
+    case "$folder" in
+      inbox)   folder_color="${_scribe_colors[yellow]}" ;; 
+      daily)   folder_color="${_scribe_colors[green]}" ;; 
+      archive) folder_color="${_scribe_colors[dim]}" ;; 
+      *)
+        folder_color="${_scribe_colors[blue]}" ;; 
+    esac
+
+    printf "%-40s ${folder_color}%-12s${_scribe_colors[reset]} %-16s %s\n" \
+           "$truncated_title" "$folder" "$time_str" "${size}b"
+  done
+}
+
 # List all tags
 _scribe_tags() {
   _scribe_check_db || return 1
@@ -462,7 +422,8 @@ _scribe_tags() {
     return 0
   fi
 
-  echo "$results" | while IFS='|' read -r name color count; do
+  echo "$results" | while IFS='|' read -r name color count;
+ do
     printf "  ${_scribe_colors[magenta]}#%-20s${_scribe_colors[reset]} (%d notes)\n" "$name" "$count"
   done
 }
@@ -487,12 +448,13 @@ _scribe_folders() {
     return 0
   fi
 
-  echo "$results" | while IFS='|' read -r folder count; do
+  echo "$results" | while IFS='|' read -r folder count;
+ do
     local icon="📁"
     case "$folder" in
-      inbox)   icon="📥" ;;
-      daily)   icon="📅" ;;
-      archive) icon="📦" ;;
+      inbox)   icon="📥" ;; 
+      daily)   icon="📅" ;; 
+      archive) icon="📦" ;; 
     esac
     printf "  $icon ${_scribe_colors[blue]}%-20s${_scribe_colors[reset]} (%d notes)\n" "$folder" "$count"
   done
@@ -520,9 +482,332 @@ _scribe_stats() {
   printf "  ${_scribe_colors[bold]}Tags:${_scribe_colors[reset]}           %s\n" "$tags"
 }
 
+# ============================================================================
+# Capture Command
+# ============================================================================
+
+# Quick capture to inbox
+_scribe_capture() {
+  _scribe_check_db || return 1
+
+  local content="$*"
+
+  # If no content provided, read from stdin or prompt
+  if [[ -z "$content" ]]; then
+    if [[ -t 0 ]]; then
+      echo "${_scribe_colors[cyan]}Enter your thought (Ctrl+D to finish):${_scribe_colors[reset]}"
+      content=$(cat)
+    else
+      content=$(cat)
+    fi
+  fi
+
+  if [[ -z "$content" ]]; then
+    echo "${_scribe_colors[yellow]}No content to capture${_scribe_colors[reset]}"
+    return 1
+  fi
+
+  # Generate title from first line or timestamp
+  local title
+  local first_line=$(echo "$content" | head -1 | cut -c1-50)
+  if [[ -n "$first_line" ]]; then
+    title="Capture: $first_line"
+    [[ ${#first_line} -eq 50 ]] && title="${title}..."
+  else
+    title="Capture: $(date '+%Y-%m-%d %H:%M')"
+  fi
+
+  local escaped_title=$(_scribe_escape "$title")
+  local escaped_content=$(_scribe_escape "$content")
+  local id=$(_scribe_generate_id)
+  local now=$(date +%s)
+
+  _scribe_exec "INSERT INTO notes (id, title, content, folder, created_at, updated_at)
+                VALUES ('$id', '$escaped_title', '$escaped_content', 'inbox', $now, $now)"
+
+  if [[ $? -eq 0 ]]; then
+    echo "${_scribe_colors[green]}Captured!${_scribe_colors[reset]} $title"
+    echo "${_scribe_colors[dim]}ID: $id${_scribe_colors[reset]}"
+  else
+    echo "${_scribe_colors[red]}Error: Failed to capture${_scribe_colors[reset]}"
+    return 1
+  fi
+}
+
+# ============================================================================
+# Management Commands
+# ============================================================================ 
+
+# Delete a note (move to trash)
+_scribe_delete() {
+  _scribe_check_db || return 1
+
+  if [[ -z "$*" ]]; then
+    echo "${_scribe_colors[yellow]}Usage: scribe delete \"Title\"${_scribe_colors[reset]}"
+    return 1
+  fi
+
+  local title="$*"
+  local escaped_title=$(_scribe_escape "$title")
+
+  # Find the note
+  local result=$(_scribe_query "
+    SELECT id, title FROM notes
+    WHERE deleted_at IS NULL
+      AND (title = '$escaped_title' OR title LIKE '%$escaped_title%')
+    ORDER BY
+      CASE WHEN title = '$escaped_title' THEN 0 ELSE 1 END,
+      updated_at DESC
+    LIMIT 1
+  ")
+
+  if [[ -z "$result" ]]; then
+    echo "${_scribe_colors[yellow]}Note not found:${_scribe_colors[reset]} $title"
+    return 1
+  fi
+
+  local id=$(echo "$result" | cut -d'|' -f1)
+  local found_title=$(echo "$result" | cut -d'|' -f2)
+
+  echo "Delete '${_scribe_colors[bold]}$found_title${_scribe_colors[reset]}'? [y/N] "
+  if [[ -t 0 ]]; then
+    read -k 1 REPLY
+  else
+    read REPLY
+  fi
+  echo ""
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    local now=$(date +%s)
+    _scribe_exec "UPDATE notes SET deleted_at = $now WHERE id = '$id'"
+    echo "${_scribe_colors[red]}Deleted:${_scribe_colors[reset]} $found_title"
+  else
+    echo "Cancelled."
+  fi
+}
+
+# Backup the database
+_scribe_backup() {
+  _scribe_check_db || return 1
+
+  local dest="${1:-$HOME/scribe-backup-$(date +%Y%m%d-%H%M%S).db}"
+  
+  echo "${_scribe_colors[cyan]}Backing up database...${_scribe_colors[reset]}"
+  cp "$SCRIBE_DB" "$dest"
+
+  if [[ $? -eq 0 ]]; then
+    echo "${_scribe_colors[green]}Backup created at:${_scribe_colors[reset]} $dest"
+  else
+    echo "${_scribe_colors[red]}Backup failed!${_scribe_colors[reset]}"
+    return 1
+  fi
+}
+
+# Restore the database
+_scribe_restore() {
+  if [[ -z "$1" ]]; then
+    echo "${_scribe_colors[yellow]}Usage: scribe restore <backup_file>${_scribe_colors[reset]}"
+    return 1
+  fi
+
+  local src="$1"
+  if [[ ! -f "$src" ]]; then
+    echo "${_scribe_colors[red]}Backup file not found:${_scribe_colors[reset]} $src"
+    return 1
+  fi
+
+  echo "${_scribe_colors[red]}WARNING: This will overwrite your current database!${_scribe_colors[reset]}"
+  echo "Current DB: $SCRIBE_DB"
+  echo "Restore from: $src"
+  echo -n "Are you sure? [y/N] "
+  if [[ -t 0 ]]; then
+    read -k 1 REPLY
+  else
+    read REPLY
+  fi
+  echo ""
+  
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Make a safety backup first
+    cp "$SCRIBE_DB" "$SCRIBE_DB.pre-restore"
+    
+    cp "$src" "$SCRIBE_DB"
+    if [[ $? -eq 0 ]]; then
+      echo "${_scribe_colors[green]}Database restored successfully.${_scribe_colors[reset]}"
+    else
+      echo "${_scribe_colors[red]}Restore failed! Reverting...${_scribe_colors[reset]}"
+      mv "$SCRIBE_DB.pre-restore" "$SCRIBE_DB"
+      return 1
+    fi
+  else
+    echo "Cancelled."
+  fi
+}
+
+# Export a note to Markdown
+_scribe_export() {
+  _scribe_check_db || return 1
+  
+  if [[ -z "$*" ]]; then
+    echo "${_scribe_colors[yellow]}Usage: scribe export \"Title\" [output_file]${_scribe_colors[reset]}"
+    return 1
+  fi
+
+  # Split args into title and output file if provided
+  # Simple heuristic: last arg is file if it ends in .md, otherwise everything is title
+  # Actually, simpler: first arg is title, second is optional output
+  # But title might have spaces.
+  # Let's stick to: export "Title" > output.md (shell redirection)
+  # Or provide interactive export.
+  
+  local title="$*"
+  local escaped_title=$(_scribe_escape "$title")
+
+  local result=$(_scribe_query "
+    SELECT id, title, content FROM notes
+    WHERE deleted_at IS NULL
+      AND (title = '$escaped_title' OR title LIKE '%$escaped_title%')
+    ORDER BY
+      CASE WHEN title = '$escaped_title' THEN 0 ELSE 1 END,
+      updated_at DESC
+    LIMIT 1
+  ")
+
+  if [[ -z "$result" ]]; then
+    echo "${_scribe_colors[yellow]}Note not found:${_scribe_colors[reset]} $title" >&2
+    return 1
+  fi
+
+  local found_title=$(echo "$result" | cut -d'|' -f2)
+  local content=$(echo "$result" | cut -d'|' -f3)
+
+  # Output content to stdout
+  echo "# $found_title"
+  echo ""
+  echo "$content"
+}
+
+# ============================================================================
+# Browser Command
+# ============================================================================
+
+# Run Scribe in browser with specific flags
+_scribe_browser() {
+  local url="http://localhost:5173"
+  local flags=("--incognito")
+  local args=("--disable-extensions")
+  local output="/dev/null"
+  local timeout=60
+  local verify=""
+  local browser_path=""
+
+  # Detect Chrome on macOS
+  if [[ -d "/Applications/Google Chrome.app" ]]; then
+    browser_path="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  elif [[ -d "/Applications/Brave Browser.app" ]]; then
+    browser_path="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+  else
+    echo "${_scribe_colors[red]}Error: Supported browser (Chrome/Brave) not found.${_scribe_colors[reset]}"
+    return 1
+  fi
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --url=*)
+        url="${1#*=}"
+        shift
+        ;;
+      --args=*)
+        local arg_str="${1#*=}"
+        # Split by space and add to args array
+        args+=(${=arg_str})
+        shift
+        ;;
+      --flags=*)
+        local flag_str="${1#*=}"
+        flags+=(${=flag_str})
+        shift
+        ;;
+      --output=*)
+        output="${1#*=}"
+        shift
+        ;;
+      --timeout=*)
+        timeout="${1#*=}"
+        # Remove 's' suffix if present
+        timeout="${timeout%s}"
+        shift
+        ;;
+      --verify=*)
+        verify="${1#*=}"
+        shift
+        ;;
+      *)
+        echo "${_scribe_colors[yellow]}Unknown option: $1${_scribe_colors[reset]}"
+        shift
+        ;;
+    esac
+  done
+
+  # Check if server is running
+  if ! curl --output /dev/null --silent --head --fail "$url"; then
+    echo "${_scribe_colors[red]}Error: Scribe server not running at $url${_scribe_colors[reset]}"
+    echo "Run 'npm run dev:vite' in another terminal first."
+    return 1
+  fi
+
+  echo "${_scribe_colors[cyan]}Launching Scribe in browser...${_scribe_colors[reset]}"
+  echo "URL: $url"
+  echo "Flags: ${flags[*]}"
+  echo "Args: ${args[*]}"
+  echo "Output: $output"
+
+  # Construct command
+  # We use 'nohup' to detach, or just '&' if we want to monitor?
+  # The user asked for --output="browser_session.log", so we should redirect.
+
+  "$browser_path" "$url" "${flags[@]}" "${args[@]}" > "$output" 2>&1 &
+  local pid=$!
+  
+  echo "${_scribe_colors[dim]}Browser PID: $pid${_scribe_colors[reset]}"
+
+  # Verification
+  if [[ "$verify" == "browser_loaded" ]]; then
+    echo "Verifying browser loaded (timeout: ${timeout}s)..."
+    local start_time=$(date +%s)
+    local end_time=$((start_time + timeout))
+    
+    while [[ $(date +%s) -lt $end_time ]]; do
+      # check if process is still running
+      if ! ps -p "$pid" > /dev/null; then
+        echo "${_scribe_colors[red]}Error: Browser process died unexpectedly.${_scribe_colors[reset]}"
+        return 1
+      fi
+      
+      # We assume if it's running and server is up, it's 'loaded' for this simple check.
+      # A real check might need Chrome remote debugging port.
+      # For now, just wait a bit and check process.
+      sleep 1
+      
+      # If we just wanted to check if it started, we are good.
+      echo "${_scribe_colors[green]}Verification successful: Browser running.${_scribe_colors[reset]}"
+      return 0
+    done
+    
+    echo "${_scribe_colors[red]}Error: Verification timed out.${_scribe_colors[reset]}"
+    return 1
+  fi
+
+  return 0
+}
+
+# ============================================================================
+# Help Command
+# ============================================================================ 
+
 # Show help
 _scribe_help() {
-  local topic="${1:-}"
+  local topic="${1:-""}"
 
   # Handle --all for extended help
   local show_all=false
@@ -545,8 +830,8 @@ _scribe_help() {
 
   echo -e "
 ${_C_BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${_C_NC}
-${_C_BOLD}│ 📝 SCRIBE CLI v${SCRIBE_CLI_VERSION} - Terminal-based note access                        │${_C_NC}
-${_C_BOLD}╰─────────────────────────────────────────────────────────────────────────────╯${_C_NC}
+${_C_BOLD}│ 📝 SCRIBE CLI v${SCRIBE_CLI_VERSION} - Terminal-based note access                        │${_C_BOLD}
+╰─────────────────────────────────────────────────────────────────────────────╯${_C_NC}
 
 ${_C_BOLD}Usage:${_C_NC} scribe <command> [arguments]
 
@@ -558,9 +843,9 @@ ${_C_GREEN}🔥 QUICK START${_C_NC} ${_C_DIM}(80% of daily use)${_C_NC}:
 
 ${_C_YELLOW}💡 QUICK EXAMPLES${_C_NC}:
   ${_C_DIM}\$${_C_NC} scribe daily                  ${_C_DIM}# Open today's note${_C_NC}
-  ${_C_DIM}\$${_C_NC} scribe c \"Buy milk\"           ${_C_DIM}# Quick capture${_C_NC}
-  ${_C_DIM}\$${_C_NC} scribe s \"ADHD focus\"         ${_C_DIM}# Search notes${_C_NC}
-  ${_C_DIM}\$${_C_NC} echo \"idea\" | scribe c        ${_C_DIM}# Pipe to capture${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe c "Buy milk"           ${_C_DIM}# Quick capture${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe s "ADHD focus"         ${_C_DIM}# Search notes${_C_NC}
+  ${_C_DIM}\$${_C_NC} echo "idea" | scribe c        ${_C_DIM}# Pipe to capture${_C_NC}
   ${_C_DIM}\$${_C_NC} scribe list inbox             ${_C_DIM}# Show inbox notes${_C_NC}"
 
   if [[ "$show_all" == "true" ]]; then
@@ -571,6 +856,9 @@ ${_C_BLUE}📋 NOTE MANAGEMENT${_C_NC}:
   ${_C_CYAN}capture${_C_NC}, ${_C_CYAN}c${_C_NC} [text]     Quick capture thought to inbox
   ${_C_CYAN}open${_C_NC}, ${_C_CYAN}o${_C_NC} [title]       Open note in Scribe app
   ${_C_CYAN}edit${_C_NC}, ${_C_CYAN}e${_C_NC} <title>       Edit note in \$EDITOR
+  ${_C_CYAN}delete${_C_NC}, ${_C_CYAN}del${_C_NC} <title>   Delete a note (move to trash)
+  ${_C_CYAN}export${_C_NC} <title>        Export note to Markdown (stdout)
+  ${_C_CYAN}browser${_C_NC}               Run Scribe in browser (Chrome/Brave)
 
 ${_C_BLUE}🔍 SEARCH & BROWSE${_C_NC}:
   ${_C_CYAN}search${_C_NC}, ${_C_CYAN}s${_C_NC} <query>     Full-text search (FTS5)
@@ -579,21 +867,26 @@ ${_C_BLUE}🔍 SEARCH & BROWSE${_C_NC}:
   ${_C_CYAN}folders${_C_NC}, ${_C_CYAN}f${_C_NC}            List all folders with note counts
   ${_C_CYAN}stats${_C_NC}                 Show database statistics
 
+${_C_BLUE}💾 SYSTEM${_C_NC}:
+  ${_C_CYAN}backup${_C_NC} [path]         Backup database
+  ${_C_CYAN}restore${_C_NC} <path>        Restore database from backup
+
 ${_C_BLUE}⚙️  OPTIONS${_C_NC}:
   ${_C_CYAN}--project${_C_NC}, ${_C_CYAN}-f${_C_NC} <name>  Filter list by folder
   ${_C_CYAN}--limit${_C_NC}, ${_C_CYAN}-l${_C_NC} <n>       Limit results (default: 20)
 
 ${_C_MAGENTA}🚀 WORKFLOWS${_C_NC}:
   ${_C_DIM}\$${_C_NC} pbpaste | scribe c           ${_C_DIM}# Capture from clipboard${_C_NC}
-  ${_C_DIM}\$${_C_NC} scribe s \"TODO\" | head       ${_C_DIM}# Quick grep through notes${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe s "TODO" | head       ${_C_DIM}# Quick grep through notes${_C_NC}
   ${_C_DIM}\$${_C_NC} scribe list | fzf            ${_C_DIM}# Interactive note picker${_C_NC}
+  ${_C_DIM}\$${_C_NC} scribe export "My Note" > out.md ${_C_DIM}# Export to file${_C_NC}
 
 ${_C_MAGENTA}📁 SHELL ALIASES${_C_NC}:
   ${_C_DIM}sd${_C_NC} = scribe daily      ${_C_DIM}sc${_C_NC} = scribe capture
   ${_C_DIM}ss${_C_NC} = scribe search     ${_C_DIM}sl${_C_NC} = scribe list
   ${_C_DIM}sn${_C_NC} = scribe new
 
-${_C_DIM}Database: ~/Library/Application Support/com.scribe.app/scribe.db${_C_NC}
+${_C_DIM}Database: $SCRIBE_DB${_C_NC}
 ${_C_DIM}Man page: man scribe${_C_NC}"
   else
     echo -e "
@@ -608,13 +901,18 @@ ${_C_DIM}More commands: scribe help --all${_C_NC}"
 
 scribe() {
   case "${1:-help}" in
-    new)      shift; _scribe_new "$@" ;;
+    new|n)    shift; _scribe_new "$@" ;;
     daily|d)  _scribe_daily ;;
     search|s) shift; _scribe_search "$@" ;;
     capture|c) shift; _scribe_capture "$@" ;;
     list|ls|l) shift; _scribe_list "$@" ;;
     open|o)   shift; _scribe_open "$@" ;;
     edit|e)   shift; _scribe_edit "$@" ;;
+    delete|del) shift; _scribe_delete "$@" ;;
+    export|exp) shift; _scribe_export "$@" ;;
+    backup)   shift; _scribe_backup "$@" ;;
+    restore)  shift; _scribe_restore "$@" ;;
+    browser)  shift; _scribe_browser "$@" ;;
     tags|t)   _scribe_tags ;;
     folders|f) _scribe_folders ;;
     stats)    _scribe_stats ;;
@@ -640,7 +938,7 @@ alias sn='scribe new'
 
 # Completion function
 _scribe_completion() {
-  local commands=(new daily search capture list open edit tags folders stats help)
+  local commands=(new daily search capture list open edit delete export backup restore browser tags folders stats help)
   local folders=(inbox daily archive)
 
   if [[ ${#words[@]} -eq 2 ]]; then

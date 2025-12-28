@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, Clock, FileText, ChevronRight } from 'lucide-react'
+import { Menu, Plus, Search, Clock, FileText, ChevronRight, ChevronDown, FolderOpen, Folder } from 'lucide-react'
 import { Project, Note } from '../../types'
-import { StatusDot } from './StatusDot'
+import { ActivityDots } from './ActivityDots'
+import { ProjectContextCard } from './ProjectContextCard'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -10,6 +11,7 @@ interface CompactListModeProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onNewNote: (projectId: string) => void
   onCollapse: () => void
   width: number
 }
@@ -21,6 +23,7 @@ export function CompactListMode({
   onSelectProject,
   onSelectNote,
   onCreateProject,
+  onNewNote,
   onCollapse,
   width
 }: CompactListModeProps) {
@@ -50,8 +53,7 @@ export function CompactListMode({
         if (n.deleted_at) return false
         // If a project is selected, only show notes from that project
         if (currentProjectId) {
-          const noteProjectId = n.properties?.project_id?.value as string | undefined
-          return noteProjectId === currentProjectId
+          return n.project_id === currentProjectId
         }
         return true
       })
@@ -66,10 +68,9 @@ export function CompactListMode({
       stats[p.id] = { noteCount: 0, wordCount: 0 }
     })
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && stats[projectId]) {
-        stats[projectId].noteCount++
-        stats[projectId].wordCount += countWords(note.content)
+      if (note.project_id && stats[note.project_id]) {
+        stats[note.project_id].noteCount++
+        stats[note.project_id].wordCount += countWords(note.content)
       }
     })
     return stats
@@ -109,14 +110,22 @@ export function CompactListMode({
       <div className="project-list-compact">
         {sortedProjects.map(project => {
           const stats = projectStats[project.id]
-          const isActive = project.id === currentProjectId
+          const isExpanded = project.id === currentProjectId
+          const projectNotes = notes
+            .filter(n => !n.deleted_at && n.project_id === project.id)
+            .sort((a, b) => b.updated_at - a.updated_at)
+            .slice(0, 5)
           return (
             <CompactProjectItem
               key={project.id}
               project={project}
-              isActive={isActive}
+              allNotes={notes}
+              isExpanded={isExpanded}
               noteCount={stats?.noteCount || 0}
-              onClick={() => onSelectProject(isActive ? null : project.id)}
+              projectNotes={projectNotes}
+              onClick={() => onSelectProject(isExpanded ? null : project.id)}
+              onSelectNote={onSelectNote}
+              onQuickAdd={() => onNewNote(project.id)}
             />
           )
         })}
@@ -163,42 +172,82 @@ export function CompactListMode({
 
 interface CompactProjectItemProps {
   project: Project
-  isActive: boolean
+  allNotes: Note[]
+  isExpanded: boolean
   noteCount: number
+  projectNotes: Note[]
   onClick: () => void
+  onSelectNote: (id: string) => void
+  onQuickAdd: () => void
 }
 
-function CompactProjectItem({ project, isActive, noteCount, onClick }: CompactProjectItemProps) {
-  const status = project.status || 'active'
+function CompactProjectItem({
+  project,
+  allNotes,
+  isExpanded,
+  noteCount,
+  projectNotes,
+  onClick,
+  onSelectNote,
+  onQuickAdd
+}: CompactProjectItemProps) {
+  const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
+  const FolderIcon = isExpanded ? FolderOpen : Folder
+
+  // When expanded, show context card + notes list
+  if (isExpanded) {
+    return (
+      <div className="compact-project-wrapper expanded">
+        {/* Collapsed header to close */}
+        <button className="compact-project-item expanded" onClick={onClick}>
+          <div className="item-row">
+            <ChevronIcon size={14} className="chevron open" />
+            <FolderIcon size={14} className="folder-icon" />
+            <span className="project-name">{project.name}</span>
+          </div>
+        </button>
+
+        {/* Context card with stats */}
+        <ProjectContextCard
+          project={project}
+          notes={allNotes}
+          onNewNote={onQuickAdd}
+        />
+
+        {/* Notes list */}
+        {projectNotes.length > 0 && (
+          <div className="project-notes-list">
+            {projectNotes.map(note => (
+              <button
+                key={note.id}
+                className="project-note-item"
+                onClick={() => onSelectNote(note.id)}
+              >
+                <FileText size={12} className="note-icon" />
+                <span className="note-title">{note.title || 'Untitled'}</span>
+              </button>
+            ))}
+            {noteCount > 5 && (
+              <div className="more-notes">+{noteCount - 5} more</div>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Collapsed view with activity dots
   return (
-    <button
-      className={`compact-project-item ${isActive ? 'active' : ''}`}
-      onClick={onClick}
-      data-status={status}
-    >
-      {/* Top row: status + name + count */}
-      <div className="item-row">
-        <StatusDot status={status} size="sm" />
-        <span className="project-name">{project.name}</span>
-        <span className="note-count">{noteCount}</span>
-        <ChevronRight size={12} className="chevron" />
-      </div>
-
-      {/* Progress bar (if project has progress) */}
-      {project.progress !== undefined && project.progress > 0 && (
-        <div className="progress-mini" title={`${project.progress}% complete`}>
-          <div
-            className="progress-fill"
-            style={{ width: `${project.progress}%` }}
-          />
+    <div className="compact-project-wrapper">
+      <button className="compact-project-item" onClick={onClick}>
+        <div className="item-row">
+          <ChevronIcon size={14} className="chevron" />
+          <FolderIcon size={14} className="folder-icon" />
+          <span className="project-name">{project.name}</span>
+          <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
         </div>
-      )}
-
-      {/* Footer: time */}
-      <div className="item-footer">
-        {formatTimeAgo(project.updated_at)}
-      </div>
-    </button>
+      </button>
+    </div>
   )
 }
 

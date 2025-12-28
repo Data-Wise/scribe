@@ -50,6 +50,7 @@ export interface Note {
   title: string
   content: string
   folder: string
+  project_id: string | null  // Direct database field for project association
   properties?: Record<string, Property>
   created_at: number
   updated_at: number

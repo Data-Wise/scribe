@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
 import { useAppViewStore } from './store/useAppViewStore'
+import { useForestTheme } from './hooks/useForestTheme'
 import { HybridEditor } from './components/HybridEditor'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
@@ -13,9 +14,12 @@ import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
+import { ClaudePanel } from './components/ClaudePanel'
+import { HudPanel } from './components/HudPanel'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
+import { Zap } from 'lucide-react'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
@@ -85,6 +89,9 @@ function App() {
     createProject
   } = useProjectStore()
 
+  // Apply Forest Night theme
+  useForestTheme()
+
   // Sidebar mode from app view store (replaces dashboardCollapsed toggle)
   const {
     sidebarMode,
@@ -119,6 +126,12 @@ function App() {
     return saved ? parseInt(saved) : 320
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
+  
+  // Claude Panel state
+  const [claudePanelOpen, setClaudePanelOpen] = useState(false)
+
+  // HUD Panel state
+  const [hudPanelOpen, setHudPanelOpen] = useState(false)
   
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
@@ -190,7 +203,7 @@ function App() {
       activeThemeId = getAutoTheme(autoThemeSettings)
     }
     
-    const activeTheme = allThemes[activeThemeId] || allThemes['oxford-dark']
+    const activeTheme = allThemes[activeThemeId] || allThemes['sage-garden']
     if (activeTheme) {
       applyTheme(activeTheme)
     }
@@ -236,7 +249,7 @@ function App() {
     setAllThemes(getAllThemes())
     // If deleted theme was selected, switch to default
     if (theme === themeId) {
-      setTheme('oxford-dark')
+      setTheme('sage-garden')
     }
   }
 
@@ -934,6 +947,19 @@ function App() {
           selectNote(noteId)
         }}
         onCreateProject={() => setIsCreateProjectModalOpen(true)}
+        onNewNote={async (projectId) => {
+          // Create new note and assign to project
+          const newNote = await createNote({
+            title: 'New Note',
+            content: '',
+            folder: 'inbox'
+          })
+          // Assign note to project
+          await api.setNoteProject(newNote.id, projectId)
+          // Select the new note
+          selectNote(newNote.id)
+          setEditorMode('source')
+        }}
       />
 
       {/* Main content area */}
@@ -1038,7 +1064,50 @@ function App() {
             </div>
           </>
         )}
+
+        {/* Claude AI Assistant Panel */}
+        {claudePanelOpen && (
+          <ClaudePanel
+            currentNote={selectedNote}
+            currentProject={projects.find(p => p.id === currentProjectId) || null}
+            notes={notes}
+            onClose={() => setClaudePanelOpen(false)}
+          />
+        )}
+
+        {/* HUD Panel */}
+        <HudPanel
+          isOpen={hudPanelOpen}
+          projects={projects}
+          notes={notes}
+          currentProjectId={currentProjectId}
+          onSelectProject={(projectId) => setCurrentProjectId(projectId)}
+          onSelectNote={(noteId) => selectNote(noteId)}
+          onClose={() => setHudPanelOpen(false)}
+          mode="layered"
+        />
       </div>
+
+      {/* HUD Panel Toggle Button */}
+      <button
+        className={`hud-toggle-btn ${hudPanelOpen ? 'active' : ''}`}
+        onClick={() => setHudPanelOpen(!hudPanelOpen)}
+        title="Toggle Mission HUD (⌘⇧M)"
+      >
+        <Zap size={18} />
+      </button>
+
+      {/* Claude Panel Toggle Button */}
+      <button
+        className={`claude-toggle-btn ${claudePanelOpen ? 'active' : ''}`}
+        onClick={() => setClaudePanelOpen(!claudePanelOpen)}
+        title="Toggle Claude Assistant"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M6 10h8M10 6v8" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </button>
 
       {/* Command Palette */}
       <CommandPalette

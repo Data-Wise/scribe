@@ -10,6 +10,7 @@ interface CardViewModeProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onNewNote: (projectId: string) => void  // NEW: Create note in project
   onCollapse: () => void
   width: number
 }
@@ -21,6 +22,7 @@ export function CardViewMode({
   onSelectProject,
   onSelectNote,
   onCreateProject,
+  onNewNote,
   onCollapse,
   width
 }: CardViewModeProps) {
@@ -51,8 +53,7 @@ export function CardViewMode({
         if (n.deleted_at) return false
         // If a project is selected, only show notes from that project
         if (currentProjectId) {
-          const noteProjectId = n.properties?.project_id?.value as string | undefined
-          return noteProjectId === currentProjectId
+          return n.project_id === currentProjectId
         }
         return true
       })
@@ -67,10 +68,9 @@ export function CardViewMode({
       stats[p.id] = { noteCount: 0, wordCount: 0 }
     })
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && stats[projectId]) {
-        stats[projectId].noteCount++
-        stats[projectId].wordCount += countWords(note.content)
+      if (note.project_id && stats[note.project_id]) {
+        stats[note.project_id].noteCount++
+        stats[note.project_id].wordCount += countWords(note.content)
       }
     })
     return stats
@@ -117,6 +117,7 @@ export function CardViewMode({
               noteCount={stats?.noteCount || 0}
               wordCount={stats?.wordCount || 0}
               onClick={() => onSelectProject(isActive ? null : project.id)}
+              onQuickAdd={() => onNewNote(project.id)}
             />
           )
         })}
@@ -176,9 +177,10 @@ interface ProjectCardProps {
   noteCount: number
   wordCount: number
   onClick: () => void
+  onQuickAdd: () => void  // NEW: Quick add note to this project
 }
 
-function ProjectCard({ project, isActive, noteCount, wordCount, onClick }: ProjectCardProps) {
+function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuickAdd }: ProjectCardProps) {
   const status = project.status || 'active'
   const progress = project.progress || 0
   const color = project.color || '#3b82f6'
@@ -194,15 +196,27 @@ function ProjectCard({ project, isActive, noteCount, wordCount, onClick }: Proje
       <div className="card-header">
         <StatusDot status={status} size="md" />
         <span className="card-title">{project.name}</span>
-        <button
-          className="card-menu-btn"
-          onClick={(e) => {
-            e.stopPropagation()
-            // TODO: Open project menu
-          }}
-        >
-          <MoreHorizontal size={14} />
-        </button>
+        <div className="card-actions">
+          <button
+            className="card-quick-add-btn"
+            onClick={(e) => {
+              e.stopPropagation()
+              onQuickAdd()
+            }}
+            title="New note in this project"
+          >
+            <Plus size={14} />
+          </button>
+          <button
+            className="card-menu-btn"
+            onClick={(e) => {
+              e.stopPropagation()
+              // TODO: Open project menu
+            }}
+          >
+            <MoreHorizontal size={14} />
+          </button>
+        </div>
       </div>
 
       {/* Project type badge */}
@@ -219,11 +233,11 @@ function ProjectCard({ project, isActive, noteCount, wordCount, onClick }: Proje
 
       {/* Stats row */}
       <div className="card-stats">
-        <span className="stat">
+        <span className={`stat ${noteCount === 0 ? 'zero' : noteCount >= 5 ? 'many' : ''}`}>
           <FileText size={12} />
           {noteCount} {noteCount === 1 ? 'note' : 'notes'}
         </span>
-        <span className="stat">
+        <span className={`stat ${wordCount === 0 ? 'zero' : wordCount >= 1000 ? 'many' : ''}`}>
           {formatWordCount(wordCount)}
         </span>
       </div>
