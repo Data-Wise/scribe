@@ -5,7 +5,7 @@
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
 [![Version](https://img.shields.io/badge/version-1.2.0-blue)]()
 [![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-483%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-554%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -92,7 +92,7 @@ npm run build
 
 ## CLI Access
 
-Scribe includes a terminal CLI for quick note access without opening the app:
+Scribe includes a terminal CLI for quick note access and management:
 
 ```bash
 # Quick commands
@@ -100,6 +100,13 @@ scribe daily              # Open today's daily note
 scribe capture "idea"     # Quick capture to inbox
 scribe search "query"     # Full-text search (FTS5)
 scribe list               # List recent notes
+
+# Management
+scribe delete "Note"      # Move note to trash
+scribe export "Title"     # Print note content (pipable)
+scribe backup             # Backup database
+scribe restore <file>     # Restore database
+scribe browser            # Open Scribe in browser (dev)
 
 # Aliases
 sd  # scribe daily
@@ -111,8 +118,8 @@ sl  # scribe list
 ### Installation
 
 ```bash
-# Source the CLI (add to .zshrc)
-source ~/.config/zsh/functions/scribe.zsh
+# Install (adds to .zshrc)
+./cli/install.sh
 
 # View man page
 man scribe
@@ -121,7 +128,11 @@ man scribe
 scribe help --all
 ```
 
-> The CLI is part of [flow-cli](https://github.com/Data-Wise/flow-cli) and operates directly on the SQLite database.
+> **Documentation:**
+> * [Cheat Sheet](cli/docs/CHEATSHEET.md)
+> * [Examples & Workflows](cli/docs/EXAMPLES.md)
+
+> The CLI operates directly on the SQLite database for maximum speed.
 
 ---
 
@@ -232,17 +243,23 @@ scribe/
 
 ## Test Coverage
 
-**483 tests passing** across 14 test files:
+**554 tests passing** across 19 test files:
 
 | Test File | Tests |
 |-----------|-------|
 | Themes.test.ts | 101 |
-| Academic.test.ts | 67 |
 | Validation.test.ts | 54 |
 | Tags.test.tsx | 52 |
+| Academic.test.ts | 40 |
 | HybridEditor.test.tsx | 37 |
+| Sidebar.test.tsx | 34 |
+| Autocomplete.test.tsx | 34 |
 | Integration.test.tsx | 32 |
-| And 8 more... | 140 |
+| CommandPalette.test.tsx | 24 |
+| Preferences.test.ts | 8 |
+| DailyNoteTemplates.test.ts | 7 |
+| CreateProjectModal.test.tsx | 7 |
+| And more... | |
 
 ---
 

@@ -189,3 +189,17 @@ $$
 ```
 
 Powered by KaTeX for fast, native rendering.
+
+## CLI Access
+
+Scribe comes with a powerful terminal companion tool:
+
+```bash
+scribe capture "Idea for paper"  # Capture without opening app
+scribe search "causal"           # Find notes instantly
+scribe daily                     # Open today's journal
+```
+
+The CLI operates directly on the local database for instant performance. It's perfect for piping data, quick capture, or integrating Scribe into your shell workflows.
+
+See `man scribe` or the [CLI Documentation](../../cli/README.md) for details.
