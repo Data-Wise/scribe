@@ -10,7 +10,7 @@ interface NotesState {
 
   // Actions
   loadNotes: (folder?: string) => Promise<void>
-  createNote: (note: Partial<Note>) => Promise<void>
+  createNote: (note: Partial<Note>) => Promise<Note | undefined>
   updateNote: (id: string, updates: Partial<Note>) => Promise<void>
   deleteNote: (id: string) => Promise<void>
   selectNote: (id: string) => void
@@ -33,7 +33,7 @@ export const useNotesStore = create<NotesState>((set) => ({
     }
   },
 
-  createNote: async (note: Partial<Note>) => {
+  createNote: async (note: Partial<Note>): Promise<Note | undefined> => {
     set({ isLoading: true, error: null })
     try {
       // For markdown content, skip HTML sanitization
@@ -44,8 +44,10 @@ export const useNotesStore = create<NotesState>((set) => ({
         selectedNoteId: newNote.id,
         isLoading: false
       }))
+      return newNote
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
+      return undefined
     }
   },
 

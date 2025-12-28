@@ -331,12 +331,13 @@ function App() {
       status: { key: 'status', value: 'draft', type: 'list' },
       type: { key: 'type', value: 'note', type: 'list' },
     }
-    
+
     await createNote({
       title: `New Note`,
       content: '',  // Empty markdown - user starts fresh
       folder: currentFolder || 'inbox',
-      properties: defaultProperties
+      properties: defaultProperties,
+      project_id: currentProjectId || undefined  // Auto-assign to current project
     })
   }
 
@@ -966,20 +967,19 @@ function App() {
         }}
         onCreateProject={() => setIsCreateProjectModalOpen(true)}
         onNewNote={async (projectId) => {
-          // Create new note and assign to project
+          // Create new note directly with project assignment
           const newNote = await createNote({
             title: 'New Note',
             content: '',
-            folder: 'inbox'
+            folder: 'inbox',
+            project_id: projectId
           })
           // Guard against undefined (createNote may fail)
           if (!newNote) {
             console.error('[Scribe] Failed to create note')
             return
           }
-          // Assign note to project
-          await api.setNoteProject(newNote.id, projectId)
-          // Select the new note
+          // Select the new note (already added to state by createNote)
           selectNote(newNote.id)
           setEditorMode('source')
         }}
