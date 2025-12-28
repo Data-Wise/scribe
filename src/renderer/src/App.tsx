@@ -975,10 +975,17 @@ function App() {
         onDeleteProject={async (projectId) => {
           const project = projects.find(p => p.id === projectId)
           if (!project) return
-          const confirmed = await ask(
-            `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
-            { title: 'Delete Project', kind: 'warning' }
-          )
+          // Try Tauri dialog, fallback to browser confirm for dev/testing
+          let confirmed = false
+          try {
+            confirmed = await ask(
+              `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
+              { title: 'Delete Project', kind: 'warning' }
+            )
+          } catch {
+            // Fallback for browser testing (Tauri API not available)
+            confirmed = window.confirm(`Are you sure you want to delete "${project.name}"? This cannot be undone.`)
+          }
           if (confirmed) {
             await api.deleteProject(projectId)
             if (currentProjectId === projectId) {
@@ -1016,10 +1023,17 @@ function App() {
         onDeleteNote={async (noteId) => {
           const note = notes.find(n => n.id === noteId)
           if (!note) return
-          const confirmed = await ask(
-            `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
-            { title: 'Delete Note', kind: 'warning' }
-          )
+          // Try Tauri dialog, fallback to browser confirm for dev/testing
+          let confirmed = false
+          try {
+            confirmed = await ask(
+              `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
+              { title: 'Delete Note', kind: 'warning' }
+            )
+          } catch {
+            // Fallback for browser testing (Tauri API not available)
+            confirmed = window.confirm(`Are you sure you want to delete "${note.title || 'Untitled'}"?`)
+          }
           if (confirmed) {
             await api.deleteNote(noteId)
             if (selectedNoteId === noteId) {
