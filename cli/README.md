@@ -27,6 +27,11 @@ if [[ -f ~/.config/zsh/functions/scribe.zsh ]]; then
 fi
 ```
 
+## Documentation
+
+- **[Cheat Sheet](docs/CHEATSHEET.md)**: Quick reference card for all commands.
+- **[Examples & Workflows](docs/EXAMPLES.md)**: Real-world usage scenarios.
+
 ## Usage
 
 ```bash
