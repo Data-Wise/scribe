@@ -5,13 +5,19 @@ import { SearchBar } from '../components/SearchBar'
 import { TagFilter } from '../components/TagFilter'
 import { PropertiesPanel } from '../components/PropertiesPanel'
 
+// Mock the Zustand store
+vi.mock('../store/useAppViewStore', () => ({
+  useAppViewStore: () => ({
+    sidebarMode: 'compact'
+  })
+}))
+
 describe('Ribbon Component', () => {
-  const mockHandlers = {
-    onToggleLeft: vi.fn(),
-    onToggleRight: vi.fn(),
-    onSearch: vi.fn(),
-    onSettings: vi.fn(),
-    onMissionControl: vi.fn(),
+  const defaultProps = {
+    activeTab: 'projects',
+    onTabChange: vi.fn(),
+    onToggleDashboard: vi.fn(),
+    isDashboardOpen: false,
   }
 
   beforeEach(() => {
@@ -19,97 +25,58 @@ describe('Ribbon Component', () => {
   })
 
   it('renders all navigation buttons', () => {
-    render(
-      <Ribbon
-        {...mockHandlers}
-        leftCollapsed={false}
-        rightCollapsed={false}
-      />
-    )
+    render(<Ribbon {...defaultProps} />)
 
-    // Should have toggle buttons, search, and settings (using aria-label for accessibility)
-    expect(screen.getByLabelText(/Toggle file list/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Search/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Toggle tags panel/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Settings/)).toBeInTheDocument()
+    // Should have nav items with title attributes
+    expect(screen.getByTitle('Mission HQ')).toBeInTheDocument()
+    expect(screen.getByTitle('Projects')).toBeInTheDocument()
+    expect(screen.getByTitle('Search')).toBeInTheDocument()
+    expect(screen.getByTitle('Journal')).toBeInTheDocument()
+    expect(screen.getByTitle('Settings')).toBeInTheDocument()
   })
 
-  it('calls onToggleLeft when file list button clicked', () => {
-    render(
-      <Ribbon
-        {...mockHandlers}
-        leftCollapsed={false}
-        rightCollapsed={false}
-      />
-    )
+  it('calls onTabChange when Projects button clicked', () => {
+    render(<Ribbon {...defaultProps} />)
 
-    fireEvent.click(screen.getByLabelText(/Toggle file list/))
-    expect(mockHandlers.onToggleLeft).toHaveBeenCalled()
+    fireEvent.click(screen.getByTitle('Projects'))
+    expect(defaultProps.onTabChange).toHaveBeenCalledWith('projects')
   })
 
-  it('calls onToggleRight when tags button clicked', () => {
-    render(
-      <Ribbon
-        {...mockHandlers}
-        leftCollapsed={false}
-        rightCollapsed={false}
-      />
-    )
+  it('calls onTabChange when Search button clicked', () => {
+    render(<Ribbon {...defaultProps} />)
 
-    fireEvent.click(screen.getByLabelText(/Toggle tags panel/))
-    expect(mockHandlers.onToggleRight).toHaveBeenCalled()
+    fireEvent.click(screen.getByTitle('Search'))
+    expect(defaultProps.onTabChange).toHaveBeenCalledWith('search')
   })
 
-  it('calls onSearch when search button clicked', () => {
-    render(
-      <Ribbon
-        {...mockHandlers}
-        leftCollapsed={false}
-        rightCollapsed={false}
-      />
-    )
+  it('calls onTabChange when Journal button clicked', () => {
+    render(<Ribbon {...defaultProps} />)
 
-    fireEvent.click(screen.getByLabelText(/Search/))
-    expect(mockHandlers.onSearch).toHaveBeenCalled()
+    fireEvent.click(screen.getByTitle('Journal'))
+    expect(defaultProps.onTabChange).toHaveBeenCalledWith('daily')
   })
 
-  it('calls onSettings when settings button clicked', () => {
-    render(
-      <Ribbon
-        {...mockHandlers}
-        leftCollapsed={false}
-        rightCollapsed={false}
-      />
-    )
+  it('calls onTabChange when Settings button clicked', () => {
+    render(<Ribbon {...defaultProps} />)
 
-    fireEvent.click(screen.getByLabelText(/Settings/))
-    expect(mockHandlers.onSettings).toHaveBeenCalled()
+    fireEvent.click(screen.getByTitle('Settings'))
+    expect(defaultProps.onTabChange).toHaveBeenCalledWith('settings')
   })
 
-  it('calls onMissionControl when Mission Control button clicked', () => {
-    render(
-      <Ribbon
-        {...mockHandlers}
-        leftCollapsed={false}
-        rightCollapsed={false}
-      />
-    )
+  it('calls onToggleDashboard when Mission HQ button clicked', () => {
+    render(<Ribbon {...defaultProps} />)
 
-    fireEvent.click(screen.getByLabelText(/Mission Control/))
-    expect(mockHandlers.onMissionControl).toHaveBeenCalled()
+    fireEvent.click(screen.getByTitle('Mission HQ'))
+    expect(defaultProps.onToggleDashboard).toHaveBeenCalled()
   })
 
-  it('shows active state when sidebar is expanded', () => {
-    const { container } = render(
-      <Ribbon
-        {...mockHandlers}
-        leftCollapsed={false}
-        rightCollapsed={false}
-      />
-    )
+  it('shows active indicator for current tab', () => {
+    const { container } = render(<Ribbon {...defaultProps} activeTab="projects" />)
 
-    const activeButtons = container.querySelectorAll('.active')
-    expect(activeButtons.length).toBeGreaterThan(0)
+    // Active tab should have the active indicator (white/10 bg)
+    const buttons = container.querySelectorAll('button')
+    const projectsButton = Array.from(buttons).find(btn => btn.title === 'Projects')
+    expect(projectsButton?.className).toContain('bg-white/10')
   })
 })
 

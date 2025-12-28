@@ -3700,3 +3700,76 @@ mark {
 .claude-toggle-btn:not(.active) {
   animation: claude-pulse 2s ease-in-out infinite;
 }
+
+/* ============================================================
+   CONTEXT MENUS
+   Right-click menus for projects and notes
+   ============================================================ */
+
+.project-context-menu,
+.note-context-menu {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+.context-menu-content {
+  min-width: 180px;
+  background: var(--nexus-bg-secondary);
+  border: 1px solid var(--nexus-bg-tertiary);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--nexus-text-secondary);
+  font-size: 13px;
+  text-align: left;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.context-menu-item:hover {
+  background: var(--nexus-bg-tertiary);
+  color: var(--nexus-text-primary);
+}
+
+.context-menu-item .shortcut {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  opacity: 0.6;
+}
+
+.context-menu-item.danger {
+  color: #ef4444;
+}
+
+.context-menu-item.danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.context-menu-divider {
+  height: 1px;
+  background: var(--nexus-bg-tertiary);
+  margin: 4px 8px;
+}
+
+.context-menu-item-wrapper {
+  position: relative;
+}

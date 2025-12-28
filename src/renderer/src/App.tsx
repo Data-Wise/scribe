@@ -22,7 +22,7 @@ import { Note, Tag, Property } from './types'
 import { Zap } from 'lucide-react'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
-import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
+import { open as openDialog, ask, message } from '@tauri-apps/plugin-dialog'
 import { listen } from '@tauri-apps/api/event'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
@@ -959,6 +959,76 @@ function App() {
           // Select the new note
           selectNote(newNote.id)
           setEditorMode('source')
+        }}
+        // Context menu handlers
+        onEditProject={async (projectId) => {
+          // For now, show a message. TODO: implement edit project modal
+          await message(`Edit project: ${projectId}`, { title: 'Edit Project' })
+        }}
+        onArchiveProject={async (projectId) => {
+          const project = projects.find(p => p.id === projectId)
+          if (!project) return
+          const newStatus = project.status === 'archive' ? 'active' : 'archive'
+          await api.updateProject(projectId, { status: newStatus })
+          await loadProjects()
+        }}
+        onDeleteProject={async (projectId) => {
+          const project = projects.find(p => p.id === projectId)
+          if (!project) return
+          const confirmed = await ask(
+            `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
+            { title: 'Delete Project', kind: 'warning' }
+          )
+          if (confirmed) {
+            await api.deleteProject(projectId)
+            if (currentProjectId === projectId) {
+              setCurrentProject(null)
+            }
+            await loadProjects()
+          }
+        }}
+        onRenameNote={async (noteId) => {
+          // Select the note and focus for rename
+          selectNote(noteId)
+          setEditorMode('source')
+          // TODO: trigger inline rename in editor
+        }}
+        onMoveNoteToProject={async (noteId, projectId) => {
+          await api.setNoteProject(noteId, projectId)
+          // Refresh notes list
+          const updatedNotes = await api.listNotes()
+          setNotes(updatedNotes)
+        }}
+        onDuplicateNote={async (noteId) => {
+          const note = notes.find(n => n.id === noteId)
+          if (!note) return
+          const newNote = await createNote({
+            title: `${note.title || 'Untitled'} (copy)`,
+            content: note.content,
+            folder: note.folder
+          })
+          if (note.project_id) {
+            await api.setNoteProject(newNote.id, note.project_id)
+          }
+          selectNote(newNote.id)
+          setEditorMode('source')
+        }}
+        onDeleteNote={async (noteId) => {
+          const note = notes.find(n => n.id === noteId)
+          if (!note) return
+          const confirmed = await ask(
+            `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
+            { title: 'Delete Note', kind: 'warning' }
+          )
+          if (confirmed) {
+            await api.deleteNote(noteId)
+            if (selectedNoteId === noteId) {
+              selectNote(null)
+            }
+            // Refresh notes list
+            const updatedNotes = await api.listNotes()
+            setNotes(updatedNotes)
+          }
         }}
       />
 

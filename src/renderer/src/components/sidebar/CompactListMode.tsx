@@ -3,6 +3,8 @@ import { Menu, Plus, Search, Clock, FileText, ChevronRight, ChevronDown, FolderO
 import { Project, Note } from '../../types'
 import { ActivityDots } from './ActivityDots'
 import { ProjectContextCard } from './ProjectContextCard'
+import { ProjectContextMenu } from './ProjectContextMenu'
+import { NoteContextMenu } from './NoteContextMenu'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -14,6 +16,14 @@ interface CompactListModeProps {
   onNewNote: (projectId: string) => void
   onCollapse: () => void
   width: number
+  // Context menu handlers (optional)
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
+  onRenameNote?: (noteId: string) => void
+  onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
+  onDuplicateNote?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
 }
 
 export function CompactListMode({
@@ -25,9 +35,31 @@ export function CompactListMode({
   onCreateProject,
   onNewNote,
   onCollapse,
-  width
+  width,
+  onEditProject,
+  onArchiveProject,
+  onDeleteProject,
+  onRenameNote,
+  onMoveNoteToProject,
+  onDuplicateNote,
+  onDeleteNote
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+
+  // Context menu state
+  const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
+  const [noteContextMenu, setNoteContextMenu] = useState<{ note: Note; position: { x: number; y: number } } | null>(null)
+
+  // Context menu handlers
+  const handleProjectContextMenu = (e: React.MouseEvent, project: Project) => {
+    e.preventDefault()
+    setProjectContextMenu({ project, position: { x: e.clientX, y: e.clientY } })
+  }
+
+  const handleNoteContextMenu = (e: React.MouseEvent, note: Note) => {
+    e.preventDefault()
+    setNoteContextMenu({ note, position: { x: e.clientX, y: e.clientY } })
+  }
 
   // Filter projects by search (treat undefined status as 'active')
   const filteredProjects = useMemo(() => {
@@ -120,12 +152,15 @@ export function CompactListMode({
               key={project.id}
               project={project}
               allNotes={notes}
+              allProjects={projects}
               isExpanded={isExpanded}
               noteCount={stats?.noteCount || 0}
               projectNotes={projectNotes}
               onClick={() => onSelectProject(isExpanded ? null : project.id)}
               onSelectNote={onSelectNote}
               onQuickAdd={() => onNewNote(project.id)}
+              onContextMenu={(e) => handleProjectContextMenu(e, project)}
+              onNoteContextMenu={handleNoteContextMenu}
             />
           )
         })}
@@ -148,6 +183,7 @@ export function CompactListMode({
                 key={note.id}
                 className="recent-note-item"
                 onClick={() => onSelectNote(note.id)}
+                onContextMenu={(e) => handleNoteContextMenu(e, note)}
               >
                 <FileText size={12} className="note-icon" />
                 <span className="note-title">{note.title || 'Untitled'}</span>
@@ -166,6 +202,33 @@ export function CompactListMode({
         <Plus size={14} />
         <span>New Project</span>
       </button>
+
+      {/* Context Menus */}
+      {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (
+        <ProjectContextMenu
+          project={projectContextMenu.project}
+          position={projectContextMenu.position}
+          onClose={() => setProjectContextMenu(null)}
+          onNewNote={onNewNote}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+        />
+      )}
+
+      {noteContextMenu && onRenameNote && onMoveNoteToProject && onDuplicateNote && onDeleteNote && (
+        <NoteContextMenu
+          note={noteContextMenu.note}
+          projects={projects}
+          position={noteContextMenu.position}
+          onClose={() => setNoteContextMenu(null)}
+          onOpenNote={onSelectNote}
+          onRenameNote={onRenameNote}
+          onMoveToProject={onMoveNoteToProject}
+          onDuplicateNote={onDuplicateNote}
+          onDeleteNote={onDeleteNote}
+        />
+      )}
     </div>
   )
 }
@@ -173,23 +236,29 @@ export function CompactListMode({
 interface CompactProjectItemProps {
   project: Project
   allNotes: Note[]
+  allProjects: Project[]
   isExpanded: boolean
   noteCount: number
   projectNotes: Note[]
   onClick: () => void
   onSelectNote: (id: string) => void
   onQuickAdd: () => void
+  onContextMenu: (e: React.MouseEvent) => void
+  onNoteContextMenu: (e: React.MouseEvent, note: Note) => void
 }
 
 function CompactProjectItem({
   project,
   allNotes,
+  allProjects,
   isExpanded,
   noteCount,
   projectNotes,
   onClick,
   onSelectNote,
-  onQuickAdd
+  onQuickAdd,
+  onContextMenu,
+  onNoteContextMenu
 }: CompactProjectItemProps) {
   const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
   const FolderIcon = isExpanded ? FolderOpen : Folder
@@ -199,7 +268,11 @@ function CompactProjectItem({
     return (
       <div className="compact-project-wrapper expanded">
         {/* Collapsed header to close */}
-        <button className="compact-project-item expanded" onClick={onClick}>
+        <button
+          className="compact-project-item expanded"
+          onClick={onClick}
+          onContextMenu={onContextMenu}
+        >
           <div className="item-row">
             <ChevronIcon size={14} className="chevron open" />
             <FolderIcon size={14} className="folder-icon" />
@@ -222,6 +295,7 @@ function CompactProjectItem({
                 key={note.id}
                 className="project-note-item"
                 onClick={() => onSelectNote(note.id)}
+                onContextMenu={(e) => onNoteContextMenu(e, note)}
               >
                 <FileText size={12} className="note-icon" />
                 <span className="note-title">{note.title || 'Untitled'}</span>
@@ -239,7 +313,11 @@ function CompactProjectItem({
   // Collapsed view with activity dots
   return (
     <div className="compact-project-wrapper">
-      <button className="compact-project-item" onClick={onClick}>
+      <button
+        className="compact-project-item"
+        onClick={onClick}
+        onContextMenu={onContextMenu}
+      >
         <div className="item-row">
           <ChevronIcon size={14} className="chevron" />
           <FolderIcon size={14} className="folder-icon" />

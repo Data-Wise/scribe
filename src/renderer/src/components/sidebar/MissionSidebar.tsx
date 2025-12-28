@@ -13,7 +13,15 @@ interface MissionSidebarProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
-  onNewNote: (projectId: string) => void  // NEW: Create note in project
+  onNewNote: (projectId: string) => void
+  // Context menu handlers
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
+  onRenameNote?: (noteId: string) => void
+  onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
+  onDuplicateNote?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
 }
 
 export function MissionSidebar({
@@ -23,7 +31,14 @@ export function MissionSidebar({
   onSelectProject,
   onSelectNote,
   onCreateProject,
-  onNewNote
+  onNewNote,
+  onEditProject,
+  onArchiveProject,
+  onDeleteProject,
+  onRenameNote,
+  onMoveNoteToProject,
+  onDuplicateNote,
+  onDeleteNote
 }: MissionSidebarProps) {
   const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
 
@@ -86,6 +101,13 @@ export function MissionSidebar({
           onNewNote={onNewNote}
           onCollapse={handleCollapse}
           width={width}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+          onRenameNote={onRenameNote}
+          onMoveNoteToProject={onMoveNoteToProject}
+          onDuplicateNote={onDuplicateNote}
+          onDeleteNote={onDeleteNote}
         />
       )}
 
@@ -100,6 +122,13 @@ export function MissionSidebar({
           onNewNote={onNewNote}
           onCollapse={handleCollapse}
           width={width}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+          onRenameNote={onRenameNote}
+          onMoveNoteToProject={onMoveNoteToProject}
+          onDuplicateNote={onDuplicateNote}
+          onDeleteNote={onDeleteNote}
         />
       )}
 

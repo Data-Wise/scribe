@@ -5,12 +5,16 @@ import { IconBarMode } from '../components/sidebar/IconBarMode'
 import { Project, Note } from '../types'
 
 /**
- * Activity Bar Test Suite
+ * IconBarMode Test Suite
  *
- * Tests for VS Code-style activity bar with:
- * - Activity icons (Projects, Search, Daily, Graph, Settings)
- * - Badge notifications (numeric and dot variants)
- * - Activity bar visibility toggle
+ * Tests for the icon-mode sidebar:
+ * - Expand button
+ * - Project icons with status dots
+ * - Add project button
+ * - Project selection and toggle behavior
+ *
+ * NOTE: VS Code-style Activity Bar with badges is PROPOSED but not yet implemented.
+ * Those tests are marked as .todo below.
  */
 
 // Mock data
@@ -29,11 +33,11 @@ const mockProjects: Project[] = [
     id: '2',
     name: 'Project B',
     type: 'teaching',
-    status: 'active',
+    status: 'planning',
     color: '#3b82f6',
     sort_order: 1,
     created_at: Date.now(),
-    updated_at: Date.now()
+    updated_at: Date.now() - 1000
   }
 ]
 
@@ -53,301 +57,204 @@ const mockNotes: Note[] = [
 const mockHandlers = {
   onSelectProject: vi.fn(),
   onCreateProject: vi.fn(),
-  onExpand: vi.fn(),
-  onNewNote: vi.fn(),
-  onOpenSearch: vi.fn(),
-  onOpenDaily: vi.fn(),
-  onOpenGraph: vi.fn(),
-  onOpenSettings: vi.fn()
+  onExpand: vi.fn()
 }
 
-// Mock Lucide icons
-vi.mock('lucide-react', () => ({
-  Menu: () => <span data-testid="icon-menu">Menu</span>,
-  Plus: () => <span data-testid="icon-plus">Plus</span>,
-  Search: () => <span data-testid="icon-search">Search</span>,
-  Calendar: () => <span data-testid="icon-calendar">Calendar</span>,
-  Share2: () => <span data-testid="icon-graph">Graph</span>,
-  Settings: () => <span data-testid="icon-settings">Settings</span>,
-  Zap: () => <span data-testid="icon-zap">Zap</span>,
-  ChevronLeft: () => <span data-testid="icon-chevron">Chevron</span>,
-  FolderOpen: () => <span data-testid="icon-folder">Folder</span>,
-  FileText: () => <span data-testid="icon-file">File</span>,
-  MoreHorizontal: () => <span data-testid="icon-more">More</span>,
-  Archive: () => <span data-testid="icon-archive">Archive</span>,
-  Trash2: () => <span data-testid="icon-trash">Trash</span>,
-  Edit3: () => <span data-testid="icon-edit">Edit</span>,
-  FilePlus: () => <span data-testid="icon-file-plus">FilePlus</span>
-}))
-
-describe('Activity Bar - IconBarMode', () => {
+describe('IconBarMode Component', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  describe('Activity Bar Visibility', () => {
-    it('renders activity bar when enabled', () => {
+  describe('Core Rendering', () => {
+    it('renders expand button', () => {
       render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
           currentProjectId={null}
-          activityBarEnabled={true}
           {...mockHandlers}
         />
       )
 
-      // Should have activity icons
-      expect(screen.getByTitle('Projects (⌘0)')).toBeInTheDocument()
-      expect(screen.getByTitle('Search (⌘F)')).toBeInTheDocument()
-      expect(screen.getByTitle('Daily Note (⌘D)')).toBeInTheDocument()
-      expect(screen.getByTitle('Knowledge Graph (⌘⇧G)')).toBeInTheDocument()
+      expect(screen.getByTitle('Expand sidebar (⌘0)')).toBeInTheDocument()
     })
 
-    it('renders simple expand button when activity bar disabled', () => {
+    it('renders add project button', () => {
       render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
           currentProjectId={null}
-          activityBarEnabled={false}
           {...mockHandlers}
         />
       )
 
-      // Should have simple expand button instead of activity bar
-      expect(screen.getByTitle('Expand sidebar (⌘0)')).toBeInTheDocument()
-      // Should not have activity bar icons
-      expect(screen.queryByTitle('Search (⌘F)')).not.toBeInTheDocument()
+      expect(screen.getByTitle('New project (⌘⇧P)')).toBeInTheDocument()
+    })
+
+    it('renders project icons for non-archived projects', () => {
+      const { container } = render(
+        <IconBarMode
+          projects={mockProjects}
+          notes={mockNotes}
+          currentProjectId={null}
+          {...mockHandlers}
+        />
+      )
+
+      const projectButtons = container.querySelectorAll('.project-icon-btn')
+      expect(projectButtons.length).toBe(2)
     })
   })
 
-  describe('Activity Icon Clicks', () => {
-    it('calls onExpand when Projects icon clicked', () => {
+  describe('User Interactions', () => {
+    it('calls onExpand when expand button clicked', () => {
       render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
           currentProjectId={null}
-          activityBarEnabled={true}
           {...mockHandlers}
         />
       )
 
-      fireEvent.click(screen.getByTitle('Projects (⌘0)'))
+      fireEvent.click(screen.getByTitle('Expand sidebar (⌘0)'))
       expect(mockHandlers.onExpand).toHaveBeenCalled()
     })
 
-    it('calls onOpenSearch when Search icon clicked', () => {
+    it('calls onCreateProject when add button clicked', () => {
       render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
           currentProjectId={null}
-          activityBarEnabled={true}
           {...mockHandlers}
         />
       )
 
-      fireEvent.click(screen.getByTitle('Search (⌘F)'))
-      expect(mockHandlers.onOpenSearch).toHaveBeenCalled()
+      fireEvent.click(screen.getByTitle('New project (⌘⇧P)'))
+      expect(mockHandlers.onCreateProject).toHaveBeenCalled()
     })
 
-    it('calls onOpenDaily when Daily Note icon clicked', () => {
-      render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          {...mockHandlers}
-        />
-      )
-
-      fireEvent.click(screen.getByTitle('Daily Note (⌘D)'))
-      expect(mockHandlers.onOpenDaily).toHaveBeenCalled()
-    })
-
-    it('calls onOpenGraph when Graph icon clicked', () => {
-      render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          {...mockHandlers}
-        />
-      )
-
-      fireEvent.click(screen.getByTitle('Knowledge Graph (⌘⇧G)'))
-      expect(mockHandlers.onOpenGraph).toHaveBeenCalled()
-    })
-
-    it('calls onOpenSettings when Settings icon clicked', () => {
-      render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          {...mockHandlers}
-        />
-      )
-
-      fireEvent.click(screen.getByTitle('Settings (⌘,)'))
-      expect(mockHandlers.onOpenSettings).toHaveBeenCalled()
-    })
-  })
-
-  describe('Activity Badges', () => {
-    it('renders numeric badge for projects', () => {
+    it('calls onSelectProject when project icon clicked', () => {
       const { container } = render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
           currentProjectId={null}
-          activityBarEnabled={true}
-          badges={{ projects: 5 }}
           {...mockHandlers}
         />
       )
 
-      const badge = container.querySelector('.activity-badge')
-      expect(badge).toBeInTheDocument()
-      expect(badge?.textContent).toBe('5')
+      const projectButtons = container.querySelectorAll('.project-icon-btn')
+      fireEvent.click(projectButtons[0])
+      expect(mockHandlers.onSelectProject).toHaveBeenCalledWith('1')
     })
 
-    it('renders 9+ for counts over 9', () => {
+    it('toggles project selection (deselects when clicking active project)', () => {
       const { container } = render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          badges={{ projects: 15 }}
+          currentProjectId="1"
           {...mockHandlers}
         />
       )
 
-      const badge = container.querySelector('.activity-badge')
-      expect(badge?.textContent).toBe('9+')
-    })
-
-    it('renders dot badge for boolean true', () => {
-      const { container } = render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          badges={{ daily: true }}
-          {...mockHandlers}
-        />
-      )
-
-      const dotBadge = container.querySelector('.activity-badge-dot')
-      expect(dotBadge).toBeInTheDocument()
-    })
-
-    it('does not render badge for zero count', () => {
-      const { container } = render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          badges={{ projects: 0 }}
-          {...mockHandlers}
-        />
-      )
-
-      const badge = container.querySelector('.activity-badge')
-      expect(badge).not.toBeInTheDocument()
-    })
-
-    it('does not render badge for false boolean', () => {
-      const { container } = render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          badges={{ daily: false }}
-          {...mockHandlers}
-        />
-      )
-
-      const badge = container.querySelector('.activity-badge')
-      expect(badge).not.toBeInTheDocument()
-    })
-
-    it('does not render badge for undefined', () => {
-      const { container } = render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          badges={{}}
-          {...mockHandlers}
-        />
-      )
-
-      const badge = container.querySelector('.activity-badge')
-      expect(badge).not.toBeInTheDocument()
-    })
-
-    it('renders multiple badges simultaneously', () => {
-      const { container } = render(
-        <IconBarMode
-          projects={mockProjects}
-          notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          badges={{ projects: 3, daily: true, graph: 7 }}
-          {...mockHandlers}
-        />
-      )
-
-      const badges = container.querySelectorAll('.activity-badge')
-      // Should have 3 badges: projects (3), daily (dot), graph (7)
-      expect(badges.length).toBe(3)
+      const projectButtons = container.querySelectorAll('.project-icon-btn')
+      fireEvent.click(projectButtons[0]) // Click the active project
+      expect(mockHandlers.onSelectProject).toHaveBeenCalledWith(null)
     })
   })
 
   describe('Active State', () => {
-    it('marks projects icon as active by default', () => {
+    it('marks current project as active', () => {
       const { container } = render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          activeActivity="projects"
+          currentProjectId="1"
           {...mockHandlers}
         />
       )
 
-      const projectsBtn = container.querySelector('.activity-btn.active')
-      expect(projectsBtn).toBeInTheDocument()
+      const activeButton = container.querySelector('.project-icon-btn.active')
+      expect(activeButton).toBeInTheDocument()
     })
 
-    it('marks search icon as active when specified', () => {
-      render(
+    it('shows active indicator for selected project', () => {
+      const { container } = render(
         <IconBarMode
           projects={mockProjects}
           notes={mockNotes}
-          currentProjectId={null}
-          activityBarEnabled={true}
-          activeActivity="search"
+          currentProjectId="1"
           {...mockHandlers}
         />
       )
 
-      const searchBtn = screen.getByTitle('Search (⌘F)')
-      expect(searchBtn).toHaveClass('active')
+      const activeIndicator = container.querySelector('.active-indicator')
+      expect(activeIndicator).toBeInTheDocument()
     })
   })
+
+  describe('Project Filtering', () => {
+    it('excludes archived projects', () => {
+      const projectsWithArchived: Project[] = [
+        ...mockProjects,
+        { id: '3', name: 'Archived', type: 'generic', status: 'archive', created_at: Date.now(), updated_at: Date.now() }
+      ]
+
+      const { container } = render(
+        <IconBarMode
+          projects={projectsWithArchived}
+          notes={mockNotes}
+          currentProjectId={null}
+          {...mockHandlers}
+        />
+      )
+
+      const projectButtons = container.querySelectorAll('.project-icon-btn')
+      expect(projectButtons.length).toBe(2) // Only non-archived
+    })
+
+    it('limits visible projects to MAX_VISIBLE_PROJECTS (8)', () => {
+      const manyProjects = Array.from({ length: 12 }, (_, i) => ({
+        id: String(i),
+        name: `Project ${i}`,
+        type: 'generic' as const,
+        status: 'active' as const,
+        created_at: Date.now(),
+        updated_at: Date.now() - i * 1000
+      }))
+
+      const { container } = render(
+        <IconBarMode
+          projects={manyProjects}
+          notes={[]}
+          currentProjectId={null}
+          {...mockHandlers}
+        />
+      )
+
+      const projectButtons = container.querySelectorAll('.project-icon-btn')
+      expect(projectButtons.length).toBe(8)
+    })
+  })
+})
+
+// ============================================================
+// Future Activity Bar Features (Proposed, Not Yet Implemented)
+// ============================================================
+
+describe('Activity Bar - Proposed Features', () => {
+  // These tests document the proposed Activity Bar with badges and multiple icons
+  // See PROPOSAL-activity-bar.md for full specification
+
+  it.todo('renders activity icons (Projects, Search, Daily, Graph)')
+  it.todo('renders badges on activity icons')
+  it.todo('shows 9+ for badge counts over 9')
+  it.todo('supports dot badges for boolean indicators')
+  it.todo('marks active activity icon')
 })
 
 describe('Activity Bar - MissionSidebar Integration', () => {
