@@ -12,7 +12,7 @@ Terminal-based note access for the Scribe app.
 
 ### Manual Install
 
-Copy `scribe.zsh` to your ZSH functions directory:
+Copy the built script `cli/scribe.zsh` to your ZSH functions directory:
 
 ```bash
 cp cli/scribe.zsh ~/.config/zsh/functions/scribe.zsh
@@ -27,39 +27,61 @@ if [[ -f ~/.config/zsh/functions/scribe.zsh ]]; then
 fi
 ```
 
-## Quick Start
+## Usage
 
 ```bash
-scribe daily              # Open today's daily note
-scribe capture "idea"     # Quick capture to inbox
-scribe search "query"     # Full-text search
-scribe list               # List recent notes
-scribe help --all         # Full command reference
+scribe <command> [args]
 ```
 
-## Aliases
+### Core Commands
 
-After sourcing, these aliases are available:
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `daily` | `sd` | Open/create today's daily note |
+| `capture "text"` | `sc` | Quick capture to inbox |
+| `search "query"` | `ss` | Full-text search (FTS5) |
+| `list [folder]` | `sl` | List recent notes |
+| `new "Title"` | `sn` | Create a new note |
 
-| Alias | Command |
-|-------|---------|
-| `sd`  | `scribe daily` |
-| `sc`  | `scribe capture` |
-| `ss`  | `scribe search` |
-| `sl`  | `scribe list` |
-| `sn`  | `scribe new` |
+### Management Commands
+
+| Command | Description |
+|---------|-------------|
+| `open "Title"` | Open note in Scribe app |
+| `edit "Title"` | Edit note in `$EDITOR` |
+| `delete "Title"` | Delete a note (move to trash) |
+| `export "Title"` | Export note content to stdout |
+| `backup [file]` | Backup the database |
+| `restore <file>` | Restore database from backup |
+
+### Browsing
+
+| Command | Description |
+|---------|-------------|
+| `tags` | List all tags with counts |
+| `folders` | List all folders with counts |
+| `stats` | Show database statistics |
+
+## Development
+
+The CLI source is located in `cli/src/`. To build the single distribution script:
+
+```bash
+./cli/build.sh
+```
+
+### Running Tests
+
+```bash
+zsh cli/tests/test_runner.zsh
+```
 
 ## Requirements
 
 - Scribe app (creates the SQLite database)
 - `sqlite3` command (macOS built-in)
-
-## Database Location
-
-```
-~/Library/Application Support/com.scribe.app/scribe.db
-```
+- Zsh shell
 
 ## Version
 
-Current: 1.1.0
+Current: 1.2.0

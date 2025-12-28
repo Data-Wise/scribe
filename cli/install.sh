@@ -30,6 +30,15 @@ fi
 echo "📋 Copying scribe.zsh..."
 cp "$SOURCE_FILE" "$TARGET_FILE"
 
+# Install man page
+MAN_DIR="$HOME/.local/share/man/man1"
+MAN_SOURCE="$SCRIPT_DIR/scribe.1"
+if [[ -f "$MAN_SOURCE" ]]; then
+    echo "📘 Installing man page..."
+    mkdir -p "$MAN_DIR"
+    cp "$MAN_SOURCE" "$MAN_DIR/scribe.1"
+fi
+
 # Check if already sourced in .zshrc
 ZSHRC="$HOME/.zshrc"
 if [[ -f "$HOME/.config/zsh/.zshrc" ]]; then

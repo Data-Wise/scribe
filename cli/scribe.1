@@ -1,0 +1,76 @@
+.TH SCRIBE 1 "December 2025" "Scribe CLI 1.2.0" "User Commands"
+.SH NAME
+scribe \- terminal-based note access for Scribe app
+.SH SYNOPSIS
+.B scribe
+.I command
+[
+.I arguments
+]
+.SH DESCRIPTION
+.B scribe
+provides a command-line interface to interact with your Scribe application notes database. It allows you to create, search, edit, and manage notes directly from your terminal.
+.SH COMMANDS
+.TP
+.B new "Title"
+Create a new note in the inbox.
+.TP
+.B daily, d
+Open or create today's daily note.
+.TP
+.B capture, c "Text"
+Quickly capture a thought to the inbox. If no text is provided, reads from standard input.
+.TP
+.B search, s "Query"
+Search notes using full-text search.
+.TP
+.B list, ls [folder]
+List recent notes. Optionally filter by folder.
+.TP
+.B open, o "Title"
+Open a note in the Scribe application.
+.TP
+.B edit, e "Title"
+Edit a note using your default $EDITOR.
+.TP
+.B delete, del "Title"
+Delete a note (move to trash).
+.TP
+.B export "Title"
+Export a note's content to standard output.
+.TP
+.B backup [file]
+Backup the database to a file.
+.TP
+.B restore <file>
+Restore the database from a backup file.
+.TP
+.B tags, t
+List all tags with note counts.
+.TP
+.B folders, f
+List all folders with note counts.
+.TP
+.B stats
+Show database statistics.
+.TP
+.B help
+Show help information.
+.SH EXAMPLES
+.B scribe daily
+.br
+Open today's daily note.
+
+.B scribe capture "Buy milk"
+.br
+Capture a task to the inbox.
+
+.B scribe search "project"
+.br
+Search for notes containing "project".
+.SH FILES
+.I ~/Library/Application Support/com.scribe.app/scribe.db
+.br
+The SQLite database used by Scribe.
+.SH AUTHOR
+Stat-Wise
