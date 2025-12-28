@@ -201,4 +201,278 @@ describe('useNotesStore', () => {
       expect(mockApi.updateNote).toHaveBeenCalledWith('1', { title: 'Updated' })
     })
   })
+
+  describe('Trash Actions (Sprint 26)', () => {
+    describe('softDeleteNote', () => {
+      it('sets deleted_at timestamp on note', async () => {
+        const initialNotes = [
+          { id: '1', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+        ]
+        const deletedNote = { ...initialNotes[0], deleted_at: Date.now() }
+
+        mockApi.updateNote.mockResolvedValue(deletedNote)
+
+        // Set initial state
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        await act(async () => {
+          await result.current.softDeleteNote('1')
+        })
+
+        expect(mockApi.updateNote).toHaveBeenCalledWith('1', expect.objectContaining({
+          deleted_at: expect.any(Number)
+        }))
+      })
+    })
+
+    describe('restoreNote', () => {
+      it('clears deleted_at timestamp on note', async () => {
+        const initialNotes = [
+          { id: '1', title: 'Deleted Note', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
+        ]
+        const restoredNote = { ...initialNotes[0], deleted_at: null }
+
+        mockApi.updateNote.mockResolvedValue(restoredNote)
+
+        // Set initial state with deleted note
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        await act(async () => {
+          await result.current.restoreNote('1')
+        })
+
+        expect(mockApi.updateNote).toHaveBeenCalledWith('1', { deleted_at: null })
+      })
+    })
+
+    describe('permanentlyDeleteNote', () => {
+      it('removes note from store permanently', async () => {
+        const initialNotes = [
+          { id: '1', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
+          { id: '2', title: 'Keep', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+        ]
+
+        mockApi.deleteNote.mockResolvedValue(undefined)
+
+        // Set initial state
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        await act(async () => {
+          await result.current.permanentlyDeleteNote('1')
+        })
+
+        expect(mockApi.deleteNote).toHaveBeenCalledWith('1')
+        expect(result.current.notes).toHaveLength(1)
+        expect(result.current.notes[0].id).toBe('2')
+      })
+
+      it('clears selection if deleted note was selected', async () => {
+        const initialNotes = [
+          { id: '1', title: 'Selected & Deleted', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
+        ]
+
+        mockApi.deleteNote.mockResolvedValue(undefined)
+
+        // Set initial state with selected note
+        useNotesStore.setState({ notes: initialNotes, selectedNoteId: '1' })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        await act(async () => {
+          await result.current.permanentlyDeleteNote('1')
+        })
+
+        expect(result.current.selectedNoteId).toBeNull()
+      })
+    })
+
+    describe('emptyTrash', () => {
+      it('deletes all trashed notes', async () => {
+        const initialNotes = [
+          { id: '1', title: 'Trashed 1', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
+          { id: '2', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '3', title: 'Trashed 2', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
+        ]
+
+        mockApi.deleteNote.mockResolvedValue(undefined)
+
+        // Set initial state
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        await act(async () => {
+          await result.current.emptyTrash()
+        })
+
+        // Should have called deleteNote for each trashed note
+        expect(mockApi.deleteNote).toHaveBeenCalledTimes(2)
+        expect(mockApi.deleteNote).toHaveBeenCalledWith('1')
+        expect(mockApi.deleteNote).toHaveBeenCalledWith('3')
+
+        // Only active note should remain
+        expect(result.current.notes).toHaveLength(1)
+        expect(result.current.notes[0].id).toBe('2')
+      })
+
+      it('does nothing when trash is empty', async () => {
+        const initialNotes = [
+          { id: '1', title: 'Active 1', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '2', title: 'Active 2', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+        ]
+
+        // Set initial state with no trashed notes
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        await act(async () => {
+          await result.current.emptyTrash()
+        })
+
+        expect(mockApi.deleteNote).not.toHaveBeenCalled()
+        expect(result.current.notes).toHaveLength(2)
+      })
+    })
+
+    describe('cleanupOldTrash', () => {
+      it('deletes notes older than specified days', async () => {
+        const now = Date.now()
+        const thirtyOneDaysAgo = now - (31 * 24 * 60 * 60 * 1000)
+        const twentyNineDaysAgo = now - (29 * 24 * 60 * 60 * 1000)
+
+        const initialNotes = [
+          { id: '1', title: 'Old Trash', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: thirtyOneDaysAgo },
+          { id: '2', title: 'Recent Trash', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: twentyNineDaysAgo },
+          { id: '3', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+        ]
+
+        mockApi.deleteNote.mockResolvedValue(undefined)
+
+        // Set initial state
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        let deletedCount: number = 0
+        await act(async () => {
+          deletedCount = await result.current.cleanupOldTrash(30)
+        })
+
+        // Should only delete the 31-day-old note
+        expect(mockApi.deleteNote).toHaveBeenCalledTimes(1)
+        expect(mockApi.deleteNote).toHaveBeenCalledWith('1')
+        expect(deletedCount).toBe(1)
+
+        // Recent trash and active note should remain
+        expect(result.current.notes).toHaveLength(2)
+        expect(result.current.notes.map(n => n.id)).toContain('2')
+        expect(result.current.notes.map(n => n.id)).toContain('3')
+      })
+
+      it('returns 0 when no old trash exists', async () => {
+        const now = Date.now()
+        const recentDeletion = now - (10 * 24 * 60 * 60 * 1000) // 10 days ago
+
+        const initialNotes = [
+          { id: '1', title: 'Recent Trash', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: recentDeletion },
+          { id: '2', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+        ]
+
+        // Set initial state
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        let deletedCount: number = 0
+        await act(async () => {
+          deletedCount = await result.current.cleanupOldTrash(30)
+        })
+
+        expect(mockApi.deleteNote).not.toHaveBeenCalled()
+        expect(deletedCount).toBe(0)
+        expect(result.current.notes).toHaveLength(2)
+      })
+
+      it('uses default 30 days when no argument provided', async () => {
+        const now = Date.now()
+        const thirtyOneDaysAgo = now - (31 * 24 * 60 * 60 * 1000)
+
+        const initialNotes = [
+          { id: '1', title: 'Old Trash', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: thirtyOneDaysAgo },
+        ]
+
+        mockApi.deleteNote.mockResolvedValue(undefined)
+        useNotesStore.setState({ notes: initialNotes })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        await act(async () => {
+          await result.current.cleanupOldTrash() // No argument = 30 days default
+        })
+
+        expect(mockApi.deleteNote).toHaveBeenCalledWith('1')
+      })
+    })
+
+    describe('Delete Confirmation Flow', () => {
+      it('requestDeleteNote sets pending state', () => {
+        const { result } = renderHook(() => useNotesStore())
+
+        act(() => {
+          result.current.requestDeleteNote('note-to-delete')
+        })
+
+        expect(useNotesStore.getState().pendingDeleteNoteId).toBe('note-to-delete')
+        expect(useNotesStore.getState().showDeleteConfirmation).toBe(true)
+      })
+
+      it('cancelDeleteNote clears pending state', () => {
+        useNotesStore.setState({ pendingDeleteNoteId: 'note-123', showDeleteConfirmation: true })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        act(() => {
+          result.current.cancelDeleteNote()
+        })
+
+        expect(useNotesStore.getState().pendingDeleteNoteId).toBeNull()
+        expect(useNotesStore.getState().showDeleteConfirmation).toBe(false)
+      })
+
+      it('confirmDeleteNote soft deletes and clears pending state', async () => {
+        const initialNotes = [
+          { id: 'note-123', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+        ]
+        const deletedNote = { ...initialNotes[0], deleted_at: Date.now() }
+
+        mockApi.updateNote.mockResolvedValue(deletedNote)
+        useNotesStore.setState({
+          notes: initialNotes,
+          pendingDeleteNoteId: 'note-123',
+          showDeleteConfirmation: true
+        })
+
+        const { result } = renderHook(() => useNotesStore())
+
+        act(() => {
+          result.current.confirmDeleteNote()
+        })
+
+        // Wait for async operations
+        await act(async () => {
+          await new Promise(resolve => setTimeout(resolve, 100))
+        })
+
+        expect(useNotesStore.getState().pendingDeleteNoteId).toBeNull()
+        expect(useNotesStore.getState().showDeleteConfirmation).toBe(false)
+      })
+    })
+  })
 })
