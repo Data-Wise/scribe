@@ -6,7 +6,7 @@
  * browser IndexedDB for persistence.
  */
 
-import { db, generateId, createSearchText, parseNoteRecord, noteToRecord } from './browser-db'
+import { db, generateId, createSearchText, parseNoteRecord, noteToRecord, seedDemoData } from './browser-db'
 import type { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types'
 import type { Citation, ExportOptions, ExportResult } from './api'
 
@@ -548,3 +548,18 @@ export const browserApi = {
     await db.notes.update(noteId, { project_id: projectId })
   }
 }
+
+// ============================================================================
+// Browser API Initialization
+// ============================================================================
+
+/**
+ * Initialize browser API with demo data if needed
+ */
+export const initializeBrowserApi = async (): Promise<void> => {
+  console.log('[Scribe] Using IndexedDB for persistence')
+  await seedDemoData()
+}
+
+// Auto-initialize on import (browser mode only)
+initializeBrowserApi().catch(console.error)

@@ -692,6 +692,30 @@ _scribe_export() {
 
 # Run Scribe in browser with specific flags
 _scribe_browser() {
+  # Handle help first
+  if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    echo "${_scribe_colors[cyan]}scribe browser${_scribe_colors[reset]} - Run Scribe in browser mode (Chrome/Brave)"
+    echo ""
+    echo "${_scribe_colors[bold]}Usage:${_scribe_colors[reset]}"
+    echo "  scribe browser [options]"
+    echo ""
+    echo "${_scribe_colors[bold]}Options:${_scribe_colors[reset]}"
+    echo "  --url=URL        Dev server URL (default: http://localhost:5173)"
+    echo "  --flags=FLAGS    Browser flags (default: --incognito)"
+    echo "  --args=ARGS      Additional browser args (default: --disable-extensions)"
+    echo "  --output=FILE    Log output file (default: /dev/null)"
+    echo "  --timeout=SEC    Verification timeout in seconds (default: 60)"
+    echo "  --verify=TYPE    Verification type: browser_loaded"
+    echo ""
+    echo "${_scribe_colors[bold]}Examples:${_scribe_colors[reset]}"
+    echo "  scribe browser                          # Launch with defaults"
+    echo "  scribe browser --url=http://localhost:3000"
+    echo "  scribe browser --output=browser.log --verify=browser_loaded"
+    echo ""
+    echo "${_scribe_colors[dim]}Note: Start dev server first with 'npm run dev:vite'${_scribe_colors[reset]}"
+    return 0
+  fi
+
   local url="http://localhost:5173"
   local flags=("--incognito")
   local args=("--disable-extensions")
