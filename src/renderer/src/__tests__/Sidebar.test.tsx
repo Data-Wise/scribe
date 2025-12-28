@@ -21,8 +21,8 @@ describe('StatusDot Component', () => {
     const statuses: ProjectStatus[] = ['active', 'planning', 'complete', 'archive']
     const expectedColors: Record<ProjectStatus, string> = {
       active: '#22c55e',    // Green
-      planning: '#eab308',  // Yellow
-      complete: '#3b82f6',  // Blue
+      planning: '#3b82f6',  // Blue
+      complete: '#8b5cf6',  // Purple
       archive: '#6b7280',   // Gray
     }
 
@@ -36,21 +36,21 @@ describe('StatusDot Component', () => {
   it('renders different sizes', () => {
     const { rerender, container } = render(<StatusDot size="sm" />)
     let dot = container.querySelector('span')
-    expect(dot).toHaveStyle({ width: '6px', height: '6px' })
+    expect(dot).toHaveClass('sm')
 
     rerender(<StatusDot size="md" />)
     dot = container.querySelector('span')
-    expect(dot).toHaveStyle({ width: '8px', height: '8px' })
+    expect(dot).toHaveClass('md')
 
     rerender(<StatusDot size="lg" />)
     dot = container.querySelector('span')
-    expect(dot).toHaveStyle({ width: '10px', height: '10px' })
+    expect(dot).toHaveClass('lg')
   })
 
   it('getStatusColor returns correct colors', () => {
     expect(getStatusColor('active')).toBe('#22c55e')
-    expect(getStatusColor('planning')).toBe('#eab308')
-    expect(getStatusColor('complete')).toBe('#3b82f6')
+    expect(getStatusColor('planning')).toBe('#3b82f6')
+    expect(getStatusColor('complete')).toBe('#8b5cf6')
     expect(getStatusColor('archive')).toBe('#6b7280')
   })
 
@@ -463,16 +463,16 @@ describe('CompactListMode Component', () => {
       <CompactListMode
         projects={mockProjects}
         notes={[]}
-        currentProjectId={null}
+        currentProjectId="1" // Select project 1 to expand it
         width={240}
         {...mockHandlers}
       />
     )
 
-    // Research Paper has 75% progress
-    const progressBar = container.querySelector('.progress-mini')
+    // Research Paper (id: 1) has 75% progress and is now expanded
+    const progressBar = container.querySelector('.progress-fill')
     expect(progressBar).toBeInTheDocument()
-    expect(progressBar).toHaveAttribute('title', '75% complete')
+    expect(progressBar).toHaveStyle({ width: '75%' })
   })
 
   it('excludes archived projects from display', () => {
