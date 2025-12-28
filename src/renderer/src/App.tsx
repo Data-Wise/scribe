@@ -10,6 +10,7 @@ import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
+import { MissionControl } from './components/MissionControl'
 import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
@@ -1094,10 +1095,17 @@ function App() {
               </div>
             </div>
           ) : (
-            <EmptyState
+            <MissionControl
+              projects={projects}
+              notes={notes}
+              currentProjectId={currentProjectId}
+              onSelectProject={setCurrentProject}
+              onSelectNote={selectNote}
               onCreateNote={handleCreateNote}
-              onOpenDaily={handleDailyNote}
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+              onDailyNote={handleDailyNote}
+              onQuickCapture={() => setIsQuickCaptureOpen(true)}
+              onSettings={() => setIsSettingsOpen(true)}
+              onCreateProject={() => setIsCreateProjectModalOpen(true)}
             />
           )}
         </div>
