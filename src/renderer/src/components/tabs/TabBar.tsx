@@ -18,7 +18,7 @@ interface TabBarProps {
  * - New tab button
  */
 export function TabBar({ onCreateNote }: TabBarProps) {
-  const { tabs, activeTabId, setActiveTab, closeTab } = useTabStore()
+  const { tabs, activeTabId, setActiveTab, requestCloseTab } = useTabStore()
   const tabBarRef = useRef<HTMLDivElement>(null)
   const dragRegion = useDragRegion()
 
@@ -73,8 +73,8 @@ export function TabBar({ onCreateNote }: TabBarProps) {
             tab={tab}
             isActive={tab.id === activeTabId}
             onSelect={() => setActiveTab(tab.id)}
-            onClose={tab.isPinned ? undefined : () => closeTab(tab.id)}
-            onMiddleClick={tab.isPinned ? undefined : () => closeTab(tab.id)}
+            onClose={tab.isPinned ? undefined : () => requestCloseTab(tab.id)}
+            onMiddleClick={tab.isPinned ? undefined : () => requestCloseTab(tab.id)}
           />
         </div>
       ))}

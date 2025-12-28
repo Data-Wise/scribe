@@ -8,6 +8,10 @@ interface NotesState {
   isLoading: boolean
   error: string | null
 
+  // Delete confirmation state (ADHD: Escape hatches - prevent accidental data loss)
+  pendingDeleteNoteId: string | null
+  showDeleteConfirmation: boolean
+
   // Actions
   loadNotes: (folder?: string) => Promise<void>
   createNote: (note: Partial<Note>) => Promise<void>
@@ -15,13 +19,27 @@ interface NotesState {
   deleteNote: (id: string) => Promise<void>
   selectNote: (id: string) => void
   searchNotes: (query: string) => Promise<void>
+
+  // Trash actions (soft delete pattern)
+  softDeleteNote: (id: string) => Promise<void>
+  restoreNote: (id: string) => Promise<void>
+  permanentlyDeleteNote: (id: string) => Promise<void>
+
+  // Delete confirmation actions
+  requestDeleteNote: (id: string) => void
+  confirmDeleteNote: () => void
+  cancelDeleteNote: () => void
 }
 
-export const useNotesStore = create<NotesState>((set) => ({
+export const useNotesStore = create<NotesState>((set, get) => ({
   notes: [],
   selectedNoteId: null,
   isLoading: false,
   error: null,
+
+  // Delete confirmation state
+  pendingDeleteNoteId: null,
+  showDeleteConfirmation: false,
 
   loadNotes: async (folder?: string) => {
     set({ isLoading: true, error: null })
@@ -94,6 +112,67 @@ export const useNotesStore = create<NotesState>((set) => ({
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
     }
+  },
+
+  // Trash actions (soft delete pattern)
+  softDeleteNote: async (id: string) => {
+    try {
+      const updatedNote = await api.updateNote(id, { deleted_at: Date.now() })
+      if (updatedNote) {
+        set((state) => ({
+          notes: state.notes.map((note) =>
+            note.id === id ? updatedNote : note
+          ),
+          selectedNoteId: state.selectedNoteId === id ? null : state.selectedNoteId
+        }))
+      }
+    } catch (error) {
+      set({ error: (error as Error).message })
+    }
+  },
+
+  restoreNote: async (id: string) => {
+    try {
+      // Restore by clearing deleted_at
+      const updatedNote = await api.updateNote(id, { deleted_at: null })
+      if (updatedNote) {
+        set((state) => ({
+          notes: state.notes.map((note) =>
+            note.id === id ? { ...updatedNote, deleted_at: undefined } : note
+          )
+        }))
+      }
+    } catch (error) {
+      set({ error: (error as Error).message })
+    }
+  },
+
+  permanentlyDeleteNote: async (id: string) => {
+    try {
+      await api.deleteNote(id)
+      set((state) => ({
+        notes: state.notes.filter((note) => note.id !== id),
+        selectedNoteId: state.selectedNoteId === id ? null : state.selectedNoteId
+      }))
+    } catch (error) {
+      set({ error: (error as Error).message })
+    }
+  },
+
+  // Delete confirmation actions (ADHD: Escape hatches)
+  requestDeleteNote: (id: string) => {
+    set({ pendingDeleteNoteId: id, showDeleteConfirmation: true })
+  },
+
+  confirmDeleteNote: () => {
+    const { pendingDeleteNoteId, softDeleteNote } = get()
+    if (!pendingDeleteNoteId) return
+    softDeleteNote(pendingDeleteNoteId) // Soft delete moves to trash
+    set({ pendingDeleteNoteId: null, showDeleteConfirmation: false })
+  },
+
+  cancelDeleteNote: () => {
+    set({ pendingDeleteNoteId: null, showDeleteConfirmation: false })
   }
 }))
 

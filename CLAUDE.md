@@ -35,15 +35,16 @@ Before making ANY changes, read:
 
 | Layer | Technology |
 |-------|------------|
-| Shell | Electron 28 |
+| Shell | Tauri 2 |
 | UI | React 18 |
-| Editor | BlockNote (migrating from TipTap) |
+| Editor | HybridEditor++ (custom) |
 | Styling | Tailwind CSS |
 | State | Zustand |
-| Database | SQLite (better-sqlite3) |
+| Database | SQLite (rusqlite) |
 | AI | Claude/Gemini CLI only (NO API) |
 | Citations | Pandoc citeproc |
 | Math | KaTeX |
+| Testing | Vitest + Testing Library |
 
 ---
 
@@ -113,17 +114,16 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Sprint: 8 (BlockNote + Focus Mode)
+## 🎯 Current Sprint: 26 (Polish & Stability)
 
-**Tasks:**
+**Sprint 25 Complete:** Tab System, Continue Writing Hero, Time-based Greeting, Writing Goal, Quick Capture Inbox
 
-- [ ] Replace TipTap with BlockNote
-- [ ] Implement Focus Mode
-- [ ] Dark mode default
-- [ ] Auto-save
-- [ ] Word count
-- [ ] Port wiki links
-- [ ] Port tags
+**Sprint 26 Focus:**
+- [x] Dirty tab close confirmation (data safety)
+- [x] IStorage interface (architecture prep)
+- [ ] Delete confirmation dialogs
+- [ ] ARIA accessibility improvements
+- [ ] Toast notifications for actions
 
 ---
 
@@ -226,6 +226,50 @@ async function askClaude(prompt: string, context: string): Promise<string> {
 
 ---
 
+## 🏗️ Architecture Decisions
+
+### Storage Abstraction (2025-12-28)
+
+**Decision:** Created `IStorage` interface for platform abstraction.
+
+**Location:** `src/renderer/src/lib/storage.ts`
+
+**Rationale:**
+- Future-proofs for PWA/browser deployment
+- Current: TauriStorage (SQLite via rusqlite)
+- Future: BrowserStorage (IndexedDB)
+- Enables sync via PouchDB/CouchDB later
+
+### Tauri ↔ Browser Coordination Options
+
+| Option | Status | Use Case |
+|--------|--------|----------|
+| **MCP Bridge** | Recommended for v1 | Browser reads Scribe SQLite via MCP server |
+| WebSocket Bridge | Deferred | Real-time sync (needs PWA first) |
+| Shared Files | Rejected | Loses SQLite benefits |
+| **PWA Hybrid** | Future (v2) | Single codebase, multiple targets |
+
+**Current Approach:** Tauri-only desktop. MCP bridge can expose data to browser if needed.
+
+### Data Safety Patterns
+
+1. **Dirty tab confirmation** — Prompt before closing unsaved work
+2. **Soft delete** — `deleted_at` timestamp, not hard delete
+3. **Auto-save** — Debounced saves on content change
+4. **Closed tabs history** — `reopenLastClosed()` for recovery
+
+### SQLite Best Practices
+
+```sql
+-- Enable WAL mode for better concurrent access
+PRAGMA journal_mode=WAL;
+
+-- Enable foreign keys
+PRAGMA foreign_keys=ON;
+```
+
+---
+
 ## 🔗 Related Files
 
 | File | Purpose |
@@ -236,3 +280,5 @@ async function askClaude(prompt: string, context: string): Promise<string> {
 | CHANGELOG.md | Version history |
 | cli/scribe.zsh | Terminal CLI implementation |
 | cli/README.md | CLI documentation |
+| src/renderer/src/lib/storage.ts | IStorage interface |
+| docs/ARCHITECTURE.md | System architecture |

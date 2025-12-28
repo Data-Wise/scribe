@@ -3828,7 +3828,8 @@ mark {
 /* Dragging state on source element */
 .note-list-item.dragging,
 .note-item.dragging,
-.inbox-item.dragging {
+.inbox-item.dragging,
+.recent-note-item.dragging {
   opacity: 0.5;
   background: rgba(139, 92, 246, 0.1);
 }
@@ -3872,12 +3873,14 @@ mark {
 }
 
 .note-list-item:hover .drag-handle,
-.inbox-item:hover .drag-handle {
+.inbox-item:hover .drag-handle,
+.recent-note-item:hover .drag-handle {
   opacity: 0.5;
 }
 
 .note-list-item:hover .drag-handle:hover,
-.inbox-item:hover .drag-handle:hover {
+.inbox-item:hover .drag-handle:hover,
+.recent-note-item:hover .drag-handle:hover {
   opacity: 1;
 }
 

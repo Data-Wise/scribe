@@ -1,4 +1,4 @@
-import { FolderKanban, FileText, Inbox, GitBranch, type LucideIcon } from 'lucide-react'
+import { FolderKanban, FileText, Inbox, GitBranch, Trash2, type LucideIcon } from 'lucide-react'
 
 /**
  * SidebarTabs - Modern tabbed navigation for left sidebar
@@ -8,7 +8,7 @@ import { FolderKanban, FileText, Inbox, GitBranch, type LucideIcon } from 'lucid
  * - Compact/Card mode: Horizontal pill tabs
  */
 
-export type LeftSidebarTab = 'projects' | 'notes' | 'inbox' | 'graph'
+export type LeftSidebarTab = 'projects' | 'notes' | 'inbox' | 'graph' | 'trash'
 
 export interface TabDefinition {
   id: LeftSidebarTab
@@ -22,6 +22,7 @@ export const LEFT_SIDEBAR_TABS: TabDefinition[] = [
   { id: 'notes', label: 'Notes', icon: FileText },
   { id: 'inbox', label: 'Inbox', icon: Inbox },
   { id: 'graph', label: 'Graph', icon: GitBranch },
+  { id: 'trash', label: 'Trash', icon: Trash2 },
 ]
 
 // =============================================================================

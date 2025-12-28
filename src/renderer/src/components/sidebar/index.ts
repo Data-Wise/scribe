@@ -8,6 +8,7 @@ export { PillTabs, IconTabs, SidebarTabs, LEFT_SIDEBAR_TABS } from './SidebarTab
 export { NotesListPanel } from './NotesListPanel'
 export { InboxPanel } from './InboxPanel'
 export { GraphPanel } from './GraphPanel'
+export { TrashPanel } from './TrashPanel'
 export { NoteContextMenu, useNoteContextMenu } from './NoteContextMenu'
 export {
   useDraggableNote,

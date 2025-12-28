@@ -10,7 +10,7 @@ import { create } from 'zustand'
  */
 
 export type SidebarMode = 'icon' | 'compact' | 'card'
-export type LeftSidebarTab = 'projects' | 'notes' | 'inbox' | 'graph'
+export type LeftSidebarTab = 'projects' | 'notes' | 'inbox' | 'graph' | 'trash'
 
 interface AppViewState {
   // Sidebar state
@@ -130,7 +130,7 @@ const saveSidebarWidth = (width: number): void => {
 const getSavedLeftSidebarTab = (): LeftSidebarTab => {
   try {
     const saved = localStorage.getItem(LEFT_SIDEBAR_TAB_KEY)
-    if (saved === 'projects' || saved === 'notes' || saved === 'inbox' || saved === 'graph') {
+    if (saved === 'projects' || saved === 'notes' || saved === 'inbox' || saved === 'graph' || saved === 'trash') {
       return saved
     }
     return 'projects' // default

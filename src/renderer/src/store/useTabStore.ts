@@ -24,6 +24,10 @@ interface TabState {
   activeTabId: string
   closedTabs: Tab[]    // For ⌘⇧T reopen (last 10)
 
+  // Close confirmation state (for dirty tabs)
+  pendingCloseTabId: string | null
+  showCloseConfirmation: boolean
+
   // Actions
   openTab: (noteId: string, title: string) => void
   closeTab: (tabId: string) => void
@@ -35,6 +39,11 @@ interface TabState {
   reorderTabs: (fromIndex: number, toIndex: number) => void
   reopenLastClosed: () => void
   goToHomeTab: () => void
+
+  // Close confirmation actions
+  requestCloseTab: (tabId: string) => void  // Use this instead of closeTab for user-initiated closes
+  confirmCloseTab: (save: boolean) => void
+  cancelCloseTab: () => void
 }
 
 // localStorage keys
@@ -99,6 +108,8 @@ export const useTabStore = create<TabState>((set, get) => ({
   tabs: loadSavedTabs(),
   activeTabId: loadActiveTab(),
   closedTabs: [],
+  pendingCloseTabId: null,
+  showCloseConfirmation: false,
 
   openTab: (noteId: string, title: string) => {
     const { tabs } = get()
@@ -265,6 +276,54 @@ export const useTabStore = create<TabState>((set, get) => ({
   goToHomeTab: () => {
     set({ activeTabId: 'home' })
     saveActiveTab('home')
+  },
+
+  // Request to close a tab - checks for dirty state first
+  requestCloseTab: (tabId: string) => {
+    const { tabs } = get()
+
+    // Cannot close home tab
+    const tab = tabs.find(t => t.id === tabId)
+    if (!tab || tab.isPinned) return
+
+    // If tab is dirty, show confirmation dialog
+    if (tab.isDirty) {
+      set({
+        pendingCloseTabId: tabId,
+        showCloseConfirmation: true,
+      })
+      return
+    }
+
+    // Tab is clean, close directly
+    get().closeTab(tabId)
+  },
+
+  // Confirm closing a dirty tab
+  confirmCloseTab: (save: boolean) => {
+    const { pendingCloseTabId } = get()
+
+    if (!pendingCloseTabId) return
+
+    // Note: If save is true, the caller should trigger save first
+    // This just handles the tab close after save is complete
+
+    // Close the tab
+    get().closeTab(pendingCloseTabId)
+
+    // Clear confirmation state
+    set({
+      pendingCloseTabId: null,
+      showCloseConfirmation: false,
+    })
+  },
+
+  // Cancel closing a dirty tab
+  cancelCloseTab: () => {
+    set({
+      pendingCloseTabId: null,
+      showCloseConfirmation: false,
+    })
   },
 }))
 

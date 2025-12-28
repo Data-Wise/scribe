@@ -727,13 +727,13 @@ describe('SidebarTabs Components', () => {
   })
 
   describe('LEFT_SIDEBAR_TABS constant', () => {
-    it('has exactly 4 tabs', () => {
-      expect(LEFT_SIDEBAR_TABS).toHaveLength(4)
+    it('has exactly 5 tabs', () => {
+      expect(LEFT_SIDEBAR_TABS).toHaveLength(5)
     })
 
     it('has correct tab IDs', () => {
       const ids = LEFT_SIDEBAR_TABS.map(t => t.id)
-      expect(ids).toEqual(['projects', 'notes', 'inbox', 'graph'])
+      expect(ids).toEqual(['projects', 'notes', 'inbox', 'graph', 'trash'])
     })
   })
 })

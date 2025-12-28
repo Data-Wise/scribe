@@ -7,6 +7,7 @@ import { PillTabs, LEFT_SIDEBAR_TABS } from './SidebarTabs'
 import { NotesListPanel } from './NotesListPanel'
 import { InboxPanel } from './InboxPanel'
 import { GraphPanel } from './GraphPanel'
+import { TrashPanel } from './TrashPanel'
 import { useDropTarget, useDraggableNote } from './DraggableNote'
 import { NoteContextMenu, useNoteContextMenu } from './NoteContextMenu'
 import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
@@ -53,13 +54,18 @@ export function CompactListMode({
     return notes.filter(n => n.folder === 'inbox' && !n.deleted_at).length
   }, [notes])
 
-  // Create tabs with dynamic inbox badge
+  // Count trash items for badge
+  const trashCount = useMemo(() => {
+    return notes.filter(n => n.deleted_at).length
+  }, [notes])
+
+  // Create tabs with dynamic badges
   const tabsWithBadge = useMemo(() => {
     return LEFT_SIDEBAR_TABS.map(tab => ({
       ...tab,
-      badge: tab.id === 'inbox' ? inboxCount : undefined
+      badge: tab.id === 'inbox' ? inboxCount : tab.id === 'trash' ? trashCount : undefined
     }))
-  }, [inboxCount])
+  }, [inboxCount, trashCount])
 
   // Filter projects by search (treat undefined status as 'active')
   const filteredProjects = useMemo(() => {
@@ -257,6 +263,10 @@ export function CompactListMode({
           onOpenFullGraph={onOpenFullGraph}
           variant="compact"
         />
+      )}
+
+      {leftSidebarTab === 'trash' && (
+        <TrashPanel notes={notes} />
       )}
     </div>
   )

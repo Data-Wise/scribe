@@ -12,7 +12,8 @@ interface ContinueWritingHeroProps {
  * ADHD Principle: Zero friction to resume writing (< 3 seconds)
  */
 export function ContinueWritingHero({ note, project, onContinue }: ContinueWritingHeroProps) {
-  if (!note) return null
+  // Filter out null or deleted notes
+  if (!note || note.deleted_at) return null
 
   // Count words in content
   const wordCount = countWords(note.content)
@@ -26,6 +27,7 @@ export function ContinueWritingHero({ note, project, onContinue }: ContinueWriti
   return (
     <button
       onClick={onContinue}
+      aria-label={`Continue writing ${note.title || 'Untitled'}, ${wordCount} words, last edited ${timeAgo}`}
       className="continue-hero w-full text-left p-5 rounded-xl border-2 border-dashed transition-all duration-200 group hover:border-solid focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-nexus-bg-primary"
       style={{
         borderColor: `${accentColor}40`,

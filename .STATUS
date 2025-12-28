@@ -1,7 +1,7 @@
 ---
 status: active
 priority: P1
-progress: 40
+progress: 100
 version: 1.6.0
 sprint: 25
 updated: 2025-12-27
@@ -27,7 +27,7 @@ tags:
 
 **Sprint 25: Quick Capture & Mission Control Enhancements** (Started 2025-12-27)
 
-### Sprint 25: Tab System & Mission Control ⏳
+### Sprint 25: Tab System & Mission Control ✅
 
 #### Tab System ✅
 - [x] Pinned Home tab (Mission Control always accessible)
@@ -46,10 +46,31 @@ tags:
 - [x] Integration with MissionControl
 - [x] 27 new tests
 
-#### Remaining
-- [ ] Time-based greeting (Good morning/afternoon/evening)
-- [ ] Today's Writing Goal (opt-in)
-- [ ] Quick Capture Inbox
+#### Time-based Greeting ✅
+- [x] getTimeBasedGreeting() function (MissionControl.tsx)
+- [x] Morning/afternoon/evening/night greetings
+- [x] Contextual subtitles ("Ready to write?", "Keep the momentum")
+- [x] Auto-updates every minute
+- [x] 17 tests
+
+#### Writing Goal ✅
+- [x] WritingGoal component (opt-in daily tracker)
+- [x] Progress bar with visual feedback
+- [x] Goal editing (inline number input)
+- [x] Celebration state when goal reached
+- [x] ADHD-friendly design (no pressure by default)
+
+#### Quick Capture Inbox ✅
+- [x] QuickCaptureInbox component (GTD-style inbox)
+- [x] Shows notes in "inbox" folder
+- [x] Process / Mark Processed / Delete actions
+- [x] Hides when inbox is empty
+- [x] Relative time display
+
+#### Recent Notes Enhancements ✅
+- [x] Right-click context menu
+- [x] Drag-and-drop for project assignment
+- [x] Note-to-project assignment
 
 ### Sprint 24: Three-State Collapsible Sidebar ✅
 - [x] Icon mode (48px) - status dots only
@@ -188,9 +209,9 @@ tags:
 | **v1.3** | 22 | Editor Modes + Custom CSS | ✅ 100% |
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
-| v1.6 | 25 | Quick Capture & Daily Notes | ⏳ 0% |
+| v1.6 | 25 | Quick Capture & Mission Control | ✅ 100% |
 
-**Total: v1.5 complete, v1.6 planning**
+**Total: v1.6 complete, Sprint 26 planning**
 
 ---
 

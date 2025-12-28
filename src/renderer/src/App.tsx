@@ -23,6 +23,8 @@ import { CommandPalette } from './components/CommandPalette'
 import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
 import { listen } from '@tauri-apps/api/event'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
+import { CloseConfirmationDialog } from './components/CloseConfirmationDialog'
+import { DeleteConfirmationDialog } from './components/DeleteConfirmationDialog'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
 import { SearchPanel } from './components/SearchPanel'
 import {
@@ -78,7 +80,7 @@ function extractTagsFromContent(content: string): string[] {
 }
 
 function App() {
-  const { notes, loadNotes, createNote, updateNote, deleteNote, selectedNoteId, selectNote } = useNotesStore()
+  const { notes, loadNotes, createNote, updateNote, deleteNote, selectedNoteId, selectNote, requestDeleteNote } = useNotesStore()
   const {
     projects,
     currentProjectId,
@@ -101,11 +103,12 @@ function App() {
     tabs,
     activeTabId,
     openTab,
-    closeTab,
     setActiveTab,
     updateTabTitle,
     reopenLastClosed,
     goToHomeTab,
+    requestCloseTab,
+    pendingCloseTabId,
   } = useTabStore()
 
   // Get active tab and determine what content to show
@@ -646,11 +649,11 @@ function App() {
         }
       }
 
-      // ⌘W = Close current tab (if editor tab)
+      // ⌘W = Close current tab (if editor tab) - uses requestCloseTab for dirty check
       if ((e.metaKey || e.ctrlKey) && e.key === 'w' && !e.shiftKey) {
         e.preventDefault()
         if (activeTab && activeTab.type === 'editor') {
-          closeTab(activeTab.id)
+          requestCloseTab(activeTab.id)
         }
       }
 
@@ -691,7 +694,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, tabs, activeTabId, activeTab, goToHomeTab, setActiveTab, closeTab, reopenLastClosed, setLeftSidebarTab])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, tabs, activeTabId, activeTab, goToHomeTab, setActiveTab, requestCloseTab, reopenLastClosed, setLeftSidebarTab])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -1040,7 +1043,7 @@ function App() {
             // Move note out of inbox by changing folder
             updateNote(noteId, { folder: 'notes' })
           }}
-          onDeleteNote={(noteId) => deleteNote(noteId)}
+          onDeleteNote={(noteId) => requestDeleteNote(noteId)}
           onAssignNoteToProject={async (noteId, projectId) => {
             try {
               await api.setNoteProject(noteId, projectId)
@@ -1092,10 +1095,7 @@ function App() {
                 // Move note out of inbox by changing folder
                 updateNote(noteId, { folder: 'notes' })
               }}
-              onDeleteNote={(noteId) => {
-                // Soft delete the note
-                updateNote(noteId, { deleted_at: Date.now() })
-              }}
+              onDeleteNote={(noteId) => requestDeleteNote(noteId)}
             />
           )}
 
@@ -1306,6 +1306,27 @@ function App() {
         onClose={() => setIsQuickCaptureOpen(false)}
         onCapture={handleQuickCapture}
       />
+
+      {/* Close Confirmation Dialog (shown when closing dirty tabs) */}
+      <CloseConfirmationDialog
+        onSave={async () => {
+          // Find the note being closed and save it
+          if (pendingCloseTabId) {
+            const tab = tabs.find(t => t.id === pendingCloseTabId)
+            if (tab?.noteId) {
+              const note = notes.find(n => n.id === tab.noteId)
+              if (note) {
+                // The note content is already in state, just trigger a save
+                // This ensures the latest content is persisted
+                await updateNote(note.id, { content: note.content })
+              }
+            }
+          }
+        }}
+      />
+
+      {/* Delete Confirmation Dialog (ADHD: Escape hatches - prevent accidental data loss) */}
+      <DeleteConfirmationDialog />
     </div>
   )
 }
