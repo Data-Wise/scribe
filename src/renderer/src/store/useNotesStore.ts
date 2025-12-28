@@ -24,6 +24,7 @@ interface NotesState {
   softDeleteNote: (id: string) => Promise<void>
   restoreNote: (id: string) => Promise<void>
   permanentlyDeleteNote: (id: string) => Promise<void>
+  emptyTrash: () => Promise<void>
 
   // Delete confirmation actions
   requestDeleteNote: (id: string) => void
@@ -153,6 +154,24 @@ export const useNotesStore = create<NotesState>((set, get) => ({
       set((state) => ({
         notes: state.notes.filter((note) => note.id !== id),
         selectedNoteId: state.selectedNoteId === id ? null : state.selectedNoteId
+      }))
+    } catch (error) {
+      set({ error: (error as Error).message })
+    }
+  },
+
+  emptyTrash: async () => {
+    const { notes } = get()
+    const trashedNotes = notes.filter(n => n.deleted_at)
+    try {
+      // Delete all trashed notes
+      await Promise.all(trashedNotes.map(note => api.deleteNote(note.id)))
+      // Remove from local state
+      set((state) => ({
+        notes: state.notes.filter(n => !n.deleted_at),
+        selectedNoteId: trashedNotes.some(n => n.id === state.selectedNoteId)
+          ? null
+          : state.selectedNoteId
       }))
     } catch (error) {
       set({ error: (error as Error).message })

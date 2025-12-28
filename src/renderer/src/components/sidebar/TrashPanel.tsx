@@ -19,8 +19,9 @@ interface TrashPanelProps {
  * - Shows when note was deleted
  */
 export function TrashPanel({ notes }: TrashPanelProps) {
-  const { restoreNote, permanentlyDeleteNote } = useNotesStore()
+  const { restoreNote, permanentlyDeleteNote, emptyTrash } = useNotesStore()
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null)
+  const [confirmingEmptyTrash, setConfirmingEmptyTrash] = useState(false)
 
   // Filter to only show deleted notes
   const trashedNotes = useMemo(() => {
@@ -41,6 +42,17 @@ export function TrashPanel({ notes }: TrashPanelProps) {
       setConfirmingDeleteId(noteId)
       // Auto-cancel after 3 seconds
       setTimeout(() => setConfirmingDeleteId(null), 3000)
+    }
+  }
+
+  const handleEmptyTrash = async () => {
+    if (confirmingEmptyTrash) {
+      await emptyTrash()
+      setConfirmingEmptyTrash(false)
+    } else {
+      setConfirmingEmptyTrash(true)
+      // Auto-cancel after 3 seconds
+      setTimeout(() => setConfirmingEmptyTrash(false), 3000)
     }
   }
 
@@ -81,6 +93,18 @@ export function TrashPanel({ notes }: TrashPanelProps) {
         <span className="text-xs font-medium text-nexus-text-muted uppercase tracking-wide">
           Trash ({trashedNotes.length})
         </span>
+        <button
+          onClick={handleEmptyTrash}
+          className={`flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition-colors ${
+            confirmingEmptyTrash
+              ? 'bg-red-500/20 text-red-400'
+              : 'text-nexus-text-muted hover:text-red-400 hover:bg-red-500/10'
+          }`}
+          title={confirmingEmptyTrash ? 'Click again to confirm' : 'Empty trash'}
+        >
+          <Trash2 className="w-3 h-3" />
+          {confirmingEmptyTrash ? 'Confirm?' : 'Empty'}
+        </button>
       </div>
 
       {/* List */}
