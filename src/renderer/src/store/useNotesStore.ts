@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Note } from '../types'
 import { api } from '../lib/api'
+import { useToastStore } from './useToastStore'
 
 interface NotesState {
   notes: Note[]
@@ -184,10 +185,28 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   },
 
   confirmDeleteNote: () => {
-    const { pendingDeleteNoteId, softDeleteNote } = get()
+    const { pendingDeleteNoteId, softDeleteNote, restoreNote, notes } = get()
     if (!pendingDeleteNoteId) return
-    softDeleteNote(pendingDeleteNoteId) // Soft delete moves to trash
+
+    // Get note title for toast message
+    const note = notes.find(n => n.id === pendingDeleteNoteId)
+    const noteTitle = note?.title || 'Untitled'
+    const noteId = pendingDeleteNoteId
+
+    // Soft delete moves to trash
+    softDeleteNote(noteId)
     set({ pendingDeleteNoteId: null, showDeleteConfirmation: false })
+
+    // Show undo toast (ADHD: Escape hatches - allow quick recovery)
+    useToastStore.getState().addToast({
+      message: `"${noteTitle}" moved to trash`,
+      type: 'undo',
+      duration: 5000,
+      action: {
+        label: 'Undo',
+        onClick: () => restoreNote(noteId)
+      }
+    })
   },
 
   cancelDeleteNote: () => {

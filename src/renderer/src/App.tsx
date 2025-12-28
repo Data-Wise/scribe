@@ -25,6 +25,7 @@ import { listen } from '@tauri-apps/api/event'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import { CloseConfirmationDialog } from './components/CloseConfirmationDialog'
 import { DeleteConfirmationDialog } from './components/DeleteConfirmationDialog'
+import { ToastContainer } from './components/Toast'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
 import { SearchPanel } from './components/SearchPanel'
 import {
@@ -1328,6 +1329,9 @@ function App() {
 
       {/* Delete Confirmation Dialog (ADHD: Escape hatches - prevent accidental data loss) */}
       <DeleteConfirmationDialog />
+
+      {/* Toast notifications (ADHD: Escape hatches - undo actions) */}
+      <ToastContainer />
     </div>
   )
 }

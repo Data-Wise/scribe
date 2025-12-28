@@ -3887,3 +3887,30 @@ mark {
 .drag-handle:active {
   cursor: grabbing;
 }
+
+/* ==========================================================================
+   Toast Notifications
+   ========================================================================== */
+
+/* Slide-in animation for toasts */
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: toastSlideIn 200ms ease-out;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-in {
+    animation: none;
+  }
+}
