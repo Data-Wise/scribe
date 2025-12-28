@@ -598,6 +598,12 @@ function App() {
         e.preventDefault()
         setIsCreateProjectModalOpen(true)
       }
+
+      // Settings (⌘,) - standard preferences shortcut
+      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault()
+        setIsSettingsOpen(true)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)

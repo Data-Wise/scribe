@@ -27,7 +27,10 @@ import {
   RefreshCw,
   ChevronDown,
   ChevronUp,
-  Calendar
+  Calendar,
+  Globe,
+  Database,
+  RotateCcw
 } from 'lucide-react'
 import {
   loadTemplates,
@@ -60,6 +63,8 @@ import {
   Base16Scheme
 } from '../lib/themes'
 import { api } from '../lib/api'
+import { isBrowser } from '../lib/platform'
+import { db, seedDemoData } from '../lib/browser-db'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -496,6 +501,67 @@ export function SettingsModal({
                     </div>
                   </div>
                 </section>
+
+                {/* Browser Mode Section - only shown in browser mode */}
+                {isBrowser() && (
+                  <section>
+                    <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4 flex items-center gap-2">
+                      <Globe className="w-3 h-3" style={{ color: 'rgb(251, 146, 60)' }} />
+                      Browser Mode
+                    </h4>
+                    <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(251, 146, 60, 0.15)' }}>
+                          <Database className="w-5 h-5" style={{ color: 'rgb(251, 146, 60)' }} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-sm font-medium text-nexus-text-primary">IndexedDB Storage</div>
+                          <div className="text-xs text-nexus-text-muted">Your data is stored locally in this browser.</div>
+                        </div>
+                      </div>
+
+                      <div className="border-t border-white/5 pt-4 space-y-3">
+                        <button
+                          onClick={async () => {
+                            if (confirm('This will delete ALL notes, projects, and tags. This cannot be undone. Continue?')) {
+                              await db.notes.clear()
+                              await db.projects.clear()
+                              await db.tags.clear()
+                              await db.noteTags.clear()
+                              await db.noteLinks.clear()
+                              await db.projectSettings.clear()
+                              window.location.reload()
+                            }
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors text-sm font-medium"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Clear All Data
+                        </button>
+
+                        <button
+                          onClick={async () => {
+                            const seeded = await seedDemoData()
+                            if (seeded) {
+                              alert('Demo data has been restored!')
+                              window.location.reload()
+                            } else {
+                              alert('Demo data already exists. Clear data first to re-seed.')
+                            }
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-nexus-text-secondary rounded-lg transition-colors text-sm font-medium"
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                          Restore Demo Data
+                        </button>
+                      </div>
+
+                      <div className="text-xs text-nexus-text-muted pt-2 border-t border-white/5">
+                        Some features like AI assistance and PDF export require the desktop app.
+                      </div>
+                    </div>
+                  </section>
+                )}
               </div>
             )}
 
