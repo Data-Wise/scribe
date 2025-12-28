@@ -55,6 +55,7 @@ ${_C_BLUE}📋 NOTE MANAGEMENT${_C_NC}:
   ${_C_CYAN}edit${_C_NC}, ${_C_CYAN}e${_C_NC} <title>       Edit note in \$EDITOR
   ${_C_CYAN}delete${_C_NC}, ${_C_CYAN}del${_C_NC} <title>   Delete a note (move to trash)
   ${_C_CYAN}export${_C_NC} <title>        Export note to Markdown (stdout)
+  ${_C_CYAN}browser${_C_NC}               Run Scribe in browser (Chrome/Brave)
 
 ${_C_BLUE}🔍 SEARCH & BROWSE${_C_NC}:
   ${_C_CYAN}search${_C_NC}, ${_C_CYAN}s${_C_NC} <query>     Full-text search (FTS5)
