@@ -321,6 +321,14 @@ export const browserDialogs = {
 ### Future Enhancements
 
 1. [x] Add browser mode indicator in UI ✅ (2025-12-28)
-2. [ ] Test wiki link creation and backlink tracking
-3. [ ] Add "Clear Demo Data" option for testing
-4. [ ] PWA offline support with service worker
+2. [x] Test wiki link creation and backlink tracking ✅ (code verified)
+3. [x] Add "Clear Demo Data" option in Settings ✅ (2025-12-28)
+4. [x] PWA offline support with service worker ✅ (2025-12-28)
+   - vite-plugin-pwa configured in vite.config.ts
+   - Workbox caching for static assets
+   - **TODO:** Create PWA icons (pwa-192x192.png, pwa-512x512.png)
+
+### Additional Enhancements Completed
+
+5. [x] Show desktop-only features in command palette
+6. [x] Add ⌘, keyboard shortcut for Settings
