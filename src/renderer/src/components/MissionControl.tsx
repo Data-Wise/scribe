@@ -1,12 +1,49 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import { Project, Note } from '../types'
 import { QuickActions } from './QuickActions'
 import { ProjectCard } from './ProjectCard'
 import { StreakDisplay } from './StreakDisplay'
-import { RecentNotes } from './RecentNotes'
+import { ActivityHeatmap } from './ActivityHeatmap'
+import { PinnedNotes } from './PinnedNotes'
+import { ProjectSpotlight } from './ProjectSpotlight'
+import { RecentNotes, getRecentNotes } from './RecentNotes'
+import { ContinueWritingHero } from './ContinueWritingHero'
+import { WritingGoal } from './WritingGoal'
+import { QuickCaptureInbox } from './QuickCaptureInbox'
 import { loadPreferences, getStreakInfo } from '../lib/preferences'
 import { useDragRegion } from './DragRegion'
+import { useAppViewStore } from '../store/useAppViewStore'
 import { Settings, FolderPlus } from 'lucide-react'
+
+/**
+ * Get time-based greeting with contextual message
+ * Returns a greeting appropriate for the current time of day
+ */
+export function getTimeBasedGreeting(): { greeting: string; subtitle: string } {
+  const hour = new Date().getHours()
+
+  if (hour >= 5 && hour < 12) {
+    return {
+      greeting: 'Good morning',
+      subtitle: 'Ready to write?'
+    }
+  } else if (hour >= 12 && hour < 17) {
+    return {
+      greeting: 'Good afternoon',
+      subtitle: 'Keep the momentum'
+    }
+  } else if (hour >= 17 && hour < 21) {
+    return {
+      greeting: 'Good evening',
+      subtitle: 'Wrapping up?'
+    }
+  } else {
+    return {
+      greeting: 'Late night session',
+      subtitle: 'Night owl mode'
+    }
+  }
+}
 
 // Helper to count words in markdown content
 function countWords(content: string): number {
@@ -33,6 +70,10 @@ interface MissionControlProps {
   onQuickCapture: () => void
   onSettings: () => void
   onCreateProject: () => void
+  /** Move note out of inbox (mark as processed) */
+  onMarkInboxProcessed?: (noteId: string) => void
+  /** Delete note */
+  onDeleteNote?: (noteId: string) => void
 }
 
 export function MissionControl({
@@ -46,10 +87,71 @@ export function MissionControl({
   onQuickCapture,
   onSettings,
   onCreateProject,
+  onMarkInboxProcessed,
+  onDeleteNote,
 }: MissionControlProps) {
   const preferences = loadPreferences()
   const streakInfo = getStreakInfo()
   const dragRegion = useDragRegion()
+  const { lastActiveNoteId } = useAppViewStore()
+
+  // Time-based greeting that updates every minute
+  const [greeting, setGreeting] = useState(getTimeBasedGreeting)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGreeting(getTimeBasedGreeting())
+    }, 60000) // Update every minute
+    return () => clearInterval(interval)
+  }, [])
+
+  // Get recent notes for keyboard navigation
+  const recentNotes = useMemo(() => getRecentNotes(notes, 9), [notes])
+
+  // Keyboard navigation: 1-9 opens recent notes
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    // Skip if typing in an input
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      return
+    }
+    // Skip if modifier keys are pressed (except shift)
+    if (e.metaKey || e.ctrlKey || e.altKey) {
+      return
+    }
+
+    // Handle number keys 1-9
+    const key = e.key
+    if (key >= '1' && key <= '9') {
+      const index = parseInt(key, 10) - 1
+      if (index < recentNotes.length) {
+        e.preventDefault()
+        onSelectNote(recentNotes[index].id)
+      }
+    }
+  }, [recentNotes, onSelectNote])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
+
+  // Find the last active note and its project
+  const lastActiveNote = useMemo(() => {
+    if (!lastActiveNoteId) return null
+    return notes.find(n => n.id === lastActiveNoteId && !n.deleted_at) || null
+  }, [lastActiveNoteId, notes])
+
+  const lastActiveProject = useMemo(() => {
+    if (!lastActiveNote) return null
+    const projectId = lastActiveNote.properties?.project_id?.value as string | undefined
+    if (!projectId) return null
+    return projects.find(p => p.id === projectId) || null
+  }, [lastActiveNote, projects])
+
+  // Get current active project for spotlight
+  const currentProject = useMemo(() => {
+    if (!currentProjectId) return null
+    return projects.find(p => p.id === currentProjectId) || null
+  }, [currentProjectId, projects])
 
   // Sort projects: current first, then by updated_at
   const sortedProjects = [...projects].sort((a, b) => {
@@ -92,10 +194,10 @@ export function MissionControl({
       >
         <div>
           <h1 className="text-2xl font-display font-bold text-nexus-text-primary">
-            Mission Control
+            {greeting.greeting}
           </h1>
           <p className="text-sm text-nexus-text-muted mt-1">
-            {projects.length} {projects.length === 1 ? 'project' : 'projects'} • {totalNotes} {totalNotes === 1 ? 'page' : 'pages'} • {totalWords.toLocaleString()} words
+            {greeting.subtitle} • {projects.length} {projects.length === 1 ? 'project' : 'projects'} • {totalNotes} {totalNotes === 1 ? 'page' : 'pages'} • {totalWords.toLocaleString()} words
           </p>
         </div>
         <button
@@ -109,6 +211,47 @@ export function MissionControl({
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-8 py-6">
+        {/* Continue Writing Hero - shown when there's a recent note */}
+        {lastActiveNote && (
+          <section className="mb-8">
+            <ContinueWritingHero
+              note={lastActiveNote}
+              project={lastActiveProject}
+              onContinue={() => onSelectNote(lastActiveNote.id)}
+            />
+          </section>
+        )}
+
+        {/* Pinned Notes - only shows when there are pinned notes */}
+        <PinnedNotes
+          notes={notes}
+          projects={projects}
+          onNoteClick={onSelectNote}
+        />
+
+        {/* Focus Project Spotlight - shown when a project is selected */}
+        {currentProject && (
+          <section className="mb-8">
+            <ProjectSpotlight
+              project={currentProject}
+              notes={notes}
+              onContinue={() => {
+                // Open the last edited note in the project
+                const projectNotes = notes.filter(n =>
+                  !n.deleted_at && n.properties?.project_id?.value === currentProject.id
+                ).sort((a, b) => b.updated_at - a.updated_at)
+                if (projectNotes[0]) {
+                  onSelectNote(projectNotes[0].id)
+                } else {
+                  onCreateNote()
+                }
+              }}
+              onNewNote={onCreateNote}
+              onViewAll={() => onSelectProject(currentProject.id)}
+            />
+          </section>
+        )}
+
         {/* Quick Actions */}
         <section className="mb-8">
           <QuickActions
@@ -128,6 +271,26 @@ export function MissionControl({
             />
           </section>
         )}
+
+        {/* Activity Heatmap */}
+        <section className="mb-8">
+          <ActivityHeatmap notes={notes} weeks={12} />
+        </section>
+
+        {/* Daily Writing Goal (opt-in) */}
+        <section className="mb-8">
+          <WritingGoal onStartWriting={onCreateNote} />
+        </section>
+
+        {/* Quick Capture Inbox - only shows when items exist */}
+        <section className="mb-8">
+          <QuickCaptureInbox
+            notes={notes}
+            onProcess={onSelectNote}
+            onMarkProcessed={onMarkInboxProcessed}
+            onDelete={onDeleteNote}
+          />
+        </section>
 
         {/* Recent Notes */}
         <RecentNotes
@@ -182,7 +345,9 @@ export function MissionControl({
 
       {/* Footer hint */}
       <footer className="px-8 py-3 border-t border-white/5 text-xs text-nexus-text-muted text-center">
-        Press <kbd className="px-1.5 py-0.5 bg-white/10 rounded">⌘0</kbd> to toggle back to editor
+        <kbd className="px-1.5 py-0.5 bg-white/10 rounded">1-9</kbd> open recent pages
+        <span className="mx-2 opacity-50">•</span>
+        <kbd className="px-1.5 py-0.5 bg-white/10 rounded">⌘0</kbd> toggle editor
       </footer>
     </div>
   )

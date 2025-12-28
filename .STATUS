@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 100
-version: 1.5.0
-sprint: 24
+progress: 40
+version: 1.6.0
+sprint: 25
 updated: 2025-12-27
 editor: hybrid-markdown++
-next_sprint: 25
-next_focus: Quick Capture & Daily Notes
-tests: 518
+next_sprint: 26
+next_focus: Time-based Greeting & Writing Goals
+tests: 567
 tags:
   - adhd-friendly
   - distraction-free
@@ -25,7 +25,31 @@ tags:
 
 ## Current Sprint
 
-**v1.5 Release** ✅ Complete (2025-12-27)
+**Sprint 25: Quick Capture & Mission Control Enhancements** (Started 2025-12-27)
+
+### Sprint 25: Tab System & Mission Control ⏳
+
+#### Tab System ✅
+- [x] Pinned Home tab (Mission Control always accessible)
+- [x] Editor tabs for notes (unlimited, closable)
+- [x] Tab persistence (localStorage)
+- [x] Keyboard shortcuts (⌘1=Home, ⌘2-9=tabs, ⌘W=close, ⌘⇧T=reopen)
+- [x] Tab bar with drag region for window
+- [x] useTabStore with full state management
+- [x] 22 new tests for tab store
+
+#### Continue Writing Hero ✅
+- [x] ContinueWritingHero component (zero-friction resume)
+- [x] Project color accent styling
+- [x] Word count & time ago display
+- [x] Keyboard hint (Enter to continue)
+- [x] Integration with MissionControl
+- [x] 27 new tests
+
+#### Remaining
+- [ ] Time-based greeting (Good morning/afternoon/evening)
+- [ ] Today's Writing Goal (opt-in)
+- [ ] Quick Capture Inbox
 
 ### Sprint 24: Three-State Collapsible Sidebar ✅
 - [x] Icon mode (48px) - status dots only

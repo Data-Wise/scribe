@@ -1,11 +1,25 @@
+import { useMemo } from 'react'
 import { Note, Project } from '../types'
 import { FileText, Clock } from 'lucide-react'
+
+/**
+ * Get recent notes sorted by updated_at
+ * Exported for keyboard navigation access
+ */
+export function getRecentNotes(notes: Note[], limit: number = 5): Note[] {
+  return [...notes]
+    .filter(n => !n.deleted_at)
+    .sort((a, b) => b.updated_at - a.updated_at)
+    .slice(0, limit)
+}
 
 interface RecentNotesProps {
   notes: Note[]
   projects: Project[]
   onNoteClick: (noteId: string) => void
   limit?: number
+  /** Show keyboard number hints (1-9) */
+  showKeyboardHints?: boolean
 }
 
 /**
@@ -15,13 +29,11 @@ export function RecentNotes({
   notes,
   projects,
   onNoteClick,
-  limit = 5
+  limit = 5,
+  showKeyboardHints = true
 }: RecentNotesProps) {
-  // Get the most recently updated notes
-  const recentNotes = [...notes]
-    .filter(n => !n.deleted_at)
-    .sort((a, b) => b.updated_at - a.updated_at)
-    .slice(0, limit)
+  // Get the most recently updated notes using shared helper
+  const recentNotes = useMemo(() => getRecentNotes(notes, limit), [notes, limit])
 
   if (recentNotes.length === 0) {
     return null
@@ -60,8 +72,9 @@ export function RecentNotes({
         Recent Pages
       </h2>
       <div className="space-y-2">
-        {recentNotes.map((note) => {
+        {recentNotes.map((note, index) => {
           const projectName = getProjectName(note)
+          const keyNumber = index + 1 // 1-9 for keyboard navigation
 
           return (
             <button
@@ -69,10 +82,16 @@ export function RecentNotes({
               onClick={() => onNoteClick(note.id)}
               className="w-full text-left px-4 py-3 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20 transition-all group flex items-center gap-3"
             >
-              {/* Icon */}
-              <span className="p-2 rounded-lg bg-sky-500/10 text-sky-500 group-hover:bg-sky-500/20 transition-colors flex-shrink-0">
-                <FileText className="w-4 h-4" />
-              </span>
+              {/* Keyboard hint or Icon */}
+              {showKeyboardHints && keyNumber <= 9 ? (
+                <span className="w-8 h-8 rounded-lg bg-white/5 text-nexus-text-muted group-hover:bg-sky-500/20 group-hover:text-sky-400 transition-colors flex-shrink-0 flex items-center justify-center text-sm font-mono">
+                  {keyNumber}
+                </span>
+              ) : (
+                <span className="p-2 rounded-lg bg-sky-500/10 text-sky-500 group-hover:bg-sky-500/20 transition-colors flex-shrink-0">
+                  <FileText className="w-4 h-4" />
+                </span>
+              )}
 
               {/* Content */}
               <div className="flex-1 min-w-0">

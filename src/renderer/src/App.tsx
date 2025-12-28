@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
 import { useAppViewStore } from './store/useAppViewStore'
+import { useTabStore } from './store/useTabStore'
 import { HybridEditor } from './components/HybridEditor'
+import { MissionControl } from './components/MissionControl'
+import { TabBar } from './components/tabs'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
@@ -14,7 +17,6 @@ import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
-import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
 import { api } from './lib/api'
 import { CommandPalette } from './components/CommandPalette'
@@ -92,6 +94,23 @@ function App() {
     setLastActiveNote,
     updateSessionTimestamp
   } = useAppViewStore()
+
+  // Tab store for pinned home + editor tabs
+  const {
+    tabs,
+    activeTabId,
+    openTab,
+    closeTab,
+    setActiveTab,
+    updateTabTitle,
+    reopenLastClosed,
+    goToHomeTab,
+  } = useTabStore()
+
+  // Get active tab and determine what content to show
+  const activeTab = useMemo(() => tabs.find(t => t.id === activeTabId), [tabs, activeTabId])
+  const isHomeTabActive = activeTab?.type === 'home'
+  const activeEditorNoteId = activeTab?.type === 'editor' ? activeTab.noteId : null
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
 
@@ -311,22 +330,40 @@ function App() {
   }, [selectedNoteId, backlinksRefreshKey]) // Refresh when content changes (backlinksRefreshKey)
 
 
+  // Open a note in a new tab (or switch to existing tab)
+  const handleOpenNoteInTab = (noteId: string) => {
+    const note = notes.find(n => n.id === noteId)
+    if (note) {
+      openTab(noteId, note.title || 'Untitled')
+      selectNote(noteId) // Also update legacy store for compatibility
+    }
+  }
+
   const handleCreateNote = async () => {
     // Default properties for new notes
     const defaultProperties: Record<string, Property> = {
       status: { key: 'status', value: 'draft', type: 'list' },
       type: { key: 'type', value: 'note', type: 'list' },
     }
-    
-    await createNote({
+
+    // Create note via API directly to get the note back
+    const newNote = await api.createNote({
       title: `New Note`,
       content: '',  // Empty markdown - user starts fresh
       folder: currentFolder || 'inbox',
       properties: defaultProperties
     })
+
+    // Open the new note in a tab
+    openTab(newNote.id, newNote.title || 'Untitled')
+    selectNote(newNote.id)
+    loadNotes(currentFolder)
   }
 
-  const selectedNote = notes.find(n => n.id === selectedNoteId)
+  // Selected note is based on active tab (for editor tabs) or legacy selectedNoteId
+  const selectedNote = activeEditorNoteId
+    ? notes.find(n => n.id === activeEditorNoteId)
+    : notes.find(n => n.id === selectedNoteId)
 
   // Calculate word count for current note
   const wordCount = selectedNote?.content
@@ -397,11 +434,13 @@ function App() {
   const handleTitleChange = (title: string) => {
     if (selectedNote && title.trim()) {
       updateNote(selectedNote.id, { title: title.trim() })
+      // Update tab title if this note has an open tab
+      updateTabTitle(`editor-${selectedNote.id}`, title.trim())
       setEditingTitle(false)
     }
   }
 
-  // Wiki link handlers - preserves preview mode when navigating
+  // Wiki link handlers - opens note in new tab
   const handleLinkClick = async (title: string) => {
     console.log('[App] handleLinkClick called with title:', title)
     try {
@@ -416,6 +455,7 @@ function App() {
         console.log('[App] Found target note:', targetNote.id)
         // Keep preview mode when navigating via wiki-link click
         setEditorMode('reading')
+        openTab(targetNote.id, targetNote.title || 'Untitled')
         selectNote(targetNote.id)
       } else {
         console.log('[App] Creating new note for:', title)
@@ -431,6 +471,7 @@ function App() {
 
         // New note opens in write mode
         setEditorMode('source')
+        openTab(newNote.id, newNote.title || 'Untitled')
         selectNote(newNote.id)
         loadNotes(currentFolder)
       }
@@ -452,6 +493,8 @@ function App() {
         dailyNote.content = templateContent
       }
 
+      // Open daily note in a tab
+      openTab(dailyNote.id, dailyNote.title || dateStr)
       selectNote(dailyNote.id)
       loadNotes(currentFolder)
     } catch (error) {
@@ -585,11 +628,57 @@ function App() {
         e.preventDefault()
         setIsCreateProjectModalOpen(true)
       }
+
+      // Tab navigation shortcuts
+      // ⌘1 = Go to Home tab
+      if ((e.metaKey || e.ctrlKey) && e.key === '1' && !e.shiftKey && !e.altKey) {
+        e.preventDefault()
+        goToHomeTab()
+      }
+
+      // ⌘2-9 = Go to tab 2-9
+      if ((e.metaKey || e.ctrlKey) && /^[2-9]$/.test(e.key) && !e.shiftKey && !e.altKey) {
+        e.preventDefault()
+        const tabIndex = parseInt(e.key, 10) - 1 // 0-indexed
+        if (tabs[tabIndex]) {
+          setActiveTab(tabs[tabIndex].id)
+        }
+      }
+
+      // ⌘W = Close current tab (if editor tab)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'w' && !e.shiftKey) {
+        e.preventDefault()
+        if (activeTab && activeTab.type === 'editor') {
+          closeTab(activeTab.id)
+        }
+      }
+
+      // ⌘⇧T = Reopen last closed tab
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'T') {
+        e.preventDefault()
+        reopenLastClosed()
+      }
+
+      // ⌃Tab = Next tab
+      if (e.ctrlKey && e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault()
+        const currentIndex = tabs.findIndex(t => t.id === activeTabId)
+        const nextIndex = (currentIndex + 1) % tabs.length
+        setActiveTab(tabs[nextIndex].id)
+      }
+
+      // ⌃⇧Tab = Previous tab
+      if (e.ctrlKey && e.shiftKey && e.key === 'Tab') {
+        e.preventDefault()
+        const currentIndex = tabs.findIndex(t => t.id === activeTabId)
+        const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length
+        setActiveTab(tabs[prevIndex].id)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, tabs, activeTabId, activeTab, goToHomeTab, setActiveTab, closeTab, reopenLastClosed])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -912,132 +1001,167 @@ function App() {
     )
   }
 
-  // Normal mode: Three-state collapsible sidebar + main content
+  // Normal mode: Tab bar + sidebar + content
   return (
-    <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex overflow-hidden" style={{ height: '100vh' }}>
+    <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex flex-col overflow-hidden" style={{ height: '100vh' }}>
       {/* Custom CSS injection from user preferences */}
       {preferences.customCSSEnabled && preferences.customCSS && (
         <style id="custom-user-css">{preferences.customCSS}</style>
       )}
 
-      {/* Titlebar drag region for window moving - uses Tauri API */}
-      <DragRegion className="titlebar-drag-region" />
+      {/* Tab bar - pinned Home tab + editor tabs */}
+      <TabBar onCreateNote={handleCreateNote} />
 
-      {/* Three-state collapsible sidebar (icon/compact/card) */}
-      <MissionSidebar
-        projects={projects}
-        notes={notes}
-        currentProjectId={currentProjectId}
-        onSelectProject={setCurrentProject}
-        onSelectNote={(noteId) => {
-          setEditorMode('source')
-          selectNote(noteId)
-        }}
-        onCreateProject={() => setIsCreateProjectModalOpen(true)}
-      />
-
-      {/* Main content area */}
+      {/* Main layout: sidebar + content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Main editor area */}
-        <div className="flex-1 flex flex-col min-w-0">
-          <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
+        {/* Three-state collapsible sidebar (icon/compact/card) */}
+        <MissionSidebar
+          projects={projects}
+          notes={notes}
+          currentProjectId={currentProjectId}
+          onSelectProject={setCurrentProject}
+          onSelectNote={(noteId) => {
+            setEditorMode('source')
+            handleOpenNoteInTab(noteId)
+          }}
+          onCreateProject={() => setIsCreateProjectModalOpen(true)}
+        />
 
-          {selectedNote ? (
-            <div className="flex-1 flex flex-col min-h-0">
-              <div className="px-6 py-4 border-b border-white/5">
-                {editingTitle ? (
-                  <input
-                    autoFocus
-                    className="text-2xl font-bold bg-transparent outline-none w-full border-b border-nexus-accent"
-                    defaultValue={selectedNote.title}
-                    onBlur={(e) => handleTitleChange(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleTitleChange(e.currentTarget.value)}
-                  />
-                ) : (
-                  <h2 onClick={() => setEditingTitle(true)} className="text-2xl font-bold cursor-pointer">{selectedNote.title}</h2>
-                )}
-              </div>
-              <div className="flex-1 overflow-hidden relative">
-                <HybridEditor
-                  key={selectedNote.id}
-                  content={selectedNote.content}
-                  onChange={handleContentChange}
-                  onWikiLinkClick={handleLinkClick}
-                  onTagClick={handleTagClickInEditor}
-                  onSearchNotes={handleSearchNotesForAutocomplete}
-                  onSearchTags={handleSearchTagsForAutocomplete}
-                  placeholder="Start writing... (Cmd+E to preview)"
-                  editorMode={editorMode}
-                  onEditorModeChange={(mode) => {
-                    setEditorMode(mode)
-                    updatePreferences({ editorMode: mode })
-                  }}
-                  focusMode={false}
-                  wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
-                  sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
-                  streak={streakInfo.streak}
-                  sessionStartTime={sessionStartTime || undefined}
-                />
-              </div>
-            </div>
-          ) : (
-            <EmptyState
+        {/* Main content area - switches between Home and Editor */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Home tab content: Mission Control */}
+          {isHomeTabActive && (
+            <MissionControl
+              projects={projects}
+              notes={notes}
+              currentProjectId={currentProjectId}
+              onSelectProject={setCurrentProject}
+              onSelectNote={(noteId) => {
+                setEditorMode('source')
+                handleOpenNoteInTab(noteId)
+              }}
               onCreateNote={handleCreateNote}
-              onOpenDaily={handleDailyNote}
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+              onDailyNote={handleDailyNote}
+              onQuickCapture={() => setIsQuickCaptureOpen(true)}
+              onSettings={() => setIsSettingsOpen(true)}
+              onCreateProject={() => setIsCreateProjectModalOpen(true)}
+              onMarkInboxProcessed={(noteId) => {
+                // Move note out of inbox by changing folder
+                updateNote(noteId, { folder: 'notes' })
+              }}
+              onDeleteNote={(noteId) => {
+                // Soft delete the note
+                updateNote(noteId, { deleted_at: Date.now() })
+              }}
             />
           )}
-        </div>
 
-        {/* Right sidebar (properties/backlinks/tags) - only in compact/card mode */}
-        {sidebarMode !== 'icon' && selectedNote && (
-          <>
-            <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
-            <div
-              className="bg-nexus-bg-secondary flex flex-col"
-              style={{ width: `${rightSidebarWidth}px` }}
-            >
-              <div className="sidebar-tabs pt-10">
-                <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
-                <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
-                <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
-                <div className="flex-1" />
-                <PanelMenu sections={getRightMenuSections()} />
-              </div>
-              <div className="tab-content flex-1">
-                {rightActiveTab === 'properties' ? (
-                  <PropertiesPanel
-                    properties={selectedNote.properties || {}}
-                    onChange={(p) => updateNote(selectedNote.id, { properties: p })}
-                    noteTags={currentNoteTags}
-                    wordCount={wordCount}
-                    wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
-                    defaultWordGoal={preferences.defaultWordGoal}
-                    streak={streakInfo.streak}
-                    createdAt={selectedNote.created_at}
-                    updatedAt={selectedNote.updated_at}
-                  />
-                ) : rightActiveTab === 'backlinks' ? (
-                  <BacklinksPanel
-                    noteId={selectedNote.id}
-                    noteTitle={selectedNote.title}
-                    onSelectNote={(noteId) => {
-                      setEditorMode('reading')
-                      selectNote(noteId)
-                    }}
-                    refreshKey={backlinksRefreshKey}
-                  />
+          {/* Editor tab content */}
+          {!isHomeTabActive && (
+            <>
+              {/* Main editor area */}
+              <div className="flex-1 flex flex-col min-w-0">
+                <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
+
+                {selectedNote ? (
+                  <div className="flex-1 flex flex-col min-h-0">
+                    <div className="px-6 py-4 border-b border-white/5">
+                      {editingTitle ? (
+                        <input
+                          autoFocus
+                          className="text-2xl font-bold bg-transparent outline-none w-full border-b border-nexus-accent"
+                          defaultValue={selectedNote.title}
+                          onBlur={(e) => handleTitleChange(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleTitleChange(e.currentTarget.value)}
+                        />
+                      ) : (
+                        <h2 onClick={() => setEditingTitle(true)} className="text-2xl font-bold cursor-pointer">{selectedNote.title}</h2>
+                      )}
+                    </div>
+                    <div className="flex-1 overflow-hidden relative">
+                      <HybridEditor
+                        key={selectedNote.id}
+                        content={selectedNote.content}
+                        onChange={handleContentChange}
+                        onWikiLinkClick={handleLinkClick}
+                        onTagClick={handleTagClickInEditor}
+                        onSearchNotes={handleSearchNotesForAutocomplete}
+                        onSearchTags={handleSearchTagsForAutocomplete}
+                        placeholder="Start writing... (Cmd+E to preview)"
+                        editorMode={editorMode}
+                        onEditorModeChange={(mode) => {
+                          setEditorMode(mode)
+                          updatePreferences({ editorMode: mode })
+                        }}
+                        focusMode={false}
+                        wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
+                        sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
+                        streak={streakInfo.streak}
+                        sessionStartTime={sessionStartTime || undefined}
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <TagsPanel
-                    noteId={selectedNote.id}
-                    selectedTagIds={selectedTagIds}
-                    onTagClick={handleTagClick}
+                  <EmptyState
+                    onCreateNote={handleCreateNote}
+                    onOpenDaily={handleDailyNote}
+                    onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
                   />
                 )}
               </div>
-            </div>
-          </>
-        )}
+
+              {/* Right sidebar (properties/backlinks/tags) - only in compact/card mode with note selected */}
+              {sidebarMode !== 'icon' && selectedNote && (
+                <>
+                  <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
+                  <div
+                    className="bg-nexus-bg-secondary flex flex-col"
+                    style={{ width: `${rightSidebarWidth}px` }}
+                  >
+                    <div className="sidebar-tabs pt-10">
+                      <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
+                      <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
+                      <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
+                      <div className="flex-1" />
+                      <PanelMenu sections={getRightMenuSections()} />
+                    </div>
+                    <div className="tab-content flex-1">
+                      {rightActiveTab === 'properties' ? (
+                        <PropertiesPanel
+                          properties={selectedNote.properties || {}}
+                          onChange={(p) => updateNote(selectedNote.id, { properties: p })}
+                          noteTags={currentNoteTags}
+                          wordCount={wordCount}
+                          wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
+                          defaultWordGoal={preferences.defaultWordGoal}
+                          streak={streakInfo.streak}
+                          createdAt={selectedNote.created_at}
+                          updatedAt={selectedNote.updated_at}
+                        />
+                      ) : rightActiveTab === 'backlinks' ? (
+                        <BacklinksPanel
+                          noteId={selectedNote.id}
+                          noteTitle={selectedNote.title}
+                          onSelectNote={(noteId) => {
+                            setEditorMode('reading')
+                            handleOpenNoteInTab(noteId)
+                          }}
+                          refreshKey={backlinksRefreshKey}
+                        />
+                      ) : (
+                        <TagsPanel
+                          noteId={selectedNote.id}
+                          selectedTagIds={selectedTagIds}
+                          onTagClick={handleTagClick}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Command Palette */}
@@ -1045,7 +1169,7 @@ function App() {
         open={isCommandPaletteOpen}
         setOpen={setIsCommandPaletteOpen}
         notes={notes}
-        onSelectNote={(noteId) => selectNote(noteId)}
+        onSelectNote={handleOpenNoteInTab}
         onCreateNote={handleCreateNote}
         onDailyNote={handleDailyNote}
         onToggleFocus={() => handleFocusModeChange(!focusMode)}
@@ -1091,7 +1215,7 @@ function App() {
         isOpen={isGraphViewOpen}
         onClose={() => setIsGraphViewOpen(false)}
         notes={notes}
-        onSelectNote={selectNote}
+        onSelectNote={handleOpenNoteInTab}
         currentNoteId={selectedNoteId || undefined}
       />
 
@@ -1107,7 +1231,7 @@ function App() {
         onClose={() => setIsSearchPanelOpen(false)}
         onSelectNote={(noteId) => {
           setEditorMode('source')
-          selectNote(noteId)
+          handleOpenNoteInTab(noteId)
         }}
         currentProject={currentProjectId ? projects.find(p => p.id === currentProjectId) : null}
         projects={projects}

@@ -20,6 +20,15 @@ export interface UserPreferences {
   currentStreak: number          // Consecutive days writing streak
   totalWordsWritten: number      // Lifetime words written
 
+  // Daily goal tracking
+  dailyGoalOptIn: boolean        // Whether to show daily goal on Mission Control
+  dailyGoalTarget: number        // Today's word goal (can override default)
+  todayWordsWritten: number      // Words written today
+  todayDate: string | null       // Date for today's tracking (resets daily)
+
+  // Pinned notes
+  pinnedNoteIds: string[]        // Note IDs pinned to Mission Control
+
   // UI preferences
   showWordGoalProgress: boolean  // Show progress bar in editor
   celebrateMilestones: boolean   // Show milestone celebrations
@@ -37,6 +46,14 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   lastSessionDate: null,
   currentStreak: 0,
   totalWordsWritten: 0,
+  // Daily goal tracking
+  dailyGoalOptIn: false,     // OFF by default - opt-in feature
+  dailyGoalTarget: 500,      // Default matches defaultWordGoal
+  todayWordsWritten: 0,
+  todayDate: null,
+  // Pinned notes
+  pinnedNoteIds: [],         // No pinned notes by default
+  // UI preferences
   showWordGoalProgress: true,
   celebrateMilestones: true,
   streakDisplayOptIn: false, // OFF by default - avoids ADHD anxiety
@@ -146,4 +163,143 @@ export function resetStreak(): UserPreferences {
     currentStreak: 0,
     lastSessionDate: null
   })
+}
+
+/**
+ * Daily Goal Tracking
+ */
+
+export interface DailyGoalInfo {
+  isEnabled: boolean
+  target: number
+  written: number
+  progress: number  // 0-100
+  isComplete: boolean
+  remaining: number
+}
+
+/**
+ * Get today's writing goal information
+ * Automatically resets if it's a new day
+ */
+export function getDailyGoalInfo(): DailyGoalInfo {
+  const prefs = loadPreferences()
+  const today = getToday()
+
+  // Reset if new day
+  if (prefs.todayDate !== today) {
+    updatePreferences({
+      todayDate: today,
+      todayWordsWritten: 0
+    })
+    return {
+      isEnabled: prefs.dailyGoalOptIn,
+      target: prefs.dailyGoalTarget,
+      written: 0,
+      progress: 0,
+      isComplete: false,
+      remaining: prefs.dailyGoalTarget
+    }
+  }
+
+  const progress = Math.min(100, Math.round((prefs.todayWordsWritten / prefs.dailyGoalTarget) * 100))
+
+  return {
+    isEnabled: prefs.dailyGoalOptIn,
+    target: prefs.dailyGoalTarget,
+    written: prefs.todayWordsWritten,
+    progress,
+    isComplete: prefs.todayWordsWritten >= prefs.dailyGoalTarget,
+    remaining: Math.max(0, prefs.dailyGoalTarget - prefs.todayWordsWritten)
+  }
+}
+
+/**
+ * Update today's word count
+ */
+export function updateDailyProgress(wordsWritten: number): DailyGoalInfo {
+  const prefs = loadPreferences()
+  const today = getToday()
+
+  // Ensure we're tracking today
+  if (prefs.todayDate !== today) {
+    updatePreferences({
+      todayDate: today,
+      todayWordsWritten: wordsWritten
+    })
+  } else {
+    updatePreferences({
+      todayWordsWritten: prefs.todayWordsWritten + wordsWritten
+    })
+  }
+
+  return getDailyGoalInfo()
+}
+
+/**
+ * Set daily goal target
+ */
+export function setDailyGoalTarget(target: number): void {
+  updatePreferences({ dailyGoalTarget: target })
+}
+
+/**
+ * Toggle daily goal opt-in
+ */
+export function toggleDailyGoalOptIn(enabled: boolean): void {
+  updatePreferences({ dailyGoalOptIn: enabled })
+}
+
+/**
+ * Pinned Notes Management
+ */
+
+const MAX_PINNED_NOTES = 5
+
+/**
+ * Get list of pinned note IDs
+ */
+export function getPinnedNoteIds(): string[] {
+  const prefs = loadPreferences()
+  return prefs.pinnedNoteIds || []
+}
+
+/**
+ * Check if a note is pinned
+ */
+export function isNotePinned(noteId: string): boolean {
+  return getPinnedNoteIds().includes(noteId)
+}
+
+/**
+ * Pin a note (add to pinned list)
+ * Returns false if already at max or already pinned
+ */
+export function pinNote(noteId: string): boolean {
+  const pinned = getPinnedNoteIds()
+  if (pinned.includes(noteId)) return false
+  if (pinned.length >= MAX_PINNED_NOTES) return false
+
+  updatePreferences({ pinnedNoteIds: [...pinned, noteId] })
+  return true
+}
+
+/**
+ * Unpin a note (remove from pinned list)
+ */
+export function unpinNote(noteId: string): void {
+  const pinned = getPinnedNoteIds()
+  updatePreferences({ pinnedNoteIds: pinned.filter(id => id !== noteId) })
+}
+
+/**
+ * Toggle pin state
+ */
+export function togglePinNote(noteId: string): boolean {
+  if (isNotePinned(noteId)) {
+    unpinNote(noteId)
+    return false
+  } else {
+    return pinNote(noteId)
+  }
 }

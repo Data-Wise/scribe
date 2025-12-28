@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git worktree:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git -C /Users/dt/.claude-worktrees/scribe/wonderful-wilson log --oneline -20)",
+      "Bash(git -C /Users/dt/.claude-worktrees/scribe/wonderful-wilson log --oneline cdeb46c^..cdeb46c)",
+      "Bash(git -C /Users/dt/.claude-worktrees/scribe/wonderful-wilson show cdeb46c --stat)",
+      "Bash(git -C /Users/dt/.claude-worktrees/scribe/wonderful-wilson show 34fa910 --stat)",
+      "Bash(git -C /Users/dt/.claude-worktrees/scribe/wonderful-wilson log --oneline -5 --decorate)",
+      "Bash(./node_modules/.bin/tsc:*)",
+      "Bash(npm test:*)"
+    ]
+  }
+}
