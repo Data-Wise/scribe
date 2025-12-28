@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { FolderKanban, Trash2, ArrowRightFromLine, Check } from 'lucide-react'
+import { FolderKanban, Trash2, ArrowRightFromLine, Check, AlertTriangle } from 'lucide-react'
 import { Project } from '../../types'
 
 /**
@@ -39,6 +39,7 @@ export function NoteContextMenu({
   const menuRef = useRef<HTMLDivElement>(null)
   const [showProjectSubmenu, setShowProjectSubmenu] = useState(false)
   const [submenuPosition, setSubmenuPosition] = useState<'right' | 'left'>('right')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // Close menu on outside click
   useEffect(() => {
@@ -180,17 +181,41 @@ export function NoteContextMenu({
       <div className="context-menu-divider" />
 
       {/* Delete */}
-      {onDelete && (
+      {onDelete && !showDeleteConfirm && (
         <button
           className="context-menu-item danger"
-          onClick={() => {
-            onDelete(noteId)
-            onClose()
-          }}
+          onClick={() => setShowDeleteConfirm(true)}
         >
           <Trash2 size={14} />
           <span>Delete</span>
         </button>
+      )}
+
+      {/* Delete confirmation */}
+      {onDelete && showDeleteConfirm && (
+        <div className="delete-confirm-group">
+          <div className="delete-confirm-message">
+            <AlertTriangle size={14} />
+            <span>Move to trash?</span>
+          </div>
+          <div className="delete-confirm-actions">
+            <button
+              className="confirm-btn cancel"
+              onClick={() => setShowDeleteConfirm(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="confirm-btn delete"
+              onClick={() => {
+                onDelete(noteId)
+                onClose()
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )

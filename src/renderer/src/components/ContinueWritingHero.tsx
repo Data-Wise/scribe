@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Note, Project } from '../types'
 import { ArrowRight, FileText, Clock } from 'lucide-react'
 
@@ -12,11 +13,11 @@ interface ContinueWritingHeroProps {
  * ADHD Principle: Zero friction to resume writing (< 3 seconds)
  */
 export function ContinueWritingHero({ note, project, onContinue }: ContinueWritingHeroProps) {
+  // Memoize word count to avoid recalculating on every render
+  const wordCount = useMemo(() => note ? countWords(note.content) : 0, [note?.content])
+
   // Filter out null or deleted notes
   if (!note || note.deleted_at) return null
-
-  // Count words in content
-  const wordCount = countWords(note.content)
 
   // Format time since last edit
   const timeAgo = formatTimeAgo(note.updated_at)
@@ -48,6 +49,7 @@ export function ContinueWritingHero({ note, project, onContinue }: ContinueWriti
             <FileText
               className="w-6 h-6 transition-colors"
               style={{ color: accentColor }}
+              aria-hidden="true"
             />
           </div>
 
@@ -91,7 +93,7 @@ export function ContinueWritingHero({ note, project, onContinue }: ContinueWriti
 
               {/* Time ago */}
               <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" />
+                <Clock className="w-3.5 h-3.5" aria-hidden="true" />
                 {timeAgo}
               </span>
             </div>
@@ -106,6 +108,7 @@ export function ContinueWritingHero({ note, project, onContinue }: ContinueWriti
           <ArrowRight
             className="w-5 h-5 transition-colors"
             style={{ color: accentColor }}
+            aria-hidden="true"
           />
         </div>
       </div>
