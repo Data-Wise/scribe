@@ -7,6 +7,144 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] - 2025-12-28
+
+### Data Safety & UX Polish (Sprint 26)
+
+**ADHD-friendly data protection with undo capabilities and trash management.**
+
+### Added
+
+**Trash System:**
+- Soft delete pattern: notes move to trash instead of permanent delete
+- TrashPanel component in sidebar with restore/delete actions
+- Trash tab with badge showing item count
+- `⌥5` keyboard shortcut to access Trash (matches ⌥1-4 pattern)
+- Empty Trash button with double-click confirmation (3s auto-cancel)
+
+**Undo Toast Notifications:**
+- Toast notification system with visual progress bar
+- 5-second undo window when notes are deleted
+- Pause timer on hover (ADHD-friendly)
+- Multiple toast types: info, success, warning, error, undo
+- Slide-in animation (respects prefers-reduced-motion)
+
+**Auto-Cleanup:**
+- Automatic cleanup of notes in trash > 30 days
+- Runs on app startup (2s delay for notes to load)
+- Shows info toast with count of cleaned up notes
+
+**New Components:**
+- `TrashPanel.tsx` - Trash management UI
+- `Toast.tsx` - Toast notification container
+- `useToastStore.ts` - Global toast state management
+
+### Technical
+
+- `softDeleteNote`, `restoreNote`, `permanentlyDeleteNote` actions in notes store
+- `emptyTrash` and `cleanupOldTrash` batch operations
+- `deleted_at` timestamp field for soft delete tracking
+
+---
+
+## [1.6.0] - 2025-12-28
+
+### Quick Capture & Mission Control Enhancements (Sprint 25)
+
+**Tab system, writing goals, and enhanced Mission Control.**
+
+### Added
+
+**Tab System:**
+- Pinned Home tab (Mission Control always accessible)
+- Editor tabs for notes (unlimited, closable)
+- Tab persistence (localStorage)
+- Keyboard shortcuts: ⌘1=Home, ⌘2-9=tabs, ⌘W=close, ⌘⇧T=reopen
+- Tab bar with drag region for window
+
+**Continue Writing Hero:**
+- Zero-friction resume writing component
+- Project color accent styling
+- Word count & time ago display
+- Keyboard hint (Enter to continue)
+
+**Time-based Greeting:**
+- Morning/afternoon/evening/night greetings
+- Contextual subtitles
+- Auto-updates every minute
+
+**Writing Goal (Opt-in):**
+- Daily word count tracker
+- Progress bar with visual feedback
+- Goal editing (inline number input)
+- Celebration state when goal reached
+
+**Quick Capture Inbox:**
+- GTD-style inbox for captured notes
+- Process / Mark Processed / Delete actions
+- Hides when inbox is empty
+
+**Recent Notes Enhancements:**
+- Right-click context menu
+- Drag-and-drop for project assignment
+
+**Data Safety:**
+- Close confirmation dialog for dirty tabs
+- Delete confirmation dialog before moving to trash
+
+---
+
+## [1.5.0] - 2025-12-27
+
+### Three-State Collapsible Sidebar (Sprint 24)
+
+**Flexible sidebar with three view modes.**
+
+### Added
+
+- Icon mode (48px) - status dots only
+- Compact mode (240px) - project list with stats
+- Card mode (320px+) - full project cards
+- `⌘0` keyboard shortcut to cycle modes
+- Resize handle with snap points
+- Project switching with toggle behavior
+- Active project indicator (all modes)
+- Progress bars in sidebar
+- Rich tooltips on icon hover
+- Recent Notes filtered by selected project
+
+---
+
+## [1.4.0] - 2025-12-27
+
+### Mission Control & Native Menu (Sprint 23)
+
+### Added
+
+- New Project button in QuickActions (⌘⇧P)
+- Improved empty state with Create Project CTA
+- Native macOS menu bar (File/Edit/View/Window/Help)
+- Menu events wired to frontend actions
+- RecentNotes component (5 most recent)
+- Project stats (note count, word count)
+- Total stats in Mission Control header
+- Mission Control button in Ribbon
+
+---
+
+## [1.3.0] - 2025-12-27
+
+### Editor Modes & Custom CSS (Sprint 22)
+
+### Added
+
+- Three-mode editor toggle: Source / Live Preview / Reading
+- Keyboard shortcuts: ⌘1, ⌘2, ⌘3, ⌘E (cycle)
+- Custom CSS support in Settings > Appearance
+- Escape exits Reading mode
+
+---
+
 ## [1.2.0] - 2025-12-27
 
 ### Mission Control - Dashboard-First Experience

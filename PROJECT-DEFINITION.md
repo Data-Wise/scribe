@@ -1,6 +1,6 @@
 # Scribe Project Definition
 
-> **Version:** 1.3.0 | **Updated:** 2024-12-25 | **Status:** Active Development (70% Complete)
+> **Version:** 1.7.0 | **Updated:** 2025-12-28 | **Status:** Active Development (Sprint 26 Complete)
 
 ---
 
@@ -394,42 +394,37 @@ quarto render input.qmd
 
 ## 🛤️ Sprint Roadmap
 
-### Phase 1: Editor (Weeks 1-2) ✅ COMPLETE
+### ✅ Completed Sprints (v1.0 - v1.7)
 
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 8 | Editor Foundation | 4h | ✅ Complete |
-| 9 | Editor Enhancement | 4h | ✅ Complete |
-| 10 | Hotkey + Commands | 6h | ✅ Complete |
+| Sprint | Version | Focus | Status |
+|--------|---------|-------|--------|
+| 8-10 | v1.0 | Editor Foundation, Enhancement, Commands | ✅ |
+| 10.5-11 | v1.0 | Theme System, Academic Features | ✅ |
+| 14-16 | v1.0 | Knowledge Graph, Tags Panel | ✅ |
+| 17-20 | v1.1 | ADHD Enhancements, Projects, Search, CLI | ✅ |
+| 22-23 | v1.3-1.4 | Editor Modes, Mission Control, Native Menu | ✅ |
+| 24 | v1.5 | Three-State Collapsible Sidebar | ✅ |
+| 25 | v1.6 | Tab System, Quick Capture, Writing Goals | ✅ |
+| 26 | v1.7 | Data Safety & UX Polish (Trash, Undo, Auto-cleanup) | ✅ |
 
-### Phase 2: Integration (Weeks 3-4) ← CURRENT
+### 🚧 Sprint 27: PWA/Browser Support (Next)
 
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 11 | Academic Features | 8h | 🔄 Next |
-| 12 | Obsidian Sync | 8h | Pending |
+| Feature | Priority | Status |
+|---------|----------|--------|
+| IStorage interface (IndexedDB) | P1 | Planned |
+| PWA manifest | P2 | Planned |
+| Service worker | P2 | Planned |
+| Offline sync queue | P3 | Planned |
 
-### Phase 3: Export (Week 5)
+### 📋 Future Sprints
 
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 13 | LaTeX/PDF/Word | 6h | Pending |
-| 14 | Quarto | 6h | Pending |
+| Sprint | Focus | Features |
+|--------|-------|----------|
+| 28 | Cloud Sync | Optional cloud backup, sync across devices |
+| 29 | Mobile PWA | Responsive design, touch-friendly UI |
+| 30 | Collaboration | Real-time co-editing (stretch goal) |
 
-### Phase 4: Projects (Weeks 6-7)
-
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 15 | Project System | 8h | Pending |
-| 16 | Templates + Daily | 4h | Pending |
-
-### Phase 5: Polish (Week 8)
-
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 17 | Search + Goals | 4h | Pending |
-
-**Progress: 42h / 60h (70%) — 300 tests passing**
+**Progress: 677 tests passing — 26 sprints complete**
 
 ---
 
@@ -545,29 +540,34 @@ Only after v1.0 is stable:
 
 | Date | Version | Changes |
 |------|---------|---------|
-| 2024-12-25 | 1.3.0 | Sprint 10 complete, 300 tests, 70% progress |
-| 2024-12-24 | 1.2.0 | Added project system, daily notes, backlinks |
-| 2024-12-24 | 1.1.0 | Added academic features |
-| 2024-12-24 | 1.0.0 | Initial definition |
+| 2025-12-28 | 1.7.0 | Sprint 26: Data Safety (Trash, Undo Toast, Auto-cleanup) |
+| 2025-12-28 | 1.6.0 | Sprint 25: Tab System, Quick Capture, Writing Goals |
+| 2025-12-27 | 1.5.0 | Sprint 24: Three-State Collapsible Sidebar |
+| 2025-12-27 | 1.4.0 | Sprint 23: Mission Control, Native Menu |
+| 2025-12-27 | 1.3.0 | Sprint 22: Editor Modes, Custom CSS |
+| 2025-12-27 | 1.2.0 | Mission Control dashboard |
+| 2025-12-27 | 1.1.0 | Projects, Note Search, CLI |
+| 2024-12-25 | 1.0.0 | Initial release, 300 tests |
 
 ---
 
- ## 🎯 Summary
+## 🎯 Summary
 
- ```
- Scribe v1.0 =
-   HybridEditor (markdown + preview)
-   + Focus Mode
-   + Projects (Research, Teaching, R-Package, R-Dev, Generic)
-   + Daily Notes
-   + Wiki Links + Tags + Backlinks
-   + Zotero + LaTeX + Quarto
-   + Claude/Gemini CLI
-   + Obsidian Sync
+```
+Scribe v1.7 =
+  HybridEditor (markdown + preview)
+  + Mission Control Dashboard
+  + Tab System (multi-note editing)
+  + Three-State Sidebar
+  + Focus Mode + Writing Goals
+  + Projects (Research, Teaching, R-Package, R-Dev, Generic)
+  + Daily Notes + Quick Capture
+  + Wiki Links + Tags + Backlinks
+  + Trash System + Undo Toast
+  + Zotero + LaTeX + Quarto
+  + Claude/Gemini CLI
+  + Obsidian Sync
 
- Terminal = v2 (deferred)
- Graph View = Never (use Obsidian)
- BlockNote = Optional (deferred if HybridEditor works well)
-
- 64 hours. 10 sprints. ADHD-first.
- ```
+Next: PWA/Browser Support (Sprint 27)
+677 tests. 26 sprints. ADHD-first.
+```
