@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, Clock, FileText, MoreHorizontal } from 'lucide-react'
+import { Menu, Plus, Search, Clock, FileText, MoreHorizontal, GripVertical } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { DragRegion } from '../DragRegion'
@@ -7,6 +7,7 @@ import { PillTabs, LEFT_SIDEBAR_TABS } from './SidebarTabs'
 import { NotesListPanel } from './NotesListPanel'
 import { InboxPanel } from './InboxPanel'
 import { GraphPanel } from './GraphPanel'
+import { useDraggableNote, useDropTarget } from './DraggableNote'
 import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
 
 interface CardViewModeProps {
@@ -163,6 +164,7 @@ export function CardViewMode({
                   noteCount={stats?.noteCount || 0}
                   wordCount={stats?.wordCount || 0}
                   onClick={() => onSelectProject(isActive ? null : project.id)}
+                  onDropNote={onAssignNoteToProject ? (noteId) => onAssignNoteToProject(noteId, project.id) : undefined}
                 />
               )
             })}
@@ -189,17 +191,17 @@ export function CardViewMode({
                 <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
               </h4>
               <div className="recent-notes-list">
-                {recentNotes.map(note => (
-                  <button
-                    key={note.id}
-                    className="recent-note-item"
-                    onClick={() => onSelectNote(note.id)}
-                  >
-                    <FileText size={12} className="note-icon" />
-                    <span className="note-title">{note.title || 'Untitled'}</span>
-                    <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-                  </button>
-                ))}
+                {recentNotes.map(note => {
+                  const noteProjectId = note.properties?.project_id?.value as string | undefined
+                  return (
+                    <DraggableRecentNoteItem
+                      key={note.id}
+                      note={note}
+                      currentProjectId={noteProjectId}
+                      onClick={() => onSelectNote(note.id)}
+                    />
+                  )
+                })}
               </div>
             </div>
           )}
@@ -257,19 +259,33 @@ interface ProjectCardProps {
   noteCount: number
   wordCount: number
   onClick: () => void
+  onDropNote?: (noteId: string) => void
 }
 
-function ProjectCard({ project, isActive, noteCount, wordCount, onClick }: ProjectCardProps) {
+function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onDropNote }: ProjectCardProps) {
   const status = project.status || 'active'
   const progress = project.progress || 0
   const color = project.color || '#3b82f6'
 
+  // Drop target hook
+  const { isOver, canAccept, dropProps } = useDropTarget(
+    (noteId) => onDropNote?.(noteId),
+    (data) => data.currentProjectId !== project.id // Can't drop on same project
+  )
+
+  const dropClass = isOver
+    ? canAccept
+      ? 'drop-target-active'
+      : 'drop-target-reject'
+    : ''
+
   return (
     <button
-      className={`project-card ${isActive ? 'active' : ''}`}
+      className={`project-card ${isActive ? 'active' : ''} ${dropClass}`}
       onClick={onClick}
       data-status={status}
       style={{ '--project-color': color } as React.CSSProperties}
+      {...(onDropNote ? dropProps : {})}
     >
       {/* Card header */}
       <div className="card-header">
@@ -374,4 +390,28 @@ function formatProjectType(type: string): string {
     'generic': 'General'
   }
   return labels[type] || type
+}
+
+// Draggable recent note item
+interface DraggableRecentNoteItemProps {
+  note: Note
+  currentProjectId?: string
+  onClick: () => void
+}
+
+function DraggableRecentNoteItem({ note, currentProjectId, onClick }: DraggableRecentNoteItemProps) {
+  const { isDragging, dragProps } = useDraggableNote(note, currentProjectId)
+
+  return (
+    <button
+      className={`recent-note-item ${isDragging ? 'dragging' : ''}`}
+      onClick={onClick}
+      {...dragProps}
+    >
+      <GripVertical size={10} className="drag-handle" />
+      <FileText size={12} className="note-icon" />
+      <span className="note-title">{note.title || 'Untitled'}</span>
+      <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
+    </button>
+  )
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, Clock, FileText, ChevronRight } from 'lucide-react'
+import { Menu, Plus, Search, Clock, FileText, ChevronRight, GripVertical } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { DragRegion } from '../DragRegion'
@@ -7,7 +7,7 @@ import { PillTabs, LEFT_SIDEBAR_TABS } from './SidebarTabs'
 import { NotesListPanel } from './NotesListPanel'
 import { InboxPanel } from './InboxPanel'
 import { GraphPanel } from './GraphPanel'
-import { useDropTarget } from './DraggableNote'
+import { useDropTarget, useDraggableNote } from './DraggableNote'
 import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
 
 interface CompactListModeProps {
@@ -182,17 +182,17 @@ export function CompactListMode({
                 <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
               </h4>
               <div className="recent-notes-list">
-                {recentNotes.map(note => (
-                  <button
-                    key={note.id}
-                    className="recent-note-item"
-                    onClick={() => onSelectNote(note.id)}
-                  >
-                    <FileText size={12} className="note-icon" />
-                    <span className="note-title">{note.title || 'Untitled'}</span>
-                    <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-                  </button>
-                ))}
+                {recentNotes.map(note => {
+                  const noteProjectId = note.properties?.project_id?.value as string | undefined
+                  return (
+                    <DraggableRecentNoteItem
+                      key={note.id}
+                      note={note}
+                      currentProjectId={noteProjectId}
+                      onClick={() => onSelectNote(note.id)}
+                    />
+                  )
+                })}
               </div>
             </div>
           )}
@@ -325,4 +325,28 @@ function formatTimeAgo(timestamp: number): string {
   if (hours < 24) return `${hours}h`
   if (days < 7) return `${days}d`
   return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+// Draggable recent note item
+interface DraggableRecentNoteItemProps {
+  note: Note
+  currentProjectId?: string
+  onClick: () => void
+}
+
+function DraggableRecentNoteItem({ note, currentProjectId, onClick }: DraggableRecentNoteItemProps) {
+  const { isDragging, dragProps } = useDraggableNote(note, currentProjectId)
+
+  return (
+    <button
+      className={`recent-note-item ${isDragging ? 'dragging' : ''}`}
+      onClick={onClick}
+      {...dragProps}
+    >
+      <GripVertical size={10} className="drag-handle" />
+      <FileText size={12} className="note-icon" />
+      <span className="note-title">{note.title || 'Untitled'}</span>
+      <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
+    </button>
+  )
 }
