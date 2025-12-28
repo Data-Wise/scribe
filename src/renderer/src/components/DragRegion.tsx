@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { getCurrentWindow } from '@tauri-apps/api/window'
+import { isTauri } from '../lib/platform'
 
 interface DragRegionProps {
   children?: React.ReactNode
@@ -12,9 +12,14 @@ interface DragRegionProps {
  *
  * Uses Tauri 2's window.startDragging() API which is more reliable
  * than CSS-based dragging (-webkit-app-region: drag) for Overlay title bars.
+ *
+ * In browser mode, this is a no-op (just renders children).
  */
 export function DragRegion({ children, className = '', style }: DragRegionProps) {
   const handleMouseDown = useCallback(async (e: React.MouseEvent) => {
+    // Skip in browser mode - no window dragging available
+    if (!isTauri()) return
+
     // Only start dragging on left mouse button
     if (e.button !== 0) return
 
@@ -34,6 +39,8 @@ export function DragRegion({ children, className = '', style }: DragRegionProps)
     }
 
     try {
+      // Dynamic import to avoid errors in browser mode
+      const { getCurrentWindow } = await import('@tauri-apps/api/window')
       await getCurrentWindow().startDragging()
     } catch (err) {
       console.error('Failed to start window drag:', err)
@@ -43,7 +50,7 @@ export function DragRegion({ children, className = '', style }: DragRegionProps)
   return (
     <div
       className={`drag-region ${className}`}
-      style={{ cursor: 'grab', ...style }}
+      style={{ cursor: isTauri() ? 'grab' : 'default', ...style }}
       onMouseDown={handleMouseDown}
     >
       {children}
@@ -56,6 +63,9 @@ export function DragRegion({ children, className = '', style }: DragRegionProps)
  */
 export function useDragRegion() {
   const handleMouseDown = useCallback(async (e: React.MouseEvent) => {
+    // Skip in browser mode
+    if (!isTauri()) return
+
     if (e.button !== 0) return
 
     const target = e.target as HTMLElement
@@ -73,6 +83,7 @@ export function useDragRegion() {
     }
 
     try {
+      const { getCurrentWindow } = await import('@tauri-apps/api/window')
       await getCurrentWindow().startDragging()
     } catch (err) {
       console.error('Failed to start window drag:', err)

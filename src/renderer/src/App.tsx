@@ -21,9 +21,9 @@ import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
 import { Zap } from 'lucide-react'
 import { api } from './lib/api'
+import { isTauri } from './lib/platform'
+import { dialogs } from './lib/browser-dialogs'
 import { CommandPalette } from './components/CommandPalette'
-import { open as openDialog, ask, message } from '@tauri-apps/plugin-dialog'
-import { listen } from '@tauri-apps/api/event'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
 import { SearchPanel } from './components/SearchPanel'
@@ -474,7 +474,7 @@ function App() {
 
   const handleObsidianSync = async () => {
     try {
-      const selected = await openDialog({
+      const selected = await dialogs.open({
         directory: true,
         multiple: false,
         title: 'Select Obsidian Vault Folder'
@@ -482,7 +482,7 @@ function App() {
 
       if (selected && typeof selected === 'string') {
         const result = await api.exportToObsidian(selected)
-        await message(result, { title: 'Sync Complete', kind: 'info' })
+        await dialogs.message(result, { title: 'Sync Complete', kind: 'info' })
       }
     } catch (error) {
       console.error('Failed to sync with Obsidian:', error)
@@ -496,7 +496,7 @@ function App() {
     
     try {
       const response = await api.runClaude(`Please refactor and improve this note: \n\n${note.content}`)
-      await message(response, { title: 'Claude Response', kind: 'info' })
+      await dialogs.message(response, { title: 'Claude Response', kind: 'info' })
     } catch (error) {
       console.error('Claude error:', error)
     }
@@ -509,7 +509,7 @@ function App() {
 
     try {
       const response = await api.runGemini(`Brainstorm ideas based on this note: \n\n${note.content}`)
-      await message(response, { title: 'Gemini Response', kind: 'info' })
+      await dialogs.message(response, { title: 'Gemini Response', kind: 'info' })
     } catch (error) {
       console.error('Gemini error:', error)
     }
@@ -612,73 +612,84 @@ function App() {
     }
   }, [selectedNoteId, setLastActiveNote, updateSessionTimestamp])
 
-  // Handle native menu events from Tauri
+  // Handle native menu events from Tauri (skip in browser mode)
   useEffect(() => {
-    const unlisten = listen<string>('menu-event', (event) => {
-      const menuId = event.payload
+    if (!isTauri()) return // No native menu in browser mode
 
-      switch (menuId) {
-        // File menu
-        case 'new_note':
-          handleCreateNote()
-          break
-        case 'new_project':
-          setIsCreateProjectModalOpen(true)
-          break
-        case 'daily_note':
-          handleDailyNote()
-          break
-        case 'quick_capture':
-          setIsQuickCaptureOpen(true)
-          break
-        case 'search':
-          setIsSearchPanelOpen(true)
-          break
-        case 'export':
-          setIsExportDialogOpen(true)
-          break
+    let unlisten: (() => void) | null = null
 
-        // View menu
-        case 'mission_control':
-          cycleSidebarMode()
-          break
-        case 'focus_mode':
-          handleFocusModeChange(!focusMode)
-          break
-        case 'source_mode':
-          setEditorMode('source')
-          updatePreferences({ editorMode: 'source' })
-          break
-        case 'live_preview':
-          setEditorMode('live-preview')
-          updatePreferences({ editorMode: 'live-preview' })
-          break
-        case 'reading_mode':
-          setEditorMode('reading')
-          updatePreferences({ editorMode: 'reading' })
-          break
-        case 'toggle_sidebar':
-          cycleSidebarMode()
-          break
-        case 'knowledge_graph':
-          setIsGraphViewOpen(true)
-          break
+    // Dynamic import to avoid errors in browser mode
+    import('@tauri-apps/api/event').then(({ listen }) => {
+      listen<string>('menu-event', (event) => {
+        const menuId = event.payload
 
-        // Scribe menu
-        case 'preferences':
-          setIsSettingsOpen(true)
-          break
-        case 'shortcuts':
-          setIsKeyboardShortcutsOpen(true)
-          break
-        case 'about':
-          // TODO: Show about dialog
-          break
-      }
+        switch (menuId) {
+          // File menu
+          case 'new_note':
+            handleCreateNote()
+            break
+          case 'new_project':
+            setIsCreateProjectModalOpen(true)
+            break
+          case 'daily_note':
+            handleDailyNote()
+            break
+          case 'quick_capture':
+            setIsQuickCaptureOpen(true)
+            break
+          case 'search':
+            setIsSearchPanelOpen(true)
+            break
+          case 'export':
+            setIsExportDialogOpen(true)
+            break
+
+          // View menu
+          case 'mission_control':
+            cycleSidebarMode()
+            break
+          case 'focus_mode':
+            handleFocusModeChange(!focusMode)
+            break
+          case 'source_mode':
+            setEditorMode('source')
+            updatePreferences({ editorMode: 'source' })
+            break
+          case 'live_preview':
+            setEditorMode('live-preview')
+            updatePreferences({ editorMode: 'live-preview' })
+            break
+          case 'reading_mode':
+            setEditorMode('reading')
+            updatePreferences({ editorMode: 'reading' })
+            break
+          case 'toggle_sidebar':
+            cycleSidebarMode()
+            break
+          case 'knowledge_graph':
+            setIsGraphViewOpen(true)
+            break
+
+          // Scribe menu
+          case 'preferences':
+            setIsSettingsOpen(true)
+            break
+          case 'shortcuts':
+            setIsKeyboardShortcutsOpen(true)
+            break
+          case 'about':
+            // TODO: Show about dialog
+            break
+        }
+      }).then(fn => {
+        unlisten = fn
+      })
+    }).catch(err => {
+      console.warn('Tauri event API not available:', err)
     })
 
     return () => {
-      unlisten.then(fn => fn())
+      if (unlisten) unlisten()
     }
   }, [
     handleCreateNote,
@@ -963,7 +974,7 @@ function App() {
         // Context menu handlers
         onEditProject={async (projectId) => {
           // For now, show a message. TODO: implement edit project modal
-          await message(`Edit project: ${projectId}`, { title: 'Edit Project' })
+          await dialogs.message(`Edit project: ${projectId}`, { title: 'Edit Project' })
         }}
         onArchiveProject={async (projectId) => {
           const project = projects.find(p => p.id === projectId)
@@ -975,17 +986,10 @@ function App() {
         onDeleteProject={async (projectId) => {
           const project = projects.find(p => p.id === projectId)
           if (!project) return
-          // Try Tauri dialog, fallback to browser confirm for dev/testing
-          let confirmed = false
-          try {
-            confirmed = await ask(
-              `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
-              { title: 'Delete Project', kind: 'warning' }
-            )
-          } catch {
-            // Fallback for browser testing (Tauri API not available)
-            confirmed = window.confirm(`Are you sure you want to delete "${project.name}"? This cannot be undone.`)
-          }
+          const confirmed = await dialogs.ask(
+            `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
+            { title: 'Delete Project' }
+          )
           if (confirmed) {
             await api.deleteProject(projectId)
             if (currentProjectId === projectId) {
@@ -1023,17 +1027,10 @@ function App() {
         onDeleteNote={async (noteId) => {
           const note = notes.find(n => n.id === noteId)
           if (!note) return
-          // Try Tauri dialog, fallback to browser confirm for dev/testing
-          let confirmed = false
-          try {
-            confirmed = await ask(
-              `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
-              { title: 'Delete Note', kind: 'warning' }
-            )
-          } catch {
-            // Fallback for browser testing (Tauri API not available)
-            confirmed = window.confirm(`Are you sure you want to delete "${note.title || 'Untitled'}"?`)
-          }
+          const confirmed = await dialogs.ask(
+            `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
+            { title: 'Delete Note' }
+          )
           if (confirmed) {
             await api.deleteNote(noteId)
             if (selectedNoteId === noteId) {
