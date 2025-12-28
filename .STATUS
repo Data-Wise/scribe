@@ -1,7 +1,7 @@
 ---
 status: active
 priority: P1
-progress: 75
+progress: 100
 version: 1.7.0
 sprint: 26
 updated: 2025-12-28
@@ -33,9 +33,10 @@ tags:
 - [x] ⌥5 keyboard shortcut for Trash tab (matches ⌥1-4 pattern)
 - [x] Empty Trash button with double-click confirmation
 - [x] Undo toast for delete actions (5s window with progress bar)
+- [x] Auto-cleanup: notes in trash > 30 days (runs on startup)
 
 #### Planned
-- [ ] Auto-cleanup: notes in trash > 30 days
+(Sprint 26 complete!)
 
 #### Future Considerations
 - [ ] IStorage implementation for browser (IndexedDB)
@@ -240,9 +241,9 @@ tags:
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
 | v1.6 | 25 | Quick Capture & Mission Control | ✅ 100% |
-| **v1.7** | 26 | Data Safety & UX Polish | 🚧 0% |
+| **v1.7** | 26 | Data Safety & UX Polish | ✅ 100% |
 
-**Total: v1.6 complete, Sprint 26 in progress**
+**Total: v1.7 complete (Sprint 26 done)**
 
 ---
 
@@ -270,6 +271,7 @@ tags:
 | 23 | Mission Control + Native Menu | 483 |
 | 24 | Three-State Collapsible Sidebar | 518 |
 | 25 | Quick Capture & Mission Control | 677 |
+| 26 | Data Safety & UX Polish | 677 |
 
 ---
 

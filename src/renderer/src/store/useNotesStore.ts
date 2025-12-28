@@ -26,6 +26,7 @@ interface NotesState {
   restoreNote: (id: string) => Promise<void>
   permanentlyDeleteNote: (id: string) => Promise<void>
   emptyTrash: () => Promise<void>
+  cleanupOldTrash: (maxAgeDays?: number) => Promise<number>
 
   // Delete confirmation actions
   requestDeleteNote: (id: string) => void
@@ -176,6 +177,47 @@ export const useNotesStore = create<NotesState>((set, get) => ({
       }))
     } catch (error) {
       set({ error: (error as Error).message })
+    }
+  },
+
+  cleanupOldTrash: async (maxAgeDays = 30) => {
+    const { notes } = get()
+    const now = Date.now()
+    const maxAgeMs = maxAgeDays * 24 * 60 * 60 * 1000
+
+    // Find notes in trash older than maxAgeDays
+    const oldTrashedNotes = notes.filter(n => {
+      if (!n.deleted_at) return false
+      const age = now - n.deleted_at
+      return age > maxAgeMs
+    })
+
+    if (oldTrashedNotes.length === 0) return 0
+
+    try {
+      // Permanently delete old trashed notes
+      await Promise.all(oldTrashedNotes.map(note => api.deleteNote(note.id)))
+
+      // Remove from local state
+      const deletedIds = new Set(oldTrashedNotes.map(n => n.id))
+      set((state) => ({
+        notes: state.notes.filter(n => !deletedIds.has(n.id)),
+        selectedNoteId: deletedIds.has(state.selectedNoteId || '')
+          ? null
+          : state.selectedNoteId
+      }))
+
+      // Show info toast about cleanup
+      useToastStore.getState().addToast({
+        message: `Cleaned up ${oldTrashedNotes.length} old ${oldTrashedNotes.length === 1 ? 'note' : 'notes'} from trash`,
+        type: 'info',
+        duration: 4000
+      })
+
+      return oldTrashedNotes.length
+    } catch (error) {
+      set({ error: (error as Error).message })
+      return 0
     }
   },
 

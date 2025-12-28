@@ -81,7 +81,7 @@ function extractTagsFromContent(content: string): string[] {
 }
 
 function App() {
-  const { notes, loadNotes, createNote, updateNote, deleteNote, selectedNoteId, selectNote, requestDeleteNote } = useNotesStore()
+  const { notes, loadNotes, createNote, updateNote, deleteNote, selectedNoteId, selectNote, requestDeleteNote, cleanupOldTrash } = useNotesStore()
   const {
     projects,
     currentProjectId,
@@ -313,6 +313,16 @@ function App() {
   useEffect(() => {
     loadProjects()
   }, [loadProjects])
+
+  // Auto-cleanup old trash on startup (notes deleted > 30 days ago)
+  useEffect(() => {
+    // Run cleanup after notes are loaded
+    const timeoutId = setTimeout(() => {
+      cleanupOldTrash(30)
+    }, 2000) // Delay to ensure notes are loaded first
+
+    return () => clearTimeout(timeoutId)
+  }, [cleanupOldTrash])
 
   // Project-specific notes are now filtered in MissionSidebar
 
