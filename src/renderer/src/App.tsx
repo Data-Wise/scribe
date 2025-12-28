@@ -679,14 +679,15 @@ function App() {
         setActiveTab(tabs[prevIndex].id)
       }
 
-      // ⌥1-4 = Switch sidebar tabs (Projects, Notes, Inbox, Graph)
-      if (e.altKey && !e.metaKey && !e.ctrlKey && !e.shiftKey && /^[1-4]$/.test(e.key)) {
+      // ⌥1-5 = Switch sidebar tabs (Projects, Notes, Inbox, Graph, Trash)
+      if (e.altKey && !e.metaKey && !e.ctrlKey && !e.shiftKey && /^[1-5]$/.test(e.key)) {
         e.preventDefault()
-        const tabMap: Record<string, 'projects' | 'notes' | 'inbox' | 'graph'> = {
+        const tabMap: Record<string, 'projects' | 'notes' | 'inbox' | 'graph' | 'trash'> = {
           '1': 'projects',
           '2': 'notes',
           '3': 'inbox',
-          '4': 'graph'
+          '4': 'graph',
+          '5': 'trash'
         }
         setLeftSidebarTab(tabMap[e.key])
       }

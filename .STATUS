@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 100
-version: 1.6.0
-sprint: 25
-updated: 2025-12-27
+progress: 25
+version: 1.7.0
+sprint: 26
+updated: 2025-12-28
 editor: hybrid-markdown++
-next_sprint: 26
-next_focus: Time-based Greeting & Writing Goals
-tests: 567
+next_sprint: 27
+next_focus: PWA/Browser Support
+tests: 677
 tags:
   - adhd-friendly
   - distraction-free
@@ -25,7 +25,28 @@ tags:
 
 ## Current Sprint
 
-**Sprint 25: Quick Capture & Mission Control Enhancements** (Started 2025-12-27)
+**Sprint 26: Data Safety & UX Polish** (Started 2025-12-28)
+
+### Sprint 26 Tasks
+
+#### Completed
+- [x] ⌥5 keyboard shortcut for Trash tab (matches ⌥1-4 pattern)
+
+#### Planned
+- [ ] Empty Trash button to clear all trashed notes at once
+- [ ] Undo toast for delete actions (5s window)
+- [ ] Auto-cleanup: notes in trash > 30 days
+
+#### Future Considerations
+- [ ] IStorage implementation for browser (IndexedDB)
+- [ ] PWA manifest and service worker
+- [ ] Offline support with sync queue
+
+---
+
+## Previous Sprint
+
+**Sprint 25: Quick Capture & Mission Control Enhancements** (Completed 2025-12-28)
 
 ### Sprint 25: Tab System & Mission Control ✅
 
@@ -71,6 +92,15 @@ tags:
 - [x] Right-click context menu
 - [x] Drag-and-drop for project assignment
 - [x] Note-to-project assignment
+
+#### Data Safety Features ✅ (2025-12-28)
+- [x] Close confirmation dialog for dirty tabs (unsaved changes)
+- [x] Delete confirmation dialog before moving notes to trash
+- [x] Soft delete pattern: notes move to trash instead of hard delete
+- [x] Trash tab in sidebar with badge showing count
+- [x] TrashPanel component with restore/permanent delete actions
+- [x] IStorage interface scaffold for future PWA support
+- [x] Updated CLAUDE.md with architecture decisions
 
 ### Sprint 24: Three-State Collapsible Sidebar ✅
 - [x] Icon mode (48px) - status dots only
@@ -210,8 +240,9 @@ tags:
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
 | v1.6 | 25 | Quick Capture & Mission Control | ✅ 100% |
+| **v1.7** | 26 | Data Safety & UX Polish | 🚧 0% |
 
-**Total: v1.6 complete, Sprint 26 planning**
+**Total: v1.6 complete, Sprint 26 in progress**
 
 ---
 
@@ -238,6 +269,7 @@ tags:
 | 22 | Editor Modes + Custom CSS | 483 |
 | 23 | Mission Control + Native Menu | 483 |
 | 24 | Three-State Collapsible Sidebar | 518 |
+| 25 | Quick Capture & Mission Control | 677 |
 
 ---
 
