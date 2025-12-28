@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] - v1.6.0
+
+### Sprint 25: Plan B UI Redesign - Obsidian Style + Gradient Tabs
+
+**Phase 1: Editor Tabs** ✅ Complete (2025-12-28)
+
+### Added
+
+**Editor Tabs System:**
+- EditorTabs component with gradient accent bar (Style 5 from schematic)
+- Tab state management in useAppViewStore with Zustand
+- localStorage persistence for open tabs and active tab
+- Mission Control pinned as permanent first tab (cannot close)
+- Keyboard shortcuts: ⌘1-9 switch tabs, ⌘W close current tab
+- Middle-click to close non-pinned tabs
+- Tab hover states with close button
+
+**New Components:**
+- `EditorTabs.tsx` - Main tab bar component (105 lines)
+- `EditorTabs.css` - Gradient accent styling (200 lines)
+- `EditorTabs/index.ts` - Barrel exports
+
+**Tab State (useAppViewStore.ts):**
+- `EditorTab` interface with id, type, noteId, title, isPinned
+- Actions: openTab, openNoteTab, closeTab, setActiveTab, reorderTabs, pinTab, unpinTab, updateTabTitle
+- MISSION_CONTROL_TAB_ID constant for pinned home tab
+
+### Technical
+
+- Gradient top border on active tab (project accent color)
+- Tab icons: Home for Mission Control, FileText for notes
+- Pin icon (📌) for pinned tabs instead of close button
+- CSS variables for theming support
+
+### Planned (Upcoming Phases)
+
+- Phase 2: Vault Sidebar (Obsidian-style file tree)
+- Phase 3: Status Bar (VS Code-style bottom bar)
+- Phase 4: Mission Control dashboard updates
+
+---
+
 ## [1.2.0] - 2025-12-27
 
 ### Mission Control - Dashboard-First Experience

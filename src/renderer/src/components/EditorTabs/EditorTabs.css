@@ -1,0 +1,200 @@
+/* EditorTabs - Gradient Accent Style (Plan B, Style 5) */
+
+.editor-tabs {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-secondary, #1e1e1e);
+  border-bottom: 1px solid var(--border-color, #333);
+  height: 36px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-app-region: no-drag;
+}
+
+.editor-tabs-scroll {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+}
+
+.editor-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual tab */
+.editor-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  min-width: 100px;
+  max-width: 180px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border-color, #333);
+  color: var(--text-muted, #888);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.editor-tab:hover {
+  background: var(--bg-hover, #2a2a2a);
+  color: var(--text-primary, #e0e0e0);
+}
+
+.editor-tab:hover .tab-close {
+  opacity: 1;
+}
+
+/* Active tab */
+.editor-tab.active {
+  background: var(--bg-primary, #252525);
+  color: var(--text-primary, #fff);
+  font-weight: 500;
+}
+
+/* Gradient accent bar on active tab */
+.tab-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+}
+
+/* Pinned tab styling */
+.editor-tab.pinned {
+  min-width: auto;
+  padding: 0 10px;
+}
+
+.editor-tab.pinned .tab-title {
+  max-width: 100px;
+}
+
+/* Tab icon */
+.tab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.editor-tab.active .tab-icon {
+  opacity: 1;
+}
+
+/* Tab title */
+.tab-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* Pin indicator */
+.tab-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  margin-left: 2px;
+}
+
+/* Close button */
+.tab-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin-left: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  color: var(--text-muted, #888);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.tab-close:hover {
+  background: var(--bg-hover, #3a3a3a);
+  color: var(--text-primary, #fff);
+}
+
+.editor-tab.active .tab-close {
+  opacity: 0.7;
+}
+
+/* Mission Control special styling */
+.editor-tab.pinned:first-child {
+  background: var(--bg-tertiary, #1a1a1a);
+}
+
+.editor-tab.pinned:first-child.active {
+  background: var(--bg-primary, #252525);
+}
+
+/* Responsive: smaller tabs on narrow screens */
+@media (max-width: 800px) {
+  .editor-tab {
+    min-width: 80px;
+    max-width: 140px;
+    padding: 0 8px;
+  }
+
+  .editor-tab.pinned .tab-title {
+    max-width: 60px;
+  }
+}
+
+/* Dark mode adjustments (default) */
+:root {
+  --bg-primary: #252525;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #1a1a1a;
+  --bg-hover: #2a2a2a;
+  --text-primary: #e0e0e0;
+  --text-muted: #888;
+  --border-color: #333;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  .editor-tabs {
+    background: #f5f5f5;
+    border-bottom-color: #ddd;
+  }
+
+  .editor-tab {
+    color: #666;
+    border-right-color: #ddd;
+  }
+
+  .editor-tab:hover {
+    background: #eee;
+    color: #333;
+  }
+
+  .editor-tab.active {
+    background: #fff;
+    color: #111;
+  }
+
+  .tab-close:hover {
+    background: #ddd;
+    color: #333;
+  }
+}

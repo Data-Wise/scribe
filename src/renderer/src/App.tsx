@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
-import { useAppViewStore } from './store/useAppViewStore'
+import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
+import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
 import { HybridEditor } from './components/HybridEditor'
 import { BacklinksPanel } from './components/BacklinksPanel'
@@ -93,12 +94,18 @@ function App() {
   // Apply Forest Night theme
   useForestTheme()
 
-  // Sidebar mode from app view store (replaces dashboardCollapsed toggle)
+  // Sidebar mode and tabs from app view store
   const {
     sidebarMode,
     cycleSidebarMode,
     setLastActiveNote,
-    updateSessionTimestamp
+    updateSessionTimestamp,
+    // Tab state
+    openTabs,
+    activeTabId,
+    setActiveTab,
+    openNoteTab,
+    closeTab
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
@@ -606,11 +613,31 @@ function App() {
         e.preventDefault()
         setIsSettingsOpen(true)
       }
+
+      // Tab switching (⌘1-9) - switch to tab by index
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && /^[1-9]$/.test(e.key)) {
+        e.preventDefault()
+        const tabIndex = parseInt(e.key) - 1
+        if (tabIndex < openTabs.length) {
+          setActiveTab(openTabs[tabIndex].id)
+        }
+      }
+
+      // Close current tab (⌘W) - closes active non-pinned tab
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'w') {
+        e.preventDefault()
+        // Find the active tab
+        const activeTab = openTabs.find(t => t.id === activeTabId)
+        // Only close if it's not pinned
+        if (activeTab && !activeTab.isPinned) {
+          closeTab(activeTabId!)
+        }
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -1059,9 +1086,34 @@ function App() {
       <div className="flex-1 flex overflow-hidden">
         {/* Main editor area */}
         <div className="flex-1 flex flex-col min-w-0">
+          {/* Editor tabs bar */}
+          <EditorTabs
+            accentColor={currentProjectId ? projects.find(p => p.id === currentProjectId)?.color : '#3b82f6'}
+          />
+
           <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
 
-          {selectedNote ? (
+          {/* Show content based on active tab */}
+          {activeTabId === MISSION_CONTROL_TAB_ID ? (
+            <MissionControl
+              projects={projects}
+              notes={notes}
+              currentProjectId={currentProjectId}
+              onSelectProject={setCurrentProject}
+              onSelectNote={(noteId) => {
+                const note = notes.find(n => n.id === noteId)
+                if (note) {
+                  openNoteTab(noteId, note.title)
+                  selectNote(noteId)
+                }
+              }}
+              onCreateNote={handleCreateNote}
+              onDailyNote={handleDailyNote}
+              onQuickCapture={() => setIsQuickCaptureOpen(true)}
+              onSettings={() => setIsSettingsOpen(true)}
+              onCreateProject={() => setIsCreateProjectModalOpen(true)}
+            />
+          ) : selectedNote ? (
             <div className="flex-1 flex flex-col min-h-0">
               <div className="px-6 py-4 border-b border-white/5">
                 {editingTitle ? (
