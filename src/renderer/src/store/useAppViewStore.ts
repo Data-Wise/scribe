@@ -10,11 +10,13 @@ import { create } from 'zustand'
  */
 
 export type SidebarMode = 'icon' | 'compact' | 'card'
+export type LeftSidebarTab = 'projects' | 'notes' | 'inbox' | 'graph'
 
 interface AppViewState {
   // Sidebar state
   sidebarMode: SidebarMode
   sidebarWidth: number
+  leftSidebarTab: LeftSidebarTab
 
   // Session tracking
   lastActiveNoteId: string | null
@@ -23,17 +25,19 @@ interface AppViewState {
   setSidebarMode: (mode: SidebarMode) => void
   cycleSidebarMode: () => void
   setSidebarWidth: (width: number) => void
+  setLeftSidebarTab: (tab: LeftSidebarTab) => void
 
   // Session actions
   setLastActiveNote: (noteId: string | null) => void
   updateSessionTimestamp: () => void
 }
 
-// localStorage keys
-const SESSION_KEY = 'scribe:lastSessionTimestamp'
-const LAST_NOTE_KEY = 'scribe:lastActiveNoteId'
-const SIDEBAR_MODE_KEY = 'scribe:sidebarMode'
-const SIDEBAR_WIDTH_KEY = 'scribe:sidebarWidth'
+// localStorage keys (use scribe-dev: prefix to avoid conflicts with main branch)
+const SESSION_KEY = 'scribe-dev:lastSessionTimestamp'
+const LAST_NOTE_KEY = 'scribe-dev:lastActiveNoteId'
+const SIDEBAR_MODE_KEY = 'scribe-dev:sidebarMode'
+const SIDEBAR_WIDTH_KEY = 'scribe-dev:sidebarWidth'
+const LEFT_SIDEBAR_TAB_KEY = 'scribe-dev:leftSidebarTab'
 
 // Sidebar width constraints
 export const SIDEBAR_WIDTHS = {
@@ -123,6 +127,26 @@ const saveSidebarWidth = (width: number): void => {
   }
 }
 
+const getSavedLeftSidebarTab = (): LeftSidebarTab => {
+  try {
+    const saved = localStorage.getItem(LEFT_SIDEBAR_TAB_KEY)
+    if (saved === 'projects' || saved === 'notes' || saved === 'inbox' || saved === 'graph') {
+      return saved
+    }
+    return 'projects' // default
+  } catch {
+    return 'projects'
+  }
+}
+
+const saveLeftSidebarTab = (tab: LeftSidebarTab): void => {
+  try {
+    localStorage.setItem(LEFT_SIDEBAR_TAB_KEY, tab)
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
 /**
  * Determine initial sidebar mode based on session context
  * - Fresh start or > 4 hours → compact (get bearings)
@@ -152,6 +176,7 @@ const determineInitialSidebarMode = (): SidebarMode => {
 export const useAppViewStore = create<AppViewState>((set, get) => ({
   sidebarMode: determineInitialSidebarMode(),
   sidebarWidth: getSavedSidebarWidth(),
+  leftSidebarTab: getSavedLeftSidebarTab(),
   lastActiveNoteId: getLastActiveNoteId(),
 
   setSidebarMode: (mode: SidebarMode) => {
@@ -181,6 +206,11 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
 
     set({ sidebarWidth: constrainedWidth })
     saveSidebarWidth(constrainedWidth)
+  },
+
+  setLeftSidebarTab: (tab: LeftSidebarTab) => {
+    set({ leftSidebarTab: tab })
+    saveLeftSidebarTab(tab)
   },
 
   setLastActiveNote: (noteId: string | null) => {

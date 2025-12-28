@@ -2,6 +2,13 @@ import { useState, useMemo } from 'react'
 import { Menu, Plus, Search, Clock, FileText, ChevronRight } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
+import { DragRegion } from '../DragRegion'
+import { PillTabs, LEFT_SIDEBAR_TABS } from './SidebarTabs'
+import { NotesListPanel } from './NotesListPanel'
+import { InboxPanel } from './InboxPanel'
+import { GraphPanel } from './GraphPanel'
+import { useDropTarget } from './DraggableNote'
+import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -11,6 +18,12 @@ interface CompactListModeProps {
   onSelectNote: (id: string) => void
   onCreateProject: () => void
   onCollapse: () => void
+  onOpenQuickCapture?: () => void
+  onMarkInboxProcessed?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
+  onAssignNoteToProject?: (noteId: string, projectId: string | null) => void
+  onMoveNoteToInbox?: (noteId: string) => void
+  onOpenFullGraph?: () => void
   width: number
 }
 
@@ -22,9 +35,29 @@ export function CompactListMode({
   onSelectNote,
   onCreateProject,
   onCollapse,
+  onOpenQuickCapture,
+  onMarkInboxProcessed,
+  onDeleteNote,
+  onAssignNoteToProject,
+  onMoveNoteToInbox,
+  onOpenFullGraph,
   width
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const { leftSidebarTab, setLeftSidebarTab } = useAppViewStore()
+
+  // Count inbox items for badge
+  const inboxCount = useMemo(() => {
+    return notes.filter(n => n.folder === 'inbox' && !n.deleted_at).length
+  }, [notes])
+
+  // Create tabs with dynamic inbox badge
+  const tabsWithBadge = useMemo(() => {
+    return LEFT_SIDEBAR_TABS.map(tab => ({
+      ...tab,
+      badge: tab.id === 'inbox' ? inboxCount : undefined
+    }))
+  }, [inboxCount])
 
   // Filter projects by search (treat undefined status as 'active')
   const filteredProjects = useMemo(() => {
@@ -77,6 +110,9 @@ export function CompactListMode({
 
   return (
     <div className="mission-sidebar-compact" style={{ width }}>
+      {/* Draggable header region for macOS window dragging */}
+      <DragRegion className="sidebar-drag-header" />
+
       {/* Header */}
       <div className="sidebar-header">
         <button
@@ -86,77 +122,124 @@ export function CompactListMode({
         >
           <Menu size={16} />
         </button>
-        <h3 className="sidebar-title">
-          Projects <span className="count">({projects.filter(p => (p.status || 'active') !== 'archive').length})</span>
-        </h3>
+        <h3 className="sidebar-title">Mission Control</h3>
       </div>
 
-      {/* Search (if >5 projects) */}
-      {projects.length > 5 && (
-        <div className="sidebar-search">
-          <Search size={14} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Find project..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-        </div>
-      )}
-
-      {/* Project list */}
-      <div className="project-list-compact">
-        {sortedProjects.map(project => {
-          const stats = projectStats[project.id]
-          const isActive = project.id === currentProjectId
-          return (
-            <CompactProjectItem
-              key={project.id}
-              project={project}
-              isActive={isActive}
-              noteCount={stats?.noteCount || 0}
-              onClick={() => onSelectProject(isActive ? null : project.id)}
-            />
-          )
-        })}
-
-        {sortedProjects.length === 0 && searchQuery && (
-          <div className="no-results">No projects match "{searchQuery}"</div>
-        )}
+      {/* Pill tabs navigation */}
+      <div className="sidebar-tabs-container">
+        <PillTabs
+          tabs={tabsWithBadge}
+          activeTab={leftSidebarTab}
+          onTabChange={(tab) => setLeftSidebarTab(tab as LeftSidebarTab)}
+          size="sm"
+        />
       </div>
 
-      {/* Recent notes section */}
-      {recentNotes.length > 0 && (
-        <div className="sidebar-section">
-          <h4 className="section-header">
-            <Clock size={12} />
-            <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
-          </h4>
-          <div className="recent-notes-list">
-            {recentNotes.map(note => (
-              <button
-                key={note.id}
-                className="recent-note-item"
-                onClick={() => onSelectNote(note.id)}
-              >
-                <FileText size={12} className="note-icon" />
-                <span className="note-title">{note.title || 'Untitled'}</span>
-                <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-              </button>
-            ))}
+      {/* Tab content */}
+      {leftSidebarTab === 'projects' && (
+        <>
+          {/* Search (if >5 projects) */}
+          {projects.length > 5 && (
+            <div className="sidebar-search">
+              <Search size={14} className="search-icon" />
+              <input
+                type="text"
+                placeholder="Find project..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+          )}
+
+          {/* Project list */}
+          <div className="project-list-compact">
+            {sortedProjects.map(project => {
+              const stats = projectStats[project.id]
+              const isActive = project.id === currentProjectId
+              return (
+                <CompactProjectItem
+                  key={project.id}
+                  project={project}
+                  isActive={isActive}
+                  noteCount={stats?.noteCount || 0}
+                  onClick={() => onSelectProject(isActive ? null : project.id)}
+                  onDropNote={onAssignNoteToProject ? (noteId) => onAssignNoteToProject(noteId, project.id) : undefined}
+                />
+              )
+            })}
+
+            {sortedProjects.length === 0 && searchQuery && (
+              <div className="no-results">No projects match "{searchQuery}"</div>
+            )}
           </div>
-        </div>
+
+          {/* Recent notes section */}
+          {recentNotes.length > 0 && (
+            <div className="sidebar-section">
+              <h4 className="section-header">
+                <Clock size={12} />
+                <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
+              </h4>
+              <div className="recent-notes-list">
+                {recentNotes.map(note => (
+                  <button
+                    key={note.id}
+                    className="recent-note-item"
+                    onClick={() => onSelectNote(note.id)}
+                  >
+                    <FileText size={12} className="note-icon" />
+                    <span className="note-title">{note.title || 'Untitled'}</span>
+                    <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Add project button */}
+          <button
+            className="add-project-btn-compact"
+            onClick={onCreateProject}
+          >
+            <Plus size={14} />
+            <span>New Project</span>
+          </button>
+        </>
       )}
 
-      {/* Add project button */}
-      <button
-        className="add-project-btn-compact"
-        onClick={onCreateProject}
-      >
-        <Plus size={14} />
-        <span>New Project</span>
-      </button>
+      {leftSidebarTab === 'notes' && (
+        <NotesListPanel
+          notes={notes}
+          projects={projects}
+          onSelectNote={onSelectNote}
+          onAssignToProject={onAssignNoteToProject}
+          onMoveToInbox={onMoveNoteToInbox}
+          onDelete={onDeleteNote}
+          variant="compact"
+        />
+      )}
+
+      {leftSidebarTab === 'inbox' && (
+        <InboxPanel
+          notes={notes}
+          onSelectNote={onSelectNote}
+          onMarkProcessed={onMarkInboxProcessed}
+          onDelete={onDeleteNote}
+          onOpenQuickCapture={onOpenQuickCapture}
+          variant="compact"
+        />
+      )}
+
+      {leftSidebarTab === 'graph' && (
+        <GraphPanel
+          notes={notes}
+          projects={projects}
+          onSelectNote={onSelectNote}
+          onOpenFullGraph={onOpenFullGraph}
+          variant="compact"
+        />
+      )}
     </div>
   )
 }
@@ -166,15 +249,30 @@ interface CompactProjectItemProps {
   isActive: boolean
   noteCount: number
   onClick: () => void
+  onDropNote?: (noteId: string) => void
 }
 
-function CompactProjectItem({ project, isActive, noteCount, onClick }: CompactProjectItemProps) {
+function CompactProjectItem({ project, isActive, noteCount, onClick, onDropNote }: CompactProjectItemProps) {
   const status = project.status || 'active'
+
+  // Drop target hook
+  const { isOver, canAccept, dropProps } = useDropTarget(
+    (noteId) => onDropNote?.(noteId),
+    (data) => data.currentProjectId !== project.id // Can't drop on same project
+  )
+
+  const dropClass = isOver
+    ? canAccept
+      ? 'drop-target-active'
+      : 'drop-target-reject'
+    : ''
+
   return (
     <button
-      className={`compact-project-item ${isActive ? 'active' : ''}`}
+      className={`compact-project-item ${isActive ? 'active' : ''} ${dropClass}`}
       onClick={onClick}
       data-status={status}
+      {...(onDropNote ? dropProps : {})}
     >
       {/* Top row: status + name + count */}
       <div className="item-row">

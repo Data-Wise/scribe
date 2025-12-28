@@ -2,6 +2,9 @@ import { useMemo } from 'react'
 import { Menu, Plus } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
+import { DragRegion } from '../DragRegion'
+import { IconTabs, LEFT_SIDEBAR_TABS } from './SidebarTabs'
+import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
 
 interface IconBarModeProps {
   projects: Project[]
@@ -22,6 +25,21 @@ export function IconBarMode({
   onCreateProject,
   onExpand
 }: IconBarModeProps) {
+  const { leftSidebarTab, setLeftSidebarTab } = useAppViewStore()
+
+  // Count inbox items for badge
+  const inboxCount = useMemo(() => {
+    return notes.filter(n => n.folder === 'inbox' && !n.deleted_at).length
+  }, [notes])
+
+  // Create tabs with dynamic inbox badge
+  const tabsWithBadge = useMemo(() => {
+    return LEFT_SIDEBAR_TABS.map(tab => ({
+      ...tab,
+      badge: tab.id === 'inbox' ? inboxCount : undefined
+    }))
+  }, [inboxCount])
+
   // Show active projects first, then by updated_at (treat undefined status as 'active')
   const sortedProjects = [...projects]
     .filter(p => (p.status || 'active') !== 'archive')
@@ -47,6 +65,9 @@ export function IconBarMode({
 
   return (
     <div className="mission-sidebar-icon">
+      {/* Draggable header region for macOS window dragging */}
+      <DragRegion className="sidebar-drag-header" />
+
       {/* Expand button */}
       <button
         className="sidebar-toggle-btn"
@@ -58,21 +79,50 @@ export function IconBarMode({
 
       <div className="sidebar-divider" />
 
-      {/* Project icons */}
-      <div className="project-icons">
-        {sortedProjects.map(project => {
-          const isActive = project.id === currentProjectId
-          return (
-            <ProjectIconButton
-              key={project.id}
-              project={project}
-              isActive={isActive}
-              noteCount={noteCounts[project.id] || 0}
-              onClick={() => onSelectProject(isActive ? null : project.id)}
-            />
-          )
-        })}
-      </div>
+      {/* Tab navigation - icon style */}
+      <IconTabs
+        tabs={tabsWithBadge}
+        activeTab={leftSidebarTab}
+        onTabChange={(tab) => setLeftSidebarTab(tab as LeftSidebarTab)}
+      />
+
+      <div className="sidebar-divider" />
+
+      {/* Tab content based on active tab */}
+      {leftSidebarTab === 'projects' && (
+        <div className="project-icons">
+          {sortedProjects.map(project => {
+            const isActive = project.id === currentProjectId
+            return (
+              <ProjectIconButton
+                key={project.id}
+                project={project}
+                isActive={isActive}
+                noteCount={noteCounts[project.id] || 0}
+                onClick={() => onSelectProject(isActive ? null : project.id)}
+              />
+            )
+          })}
+        </div>
+      )}
+
+      {leftSidebarTab === 'notes' && (
+        <div className="icon-placeholder">
+          <span title="Notes">📝</span>
+        </div>
+      )}
+
+      {leftSidebarTab === 'inbox' && (
+        <div className="icon-placeholder">
+          <span title="Inbox">📥</span>
+        </div>
+      )}
+
+      {leftSidebarTab === 'graph' && (
+        <div className="icon-placeholder">
+          <span title="Graph">🔗</span>
+        </div>
+      )}
 
       <div className="sidebar-spacer" />
 

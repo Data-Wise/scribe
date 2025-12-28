@@ -2,6 +2,12 @@ import { useState, useMemo } from 'react'
 import { Menu, Plus, Search, Clock, FileText, MoreHorizontal } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
+import { DragRegion } from '../DragRegion'
+import { PillTabs, LEFT_SIDEBAR_TABS } from './SidebarTabs'
+import { NotesListPanel } from './NotesListPanel'
+import { InboxPanel } from './InboxPanel'
+import { GraphPanel } from './GraphPanel'
+import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
 
 interface CardViewModeProps {
   projects: Project[]
@@ -11,6 +17,12 @@ interface CardViewModeProps {
   onSelectNote: (id: string) => void
   onCreateProject: () => void
   onCollapse: () => void
+  onOpenQuickCapture?: () => void
+  onMarkInboxProcessed?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
+  onAssignNoteToProject?: (noteId: string, projectId: string | null) => void
+  onMoveNoteToInbox?: (noteId: string) => void
+  onOpenFullGraph?: () => void
   width: number
 }
 
@@ -22,9 +34,29 @@ export function CardViewMode({
   onSelectNote,
   onCreateProject,
   onCollapse,
+  onOpenQuickCapture,
+  onMarkInboxProcessed,
+  onDeleteNote,
+  onAssignNoteToProject,
+  onMoveNoteToInbox,
+  onOpenFullGraph,
   width
 }: CardViewModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const { leftSidebarTab, setLeftSidebarTab } = useAppViewStore()
+
+  // Count inbox items for badge
+  const inboxCount = useMemo(() => {
+    return notes.filter(n => n.folder === 'inbox' && !n.deleted_at).length
+  }, [notes])
+
+  // Create tabs with dynamic inbox badge
+  const tabsWithBadge = useMemo(() => {
+    return LEFT_SIDEBAR_TABS.map(tab => ({
+      ...tab,
+      badge: tab.id === 'inbox' ? inboxCount : undefined
+    }))
+  }, [inboxCount])
 
   // Filter projects by search (treat undefined status as 'active')
   const filteredProjects = useMemo(() => {
@@ -78,6 +110,9 @@ export function CardViewMode({
 
   return (
     <div className="mission-sidebar-card" style={{ width }}>
+      {/* Draggable header region for macOS window dragging */}
+      <DragRegion className="sidebar-drag-header" />
+
       {/* Header */}
       <div className="sidebar-header">
         <button
@@ -87,85 +122,131 @@ export function CardViewMode({
         >
           <Menu size={16} />
         </button>
-        <h3 className="sidebar-title">
-          Projects <span className="count">({projects.filter(p => (p.status || 'active') !== 'archive').length})</span>
-        </h3>
+        <h3 className="sidebar-title">Mission Control</h3>
       </div>
 
-      {/* Search */}
-      <div className="sidebar-search">
-        <Search size={14} className="search-icon" />
-        <input
-          type="text"
-          placeholder="Find project..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
+      {/* Pill tabs navigation - large size for card mode */}
+      <div className="sidebar-tabs-container">
+        <PillTabs
+          tabs={tabsWithBadge}
+          activeTab={leftSidebarTab}
+          onTabChange={(tab) => setLeftSidebarTab(tab as LeftSidebarTab)}
+          size="md"
         />
       </div>
 
-      {/* Project cards */}
-      <div className="project-cards-container">
-        {sortedProjects.map(project => {
-          const stats = projectStats[project.id]
-          const isActive = project.id === currentProjectId
-          return (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              isActive={isActive}
-              noteCount={stats?.noteCount || 0}
-              wordCount={stats?.wordCount || 0}
-              onClick={() => onSelectProject(isActive ? null : project.id)}
+      {/* Tab content */}
+      {leftSidebarTab === 'projects' && (
+        <>
+          {/* Search */}
+          <div className="sidebar-search">
+            <Search size={14} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Find project..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
             />
-          )
-        })}
-
-        {sortedProjects.length === 0 && searchQuery && (
-          <div className="no-results">No projects match "{searchQuery}"</div>
-        )}
-
-        {sortedProjects.length === 0 && !searchQuery && (
-          <div className="empty-projects">
-            <p>No projects yet</p>
-            <button onClick={onCreateProject} className="create-first-btn">
-              Create your first project
-            </button>
           </div>
-        )}
-      </div>
 
-      {/* Recent notes section */}
-      {recentNotes.length > 0 && (
-        <div className="sidebar-section">
-          <h4 className="section-header">
-            <Clock size={12} />
-            <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
-          </h4>
-          <div className="recent-notes-list">
-            {recentNotes.map(note => (
-              <button
-                key={note.id}
-                className="recent-note-item"
-                onClick={() => onSelectNote(note.id)}
-              >
-                <FileText size={12} className="note-icon" />
-                <span className="note-title">{note.title || 'Untitled'}</span>
-                <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-              </button>
-            ))}
+          {/* Project cards */}
+          <div className="project-cards-container">
+            {sortedProjects.map(project => {
+              const stats = projectStats[project.id]
+              const isActive = project.id === currentProjectId
+              return (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  isActive={isActive}
+                  noteCount={stats?.noteCount || 0}
+                  wordCount={stats?.wordCount || 0}
+                  onClick={() => onSelectProject(isActive ? null : project.id)}
+                />
+              )
+            })}
+
+            {sortedProjects.length === 0 && searchQuery && (
+              <div className="no-results">No projects match "{searchQuery}"</div>
+            )}
+
+            {sortedProjects.length === 0 && !searchQuery && (
+              <div className="empty-projects">
+                <p>No projects yet</p>
+                <button onClick={onCreateProject} className="create-first-btn">
+                  Create your first project
+                </button>
+              </div>
+            )}
           </div>
-        </div>
+
+          {/* Recent notes section */}
+          {recentNotes.length > 0 && (
+            <div className="sidebar-section">
+              <h4 className="section-header">
+                <Clock size={12} />
+                <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
+              </h4>
+              <div className="recent-notes-list">
+                {recentNotes.map(note => (
+                  <button
+                    key={note.id}
+                    className="recent-note-item"
+                    onClick={() => onSelectNote(note.id)}
+                  >
+                    <FileText size={12} className="note-icon" />
+                    <span className="note-title">{note.title || 'Untitled'}</span>
+                    <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Add project button */}
+          <button
+            className="add-project-btn-card"
+            onClick={onCreateProject}
+          >
+            <Plus size={16} />
+            <span>New Project</span>
+          </button>
+        </>
       )}
 
-      {/* Add project button */}
-      <button
-        className="add-project-btn-card"
-        onClick={onCreateProject}
-      >
-        <Plus size={16} />
-        <span>New Project</span>
-      </button>
+      {leftSidebarTab === 'notes' && (
+        <NotesListPanel
+          notes={notes}
+          projects={projects}
+          onSelectNote={onSelectNote}
+          onAssignToProject={onAssignNoteToProject}
+          onMoveToInbox={onMoveNoteToInbox}
+          onDelete={onDeleteNote}
+          variant="card"
+        />
+      )}
+
+      {leftSidebarTab === 'inbox' && (
+        <InboxPanel
+          notes={notes}
+          onSelectNote={onSelectNote}
+          onMarkProcessed={onMarkInboxProcessed}
+          onDelete={onDeleteNote}
+          onOpenQuickCapture={onOpenQuickCapture}
+          variant="card"
+        />
+      )}
+
+      {leftSidebarTab === 'graph' && (
+        <GraphPanel
+          notes={notes}
+          projects={projects}
+          onSelectNote={onSelectNote}
+          onOpenFullGraph={onOpenFullGraph}
+          variant="card"
+        />
+      )}
     </div>
   )
 }

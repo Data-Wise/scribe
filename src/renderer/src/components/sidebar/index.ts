@@ -4,3 +4,16 @@ export { CompactListMode } from './CompactListMode'
 export { CardViewMode } from './CardViewMode'
 export { StatusDot, getStatusColor } from './StatusDot'
 export { ResizeHandle } from './ResizeHandle'
+export { PillTabs, IconTabs, SidebarTabs, LEFT_SIDEBAR_TABS } from './SidebarTabs'
+export { NotesListPanel } from './NotesListPanel'
+export { InboxPanel } from './InboxPanel'
+export { GraphPanel } from './GraphPanel'
+export { NoteContextMenu, useNoteContextMenu } from './NoteContextMenu'
+export {
+  useDraggableNote,
+  useDropTarget,
+  ProjectDropZone,
+  InboxDropZone,
+  getDragData,
+  setDragData
+} from './DraggableNote'

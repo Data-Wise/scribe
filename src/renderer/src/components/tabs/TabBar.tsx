@@ -50,15 +50,10 @@ export function TabBar({ onCreateNote }: TabBarProps) {
   return (
     <div
       ref={tabBarRef}
-      className="tab-bar flex items-end h-10 bg-nexus-bg-secondary border-b border-white/5 px-2 gap-0.5 overflow-x-auto"
+      className="tab-bar flex items-end h-10 mt-7 bg-nexus-bg-secondary border-b border-white/5 px-3 gap-0.5 overflow-x-auto"
       role="tablist"
       aria-label="Editor tabs"
     >
-      {/* Draggable region for window - fills space before tabs on macOS */}
-      <div
-        className="h-full w-20 flex-shrink-0"
-        {...dragRegion}
-      />
 
       {/* Tabs */}
       {tabs.map((tab, index) => (

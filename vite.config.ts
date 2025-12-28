@@ -18,7 +18,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5173,
+    // Use port 5174 for dev worktrees to avoid conflicts with main branch (5173)
+    port: 5174,
     strictPort: true,
   },
 });

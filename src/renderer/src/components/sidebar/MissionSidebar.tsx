@@ -13,6 +13,12 @@ interface MissionSidebarProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onOpenQuickCapture?: () => void
+  onMarkInboxProcessed?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
+  onAssignNoteToProject?: (noteId: string, projectId: string | null) => void
+  onMoveNoteToInbox?: (noteId: string) => void
+  onOpenFullGraph?: () => void
 }
 
 export function MissionSidebar({
@@ -21,7 +27,13 @@ export function MissionSidebar({
   currentProjectId,
   onSelectProject,
   onSelectNote,
-  onCreateProject
+  onCreateProject,
+  onOpenQuickCapture,
+  onMarkInboxProcessed,
+  onDeleteNote,
+  onAssignNoteToProject,
+  onMoveNoteToInbox,
+  onOpenFullGraph
 }: MissionSidebarProps) {
   const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
 
@@ -82,6 +94,12 @@ export function MissionSidebar({
           onSelectNote={onSelectNote}
           onCreateProject={onCreateProject}
           onCollapse={handleCollapse}
+          onOpenQuickCapture={onOpenQuickCapture}
+          onMarkInboxProcessed={onMarkInboxProcessed}
+          onDeleteNote={onDeleteNote}
+          onAssignNoteToProject={onAssignNoteToProject}
+          onMoveNoteToInbox={onMoveNoteToInbox}
+          onOpenFullGraph={onOpenFullGraph}
           width={width}
         />
       )}
@@ -95,6 +113,12 @@ export function MissionSidebar({
           onSelectNote={onSelectNote}
           onCreateProject={onCreateProject}
           onCollapse={handleCollapse}
+          onOpenQuickCapture={onOpenQuickCapture}
+          onMarkInboxProcessed={onMarkInboxProcessed}
+          onDeleteNote={onDeleteNote}
+          onAssignNoteToProject={onAssignNoteToProject}
+          onMoveNoteToInbox={onMoveNoteToInbox}
+          onOpenFullGraph={onOpenFullGraph}
           width={width}
         />
       )}

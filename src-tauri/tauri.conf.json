@@ -1,11 +1,11 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Scribe",
+  "productName": "Scribe Dev",
   "version": "1.2.0",
-  "identifier": "com.scribe.app",
+  "identifier": "com.scribe.dev",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "http://localhost:5173",
+    "devUrl": "http://localhost:5174",
     "beforeDevCommand": "npm run dev:vite",
     "beforeBuildCommand": "npm run build:vite"
   },
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Scribe",
+        "title": "Scribe Dev",
         "width": 1200,
         "height": 800,
         "resizable": true,

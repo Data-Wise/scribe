@@ -78,7 +78,7 @@ function extractTagsFromContent(content: string): string[] {
 }
 
 function App() {
-  const { notes, loadNotes, createNote, updateNote, selectedNoteId, selectNote } = useNotesStore()
+  const { notes, loadNotes, createNote, updateNote, deleteNote, selectedNoteId, selectNote } = useNotesStore()
   const {
     projects,
     currentProjectId,
@@ -91,6 +91,7 @@ function App() {
   const {
     sidebarMode,
     cycleSidebarMode,
+    setLeftSidebarTab,
     setLastActiveNote,
     updateSessionTimestamp
   } = useAppViewStore()
@@ -674,11 +675,23 @@ function App() {
         const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length
         setActiveTab(tabs[prevIndex].id)
       }
+
+      // ⌥1-4 = Switch sidebar tabs (Projects, Notes, Inbox, Graph)
+      if (e.altKey && !e.metaKey && !e.ctrlKey && !e.shiftKey && /^[1-4]$/.test(e.key)) {
+        e.preventDefault()
+        const tabMap: Record<string, 'projects' | 'notes' | 'inbox' | 'graph'> = {
+          '1': 'projects',
+          '2': 'notes',
+          '3': 'inbox',
+          '4': 'graph'
+        }
+        setLeftSidebarTab(tabMap[e.key])
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, tabs, activeTabId, activeTab, goToHomeTab, setActiveTab, closeTab, reopenLastClosed])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, tabs, activeTabId, activeTab, goToHomeTab, setActiveTab, closeTab, reopenLastClosed, setLeftSidebarTab])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -1003,16 +1016,13 @@ function App() {
 
   // Normal mode: Tab bar + sidebar + content
   return (
-    <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex flex-col overflow-hidden" style={{ height: '100vh' }}>
+    <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex overflow-hidden" style={{ height: '100vh' }}>
       {/* Custom CSS injection from user preferences */}
       {preferences.customCSSEnabled && preferences.customCSS && (
         <style id="custom-user-css">{preferences.customCSS}</style>
       )}
 
-      {/* Tab bar - pinned Home tab + editor tabs */}
-      <TabBar onCreateNote={handleCreateNote} />
-
-      {/* Main layout: sidebar + content */}
+      {/* Main layout: sidebar + content with tab bar */}
       <div className="flex-1 flex overflow-hidden">
         {/* Three-state collapsible sidebar (icon/compact/card) */}
         <MissionSidebar
@@ -1025,10 +1035,43 @@ function App() {
             handleOpenNoteInTab(noteId)
           }}
           onCreateProject={() => setIsCreateProjectModalOpen(true)}
+          onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
+          onMarkInboxProcessed={(noteId) => {
+            // Move note out of inbox by changing folder
+            updateNote(noteId, { folder: 'notes' })
+          }}
+          onDeleteNote={(noteId) => deleteNote(noteId)}
+          onAssignNoteToProject={async (noteId, projectId) => {
+            try {
+              await api.setNoteProject(noteId, projectId)
+              // Update local note state with new project_id
+              const note = notes.find(n => n.id === noteId)
+              if (note) {
+                const updatedProperties = { ...note.properties }
+                if (projectId) {
+                  updatedProperties.project_id = { key: 'project_id', value: projectId, type: 'text' }
+                } else {
+                  delete updatedProperties.project_id
+                }
+                updateNote(noteId, { properties: updatedProperties })
+              }
+            } catch (error) {
+              console.error('Failed to assign note to project:', error)
+            }
+          }}
+          onMoveNoteToInbox={(noteId) => {
+            updateNote(noteId, { folder: 'inbox' })
+          }}
+          onOpenFullGraph={() => setIsGraphViewOpen(true)}
         />
 
-        {/* Main content area - switches between Home and Editor */}
-        <div className="flex-1 flex overflow-hidden">
+        {/* Main content area with tab bar - switches between Home and Editor */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Tab bar - pinned Home tab + editor tabs */}
+          <TabBar onCreateNote={handleCreateNote} />
+
+          {/* Content below tab bar */}
+          <div className="flex-1 flex overflow-hidden">
           {/* Home tab content: Mission Control */}
           {isHomeTabActive && (
             <MissionControl
@@ -1161,6 +1204,7 @@ function App() {
               )}
             </>
           )}
+          </div>
         </div>
       </div>
 

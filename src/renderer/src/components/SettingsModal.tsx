@@ -27,7 +27,10 @@ import {
   RefreshCw,
   ChevronDown,
   ChevronUp,
-  Calendar
+  Calendar,
+  PanelLeft,
+  LayoutGrid,
+  List
 } from 'lucide-react'
 import {
   loadTemplates,
@@ -60,6 +63,7 @@ import {
   Base16Scheme
 } from '../lib/themes'
 import { api } from '../lib/api'
+import { useAppViewStore, type SidebarMode, type LeftSidebarTab } from '../store/useAppViewStore'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -496,6 +500,8 @@ export function SettingsModal({
                     </div>
                   </div>
                 </section>
+
+                <SidebarSettings />
               </div>
             )}
 
@@ -1805,5 +1811,94 @@ export function SettingsModal({
         </div>
       )}
     </div>
+  )
+}
+
+/**
+ * Sidebar Settings Component
+ * Allows users to configure default sidebar behavior
+ */
+function SidebarSettings() {
+  const { sidebarMode, setSidebarMode, leftSidebarTab, setLeftSidebarTab } = useAppViewStore()
+
+  const sidebarModes: { id: SidebarMode; label: string; description: string; icon: typeof PanelLeft }[] = [
+    { id: 'icon', label: 'Icon', description: 'Minimal 48px bar', icon: PanelLeft },
+    { id: 'compact', label: 'Compact', description: 'List view (240px)', icon: List },
+    { id: 'card', label: 'Card', description: 'Rich cards (320px+)', icon: LayoutGrid },
+  ]
+
+  const defaultTabs: { id: LeftSidebarTab; label: string }[] = [
+    { id: 'projects', label: 'Projects' },
+    { id: 'notes', label: 'Notes' },
+    { id: 'inbox', label: 'Inbox' },
+    { id: 'graph', label: 'Graph' },
+  ]
+
+  return (
+    <section>
+      <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+        <PanelLeft className="w-3 h-3 inline mr-2" />
+        Mission Control Sidebar
+      </h4>
+
+      <div className="space-y-4">
+        {/* Sidebar Mode Selection */}
+        <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
+          <div className="text-sm font-medium text-nexus-text-primary mb-3">Default Mode</div>
+          <div className="grid grid-cols-3 gap-2">
+            {sidebarModes.map(mode => {
+              const Icon = mode.icon
+              const isActive = sidebarMode === mode.id
+              return (
+                <button
+                  key={mode.id}
+                  onClick={() => setSidebarMode(mode.id)}
+                  className={`p-3 rounded-lg border transition-all text-center ${
+                    isActive
+                      ? 'border-nexus-accent bg-nexus-accent/10'
+                      : 'border-white/10 hover:border-white/20 hover:bg-white/5'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 mx-auto mb-1 ${isActive ? 'text-nexus-accent' : 'text-nexus-text-muted'}`} />
+                  <div className={`text-xs font-medium ${isActive ? 'text-nexus-accent' : 'text-nexus-text-primary'}`}>
+                    {mode.label}
+                  </div>
+                  <div className="text-[10px] text-nexus-text-muted mt-0.5">{mode.description}</div>
+                </button>
+              )
+            })}
+          </div>
+          <div className="text-xs text-nexus-text-muted mt-3">
+            Tip: Use ⌘0 to cycle through modes, or drag the edge to resize.
+          </div>
+        </div>
+
+        {/* Default Tab Selection */}
+        <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
+          <div className="text-sm font-medium text-nexus-text-primary mb-3">Default Tab</div>
+          <div className="flex gap-2">
+            {defaultTabs.map(tab => {
+              const isActive = leftSidebarTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setLeftSidebarTab(tab.id)}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                    isActive
+                      ? 'bg-nexus-accent text-white'
+                      : 'bg-white/5 text-nexus-text-muted hover:bg-white/10 hover:text-nexus-text-primary'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              )
+            })}
+          </div>
+          <div className="text-xs text-nexus-text-muted mt-3">
+            The tab that opens by default when you expand the sidebar.
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
