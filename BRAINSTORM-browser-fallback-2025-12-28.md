@@ -297,9 +297,30 @@ export const browserDialogs = {
 - Citation/Zotero integration
 - Pandoc document export
 
-### Next Steps
+### ✅ COMPLETED (Session 2)
 
-1. [ ] Complete CLI `scribe browser` command integration
-2. [ ] Add demo seed data for new users
-3. [ ] Test note persistence and full-text search
-4. [ ] Add browser mode indicator in UI
+**CLI Integration:**
+- ✅ CLI `scribe browser` command with --help flag
+- ✅ Browser detection (Chrome/Brave on macOS)
+- ✅ Server health check before launch
+
+**Demo Seed Data:**
+- ✅ Auto-seeds on first browser launch (empty database)
+- ✅ Creates "Getting Started" project
+- ✅ Creates 3 tutorial notes with wiki links
+- ✅ Creates 3 demo tags (#welcome, #tutorial, #tips)
+- ✅ Skips seeding if data already exists
+
+**Verified Features:**
+- ✅ Search via command palette (⌘K)
+- ✅ Tags panel UI working
+- ✅ Backlinks panel UI working (incoming/outgoing)
+- ✅ Note persistence across refresh
+- ✅ Properties panel (created, modified, word count)
+
+### Future Enhancements
+
+1. [ ] Add browser mode indicator in UI
+2. [ ] Test wiki link creation and backlink tracking
+3. [ ] Add "Clear Demo Data" option for testing
+4. [ ] PWA offline support with service worker
