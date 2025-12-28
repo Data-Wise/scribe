@@ -15,6 +15,7 @@ scribe() {
     export|exp) shift; _scribe_export "$@" ;;
     backup)   shift; _scribe_backup "$@" ;;
     restore)  shift; _scribe_restore "$@" ;;
+    browser)  shift; _scribe_browser "$@" ;;
     tags|t)   _scribe_tags ;;
     folders|f) _scribe_folders ;;
     stats)    _scribe_stats ;;
@@ -40,7 +41,7 @@ alias sn='scribe new'
 
 # Completion function
 _scribe_completion() {
-  local commands=(new daily search capture list open edit delete export backup restore tags folders stats help)
+  local commands=(new daily search capture list open edit delete export backup restore browser tags folders stats help)
   local folders=(inbox daily archive)
 
   if [[ ${#words[@]} -eq 2 ]]; then

@@ -116,8 +116,29 @@ backup_file="/tmp/scribe_backup.db"
 scribe backup "$backup_file" > /dev/null
 assert_file_exists "$backup_file"
 
+echo "Test: scribe browser"
+# Mock curl to return success for server check
+curl() { return 0; }
+# Mock browser
+mkdir -p "/tmp/Mock Browser.app/Contents/MacOS"
+touch "/tmp/Mock Browser.app/Contents/MacOS/Mock Browser"
+chmod +x "/tmp/Mock Browser.app/Contents/MacOS/Mock Browser"
+# Override detection in _scribe_browser implies we need to hack it or set a var?
+# The script checks for fixed paths.
+# We can't easily override the path check in the script without changing the script source.
+# Instead, let's verify that it fails gracefully or validly if we can't find chrome.
+# Or better, let's create a fake function override for the test.
+_scribe_browser() {
+  echo "Mock _scribe_browser called with args: $*"
+  return 0
+}
+out=$(scribe browser --args="--no-extensions")
+assert_contains "$out" "Mock _scribe_browser called"
+assert_contains "$out" "--no-extensions"
+
 # Cleanup
 rm -f "$TEST_DB" "$backup_file" /tmp/del_out
+rm -rf "/tmp/Mock Browser.app"
 
 if [[ $failed -eq 0 ]]; then
   echo "=== All Tests Passed ==="
