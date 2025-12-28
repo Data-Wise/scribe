@@ -7,7 +7,7 @@
 # Source:   source ~/.config/zsh/functions/scribe.zsh
 # Man page: ~/.local/share/man/man1/scribe.1
 #
-# Generated: Sat Dec 27 20:16:46 EST 2025
+# Generated: Sat Dec 27 20:28:13 EST 2025
 # ============================================================================
 
 # ============================================================================

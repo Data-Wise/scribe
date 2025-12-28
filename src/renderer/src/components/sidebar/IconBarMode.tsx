@@ -37,9 +37,8 @@ export function IconBarMode({
     const counts: Record<string, number> = {}
     projects.forEach(p => { counts[p.id] = 0 })
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && counts[projectId] !== undefined) {
-        counts[projectId]++
+      if (note.project_id && counts[note.project_id] !== undefined) {
+        counts[note.project_id]++
       }
     })
     return counts

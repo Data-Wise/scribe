@@ -29,8 +29,7 @@ export function DashboardFooter({
           <span className="text-xs text-nexus-text-muted italic">No recent pages</span>
         ) : (
           recentNotes.map((note, index) => {
-            const projectId = note.properties?.project_id?.value as string | undefined
-            const project = projectId ? projectMap.get(projectId) : null
+            const project = note.project_id ? projectMap.get(note.project_id) : null
 
             return (
               <button
