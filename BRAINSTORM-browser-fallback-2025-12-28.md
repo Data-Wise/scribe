@@ -320,7 +320,7 @@ export const browserDialogs = {
 
 ### Future Enhancements
 
-1. [ ] Add browser mode indicator in UI
+1. [x] Add browser mode indicator in UI ✅ (2025-12-28)
 2. [ ] Test wiki link creation and backlink tracking
 3. [ ] Add "Clear Demo Data" option for testing
 4. [ ] PWA offline support with service worker
