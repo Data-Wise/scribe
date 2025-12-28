@@ -8,6 +8,7 @@ import { NotesListPanel } from './NotesListPanel'
 import { InboxPanel } from './InboxPanel'
 import { GraphPanel } from './GraphPanel'
 import { useDraggableNote, useDropTarget } from './DraggableNote'
+import { NoteContextMenu, useNoteContextMenu } from './NoteContextMenu'
 import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
 
 interface CardViewModeProps {
@@ -45,6 +46,7 @@ export function CardViewMode({
 }: CardViewModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const { leftSidebarTab, setLeftSidebarTab } = useAppViewStore()
+  const { contextMenu, showContextMenu, hideContextMenu } = useNoteContextMenu()
 
   // Count inbox items for badge
   const inboxCount = useMemo(() => {
@@ -199,11 +201,27 @@ export function CardViewMode({
                       note={note}
                       currentProjectId={noteProjectId}
                       onClick={() => onSelectNote(note.id)}
+                      onContextMenu={(e) => showContextMenu(e, note.id, noteProjectId)}
                     />
                   )
                 })}
               </div>
             </div>
+          )}
+
+          {/* Context Menu for Recent Notes */}
+          {contextMenu && onAssignNoteToProject && (
+            <NoteContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              noteId={contextMenu.noteId}
+              currentProjectId={contextMenu.currentProjectId}
+              projects={projects}
+              onClose={hideContextMenu}
+              onAssignToProject={onAssignNoteToProject}
+              onMoveToInbox={onMoveNoteToInbox}
+              onDelete={onDeleteNote}
+            />
           )}
 
           {/* Add project button */}
@@ -397,15 +415,17 @@ interface DraggableRecentNoteItemProps {
   note: Note
   currentProjectId?: string
   onClick: () => void
+  onContextMenu?: (e: React.MouseEvent) => void
 }
 
-function DraggableRecentNoteItem({ note, currentProjectId, onClick }: DraggableRecentNoteItemProps) {
+function DraggableRecentNoteItem({ note, currentProjectId, onClick, onContextMenu }: DraggableRecentNoteItemProps) {
   const { isDragging, dragProps } = useDraggableNote(note, currentProjectId)
 
   return (
     <button
       className={`recent-note-item ${isDragging ? 'dragging' : ''}`}
       onClick={onClick}
+      onContextMenu={onContextMenu}
       {...dragProps}
     >
       <GripVertical size={10} className="drag-handle" />
