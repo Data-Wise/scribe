@@ -206,7 +206,7 @@ describe('useNotesStore', () => {
     describe('softDeleteNote', () => {
       it('sets deleted_at timestamp on note', async () => {
         const initialNotes = [
-          { id: '1', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '1', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
         const deletedNote = { ...initialNotes[0], deleted_at: Date.now() }
 
@@ -253,7 +253,7 @@ describe('useNotesStore', () => {
       it('removes note from store permanently', async () => {
         const initialNotes = [
           { id: '1', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
-          { id: '2', title: 'Keep', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '2', title: 'Keep', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
 
         mockApi.deleteNote.mockResolvedValue(undefined)
@@ -296,7 +296,7 @@ describe('useNotesStore', () => {
       it('deletes all trashed notes', async () => {
         const initialNotes = [
           { id: '1', title: 'Trashed 1', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
-          { id: '2', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '2', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
           { id: '3', title: 'Trashed 2', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: Date.now() },
         ]
 
@@ -323,8 +323,8 @@ describe('useNotesStore', () => {
 
       it('does nothing when trash is empty', async () => {
         const initialNotes = [
-          { id: '1', title: 'Active 1', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
-          { id: '2', title: 'Active 2', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '1', title: 'Active 1', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
+          { id: '2', title: 'Active 2', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
 
         // Set initial state with no trashed notes
@@ -350,7 +350,7 @@ describe('useNotesStore', () => {
         const initialNotes = [
           { id: '1', title: 'Old Trash', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: thirtyOneDaysAgo },
           { id: '2', title: 'Recent Trash', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: twentyNineDaysAgo },
-          { id: '3', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '3', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
 
         mockApi.deleteNote.mockResolvedValue(undefined)
@@ -382,7 +382,7 @@ describe('useNotesStore', () => {
 
         const initialNotes = [
           { id: '1', title: 'Recent Trash', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: recentDeletion },
-          { id: '2', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: '2', title: 'Active', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
 
         // Set initial state
@@ -448,7 +448,7 @@ describe('useNotesStore', () => {
 
       it('confirmDeleteNote soft deletes and clears pending state', async () => {
         const initialNotes = [
-          { id: 'note-123', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: undefined },
+          { id: 'note-123', title: 'To Delete', content: '', folder: 'notes', created_at: 1000, updated_at: 1000, deleted_at: null },
         ]
         const deletedNote = { ...initialNotes[0], deleted_at: Date.now() }
 

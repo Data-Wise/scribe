@@ -36,9 +36,15 @@ export const api = {
   updateNote: (id: string, updates: Partial<Note>): Promise<Note | null> => 
     invoke('update_note', { id, updates }),
     
-  deleteNote: (id: string): Promise<boolean> => 
+  deleteNote: (id: string): Promise<boolean> =>
     invoke('delete_note', { id }),
-    
+
+  restoreNote: (id: string): Promise<Note | null> =>
+    invoke('restore_note', { id }),
+
+  permanentDeleteNote: (id: string): Promise<boolean> =>
+    invoke('permanent_delete_note', { id }),
+
   getNote: (id: string): Promise<Note | null> => 
     invoke('get_note', { id }),
     

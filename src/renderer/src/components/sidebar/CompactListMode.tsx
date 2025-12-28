@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, Clock, FileText, ChevronRight, GripVertical } from 'lucide-react'
+import { Menu, Plus, Search, ChevronRight, FileText, GripVertical } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { DragRegion } from '../DragRegion'
@@ -10,6 +10,7 @@ import { GraphPanel } from './GraphPanel'
 import { TrashPanel } from './TrashPanel'
 import { useDropTarget, useDraggableNote } from './DraggableNote'
 import { NoteContextMenu, useNoteContextMenu } from './NoteContextMenu'
+import { ProjectContextMenu, useProjectContextMenu } from './ProjectContextMenu'
 import { useAppViewStore, type LeftSidebarTab } from '../../store/useAppViewStore'
 
 interface CompactListModeProps {
@@ -19,6 +20,11 @@ interface CompactListModeProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onNewNoteInProject?: (projectId: string) => void
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onUnarchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
   onCollapse: () => void
   onOpenQuickCapture?: () => void
   onMarkInboxProcessed?: (noteId: string) => void
@@ -29,6 +35,59 @@ interface CompactListModeProps {
   width: number
 }
 
+// Helper functions (must be before component that uses them)
+function countWords(content: string): number {
+  if (!content) return 0
+  const text = content
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]+`/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[#*_~>\-]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return text.split(/\s+/).filter(Boolean).length
+}
+
+function formatTimeAgo(timestamp: number): string {
+  const now = Date.now()
+  const diff = now - timestamp
+  const minutes = Math.floor(diff / 60000)
+  const hours = Math.floor(diff / 3600000)
+  const days = Math.floor(diff / 86400000)
+
+  if (minutes < 1) return 'now'
+  if (minutes < 60) return `${minutes}m`
+  if (hours < 24) return `${hours}h`
+  if (days < 7) return `${days}d`
+  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+// Draggable project note item (must be before CompactListMode)
+interface DraggableProjectNoteItemProps {
+  note: Note
+  currentProjectId: string | null
+  onClick: () => void
+  onContextMenu: (e: React.MouseEvent) => void
+}
+
+function DraggableProjectNoteItem({ note, currentProjectId, onClick, onContextMenu }: DraggableProjectNoteItemProps) {
+  const { isDragging, dragProps } = useDraggableNote(note, currentProjectId || undefined)
+
+  return (
+    <button
+      className={`project-note-item ${isDragging ? 'dragging' : ''}`}
+      onClick={onClick}
+      onContextMenu={onContextMenu}
+      {...dragProps}
+    >
+      <GripVertical size={10} className="drag-handle" />
+      <FileText size={12} className="note-icon" />
+      <span className="note-title">{note.title || 'Untitled'}</span>
+      <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
+    </button>
+  )
+}
+
 export function CompactListMode({
   projects,
   notes,
@@ -36,6 +95,11 @@ export function CompactListMode({
   onSelectProject,
   onSelectNote,
   onCreateProject,
+  onNewNoteInProject,
+  onEditProject,
+  onArchiveProject,
+  onUnarchiveProject,
+  onDeleteProject,
   onCollapse,
   onOpenQuickCapture,
   onMarkInboxProcessed,
@@ -47,7 +111,8 @@ export function CompactListMode({
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const { leftSidebarTab, setLeftSidebarTab } = useAppViewStore()
-  const { contextMenu, showContextMenu, hideContextMenu } = useNoteContextMenu()
+  const { contextMenu: noteContextMenu, showContextMenu: showNoteContextMenu, hideContextMenu: hideNoteContextMenu } = useNoteContextMenu()
+  const { contextMenu: projectContextMenu, showContextMenu: showProjectContextMenu, hideContextMenu: hideProjectContextMenu } = useProjectContextMenu()
 
   // Count inbox items for badge
   const inboxCount = useMemo(() => {
@@ -84,22 +149,6 @@ export function CompactListMode({
     return b.updated_at - a.updated_at
   })
 
-  // Get recent notes (last 5) - filtered by project if one is selected
-  const recentNotes = useMemo(() => {
-    return [...notes]
-      .filter(n => {
-        if (n.deleted_at) return false
-        // If a project is selected, only show notes from that project
-        if (currentProjectId) {
-          const noteProjectId = n.properties?.project_id?.value as string | undefined
-          return noteProjectId === currentProjectId
-        }
-        return true
-      })
-      .sort((a, b) => b.updated_at - a.updated_at)
-      .slice(0, 5)
-  }, [notes, currentProjectId])
-
   // Compute project stats
   const projectStats = useMemo(() => {
     const stats: Record<string, { noteCount: number; wordCount: number }> = {}
@@ -107,14 +156,21 @@ export function CompactListMode({
       stats[p.id] = { noteCount: 0, wordCount: 0 }
     })
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && stats[projectId]) {
-        stats[projectId].noteCount++
-        stats[projectId].wordCount += countWords(note.content)
+      if (note.project_id && stats[note.project_id]) {
+        stats[note.project_id].noteCount++
+        stats[note.project_id].wordCount += countWords(note.content)
       }
     })
     return stats
   }, [projects, notes])
+
+  // Get notes for the selected project
+  const projectNotes = useMemo(() => {
+    if (!currentProjectId) return []
+    return notes
+      .filter(n => !n.deleted_at && n.project_id === currentProjectId)
+      .sort((a, b) => b.updated_at - a.updated_at)
+  }, [notes, currentProjectId])
 
   return (
     <div className="mission-sidebar-compact" style={{ width }}>
@@ -172,6 +228,7 @@ export function CompactListMode({
                   isActive={isActive}
                   noteCount={stats?.noteCount || 0}
                   onClick={() => onSelectProject(isActive ? null : project.id)}
+                  onContextMenu={(e) => showProjectContextMenu(e, project)}
                   onDropNote={onAssignNoteToProject ? (noteId) => onAssignNoteToProject(noteId, project.id) : undefined}
                 />
               )
@@ -182,42 +239,62 @@ export function CompactListMode({
             )}
           </div>
 
-          {/* Recent notes section */}
-          {recentNotes.length > 0 && (
-            <div className="sidebar-section">
-              <h4 className="section-header">
-                <Clock size={12} />
-                <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
-              </h4>
-              <div className="recent-notes-list">
-                {recentNotes.map(note => {
-                  const noteProjectId = note.properties?.project_id?.value as string | undefined
-                  return (
-                    <DraggableRecentNoteItem
+          {/* Project Notes - show when a project is selected */}
+          {currentProjectId && (
+            <div className="project-notes-section">
+              <div className="project-notes-header">
+                <FileText size={12} />
+                <span>Notes ({projectNotes.length})</span>
+              </div>
+              <div className="project-notes-list">
+                {projectNotes.length === 0 ? (
+                  <div className="project-notes-empty">
+                    No notes in this project
+                  </div>
+                ) : (
+                  projectNotes.map(note => (
+                    <DraggableProjectNoteItem
                       key={note.id}
                       note={note}
-                      currentProjectId={noteProjectId}
+                      currentProjectId={currentProjectId}
                       onClick={() => onSelectNote(note.id)}
-                      onContextMenu={(e) => showContextMenu(e, note.id, noteProjectId)}
+                      onContextMenu={(e) => showNoteContextMenu(e, note.id, currentProjectId)}
                     />
-                  )
-                })}
+                  ))
+                )}
               </div>
             </div>
           )}
 
-          {/* Context Menu for Recent Notes */}
-          {contextMenu && onAssignNoteToProject && (
+          {/* Context Menu for Notes */}
+          {noteContextMenu && (
             <NoteContextMenu
-              x={contextMenu.x}
-              y={contextMenu.y}
-              noteId={contextMenu.noteId}
-              currentProjectId={contextMenu.currentProjectId}
+              x={noteContextMenu.x}
+              y={noteContextMenu.y}
+              noteId={noteContextMenu.noteId}
+              currentProjectId={noteContextMenu.currentProjectId}
               projects={projects}
-              onClose={hideContextMenu}
-              onAssignToProject={onAssignNoteToProject}
+              onClose={hideNoteContextMenu}
+              onAssignToProject={onAssignNoteToProject || (() => {})}
               onMoveToInbox={onMoveNoteToInbox}
               onDelete={onDeleteNote}
+            />
+          )}
+
+          {/* Context Menu for Projects */}
+          {projectContextMenu && (
+            <ProjectContextMenu
+              x={projectContextMenu.x}
+              y={projectContextMenu.y}
+              project={projectContextMenu.project}
+              isCurrentProject={projectContextMenu.project.id === currentProjectId}
+              onClose={hideProjectContextMenu}
+              onNewNote={onNewNoteInProject}
+              onEdit={onEditProject}
+              onSetActive={onSelectProject}
+              onArchive={onArchiveProject}
+              onUnarchive={onUnarchiveProject}
+              onDelete={onDeleteProject}
             />
           )}
 
@@ -277,10 +354,11 @@ interface CompactProjectItemProps {
   isActive: boolean
   noteCount: number
   onClick: () => void
+  onContextMenu?: (e: React.MouseEvent) => void
   onDropNote?: (noteId: string) => void
 }
 
-function CompactProjectItem({ project, isActive, noteCount, onClick, onDropNote }: CompactProjectItemProps) {
+function CompactProjectItem({ project, isActive, noteCount, onClick, onContextMenu, onDropNote }: CompactProjectItemProps) {
   const status = project.status || 'active'
 
   // Drop target hook
@@ -299,6 +377,7 @@ function CompactProjectItem({ project, isActive, noteCount, onClick, onDropNote 
     <button
       className={`compact-project-item ${isActive ? 'active' : ''} ${dropClass}`}
       onClick={onClick}
+      onContextMenu={onContextMenu}
       data-status={status}
       {...(onDropNote ? dropProps : {})}
     >
@@ -328,55 +407,4 @@ function CompactProjectItem({ project, isActive, noteCount, onClick, onDropNote 
   )
 }
 
-// Helper functions
-function countWords(content: string): number {
-  if (!content) return 0
-  const text = content
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/`[^`]+`/g, '')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/[#*_~>\-]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-  return text.split(/\s+/).filter(Boolean).length
-}
 
-function formatTimeAgo(timestamp: number): string {
-  const now = Date.now()
-  const diff = now - timestamp
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  const days = Math.floor(diff / 86400000)
-
-  if (minutes < 1) return 'now'
-  if (minutes < 60) return `${minutes}m`
-  if (hours < 24) return `${hours}h`
-  if (days < 7) return `${days}d`
-  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
-// Draggable recent note item
-interface DraggableRecentNoteItemProps {
-  note: Note
-  currentProjectId?: string
-  onClick: () => void
-  onContextMenu?: (e: React.MouseEvent) => void
-}
-
-function DraggableRecentNoteItem({ note, currentProjectId, onClick, onContextMenu }: DraggableRecentNoteItemProps) {
-  const { isDragging, dragProps } = useDraggableNote(note, currentProjectId)
-
-  return (
-    <button
-      className={`recent-note-item ${isDragging ? 'dragging' : ''}`}
-      onClick={onClick}
-      onContextMenu={onContextMenu}
-      {...dragProps}
-    >
-      <GripVertical size={10} className="drag-handle" />
-      <FileText size={12} className="note-icon" />
-      <span className="note-title">{note.title || 'Untitled'}</span>
-      <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-    </button>
-  )
-}

@@ -56,10 +56,8 @@ export function RecentNotes({
 
   // Get project name by note properties
   const getProjectName = (note: Note): string | null => {
-    // Check if note has a project_id property
-    const projectId = note.properties?.project_id?.value as string | undefined
-    if (projectId) {
-      const project = projects.find(p => p.id === projectId)
+    if (note.project_id) {
+      const project = projects.find(p => p.id === note.project_id)
       return project?.name || null
     }
     return null

@@ -13,12 +13,16 @@ pub struct CreateNoteInput {
     title: String,
     content: String,
     folder: String,
+    project_id: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateNoteInput {
     title: Option<String>,
     content: Option<String>,
+    folder: Option<String>,
+    project_id: Option<String>,
+    deleted_at: Option<i64>,
 }
 
 // Note commands
@@ -29,7 +33,7 @@ pub fn create_note(
     note: CreateNoteInput,
 ) -> Result<Note, String> {
     let db = state.db.lock().unwrap();
-    db.create_note(&note.title, &note.content, &note.folder)
+    db.create_note(&note.title, &note.content, &note.folder, note.project_id.as_deref())
         .map_err(|e| e.to_string())
 }
 
@@ -58,8 +62,15 @@ pub fn update_note(
     updates: UpdateNoteInput,
 ) -> Result<Option<Note>, String> {
     let db = state.db.lock().unwrap();
-    db.update_note(&id, updates.title.as_deref(), updates.content.as_deref())
-        .map_err(|e| e.to_string())
+    db.update_note(
+        &id,
+        updates.title.as_deref(),
+        updates.content.as_deref(),
+        updates.folder.as_deref(),
+        updates.project_id.as_deref(),
+        updates.deleted_at,
+    )
+    .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -69,6 +80,24 @@ pub fn delete_note(
 ) -> Result<bool, String> {
     let db = state.db.lock().unwrap();
     db.delete_note(&id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn restore_note(
+    state: State<AppState>,
+    id: String,
+) -> Result<Option<Note>, String> {
+    let db = state.db.lock().unwrap();
+    db.restore_note(&id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn permanent_delete_note(
+    state: State<AppState>,
+    id: String,
+) -> Result<bool, String> {
+    let db = state.db.lock().unwrap();
+    db.permanent_delete_note(&id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -396,7 +425,7 @@ pub fn get_or_create_daily_note(state: State<AppState>, date: String) -> Result<
     // Create it with Markdown format
     let content = format!("## {}\n\n", date);
     
-    let note = db.create_note(&date, &content, "daily").map_err(|e| e.to_string())?;
+    let note = db.create_note(&date, &content, "daily", None).map_err(|e| e.to_string())?;
     Ok(note)
 }
 
@@ -588,6 +617,29 @@ pub fn export_document(options: ExportOptions) -> Result<ExportResult, String> {
         .map_err(|e| format!("Failed to create export directory: {}", e))?;
 
     crate::academic::export_document(&options, &output_dir)
+}
+
+// =============================================================================
+// Test Harness Commands (debug builds only)
+// =============================================================================
+
+use crate::testing::{TestResult, TestRunner};
+
+/// Run a test scenario
+#[tauri::command]
+pub fn run_test_scenario(
+    state: State<AppState>,
+    scenario: String,
+) -> Result<TestResult, String> {
+    let db = state.db.lock().unwrap();
+    let runner = TestRunner::new(&db);
+    Ok(runner.run_scenario(&scenario))
+}
+
+/// List available test scenarios
+#[tauri::command]
+pub fn list_test_scenarios() -> Vec<&'static str> {
+    TestRunner::list_scenarios()
 }
 
 

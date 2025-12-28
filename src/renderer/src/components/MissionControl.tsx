@@ -142,7 +142,7 @@ export function MissionControl({
 
   const lastActiveProject = useMemo(() => {
     if (!lastActiveNote) return null
-    const projectId = lastActiveNote.properties?.project_id?.value as string | undefined
+    const projectId = lastActiveNote.project_id
     if (!projectId) return null
     return projects.find(p => p.id === projectId) || null
   }, [lastActiveNote, projects])
@@ -171,10 +171,9 @@ export function MissionControl({
 
     // Compute stats from notes
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && stats[projectId]) {
-        stats[projectId].noteCount++
-        stats[projectId].wordCount += countWords(note.content)
+      if (note.project_id && stats[note.project_id]) {
+        stats[note.project_id].noteCount++
+        stats[note.project_id].wordCount += countWords(note.content)
       }
     })
 
@@ -238,7 +237,7 @@ export function MissionControl({
               onContinue={() => {
                 // Open the last edited note in the project
                 const projectNotes = notes.filter(n =>
-                  !n.deleted_at && n.properties?.project_id?.value === currentProject.id
+                  !n.deleted_at && n.project_id === currentProject.id
                 ).sort((a, b) => b.updated_at - a.updated_at)
                 if (projectNotes[0]) {
                   onSelectNote(projectNotes[0].id)

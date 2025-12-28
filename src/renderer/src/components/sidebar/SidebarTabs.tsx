@@ -38,7 +38,12 @@ interface PillTabsProps {
 
 export function PillTabs({ tabs, activeTab, onTabChange, size = 'md' }: PillTabsProps) {
   return (
-    <div className="sidebar-tabs-pill" role="tablist" aria-label="Sidebar navigation">
+    <div
+      className="sidebar-tabs-pill"
+      role="tablist"
+      aria-label="Sidebar navigation"
+      onContextMenu={(e) => e.preventDefault()}
+    >
       {tabs.map((tab) => {
         const Icon = tab.icon
         const isActive = activeTab === tab.id
@@ -49,6 +54,7 @@ export function PillTabs({ tabs, activeTab, onTabChange, size = 'md' }: PillTabs
             aria-selected={isActive}
             className={`tab-pill ${isActive ? 'active' : ''} tab-pill-${size}`}
             onClick={() => onTabChange(tab.id)}
+            onContextMenu={(e) => e.preventDefault()}
           >
             <Icon size={size === 'sm' ? 12 : size === 'lg' ? 16 : 14} />
             <span className="tab-label">{tab.label}</span>
@@ -74,7 +80,12 @@ interface IconTabsProps {
 
 export function IconTabs({ tabs, activeTab, onTabChange }: IconTabsProps) {
   return (
-    <div className="sidebar-tabs-icon" role="tablist" aria-label="Sidebar navigation">
+    <div
+      className="sidebar-tabs-icon"
+      role="tablist"
+      aria-label="Sidebar navigation"
+      onContextMenu={(e) => e.preventDefault()}
+    >
       {tabs.map((tab) => {
         const Icon = tab.icon
         const isActive = activeTab === tab.id
@@ -86,6 +97,7 @@ export function IconTabs({ tabs, activeTab, onTabChange }: IconTabsProps) {
             aria-label={tab.label}
             className={`tab-icon ${isActive ? 'active' : ''}`}
             onClick={() => onTabChange(tab.id)}
+            onContextMenu={(e) => e.preventDefault()}
             title={tab.label}
           >
             <Icon size={16} />

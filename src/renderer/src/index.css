@@ -3027,6 +3027,77 @@ mark {
   color: var(--nexus-text-muted);
 }
 
+/* Project Notes Section (shows when project is selected) */
+.project-notes-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.project-notes-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--nexus-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.project-notes-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0 8px;
+}
+
+.project-notes-empty {
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  font-style: italic;
+}
+
+.project-note-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  text-align: left;
+  transition: background-color 150ms ease;
+}
+
+.project-note-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.project-note-item .note-icon {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
+.project-note-item .note-title {
+  flex: 1;
+  font-size: 12px;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-note-item .note-time {
+  font-size: 10px;
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
 /* Add Project Button (Compact) */
 .add-project-btn-compact {
   display: flex;
@@ -3654,7 +3725,8 @@ mark {
    Note Context Menu
    ============================================================ */
 
-.note-context-menu {
+.note-context-menu,
+.project-context-menu {
   position: fixed;
   z-index: 1000;
   min-width: 180px;
@@ -3829,7 +3901,8 @@ mark {
 .note-list-item.dragging,
 .note-item.dragging,
 .inbox-item.dragging,
-.recent-note-item.dragging {
+.recent-note-item.dragging,
+.project-note-item.dragging {
   opacity: 0.5;
   background: rgba(139, 92, 246, 0.1);
 }
@@ -3874,13 +3947,15 @@ mark {
 
 .note-list-item:hover .drag-handle,
 .inbox-item:hover .drag-handle,
-.recent-note-item:hover .drag-handle {
+.recent-note-item:hover .drag-handle,
+.project-note-item:hover .drag-handle {
   opacity: 0.5;
 }
 
 .note-list-item:hover .drag-handle:hover,
 .inbox-item:hover .drag-handle:hover,
-.recent-note-item:hover .drag-handle:hover {
+.recent-note-item:hover .drag-handle:hover,
+.project-note-item:hover .drag-handle:hover {
   opacity: 1;
 }
 

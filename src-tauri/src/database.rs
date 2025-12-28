@@ -53,18 +53,27 @@ impl Database {
             .path()
             .app_data_dir()
             .expect("Failed to get app data directory");
-        
+
         std::fs::create_dir_all(&app_data_dir).expect("Failed to create app data directory");
-        
+
         let db_path = app_data_dir.join("scribe.db");
         let conn = Connection::open(db_path)?;
-        
+
         // Enable WAL mode for better performance
         conn.pragma_update(None, "journal_mode", "WAL")?;
-        
+
         let mut db = Database { conn };
         db.initialize()?;
-        
+
+        Ok(db)
+    }
+
+    /// Create an in-memory database for testing
+    #[cfg(test)]
+    pub fn new_in_memory() -> SqlResult<Self> {
+        let conn = Connection::open_in_memory()?;
+        let mut db = Database { conn };
+        db.initialize()?;
         Ok(db)
     }
     
@@ -266,10 +275,10 @@ impl Database {
 
     // Note CRUD operations
     
-    pub fn create_note(&self, title: &str, content: &str, folder: &str) -> SqlResult<Note> {
+    pub fn create_note(&self, title: &str, content: &str, folder: &str, project_id: Option<&str>) -> SqlResult<Note> {
         self.conn.execute(
-            "INSERT INTO notes (title, content, folder) VALUES (?, ?, ?)",
-            [title, content, folder],
+            "INSERT INTO notes (title, content, folder, project_id) VALUES (?, ?, ?, ?)",
+            rusqlite::params![title, content, folder, project_id],
         )?;
 
         let note = self.conn.query_row(
@@ -298,9 +307,10 @@ impl Database {
     }
     
     pub fn get_note(&self, id: &str) -> SqlResult<Option<Note>> {
+        // Get note by ID, including deleted notes (for trash, restore, etc.)
         let result = self.conn.query_row(
             "SELECT id, title, content, folder, project_id, created_at, updated_at, deleted_at
-             FROM notes WHERE id = ? AND deleted_at IS NULL",
+             FROM notes WHERE id = ?",
             [id],
             |row| {
                 Ok(Note {
@@ -369,36 +379,65 @@ impl Database {
         }
     }
     
-    pub fn update_note(&self, id: &str, title: Option<&str>, content: Option<&str>) -> SqlResult<Option<Note>> {
-        if title.is_none() && content.is_none() {
+    pub fn update_note(
+        &self,
+        id: &str,
+        title: Option<&str>,
+        content: Option<&str>,
+        folder: Option<&str>,
+        project_id: Option<&str>,
+        deleted_at: Option<i64>,
+    ) -> SqlResult<Option<Note>> {
+        // Check if there's anything to update
+        let has_updates = title.is_some()
+            || content.is_some()
+            || folder.is_some()
+            || project_id.is_some()
+            || deleted_at.is_some();
+
+        if !has_updates {
             return self.get_note(id);
         }
-        
+
+        // Build dynamic SQL
         let mut sql_parts = Vec::new();
-        
-        if title.is_some() {
+        let mut params: Vec<Box<dyn rusqlite::ToSql>> = Vec::new();
+
+        if let Some(t) = title {
             sql_parts.push("title = ?");
+            params.push(Box::new(t.to_string()));
         }
-        if content.is_some() {
+        if let Some(c) = content {
             sql_parts.push("content = ?");
+            params.push(Box::new(c.to_string()));
         }
+        if let Some(f) = folder {
+            sql_parts.push("folder = ?");
+            params.push(Box::new(f.to_string()));
+        }
+        if let Some(p) = project_id {
+            sql_parts.push("project_id = ?");
+            params.push(Box::new(p.to_string()));
+        }
+        if let Some(d) = deleted_at {
+            if d == 0 {
+                // Sentinel value: 0 means "clear deleted_at" (restore note)
+                sql_parts.push("deleted_at = NULL");
+            } else {
+                sql_parts.push("deleted_at = ?");
+                params.push(Box::new(d));
+            }
+        }
+
         sql_parts.push("updated_at = strftime('%s', 'now')");
-        
+
         let sql = format!("UPDATE notes SET {} WHERE id = ?", sql_parts.join(", "));
-        
-        match (title, content) {
-            (Some(t), Some(c)) => {
-                self.conn.execute(&sql, rusqlite::params![t, c, id])?;
-            }
-            (Some(t), None) => {
-                self.conn.execute(&sql, rusqlite::params![t, id])?;
-            }
-            (None, Some(c)) => {
-                self.conn.execute(&sql, rusqlite::params![c, id])?;
-            }
-            (None, None) => unreachable!(),
-        }
-        
+        params.push(Box::new(id.to_string()));
+
+        // Execute with dynamic params
+        let params_refs: Vec<&dyn rusqlite::ToSql> = params.iter().map(|p| p.as_ref()).collect();
+        self.conn.execute(&sql, params_refs.as_slice())?;
+
         let note = self.get_note(id)?;
         if let Some(n) = &note {
             if content.is_some() {
@@ -406,7 +445,7 @@ impl Database {
                 self.update_note_links(&n.id, &n.content)?;
             }
         }
-        
+
         Ok(note)
     }
     
@@ -415,6 +454,26 @@ impl Database {
             "UPDATE notes SET deleted_at = strftime('%s', 'now') WHERE id = ?",
             [id],
         )?;
+        Ok(changes > 0)
+    }
+
+    pub fn restore_note(&self, id: &str) -> SqlResult<Option<Note>> {
+        self.conn.execute(
+            "UPDATE notes SET deleted_at = NULL, updated_at = strftime('%s', 'now') WHERE id = ?",
+            [id],
+        )?;
+        self.get_note(id)
+    }
+
+    pub fn permanent_delete_note(&self, id: &str) -> SqlResult<bool> {
+        // Also remove from FTS index
+        self.conn.execute("DELETE FROM notes_fts WHERE rowid = (SELECT rowid FROM notes WHERE id = ?)", [id])?;
+        // Remove note-tag associations
+        self.conn.execute("DELETE FROM note_tags WHERE note_id = ?", [id])?;
+        // Remove links
+        self.conn.execute("DELETE FROM links WHERE source_note_id = ? OR target_note_id = ?", [id, id])?;
+        // Delete the note
+        let changes = self.conn.execute("DELETE FROM notes WHERE id = ?", [id])?;
         Ok(changes > 0)
     }
     
@@ -1043,6 +1102,116 @@ impl Database {
             [project_id],
             |row| row.get(0),
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_create_note() {
+        let db = Database::new_in_memory().unwrap();
+        let note = db.create_note("Test Note", "Content", "inbox", None).unwrap();
+
+        assert_eq!(note.title, "Test Note");
+        assert_eq!(note.content, "Content");
+        assert_eq!(note.folder, "inbox");
+        assert!(note.deleted_at.is_none());
+        println!("✅ Create note works: {:?}", note.id);
+    }
+
+    #[test]
+    fn test_soft_delete_note() {
+        let db = Database::new_in_memory().unwrap();
+
+        // Create a note
+        let note = db.create_note("Delete Me", "Content", "inbox", None).unwrap();
+        println!("Created note: {} (deleted_at: {:?})", note.id, note.deleted_at);
+
+        // Soft delete it
+        let success = db.delete_note(&note.id).unwrap();
+        assert!(success, "delete_note should return true");
+        println!("Deleted note: success={}", success);
+
+        // Verify it has deleted_at set
+        let deleted_note = db.get_note(&note.id).unwrap().unwrap();
+        assert!(deleted_note.deleted_at.is_some(), "deleted_at should be set after delete");
+        println!("✅ Soft delete works: deleted_at={:?}", deleted_note.deleted_at);
+    }
+
+    #[test]
+    fn test_restore_note() {
+        let db = Database::new_in_memory().unwrap();
+
+        // Create and delete a note
+        let note = db.create_note("Restore Me", "Content", "inbox", None).unwrap();
+        db.delete_note(&note.id).unwrap();
+
+        // Verify it's deleted
+        let deleted = db.get_note(&note.id).unwrap().unwrap();
+        assert!(deleted.deleted_at.is_some());
+        println!("Note is in trash: deleted_at={:?}", deleted.deleted_at);
+
+        // Restore it
+        let restored = db.restore_note(&note.id).unwrap().unwrap();
+        assert!(restored.deleted_at.is_none(), "deleted_at should be None after restore");
+        println!("✅ Restore works: deleted_at={:?}", restored.deleted_at);
+    }
+
+    #[test]
+    fn test_permanent_delete_note() {
+        let db = Database::new_in_memory().unwrap();
+
+        // Create a note
+        let note = db.create_note("Permanent Delete", "Content", "inbox", None).unwrap();
+        println!("Created note: {}", note.id);
+
+        // Permanently delete it
+        let success = db.permanent_delete_note(&note.id).unwrap();
+        assert!(success, "permanent_delete should return true");
+        println!("Permanently deleted: success={}", success);
+
+        // Verify it's gone
+        let gone = db.get_note(&note.id).unwrap();
+        assert!(gone.is_none(), "Note should not exist after permanent delete");
+        println!("✅ Permanent delete works: note is gone");
+    }
+
+    #[test]
+    fn test_full_delete_cycle() {
+        let db = Database::new_in_memory().unwrap();
+
+        println!("\n=== Full Delete Cycle Test ===");
+
+        // 1. Create
+        let note = db.create_note("Cycle Test", "Content", "inbox", None).unwrap();
+        println!("1. Created: id={}, deleted_at={:?}", note.id, note.deleted_at);
+
+        // 2. Soft delete
+        db.delete_note(&note.id).unwrap();
+        let after_delete = db.get_note(&note.id).unwrap().unwrap();
+        println!("2. After soft delete: deleted_at={:?}", after_delete.deleted_at);
+        assert!(after_delete.deleted_at.is_some());
+
+        // 3. Restore
+        let restored = db.restore_note(&note.id).unwrap().unwrap();
+        println!("3. After restore: deleted_at={:?}", restored.deleted_at);
+        assert!(restored.deleted_at.is_none());
+
+        // 4. Soft delete again
+        db.delete_note(&note.id).unwrap();
+        let after_delete2 = db.get_note(&note.id).unwrap().unwrap();
+        println!("4. After second soft delete: deleted_at={:?}", after_delete2.deleted_at);
+        assert!(after_delete2.deleted_at.is_some());
+
+        // 5. Permanent delete
+        db.permanent_delete_note(&note.id).unwrap();
+        let gone = db.get_note(&note.id).unwrap();
+        println!("5. After permanent delete: exists={}", gone.is_some());
+        assert!(gone.is_none());
+
+        println!("✅ Full cycle passed!");
     }
 }
 

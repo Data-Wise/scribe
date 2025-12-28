@@ -1,6 +1,7 @@
 mod database;
 mod commands;
 mod academic;
+mod testing;
 
 use commands::AppState;
 use database::Database;
@@ -61,6 +62,8 @@ pub fn run() {
       commands::list_notes,
       commands::update_note,
       commands::delete_note,
+      commands::restore_note,
+      commands::permanent_delete_note,
       commands::search_notes,
       commands::get_folders,
       commands::get_all_tags,
@@ -104,6 +107,9 @@ pub fn run() {
       commands::get_notes_by_project,
       commands::assign_note_to_project,
       commands::get_project_note_count,
+      // Testing harness (debug builds only, but safe in release)
+      commands::run_test_scenario,
+      commands::list_test_scenarios,
     ])
 
 

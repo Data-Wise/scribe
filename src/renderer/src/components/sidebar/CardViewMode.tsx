@@ -92,8 +92,7 @@ export function CardViewMode({
         if (n.deleted_at) return false
         // If a project is selected, only show notes from that project
         if (currentProjectId) {
-          const noteProjectId = n.properties?.project_id?.value as string | undefined
-          return noteProjectId === currentProjectId
+          return n.project_id === currentProjectId
         }
         return true
       })
@@ -108,10 +107,9 @@ export function CardViewMode({
       stats[p.id] = { noteCount: 0, wordCount: 0 }
     })
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && stats[projectId]) {
-        stats[projectId].noteCount++
-        stats[projectId].wordCount += countWords(note.content)
+      if (note.project_id && stats[note.project_id]) {
+        stats[note.project_id].noteCount++
+        stats[note.project_id].wordCount += countWords(note.content)
       }
     })
     return stats
@@ -199,24 +197,21 @@ export function CardViewMode({
                 <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
               </h4>
               <div className="recent-notes-list">
-                {recentNotes.map(note => {
-                  const noteProjectId = note.properties?.project_id?.value as string | undefined
-                  return (
+                {recentNotes.map(note => (
                     <DraggableRecentNoteItem
                       key={note.id}
                       note={note}
-                      currentProjectId={noteProjectId}
+                      currentProjectId={note.project_id}
                       onClick={() => onSelectNote(note.id)}
-                      onContextMenu={(e) => showContextMenu(e, note.id, noteProjectId)}
+                      onContextMenu={(e) => showContextMenu(e, note.id, note.project_id)}
                     />
-                  )
-                })}
+                  ))}
               </div>
             </div>
           )}
 
           {/* Context Menu for Recent Notes */}
-          {contextMenu && onAssignNoteToProject && (
+          {contextMenu && (
             <NoteContextMenu
               x={contextMenu.x}
               y={contextMenu.y}
@@ -224,7 +219,7 @@ export function CardViewMode({
               currentProjectId={contextMenu.currentProjectId}
               projects={projects}
               onClose={hideContextMenu}
-              onAssignToProject={onAssignNoteToProject}
+              onAssignToProject={onAssignNoteToProject || (() => {})}
               onMoveToInbox={onMoveNoteToInbox}
               onDelete={onDeleteNote}
             />

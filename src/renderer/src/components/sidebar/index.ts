@@ -10,6 +10,7 @@ export { InboxPanel } from './InboxPanel'
 export { GraphPanel } from './GraphPanel'
 export { TrashPanel } from './TrashPanel'
 export { NoteContextMenu, useNoteContextMenu } from './NoteContextMenu'
+export { ProjectContextMenu, useProjectContextMenu } from './ProjectContextMenu'
 export {
   useDraggableNote,
   useDropTarget,

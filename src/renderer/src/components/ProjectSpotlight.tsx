@@ -32,7 +32,7 @@ export function ProjectSpotlight({
   const stats = useMemo(() => {
     const projectNotes = notes.filter(n =>
       !n.deleted_at &&
-      n.properties?.project_id?.value === project.id
+      n.project_id === project.id
     )
 
     const wordCount = projectNotes.reduce((sum, note) => {

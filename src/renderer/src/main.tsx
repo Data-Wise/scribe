@@ -4,6 +4,9 @@ import App from './App'
 import 'katex/dist/katex.min.css'  // KaTeX styles for math rendering
 import './index.css'
 
+// Debug utilities (accessible via window.scribeDebug in DevTools)
+import './lib/debug'
+
 // Global error handler
 window.onerror = (message, source, lineno, colno, error) => {
   console.error('Global error:', { message, source, lineno, colno, error });

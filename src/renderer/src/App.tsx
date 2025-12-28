@@ -87,7 +87,9 @@ function App() {
     currentProjectId,
     loadProjects,
     setCurrentProject,
-    createProject
+    createProject,
+    updateProject,
+    deleteProject
   } = useProjectStore()
 
   // Sidebar mode from app view store (replaces dashboardCollapsed toggle)
@@ -362,10 +364,12 @@ function App() {
     }
 
     // Create note via API directly to get the note back
+    // If a project is selected, associate the new note with it
     const newNote = await api.createNote({
       title: `New Note`,
       content: '',  // Empty markdown - user starts fresh
       folder: currentFolder || 'inbox',
+      project_id: currentProjectId || undefined,  // Associate with current project if selected
       properties: defaultProperties
     })
 
@@ -1050,6 +1054,56 @@ function App() {
             handleOpenNoteInTab(noteId)
           }}
           onCreateProject={() => setIsCreateProjectModalOpen(true)}
+          onNewNoteInProject={async (projectId) => {
+            // Create a new note in the specified project
+            const defaultProperties: Record<string, Property> = {
+              status: { key: 'status', value: 'draft', type: 'list' },
+              type: { key: 'type', value: 'note', type: 'list' },
+            }
+
+            const newNote = await api.createNote({
+              title: 'New Note',
+              content: '',
+              folder: 'notes',
+              project_id: projectId,  // Direct field for backend
+              properties: defaultProperties
+            })
+
+            // Open the new note in a tab
+            openTab(newNote.id, newNote.title || 'Untitled')
+            selectNote(newNote.id)
+            loadNotes(currentFolder)
+          }}
+          onEditProject={(projectId) => {
+            // TODO: Open edit project modal
+            console.log('Edit project:', projectId)
+          }}
+          onArchiveProject={async (projectId) => {
+            try {
+              await updateProject(projectId, { status: 'archive' })
+            } catch (error) {
+              console.error('Failed to archive project:', error)
+            }
+          }}
+          onUnarchiveProject={async (projectId) => {
+            try {
+              await updateProject(projectId, { status: 'active' })
+            } catch (error) {
+              console.error('Failed to unarchive project:', error)
+            }
+          }}
+          onDeleteProject={async (projectId) => {
+            if (confirm('Are you sure you want to delete this project? Notes will be unassigned but not deleted.')) {
+              try {
+                await deleteProject(projectId)
+                if (currentProjectId === projectId) {
+                  setCurrentProject(null)
+                }
+              } catch (error) {
+                console.error('Failed to delete project:', error)
+              }
+            }
+          }}
           onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
           onMarkInboxProcessed={(noteId) => {
             // Move note out of inbox by changing folder

@@ -13,6 +13,11 @@ interface MissionSidebarProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onNewNoteInProject?: (projectId: string) => void
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onUnarchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
   onOpenQuickCapture?: () => void
   onMarkInboxProcessed?: (noteId: string) => void
   onDeleteNote?: (noteId: string) => void
@@ -28,6 +33,11 @@ export function MissionSidebar({
   onSelectProject,
   onSelectNote,
   onCreateProject,
+  onNewNoteInProject,
+  onEditProject,
+  onArchiveProject,
+  onUnarchiveProject,
+  onDeleteProject,
   onOpenQuickCapture,
   onMarkInboxProcessed,
   onDeleteNote,
@@ -93,6 +103,11 @@ export function MissionSidebar({
           onSelectProject={onSelectProject}
           onSelectNote={onSelectNote}
           onCreateProject={onCreateProject}
+          onNewNoteInProject={onNewNoteInProject}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onUnarchiveProject={onUnarchiveProject}
+          onDeleteProject={onDeleteProject}
           onCollapse={handleCollapse}
           onOpenQuickCapture={onOpenQuickCapture}
           onMarkInboxProcessed={onMarkInboxProcessed}

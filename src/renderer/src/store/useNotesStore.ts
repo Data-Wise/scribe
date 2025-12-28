@@ -120,44 +120,54 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   // Trash actions (soft delete pattern)
   softDeleteNote: async (id: string) => {
     try {
-      const updatedNote = await api.updateNote(id, { deleted_at: Date.now() })
-      if (updatedNote) {
+      console.log('[softDeleteNote] Deleting note:', id)
+      // Use the dedicated delete_note command which sets deleted_at
+      const success = await api.deleteNote(id)
+      console.log('[softDeleteNote] API response:', success)
+      if (success) {
+        // Update local state - mark as deleted
         set((state) => ({
           notes: state.notes.map((note) =>
-            note.id === id ? updatedNote : note
+            note.id === id ? { ...note, deleted_at: Math.floor(Date.now() / 1000) } : note
           ),
           selectedNoteId: state.selectedNoteId === id ? null : state.selectedNoteId
         }))
       }
     } catch (error) {
+      console.error('[softDeleteNote] Error:', error)
       set({ error: (error as Error).message })
     }
   },
 
   restoreNote: async (id: string) => {
     try {
-      // Restore by clearing deleted_at
-      const updatedNote = await api.updateNote(id, { deleted_at: null })
-      if (updatedNote) {
+      console.log('[restoreNote] Restoring note:', id)
+      // Use dedicated restore_note command
+      const restoredNote = await api.restoreNote(id)
+      console.log('[restoreNote] API response:', restoredNote)
+      if (restoredNote) {
         set((state) => ({
           notes: state.notes.map((note) =>
-            note.id === id ? { ...updatedNote, deleted_at: undefined } : note
+            note.id === id ? restoredNote : note
           )
         }))
       }
     } catch (error) {
+      console.error('[restoreNote] Error:', error)
       set({ error: (error as Error).message })
     }
   },
 
   permanentlyDeleteNote: async (id: string) => {
     try {
-      await api.deleteNote(id)
+      console.log('[permanentlyDeleteNote] Permanently deleting:', id)
+      await api.permanentDeleteNote(id)
       set((state) => ({
         notes: state.notes.filter((note) => note.id !== id),
         selectedNoteId: state.selectedNoteId === id ? null : state.selectedNoteId
       }))
     } catch (error) {
+      console.error('[permanentlyDeleteNote] Error:', error)
       set({ error: (error as Error).message })
     }
   },
@@ -166,8 +176,9 @@ export const useNotesStore = create<NotesState>((set, get) => ({
     const { notes } = get()
     const trashedNotes = notes.filter(n => n.deleted_at)
     try {
-      // Delete all trashed notes
-      await Promise.all(trashedNotes.map(note => api.deleteNote(note.id)))
+      console.log('[emptyTrash] Deleting', trashedNotes.length, 'notes')
+      // Permanently delete all trashed notes
+      await Promise.all(trashedNotes.map(note => api.permanentDeleteNote(note.id)))
       // Remove from local state
       set((state) => ({
         notes: state.notes.filter(n => !n.deleted_at),

@@ -132,7 +132,7 @@ export function NotesListPanel({
           </div>
         ) : (
           filteredNotes.map(note => {
-            const projectId = note.properties?.project_id?.value as string | undefined
+            const projectId = note.project_id
             return (
               <NoteItem
                 key={note.id}
@@ -154,7 +154,7 @@ export function NotesListPanel({
       </div>
 
       {/* Context Menu */}
-      {contextMenu && onAssignToProject && (
+      {contextMenu && (
         <NoteContextMenu
           x={contextMenu.x}
           y={contextMenu.y}
@@ -162,7 +162,7 @@ export function NotesListPanel({
           currentProjectId={contextMenu.currentProjectId}
           projects={projects}
           onClose={hideContextMenu}
-          onAssignToProject={onAssignToProject}
+          onAssignToProject={onAssignToProject || (() => {})}
           onMoveToInbox={onMoveToInbox}
           onDelete={onDelete}
         />

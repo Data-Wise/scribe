@@ -39,10 +39,9 @@ export function ProjectsPanel({
     })
 
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && stats[projectId]) {
-        stats[projectId].noteCount++
-        stats[projectId].wordCount += countWords(note.content)
+      if (note.project_id && stats[note.project_id]) {
+        stats[note.project_id].noteCount++
+        stats[note.project_id].wordCount += countWords(note.content)
       }
     })
 
