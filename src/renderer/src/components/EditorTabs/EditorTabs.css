@@ -1,11 +1,13 @@
-/* EditorTabs - Gradient Accent Style (Plan B, Style 5) */
+/* EditorTabs - Pill Shape + Modern Elevated Style */
 
 .editor-tabs {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   background: var(--bg-secondary, #1e1e1e);
   border-bottom: 1px solid var(--border-color, #333);
-  height: 36px;
+  height: 44px;
+  padding: 4px 8px;
+  gap: 6px;
   overflow: hidden;
   user-select: none;
   -webkit-app-region: no-drag;
@@ -13,39 +15,41 @@
 
 .editor-tabs-scroll {
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  gap: 6px;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
   flex: 1;
+  padding: 2px 0;
 }
 
 .editor-tabs-scroll::-webkit-scrollbar {
   display: none;
 }
 
-/* Individual tab */
+/* Individual tab - Pill/Capsule shape */
 .editor-tab {
   position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 0 12px;
+  padding: 6px 14px;
   min-width: 100px;
   max-width: 180px;
-  height: 100%;
-  background: transparent;
+  height: 32px;
+  background: var(--tab-bg, rgba(255, 255, 255, 0.05));
   border: none;
-  border-right: 1px solid var(--border-color, #333);
+  border-radius: 999px; /* Pill shape */
   color: var(--text-muted, #888);
   font-size: 12px;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .editor-tab:hover {
-  background: var(--bg-hover, #2a2a2a);
+  background: var(--tab-hover-bg, rgba(255, 255, 255, 0.1));
   color: var(--text-primary, #e0e0e0);
 }
 
@@ -53,27 +57,38 @@
   opacity: 1;
 }
 
-/* Active tab */
+/* Active tab - Modern Elevated (Arc Browser-like) */
 .editor-tab.active {
-  background: var(--bg-primary, #252525);
+  background: var(--tab-active-bg, rgba(255, 255, 255, 0.15));
   color: var(--text-primary, #fff);
-  font-weight: 500;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
-/* Gradient accent bar on active tab */
+/* Gradient accent bar on active tab - now inside the pill */
 .tab-accent-bar {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  border-radius: 0 0 2px 2px;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
 }
 
 /* Pinned tab styling */
 .editor-tab.pinned {
   min-width: auto;
-  padding: 0 10px;
+  padding: 6px 12px;
+  background: var(--tab-pinned-bg, rgba(255, 255, 255, 0.08));
+}
+
+.editor-tab.pinned:hover {
+  background: var(--tab-pinned-hover-bg, rgba(255, 255, 255, 0.12));
+}
+
+.editor-tab.pinned.active {
+  background: var(--tab-pinned-active-bg, rgba(255, 255, 255, 0.18));
 }
 
 .editor-tab.pinned .tab-title {
@@ -83,14 +98,15 @@
 /* Drag and drop states */
 .editor-tab.dragging {
   opacity: 0.5;
+  transform: scale(0.95);
 }
 
 .editor-tab.drag-over {
-  border-left: 2px solid var(--nexus-accent, #3b82f6);
+  box-shadow: -3px 0 0 0 var(--nexus-accent, #3b82f6);
 }
 
 .editor-tab.drag-over-right {
-  border-right: 2px solid var(--nexus-accent, #3b82f6);
+  box-shadow: 3px 0 0 0 var(--nexus-accent, #3b82f6);
 }
 
 /* Tab icon */
@@ -154,13 +170,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   padding: 0;
-  margin-left: 4px;
+  margin-left: 2px;
   background: transparent;
   border: none;
-  border-radius: 3px;
+  border-radius: 50%; /* Round close button for pill tabs */
   color: var(--text-muted, #888);
   cursor: pointer;
   opacity: 0;
@@ -168,21 +184,26 @@
 }
 
 .tab-close:hover {
-  background: var(--bg-hover, #3a3a3a);
+  background: rgba(255, 255, 255, 0.15);
   color: var(--text-primary, #fff);
 }
 
 .editor-tab.active .tab-close {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
-/* Mission Control special styling */
+/* Mission Control special styling - theme aware */
 .editor-tab.pinned:first-child {
-  background: var(--bg-tertiary, #1a1a1a);
+  background: var(--tab-mission-control-bg, rgba(99, 102, 241, 0.15));
+}
+
+.editor-tab.pinned:first-child:hover {
+  background: var(--tab-mission-control-hover-bg, rgba(99, 102, 241, 0.25));
 }
 
 .editor-tab.pinned:first-child.active {
-  background: var(--bg-primary, #252525);
+  background: var(--tab-mission-control-active-bg, rgba(99, 102, 241, 0.3));
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3), 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive: smaller tabs on narrow screens */
@@ -230,30 +251,57 @@
   opacity: 0.9;
 }
 
-/* Light mode */
+/* Light mode - Pill tabs with elevated active */
 @media (prefers-color-scheme: light) {
   .editor-tabs {
-    background: #f5f5f5;
+    background: #f0f0f0;
     border-bottom-color: #ddd;
   }
 
   .editor-tab {
+    background: rgba(0, 0, 0, 0.04);
     color: #666;
-    border-right-color: #ddd;
   }
 
   .editor-tab:hover {
-    background: #eee;
+    background: rgba(0, 0, 0, 0.08);
     color: #333;
   }
 
   .editor-tab.active {
     background: #fff;
     color: #111;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+
+  .editor-tab.pinned {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .editor-tab.pinned:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .editor-tab.pinned.active {
+    background: #fff;
+  }
+
+  /* Mission Control in light mode */
+  .editor-tab.pinned:first-child {
+    background: rgba(99, 102, 241, 0.1);
+  }
+
+  .editor-tab.pinned:first-child:hover {
+    background: rgba(99, 102, 241, 0.18);
+  }
+
+  .editor-tab.pinned:first-child.active {
+    background: rgba(99, 102, 241, 0.15);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2), 0 1px 3px rgba(0, 0, 0, 0.06);
   }
 
   .tab-close:hover {
-    background: #ddd;
+    background: rgba(0, 0, 0, 0.1);
     color: #333;
   }
 
