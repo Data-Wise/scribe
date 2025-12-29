@@ -3,6 +3,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { CommandPalette } from '../components/CommandPalette'
 
+// Mock the platform module to simulate Tauri mode (features enabled)
+vi.mock('../lib/platform', () => ({
+  isTauri: () => true,
+  isBrowser: () => false
+}))
+
 // Mock notes
 const mockNotes = [
   { id: '1', title: 'Project Plan', content: '', folder: 'projects', created_at: Date.now(), updated_at: Date.now() },

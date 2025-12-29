@@ -13,6 +13,15 @@ interface MissionSidebarProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onNewNote: (projectId: string) => void
+  // Context menu handlers
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
+  onRenameNote?: (noteId: string) => void
+  onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
+  onDuplicateNote?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
 }
 
 export function MissionSidebar({
@@ -21,7 +30,15 @@ export function MissionSidebar({
   currentProjectId,
   onSelectProject,
   onSelectNote,
-  onCreateProject
+  onCreateProject,
+  onNewNote,
+  onEditProject,
+  onArchiveProject,
+  onDeleteProject,
+  onRenameNote,
+  onMoveNoteToProject,
+  onDuplicateNote,
+  onDeleteNote
 }: MissionSidebarProps) {
   const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
 
@@ -81,8 +98,16 @@ export function MissionSidebar({
           onSelectProject={onSelectProject}
           onSelectNote={onSelectNote}
           onCreateProject={onCreateProject}
+          onNewNote={onNewNote}
           onCollapse={handleCollapse}
           width={width}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+          onRenameNote={onRenameNote}
+          onMoveNoteToProject={onMoveNoteToProject}
+          onDuplicateNote={onDuplicateNote}
+          onDeleteNote={onDeleteNote}
         />
       )}
 
@@ -94,8 +119,16 @@ export function MissionSidebar({
           onSelectProject={onSelectProject}
           onSelectNote={onSelectNote}
           onCreateProject={onCreateProject}
+          onNewNote={onNewNote}
           onCollapse={handleCollapse}
           width={width}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+          onRenameNote={onRenameNote}
+          onMoveNoteToProject={onMoveNoteToProject}
+          onDuplicateNote={onDuplicateNote}
+          onDeleteNote={onDeleteNote}
         />
       )}
 

@@ -35,15 +35,26 @@ Before making ANY changes, read:
 
 | Layer | Technology |
 |-------|------------|
-| Shell | Electron 28 |
+| Shell | **Tauri 2** (Rust backend) |
 | UI | React 18 |
-| Editor | BlockNote (migrating from TipTap) |
+| Editor | BlockNote |
 | Styling | Tailwind CSS |
 | State | Zustand |
-| Database | SQLite (better-sqlite3) |
+| Database | SQLite (Tauri) / **IndexedDB** (Browser) |
 | AI | Claude/Gemini CLI only (NO API) |
 | Citations | Pandoc citeproc |
 | Math | KaTeX |
+
+### Dual Runtime Support
+
+Scribe runs in two modes with a unified API:
+
+| Mode | Database | Launch | Use Case |
+|------|----------|--------|----------|
+| **Tauri** | SQLite (Rust) | `npm run dev` | Full features, desktop app |
+| **Browser** | IndexedDB (Dexie.js) | `npm run dev:vite` | Testing, demos, development |
+
+The API factory (`src/renderer/src/lib/api.ts`) auto-switches based on runtime detection.
 
 ---
 
@@ -51,35 +62,27 @@ Before making ANY changes, read:
 
 ```
 scribe/
-├── cli/                       # Terminal CLI (ZSH)
-│   ├── scribe.zsh            # Main CLI implementation
-│   ├── install.sh            # CLI installer
-│   └── README.md             # CLI documentation
+├── cli/                           # Terminal CLI (ZSH)
+│   └── scribe.zsh                 # Main CLI (daily, capture, search, browser)
+├── src-tauri/                     # Tauri Rust backend
+│   └── src/
+│       ├── database/              # SQLite operations
+│       ├── ai/                    # Claude/Gemini CLI wrappers
+│       └── ...
 ├── src/
-│   ├── main/                  # Electron main process
-│   │   ├── database/          # SQLite operations
-│   │   ├── ai/                # Claude/Gemini CLI wrappers
-│   │   ├── academic/          # Zotero, Pandoc, Quarto
-│   │   ├── projects/          # Project manager
-│   │   ├── knowledge/         # Daily notes, backlinks
-│   │   ├── ecosystem/         # flow-cli, obs, aiterm status
-│   │   └── sync/              # Obsidian sync
-│   │
-│   ├── preload/               # IPC bridge
-│   │
-│   └── renderer/              # React app
-│       └── src/
-│           ├── components/
-│           │   ├── Editor/    # BlockNote
-│           │   ├── Sidebar/   # Project switcher, panels
-│           │   ├── AIPanel/   # AI actions
-│           │   └── FocusMode/ # Distraction-free
-│           ├── blocks/        # Custom BlockNote blocks
-│           │   ├── WikiLink.tsx
-│           │   ├── Tag.tsx
-│           │   ├── Citation.tsx
-│           │   └── Equation.tsx
-│           └── store/         # Zustand
+│   └── renderer/src/              # React frontend
+│       ├── components/
+│       │   ├── MissionControl/    # Mission Control HUD sidebar
+│       │   ├── Editor/            # BlockNote editor
+│       │   └── ...
+│       ├── lib/                   # Core utilities
+│       │   ├── api.ts             # API factory (Tauri/Browser)
+│       │   ├── platform.ts        # Runtime detection (isTauri/isBrowser)
+│       │   ├── browser-api.ts     # IndexedDB API (46 operations)
+│       │   ├── browser-db.ts      # Dexie.js schema + seed data
+│       │   └── browser-dialogs.ts # Browser dialog fallbacks
+│       ├── store/                 # Zustand state
+│       └── types/                 # TypeScript types
 ```
 
 ---
@@ -89,10 +92,11 @@ scribe/
 ### App Development
 
 ```bash
-npm run dev      # Development
-npm run build    # Production build
-npm run test     # Run tests
-npm run lint     # Lint code
+npm run dev          # Tauri development (full features)
+npm run dev:vite     # Browser-only development (IndexedDB)
+npm run build        # Production build
+npm run test         # Run tests
+npm run typecheck    # TypeScript check
 ```
 
 ### Terminal CLI
@@ -106,6 +110,7 @@ scribe daily           # Open today's daily note
 scribe capture "idea"  # Quick capture to inbox
 scribe search "query"  # Full-text search
 scribe list            # List recent notes
+scribe browser         # Launch in Chrome (browser mode)
 scribe help --all      # Full reference
 ```
 
@@ -113,17 +118,20 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Sprint: 8 (BlockNote + Focus Mode)
+## 🎯 Current Work: Mission Control HUD
 
-**Tasks:**
+**Branch:** `feat/mission-control-hud`
 
-- [ ] Replace TipTap with BlockNote
-- [ ] Implement Focus Mode
-- [ ] Dark mode default
-- [ ] Auto-save
-- [ ] Word count
-- [ ] Port wiki links
-- [ ] Port tags
+**Completed:**
+- ✅ Mission Control sidebar with Icon/Compact/Card modes
+- ✅ Browser mode with full IndexedDB persistence
+- ✅ API factory for Tauri/Browser switching
+- ✅ Demo seed data for new browser users
+- ✅ CLI `scribe browser` command
+
+**In Progress:**
+- [ ] Browser mode indicator in UI
+- [ ] Wiki link backlink tracking in browser
 
 ---
 
@@ -184,6 +192,32 @@ scribe help --all      # Full reference
 
 ## 🔧 Key Implementation Details
 
+### Browser Mode Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     React Components                         │
+└─────────────────────────────┬───────────────────────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      api.ts (Factory)                        │
+│   export const api = isTauri() ? tauriApi : browserApi      │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+┌─────────────────────────┐     ┌─────────────────────────┐
+│     Tauri invoke()      │     │   browser-api.ts        │
+│     (46 operations)     │     │   (IndexedDB/Dexie)     │
+└─────────────────────────┘     └─────────────────────────┘
+```
+
+**Key files:**
+- `platform.ts` - `isTauri()`, `isBrowser()` detection
+- `browser-db.ts` - Dexie.js schema, `seedDemoData()`
+- `browser-api.ts` - Full 46-operation API for browser
+- `browser-dialogs.ts` - `confirm()`, `alert()` fallbacks
+
 ### AI Integration (CLI Only)
 
 ```typescript
@@ -194,18 +228,6 @@ async function askClaude(prompt: string, context: string): Promise<string> {
   );
   return result.stdout;
 }
-```
-
-### Project Structure on Disk
-
-```
-~/Projects/{project}/
-├── .scribe/
-│   ├── project.json     # Settings
-│   └── templates/       # Custom templates
-├── notes/
-└── daily/
-    └── 2024-12-24.md
 ```
 
 ### Daily Notes
@@ -235,4 +257,24 @@ async function askClaude(prompt: string, context: string): Promise<string> {
 | .STATUS | Progress tracking |
 | CHANGELOG.md | Version history |
 | cli/scribe.zsh | Terminal CLI implementation |
-| cli/README.md | CLI documentation |
+| BRAINSTORM-browser-fallback-2025-12-28.md | Browser mode implementation notes |
+
+---
+
+## 🌐 Browser Mode Features
+
+**Working in browser:**
+- ✅ Project CRUD (create, read, update, delete)
+- ✅ Note CRUD with full-text search
+- ✅ Tags and tag filtering
+- ✅ Backlinks panel (incoming/outgoing)
+- ✅ Command palette (⌘K)
+- ✅ Properties panel
+- ✅ Persistence across refresh
+
+**Tauri-only (stubbed in browser):**
+- AI operations (Claude/Gemini CLI)
+- Obsidian sync
+- Font management (Homebrew)
+- Citation/Zotero integration
+- Pandoc document export

@@ -7,6 +7,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] - v1.6.0
+
+### Sprint 25: Plan B UI Redesign - Complete (2025-12-28)
+
+**ADHD-friendly sidebar overhaul with expandable project notes and browser mode support.**
+
+### Added
+
+**Phase 1: Editor Tabs** ✅
+- EditorTabs component with gradient accent bar (Style 5)
+- Tab state management in useAppViewStore with Zustand
+- localStorage persistence for open tabs and active tab
+- Mission Control pinned as permanent first tab
+- Keyboard shortcuts: ⌘1-9 switch tabs, ⌘W close current tab
+- Middle-click to close non-pinned tabs
+
+**Phase 2: Note Selection & Project Defaults** ✅
+- Note selection from sidebar opens in editor tabs
+- Default "Research" project for first-time users
+- Proper tab/editor integration throughout
+
+**Phase 3: Sidebar Note Display (Option B)** ✅
+- Removed redundant "Recent Notes" section from sidebar
+- CardViewMode: Expandable note tiles inside project cards
+  - Click stats row to expand/collapse (accordion behavior)
+  - Shows up to 6 recent notes per project
+  - Note tiles with title + time ago
+  - Empty state with "Create first note" CTA
+  - Right-click notes for context menu
+- CompactListMode: Notes shown when project expanded
+  - Shows up to 5 notes per project
+  - "+X more" indicator for additional notes
+
+**Phase 4: Browser Mode Indicator** ✅
+- Visual badge in EditorTabs when running in browser mode
+- Globe icon + "BROWSER" text (subtle blue styling)
+- Tooltip explains IndexedDB persistence
+
+**Testing** ✅
+- 27 new CardViewMode tests (edge cases, interactions)
+- 30 new CompactListMode tests (full coverage)
+- Total: 666 tests passing
+
+### Changed
+
+- CardViewMode project cards now expandable (in-place growth)
+- Chevron rotates 180° when project expanded
+- Active project sorted to top in both view modes
+
+### Technical
+
+- `expandedProjectId` state for accordion behavior
+- `notesByProject` computed map for note grouping
+- Fixed DOM nesting warning (button inside button → div with role="button")
+- Platform detection via `isBrowser()` for conditional rendering
+
+### New Components
+
+- `EditorTabs/EditorTabs.tsx` - Tab bar with gradient accents
+- `EditorTabs/EditorTabs.css` - Tab and browser badge styling
+
+### Test Files
+
+- `__tests__/CardViewMode.test.tsx` - 27 tests
+- `__tests__/CompactListMode.test.tsx` - 30 tests
+- `__tests__/Sidebar.test.tsx` - Updated for CardViewMode
+
+### Documentation
+
+- `docs/planning/BRAINSTORM-PROJECT-NOTE-DISPLAY.md` - Option B design doc
+
+---
+
 ## [1.2.0] - 2025-12-27
 
 ### Mission Control - Dashboard-First Experience

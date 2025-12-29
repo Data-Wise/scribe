@@ -7,6 +7,7 @@ import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
 import { WritingProgress } from './WritingProgress'
 import { processMathInContent } from '../lib/mathjax'
+import { isBrowser } from '../lib/platform'
 import { Note, Tag } from '../types'
 import { EditorMode } from '../lib/preferences'
 
@@ -501,6 +502,19 @@ export function HybridEditor({
           <span className="tabular-nums">{wordCount} words</span>
           {focusMode && (
             <span className="text-nexus-accent">Focus Mode</span>
+          )}
+          {isBrowser() && (
+            <span
+              className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+              style={{
+                backgroundColor: 'rgba(251, 146, 60, 0.2)',
+                color: 'rgb(251, 146, 60)',
+                border: '1px solid rgba(251, 146, 60, 0.3)'
+              }}
+              title="Running in browser mode with IndexedDB storage"
+            >
+              Browser Mode
+            </span>
           )}
         </span>
       </div>

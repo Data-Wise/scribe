@@ -24,6 +24,14 @@ interface ProjectState {
 // localStorage key for persisting current project
 const CURRENT_PROJECT_KEY = 'scribe:currentProjectId'
 
+// Default demo project for first-time users
+const DEFAULT_RESEARCH_PROJECT = {
+  name: 'Research',
+  type: 'research' as ProjectType,
+  description: 'Your research workspace - papers, notes, and ideas',
+  color: '#3b82f6'  // Blue
+}
+
 // Helper to get persisted project ID
 const getPersistedProjectId = (): string | null => {
   try {
@@ -55,7 +63,21 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   loadProjects: async () => {
     set({ isLoading: true, error: null })
     try {
-      const projects = await api.listProjects()
+      let projects = await api.listProjects()
+
+      // Create default Research project if no projects exist (first-time user)
+      if (projects.length === 0) {
+        const defaultProject = await api.createProject(DEFAULT_RESEARCH_PROJECT)
+        projects = [defaultProject]
+        // Auto-select the default project
+        set({
+          projects,
+          currentProjectId: defaultProject.id,
+          isLoading: false
+        })
+        persistProjectId(defaultProject.id)
+        return
+      }
 
       // Validate persisted project ID still exists
       const currentId = get().currentProjectId

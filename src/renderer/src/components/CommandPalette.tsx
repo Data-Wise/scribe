@@ -13,8 +13,10 @@ import {
   Clock,
   Folder,
   Download,
-  Network
+  Network,
+  Monitor
 } from 'lucide-react'
+import { isBrowser } from '../lib/platform'
 
 // Format relative time (e.g., "2m ago", "1h ago", "Yesterday")
 function formatRelativeTime(timestamp: number): string {
@@ -163,28 +165,58 @@ export function CommandPalette({
               <kbd className="command-palette-shortcut">⌘D</kbd>
             </Command.Item>
             <Command.Item
-              onSelect={() => { onObsidianSync(); setOpen(false); }}
-              className="command-palette-item"
+              onSelect={() => {
+                if (isBrowser()) return; // Disabled in browser mode
+                onObsidianSync(); setOpen(false);
+              }}
+              className={`command-palette-item ${isBrowser() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isBrowser()}
             >
               <kbd className="command-palette-number">3</kbd>
-              <Share className="mr-3 h-4 w-4 text-purple-400" />
+              <Share className={`mr-3 h-4 w-4 ${isBrowser() ? 'text-gray-500' : 'text-purple-400'}`} />
               <span>Sync to Obsidian Vault</span>
+              {isBrowser() && (
+                <span className="ml-auto flex items-center gap-1 text-xs text-gray-500">
+                  <Monitor className="w-3 h-3" />
+                  Desktop
+                </span>
+              )}
             </Command.Item>
             <Command.Item
-              onSelect={() => { onRunClaude(); setOpen(false); }}
-              className="command-palette-item"
+              onSelect={() => {
+                if (isBrowser()) return; // Disabled in browser mode
+                onRunClaude(); setOpen(false);
+              }}
+              className={`command-palette-item ${isBrowser() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isBrowser()}
             >
               <kbd className="command-palette-number">4</kbd>
-              <Sparkles className="mr-3 h-4 w-4 text-orange-400" />
+              <Sparkles className={`mr-3 h-4 w-4 ${isBrowser() ? 'text-gray-500' : 'text-orange-400'}`} />
               <span>Ask Claude (Refactor Notes)</span>
+              {isBrowser() && (
+                <span className="ml-auto flex items-center gap-1 text-xs text-gray-500">
+                  <Monitor className="w-3 h-3" />
+                  Desktop
+                </span>
+              )}
             </Command.Item>
             <Command.Item
-              onSelect={() => { onRunGemini(); setOpen(false); }}
-              className="command-palette-item"
+              onSelect={() => {
+                if (isBrowser()) return; // Disabled in browser mode
+                onRunGemini(); setOpen(false);
+              }}
+              className={`command-palette-item ${isBrowser() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isBrowser()}
             >
               <kbd className="command-palette-number">5</kbd>
-              <Brain className="mr-3 h-4 w-4 text-blue-400" />
+              <Brain className={`mr-3 h-4 w-4 ${isBrowser() ? 'text-gray-500' : 'text-blue-400'}`} />
               <span>Ask Gemini (Brainstorming)</span>
+              {isBrowser() && (
+                <span className="ml-auto flex items-center gap-1 text-xs text-gray-500">
+                  <Monitor className="w-3 h-3" />
+                  Desktop
+                </span>
+              )}
             </Command.Item>
             <Command.Item
               onSelect={() => { onToggleFocus(); setOpen(false); }}

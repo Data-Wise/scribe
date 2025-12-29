@@ -1,13 +1,13 @@
 ---
 status: active
 priority: P1
-progress: 100
-version: 1.5.0
-sprint: 24
-updated: 2025-12-27
+progress: 35
+version: 1.6.0-dev
+sprint: 25
+updated: 2025-12-28
 editor: hybrid-markdown++
-next_sprint: 25
-next_focus: Quick Capture & Daily Notes
+next_sprint: 26
+next_focus: Status Bar + Vault Sidebar
 tests: 518
 tags:
   - adhd-friendly
@@ -25,9 +25,31 @@ tags:
 
 ## Current Sprint
 
-**v1.5 Release** ✅ Complete (2025-12-27)
+**Sprint 25: Plan B UI Redesign** 🔄 In Progress (2025-12-28)
 
-### Sprint 24: Three-State Collapsible Sidebar ✅
+### Sprint 25: Plan B UI - Obsidian Style + Gradient Tabs
+- [x] **Phase 1: Editor Tabs** ✅ Complete
+  - [x] EditorTabs component with gradient accent (Style 5)
+  - [x] Tab state management in useAppViewStore
+  - [x] localStorage persistence for tabs
+  - [x] Mission Control pinned as first tab
+  - [x] Keyboard shortcuts (⌘1-9 switch, ⌘W close)
+  - [x] Middle-click to close tabs
+- [x] **Phase 1.5: Project Note Display** ✅ Complete
+  - [x] Remove redundant Recent Notes from sidebar
+  - [x] Add expandable note tiles to Card Mode (Option B)
+  - [x] Accordion-style expansion (one project at a time)
+  - [x] Up to 6 recent notes per project
+  - [x] Empty state with "Create first note" CTA
+- [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
+- [ ] Phase 3: Status Bar (VS Code-style bottom bar)
+- [ ] Phase 4: Mission Control updates
+
+**Design Document:** `SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md`
+
+---
+
+### Sprint 24: Three-State Collapsible Sidebar ✅ (2025-12-27)
 - [x] Icon mode (48px) - status dots only
 - [x] Compact mode (240px) - project list with stats
 - [x] Card mode (320px+) - full project cards
@@ -164,9 +186,24 @@ tags:
 | **v1.3** | 22 | Editor Modes + Custom CSS | ✅ 100% |
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
-| v1.6 | 25 | Quick Capture & Daily Notes | ⏳ 0% |
+| **v1.6** | 25 | Plan B UI Redesign | 🔄 25% |
 
-**Total: v1.5 complete, v1.6 planning**
+**Total: v1.5 complete, v1.6 Phase 1 done**
+
+---
+
+## Future Plans (Backlog)
+
+| Sprint | Focus | Priority | Status |
+|--------|-------|----------|--------|
+| 26/27 | Playwright E2E Testing | P2 | 📋 Planned |
+| TBD | SwiftUI Native Port | P3 | 📋 Researched |
+
+**Playwright E2E:** Add 20-30 E2E tests for user journeys, context menus, state reactivity.
+See: `docs/planning/FUTURE-PLAYWRIGHT-E2E.md`
+
+**SwiftUI Port:** Parallel development branch for native macOS experience.
+See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swiftui-native`
 
 ---
 

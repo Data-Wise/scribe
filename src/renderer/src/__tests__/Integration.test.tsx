@@ -5,9 +5,15 @@ import { HybridEditor } from '../components/HybridEditor'
 import { CommandPalette } from '../components/CommandPalette'
 import { Note, Tag } from '../types'
 
+// Mock the platform module to simulate Tauri mode (features enabled)
+vi.mock('../lib/platform', () => ({
+  isTauri: () => true,
+  isBrowser: () => false
+}))
+
 /**
  * Integration Tests
- * 
+ *
  * These tests verify that components work together correctly
  * and simulate real user workflows.
  */

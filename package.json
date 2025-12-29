@@ -26,6 +26,7 @@
     "@types/d3": "^7.4.3",
     "cmdk": "^1.1.1",
     "d3": "^7.9.0",
+    "dexie": "^4.2.1",
     "dompurify": "^3.3.1",
     "lucide-react": "^0.562.0",
     "react": "^18.3.1",
@@ -38,6 +39,7 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@tauri-apps/api": "^2.9.1",
     "@tauri-apps/cli": "^2.9.6",
     "@testing-library/jest-dom": "^6.9.1",
@@ -49,12 +51,14 @@
     "@vitejs/plugin-react": "^4.3.0",
     "@vitest/ui": "^4.0.16",
     "autoprefixer": "^10.4.20",
+    "fake-indexeddb": "^6.2.5",
     "happy-dom": "^20.0.11",
     "jsdom": "^27.3.0",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
     "typescript": "^5.5.4",
     "vite": "^5.3.5",
+    "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.0.16"
   }
 }

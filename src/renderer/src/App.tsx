@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
-import { useAppViewStore } from './store/useAppViewStore'
+import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
+import { EditorTabs } from './components/EditorTabs'
+import { useForestTheme } from './hooks/useForestTheme'
 import { HybridEditor } from './components/HybridEditor'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
@@ -9,17 +11,21 @@ import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
+import { MissionControl } from './components/MissionControl'
 import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
+import { ClaudePanel } from './components/ClaudePanel'
+import { HudPanel } from './components/HudPanel'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
+import { Zap } from 'lucide-react'
 import { api } from './lib/api'
+import { isTauri } from './lib/platform'
+import { dialogs } from './lib/browser-dialogs'
 import { CommandPalette } from './components/CommandPalette'
-import { open as openDialog, message } from '@tauri-apps/plugin-dialog'
-import { listen } from '@tauri-apps/api/event'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
 import { SearchPanel } from './components/SearchPanel'
@@ -85,12 +91,21 @@ function App() {
     createProject
   } = useProjectStore()
 
-  // Sidebar mode from app view store (replaces dashboardCollapsed toggle)
+  // Apply Forest Night theme
+  useForestTheme()
+
+  // Sidebar mode and tabs from app view store
   const {
     sidebarMode,
     cycleSidebarMode,
     setLastActiveNote,
-    updateSessionTimestamp
+    updateSessionTimestamp,
+    // Tab state
+    openTabs,
+    activeTabId,
+    setActiveTab,
+    openNoteTab,
+    closeTab
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
@@ -119,6 +134,12 @@ function App() {
     return saved ? parseInt(saved) : 320
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
+  
+  // Claude Panel state
+  const [claudePanelOpen, setClaudePanelOpen] = useState(false)
+
+  // HUD Panel state
+  const [hudPanelOpen, setHudPanelOpen] = useState(false)
   
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
@@ -190,7 +211,7 @@ function App() {
       activeThemeId = getAutoTheme(autoThemeSettings)
     }
     
-    const activeTheme = allThemes[activeThemeId] || allThemes['oxford-dark']
+    const activeTheme = allThemes[activeThemeId] || allThemes['sage-garden']
     if (activeTheme) {
       applyTheme(activeTheme)
     }
@@ -236,7 +257,7 @@ function App() {
     setAllThemes(getAllThemes())
     // If deleted theme was selected, switch to default
     if (theme === themeId) {
-      setTheme('oxford-dark')
+      setTheme('sage-garden')
     }
   }
 
@@ -317,12 +338,13 @@ function App() {
       status: { key: 'status', value: 'draft', type: 'list' },
       type: { key: 'type', value: 'note', type: 'list' },
     }
-    
+
     await createNote({
       title: `New Note`,
       content: '',  // Empty markdown - user starts fresh
       folder: currentFolder || 'inbox',
-      properties: defaultProperties
+      properties: defaultProperties,
+      project_id: currentProjectId || undefined  // Auto-assign to current project
     })
   }
 
@@ -461,7 +483,7 @@ function App() {
 
   const handleObsidianSync = async () => {
     try {
-      const selected = await openDialog({
+      const selected = await dialogs.open({
         directory: true,
         multiple: false,
         title: 'Select Obsidian Vault Folder'
@@ -469,7 +491,7 @@ function App() {
 
       if (selected && typeof selected === 'string') {
         const result = await api.exportToObsidian(selected)
-        await message(result, { title: 'Sync Complete', kind: 'info' })
+        await dialogs.message(result, { title: 'Sync Complete', kind: 'info' })
       }
     } catch (error) {
       console.error('Failed to sync with Obsidian:', error)
@@ -483,7 +505,7 @@ function App() {
     
     try {
       const response = await api.runClaude(`Please refactor and improve this note: \n\n${note.content}`)
-      await message(response, { title: 'Claude Response', kind: 'info' })
+      await dialogs.message(response, { title: 'Claude Response', kind: 'info' })
     } catch (error) {
       console.error('Claude error:', error)
     }
@@ -496,7 +518,7 @@ function App() {
 
     try {
       const response = await api.runGemini(`Brainstorm ideas based on this note: \n\n${note.content}`)
-      await message(response, { title: 'Gemini Response', kind: 'info' })
+      await dialogs.message(response, { title: 'Gemini Response', kind: 'info' })
     } catch (error) {
       console.error('Gemini error:', error)
     }
@@ -585,11 +607,37 @@ function App() {
         e.preventDefault()
         setIsCreateProjectModalOpen(true)
       }
+
+      // Settings (⌘,) - standard preferences shortcut
+      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault()
+        setIsSettingsOpen(true)
+      }
+
+      // Tab switching (⌘1-9) - switch to tab by index
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && /^[1-9]$/.test(e.key)) {
+        e.preventDefault()
+        const tabIndex = parseInt(e.key) - 1
+        if (tabIndex < openTabs.length) {
+          setActiveTab(openTabs[tabIndex].id)
+        }
+      }
+
+      // Close current tab (⌘W) - closes active non-pinned tab
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'w') {
+        e.preventDefault()
+        // Find the active tab
+        const activeTab = openTabs.find(t => t.id === activeTabId)
+        // Only close if it's not pinned
+        if (activeTab && !activeTab.isPinned) {
+          closeTab(activeTabId!)
+        }
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -599,73 +647,84 @@ function App() {
     }
   }, [selectedNoteId, setLastActiveNote, updateSessionTimestamp])
 
-  // Handle native menu events from Tauri
+  // Handle native menu events from Tauri (skip in browser mode)
   useEffect(() => {
-    const unlisten = listen<string>('menu-event', (event) => {
-      const menuId = event.payload
+    if (!isTauri()) return // No native menu in browser mode
 
-      switch (menuId) {
-        // File menu
-        case 'new_note':
-          handleCreateNote()
-          break
-        case 'new_project':
-          setIsCreateProjectModalOpen(true)
-          break
-        case 'daily_note':
-          handleDailyNote()
-          break
-        case 'quick_capture':
-          setIsQuickCaptureOpen(true)
-          break
-        case 'search':
-          setIsSearchPanelOpen(true)
-          break
-        case 'export':
-          setIsExportDialogOpen(true)
-          break
+    let unlisten: (() => void) | null = null
 
-        // View menu
-        case 'mission_control':
-          cycleSidebarMode()
-          break
-        case 'focus_mode':
-          handleFocusModeChange(!focusMode)
-          break
-        case 'source_mode':
-          setEditorMode('source')
-          updatePreferences({ editorMode: 'source' })
-          break
-        case 'live_preview':
-          setEditorMode('live-preview')
-          updatePreferences({ editorMode: 'live-preview' })
-          break
-        case 'reading_mode':
-          setEditorMode('reading')
-          updatePreferences({ editorMode: 'reading' })
-          break
-        case 'toggle_sidebar':
-          cycleSidebarMode()
-          break
-        case 'knowledge_graph':
-          setIsGraphViewOpen(true)
-          break
+    // Dynamic import to avoid errors in browser mode
+    import('@tauri-apps/api/event').then(({ listen }) => {
+      listen<string>('menu-event', (event) => {
+        const menuId = event.payload
 
-        // Scribe menu
-        case 'preferences':
-          setIsSettingsOpen(true)
-          break
-        case 'shortcuts':
-          setIsKeyboardShortcutsOpen(true)
-          break
-        case 'about':
-          // TODO: Show about dialog
-          break
-      }
+        switch (menuId) {
+          // File menu
+          case 'new_note':
+            handleCreateNote()
+            break
+          case 'new_project':
+            setIsCreateProjectModalOpen(true)
+            break
+          case 'daily_note':
+            handleDailyNote()
+            break
+          case 'quick_capture':
+            setIsQuickCaptureOpen(true)
+            break
+          case 'search':
+            setIsSearchPanelOpen(true)
+            break
+          case 'export':
+            setIsExportDialogOpen(true)
+            break
+
+          // View menu
+          case 'mission_control':
+            cycleSidebarMode()
+            break
+          case 'focus_mode':
+            handleFocusModeChange(!focusMode)
+            break
+          case 'source_mode':
+            setEditorMode('source')
+            updatePreferences({ editorMode: 'source' })
+            break
+          case 'live_preview':
+            setEditorMode('live-preview')
+            updatePreferences({ editorMode: 'live-preview' })
+            break
+          case 'reading_mode':
+            setEditorMode('reading')
+            updatePreferences({ editorMode: 'reading' })
+            break
+          case 'toggle_sidebar':
+            cycleSidebarMode()
+            break
+          case 'knowledge_graph':
+            setIsGraphViewOpen(true)
+            break
+
+          // Scribe menu
+          case 'preferences':
+            setIsSettingsOpen(true)
+            break
+          case 'shortcuts':
+            setIsKeyboardShortcutsOpen(true)
+            break
+          case 'about':
+            // TODO: Show about dialog
+            break
+        }
+      }).then(fn => {
+        unlisten = fn
+      })
+    }).catch(err => {
+      console.warn('Tauri event API not available:', err)
     })
 
     return () => {
-      unlisten.then(fn => fn())
+      if (unlisten) unlisten()
     }
   }, [
     handleCreateNote,
@@ -888,7 +947,13 @@ function App() {
           open={isCommandPaletteOpen}
           setOpen={setIsCommandPaletteOpen}
           notes={notes}
-          onSelectNote={(noteId) => selectNote(noteId)}
+          onSelectNote={(noteId) => {
+            const note = notes.find(n => n.id === noteId)
+            if (note) {
+              openNoteTab(noteId, note.title)
+              selectNote(noteId)
+            }
+          }}
           onCreateNote={handleCreateNote}
           onDailyNote={handleDailyNote}
           onToggleFocus={() => handleFocusModeChange(!focusMode)}
@@ -930,19 +995,135 @@ function App() {
         currentProjectId={currentProjectId}
         onSelectProject={setCurrentProject}
         onSelectNote={(noteId) => {
-          setEditorMode('source')
-          selectNote(noteId)
+          const note = notes.find(n => n.id === noteId)
+          if (note) {
+            openNoteTab(noteId, note.title)
+            setEditorMode('source')
+            selectNote(noteId)
+          }
         }}
         onCreateProject={() => setIsCreateProjectModalOpen(true)}
+        onNewNote={async (projectId) => {
+          // Create new note directly with project assignment
+          const newNote = await createNote({
+            title: 'New Note',
+            content: '',
+            folder: 'inbox',
+            project_id: projectId
+          })
+          // Guard against undefined (createNote may fail)
+          if (!newNote) {
+            console.error('[Scribe] Failed to create note')
+            return
+          }
+          // Select the new note (already added to state by createNote)
+          selectNote(newNote.id)
+          setEditorMode('source')
+        }}
+        // Context menu handlers
+        onEditProject={async (projectId) => {
+          // For now, show a message. TODO: implement edit project modal
+          await dialogs.message(`Edit project: ${projectId}`, { title: 'Edit Project' })
+        }}
+        onArchiveProject={async (projectId) => {
+          const project = projects.find(p => p.id === projectId)
+          if (!project) return
+          const newStatus = project.status === 'archive' ? 'active' : 'archive'
+          await api.updateProject(projectId, { status: newStatus })
+          await loadProjects()
+        }}
+        onDeleteProject={async (projectId) => {
+          const project = projects.find(p => p.id === projectId)
+          if (!project) return
+          const confirmed = await dialogs.ask(
+            `Are you sure you want to delete "${project.name}"? This cannot be undone.`,
+            { title: 'Delete Project' }
+          )
+          if (confirmed) {
+            await api.deleteProject(projectId)
+            if (currentProjectId === projectId) {
+              setCurrentProject(null)
+            }
+            await loadProjects()
+          }
+        }}
+        onRenameNote={async (noteId) => {
+          // Select the note and focus for rename
+          selectNote(noteId)
+          setEditorMode('source')
+          // TODO: trigger inline rename in editor
+        }}
+        onMoveNoteToProject={async (noteId, projectId) => {
+          await api.setNoteProject(noteId, projectId)
+          // Refresh notes list
+          const updatedNotes = await api.listNotes()
+          setNotes(updatedNotes)
+        }}
+        onDuplicateNote={async (noteId) => {
+          const note = notes.find(n => n.id === noteId)
+          if (!note) return
+          const newNote = await createNote({
+            title: `${note.title || 'Untitled'} (copy)`,
+            content: note.content,
+            folder: note.folder
+          })
+          if (note.project_id) {
+            await api.setNoteProject(newNote.id, note.project_id)
+          }
+          selectNote(newNote.id)
+          setEditorMode('source')
+        }}
+        onDeleteNote={async (noteId) => {
+          const note = notes.find(n => n.id === noteId)
+          if (!note) return
+          const confirmed = await dialogs.ask(
+            `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
+            { title: 'Delete Note' }
+          )
+          if (confirmed) {
+            await api.deleteNote(noteId)
+            if (selectedNoteId === noteId) {
+              selectNote(null)
+            }
+            // Refresh notes list
+            const updatedNotes = await api.listNotes()
+            setNotes(updatedNotes)
+          }
+        }}
       />
 
       {/* Main content area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Main editor area */}
         <div className="flex-1 flex flex-col min-w-0">
+          {/* Editor tabs bar */}
+          <EditorTabs
+            accentColor={currentProjectId ? projects.find(p => p.id === currentProjectId)?.color : '#3b82f6'}
+          />
+
           <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
 
-          {selectedNote ? (
+          {/* Show content based on active tab */}
+          {activeTabId === MISSION_CONTROL_TAB_ID ? (
+            <MissionControl
+              projects={projects}
+              notes={notes}
+              currentProjectId={currentProjectId}
+              onSelectProject={setCurrentProject}
+              onSelectNote={(noteId) => {
+                const note = notes.find(n => n.id === noteId)
+                if (note) {
+                  openNoteTab(noteId, note.title)
+                  selectNote(noteId)
+                }
+              }}
+              onCreateNote={handleCreateNote}
+              onDailyNote={handleDailyNote}
+              onQuickCapture={() => setIsQuickCaptureOpen(true)}
+              onSettings={() => setIsSettingsOpen(true)}
+              onCreateProject={() => setIsCreateProjectModalOpen(true)}
+            />
+          ) : selectedNote ? (
             <div className="flex-1 flex flex-col min-h-0">
               <div className="px-6 py-4 border-b border-white/5">
                 {editingTitle ? (
@@ -981,10 +1162,17 @@ function App() {
               </div>
             </div>
           ) : (
-            <EmptyState
+            <MissionControl
+              projects={projects}
+              notes={notes}
+              currentProjectId={currentProjectId}
+              onSelectProject={setCurrentProject}
+              onSelectNote={selectNote}
               onCreateNote={handleCreateNote}
-              onOpenDaily={handleDailyNote}
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+              onDailyNote={handleDailyNote}
+              onQuickCapture={() => setIsQuickCaptureOpen(true)}
+              onSettings={() => setIsSettingsOpen(true)}
+              onCreateProject={() => setIsCreateProjectModalOpen(true)}
             />
           )}
         </div>
@@ -1022,8 +1210,12 @@ function App() {
                     noteId={selectedNote.id}
                     noteTitle={selectedNote.title}
                     onSelectNote={(noteId) => {
-                      setEditorMode('reading')
-                      selectNote(noteId)
+                      const note = notes.find(n => n.id === noteId)
+                      if (note) {
+                        openNoteTab(noteId, note.title)
+                        setEditorMode('reading')
+                        selectNote(noteId)
+                      }
                     }}
                     refreshKey={backlinksRefreshKey}
                   />
@@ -1038,14 +1230,69 @@ function App() {
             </div>
           </>
         )}
+
+        {/* Claude AI Assistant Panel */}
+        {claudePanelOpen && (
+          <ClaudePanel
+            currentNote={selectedNote}
+            currentProject={projects.find(p => p.id === currentProjectId) || null}
+            notes={notes}
+            onClose={() => setClaudePanelOpen(false)}
+          />
+        )}
+
+        {/* HUD Panel */}
+        <HudPanel
+          isOpen={hudPanelOpen}
+          projects={projects}
+          notes={notes}
+          currentProjectId={currentProjectId}
+          onSelectProject={(projectId) => setCurrentProject(projectId)}
+          onSelectNote={(noteId) => {
+            const note = notes.find(n => n.id === noteId)
+            if (note) {
+              openNoteTab(noteId, note.title)
+              selectNote(noteId)
+            }
+          }}
+          onClose={() => setHudPanelOpen(false)}
+          mode="layered"
+        />
       </div>
+
+      {/* HUD Panel Toggle Button */}
+      <button
+        className={`hud-toggle-btn ${hudPanelOpen ? 'active' : ''}`}
+        onClick={() => setHudPanelOpen(!hudPanelOpen)}
+        title="Toggle Mission HUD (⌘⇧M)"
+      >
+        <Zap size={18} />
+      </button>
+
+      {/* Claude Panel Toggle Button */}
+      <button
+        className={`claude-toggle-btn ${claudePanelOpen ? 'active' : ''}`}
+        onClick={() => setClaudePanelOpen(!claudePanelOpen)}
+        title="Toggle Claude Assistant"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M6 10h8M10 6v8" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </button>
 
       {/* Command Palette */}
       <CommandPalette
         open={isCommandPaletteOpen}
         setOpen={setIsCommandPaletteOpen}
         notes={notes}
-        onSelectNote={(noteId) => selectNote(noteId)}
+        onSelectNote={(noteId) => {
+          const note = notes.find(n => n.id === noteId)
+          if (note) {
+            openNoteTab(noteId, note.title)
+            selectNote(noteId)
+          }
+        }}
         onCreateNote={handleCreateNote}
         onDailyNote={handleDailyNote}
         onToggleFocus={() => handleFocusModeChange(!focusMode)}
@@ -1106,8 +1353,12 @@ function App() {
         isOpen={isSearchPanelOpen}
         onClose={() => setIsSearchPanelOpen(false)}
         onSelectNote={(noteId) => {
-          setEditorMode('source')
-          selectNote(noteId)
+          const note = notes.find(n => n.id === noteId)
+          if (note) {
+            openNoteTab(noteId, note.title)
+            setEditorMode('source')
+            selectNote(noteId)
+          }
         }}
         currentProject={currentProjectId ? projects.find(p => p.id === currentProjectId) : null}
         projects={projects}

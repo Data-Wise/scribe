@@ -29,6 +29,11 @@ export interface UserPreferences {
   editorMode: EditorMode         // Source, Live Preview, or Reading mode
   customCSS: string              // User's custom CSS for editor
   customCSSEnabled: boolean      // Whether custom CSS is active
+
+  // HUD / Mission Control preferences (v1.4)
+  hudMode: 'layered' | 'persistent' // Layered (overlay) or Persistent (docked)
+  hudSide: 'left' | 'right'         // Which side the HQ appears on
+  hudRibbonVisible: boolean         // Whether the ribbon is visible
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -44,6 +49,10 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   editorMode: 'source',      // Start with source mode (familiar)
   customCSS: '',             // No custom CSS by default
   customCSSEnabled: false,   // Disabled by default
+  // HUD preferences (v1.4)
+  hudMode: 'layered',        // Layered by default for max focus
+  hudSide: 'left',
+  hudRibbonVisible: true,
 }
 
 /**

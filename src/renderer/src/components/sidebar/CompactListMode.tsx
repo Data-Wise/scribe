@@ -1,7 +1,10 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, Clock, FileText, ChevronRight } from 'lucide-react'
+import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder } from 'lucide-react'
 import { Project, Note } from '../../types'
-import { StatusDot } from './StatusDot'
+import { ActivityDots } from './ActivityDots'
+import { ProjectContextCard } from './ProjectContextCard'
+import { ProjectContextMenu } from './ProjectContextMenu'
+import { NoteContextMenu } from './NoteContextMenu'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -10,8 +13,17 @@ interface CompactListModeProps {
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
   onCreateProject: () => void
+  onNewNote: (projectId: string) => void
   onCollapse: () => void
   width: number
+  // Context menu handlers (optional)
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
+  onRenameNote?: (noteId: string) => void
+  onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
+  onDuplicateNote?: (noteId: string) => void
+  onDeleteNote?: (noteId: string) => void
 }
 
 export function CompactListMode({
@@ -21,10 +33,33 @@ export function CompactListMode({
   onSelectProject,
   onSelectNote,
   onCreateProject,
+  onNewNote,
   onCollapse,
-  width
+  width,
+  onEditProject,
+  onArchiveProject,
+  onDeleteProject,
+  onRenameNote,
+  onMoveNoteToProject,
+  onDuplicateNote,
+  onDeleteNote
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+
+  // Context menu state
+  const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
+  const [noteContextMenu, setNoteContextMenu] = useState<{ note: Note; position: { x: number; y: number } } | null>(null)
+
+  // Context menu handlers
+  const handleProjectContextMenu = (e: React.MouseEvent, project: Project) => {
+    e.preventDefault()
+    setProjectContextMenu({ project, position: { x: e.clientX, y: e.clientY } })
+  }
+
+  const handleNoteContextMenu = (e: React.MouseEvent, note: Note) => {
+    e.preventDefault()
+    setNoteContextMenu({ note, position: { x: e.clientX, y: e.clientY } })
+  }
 
   // Filter projects by search (treat undefined status as 'active')
   const filteredProjects = useMemo(() => {
@@ -43,22 +78,6 @@ export function CompactListMode({
     return b.updated_at - a.updated_at
   })
 
-  // Get recent notes (last 5) - filtered by project if one is selected
-  const recentNotes = useMemo(() => {
-    return [...notes]
-      .filter(n => {
-        if (n.deleted_at) return false
-        // If a project is selected, only show notes from that project
-        if (currentProjectId) {
-          const noteProjectId = n.properties?.project_id?.value as string | undefined
-          return noteProjectId === currentProjectId
-        }
-        return true
-      })
-      .sort((a, b) => b.updated_at - a.updated_at)
-      .slice(0, 5)
-  }, [notes, currentProjectId])
-
   // Compute project stats
   const projectStats = useMemo(() => {
     const stats: Record<string, { noteCount: number; wordCount: number }> = {}
@@ -66,10 +85,9 @@ export function CompactListMode({
       stats[p.id] = { noteCount: 0, wordCount: 0 }
     })
     notes.filter(n => !n.deleted_at).forEach(note => {
-      const projectId = note.properties?.project_id?.value as string | undefined
-      if (projectId && stats[projectId]) {
-        stats[projectId].noteCount++
-        stats[projectId].wordCount += countWords(note.content)
+      if (note.project_id && stats[note.project_id]) {
+        stats[note.project_id].noteCount++
+        stats[note.project_id].wordCount += countWords(note.content)
       }
     })
     return stats
@@ -109,14 +127,25 @@ export function CompactListMode({
       <div className="project-list-compact">
         {sortedProjects.map(project => {
           const stats = projectStats[project.id]
-          const isActive = project.id === currentProjectId
+          const isExpanded = project.id === currentProjectId
+          const projectNotes = notes
+            .filter(n => !n.deleted_at && n.project_id === project.id)
+            .sort((a, b) => b.updated_at - a.updated_at)
+            .slice(0, 5)
           return (
             <CompactProjectItem
               key={project.id}
               project={project}
-              isActive={isActive}
+              allNotes={notes}
+              allProjects={projects}
+              isExpanded={isExpanded}
               noteCount={stats?.noteCount || 0}
-              onClick={() => onSelectProject(isActive ? null : project.id)}
+              projectNotes={projectNotes}
+              onClick={() => onSelectProject(isExpanded ? null : project.id)}
+              onSelectNote={onSelectNote}
+              onQuickAdd={() => onNewNote(project.id)}
+              onContextMenu={(e) => handleProjectContextMenu(e, project)}
+              onNoteContextMenu={handleNoteContextMenu}
             />
           )
         })}
@@ -126,29 +155,6 @@ export function CompactListMode({
         )}
       </div>
 
-      {/* Recent notes section */}
-      {recentNotes.length > 0 && (
-        <div className="sidebar-section">
-          <h4 className="section-header">
-            <Clock size={12} />
-            <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
-          </h4>
-          <div className="recent-notes-list">
-            {recentNotes.map(note => (
-              <button
-                key={note.id}
-                className="recent-note-item"
-                onClick={() => onSelectNote(note.id)}
-              >
-                <FileText size={12} className="note-icon" />
-                <span className="note-title">{note.title || 'Untitled'}</span>
-                <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Add project button */}
       <button
         className="add-project-btn-compact"
@@ -157,48 +163,130 @@ export function CompactListMode({
         <Plus size={14} />
         <span>New Project</span>
       </button>
+
+      {/* Context Menus */}
+      {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (
+        <ProjectContextMenu
+          project={projectContextMenu.project}
+          position={projectContextMenu.position}
+          onClose={() => setProjectContextMenu(null)}
+          onNewNote={onNewNote}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+        />
+      )}
+
+      {noteContextMenu && onRenameNote && onMoveNoteToProject && onDuplicateNote && onDeleteNote && (
+        <NoteContextMenu
+          note={noteContextMenu.note}
+          projects={projects}
+          position={noteContextMenu.position}
+          onClose={() => setNoteContextMenu(null)}
+          onOpenNote={onSelectNote}
+          onRenameNote={onRenameNote}
+          onMoveToProject={onMoveNoteToProject}
+          onDuplicateNote={onDuplicateNote}
+          onDeleteNote={onDeleteNote}
+        />
+      )}
     </div>
   )
 }
 
 interface CompactProjectItemProps {
   project: Project
-  isActive: boolean
+  allNotes: Note[]
+  allProjects: Project[]
+  isExpanded: boolean
   noteCount: number
+  projectNotes: Note[]
   onClick: () => void
+  onSelectNote: (id: string) => void
+  onQuickAdd: () => void
+  onContextMenu: (e: React.MouseEvent) => void
+  onNoteContextMenu: (e: React.MouseEvent, note: Note) => void
 }
 
-function CompactProjectItem({ project, isActive, noteCount, onClick }: CompactProjectItemProps) {
-  const status = project.status || 'active'
+function CompactProjectItem({
+  project,
+  allNotes,
+  allProjects,
+  isExpanded,
+  noteCount,
+  projectNotes,
+  onClick,
+  onSelectNote,
+  onQuickAdd,
+  onContextMenu,
+  onNoteContextMenu
+}: CompactProjectItemProps) {
+  const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
+  const FolderIcon = isExpanded ? FolderOpen : Folder
+
+  // When expanded, show context card + notes list
+  if (isExpanded) {
+    return (
+      <div className="compact-project-wrapper expanded">
+        {/* Collapsed header to close */}
+        <button
+          className="compact-project-item expanded"
+          onClick={onClick}
+          onContextMenu={onContextMenu}
+        >
+          <div className="item-row">
+            <ChevronIcon size={14} className="chevron open" />
+            <FolderIcon size={14} className="folder-icon" />
+            <span className="project-name">{project.name}</span>
+          </div>
+        </button>
+
+        {/* Context card with stats */}
+        <ProjectContextCard
+          project={project}
+          notes={allNotes}
+          onNewNote={onQuickAdd}
+        />
+
+        {/* Notes list */}
+        {projectNotes.length > 0 && (
+          <div className="project-notes-list">
+            {projectNotes.map(note => (
+              <button
+                key={note.id}
+                className="project-note-item"
+                onClick={() => onSelectNote(note.id)}
+                onContextMenu={(e) => onNoteContextMenu(e, note)}
+              >
+                <FileText size={12} className="note-icon" />
+                <span className="note-title">{note.title || 'Untitled'}</span>
+              </button>
+            ))}
+            {noteCount > 5 && (
+              <div className="more-notes">+{noteCount - 5} more</div>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Collapsed view with activity dots
   return (
-    <button
-      className={`compact-project-item ${isActive ? 'active' : ''}`}
-      onClick={onClick}
-      data-status={status}
-    >
-      {/* Top row: status + name + count */}
-      <div className="item-row">
-        <StatusDot status={status} size="sm" />
-        <span className="project-name">{project.name}</span>
-        <span className="note-count">{noteCount}</span>
-        <ChevronRight size={12} className="chevron" />
-      </div>
-
-      {/* Progress bar (if project has progress) */}
-      {project.progress !== undefined && project.progress > 0 && (
-        <div className="progress-mini" title={`${project.progress}% complete`}>
-          <div
-            className="progress-fill"
-            style={{ width: `${project.progress}%` }}
-          />
+    <div className="compact-project-wrapper">
+      <button
+        className="compact-project-item"
+        onClick={onClick}
+        onContextMenu={onContextMenu}
+      >
+        <div className="item-row">
+          <ChevronIcon size={14} className="chevron" />
+          <FolderIcon size={14} className="folder-icon" />
+          <span className="project-name">{project.name}</span>
+          <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
         </div>
-      )}
-
-      {/* Footer: time */}
-      <div className="item-footer">
-        {formatTimeAgo(project.updated_at)}
-      </div>
-    </button>
+      </button>
+    </div>
   )
 }
 
@@ -215,16 +303,3 @@ function countWords(content: string): number {
   return text.split(/\s+/).filter(Boolean).length
 }
 
-function formatTimeAgo(timestamp: number): string {
-  const now = Date.now()
-  const diff = now - timestamp
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  const days = Math.floor(diff / 86400000)
-
-  if (minutes < 1) return 'now'
-  if (minutes < 60) return `${minutes}m`
-  if (hours < 24) return `${hours}h`
-  if (days < 7) return `${days}d`
-  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
