@@ -226,11 +226,34 @@ Before implementing, consider:
 
 ## Next Steps
 
-1. [ ] Decide on card mode enhancement approach
-2. [ ] Implement note tiles in CardViewMode
-3. [ ] Add consistent note preview styling
+1. [x] Decide on card mode enhancement approach → **Option B chosen**
+2. [x] Implement note tiles in CardViewMode → **Done (ef2559e)**
+3. [x] Add consistent note preview styling → **Done**
 4. [ ] Test with projects that have many notes
 
 ---
 
+## Implementation Notes (2025-12-28)
+
+**Option B was implemented with these design decisions:**
+
+1. **Card expansion behavior:** Expand in-place (card grows vertically)
+2. **Note limit:** 6 recent notes per project, scrollable if needed
+3. **Note preview:** Title + modified time (e.g., "Paper draft • 2h ago")
+4. **Interaction:**
+   - Click stats row (note count) → expand/collapse
+   - Click note tile → open in editor
+   - Right-click note → context menu
+5. **Visual feedback:**
+   - Chevron rotates 180° when expanded
+   - Dark inset background for note tiles section
+   - Empty state with "Create first note" CTA
+
+**Commits:**
+- `1c87b08` - Remove redundant Recent Notes section
+- `ef2559e` - Add expandable note tiles (Option B)
+
+---
+
 *Created: 2025-12-28*
+*Updated: 2025-12-28*

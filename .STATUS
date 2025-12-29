@@ -1,7 +1,7 @@
 ---
 status: active
 priority: P1
-progress: 25
+progress: 35
 version: 1.6.0-dev
 sprint: 25
 updated: 2025-12-28
@@ -35,6 +35,12 @@ tags:
   - [x] Mission Control pinned as first tab
   - [x] Keyboard shortcuts (⌘1-9 switch, ⌘W close)
   - [x] Middle-click to close tabs
+- [x] **Phase 1.5: Project Note Display** ✅ Complete
+  - [x] Remove redundant Recent Notes from sidebar
+  - [x] Add expandable note tiles to Card Mode (Option B)
+  - [x] Accordion-style expansion (one project at a time)
+  - [x] Up to 6 recent notes per project
+  - [x] Empty state with "Create first note" CTA
 - [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
 - [ ] Phase 3: Status Bar (VS Code-style bottom bar)
 - [ ] Phase 4: Mission Control updates
