@@ -181,4 +181,146 @@ export class TabsPage extends BasePage {
     const titles = await this.getTabTitles()
     return titles.findIndex((t) => t.includes(title))
   }
+
+  // ============================================================
+  // Context Menu Methods
+  // ============================================================
+
+  /**
+   * Right-click on a tab to open context menu
+   */
+  async rightClickTab(title: string): Promise<void> {
+    const tab = this.page.locator(`.editor-tab:has-text("${title}")`)
+    await tab.click({ button: 'right' })
+  }
+
+  /**
+   * Get context menu locator
+   */
+  get contextMenu(): Locator {
+    return this.page.locator('.tab-context-menu')
+  }
+
+  /**
+   * Click a context menu item by text (exact match for button text)
+   */
+  async clickContextMenuItem(itemText: string): Promise<void> {
+    // Use exact span text match to avoid partial matches (e.g., "Close" matching "Close Others")
+    const menuItem = this.contextMenu.locator(`.context-menu-item span:text-is("${itemText}")`).locator('..')
+    await menuItem.click()
+  }
+
+  /**
+   * Check if context menu item is disabled
+   */
+  async isContextMenuItemDisabled(itemText: string): Promise<boolean> {
+    const menuItem = this.contextMenu.locator(`.context-menu-item:has-text("${itemText}")`)
+    const disabled = await menuItem.getAttribute('disabled')
+    return disabled !== null
+  }
+
+  /**
+   * Close context menu by pressing Escape
+   */
+  async closeContextMenu(): Promise<void> {
+    await this.page.keyboard.press('Escape')
+  }
+
+  /**
+   * Pin a tab via context menu
+   */
+  async pinTab(title: string): Promise<void> {
+    await this.rightClickTab(title)
+    await this.clickContextMenuItem('Pin Tab')
+  }
+
+  /**
+   * Unpin a tab via context menu
+   */
+  async unpinTab(title: string): Promise<void> {
+    await this.rightClickTab(title)
+    await this.clickContextMenuItem('Unpin Tab')
+  }
+
+  /**
+   * Close other tabs via context menu
+   */
+  async closeOtherTabs(exceptTitle: string): Promise<void> {
+    await this.rightClickTab(exceptTitle)
+    await this.clickContextMenuItem('Close Others')
+  }
+
+  /**
+   * Close tabs to the right via context menu
+   */
+  async closeTabsToRight(fromTitle: string): Promise<void> {
+    await this.rightClickTab(fromTitle)
+    await this.clickContextMenuItem('Close to Right')
+  }
+
+  /**
+   * Check if a tab is pinned
+   */
+  async isTabPinned(title: string): Promise<boolean> {
+    const tab = this.page.locator(`.editor-tab:has-text("${title}")`)
+    const classes = await tab.getAttribute('class')
+    return classes?.includes('pinned') || false
+  }
+
+  // ============================================================
+  // Inline Rename Methods
+  // ============================================================
+
+  /**
+   * Double-click a tab to start inline editing
+   */
+  async doubleClickTab(title: string): Promise<void> {
+    const tab = this.page.locator(`.editor-tab:has-text("${title}")`)
+    await tab.dblclick()
+  }
+
+  /**
+   * Get the inline edit input
+   */
+  get tabTitleInput(): Locator {
+    return this.page.locator('.tab-title-input')
+  }
+
+  /**
+   * Check if tab is in editing mode
+   */
+  async isTabEditing(): Promise<boolean> {
+    return await this.tabTitleInput.isVisible()
+  }
+
+  /**
+   * Type new title in inline edit input
+   */
+  async typeNewTitle(newTitle: string): Promise<void> {
+    await this.tabTitleInput.fill(newTitle)
+  }
+
+  /**
+   * Save inline edit by pressing Enter
+   */
+  async saveInlineEdit(): Promise<void> {
+    await this.page.keyboard.press('Enter')
+  }
+
+  /**
+   * Cancel inline edit by pressing Escape
+   */
+  async cancelInlineEdit(): Promise<void> {
+    await this.page.keyboard.press('Escape')
+  }
+
+  /**
+   * Rename a tab (full workflow)
+   */
+  async renameTab(oldTitle: string, newTitle: string): Promise<void> {
+    await this.doubleClickTab(oldTitle)
+    await this.page.waitForTimeout(100)
+    await this.typeNewTitle(newTitle)
+    await this.saveInlineEdit()
+  }
 }
