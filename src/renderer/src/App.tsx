@@ -21,7 +21,7 @@ import { HudPanel } from './components/HudPanel'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
-import { Zap } from 'lucide-react'
+import { Zap, Settings2, Link2, Tags, PanelRightClose, PanelRightOpen } from 'lucide-react'
 import { api } from './lib/api'
 import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
@@ -126,8 +126,11 @@ function App() {
   
   // Sidebar collapse state (leftSidebarCollapsed now handled by DashboardShell)
   const [, setLeftSidebarCollapsed] = useState(false)  // Keep setter for potential future use
-  const [, setRightSidebarCollapsed] = useState(false)  // Keep setter for potential future use
-  
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem('rightSidebarCollapsed')
+    return saved === 'true'
+  })
+
   // Right sidebar width state with localStorage persistence
   const [rightSidebarWidth, setRightSidebarWidth] = useState(() => {
     const saved = localStorage.getItem('rightSidebarWidth')
@@ -792,6 +795,11 @@ function App() {
     }
   }, [isResizingRight])
 
+  // Persist right sidebar collapsed state
+  useEffect(() => {
+    localStorage.setItem('rightSidebarCollapsed', rightSidebarCollapsed.toString())
+  }, [rightSidebarCollapsed])
+
   const handleTagClick = async (tagId: string) => {
     const newSelectedIds = selectedTagIds.includes(tagId)
       ? selectedTagIds.filter(id => id !== tagId)
@@ -1216,53 +1224,108 @@ function App() {
         {/* Right sidebar (properties/backlinks/tags) - only in compact/card mode */}
         {sidebarMode !== 'icon' && selectedNote && (
           <>
-            <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
+            {!rightSidebarCollapsed && (
+              <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
+            )}
             <div
-              className="bg-nexus-bg-secondary flex flex-col"
-              style={{ width: `${rightSidebarWidth}px` }}
+              className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'right-sidebar-collapsed' : ''}`}
+              style={{ width: rightSidebarCollapsed ? '48px' : `${rightSidebarWidth}px` }}
             >
-              <div className="sidebar-tabs pt-10">
-                <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
-                <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
-                <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
-                <div className="flex-1" />
-                <PanelMenu sections={getRightMenuSections()} />
-              </div>
-              <div className="tab-content flex-1">
-                {rightActiveTab === 'properties' ? (
-                  <PropertiesPanel
-                    properties={selectedNote.properties || {}}
-                    onChange={(p) => updateNote(selectedNote.id, { properties: p })}
-                    noteTags={currentNoteTags}
-                    wordCount={wordCount}
-                    wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
-                    defaultWordGoal={preferences.defaultWordGoal}
-                    streak={streakInfo.streak}
-                    createdAt={selectedNote.created_at}
-                    updatedAt={selectedNote.updated_at}
-                  />
-                ) : rightActiveTab === 'backlinks' ? (
-                  <BacklinksPanel
-                    noteId={selectedNote.id}
-                    noteTitle={selectedNote.title}
-                    onSelectNote={(noteId) => {
-                      const note = notes.find(n => n.id === noteId)
-                      if (note) {
-                        openNoteTab(noteId, note.title)
-                        setEditorMode('reading')
-                        selectNote(noteId)
-                      }
-                    }}
-                    refreshKey={backlinksRefreshKey}
-                  />
-                ) : (
-                  <TagsPanel
-                    noteId={selectedNote.id}
-                    selectedTagIds={selectedTagIds}
-                    onTagClick={handleTagClick}
-                  />
-                )}
-              </div>
+              {/* Icon-only mode when collapsed */}
+              {rightSidebarCollapsed ? (
+                <div className="flex flex-col items-center pt-10 gap-1">
+                  <button
+                    className={`right-sidebar-icon-btn ${rightActiveTab === 'properties' ? 'active' : ''}`}
+                    onClick={() => { setRightActiveTab('properties'); setRightSidebarCollapsed(false) }}
+                    title="Properties"
+                  >
+                    <Settings2 size={18} />
+                  </button>
+                  <button
+                    className={`right-sidebar-icon-btn ${rightActiveTab === 'backlinks' ? 'active' : ''}`}
+                    onClick={() => { setRightActiveTab('backlinks'); setRightSidebarCollapsed(false) }}
+                    title="Backlinks"
+                  >
+                    <Link2 size={18} />
+                  </button>
+                  <button
+                    className={`right-sidebar-icon-btn ${rightActiveTab === 'tags' ? 'active' : ''}`}
+                    onClick={() => { setRightActiveTab('tags'); setRightSidebarCollapsed(false) }}
+                    title="Tags"
+                  >
+                    <Tags size={18} />
+                  </button>
+                  <div className="flex-1" />
+                  <button
+                    className="right-sidebar-icon-btn expand-btn"
+                    onClick={() => setRightSidebarCollapsed(false)}
+                    title="Expand sidebar (⌘⇧B)"
+                  >
+                    <PanelRightOpen size={18} />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="sidebar-tabs pt-10">
+                    <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>
+                      <Settings2 size={14} className="mr-1.5" />
+                      Properties
+                    </button>
+                    <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>
+                      <Link2 size={14} className="mr-1.5" />
+                      Backlinks
+                    </button>
+                    <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>
+                      <Tags size={14} className="mr-1.5" />
+                      Tags
+                    </button>
+                    <div className="flex-1" />
+                    <button
+                      className="sidebar-collapse-btn"
+                      onClick={() => setRightSidebarCollapsed(true)}
+                      title="Collapse sidebar (⌘⇧B)"
+                    >
+                      <PanelRightClose size={16} />
+                    </button>
+                    <PanelMenu sections={getRightMenuSections()} />
+                  </div>
+                  <div className="tab-content flex-1">
+                    {rightActiveTab === 'properties' ? (
+                      <PropertiesPanel
+                        properties={selectedNote.properties || {}}
+                        onChange={(p) => updateNote(selectedNote.id, { properties: p })}
+                        noteTags={currentNoteTags}
+                        wordCount={wordCount}
+                        wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : undefined}
+                        defaultWordGoal={preferences.defaultWordGoal}
+                        streak={streakInfo.streak}
+                        createdAt={selectedNote.created_at}
+                        updatedAt={selectedNote.updated_at}
+                      />
+                    ) : rightActiveTab === 'backlinks' ? (
+                      <BacklinksPanel
+                        noteId={selectedNote.id}
+                        noteTitle={selectedNote.title}
+                        onSelectNote={(noteId) => {
+                          const note = notes.find(n => n.id === noteId)
+                          if (note) {
+                            openNoteTab(noteId, note.title)
+                            setEditorMode('reading')
+                            selectNote(noteId)
+                          }
+                        }}
+                        refreshKey={backlinksRefreshKey}
+                      />
+                    ) : (
+                      <TagsPanel
+                        noteId={selectedNote.id}
+                        selectedTagIds={selectedTagIds}
+                        onTagClick={handleTagClick}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </>
         )}

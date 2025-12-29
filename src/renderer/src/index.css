@@ -293,6 +293,66 @@ body {
   background: theme('colors.nexus-bg-primary');
 }
 
+/* Right Sidebar Icon-Only Collapsed Mode */
+.right-sidebar-collapsed {
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.right-sidebar-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: theme('colors.nexus-text-muted');
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.right-sidebar-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: theme('colors.nexus-text-primary');
+}
+
+.right-sidebar-icon-btn.active {
+  color: theme('colors.nexus-accent');
+  background: theme('colors.nexus-bg-primary');
+}
+
+.right-sidebar-icon-btn.expand-btn {
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.right-sidebar-icon-btn.expand-btn:hover {
+  opacity: 1;
+}
+
+.sidebar-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  margin-right: 4px;
+  border-radius: 6px;
+  color: theme('colors.nexus-text-muted');
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: background 150ms ease, color 150ms ease, opacity 150ms ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: theme('colors.nexus-text-primary');
+  opacity: 1;
+}
+
 /* ============================================================
    Panel Slide Transitions
 
