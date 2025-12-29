@@ -633,11 +633,34 @@ function App() {
           closeTab(activeTabId!)
         }
       }
+
+      // Right sidebar tab navigation (⌘] / ⌘[)
+      const rightTabs: Array<'properties' | 'backlinks' | 'tags'> = ['properties', 'backlinks', 'tags']
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === ']') {
+        e.preventDefault()
+        const currentIndex = rightTabs.indexOf(rightActiveTab)
+        const nextIndex = (currentIndex + 1) % rightTabs.length
+        setRightActiveTab(rightTabs[nextIndex])
+        // Also ensure right sidebar is visible
+        if (rightSidebarCollapsed) {
+          setRightSidebarCollapsed(false)
+        }
+      }
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === '[') {
+        e.preventDefault()
+        const currentIndex = rightTabs.indexOf(rightActiveTab)
+        const prevIndex = (currentIndex - 1 + rightTabs.length) % rightTabs.length
+        setRightActiveTab(rightTabs[prevIndex])
+        // Also ensure right sidebar is visible
+        if (rightSidebarCollapsed) {
+          setRightSidebarCollapsed(false)
+        }
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
