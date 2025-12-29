@@ -1229,6 +1229,7 @@ function App() {
             <div
               className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'right-sidebar-collapsed' : ''}`}
               style={{ width: rightSidebarCollapsed ? '48px' : `${rightSidebarWidth}px` }}
+              data-testid="right-sidebar"
             >
               {/* Icon-only mode when collapsed */}
               {rightSidebarCollapsed ? (

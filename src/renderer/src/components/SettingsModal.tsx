@@ -413,7 +413,7 @@ export function SettingsModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl h-[650px] bg-nexus-bg-secondary border border-white/10 rounded-xl shadow-2xl flex overflow-hidden animate-slide-up">
+      <div className="relative w-full max-w-4xl h-[650px] bg-nexus-bg-secondary border border-white/10 rounded-xl shadow-2xl flex overflow-hidden animate-slide-up" data-testid="settings-modal">
         {/* Sidebar */}
         <div className="w-64 bg-nexus-bg-primary border-right border-white/5 p-4 flex flex-col gap-2">
           <div className="px-2 mb-4">

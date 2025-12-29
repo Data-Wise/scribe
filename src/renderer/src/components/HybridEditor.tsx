@@ -353,7 +353,7 @@ export function HybridEditor({
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
 
   return (
-    <div className="h-full flex flex-col relative" style={{ backgroundColor: 'var(--nexus-bg-primary)' }}>
+    <div className="h-full flex flex-col relative" style={{ backgroundColor: 'var(--nexus-bg-primary)' }} data-testid="hybrid-editor" data-mode={mode}>
       {/* Mode toggle - pill style, top-right */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-3 text-xs" style={{ color: 'var(--nexus-text-muted)' }}>
         <span className="tabular-nums">{wordCount} words</span>

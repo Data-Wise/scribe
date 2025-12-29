@@ -105,6 +105,7 @@ function ProjectIconButton({ project, isActive, noteCount, onClick }: ProjectIco
       onClick={onClick}
       title={tooltip}
       data-status={status}
+      data-testid={`project-icon-${project.id}`}
     >
       {/* Status dot */}
       <StatusDot status={status} size="md" />

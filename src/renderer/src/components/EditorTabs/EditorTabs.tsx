@@ -30,12 +30,13 @@ export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
   }
 
   return (
-    <div className="editor-tabs" ref={tabsRef}>
+    <div className="editor-tabs" ref={tabsRef} data-testid="editor-tabs">
       <div className="editor-tabs-scroll">
-        {openTabs.map((tab) => (
+        {openTabs.map((tab, index) => (
           <TabButton
             key={tab.id}
             tab={tab}
+            index={index}
             isActive={tab.id === activeTabId}
             accentColor={accentColor}
             onClick={() => handleTabClick(tab.id)}
@@ -58,6 +59,7 @@ export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
 
 interface TabButtonProps {
   tab: EditorTab
+  index: number
   isActive: boolean
   accentColor: string
   onClick: () => void
@@ -65,7 +67,7 @@ interface TabButtonProps {
   onMouseDown: (e: React.MouseEvent) => void
 }
 
-function TabButton({ tab, isActive, accentColor, onClick, onClose, onMouseDown }: TabButtonProps) {
+function TabButton({ tab, index, isActive, accentColor, onClick, onClose, onMouseDown }: TabButtonProps) {
   const isMissionControl = tab.id === MISSION_CONTROL_TAB_ID
 
   return (
@@ -74,6 +76,7 @@ function TabButton({ tab, isActive, accentColor, onClick, onClose, onMouseDown }
       onClick={onClick}
       onMouseDown={onMouseDown}
       title={tab.title}
+      data-testid={isMissionControl ? 'tab-mission-control' : `tab-${index}`}
       style={{
         '--tab-accent': isActive ? accentColor : 'transparent'
       } as React.CSSProperties}
@@ -95,7 +98,7 @@ function TabButton({ tab, isActive, accentColor, onClick, onClose, onMouseDown }
 
       {/* Pin indicator or close button */}
       {tab.isPinned ? (
-        <span className="tab-pin" title="Pinned">
+        <span className="tab-pin" title="Pinned" data-testid="tab-pinned">
           <Pin size={10} />
         </span>
       ) : (
@@ -103,6 +106,7 @@ function TabButton({ tab, isActive, accentColor, onClick, onClose, onMouseDown }
           className="tab-close"
           onClick={onClose}
           title="Close tab (⌘W)"
+          data-testid="tab-close"
         >
           <X size={12} />
         </button>

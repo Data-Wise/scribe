@@ -1,14 +1,16 @@
 ---
 status: active
 priority: P1
-progress: 40
+progress: 50
 version: 1.6.0-dev
 sprint: 25
 updated: 2025-12-29
 editor: hybrid-markdown++
 next_sprint: 26
 next_focus: Activity Bar Badges + Browser Mode Indicator
-tests: 666
+tests: 666+126
+unit_tests: 666
+e2e_tests: 126
 tags:
   - adhd-friendly
   - distraction-free
@@ -48,6 +50,18 @@ tags:
   - [x] Fix test file TypeScript errors (59→0, 13 files)
   - [x] Create testUtils.ts mock factories
   - [x] **666 tests passing, 0 TypeScript errors**
+- [x] **Phase 6: Playwright E2E Test Suite** ✅ Complete
+  - [x] Playwright infrastructure (config, fixtures, page objects)
+  - [x] 14 spec files covering all UI features
+  - [x] 126 E2E tests passing across:
+    - Smoke tests (4), Navigation (8), Tabs (10)
+    - Editor (12), Left Sidebar (14), Right Sidebar (10)
+    - Keyboard Shortcuts (15), Modals (10), Mission Control (8)
+    - Projects (8), Notes (10), Focus Mode (5), Themes (6)
+    - Mission Sidebar (6)
+  - [x] data-testid attributes added to key components
+  - [x] IndexedDB isolation per test context
+  - [x] **792 total tests (666 unit + 126 E2E)**
 
 **Design Document:** `SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md`
 
@@ -68,7 +82,7 @@ tags:
 **Lower Priority (P3):**
 - [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
 - [ ] Phase 3: Status Bar (VS Code-style bottom bar)
-- [ ] Playwright E2E tests
+- [x] Playwright E2E tests ✅ (126 tests)
 
 ---
 
@@ -209,9 +223,9 @@ tags:
 | **v1.3** | 22 | Editor Modes + Custom CSS | ✅ 100% |
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
-| **v1.6** | 25 | Plan B UI Redesign | ✅ 40% |
+| **v1.6** | 25 | Plan B UI Redesign | ✅ 50% |
 
-**Total: v1.6 Phase 1+5 complete (666 tests passing)**
+**Total: v1.6 Phase 1+5+6 complete (792 tests: 666 unit + 126 E2E)**
 
 ---
 
@@ -253,7 +267,7 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 | 22 | Editor Modes + Custom CSS | 483 |
 | 23 | Mission Control + Native Menu | 483 |
 | 24 | Three-State Collapsible Sidebar | 518 |
-| 25 | Plan B UI (Phase 1+5) | 666 |
+| 25 | Plan B UI (Phase 1+5+6) | 792 (666 unit + 126 E2E) |
 
 ---
 
@@ -362,7 +376,8 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 | State | Zustand |
 | Database | SQLite (rusqlite) |
 | AI | Claude/Gemini CLI |
-| Testing | Vitest + Testing Library |
+| Unit Testing | Vitest + Testing Library |
+| E2E Testing | Playwright |
 
 ---
 

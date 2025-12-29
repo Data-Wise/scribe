@@ -103,6 +103,7 @@ export function CreateProjectModal({
         <Dialog.Content
           className="fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-xl shadow-2xl p-6"
           style={{ backgroundColor: 'var(--nexus-bg-secondary)' }}
+          data-testid="create-project-modal"
         >
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
