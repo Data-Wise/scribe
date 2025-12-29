@@ -947,7 +947,13 @@ function App() {
           open={isCommandPaletteOpen}
           setOpen={setIsCommandPaletteOpen}
           notes={notes}
-          onSelectNote={(noteId) => selectNote(noteId)}
+          onSelectNote={(noteId) => {
+            const note = notes.find(n => n.id === noteId)
+            if (note) {
+              openNoteTab(noteId, note.title)
+              selectNote(noteId)
+            }
+          }}
           onCreateNote={handleCreateNote}
           onDailyNote={handleDailyNote}
           onToggleFocus={() => handleFocusModeChange(!focusMode)}
@@ -989,8 +995,12 @@ function App() {
         currentProjectId={currentProjectId}
         onSelectProject={setCurrentProject}
         onSelectNote={(noteId) => {
-          setEditorMode('source')
-          selectNote(noteId)
+          const note = notes.find(n => n.id === noteId)
+          if (note) {
+            openNoteTab(noteId, note.title)
+            setEditorMode('source')
+            selectNote(noteId)
+          }
         }}
         onCreateProject={() => setIsCreateProjectModalOpen(true)}
         onNewNote={async (projectId) => {
@@ -1200,8 +1210,12 @@ function App() {
                     noteId={selectedNote.id}
                     noteTitle={selectedNote.title}
                     onSelectNote={(noteId) => {
-                      setEditorMode('reading')
-                      selectNote(noteId)
+                      const note = notes.find(n => n.id === noteId)
+                      if (note) {
+                        openNoteTab(noteId, note.title)
+                        setEditorMode('reading')
+                        selectNote(noteId)
+                      }
                     }}
                     refreshKey={backlinksRefreshKey}
                   />
@@ -1233,8 +1247,14 @@ function App() {
           projects={projects}
           notes={notes}
           currentProjectId={currentProjectId}
-          onSelectProject={(projectId) => setCurrentProjectId(projectId)}
-          onSelectNote={(noteId) => selectNote(noteId)}
+          onSelectProject={(projectId) => setCurrentProject(projectId)}
+          onSelectNote={(noteId) => {
+            const note = notes.find(n => n.id === noteId)
+            if (note) {
+              openNoteTab(noteId, note.title)
+              selectNote(noteId)
+            }
+          }}
           onClose={() => setHudPanelOpen(false)}
           mode="layered"
         />
@@ -1266,7 +1286,13 @@ function App() {
         open={isCommandPaletteOpen}
         setOpen={setIsCommandPaletteOpen}
         notes={notes}
-        onSelectNote={(noteId) => selectNote(noteId)}
+        onSelectNote={(noteId) => {
+          const note = notes.find(n => n.id === noteId)
+          if (note) {
+            openNoteTab(noteId, note.title)
+            selectNote(noteId)
+          }
+        }}
         onCreateNote={handleCreateNote}
         onDailyNote={handleDailyNote}
         onToggleFocus={() => handleFocusModeChange(!focusMode)}
@@ -1327,8 +1353,12 @@ function App() {
         isOpen={isSearchPanelOpen}
         onClose={() => setIsSearchPanelOpen(false)}
         onSelectNote={(noteId) => {
-          setEditorMode('source')
-          selectNote(noteId)
+          const note = notes.find(n => n.id === noteId)
+          if (note) {
+            openNoteTab(noteId, note.title)
+            setEditorMode('source')
+            selectNote(noteId)
+          }
         }}
         currentProject={currentProjectId ? projects.find(p => p.id === currentProjectId) : null}
         projects={projects}
