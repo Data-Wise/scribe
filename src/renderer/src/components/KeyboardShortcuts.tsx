@@ -7,28 +7,44 @@ interface KeyboardShortcutsProps {
 }
 
 // Keyboard shortcuts organized by category
+// IMPORTANT: Keep this in sync with actual handlers in App.tsx and HybridEditor.tsx
+// See docs/guide/shortcuts.md for full reference
 const SHORTCUTS = {
   'Notes': [
     { keys: '⌘N', description: 'New Note' },
     { keys: '⌘D', description: 'Daily Note' },
     { keys: '⌘S', description: 'Save (auto-saves)' },
+    { keys: '⌘⇧C', description: 'Quick Capture' },
+    { keys: '⌘⇧P', description: 'New Project' },
   ],
   'Editor': [
-    { keys: '⌘E', description: 'Toggle Preview' },
+    { keys: '⌘E', description: 'Cycle Editor Mode' },
     { keys: '⌘⇧F', description: 'Focus Mode' },
     { keys: '⌘⇧E', description: 'Export Note' },
     { keys: '⌘⇧G', description: 'Graph View' },
   ],
-  'Navigation': [
-    { keys: '⌘K', description: 'Command Palette' },
-    { keys: '⌘F', description: 'Search Notes' },
+  'Tabs': [
+    { keys: '⌘1', description: 'Go to Home' },
+    { keys: '⌘2-9', description: 'Go to Tab 2-9' },
+    { keys: '⌘W', description: 'Close Tab' },
+    { keys: '⌘⇧T', description: 'Reopen Closed Tab' },
+    { keys: '⌃Tab', description: 'Next Tab' },
+    { keys: '⌃⇧Tab', description: 'Previous Tab' },
+  ],
+  'Sidebars': [
     { keys: '⌘B', description: 'Toggle Left Sidebar' },
-    { keys: '⌘⇧B', description: 'Toggle Right Sidebar' },
-    { keys: '⌘⇧A', description: 'Open AI Panel' },
-    { keys: '⌘⇧M', description: 'Mission HUD' },
+    { keys: '⌘⇧B', description: 'Toggle Right Sidebar Mode' },
     { keys: '⌘0', description: 'Cycle Sidebar Mode' },
-    { keys: '⌥1-5', description: 'Switch Sidebar Tabs' },
+    { keys: '⌥1-5', description: 'Left Sidebar Tabs' },
+    { keys: '⌘⌥1-4', description: 'Right Sidebar Tabs' },
+    { keys: '⌘⇧A', description: 'AI Panel' },
+    { keys: '⌘⇧M', description: 'Mission HUD' },
+  ],
+  'Navigation': [
+    { keys: '⌘F', description: 'Search Notes' },
     { keys: '⌘?', description: 'Keyboard Shortcuts' },
+    { keys: '⌘,', description: 'Settings' },
+    { keys: 'ESC', description: 'Exit Mode/Close Modal' },
   ],
   'Writing': [
     { keys: '[[', description: 'Wiki Link' },
@@ -36,10 +52,6 @@ const SHORTCUTS = {
     { keys: '@', description: 'Citation' },
     { keys: '$', description: 'Math (inline)' },
     { keys: '$$', description: 'Math (block)' },
-  ],
-  'General': [
-    { keys: 'ESC', description: 'Exit Focus/Preview/Modal' },
-    { keys: '⌘,', description: 'Settings' },
   ],
 }
 

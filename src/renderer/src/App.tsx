@@ -653,6 +653,9 @@ function App() {
       }
 
       // ⌘⌥1-4 - Right sidebar tab shortcuts (Sprint 27)
+      // NOTE: ⌘⌥0-9 are also used for theme switching, but themes use the
+      // full 0-9 range while right sidebar only uses 1-4, so no conflict.
+      // Theme shortcuts check for registered themes before firing.
       if ((e.metaKey || e.ctrlKey) && e.altKey && /^[1-4]$/.test(e.key)) {
         e.preventDefault()
         const tabIndex = parseInt(e.key, 10) - 1
@@ -712,7 +715,9 @@ function App() {
         setIsCreateProjectModalOpen(true)
       }
 
-      // Tab navigation shortcuts
+      // Tab navigation shortcuts (⌘1-9)
+      // NOTE: ⌘1-9 are reserved for tab navigation. Do NOT add ⌘1/2/3 for
+      // other purposes (e.g., editor mode switching uses ⌘E to cycle instead).
       // ⌘1 = Go to Home tab
       if ((e.metaKey || e.ctrlKey) && e.key === '1' && !e.shiftKey && !e.altKey) {
         e.preventDefault()

@@ -81,25 +81,14 @@ export function HybridEditor({
   }, [mode, handleModeChange])
 
   // Keyboard shortcuts for editor modes
+  // NOTE: ⌘1-9 are reserved for tab navigation in App.tsx
+  // Use ⌘E to cycle modes, Escape to exit reading mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Cmd+E or Ctrl+E to cycle modes
       if ((e.metaKey || e.ctrlKey) && e.key === 'e') {
         e.preventDefault()
         cycleMode()
-      }
-      // Cmd+1/2/3 to switch to specific mode
-      if ((e.metaKey || e.ctrlKey) && e.key === '1') {
-        e.preventDefault()
-        handleModeChange('source')
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === '2') {
-        e.preventDefault()
-        handleModeChange('live-preview')
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === '3') {
-        e.preventDefault()
-        handleModeChange('reading')
       }
       // Escape in reading mode returns to source mode
       if (e.key === 'Escape' && mode === 'reading') {
