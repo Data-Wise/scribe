@@ -1,12 +1,14 @@
-import { FileText, Link2, Tags, Sparkles } from 'lucide-react'
+import { FileText, Link2, Tags, Sparkles, PanelRightClose, PanelRight } from 'lucide-react'
 
 /**
  * RightSidebarTabs - Tab bar for the right sidebar with icons and badge counts
  *
  * Sprint 27: Icons + badge counts for Properties, Backlinks, Tags, AI tabs
+ * Supports two modes: 'expanded' (full labels) and 'icon' (icons only)
  */
 
 export type RightSidebarTab = 'properties' | 'backlinks' | 'tags' | 'ai'
+export type RightSidebarMode = 'expanded' | 'icon'
 
 interface TabConfig {
   id: RightSidebarTab
@@ -29,6 +31,8 @@ interface RightSidebarTabsProps {
   backlinksCount?: number
   tagsCount?: number
   menuContent?: React.ReactNode
+  mode?: RightSidebarMode
+  onToggleMode?: () => void
 }
 
 export function RightSidebarTabs({
@@ -37,7 +41,9 @@ export function RightSidebarTabs({
   propertiesCount = 0,
   backlinksCount = 0,
   tagsCount = 0,
-  menuContent
+  menuContent,
+  mode = 'expanded',
+  onToggleMode
 }: RightSidebarTabsProps) {
 
   const getCount = (tabId: RightSidebarTab): number | undefined => {
@@ -53,8 +59,14 @@ export function RightSidebarTabs({
     }
   }
 
+  const isIconMode = mode === 'icon'
+
   return (
-    <div className="right-sidebar-tabs" role="tablist" aria-label="Right sidebar tabs">
+    <div
+      className={`right-sidebar-tabs ${isIconMode ? 'icon-mode' : ''}`}
+      role="tablist"
+      aria-label="Right sidebar tabs"
+    >
       {TABS.map(tab => {
         const count = getCount(tab.id)
         const isActive = activeTab === tab.id
@@ -69,7 +81,7 @@ export function RightSidebarTabs({
             title={tab.shortcut ? `${tab.label} (${tab.shortcut})` : tab.label}
           >
             <span className="tab-icon" aria-hidden="true">{tab.icon}</span>
-            <span className="tab-label">{tab.label}</span>
+            {!isIconMode && <span className="tab-label">{tab.label}</span>}
             {count !== undefined && (
               <span className="tab-badge" aria-label={`${count} items`}>
                 {count}
@@ -79,7 +91,17 @@ export function RightSidebarTabs({
         )
       })}
       <div className="flex-1" />
-      {menuContent}
+      {!isIconMode && menuContent}
+      {onToggleMode && (
+        <button
+          className="right-sidebar-toggle"
+          onClick={onToggleMode}
+          title={isIconMode ? 'Expand sidebar (⌘⇧])' : 'Collapse sidebar (⌘⇧])'}
+          aria-label={isIconMode ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isIconMode ? <PanelRight size={14} /> : <PanelRightClose size={14} />}
+        </button>
+      )}
     </div>
   )
 }

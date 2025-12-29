@@ -342,6 +342,70 @@ body {
   color: white;
 }
 
+/* Right sidebar toggle button */
+.right-sidebar-toggle {
+  padding: 6px;
+  color: theme('colors.nexus-text-muted');
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right-sidebar-toggle:hover {
+  color: theme('colors.nexus-text-primary');
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Icon-only mode for right sidebar */
+.right-sidebar-tabs.icon-mode {
+  flex-direction: column;
+  padding: 40px 4px 8px 4px;
+  gap: 4px;
+  width: 48px;
+}
+
+.right-sidebar-tabs.icon-mode .right-sidebar-tab {
+  padding: 8px;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.right-sidebar-tabs.icon-mode .right-sidebar-tab.active {
+  box-shadow: none;
+  background: theme('colors.nexus-accent');
+  color: white;
+}
+
+.right-sidebar-tabs.icon-mode .right-sidebar-tab .tab-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 14px;
+  padding: 0 3px;
+  font-size: 9px;
+}
+
+.right-sidebar-tabs.icon-mode .right-sidebar-tab {
+  position: relative;
+}
+
+.right-sidebar-tabs.icon-mode .right-sidebar-toggle {
+  margin-top: auto;
+}
+
+/* Right sidebar icon mode container */
+.right-sidebar-icon-mode {
+  width: 48px;
+  background: theme('colors.nexus-bg-secondary');
+  display: flex;
+  flex-direction: column;
+}
+
 .tab-content {
   flex: 1;
   overflow-y: auto;

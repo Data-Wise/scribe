@@ -140,8 +140,22 @@ function App() {
   
   // Sidebar collapse state (leftSidebarCollapsed now handled by DashboardShell)
   const [, setLeftSidebarCollapsed] = useState(false)  // Keep setter for potential future use
-  const [, setRightSidebarCollapsed] = useState(false)  // Keep setter for potential future use
-  
+
+  // Right sidebar mode: 'expanded' (full) or 'icon' (collapsed with icons only)
+  const [rightSidebarMode, setRightSidebarMode] = useState<'expanded' | 'icon'>(() => {
+    const saved = localStorage.getItem('rightSidebarMode')
+    return (saved as 'expanded' | 'icon') || 'expanded'
+  })
+
+  // Toggle right sidebar mode
+  const toggleRightSidebarMode = () => {
+    setRightSidebarMode(prev => {
+      const next = prev === 'expanded' ? 'icon' : 'expanded'
+      localStorage.setItem('rightSidebarMode', next)
+      return next
+    })
+  }
+
   // Right sidebar width state with localStorage persistence
   const [rightSidebarWidth, setRightSidebarWidth] = useState(() => {
     const saved = localStorage.getItem('rightSidebarWidth')
@@ -626,9 +640,10 @@ function App() {
         setLeftSidebarCollapsed(prev => !prev)
       }
       
+      // ⌘⇧B - Toggle right sidebar mode (expanded/icon)
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'B') {
         e.preventDefault()
-        setRightSidebarCollapsed(prev => !prev)
+        toggleRightSidebarMode()
       }
 
       // ⌘⇧A - Switch to AI tab in right sidebar
@@ -1271,10 +1286,12 @@ function App() {
               {/* Right sidebar (properties/backlinks/tags) - only in compact/card mode with note selected */}
               {sidebarMode !== 'icon' && selectedNote && (
                 <>
-                  <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
+                  {rightSidebarMode === 'expanded' && (
+                    <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
+                  )}
                   <div
-                    className="bg-nexus-bg-secondary flex flex-col"
-                    style={{ width: `${rightSidebarWidth}px` }}
+                    className={`bg-nexus-bg-secondary flex ${rightSidebarMode === 'icon' ? 'flex-row' : 'flex-col'}`}
+                    style={{ width: rightSidebarMode === 'icon' ? '48px' : `${rightSidebarWidth}px` }}
                   >
                     <RightSidebarTabs
                       activeTab={rightActiveTab}
@@ -1283,7 +1300,10 @@ function App() {
                       backlinksCount={backlinksCount}
                       tagsCount={currentNoteTags.length}
                       menuContent={<PanelMenu sections={getRightMenuSections()} />}
+                      mode={rightSidebarMode}
+                      onToggleMode={toggleRightSidebarMode}
                     />
+                    {rightSidebarMode === 'expanded' && (
                     <div className="tab-content flex-1">
                       {rightActiveTab === 'properties' ? (
                         <PropertiesPanel
@@ -1322,6 +1342,7 @@ function App() {
                         />
                       )}
                     </div>
+                    )}
                   </div>
                 </>
               )}

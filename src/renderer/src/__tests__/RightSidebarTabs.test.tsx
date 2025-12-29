@@ -192,4 +192,84 @@ describe('RightSidebarTabs', () => {
       expect(activeTabs.length).toBe(1)
     })
   })
+
+  describe('Icon Mode', () => {
+    it('hides tab labels in icon mode', () => {
+      render(<RightSidebarTabs {...defaultProps} mode="icon" />)
+
+      // Labels should not be visible (though tabs still work)
+      expect(screen.queryByText('Properties')).not.toBeInTheDocument()
+      expect(screen.queryByText('Backlinks')).not.toBeInTheDocument()
+    })
+
+    it('shows tab labels in expanded mode', () => {
+      render(<RightSidebarTabs {...defaultProps} mode="expanded" />)
+
+      expect(screen.getByText('Properties')).toBeInTheDocument()
+      expect(screen.getByText('Backlinks')).toBeInTheDocument()
+    })
+
+    it('adds icon-mode class when in icon mode', () => {
+      render(<RightSidebarTabs {...defaultProps} mode="icon" />)
+
+      const tablist = screen.getByRole('tablist')
+      expect(tablist).toHaveClass('icon-mode')
+    })
+
+    it('does not add icon-mode class when expanded', () => {
+      render(<RightSidebarTabs {...defaultProps} mode="expanded" />)
+
+      const tablist = screen.getByRole('tablist')
+      expect(tablist).not.toHaveClass('icon-mode')
+    })
+
+    it('shows toggle button when onToggleMode provided', () => {
+      const onToggleMode = vi.fn()
+      render(<RightSidebarTabs {...defaultProps} onToggleMode={onToggleMode} />)
+
+      expect(screen.getByLabelText('Collapse sidebar')).toBeInTheDocument()
+    })
+
+    it('does not show toggle button when onToggleMode not provided', () => {
+      render(<RightSidebarTabs {...defaultProps} />)
+
+      expect(screen.queryByLabelText('Collapse sidebar')).not.toBeInTheDocument()
+      expect(screen.queryByLabelText('Expand sidebar')).not.toBeInTheDocument()
+    })
+
+    it('calls onToggleMode when toggle button clicked', () => {
+      const onToggleMode = vi.fn()
+      render(<RightSidebarTabs {...defaultProps} onToggleMode={onToggleMode} />)
+
+      fireEvent.click(screen.getByLabelText('Collapse sidebar'))
+      expect(onToggleMode).toHaveBeenCalledTimes(1)
+    })
+
+    it('shows expand label in icon mode', () => {
+      const onToggleMode = vi.fn()
+      render(<RightSidebarTabs {...defaultProps} mode="icon" onToggleMode={onToggleMode} />)
+
+      expect(screen.getByLabelText('Expand sidebar')).toBeInTheDocument()
+    })
+
+    it('still shows badges in icon mode', () => {
+      render(<RightSidebarTabs {...defaultProps} mode="icon" backlinksCount={5} />)
+
+      expect(screen.getByText('5')).toBeInTheDocument()
+    })
+
+    it('hides menu content in icon mode', () => {
+      const menuContent = <button data-testid="menu-button">Menu</button>
+      render(<RightSidebarTabs {...defaultProps} mode="icon" menuContent={menuContent} />)
+
+      expect(screen.queryByTestId('menu-button')).not.toBeInTheDocument()
+    })
+
+    it('shows menu content in expanded mode', () => {
+      const menuContent = <button data-testid="menu-button">Menu</button>
+      render(<RightSidebarTabs {...defaultProps} mode="expanded" menuContent={menuContent} />)
+
+      expect(screen.getByTestId('menu-button')).toBeInTheDocument()
+    })
+  })
 })
