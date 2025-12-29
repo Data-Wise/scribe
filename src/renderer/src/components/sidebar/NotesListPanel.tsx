@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react'
-import { Search, FileText, Calendar, FolderKanban, GripVertical } from 'lucide-react'
+import { Search, FileText, Calendar, FolderKanban, GripVertical, List, FolderTree } from 'lucide-react'
 import { Note, Project } from '../../types'
 import { NoteContextMenu, useNoteContextMenu } from './NoteContextMenu'
 import { useDraggableNote } from './DraggableNote'
+import { VaultTreeView } from './VaultTreeView'
+import { useAppViewStore } from '../../store/useAppViewStore'
 
 /**
  * NotesListPanel - Displays all notes with search and sorting
@@ -35,6 +37,14 @@ export function NotesListPanel({
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('updated')
   const { contextMenu, showContextMenu, hideContextMenu } = useNoteContextMenu()
+
+  // Vault tree view state from store
+  const {
+    notesViewMode,
+    setNotesViewMode,
+    expandedProjects,
+    toggleProjectExpanded
+  } = useAppViewStore()
 
   // Create project lookup map
   const projectMap = useMemo(() => {
@@ -76,96 +86,140 @@ export function NotesListPanel({
 
   return (
     <div className="notes-list-panel">
-      {/* Search bar */}
-      <div className="sidebar-search">
-        <Search size={14} className="search-icon" />
-        <input
-          type="text"
-          placeholder="Search notes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
+      {/* Search bar with view toggle */}
+      <div className="notes-header-row">
+        <div className="sidebar-search">
+          <Search size={14} className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search notes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
+        {/* View toggle: List / Tree */}
+        <div className="notes-view-toggle" role="tablist" aria-label="Notes view">
+          <button
+            role="tab"
+            aria-selected={notesViewMode === 'list'}
+            className={`view-toggle-btn ${notesViewMode === 'list' ? 'active' : ''}`}
+            onClick={() => setNotesViewMode('list')}
+            title="List view"
+          >
+            <List size={14} />
+          </button>
+          <button
+            role="tab"
+            aria-selected={notesViewMode === 'tree'}
+            className={`view-toggle-btn ${notesViewMode === 'tree' ? 'active' : ''}`}
+            onClick={() => setNotesViewMode('tree')}
+            title="Tree view (by project)"
+          >
+            <FolderTree size={14} />
+          </button>
+        </div>
       </div>
 
-      {/* Sort options */}
-      <div className="notes-sort-bar">
-        <span className="sort-label">Sort:</span>
-        <button
-          className={`sort-btn ${sortBy === 'updated' ? 'active' : ''}`}
-          onClick={() => setSortBy('updated')}
-          title="Sort by last updated"
-        >
-          Recent
-        </button>
-        <button
-          className={`sort-btn ${sortBy === 'created' ? 'active' : ''}`}
-          onClick={() => setSortBy('created')}
-          title="Sort by creation date"
-        >
-          Created
-        </button>
-        <button
-          className={`sort-btn ${sortBy === 'title' ? 'active' : ''}`}
-          onClick={() => setSortBy('title')}
-          title="Sort alphabetically"
-        >
-          A-Z
-        </button>
-      </div>
+      {/* Sort options (only in list mode) */}
+      {notesViewMode === 'list' && (
+        <div className="notes-sort-bar">
+          <span className="sort-label">Sort:</span>
+          <button
+            className={`sort-btn ${sortBy === 'updated' ? 'active' : ''}`}
+            onClick={() => setSortBy('updated')}
+            title="Sort by last updated"
+          >
+            Recent
+          </button>
+          <button
+            className={`sort-btn ${sortBy === 'created' ? 'active' : ''}`}
+            onClick={() => setSortBy('created')}
+            title="Sort by creation date"
+          >
+            Created
+          </button>
+          <button
+            className={`sort-btn ${sortBy === 'title' ? 'active' : ''}`}
+            onClick={() => setSortBy('title')}
+            title="Sort alphabetically"
+          >
+            A-Z
+          </button>
+        </div>
+      )}
 
-      {/* Notes list */}
-      <div className="notes-list-scroll">
-        {filteredNotes.length === 0 ? (
-          <div className="notes-empty-state">
-            {searchQuery ? (
-              <>
-                <Search size={20} className="empty-icon" />
-                <span>No notes match "{searchQuery}"</span>
-              </>
-            ) : (
-              <>
-                <FileText size={20} className="empty-icon" />
-                <span>No notes yet</span>
-              </>
-            )}
-          </div>
-        ) : (
-          filteredNotes.map(note => {
-            const projectId = note.project_id
-            return (
-              <NoteItem
-                key={note.id}
-                note={note}
-                project={projectMap[projectId || '']}
-                onClick={() => onSelectNote(note.id)}
-                onContextMenu={(e) => showContextMenu(e, note.id, projectId)}
-                isCompact={isCompact}
-              />
-            )
-          })
-        )}
-      </div>
-
-      {/* Notes count */}
-      <div className="notes-count">
-        {filteredNotes.length} {filteredNotes.length === 1 ? 'note' : 'notes'}
-        {searchQuery && ` matching "${searchQuery}"`}
-      </div>
-
-      {/* Context Menu */}
-      {contextMenu && (
-        <NoteContextMenu
-          x={contextMenu.x}
-          y={contextMenu.y}
-          noteId={contextMenu.noteId}
-          currentProjectId={contextMenu.currentProjectId}
+      {/* Tree View */}
+      {notesViewMode === 'tree' && (
+        <VaultTreeView
+          notes={searchQuery ? filteredNotes : notes}
           projects={projects}
-          onClose={hideContextMenu}
-          onAssignToProject={onAssignToProject || (() => {})}
+          onSelectNote={onSelectNote}
+          onAssignToProject={onAssignToProject}
           onMoveToInbox={onMoveToInbox}
           onDelete={onDelete}
+          expandedProjects={expandedProjects}
+          onToggleExpand={toggleProjectExpanded}
         />
+      )}
+
+      {/* List View */}
+      {notesViewMode === 'list' && (
+        <>
+          <div className="notes-list-scroll">
+            {filteredNotes.length === 0 ? (
+              <div className="notes-empty-state">
+                {searchQuery ? (
+                  <>
+                    <Search size={20} className="empty-icon" />
+                    <span>No notes match "{searchQuery}"</span>
+                  </>
+                ) : (
+                  <>
+                    <FileText size={20} className="empty-icon" />
+                    <span>No notes yet</span>
+                  </>
+                )}
+              </div>
+            ) : (
+              filteredNotes.map(note => {
+                const projectId = note.project_id
+                return (
+                  <NoteItem
+                    key={note.id}
+                    note={note}
+                    project={projectMap[projectId || '']}
+                    onClick={() => onSelectNote(note.id)}
+                    onContextMenu={(e) => showContextMenu(e, note.id, projectId)}
+                    isCompact={isCompact}
+                  />
+                )
+              })
+            )}
+          </div>
+
+          {/* Notes count */}
+          <div className="notes-count">
+            {filteredNotes.length} {filteredNotes.length === 1 ? 'note' : 'notes'}
+            {searchQuery && ` matching "${searchQuery}"`}
+          </div>
+
+          {/* Context Menu */}
+          {contextMenu && (
+            <NoteContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              noteId={contextMenu.noteId}
+              currentProjectId={contextMenu.currentProjectId}
+              projects={projects}
+              onClose={hideContextMenu}
+              onAssignToProject={onAssignToProject || (() => {})}
+              onMoveToInbox={onMoveToInbox}
+              onDelete={onDelete}
+            />
+          )}
+        </>
       )}
     </div>
   )

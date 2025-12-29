@@ -11,12 +11,17 @@ import { create } from 'zustand'
 
 export type SidebarMode = 'icon' | 'compact' | 'card'
 export type LeftSidebarTab = 'projects' | 'notes' | 'inbox' | 'graph' | 'trash'
+export type NotesViewMode = 'list' | 'tree'
 
 interface AppViewState {
   // Sidebar state
   sidebarMode: SidebarMode
   sidebarWidth: number
   leftSidebarTab: LeftSidebarTab
+
+  // Notes tab state (Vault Tree View)
+  notesViewMode: NotesViewMode
+  expandedProjects: Set<string>
 
   // Session tracking
   lastActiveNoteId: string | null
@@ -26,6 +31,12 @@ interface AppViewState {
   cycleSidebarMode: () => void
   setSidebarWidth: (width: number) => void
   setLeftSidebarTab: (tab: LeftSidebarTab) => void
+
+  // Notes view actions
+  setNotesViewMode: (mode: NotesViewMode) => void
+  toggleProjectExpanded: (projectId: string) => void
+  expandAllProjects: (projectIds: string[]) => void
+  collapseAllProjects: () => void
 
   // Session actions
   setLastActiveNote: (noteId: string | null) => void
@@ -38,6 +49,8 @@ const LAST_NOTE_KEY = 'scribe-dev:lastActiveNoteId'
 const SIDEBAR_MODE_KEY = 'scribe-dev:sidebarMode'
 const SIDEBAR_WIDTH_KEY = 'scribe-dev:sidebarWidth'
 const LEFT_SIDEBAR_TAB_KEY = 'scribe-dev:leftSidebarTab'
+const NOTES_VIEW_MODE_KEY = 'scribe-dev:notesViewMode'
+const EXPANDED_PROJECTS_KEY = 'scribe-dev:expandedProjects'
 
 // Sidebar width constraints
 export const SIDEBAR_WIDTHS = {
@@ -147,6 +160,49 @@ const saveLeftSidebarTab = (tab: LeftSidebarTab): void => {
   }
 }
 
+const getSavedNotesViewMode = (): NotesViewMode => {
+  try {
+    const saved = localStorage.getItem(NOTES_VIEW_MODE_KEY)
+    if (saved === 'list' || saved === 'tree') {
+      return saved
+    }
+    return 'list' // default to list (current behavior)
+  } catch {
+    return 'list'
+  }
+}
+
+const saveNotesViewMode = (mode: NotesViewMode): void => {
+  try {
+    localStorage.setItem(NOTES_VIEW_MODE_KEY, mode)
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getSavedExpandedProjects = (): Set<string> => {
+  try {
+    const saved = localStorage.getItem(EXPANDED_PROJECTS_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      if (Array.isArray(parsed)) {
+        return new Set(parsed)
+      }
+    }
+    return new Set()
+  } catch {
+    return new Set()
+  }
+}
+
+const saveExpandedProjects = (expanded: Set<string>): void => {
+  try {
+    localStorage.setItem(EXPANDED_PROJECTS_KEY, JSON.stringify([...expanded]))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
 /**
  * Determine initial sidebar mode based on session context
  * - Fresh start or > 4 hours → compact (get bearings)
@@ -177,6 +233,8 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   sidebarMode: determineInitialSidebarMode(),
   sidebarWidth: getSavedSidebarWidth(),
   leftSidebarTab: getSavedLeftSidebarTab(),
+  notesViewMode: getSavedNotesViewMode(),
+  expandedProjects: getSavedExpandedProjects(),
   lastActiveNoteId: getLastActiveNoteId(),
 
   setSidebarMode: (mode: SidebarMode) => {
@@ -211,6 +269,35 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   setLeftSidebarTab: (tab: LeftSidebarTab) => {
     set({ leftSidebarTab: tab })
     saveLeftSidebarTab(tab)
+  },
+
+  setNotesViewMode: (mode: NotesViewMode) => {
+    set({ notesViewMode: mode })
+    saveNotesViewMode(mode)
+  },
+
+  toggleProjectExpanded: (projectId: string) => {
+    const current = get().expandedProjects
+    const next = new Set(current)
+    if (next.has(projectId)) {
+      next.delete(projectId)
+    } else {
+      next.add(projectId)
+    }
+    set({ expandedProjects: next })
+    saveExpandedProjects(next)
+  },
+
+  expandAllProjects: (projectIds: string[]) => {
+    const next = new Set(projectIds)
+    set({ expandedProjects: next })
+    saveExpandedProjects(next)
+  },
+
+  collapseAllProjects: () => {
+    const next = new Set<string>()
+    set({ expandedProjects: next })
+    saveExpandedProjects(next)
   },
 
   setLastActiveNote: (noteId: string | null) => {
