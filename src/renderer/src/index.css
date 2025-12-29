@@ -185,8 +185,17 @@ body {
   left: 0;
   right: 0;
   height: 32px;
-  -webkit-app-region: drag;
+  /* Use pointer-events: none so clicks pass through to tabs below.
+     Window dragging is handled by DragRegion component via Tauri JS API.
+     This prevents the drag region from blocking tab clicks in browser mode. */
+  pointer-events: none;
   z-index: 1000;
+}
+
+/* In Tauri, re-enable pointer events for the drag region to work */
+.tauri .titlebar-drag-region {
+  pointer-events: auto;
+  -webkit-app-region: drag;
 }
 
 /* Prevent dragging on interactive elements */
@@ -194,6 +203,7 @@ body {
 .titlebar-drag-region a,
 .titlebar-drag-region input {
   -webkit-app-region: no-drag;
+  pointer-events: auto;
 }
 
 .ribbon {

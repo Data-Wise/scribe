@@ -647,6 +647,19 @@ function App() {
     }
   }, [selectedNoteId, setLastActiveNote, updateSessionTimestamp])
 
+  // Sync selected note when active tab changes (for tab clicks)
+  useEffect(() => {
+    if (activeTabId && activeTabId !== MISSION_CONTROL_TAB_ID) {
+      const activeTab = openTabs.find(t => t.id === activeTabId)
+      if (activeTab?.type === 'note' && activeTab.noteId) {
+        // Only update if different to avoid loops
+        if (activeTab.noteId !== selectedNoteId) {
+          selectNote(activeTab.noteId)
+        }
+      }
+    }
+  }, [activeTabId, openTabs, selectedNoteId, selectNote])
+
   // Handle native menu events from Tauri (skip in browser mode)
   useEffect(() => {
     if (!isTauri()) return // No native menu in browser mode
