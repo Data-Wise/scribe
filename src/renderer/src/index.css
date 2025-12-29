@@ -272,9 +272,74 @@ body {
 .sidebar-tab.active {
   color: theme('colors.nexus-accent');
   background: theme('colors.nexus-bg-primary');
-  box-shadow: 
+  box-shadow:
     inset 0 -2px 0 0 theme('colors.nexus-accent'),
     0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Right Sidebar Tabs (Sprint 27) */
+.right-sidebar-tabs {
+  display: flex;
+  background: theme('colors.nexus-bg-secondary');
+  padding: 40px 12px 0 16px;
+  gap: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.right-sidebar-tab {
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: theme('colors.nexus-text-muted');
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  transition: all 150ms ease;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.right-sidebar-tab:hover {
+  color: theme('colors.nexus-text-primary');
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.right-sidebar-tab.active {
+  color: theme('colors.nexus-accent');
+  background: theme('colors.nexus-bg-primary');
+  box-shadow: inset 0 -2px 0 0 theme('colors.nexus-accent');
+}
+
+.right-sidebar-tab .tab-icon {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+}
+
+.right-sidebar-tab.active .tab-icon {
+  opacity: 1;
+}
+
+.right-sidebar-tab .tab-label {
+  /* Hide label when sidebar is narrow */
+}
+
+.right-sidebar-tab .tab-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: theme('colors.nexus-text-muted');
+  min-width: 16px;
+  text-align: center;
+}
+
+.right-sidebar-tab.active .tab-badge {
+  background: theme('colors.nexus-accent');
+  color: white;
 }
 
 .tab-content {

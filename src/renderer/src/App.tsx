@@ -30,6 +30,7 @@ import { DeleteConfirmationDialog } from './components/DeleteConfirmationDialog'
 import { ToastContainer } from './components/Toast'
 import { PanelMenu, MenuSection } from './components/PanelMenu'
 import { SearchPanel } from './components/SearchPanel'
+import { RightSidebarTabs, RightSidebarTab, RIGHT_SIDEBAR_TAB_ORDER } from './components/RightSidebarTabs'
 import {
   Theme,
   AutoThemeSettings,
@@ -149,7 +150,10 @@ function App() {
   const [isResizingRight, setIsResizingRight] = useState(false)
   
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
-  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'ai'>('properties')
+  const [rightActiveTab, setRightActiveTab] = useState<RightSidebarTab>('properties')
+
+  // Right sidebar badge counts (Sprint 27)
+  const [backlinksCount, setBacklinksCount] = useState(0)
 
   // Left sidebar sorting is now handled in MissionSidebar
 
@@ -348,6 +352,27 @@ function App() {
     }
     loadCurrentNoteTags()
   }, [selectedNoteId, backlinksRefreshKey]) // Refresh when content changes (backlinksRefreshKey)
+
+  // Load backlinks count for right sidebar badge (Sprint 27)
+  useEffect(() => {
+    const loadBacklinksCount = async () => {
+      if (!selectedNoteId) {
+        setBacklinksCount(0)
+        return
+      }
+      try {
+        const [backlinks, outgoing] = await Promise.all([
+          api.getBacklinks(selectedNoteId),
+          api.getOutgoingLinks(selectedNoteId)
+        ])
+        setBacklinksCount(backlinks.length + outgoing.length)
+      } catch (error) {
+        console.error('Failed to load backlinks count:', error)
+        setBacklinksCount(0)
+      }
+    }
+    loadBacklinksCount()
+  }, [selectedNoteId, backlinksRefreshKey])
 
 
   // Open a note in a new tab (or switch to existing tab)
@@ -610,6 +635,15 @@ function App() {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'A') {
         e.preventDefault()
         setRightActiveTab('ai')
+      }
+
+      // ⌘⌥1-4 - Right sidebar tab shortcuts (Sprint 27)
+      if ((e.metaKey || e.ctrlKey) && e.altKey && /^[1-4]$/.test(e.key)) {
+        e.preventDefault()
+        const tabIndex = parseInt(e.key, 10) - 1
+        if (RIGHT_SIDEBAR_TAB_ORDER[tabIndex]) {
+          setRightActiveTab(RIGHT_SIDEBAR_TAB_ORDER[tabIndex])
+        }
       }
 
       // ⌘⇧M - Toggle Mission HUD panel (not ⌘H which is macOS "Hide")
@@ -1242,14 +1276,14 @@ function App() {
                     className="bg-nexus-bg-secondary flex flex-col"
                     style={{ width: `${rightSidebarWidth}px` }}
                   >
-                    <div className="sidebar-tabs pt-10">
-                      <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
-                      <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
-                      <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
-                      <button className={`sidebar-tab ${rightActiveTab === 'ai' ? 'active' : ''}`} onClick={() => setRightActiveTab('ai')}>✨ AI</button>
-                      <div className="flex-1" />
-                      <PanelMenu sections={getRightMenuSections()} />
-                    </div>
+                    <RightSidebarTabs
+                      activeTab={rightActiveTab}
+                      onTabChange={setRightActiveTab}
+                      propertiesCount={Object.keys(selectedNote.properties || {}).length}
+                      backlinksCount={backlinksCount}
+                      tagsCount={currentNoteTags.length}
+                      menuContent={<PanelMenu sections={getRightMenuSections()} />}
+                    />
                     <div className="tab-content flex-1">
                       {rightActiveTab === 'properties' ? (
                         <PropertiesPanel
