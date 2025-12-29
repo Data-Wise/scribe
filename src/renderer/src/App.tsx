@@ -10,6 +10,7 @@ import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
+import { ClaudePanel } from './components/ClaudePanel'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { ExportDialog } from './components/ExportDialog'
@@ -147,7 +148,7 @@ function App() {
   const [isResizingRight, setIsResizingRight] = useState(false)
   
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
-  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
+  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'ai'>('properties')
 
   // Left sidebar sorting is now handled in MissionSidebar
 
@@ -1231,6 +1232,7 @@ function App() {
                       <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>Properties</button>
                       <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>Backlinks</button>
                       <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>Tags</button>
+                      <button className={`sidebar-tab ${rightActiveTab === 'ai' ? 'active' : ''}`} onClick={() => setRightActiveTab('ai')}>✨ AI</button>
                       <div className="flex-1" />
                       <PanelMenu sections={getRightMenuSections()} />
                     </div>
@@ -1257,11 +1259,18 @@ function App() {
                           }}
                           refreshKey={backlinksRefreshKey}
                         />
-                      ) : (
+                      ) : rightActiveTab === 'tags' ? (
                         <TagsPanel
                           noteId={selectedNote.id}
                           selectedTagIds={selectedTagIds}
                           onTagClick={handleTagClick}
+                        />
+                      ) : (
+                        <ClaudePanel
+                          currentNote={selectedNote}
+                          currentProject={projects.find(p => p.id === currentProjectId) || null}
+                          notes={notes}
+                          onClose={() => setRightActiveTab('properties')}
                         />
                       )}
                     </div>
