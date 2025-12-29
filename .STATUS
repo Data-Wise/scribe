@@ -87,6 +87,31 @@ tags:
 
 ---
 
+### Sprint 27: Sidebar Consolidation (Planned)
+
+**Design Document:** `BRAINSTORM-sidebar-consolidation-2025-12-29.md`
+
+**Phase 1: Foundation**
+- [ ] Option A: Add Stats tab to right sidebar (merge HudPanel)
+- [ ] Option I: Status bar quick chat icon
+
+**Phase 2: AI Integration (Choose ONE)**
+- [ ] Option H: Claude as full sidebar tab (VS Code style)
+- [ ] Option F: Split-pane with docked Claude bottom
+  - Evolution path: If cramped → migrate to Option G
+- [ ] Option K: OpenCode-style AI Workspace (rich UI)
+
+**Phase 3: Power Features**
+- [ ] Option J: Terminal tab (xterm.js) - Feasibility: ✅ HIGH
+- [ ] Option G: Ambient AI (⌘K everywhere, inline suggestions)
+
+**Research Completed:**
+- OpenCode TUI patterns (github.com/opencode-ai/opencode)
+- Cursor 2.0 agent-centric UI (cursor.com/features)
+- xterm.js React integration (react-xtermjs)
+
+---
+
 ### Sprint 24: Three-State Collapsible Sidebar ✅ (2025-12-27)
 - [x] Icon mode (48px) - status dots only
 - [x] Compact mode (240px) - project list with stats

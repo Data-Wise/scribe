@@ -3,9 +3,9 @@ import { test, expect } from '../fixtures'
 /**
  * Right Sidebar Tests (P1)
  *
- * Tests for Properties, Backlinks, and Tags panels.
+ * Tests for Properties, Backlinks, Tags, and Stats panels.
  *
- * Tests: SBR-01 to SBR-10
+ * Tests: SBR-01 to SBR-18
  */
 
 test.describe('Right Sidebar', () => {
@@ -76,6 +76,34 @@ test.describe('Right Sidebar', () => {
       // Should now be on a different panel
       expect(true).toBe(true)
     })
+
+    test('SBR-11: Stats tab switch', async ({ basePage }) => {
+      // Click stats tab
+      const statsTab = basePage.page.locator('button:has-text("Stats")')
+      await statsTab.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Check if stats panel is visible
+      const statsPanel = basePage.page.locator('[data-testid="stats-panel"]')
+      const isVisible = await statsPanel.isVisible().catch(() => false)
+      expect(isVisible).toBe(true)
+    })
+
+    test('SBR-12: Stats tab cycles with ⌘]', async ({ basePage }) => {
+      // Click tags tab first (3rd tab)
+      const tagsTab = basePage.page.locator('button:has-text("Tags")')
+      await tagsTab.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Cycle to next tab (should be Stats, 4th tab)
+      await basePage.pressShortcut(']')
+      await basePage.page.waitForTimeout(200)
+
+      // Stats panel should be visible
+      const statsPanel = basePage.page.locator('[data-testid="stats-panel"]')
+      const isVisible = await statsPanel.isVisible().catch(() => false)
+      expect(isVisible).toBe(true)
+    })
   })
 
   test.describe('Panel Content', () => {
@@ -143,6 +171,88 @@ test.describe('Right Sidebar', () => {
       // Backlinks panel should be visible
       const backlinksPanel = basePage.page.locator('[data-testid="backlinks-panel"]')
       const isVisible = await backlinksPanel.isVisible().catch(() => false)
+      expect(isVisible).toBe(true)
+    })
+
+    test('SBR-13: Stats show session info', async ({ basePage }) => {
+      // Click stats tab
+      const statsTab = basePage.page.locator('button:has-text("Stats")')
+      await statsTab.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Check for session section
+      const statsPanel = basePage.page.locator('[data-testid="stats-panel"]')
+      const hasSession = await statsPanel.locator('text=Session').isVisible()
+      expect(hasSession).toBe(true)
+    })
+
+    test('SBR-14: Stats show daily goal', async ({ basePage }) => {
+      // Click stats tab
+      const statsTab = basePage.page.locator('button:has-text("Stats")')
+      await statsTab.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Check for daily goal section
+      const statsPanel = basePage.page.locator('[data-testid="stats-panel"]')
+      const hasGoal = await statsPanel.locator('text=Daily Goal').isVisible()
+      expect(hasGoal).toBe(true)
+    })
+
+    test('SBR-15: Stats show all notes count', async ({ basePage }) => {
+      // Click stats tab
+      const statsTab = basePage.page.locator('button:has-text("Stats")')
+      await statsTab.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Check for all notes section
+      const statsPanel = basePage.page.locator('[data-testid="stats-panel"]')
+      const hasAllNotes = await statsPanel.locator('text=All Notes').isVisible()
+      expect(hasAllNotes).toBe(true)
+    })
+
+    test('SBR-16: Stats show recent activity', async ({ basePage }) => {
+      // Click stats tab
+      const statsTab = basePage.page.locator('button:has-text("Stats")')
+      await statsTab.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Check for recent activity section
+      const statsPanel = basePage.page.locator('[data-testid="stats-panel"]')
+      const hasRecent = await statsPanel.locator('text=Recent Activity').isVisible()
+      expect(hasRecent).toBe(true)
+    })
+
+    test('SBR-17: Stats icon in collapsed mode', async ({ basePage }) => {
+      // First collapse the sidebar
+      const collapseBtn = basePage.page.locator('button[title*="Collapse"]').last()
+      await collapseBtn.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Check stats icon exists in collapsed mode
+      const statsIcon = basePage.page.locator('button[title="Stats"]')
+      const isVisible = await statsIcon.isVisible()
+      expect(isVisible).toBe(true)
+    })
+
+    test('SBR-18: Click stats icon expands to stats panel', async ({ basePage }) => {
+      // First collapse the sidebar
+      const collapseBtn = basePage.page.locator('button[title*="Collapse"]').last()
+      await collapseBtn.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Click the stats icon
+      const statsIcon = basePage.page.locator('button[title="Stats"]')
+      await statsIcon.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Should be expanded now
+      const rightSidebar = basePage.page.locator('[data-testid="right-sidebar"]')
+      const box = await rightSidebar.boundingBox()
+      expect(box?.width).toBeGreaterThan(100) // Expanded width
+
+      // Stats panel should be visible
+      const statsPanel = basePage.page.locator('[data-testid="stats-panel"]')
+      const isVisible = await statsPanel.isVisible().catch(() => false)
       expect(isVisible).toBe(true)
     })
   })

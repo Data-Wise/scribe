@@ -9,6 +9,7 @@ import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
+import { StatsPanel } from './components/StatsPanel'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { MissionControl } from './components/MissionControl'
@@ -17,11 +18,10 @@ import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
 import { ClaudePanel } from './components/ClaudePanel'
-import { HudPanel } from './components/HudPanel'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
-import { Zap, Settings2, Link2, Tags, PanelRightClose, PanelRightOpen } from 'lucide-react'
+import { Settings2, Link2, Tags, PanelRightClose, PanelRightOpen, BarChart3 } from 'lucide-react'
 import { api } from './lib/api'
 import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
@@ -142,11 +142,8 @@ function App() {
   // Claude Panel state
   const [claudePanelOpen, setClaudePanelOpen] = useState(false)
 
-  // HUD Panel state
-  const [hudPanelOpen, setHudPanelOpen] = useState(false)
-  
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
-  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags'>('properties')
+  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats'>('properties')
 
   // Left sidebar sorting is now handled in MissionSidebar
 
@@ -646,7 +643,7 @@ function App() {
       }
 
       // Right sidebar tab navigation (⌘] / ⌘[)
-      const rightTabs: Array<'properties' | 'backlinks' | 'tags'> = ['properties', 'backlinks', 'tags']
+      const rightTabs: Array<'properties' | 'backlinks' | 'tags' | 'stats'> = ['properties', 'backlinks', 'tags', 'stats']
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === ']') {
         e.preventDefault()
         const currentIndex = rightTabs.indexOf(rightActiveTab)
@@ -1263,6 +1260,13 @@ function App() {
                   >
                     <Tags size={18} />
                   </button>
+                  <button
+                    className={`right-sidebar-icon-btn ${rightActiveTab === 'stats' ? 'active' : ''}`}
+                    onClick={() => { setRightActiveTab('stats'); setRightSidebarCollapsed(false) }}
+                    title="Stats"
+                  >
+                    <BarChart3 size={18} />
+                  </button>
                   <div className="flex-1" />
                   <button
                     className="right-sidebar-icon-btn expand-btn"
@@ -1286,6 +1290,10 @@ function App() {
                     <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>
                       <Tags size={14} className="mr-1.5" />
                       Tags
+                    </button>
+                    <button className={`sidebar-tab ${rightActiveTab === 'stats' ? 'active' : ''}`} onClick={() => setRightActiveTab('stats')}>
+                      <BarChart3 size={14} className="mr-1.5" />
+                      Stats
                     </button>
                     <div className="flex-1" />
                     <button
@@ -1324,11 +1332,28 @@ function App() {
                         }}
                         refreshKey={backlinksRefreshKey}
                       />
-                    ) : (
+                    ) : rightActiveTab === 'tags' ? (
                       <TagsPanel
                         noteId={selectedNote.id}
                         selectedTagIds={selectedTagIds}
                         onTagClick={handleTagClick}
+                      />
+                    ) : (
+                      <StatsPanel
+                        projects={projects}
+                        notes={notes}
+                        currentProjectId={currentProjectId}
+                        wordCount={wordCount}
+                        wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
+                        sessionStartTime={sessionStartTime || undefined}
+                        onSelectProject={setCurrentProject}
+                        onSelectNote={(noteId) => {
+                          const note = notes.find(n => n.id === noteId)
+                          if (note) {
+                            openNoteTab(noteId, note.title)
+                            selectNote(noteId)
+                          }
+                        }}
                       />
                     )}
                   </div>
@@ -1348,33 +1373,7 @@ function App() {
           />
         )}
 
-        {/* HUD Panel */}
-        <HudPanel
-          isOpen={hudPanelOpen}
-          projects={projects}
-          notes={notes}
-          currentProjectId={currentProjectId}
-          onSelectProject={(projectId) => setCurrentProject(projectId)}
-          onSelectNote={(noteId) => {
-            const note = notes.find(n => n.id === noteId)
-            if (note) {
-              openNoteTab(noteId, note.title)
-              selectNote(noteId)
-            }
-          }}
-          onClose={() => setHudPanelOpen(false)}
-          mode="layered"
-        />
       </div>
-
-      {/* HUD Panel Toggle Button */}
-      <button
-        className={`hud-toggle-btn ${hudPanelOpen ? 'active' : ''}`}
-        onClick={() => setHudPanelOpen(!hudPanelOpen)}
-        title="Toggle Mission HUD (⌘⇧M)"
-      >
-        <Zap size={18} />
-      </button>
 
       {/* Claude Panel Toggle Button */}
       <button
