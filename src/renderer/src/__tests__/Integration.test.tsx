@@ -4,6 +4,7 @@ import '@testing-library/jest-dom'
 import { HybridEditor } from '../components/HybridEditor'
 import { CommandPalette } from '../components/CommandPalette'
 import { Note, Tag } from '../types'
+import { createMockNote } from './testUtils'
 
 // Mock the platform module to simulate Tauri mode (features enabled)
 vi.mock('../lib/platform', () => ({
@@ -20,9 +21,9 @@ vi.mock('../lib/platform', () => ({
 
 // Mock data
 const mockNotes: Note[] = [
-  { id: '1', title: 'Project Plan', content: 'Plan for [[Q1 Goals]] with #important tasks', folder: 'projects', created_at: Date.now(), updated_at: Date.now(), deleted_at: null },
-  { id: '2', title: 'Q1 Goals', content: 'Goals for Q1 #quarterly', folder: 'projects', created_at: Date.now(), updated_at: Date.now(), deleted_at: null },
-  { id: '3', title: 'Meeting Notes', content: 'Notes from meeting #todo', folder: 'inbox', created_at: Date.now(), updated_at: Date.now(), deleted_at: null }
+  createMockNote({ id: '1', title: 'Project Plan', content: 'Plan for [[Q1 Goals]] with #important tasks', folder: 'projects' }),
+  createMockNote({ id: '2', title: 'Q1 Goals', content: 'Goals for Q1 #quarterly', folder: 'projects' }),
+  createMockNote({ id: '3', title: 'Meeting Notes', content: 'Notes from meeting #todo', folder: 'inbox' })
 ]
 
 const mockTags: Tag[] = [

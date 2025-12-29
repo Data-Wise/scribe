@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { MissionControl } from '../components/MissionControl'
 import type { Project, Note } from '../types'
+import { createMockProject, createMockNote } from './testUtils'
 
 // Mock the platform module
 vi.mock('../lib/platform', () => ({
@@ -22,44 +23,36 @@ vi.mock('../components/DragRegion', () => ({
 }))
 
 const mockProjects: Project[] = [
-  {
+  createMockProject({
     id: 'project-1',
     name: 'Test Project 1',
-    type: 'general',
+    type: 'generic',
     status: 'active',
-    color: '#3B82F6',
-    created_at: Date.now() / 1000,
-    updated_at: Date.now() / 1000
-  },
-  {
+    color: '#3B82F6'
+  }),
+  createMockProject({
     id: 'project-2',
     name: 'Test Project 2',
     type: 'research',
-    status: 'active',
-    created_at: Date.now() / 1000 - 1000,
-    updated_at: Date.now() / 1000 - 1000
-  }
+    status: 'active'
+  })
 ]
 
 const mockNotes: Note[] = [
-  {
+  createMockNote({
     id: 'note-1',
     title: 'Test Note 1',
     content: 'This is test content with about ten words here.',
     folder: 'inbox',
-    project_id: 'project-1',
-    created_at: Date.now() / 1000,
-    updated_at: Date.now() / 1000
-  },
-  {
+    project_id: 'project-1'
+  }),
+  createMockNote({
     id: 'note-2',
     title: 'Test Note 2',
     content: 'More content here.',
     folder: 'notes',
-    project_id: 'project-1',
-    created_at: Date.now() / 1000 - 500,
-    updated_at: Date.now() / 1000 - 500
-  }
+    project_id: 'project-1'
+  })
 ]
 
 describe('MissionControl Component', () => {

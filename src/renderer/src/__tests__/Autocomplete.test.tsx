@@ -4,12 +4,13 @@ import '@testing-library/jest-dom'
 import { SimpleWikiLinkAutocomplete } from '../components/SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from '../components/SimpleTagAutocomplete'
 import { Note, Tag } from '../types'
+import { createMockNote } from './testUtils'
 
 // Mock notes and tags
 const mockNotes: Note[] = [
-  { id: '1', title: 'Project Plan', content: 'Planning content', folder: 'projects', created_at: Date.now(), updated_at: Date.now(), deleted_at: null },
-  { id: '2', title: 'Meeting Notes', content: 'Meeting content', folder: 'inbox', created_at: Date.now(), updated_at: Date.now(), deleted_at: null },
-  { id: '3', title: 'Research Paper', content: 'Research content', folder: 'resources', created_at: Date.now(), updated_at: Date.now(), deleted_at: null }
+  createMockNote({ id: '1', title: 'Project Plan', content: 'Planning content', folder: 'projects' }),
+  createMockNote({ id: '2', title: 'Meeting Notes', content: 'Meeting content', folder: 'inbox' }),
+  createMockNote({ id: '3', title: 'Research Paper', content: 'Research content', folder: 'resources' })
 ]
 
 const mockTags: Tag[] = [
@@ -411,15 +412,12 @@ describe('Autocomplete Edge Cases', () => {
     })
 
     it('truncates long note content in preview', async () => {
-      const longNote: Note = {
+      const longNote: Note = createMockNote({
         id: '1',
         title: 'Long Note',
         content: 'A'.repeat(200),
-        folder: 'inbox',
-        created_at: Date.now(),
-        updated_at: Date.now(),
-        deleted_at: null
-      }
+        folder: 'inbox'
+      })
       
       const onSearch = vi.fn().mockResolvedValue([longNote])
       render(

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import 'fake-indexeddb/auto'
-import { db, generateId } from '../lib/browser-db'
+import { db } from '../lib/browser-db'
 
 // Mock the platform module to simulate browser mode
 vi.mock('../lib/platform', () => ({
@@ -79,8 +79,8 @@ describe('Browser API', () => {
         content: 'New content'
       })
 
-      expect(updated.title).toBe('Updated')
-      expect(updated.content).toBe('New content')
+      expect(updated!.title).toBe('Updated')
+      expect(updated!.content).toBe('New content')
     })
 
     it('soft deletes a note', async () => {
@@ -115,8 +115,7 @@ describe('Browser API', () => {
     it('creates a project', async () => {
       const project = await browserApi.createProject({
         name: 'Test Project',
-        type: 'general',
-        status: 'active'
+        type: 'generic'
       })
 
       expect(project).toBeDefined()
@@ -125,8 +124,8 @@ describe('Browser API', () => {
     })
 
     it('lists all projects', async () => {
-      await browserApi.createProject({ name: 'Project 1', type: 'general', status: 'active' })
-      await browserApi.createProject({ name: 'Project 2', type: 'research', status: 'active' })
+      await browserApi.createProject({ name: 'Project 1', type: 'generic' })
+      await browserApi.createProject({ name: 'Project 2', type: 'research' })
 
       const projects = await browserApi.listProjects()
 
@@ -136,8 +135,7 @@ describe('Browser API', () => {
     it('gets a specific project by ID', async () => {
       const created = await browserApi.createProject({
         name: 'Find Me',
-        type: 'general',
-        status: 'active'
+        type: 'generic'
       })
 
       const found = await browserApi.getProject(created.id)
@@ -149,8 +147,7 @@ describe('Browser API', () => {
     it('updates a project', async () => {
       const created = await browserApi.createProject({
         name: 'Original',
-        type: 'general',
-        status: 'active'
+        type: 'generic'
       })
 
       const updated = await browserApi.updateProject(created.id, {
@@ -158,15 +155,14 @@ describe('Browser API', () => {
         status: 'archive'
       })
 
-      expect(updated.name).toBe('Updated')
-      expect(updated.status).toBe('archive')
+      expect(updated!.name).toBe('Updated')
+      expect(updated!.status).toBe('archive')
     })
 
     it('deletes a project', async () => {
       const created = await browserApi.createProject({
         name: 'To Delete',
-        type: 'general',
-        status: 'active'
+        type: 'generic'
       })
 
       await browserApi.deleteProject(created.id)
@@ -197,7 +193,7 @@ describe('Browser API', () => {
 
     it('adds tag to note', async () => {
       const note = await browserApi.createNote({ title: 'Note', content: '', folder: 'inbox' })
-      const tag = await browserApi.createTag('important')
+      await browserApi.createTag('important')
 
       // addTagToNote takes noteId and tagName (not tagId)
       await browserApi.addTagToNote(note.id, 'important')
@@ -208,10 +204,10 @@ describe('Browser API', () => {
 
     it('removes tag from note', async () => {
       const note = await browserApi.createNote({ title: 'Note', content: '', folder: 'inbox' })
-      const tag = await browserApi.createTag('important')
+      const createdTag = await browserApi.createTag('important')
       await browserApi.addTagToNote(note.id, 'important')
 
-      await browserApi.removeTagFromNote(note.id, tag.id)
+      await browserApi.removeTagFromNote(note.id, createdTag.id)
 
       const noteTags = await db.noteTags.where('note_id').equals(note.id).toArray()
       expect(noteTags.length).toBe(0)
@@ -272,7 +268,7 @@ describe('Browser API', () => {
     })
 
     it('gets outgoing links for a note', async () => {
-      const target = await browserApi.createNote({
+      await browserApi.createNote({
         title: 'Target Note',
         content: '',
         folder: 'inbox'

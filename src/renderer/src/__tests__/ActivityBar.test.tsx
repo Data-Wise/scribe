@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { IconBarMode } from '../components/sidebar/IconBarMode'
 import { Project, Note } from '../types'
+import { createMockProject } from './testUtils'
 
 /**
  * IconBarMode Test Suite
@@ -19,26 +20,20 @@ import { Project, Note } from '../types'
 
 // Mock data
 const mockProjects: Project[] = [
-  {
+  createMockProject({
     id: '1',
     name: 'Project A',
     type: 'research',
     status: 'active',
-    color: '#10b981',
-    sort_order: 0,
-    created_at: Date.now(),
-    updated_at: Date.now()
-  },
-  {
+    color: '#10b981'
+  }),
+  createMockProject({
     id: '2',
     name: 'Project B',
     type: 'teaching',
     status: 'planning',
-    color: '#3b82f6',
-    sort_order: 1,
-    created_at: Date.now(),
-    updated_at: Date.now() - 1000
-  }
+    color: '#3b82f6'
+  })
 ]
 
 const mockNotes: Note[] = [
@@ -279,10 +274,10 @@ describe('Badge Computation Logic', () => {
       { status: 'active' },
       { status: 'active' },
       { status: 'archive' },
-      { status: 'paused' }
+      { status: 'planning' }
     ]
     const activeCount = projects.filter(p => (p.status || 'active') !== 'archive').length
-    expect(activeCount).toBe(3) // active, active, paused (not archive)
+    expect(activeCount).toBe(3) // active, active, planning (not archive)
   })
 
   it('detects orphan notes (no wiki-links)', () => {

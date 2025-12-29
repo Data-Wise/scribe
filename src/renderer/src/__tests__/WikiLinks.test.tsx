@@ -15,6 +15,7 @@ const mockNotes: Note[] = [
     title: 'Main Note',
     content: '<p>Content of main note</p>',
     folder: 'inbox',
+    project_id: null,
     created_at: Date.now(),
     updated_at: Date.now(),
     deleted_at: null
@@ -24,6 +25,7 @@ const mockNotes: Note[] = [
     title: 'Target Note',
     content: '<p>Target content</p>',
     folder: 'inbox',
+    project_id: null,
     created_at: Date.now(),
     updated_at: Date.now(),
     deleted_at: null
@@ -33,6 +35,7 @@ const mockNotes: Note[] = [
     title: 'Another Note',
     content: '<p>Another content</p>',
     folder: 'projects',
+    project_id: null,
     created_at: Date.now(),
     updated_at: Date.now(),
     deleted_at: null
