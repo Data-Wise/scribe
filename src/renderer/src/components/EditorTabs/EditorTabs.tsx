@@ -1,9 +1,22 @@
-import { useRef, useState } from 'react'
-import { Home, X, Pin, FileText, Globe } from 'lucide-react'
+import { useRef, useState, useEffect, useCallback } from 'react'
+import { Home, X, Pin, FileText, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useAppViewStore, EditorTab, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
 import { isBrowser } from '../../lib/platform'
 import { TabContextMenu } from './TabContextMenu'
 import './EditorTabs.css'
+
+/**
+ * Smart truncation: keeps beginning and end of title visible
+ * "Mediation note 1" → "Mediati...ote 1"
+ */
+function smartTruncate(title: string, maxLen = 18): string {
+  if (title.length <= maxLen) return title
+  const ellipsis = '...'
+  const available = maxLen - ellipsis.length
+  const startLen = Math.ceil(available * 0.6) // 60% at start
+  const endLen = Math.floor(available * 0.4)  // 40% at end
+  return `${title.slice(0, startLen)}${ellipsis}${title.slice(-endLen)}`
+}
 
 interface EditorTabsProps {
   /** Optional: Project color for accent (hex) */
@@ -13,6 +26,7 @@ interface EditorTabsProps {
 export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
   const { openTabs, activeTabId, setActiveTab, closeTab, reorderTabs, updateTabTitle } = useAppViewStore()
   const tabsRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   // Drag and drop state
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
@@ -28,6 +42,36 @@ export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
     tab: EditorTab
     index: number
   } | null>(null)
+
+  // Scroll overflow state
+  const [showLeftArrow, setShowLeftArrow] = useState(false)
+  const [showRightArrow, setShowRightArrow] = useState(false)
+
+  // Check if scroll arrows are needed
+  const checkScrollOverflow = useCallback(() => {
+    const scrollEl = scrollRef.current
+    if (!scrollEl) return
+
+    const { scrollLeft, scrollWidth, clientWidth } = scrollEl
+    setShowLeftArrow(scrollLeft > 0)
+    setShowRightArrow(scrollLeft + clientWidth < scrollWidth - 1)
+  }, [])
+
+  // Update scroll state on mount, resize, and tab changes
+  useEffect(() => {
+    checkScrollOverflow()
+    window.addEventListener('resize', checkScrollOverflow)
+    return () => window.removeEventListener('resize', checkScrollOverflow)
+  }, [checkScrollOverflow, openTabs.length])
+
+  // Scroll handlers
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({ left: -150, behavior: 'smooth' })
+  }
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({ left: 150, behavior: 'smooth' })
+  }
 
   const handleSaveTitle = () => {
     if (editingTabId && editingTitle.trim()) {
@@ -112,7 +156,23 @@ export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
 
   return (
     <div className="editor-tabs" ref={tabsRef} data-testid="editor-tabs">
-      <div className="editor-tabs-scroll">
+      {/* Left scroll arrow */}
+      {showLeftArrow && (
+        <button
+          className="tab-scroll-arrow tab-scroll-left"
+          onClick={scrollLeft}
+          title="Scroll left"
+          aria-label="Scroll tabs left"
+        >
+          <ChevronLeft size={16} />
+        </button>
+      )}
+
+      <div
+        className="editor-tabs-scroll"
+        ref={scrollRef}
+        onScroll={checkScrollOverflow}
+      >
         {openTabs.map((tab, index) => (
           <TabButton
             key={tab.id}
@@ -142,6 +202,18 @@ export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
           />
         ))}
       </div>
+
+      {/* Right scroll arrow */}
+      {showRightArrow && (
+        <button
+          className="tab-scroll-arrow tab-scroll-right"
+          onClick={scrollRight}
+          title="Scroll right"
+          aria-label="Scroll tabs right"
+        >
+          <ChevronRight size={16} />
+        </button>
+      )}
 
       {/* Browser mode indicator - subtle badge when running in browser */}
       {isBrowser() && (
@@ -265,7 +337,7 @@ function TabButton({
         )}
       </span>
 
-      {/* Title - editable or static */}
+      {/* Title - editable or static with smart truncation */}
       {isEditing ? (
         <input
           className="tab-title-input"
@@ -277,7 +349,7 @@ function TabButton({
           onClick={(e) => e.stopPropagation()}
         />
       ) : (
-        <span className="tab-title">{tab.title}</span>
+        <span className="tab-title">{smartTruncate(tab.title)}</span>
       )}
 
       {/* Pin indicator or close button */}
