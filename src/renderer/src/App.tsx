@@ -105,7 +105,8 @@ function App() {
     activeTabId,
     setActiveTab,
     openNoteTab,
-    closeTab
+    closeTab,
+    reopenLastClosedTab
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
@@ -637,6 +638,13 @@ function App() {
         }
       }
 
+      // Reopen last closed tab (⌘⇧T)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'T') {
+        e.preventDefault()
+        reopenLastClosedTab()
+        return
+      }
+
       // Right sidebar tab navigation (⌘] / ⌘[)
       const rightTabs: Array<'properties' | 'backlinks' | 'tags'> = ['properties', 'backlinks', 'tags']
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === ']') {
@@ -663,7 +671,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {

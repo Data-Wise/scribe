@@ -80,6 +80,19 @@
   max-width: 100px;
 }
 
+/* Drag and drop states */
+.editor-tab.dragging {
+  opacity: 0.5;
+}
+
+.editor-tab.drag-over {
+  border-left: 2px solid var(--nexus-accent, #3b82f6);
+}
+
+.editor-tab.drag-over-right {
+  border-right: 2px solid var(--nexus-accent, #3b82f6);
+}
+
 /* Tab icon */
 .tab-icon {
   display: flex;
@@ -100,6 +113,31 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
+}
+
+/* Tab title inline edit input */
+.tab-title-input {
+  background: var(--bg-tertiary, #1a1a1a);
+  border: 1px solid var(--nexus-accent, #3b82f6);
+  border-radius: 2px;
+  color: var(--text-primary, #e0e0e0);
+  font-size: 12px;
+  padding: 1px 4px;
+  width: 100%;
+  min-width: 60px;
+  max-width: 150px;
+  outline: none;
+  font-family: inherit;
+}
+
+.tab-title-input:focus {
+  border-color: var(--nexus-accent, #3b82f6);
+  box-shadow: 0 0 0 1px var(--nexus-accent, #3b82f6);
+}
+
+/* Editing state for tab */
+.editor-tab.editing {
+  cursor: text;
 }
 
 /* Pin indicator */
@@ -217,5 +255,11 @@
   .tab-close:hover {
     background: #ddd;
     color: #333;
+  }
+
+  .tab-title-input {
+    background: #fff;
+    border-color: #3b82f6;
+    color: #111;
   }
 }
