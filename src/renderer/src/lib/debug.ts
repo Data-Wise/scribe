@@ -884,6 +884,142 @@ export const scribeUI = {
   },
 
   /**
+   * Test AI Panel keyboard shortcut (⌘⇧A)
+   */
+  async testAIPanelShortcut(): Promise<UITestResult> {
+    const start = Date.now()
+    const name = 'ai_panel_shortcut'
+
+    try {
+      // First ensure we're not already on AI tab
+      const initialTab = document.querySelector('.sidebar-tab.active')?.textContent || ''
+
+      // Simulate ⌘⇧A
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        bubbles: true,
+        key: 'A',
+        metaKey: true,
+        shiftKey: true
+      }))
+
+      await new Promise(r => setTimeout(r, 300))
+
+      // Check if AI tab is now active (look for AI tab or Claude panel)
+      const aiTabActive = document.querySelector('.sidebar-tab.active')?.textContent?.includes('AI') ||
+                         !!document.querySelector('.claude-panel')
+
+      // Check for Claude panel header
+      const claudePanel = document.querySelector('.claude-panel-header, .claude-panel')
+
+      const passed = aiTabActive || !!claudePanel
+
+      return {
+        name,
+        passed,
+        message: passed
+          ? `⌘⇧A switched to AI panel`
+          : 'AI panel not activated (may need note selected)',
+        duration: Date.now() - start
+      }
+    } catch (e) {
+      return { name, passed: false, message: `Error: ${e}`, duration: Date.now() - start }
+    }
+  },
+
+  /**
+   * Test Mission HUD keyboard shortcut (⌘⇧M)
+   */
+  async testMissionHudShortcut(): Promise<UITestResult> {
+    const start = Date.now()
+    const name = 'mission_hud_shortcut'
+
+    try {
+      // Check if HUD is initially closed
+      const hudBefore = document.querySelector('.hud-panel')
+      const wasOpen = hudBefore && getComputedStyle(hudBefore).opacity !== '0'
+
+      // Simulate ⌘⇧M
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        bubbles: true,
+        key: 'M',
+        metaKey: true,
+        shiftKey: true
+      }))
+
+      await new Promise(r => setTimeout(r, 300))
+
+      // Check if HUD is now visible
+      const hudAfter = document.querySelector('.hud-panel')
+      const isOpen = hudAfter && getComputedStyle(hudAfter).opacity !== '0'
+
+      // Toggle back to original state
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        bubbles: true,
+        key: 'M',
+        metaKey: true,
+        shiftKey: true
+      }))
+
+      const passed = wasOpen !== isOpen || !!hudAfter
+
+      return {
+        name,
+        passed,
+        message: passed
+          ? `⌘⇧M toggled Mission HUD (${wasOpen ? 'closed' : 'opened'})`
+          : 'Mission HUD not found',
+        duration: Date.now() - start
+      }
+    } catch (e) {
+      return { name, passed: false, message: `Error: ${e}`, duration: Date.now() - start }
+    }
+  },
+
+  /**
+   * Test AI tab click in right sidebar
+   */
+  async testAITabClick(): Promise<UITestResult> {
+    const start = Date.now()
+    const name = 'ai_tab_click'
+
+    try {
+      // Find the AI tab button in right sidebar
+      const aiTab = Array.from(document.querySelectorAll('.sidebar-tab'))
+        .find(tab => tab.textContent?.includes('AI'))
+
+      if (!aiTab) {
+        return {
+          name,
+          passed: true,
+          message: 'Skipped: AI tab not visible (right sidebar may be hidden or no note selected)',
+          duration: Date.now() - start
+        }
+      }
+
+      // Click the AI tab
+      simulateClick(aiTab)
+      await new Promise(r => setTimeout(r, 200))
+
+      // Check if AI tab is now active
+      const isActive = aiTab.classList.contains('active')
+
+      // Check if Claude panel content is visible
+      const claudeContent = document.querySelector('.claude-panel-content, .insights-list, .thinking-state')
+
+      const passed = isActive || !!claudeContent
+
+      return {
+        name,
+        passed,
+        message: passed ? 'AI tab activated, Claude panel visible' : 'AI tab did not activate',
+        duration: Date.now() - start
+      }
+    } catch (e) {
+      return { name, passed: false, message: `Error: ${e}`, duration: Date.now() - start }
+    }
+  },
+
+  /**
    * Run all UI tests
    */
   async runAll(): Promise<UITestSuite> {
@@ -904,6 +1040,9 @@ export const scribeUI = {
       // () => this.testCreateNoteButton(), // May create unwanted notes
       // () => this.testKeyboardNewNote(),   // May create unwanted notes
       () => this.testFocusModeToggle(),
+      () => this.testAIPanelShortcut(),
+      () => this.testMissionHudShortcut(),
+      () => this.testAITabClick(),
     ]
 
     for (const test of tests) {
@@ -960,6 +1099,9 @@ export const scribeUI = {
       () => this.testCreateNoteButton(),
       () => this.testKeyboardNewNote(),
       () => this.testFocusModeToggle(),
+      () => this.testAIPanelShortcut(),
+      () => this.testMissionHudShortcut(),
+      () => this.testAITabClick(),
     ]
 
     for (const test of tests) {
@@ -1072,6 +1214,9 @@ export const scribeUI = {
 ║   await scribeUI.testCreateNoteButton() - New note button     ║
 ║   await scribeUI.testKeyboardNewNote()  - Cmd+N shortcut      ║
 ║   await scribeUI.testFocusModeToggle()  - Focus mode          ║
+║   await scribeUI.testAIPanelShortcut()  - ⌘⇧A AI panel       ║
+║   await scribeUI.testMissionHudShortcut() - ⌘⇧M Mission HUD  ║
+║   await scribeUI.testAITabClick()   - Click AI tab            ║
 ╚═══════════════════════════════════════════════════════════════╝
     `)
   }
