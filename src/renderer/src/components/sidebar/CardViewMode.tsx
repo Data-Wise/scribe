@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, Clock, FileText, MoreHorizontal } from 'lucide-react'
+import { Menu, Plus, Search, FileText, MoreHorizontal } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { ProjectContextMenu } from './ProjectContextMenu'
@@ -83,21 +83,6 @@ export function CardViewMode({
     return b.updated_at - a.updated_at
   })
 
-  // Get recent notes (last 3 for card view) - filtered by project if one is selected
-  const recentNotes = useMemo(() => {
-    return [...notes]
-      .filter(n => {
-        if (n.deleted_at) return false
-        // If a project is selected, only show notes from that project
-        if (currentProjectId) {
-          return n.project_id === currentProjectId
-        }
-        return true
-      })
-      .sort((a, b) => b.updated_at - a.updated_at)
-      .slice(0, 3)
-  }, [notes, currentProjectId])
-
   // Compute project stats
   const projectStats = useMemo(() => {
     const stats: Record<string, { noteCount: number; wordCount: number }> = {}
@@ -174,30 +159,6 @@ export function CardViewMode({
           </div>
         )}
       </div>
-
-      {/* Recent notes section */}
-      {recentNotes.length > 0 && (
-        <div className="sidebar-section">
-          <h4 className="section-header">
-            <Clock size={12} />
-            <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
-          </h4>
-          <div className="recent-notes-list">
-            {recentNotes.map(note => (
-              <button
-                key={note.id}
-                className="recent-note-item"
-                onClick={() => onSelectNote(note.id)}
-                onContextMenu={(e) => handleNoteContextMenu(e, note)}
-              >
-                <FileText size={12} className="note-icon" />
-                <span className="note-title">{note.title || 'Untitled'}</span>
-                <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Add project button */}
       <button

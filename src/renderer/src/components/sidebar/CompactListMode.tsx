@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, Clock, FileText, ChevronRight, ChevronDown, FolderOpen, Folder } from 'lucide-react'
+import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { ActivityDots } from './ActivityDots'
 import { ProjectContextCard } from './ProjectContextCard'
@@ -78,21 +78,6 @@ export function CompactListMode({
     return b.updated_at - a.updated_at
   })
 
-  // Get recent notes (last 5) - filtered by project if one is selected
-  const recentNotes = useMemo(() => {
-    return [...notes]
-      .filter(n => {
-        if (n.deleted_at) return false
-        // If a project is selected, only show notes from that project
-        if (currentProjectId) {
-          return n.project_id === currentProjectId
-        }
-        return true
-      })
-      .sort((a, b) => b.updated_at - a.updated_at)
-      .slice(0, 5)
-  }, [notes, currentProjectId])
-
   // Compute project stats
   const projectStats = useMemo(() => {
     const stats: Record<string, { noteCount: number; wordCount: number }> = {}
@@ -169,30 +154,6 @@ export function CompactListMode({
           <div className="no-results">No projects match "{searchQuery}"</div>
         )}
       </div>
-
-      {/* Recent notes section */}
-      {recentNotes.length > 0 && (
-        <div className="sidebar-section">
-          <h4 className="section-header">
-            <Clock size={12} />
-            <span>{currentProjectId ? 'Recent Notes' : 'Recent'}</span>
-          </h4>
-          <div className="recent-notes-list">
-            {recentNotes.map(note => (
-              <button
-                key={note.id}
-                className="recent-note-item"
-                onClick={() => onSelectNote(note.id)}
-                onContextMenu={(e) => handleNoteContextMenu(e, note)}
-              >
-                <FileText size={12} className="note-icon" />
-                <span className="note-title">{note.title || 'Untitled'}</span>
-                <span className="note-time">{formatTimeAgo(note.updated_at)}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Add project button */}
       <button
@@ -342,16 +303,3 @@ function countWords(content: string): number {
   return text.split(/\s+/).filter(Boolean).length
 }
 
-function formatTimeAgo(timestamp: number): string {
-  const now = Date.now()
-  const diff = now - timestamp
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  const days = Math.floor(diff / 86400000)
-
-  if (minutes < 1) return 'now'
-  if (minutes < 60) return `${minutes}m`
-  if (hours < 24) return `${hours}h`
-  if (days < 7) return `${days}d`
-  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
