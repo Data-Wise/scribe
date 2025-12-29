@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import './EditorTabs/EditorTabs.css' // For preview styles
 import {
   X,
   Settings as SettingsIcon,
@@ -1162,86 +1163,52 @@ export function SettingsModal({
                       </p>
                     </div>
 
-                    {/* Live Preview */}
+                    {/* Live Preview - Uses actual EditorTabs CSS classes via data attributes */}
                     <div className="pt-3 border-t border-white/5">
                       <label className="text-xs text-nexus-text-muted mb-2 block">Preview</label>
                       <div
                         className="rounded-lg overflow-hidden border border-white/10"
                         style={{ background: 'var(--nexus-bg-primary)' }}
                       >
-                        {/* Mini tab bar preview */}
+                        {/* Mini tab bar preview - uses real EditorTabs CSS classes */}
                         <div
-                          className="flex items-center gap-2 px-3 py-2"
+                          className="editor-tabs"
+                          data-tab-bar-style={uiStyles.tabBarStyle}
+                          data-border-style={uiStyles.borderStyle}
+                          data-active-tab-style={uiStyles.activeTabStyle}
                           style={{
-                            background: uiStyles.tabBarStyle === 'borderless'
-                              ? 'var(--nexus-bg-primary)'
-                              : 'var(--nexus-bg-tertiary)',
-                            boxShadow: uiStyles.tabBarStyle === 'elevated'
-                              ? '0 2px 8px rgba(0,0,0,0.15)'
-                              : uiStyles.borderStyle === 'glow'
-                                ? '0 1px 8px rgba(59,130,246,0.2)'
-                                : 'none',
-                            backdropFilter: uiStyles.tabBarStyle === 'glass' ? 'blur(12px)' : 'none',
-                            borderBottom: uiStyles.borderStyle === 'none'
-                              ? 'none'
-                              : uiStyles.borderStyle === 'glow'
-                                ? '1px solid var(--nexus-accent)'
-                                : uiStyles.borderStyle === 'sharp'
-                                  ? '1px solid rgba(128,128,128,0.25)'
-                                  : '1px solid rgba(128,128,128,0.08)'
+                            height: 'auto',
+                            padding: '6px 8px',
+                            borderRadius: 0
                           }}
                         >
-                          {/* Mission Control tab */}
-                          <div
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px]"
-                            style={{
-                              background: 'rgba(99,102,241,0.15)',
-                              color: 'var(--nexus-text-muted)'
-                            }}
+                          {/* Mission Control tab (pinned) */}
+                          <button
+                            className="editor-tab pinned"
+                            style={{ fontSize: '10px', height: '26px', padding: '4px 10px', minWidth: 'auto' }}
                           >
-                            <Home className="w-3 h-3" />
-                            <span>Mission</span>
-                          </div>
+                            <span className="tab-icon"><Home size={12} /></span>
+                            <span className="tab-title">Mission</span>
+                          </button>
 
                           {/* Active tab - shows current active style */}
-                          <div
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] relative"
-                            style={{
-                              background: uiStyles.activeTabStyle === 'background' || uiStyles.activeTabStyle === 'full'
-                                ? 'rgba(59,130,246,0.15)'
-                                : 'rgba(255,255,255,0.15)',
-                              color: 'var(--nexus-text-primary)',
-                              fontWeight: uiStyles.activeTabStyle === 'bold' || uiStyles.activeTabStyle === 'elevated' || uiStyles.activeTabStyle === 'full' ? 600 : 500,
-                              boxShadow: uiStyles.activeTabStyle === 'elevated' || uiStyles.activeTabStyle === 'full'
-                                ? '0 2px 8px rgba(0,0,0,0.2)'
-                                : 'none',
-                              transform: uiStyles.activeTabStyle === 'elevated' || uiStyles.activeTabStyle === 'full'
-                                ? 'translateY(-1px)'
-                                : 'none'
-                            }}
+                          <button
+                            className="editor-tab active"
+                            style={{ fontSize: '10px', height: '26px', padding: '4px 10px', minWidth: 'auto' }}
                           >
-                            <FileText className="w-3 h-3" />
-                            <span>Active Note</span>
-                            {/* Accent bar */}
-                            {(uiStyles.activeTabStyle === 'accent-bar' || uiStyles.activeTabStyle === 'full') && (
-                              <div
-                                className="absolute bottom-0 left-2 right-2 h-0.5 rounded-t"
-                                style={{ background: 'linear-gradient(to right, var(--nexus-accent), rgba(59,130,246,0.5))' }}
-                              />
-                            )}
-                          </div>
+                            <div className="tab-accent-bar" style={{ background: 'linear-gradient(to right, var(--nexus-accent), rgba(59,130,246,0.5))' }} />
+                            <span className="tab-icon"><FileText size={12} /></span>
+                            <span className="tab-title">Active Note</span>
+                          </button>
 
                           {/* Inactive tab */}
-                          <div
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px]"
-                            style={{
-                              background: 'rgba(128,128,128,0.08)',
-                              color: 'var(--nexus-text-muted)'
-                            }}
+                          <button
+                            className="editor-tab"
+                            style={{ fontSize: '10px', height: '26px', padding: '4px 10px', minWidth: 'auto' }}
                           >
-                            <FileText className="w-3 h-3" />
-                            <span>Note 2</span>
-                          </div>
+                            <span className="tab-icon"><FileText size={12} /></span>
+                            <span className="tab-title">Note 2</span>
+                          </button>
                         </div>
 
                         {/* Mini editor area */}
