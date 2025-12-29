@@ -30,7 +30,10 @@ import {
   Calendar,
   Globe,
   Database,
-  RotateCcw
+  RotateCcw,
+  SlidersHorizontal,
+  Home,
+  FileText
 } from 'lucide-react'
 import {
   loadTemplates,
@@ -39,7 +42,13 @@ import {
   processTemplate,
   DailyNoteTemplate,
 } from '../lib/dailyNoteTemplates'
-import { loadPreferences, updatePreferences } from '../lib/preferences'
+import {
+  loadPreferences,
+  updatePreferences,
+  TabBarStyle,
+  BorderStyle,
+  ActiveTabStyle
+} from '../lib/preferences'
 import { 
   Theme, 
   AutoThemeSettings,
@@ -142,6 +151,22 @@ export function SettingsModal({
   const [templates, _setTemplates] = useState<DailyNoteTemplate[]>(() => loadTemplates())
   const [selectedTemplateId, setSelectedTemplate] = useState<string>(() => getSelectedTemplateId())
   const [showTemplatePreview, setShowTemplatePreview] = useState(false)
+
+  // UI Style preferences state (for reactivity)
+  const [uiStyles, setUiStyles] = useState(() => {
+    const prefs = loadPreferences()
+    return {
+      tabBarStyle: prefs.tabBarStyle,
+      borderStyle: prefs.borderStyle,
+      activeTabStyle: prefs.activeTabStyle
+    }
+  })
+
+  // Update UI style and save to preferences
+  const updateUiStyle = (key: keyof typeof uiStyles, value: TabBarStyle | BorderStyle | ActiveTabStyle) => {
+    setUiStyles(prev => ({ ...prev, [key]: value }))
+    updatePreferences({ [key]: value })
+  }
 
   // Handle template selection
   const handleTemplateChange = (id: string) => {
@@ -1051,6 +1076,204 @@ export function SettingsModal({
 
             {activeTab === 'appearance' && (
               <div className="space-y-6">
+                {/* UI Style */}
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    <SlidersHorizontal className="w-3 h-3 inline mr-2" />
+                    UI Style
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-5">
+                    {/* Tab Bar Style */}
+                    <div>
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Tab Bar Style</label>
+                      <div className="grid grid-cols-4 gap-2">
+                        {(['subtle', 'elevated', 'glass', 'borderless'] as TabBarStyle[]).map((style) => (
+                          <button
+                            key={style}
+                            onClick={() => updateUiStyle('tabBarStyle', style)}
+                            className={`px-3 py-2 rounded-md text-xs font-medium transition-all capitalize ${
+                              uiStyles.tabBarStyle === style
+                                ? 'bg-nexus-accent text-white'
+                                : 'bg-nexus-bg-primary text-nexus-text-muted hover:text-nexus-text-primary hover:bg-white/5'
+                            }`}
+                          >
+                            {style}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted mt-1.5">
+                        {uiStyles.tabBarStyle === 'subtle' && 'Minimal style with slight background difference'}
+                        {uiStyles.tabBarStyle === 'elevated' && 'Modern shadow effect for clear visual hierarchy'}
+                        {uiStyles.tabBarStyle === 'glass' && 'Frosted blur effect (macOS Sonoma style)'}
+                        {uiStyles.tabBarStyle === 'borderless' && 'Same as editor background with subtle line'}
+                      </p>
+                    </div>
+
+                    {/* Border Style */}
+                    <div>
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Border Style</label>
+                      <div className="grid grid-cols-4 gap-2">
+                        {(['sharp', 'soft', 'glow', 'none'] as BorderStyle[]).map((style) => (
+                          <button
+                            key={style}
+                            onClick={() => updateUiStyle('borderStyle', style)}
+                            className={`px-3 py-2 rounded-md text-xs font-medium transition-all capitalize ${
+                              uiStyles.borderStyle === style
+                                ? 'bg-nexus-accent text-white'
+                                : 'bg-nexus-bg-primary text-nexus-text-muted hover:text-nexus-text-primary hover:bg-white/5'
+                            }`}
+                          >
+                            {style}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted mt-1.5">
+                        {uiStyles.borderStyle === 'sharp' && 'Traditional solid border line'}
+                        {uiStyles.borderStyle === 'soft' && 'Subtle, ADHD-friendly faded border'}
+                        {uiStyles.borderStyle === 'glow' && 'Accent-colored soft glow effect'}
+                        {uiStyles.borderStyle === 'none' && 'No visible border'}
+                      </p>
+                    </div>
+
+                    {/* Active Tab Style */}
+                    <div>
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Active Tab Emphasis</label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {(['elevated', 'accent-bar', 'background', 'bold', 'full'] as ActiveTabStyle[]).map((style) => (
+                          <button
+                            key={style}
+                            onClick={() => updateUiStyle('activeTabStyle', style)}
+                            className={`px-2 py-2 rounded-md text-xs font-medium transition-all capitalize ${
+                              uiStyles.activeTabStyle === style
+                                ? 'bg-nexus-accent text-white'
+                                : 'bg-nexus-bg-primary text-nexus-text-muted hover:text-nexus-text-primary hover:bg-white/5'
+                            }`}
+                          >
+                            {style === 'accent-bar' ? 'Bar' : style}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted mt-1.5">
+                        {uiStyles.activeTabStyle === 'elevated' && 'Shadow + lift effect (Arc/Notion style)'}
+                        {uiStyles.activeTabStyle === 'accent-bar' && 'Gradient accent bar indicator'}
+                        {uiStyles.activeTabStyle === 'background' && 'Accent-colored background fill'}
+                        {uiStyles.activeTabStyle === 'bold' && 'Bold text only (minimal)'}
+                        {uiStyles.activeTabStyle === 'full' && 'All effects combined (maximum emphasis)'}
+                      </p>
+                    </div>
+
+                    {/* Live Preview */}
+                    <div className="pt-3 border-t border-white/5">
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Preview</label>
+                      <div
+                        className="rounded-lg overflow-hidden border border-white/10"
+                        style={{ background: 'var(--nexus-bg-primary)' }}
+                      >
+                        {/* Mini tab bar preview */}
+                        <div
+                          className="flex items-center gap-2 px-3 py-2"
+                          style={{
+                            background: uiStyles.tabBarStyle === 'borderless'
+                              ? 'var(--nexus-bg-primary)'
+                              : 'var(--nexus-bg-tertiary)',
+                            boxShadow: uiStyles.tabBarStyle === 'elevated'
+                              ? '0 2px 8px rgba(0,0,0,0.15)'
+                              : uiStyles.borderStyle === 'glow'
+                                ? '0 1px 8px rgba(59,130,246,0.2)'
+                                : 'none',
+                            backdropFilter: uiStyles.tabBarStyle === 'glass' ? 'blur(12px)' : 'none',
+                            borderBottom: uiStyles.borderStyle === 'none'
+                              ? 'none'
+                              : uiStyles.borderStyle === 'glow'
+                                ? '1px solid var(--nexus-accent)'
+                                : uiStyles.borderStyle === 'sharp'
+                                  ? '1px solid rgba(128,128,128,0.25)'
+                                  : '1px solid rgba(128,128,128,0.08)'
+                          }}
+                        >
+                          {/* Mission Control tab */}
+                          <div
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px]"
+                            style={{
+                              background: 'rgba(99,102,241,0.15)',
+                              color: 'var(--nexus-text-muted)'
+                            }}
+                          >
+                            <Home className="w-3 h-3" />
+                            <span>Mission</span>
+                          </div>
+
+                          {/* Active tab - shows current active style */}
+                          <div
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] relative"
+                            style={{
+                              background: uiStyles.activeTabStyle === 'background' || uiStyles.activeTabStyle === 'full'
+                                ? 'rgba(59,130,246,0.15)'
+                                : 'rgba(255,255,255,0.15)',
+                              color: 'var(--nexus-text-primary)',
+                              fontWeight: uiStyles.activeTabStyle === 'bold' || uiStyles.activeTabStyle === 'elevated' || uiStyles.activeTabStyle === 'full' ? 600 : 500,
+                              boxShadow: uiStyles.activeTabStyle === 'elevated' || uiStyles.activeTabStyle === 'full'
+                                ? '0 2px 8px rgba(0,0,0,0.2)'
+                                : 'none',
+                              transform: uiStyles.activeTabStyle === 'elevated' || uiStyles.activeTabStyle === 'full'
+                                ? 'translateY(-1px)'
+                                : 'none'
+                            }}
+                          >
+                            <FileText className="w-3 h-3" />
+                            <span>Active Note</span>
+                            {/* Accent bar */}
+                            {(uiStyles.activeTabStyle === 'accent-bar' || uiStyles.activeTabStyle === 'full') && (
+                              <div
+                                className="absolute bottom-0 left-2 right-2 h-0.5 rounded-t"
+                                style={{ background: 'linear-gradient(to right, var(--nexus-accent), rgba(59,130,246,0.5))' }}
+                              />
+                            )}
+                          </div>
+
+                          {/* Inactive tab */}
+                          <div
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px]"
+                            style={{
+                              background: 'rgba(128,128,128,0.08)',
+                              color: 'var(--nexus-text-muted)'
+                            }}
+                          >
+                            <FileText className="w-3 h-3" />
+                            <span>Note 2</span>
+                          </div>
+                        </div>
+
+                        {/* Mini editor area */}
+                        <div className="p-3 text-[10px] text-nexus-text-muted">
+                          Editor content area...
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reset to defaults */}
+                    <div className="pt-2 border-t border-white/5 flex justify-end">
+                      <button
+                        onClick={() => {
+                          setUiStyles({
+                            tabBarStyle: 'elevated',
+                            borderStyle: 'soft',
+                            activeTabStyle: 'elevated'
+                          })
+                          updatePreferences({
+                            tabBarStyle: 'elevated',
+                            borderStyle: 'soft',
+                            activeTabStyle: 'elevated'
+                          })
+                        }}
+                        className="text-xs text-nexus-text-muted hover:text-nexus-accent transition-colors"
+                      >
+                        Reset to defaults
+                      </button>
+                    </div>
+                  </div>
+                </section>
+
                 {/* Auto Theme */}
                 <section>
                   <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">

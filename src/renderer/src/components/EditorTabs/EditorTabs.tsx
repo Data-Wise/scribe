@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useCallback } from 'react'
 import { Home, X, Pin, FileText, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useAppViewStore, EditorTab, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
 import { isBrowser } from '../../lib/platform'
+import { loadPreferences, TabBarStyle, BorderStyle, ActiveTabStyle } from '../../lib/preferences'
 import { TabContextMenu } from './TabContextMenu'
 import './EditorTabs.css'
 
@@ -21,10 +22,58 @@ function smartTruncate(title: string, maxLen = 18): string {
 interface EditorTabsProps {
   /** Optional: Project color for accent (hex) */
   accentColor?: string
+  /** Optional: Override tab bar style (for settings preview) */
+  tabBarStyle?: TabBarStyle
+  /** Optional: Override border style (for settings preview) */
+  borderStyle?: BorderStyle
+  /** Optional: Override active tab style (for settings preview) */
+  activeTabStyle?: ActiveTabStyle
 }
 
-export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
+export function EditorTabs({
+  accentColor = '#3b82f6',
+  tabBarStyle: tabBarStyleProp,
+  borderStyle: borderStyleProp,
+  activeTabStyle: activeTabStyleProp
+}: EditorTabsProps) {
   const { openTabs, activeTabId, setActiveTab, closeTab, reorderTabs, updateTabTitle } = useAppViewStore()
+
+  // UI style state - reload on storage change for reactivity
+  const [uiStyles, setUiStyles] = useState(() => {
+    const prefs = loadPreferences()
+    return {
+      tabBarStyle: prefs.tabBarStyle,
+      borderStyle: prefs.borderStyle,
+      activeTabStyle: prefs.activeTabStyle
+    }
+  })
+
+  // Listen for localStorage changes (from settings modal)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const prefs = loadPreferences()
+      setUiStyles({
+        tabBarStyle: prefs.tabBarStyle,
+        borderStyle: prefs.borderStyle,
+        activeTabStyle: prefs.activeTabStyle
+      })
+    }
+
+    // Listen for storage events (cross-tab) and custom event (same-tab)
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('preferences-changed', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('preferences-changed', handleStorageChange)
+    }
+  }, [])
+
+  // Use props if provided (for preview), otherwise use state
+  const tabBarStyle = tabBarStyleProp ?? uiStyles.tabBarStyle
+  const borderStyle = borderStyleProp ?? uiStyles.borderStyle
+  const activeTabStyle = activeTabStyleProp ?? uiStyles.activeTabStyle
+
   const tabsRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -155,7 +204,14 @@ export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
   }
 
   return (
-    <div className="editor-tabs" ref={tabsRef} data-testid="editor-tabs">
+    <div
+      className="editor-tabs"
+      ref={tabsRef}
+      data-testid="editor-tabs"
+      data-tab-bar-style={tabBarStyle}
+      data-border-style={borderStyle}
+      data-active-tab-style={activeTabStyle}
+    >
       {/* Left scroll arrow */}
       {showLeftArrow && (
         <button

@@ -10,6 +10,11 @@ const PREFERENCES_KEY = 'scribe-preferences'
 // Editor modes: Source (raw markdown), Live Preview (WYSIWYG), Reading (rendered, read-only)
 export type EditorMode = 'source' | 'live-preview' | 'reading'
 
+// UI Style types (v1.7)
+export type TabBarStyle = 'subtle' | 'elevated' | 'glass' | 'borderless'
+export type BorderStyle = 'sharp' | 'soft' | 'glow' | 'none'
+export type ActiveTabStyle = 'elevated' | 'accent-bar' | 'background' | 'bold' | 'full'
+
 export interface UserPreferences {
   // Writing settings
   defaultWordGoal: number        // Default daily word goal (500)
@@ -34,6 +39,11 @@ export interface UserPreferences {
   hudMode: 'layered' | 'persistent' // Layered (overlay) or Persistent (docked)
   hudSide: 'left' | 'right'         // Which side the HQ appears on
   hudRibbonVisible: boolean         // Whether the ribbon is visible
+
+  // UI Style preferences (v1.7)
+  tabBarStyle: TabBarStyle          // Tab bar background style
+  borderStyle: BorderStyle          // Border treatment for UI zones
+  activeTabStyle: ActiveTabStyle    // How active tab is emphasized
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -53,6 +63,11 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   hudMode: 'layered',        // Layered by default for max focus
   hudSide: 'left',
   hudRibbonVisible: true,
+
+  // UI Style defaults (v1.7)
+  tabBarStyle: 'elevated',      // Modern, clear hierarchy
+  borderStyle: 'soft',          // ADHD-friendly, not harsh
+  activeTabStyle: 'elevated',   // Clear distinction
 }
 
 /**
@@ -78,6 +93,8 @@ export function loadPreferences(): UserPreferences {
 export function savePreferences(preferences: UserPreferences): void {
   try {
     localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences))
+    // Dispatch custom event for same-tab reactivity
+    window.dispatchEvent(new CustomEvent('preferences-changed'))
   } catch (e) {
     console.warn('Failed to save preferences:', e)
   }
