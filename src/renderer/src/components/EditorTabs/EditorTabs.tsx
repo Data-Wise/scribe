@@ -1,6 +1,7 @@
 import { useRef } from 'react'
-import { Home, X, Pin, FileText } from 'lucide-react'
+import { Home, X, Pin, FileText, Globe } from 'lucide-react'
 import { useAppViewStore, EditorTab, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
+import { isBrowser } from '../../lib/platform'
 import './EditorTabs.css'
 
 interface EditorTabsProps {
@@ -43,6 +44,14 @@ export function EditorTabs({ accentColor = '#3b82f6' }: EditorTabsProps) {
           />
         ))}
       </div>
+
+      {/* Browser mode indicator - subtle badge when running in browser */}
+      {isBrowser() && (
+        <div className="browser-mode-badge" title="Running in browser mode (IndexedDB)">
+          <Globe size={12} />
+          <span>Browser</span>
+        </div>
+      )}
     </div>
   )
 }
