@@ -1,5 +1,15 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
+import { ChevronRight, ChevronDown, Plus, X, Clock, FileText, Hash, Settings } from 'lucide-react'
 import { Property, PropertyType, Tag } from '../types'
+
+/**
+ * PropertiesPanel - Collapsible sections for note metadata
+ *
+ * Sprint 27: Reorganized into collapsible sections:
+ * - Statistics (word count, created, modified)
+ * - Document (status, type, priority)
+ * - Custom Properties (user-defined)
+ */
 
 interface PropertiesPanelProps {
   properties: Record<string, Property>
@@ -41,6 +51,60 @@ const LIST_OPTIONS: Record<string, string[]> = {
   priority: ['high', 'medium', 'low'],
 }
 
+// Document properties that get their own section
+const DOCUMENT_PROPERTY_KEYS = ['status', 'type', 'priority', 'due_date', 'word_goal']
+
+// Collapsible Section Component
+interface CollapsibleSectionProps {
+  title: string
+  icon: React.ReactNode
+  count?: number
+  defaultExpanded?: boolean
+  children: React.ReactNode
+  actions?: React.ReactNode
+}
+
+function CollapsibleSection({
+  title,
+  icon,
+  count,
+  defaultExpanded = true,
+  children,
+  actions
+}: CollapsibleSectionProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+
+  return (
+    <div className="properties-section">
+      <button
+        className="properties-section-header"
+        onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
+      >
+        <span className="section-chevron">
+          {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+        </span>
+        <span className="section-icon">{icon}</span>
+        <span className="section-title">{title}</span>
+        {count !== undefined && count > 0 && (
+          <span className="section-count">{count}</span>
+        )}
+        <div className="flex-1" />
+        {actions && (
+          <div className="section-actions" onClick={e => e.stopPropagation()}>
+            {actions}
+          </div>
+        )}
+      </button>
+      {isExpanded && (
+        <div className="properties-section-content">
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function PropertiesPanel({
   properties,
   onChange,
@@ -53,7 +117,6 @@ export function PropertiesPanel({
   createdAt,
   updatedAt
 }: PropertiesPanelProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false)
   const [newPropertyKey, setNewPropertyKey] = useState('')
   const [showAddRow, setShowAddRow] = useState(false)
 
@@ -69,16 +132,37 @@ export function PropertiesPanel({
     })
   }
 
-  // Build auto-managed properties
-  const autoProperties: Record<string, Property> = {
-    created: { key: 'created', value: formatDate(createdAt), type: 'date', readonly: true },
-    modified: { key: 'modified', value: formatDate(updatedAt), type: 'date', readonly: true },
-    word_count: { key: 'word_count', value: wordCount, type: 'number', readonly: true },
+  // Format relative time
+  const formatRelativeTime = (timestamp?: number) => {
+    if (!timestamp) return '—'
+    const diff = Date.now() - timestamp
+    const minutes = Math.floor(diff / 60000)
+    const hours = Math.floor(diff / 3600000)
+    const days = Math.floor(diff / 86400000)
+
+    if (minutes < 1) return 'just now'
+    if (minutes < 60) return `${minutes}m ago`
+    if (hours < 24) return `${hours}h ago`
+    if (days === 1) return 'yesterday'
+    if (days < 7) return `${days}d ago`
+    return formatDate(timestamp)
   }
 
-  // Merge auto properties with user properties
-  const allProperties = { ...autoProperties, ...properties }
-  const propertyEntries = Object.entries(allProperties)
+  // Separate properties into categories
+  const { documentProps, customProps } = useMemo(() => {
+    const docProps: Record<string, Property> = {}
+    const custProps: Record<string, Property> = {}
+
+    Object.entries(properties).forEach(([key, prop]) => {
+      if (DOCUMENT_PROPERTY_KEYS.includes(key)) {
+        docProps[key] = prop
+      } else {
+        custProps[key] = prop
+      }
+    })
+
+    return { documentProps: docProps, customProps: custProps }
+  }, [properties])
 
   const handleValueChange = useCallback((key: string, value: string | number | boolean | string[]) => {
     const updated = { ...properties }
@@ -88,15 +172,13 @@ export function PropertiesPanel({
     }
   }, [properties, onChange])
 
-
-
   const handleAddProperty = useCallback(() => {
     if (!newPropertyKey.trim()) return
-    
+
     const key = newPropertyKey.trim().toLowerCase().replace(/\s+/g, '_')
     if (properties[key]) return // Key exists
-    
-    const updated = { 
+
+    const updated = {
       ...properties,
       [key]: { key, value: '', type: 'text' as PropertyType }
     }
@@ -149,7 +231,6 @@ export function PropertiesPanel({
           />
         )
       case 'list':
-        // Check if we have predefined options for this property
         const options = LIST_OPTIONS[prop.key]
         if (options) {
           return (
@@ -165,7 +246,6 @@ export function PropertiesPanel({
             </select>
           )
         }
-        // Fallback to text input
         return (
           <input
             type="text"
@@ -176,7 +256,6 @@ export function PropertiesPanel({
           />
         )
       case 'tags':
-        // Tags are displayed separately, just show count here
         return <span className="text-nexus-text-muted">{noteTags.length} tags</span>
       default:
         return (
@@ -195,149 +274,178 @@ export function PropertiesPanel({
   const effectiveWordGoal = wordGoal || (properties.word_goal ? Number(properties.word_goal.value) : 0)
   const progressPercent = effectiveWordGoal > 0 ? Math.min((wordCount / effectiveWordGoal) * 100, 100) : 0
   const hasWordGoal = effectiveWordGoal > 0
-
-  // Word goal progress bar component
-  const WordGoalProgress = () => {
-    if (!hasWordGoal) return null
-    
-    const isComplete = wordCount >= effectiveWordGoal
-    const progressColor = isComplete ? 'bg-green-500' : 'bg-nexus-accent'
-    
-    return (
-      <div className="px-6 py-3 border-b border-white/5">
-        <div className="flex items-center justify-between text-xs text-nexus-text-muted mb-2">
-          <span>Word Goal</span>
-          <span className={isComplete ? 'text-green-500 font-medium' : ''}>
-            {wordCount.toLocaleString()} / {effectiveWordGoal.toLocaleString()}
-            {isComplete && ' ✓'}
-          </span>
-        </div>
-        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-          <div 
-            className={`h-full ${progressColor} transition-all duration-300 ease-out rounded-full`}
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
-        <div className="text-right text-[10px] text-nexus-text-muted mt-1">
-          {Math.round(progressPercent)}% complete
-        </div>
-      </div>
-    )
-  }
-
-  if (propertyEntries.length === 0 && !showAddRow) {
-    return (
-      <div className="properties-panel">
-        <WordGoalProgress />
-        <div className="px-6 py-2 border-b border-white/5">
-          <button 
-            onClick={() => setShowAddRow(true)}
-            className="text-xs text-nexus-text-muted hover:text-nexus-accent transition-colors flex items-center gap-1"
-          >
-            <span>+</span> Add property
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const isGoalComplete = wordCount >= effectiveWordGoal
 
   return (
     <div className="properties-panel">
-      {/* Word Goal Progress */}
-      <WordGoalProgress />
-      {/* Header */}
-      <div 
-        className="px-6 py-2 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
-        <div className="flex items-center gap-2 text-xs text-nexus-text-muted">
-          <span className={`transition-transform ${isCollapsed ? '' : 'rotate-90'}`}>▶</span>
-          <span>Properties</span>
-          <span className="bg-white/10 px-1.5 rounded">{propertyEntries.length}</span>
+      {/* Word Goal Progress (always visible when set) */}
+      {hasWordGoal && (
+        <div className="word-goal-progress">
+          <div className="word-goal-header">
+            <span>Word Goal</span>
+            <span className={isGoalComplete ? 'text-green-500 font-medium' : ''}>
+              {wordCount.toLocaleString()} / {effectiveWordGoal.toLocaleString()}
+              {isGoalComplete && ' ✓'}
+            </span>
+          </div>
+          <div className="word-goal-bar">
+            <div
+              className={`word-goal-fill ${isGoalComplete ? 'complete' : ''}`}
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+          <div className="word-goal-percent">
+            {Math.round(progressPercent)}% complete
+          </div>
         </div>
-        {editable && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              setShowAddRow(true)
-            }}
-            className="text-xs text-nexus-text-muted hover:text-nexus-accent"
-            title="Add property"
-          >
-            +
-          </button>
-        )}
-      </div>
+      )}
 
-      {/* Properties list */}
-      {!isCollapsed && (
-        <div className="px-6 pb-3 space-y-1">
-          {propertyEntries.map(([key, prop]) => (
-            <div 
-              key={key}
-              className="property-row grid grid-cols-[24px_100px_1fr_24px] gap-2 items-center text-sm group"
-            >
-              {/* Type icon */}
-              <span 
-                className="text-xs cursor-pointer" 
-                title={TYPE_LABELS[prop.type]}
-              >
-                {TYPE_ICONS[prop.type]}
-              </span>
-              
-              {/* Key */}
-              <span className="text-nexus-text-muted truncate">{key}</span>
-              
-              {/* Value */}
-              <div>{renderValue(prop)}</div>
-              
-              {/* Remove button - not shown for readonly properties */}
-              {editable && !prop.readonly && (
-                <button
-                  onClick={() => handleRemoveProperty(key)}
-                  className="opacity-0 group-hover:opacity-100 text-nexus-text-muted hover:text-nexus-error text-xs transition-opacity"
-                  title="Remove property"
-                >
-                  ×
-                </button>
-              )}
-              {prop.readonly && <span className="w-4" />}
-            </div>
-          ))}
-
-          {/* Add new property row */}
-          {showAddRow && (
-            <div className="property-row grid grid-cols-[24px_100px_1fr_24px] gap-2 items-center text-sm">
-              <span className="text-xs">📝</span>
-              <input
-                type="text"
-                value={newPropertyKey}
-                onChange={(e) => setNewPropertyKey(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddProperty()
-                  if (e.key === 'Escape') {
-                    setShowAddRow(false)
-                    setNewPropertyKey('')
-                  }
-                }}
-                placeholder="key"
-                autoFocus
-                className="bg-transparent border-b border-nexus-accent outline-none text-nexus-text-muted placeholder:text-nexus-text-muted/50"
-              />
-              <span className="text-nexus-text-muted/50 text-xs">Press Enter to add</span>
-              <button
-                onClick={() => {
-                  setShowAddRow(false)
-                  setNewPropertyKey('')
-                }}
-                className="text-nexus-text-muted hover:text-nexus-error text-xs"
-              >
-                ×
-              </button>
+      {/* Statistics Section */}
+      <CollapsibleSection
+        title="Statistics"
+        icon={<Hash size={12} />}
+        defaultExpanded={true}
+      >
+        <div className="stats-grid">
+          <div className="stat-item">
+            <span className="stat-label">Words</span>
+            <span className="stat-value">{wordCount.toLocaleString()}</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Created</span>
+            <span className="stat-value" title={formatDate(createdAt)}>
+              {formatRelativeTime(createdAt)}
+            </span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Modified</span>
+            <span className="stat-value" title={formatDate(updatedAt)}>
+              {formatRelativeTime(updatedAt)}
+            </span>
+          </div>
+          {noteTags.length > 0 && (
+            <div className="stat-item">
+              <span className="stat-label">Tags</span>
+              <span className="stat-value">{noteTags.length}</span>
             </div>
           )}
         </div>
+      </CollapsibleSection>
+
+      {/* Document Properties Section */}
+      {(Object.keys(documentProps).length > 0 || editable) && (
+        <CollapsibleSection
+          title="Document"
+          icon={<FileText size={12} />}
+          count={Object.keys(documentProps).length}
+          defaultExpanded={true}
+        >
+          {Object.keys(documentProps).length === 0 ? (
+            <div className="empty-section-hint">
+              No document properties set
+            </div>
+          ) : (
+            <div className="properties-list">
+              {Object.entries(documentProps).map(([key, prop]) => (
+                <div key={key} className="property-row">
+                  <span className="property-icon" title={TYPE_LABELS[prop.type]}>
+                    {TYPE_ICONS[prop.type]}
+                  </span>
+                  <span className="property-key">{key}</span>
+                  <div className="property-value">{renderValue(prop)}</div>
+                  {editable && !prop.readonly && (
+                    <button
+                      onClick={() => handleRemoveProperty(key)}
+                      className="property-remove"
+                      title="Remove property"
+                    >
+                      <X size={12} />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </CollapsibleSection>
       )}
+
+      {/* Custom Properties Section */}
+      <CollapsibleSection
+        title="Custom"
+        icon={<Settings size={12} />}
+        count={Object.keys(customProps).length}
+        defaultExpanded={Object.keys(customProps).length > 0}
+        actions={
+          editable && (
+            <button
+              onClick={() => setShowAddRow(true)}
+              className="add-property-btn"
+              title="Add property"
+            >
+              <Plus size={12} />
+            </button>
+          )
+        }
+      >
+        {Object.keys(customProps).length === 0 && !showAddRow ? (
+          <div className="empty-section-hint">
+            No custom properties
+          </div>
+        ) : (
+          <div className="properties-list">
+            {Object.entries(customProps).map(([key, prop]) => (
+              <div key={key} className="property-row">
+                <span className="property-icon" title={TYPE_LABELS[prop.type]}>
+                  {TYPE_ICONS[prop.type]}
+                </span>
+                <span className="property-key">{key}</span>
+                <div className="property-value">{renderValue(prop)}</div>
+                {editable && !prop.readonly && (
+                  <button
+                    onClick={() => handleRemoveProperty(key)}
+                    className="property-remove"
+                    title="Remove property"
+                  >
+                    <X size={12} />
+                  </button>
+                )}
+              </div>
+            ))}
+
+            {/* Add new property row */}
+            {showAddRow && (
+              <div className="property-row add-row">
+                <span className="property-icon">📝</span>
+                <input
+                  type="text"
+                  value={newPropertyKey}
+                  onChange={(e) => setNewPropertyKey(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleAddProperty()
+                    if (e.key === 'Escape') {
+                      setShowAddRow(false)
+                      setNewPropertyKey('')
+                    }
+                  }}
+                  placeholder="property name"
+                  autoFocus
+                  className="add-property-input"
+                />
+                <span className="add-property-hint">Enter to add</span>
+                <button
+                  onClick={() => {
+                    setShowAddRow(false)
+                    setNewPropertyKey('')
+                  }}
+                  className="property-remove"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </CollapsibleSection>
     </div>
   )
 }

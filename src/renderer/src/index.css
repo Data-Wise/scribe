@@ -413,6 +413,265 @@ body {
 }
 
 /* ============================================================
+   Properties Panel (Sprint 27)
+   Collapsible sections for note metadata
+   ============================================================ */
+
+.properties-panel {
+  padding: 8px 0;
+}
+
+/* Word Goal Progress */
+.word-goal-progress {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.word-goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: theme('colors.nexus-text-muted');
+  margin-bottom: 8px;
+}
+
+.word-goal-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.word-goal-fill {
+  height: 100%;
+  background: theme('colors.nexus-accent');
+  border-radius: 3px;
+  transition: width 300ms ease-out;
+}
+
+.word-goal-fill.complete {
+  background: #22c55e;
+}
+
+.word-goal-percent {
+  text-align: right;
+  font-size: 10px;
+  color: theme('colors.nexus-text-muted');
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+/* Collapsible Section */
+.properties-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.properties-section:last-child {
+  border-bottom: none;
+}
+
+.properties-section-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  color: theme('colors.nexus-text-muted');
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.properties-section-header:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.section-chevron {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.section-icon {
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+}
+
+.section-title {
+  flex-shrink: 0;
+}
+
+.section-count {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: theme('colors.nexus-text-muted');
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.properties-section-content {
+  padding: 0 16px 12px;
+}
+
+/* Statistics Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: theme('colors.nexus-text-muted');
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.stat-value {
+  font-size: 13px;
+  color: theme('colors.nexus-text-primary');
+  font-weight: 500;
+}
+
+/* Properties List */
+.properties-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.property-row {
+  display: grid;
+  grid-template-columns: 20px 80px 1fr 20px;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background 150ms ease;
+}
+
+.property-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.property-icon {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.property-key {
+  font-size: 12px;
+  color: theme('colors.nexus-text-muted');
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.property-value {
+  font-size: 12px;
+  color: theme('colors.nexus-text-primary');
+}
+
+.property-remove {
+  opacity: 0;
+  color: theme('colors.nexus-text-muted');
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+
+.property-row:hover .property-remove {
+  opacity: 1;
+}
+
+.property-remove:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Add Property */
+.add-property-btn {
+  color: theme('colors.nexus-text-muted');
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+
+.add-property-btn:hover {
+  color: theme('colors.nexus-accent');
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.property-row.add-row {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.add-property-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid theme('colors.nexus-accent');
+  outline: none;
+  font-size: 12px;
+  color: theme('colors.nexus-text-primary');
+  padding: 2px 0;
+}
+
+.add-property-input::placeholder {
+  color: theme('colors.nexus-text-muted');
+  opacity: 0.5;
+}
+
+.add-property-hint {
+  font-size: 10px;
+  color: theme('colors.nexus-text-muted');
+  opacity: 0.5;
+}
+
+/* Empty State */
+.empty-section-hint {
+  font-size: 12px;
+  color: theme('colors.nexus-text-muted');
+  opacity: 0.5;
+  padding: 8px;
+  text-align: center;
+}
+
+/* ============================================================
    Panel Slide Transitions
 
    ADHD-friendly: Smooth, predictable animations that help
