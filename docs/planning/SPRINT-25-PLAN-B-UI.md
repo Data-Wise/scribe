@@ -1,9 +1,10 @@
 # Sprint 25: Plan B UI Redesign
 
-**Status:** ✅ Complete (Phase 1 + Cleanup)
+**Status:** ✅ Complete (Phase 1 + 5 + 6)
 **Started:** 2025-12-28
 **Completed:** 2025-12-29
 **Version:** v1.6.0
+**Tests:** 795 (666 unit + 129 E2E)
 
 ---
 
@@ -57,7 +58,35 @@ Implementing "Plan B" from the UI redesign brainstorm:
 - `src/renderer/src/__tests__/testUtils.ts` (createMockNote, createMockProject, createMockTag)
 - `src/renderer/src/vite-env.d.ts` (import.meta.env types)
 
-**Test Results:** 666 tests passing, 0 TypeScript errors
+**Test Results:** 666 unit tests passing, 0 TypeScript errors
+
+---
+
+### Phase 6: Playwright E2E Test Suite ✅ COMPLETE (2025-12-29)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Playwright infrastructure | ✅ | Config, fixtures, page objects |
+| 14 spec files | ✅ | All UI categories covered |
+| 129 E2E tests passing | ✅ | 100% pass rate |
+| Tab drag reorder tests | ✅ | TAB-11, TAB-12, TAB-13 |
+| data-testid attributes | ✅ | Added to key components |
+| IndexedDB isolation | ✅ | Per-test context |
+
+**Files Created:**
+- `e2e/playwright.config.ts`
+- `e2e/pages/*.ts` (7 page objects)
+- `e2e/fixtures/index.ts`
+- `e2e/specs/*.spec.ts` (14 spec files)
+
+**Test Categories:**
+- Smoke (4), Navigation (8), Tabs (13)
+- Editor (12), Left Sidebar (14), Right Sidebar (10)
+- Keyboard Shortcuts (15), Modals (10), Mission Control (8)
+- Projects (8), Notes (10), Focus Mode (5), Themes (6)
+- Mission Sidebar (6)
+
+**Total: 795 tests (666 unit + 129 E2E)**
 
 ---
 
@@ -138,10 +167,11 @@ Update dashboard content and pinned tab behavior.
 |-------|----------|--------|
 | Phase 1: Editor Tabs | 100% | ✅ Complete |
 | Phase 5: Right Sidebar + Cleanup | 100% | ✅ Complete |
+| Phase 6: Playwright E2E Tests | 100% | ✅ Complete (129 tests) |
 | Phase 2: Vault Sidebar | 0% | ⏳ Sprint 26 |
 | Phase 3: Status Bar | 0% | ⏳ Sprint 26 |
 | Phase 4: Mission Control | 0% | ⏳ Sprint 26 |
-| **Overall** | **40%** | **Phase 1+5 Complete** |
+| **Overall** | **50%** | **Phase 1+5+6 Complete** |
 
 ---
 
@@ -166,7 +196,7 @@ Update dashboard content and pinned tab behavior.
 
 | Next | Priority | Document |
 |------|----------|----------|
-| Playwright E2E Testing | P2 | `FUTURE-PLAYWRIGHT-E2E.md` |
+| ~~Playwright E2E Testing~~ | ~~P2~~ | ✅ Complete (129 tests) |
 | SwiftUI Native Port | P3 | `BRAINSTORM-TAURI-TO-SWIFTUI.md` |
 
 ---
@@ -190,7 +220,7 @@ The following items are ready for the next sprint:
 ### Lower Priority (P3)
 7. **Phase 2: Vault Sidebar** - Obsidian-style file tree (major feature)
 8. **Phase 3: Status Bar** - VS Code-style bottom bar
-9. **Playwright E2E tests** - End-to-end user journey testing
+9. ~~**Playwright E2E tests**~~ - ✅ Complete (129 tests passing)
 
 ---
 
