@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, FileText, MoreHorizontal } from 'lucide-react'
+import { Menu, Plus, Search, FileText, MoreHorizontal, ChevronDown } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { ProjectContextMenu } from './ProjectContextMenu'
@@ -44,6 +44,7 @@ export function CardViewMode({
   onDeleteNote
 }: CardViewModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null)
 
   // Context menu state
   const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
@@ -83,19 +84,31 @@ export function CardViewMode({
     return b.updated_at - a.updated_at
   })
 
-  // Compute project stats
-  const projectStats = useMemo(() => {
+  // Compute project stats and notes by project
+  const { projectStats, notesByProject } = useMemo(() => {
     const stats: Record<string, { noteCount: number; wordCount: number }> = {}
+    const noteMap: Record<string, Note[]> = {}
+
     projects.forEach(p => {
       stats[p.id] = { noteCount: 0, wordCount: 0 }
+      noteMap[p.id] = []
     })
-    notes.filter(n => !n.deleted_at).forEach(note => {
-      if (note.project_id && stats[note.project_id]) {
-        stats[note.project_id].noteCount++
-        stats[note.project_id].wordCount += countWords(note.content)
-      }
-    })
-    return stats
+
+    notes
+      .filter(n => !n.deleted_at)
+      .sort((a, b) => b.updated_at - a.updated_at)
+      .forEach(note => {
+        if (note.project_id && stats[note.project_id]) {
+          stats[note.project_id].noteCount++
+          stats[note.project_id].wordCount += countWords(note.content)
+          // Keep up to 6 recent notes per project for tiles
+          if (noteMap[note.project_id].length < 6) {
+            noteMap[note.project_id].push(note)
+          }
+        }
+      })
+
+    return { projectStats: stats, notesByProject: noteMap }
   }, [projects, notes])
 
   return (
@@ -131,15 +144,22 @@ export function CardViewMode({
         {sortedProjects.map(project => {
           const stats = projectStats[project.id]
           const isActive = project.id === currentProjectId
+          const isExpanded = expandedProjectId === project.id
+          const projectNotes = notesByProject[project.id] || []
           return (
             <ProjectCard
               key={project.id}
               project={project}
               isActive={isActive}
+              isExpanded={isExpanded}
               noteCount={stats?.noteCount || 0}
               wordCount={stats?.wordCount || 0}
+              projectNotes={projectNotes}
               onClick={() => onSelectProject(isActive ? null : project.id)}
+              onToggleExpand={() => setExpandedProjectId(isExpanded ? null : project.id)}
               onQuickAdd={() => onNewNote(project.id)}
+              onSelectNote={onSelectNote}
+              onNoteContextMenu={handleNoteContextMenu}
               onContextMenu={(e) => handleProjectContextMenu(e, project)}
               onMenuClick={(e) => handleMenuClick(e, project)}
             />
@@ -202,38 +222,53 @@ export function CardViewMode({
 interface ProjectCardProps {
   project: Project
   isActive: boolean
+  isExpanded: boolean
   noteCount: number
   wordCount: number
+  projectNotes: Note[]
   onClick: () => void
+  onToggleExpand: () => void
   onQuickAdd: () => void
+  onSelectNote: (noteId: string) => void
+  onNoteContextMenu: (e: React.MouseEvent, note: Note) => void
   onContextMenu: (e: React.MouseEvent) => void
   onMenuClick: (e: React.MouseEvent) => void
 }
 
-function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuickAdd, onContextMenu, onMenuClick }: ProjectCardProps) {
+function ProjectCard({
+  project,
+  isActive,
+  isExpanded,
+  noteCount,
+  wordCount,
+  projectNotes,
+  onClick,
+  onToggleExpand,
+  onQuickAdd,
+  onSelectNote,
+  onNoteContextMenu,
+  onContextMenu,
+  onMenuClick
+}: ProjectCardProps) {
   const status = project.status || 'active'
   const progress = project.progress || 0
   const color = project.color || '#3b82f6'
 
   return (
-    <button
-      className={`project-card ${isActive ? 'active' : ''}`}
-      onClick={onClick}
+    <div
+      className={`project-card ${isActive ? 'active' : ''} ${isExpanded ? 'expanded' : ''}`}
       onContextMenu={onContextMenu}
       data-status={status}
       style={{ '--project-color': color } as React.CSSProperties}
     >
-      {/* Card header */}
-      <div className="card-header">
+      {/* Card header - clickable to select project */}
+      <button className="card-header" onClick={onClick}>
         <StatusDot status={status} size="md" />
         <span className="card-title">{project.name}</span>
-        <div className="card-actions">
+        <div className="card-actions" onClick={(e) => e.stopPropagation()}>
           <button
             className="card-quick-add-btn"
-            onClick={(e) => {
-              e.stopPropagation()
-              onQuickAdd()
-            }}
+            onClick={onQuickAdd}
             title="New note in this project"
           >
             <Plus size={14} />
@@ -246,7 +281,7 @@ function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuick
             <MoreHorizontal size={14} />
           </button>
         </div>
-      </div>
+      </button>
 
       {/* Project type badge */}
       {project.type && (
@@ -256,23 +291,62 @@ function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuick
       )}
 
       {/* Description preview */}
-      {project.description && (
+      {project.description && !isExpanded && (
         <p className="card-description">{project.description}</p>
       )}
 
-      {/* Stats row */}
-      <div className="card-stats">
-        <span className={`stat ${noteCount === 0 ? 'zero' : noteCount >= 5 ? 'many' : ''}`}>
-          <FileText size={12} />
-          {noteCount} {noteCount === 1 ? 'note' : 'notes'}
-        </span>
-        <span className={`stat ${wordCount === 0 ? 'zero' : wordCount >= 1000 ? 'many' : ''}`}>
-          {formatWordCount(wordCount)}
-        </span>
-      </div>
+      {/* Stats row - clickable to expand/collapse */}
+      <button
+        className="card-stats-btn"
+        onClick={onToggleExpand}
+        title={isExpanded ? 'Collapse notes' : 'Show notes'}
+      >
+        <div className="card-stats">
+          <span className={`stat ${noteCount === 0 ? 'zero' : noteCount >= 5 ? 'many' : ''}`}>
+            <FileText size={12} />
+            {noteCount} {noteCount === 1 ? 'note' : 'notes'}
+          </span>
+          <span className={`stat ${wordCount === 0 ? 'zero' : wordCount >= 1000 ? 'many' : ''}`}>
+            {formatWordCount(wordCount)}
+          </span>
+        </div>
+        <ChevronDown
+          size={14}
+          className={`expand-chevron ${isExpanded ? 'rotated' : ''}`}
+        />
+      </button>
+
+      {/* Note tiles - shown when expanded */}
+      {isExpanded && projectNotes.length > 0 && (
+        <div className="note-tiles">
+          {projectNotes.map(note => (
+            <button
+              key={note.id}
+              className="note-tile"
+              onClick={() => onSelectNote(note.id)}
+              onContextMenu={(e) => onNoteContextMenu(e, note)}
+              title={note.title || 'Untitled'}
+            >
+              <FileText size={12} className="tile-icon" />
+              <span className="tile-title">{note.title || 'Untitled'}</span>
+              <span className="tile-time">{formatTimeAgo(note.updated_at)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {isExpanded && projectNotes.length === 0 && (
+        <div className="note-tiles-empty">
+          <p>No notes yet</p>
+          <button className="create-note-btn" onClick={onQuickAdd}>
+            <Plus size={12} />
+            <span>Create first note</span>
+          </button>
+        </div>
+      )}
 
       {/* Progress bar */}
-      {progress > 0 && (
+      {progress > 0 && !isExpanded && (
         <div className="card-progress">
           <div className="progress-bar">
             <div
@@ -285,12 +359,14 @@ function ProjectCard({ project, isActive, noteCount, wordCount, onClick, onQuick
       )}
 
       {/* Footer */}
-      <div className="card-footer">
-        <span className="last-updated">
-          Updated {formatTimeAgo(project.updated_at)}
-        </span>
-      </div>
-    </button>
+      {!isExpanded && (
+        <div className="card-footer">
+          <span className="last-updated">
+            Updated {formatTimeAgo(project.updated_at)}
+          </span>
+        </div>
+      )}
+    </div>
   )
 }
 
