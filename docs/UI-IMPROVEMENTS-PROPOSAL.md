@@ -179,4 +179,19 @@
 
 ---
 
-**Document Status:** Proposal ready for review
+## Implementation Timeline
+
+**Scheduled for Sprint 31** (after PWA/Browser Support)
+
+See: [.STATUS](../.STATUS) for sprint planning
+
+| Sprint | Focus |
+|--------|-------|
+| 28 | PWA/Browser Support |
+| 29 | Cloud Sync |
+| 30 | Mobile PWA |
+| **31** | **Terminology Update (this proposal)** |
+
+---
+
+**Document Status:** Proposal ready for review - scheduled for Sprint 31

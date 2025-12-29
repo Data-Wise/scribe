@@ -48,28 +48,36 @@ tags:
 
 **Sprint 28: PWA/Browser Support** (Planned)
 
+See: [docs/planning/SPRINT-28-PLAN.md](docs/planning/SPRINT-28-PLAN.md)
+
 ### Sprint 28 Tasks
 
 #### P0 - Core Architecture
-- [ ] Implement BrowserStorage using IndexedDB
-- [ ] Storage abstraction switching (Tauri vs Browser)
-- [ ] Service worker for offline support
+- [ ] BrowserStorage adapter (IndexedDB implementation of IStorage)
+- [ ] Storage factory with runtime platform detection
+- [ ] Service worker for offline PWA support
+- [ ] PWA manifest with icons and theme colors
 
 #### P1 - Feature Parity
-- [ ] Sync UI for browser mode
-- [ ] Settings persistence in browser
-- [ ] Export/import data for browser
+- [ ] Settings persistence in browser (LocalStorage)
+- [ ] Sync UI indicator (offline/online status)
+- [ ] Export/import data (JSON backup/transfer)
+- [ ] Browser-safe keyboard shortcuts (remap conflicts)
 
-#### Strategic (P2) - Future
+#### P2 - Polish Tasks
+- [ ] Keyboard shortcut hints in tooltips throughout app
+- [ ] Smooth animations for collapsible section expand/collapse
+- [ ] Improved focus management in collapsible panels
+- [ ] Graph preview in Backlinks tab (mini-graph)
 - [ ] AI-powered related notes suggestions
-- [ ] Graph preview in Backlinks tab
 
 ### Future Sprints
 
 | Sprint | Focus | Priority |
 |--------|-------|----------|
-| 29 | Cloud Sync | Optional backup, cross-device sync |
+| 29 | Cloud Sync | PouchDB/CouchDB for cross-device sync |
 | 30 | Mobile PWA | Responsive design, touch UI |
+| 31 | Terminology Update | "Note" → "Page", "Daily Note" → "Today" |
 
 ---
 

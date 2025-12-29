@@ -114,16 +114,21 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Sprint: 26 (Polish & Stability)
+## 🎯 Current Sprint: 27 Complete → Sprint 28 Next
 
-**Sprint 25 Complete:** Tab System, Continue Writing Hero, Time-based Greeting, Writing Goal, Quick Capture Inbox
+**Sprint 27 Complete:** Right Sidebar Enhancements
+- [x] Icons + badge counts for right sidebar tabs
+- [x] Keyboard shortcuts ⌘⌥1-4 for tab switching
+- [x] Icon-only collapsed mode (⌘⇧B toggle)
+- [x] Collapsible sections in Properties panel
 
-**Sprint 26 Focus:**
-- [x] Dirty tab close confirmation (data safety)
-- [x] IStorage interface (architecture prep)
-- [ ] Delete confirmation dialogs
-- [ ] ARIA accessibility improvements
-- [ ] Toast notifications for actions
+**Sprint 28 Focus:** PWA/Browser Support
+- [ ] BrowserStorage adapter (IndexedDB)
+- [ ] Storage factory with platform detection
+- [ ] Service worker for offline support
+- [ ] PWA manifest with icons
+
+See: [docs/planning/SPRINT-28-PLAN.md](docs/planning/SPRINT-28-PLAN.md)
 
 ---
 
