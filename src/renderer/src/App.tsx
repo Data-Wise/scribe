@@ -612,8 +612,8 @@ function App() {
         setRightActiveTab('ai')
       }
 
-      // ⌘H - Toggle Mission HUD panel
-      if ((e.metaKey || e.ctrlKey) && e.key === 'h') {
+      // ⌘⇧M - Toggle Mission HUD panel (not ⌘H which is macOS "Hide")
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'M') {
         e.preventDefault()
         setIsHudPanelOpen(prev => !prev)
       }
