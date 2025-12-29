@@ -262,7 +262,7 @@ function ProjectCard({
       style={{ '--project-color': color } as React.CSSProperties}
     >
       {/* Card header - clickable to select project */}
-      <button className="card-header" onClick={onClick}>
+      <div className="card-header" onClick={onClick} role="button" tabIndex={0}>
         <StatusDot status={status} size="md" />
         <span className="card-title">{project.name}</span>
         <div className="card-actions" onClick={(e) => e.stopPropagation()}>
@@ -281,7 +281,7 @@ function ProjectCard({
             <MoreHorizontal size={14} />
           </button>
         </div>
-      </button>
+      </div>
 
       {/* Project type badge */}
       {project.type && (

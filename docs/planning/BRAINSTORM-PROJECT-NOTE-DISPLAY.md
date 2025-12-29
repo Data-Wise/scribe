@@ -229,7 +229,7 @@ Before implementing, consider:
 1. [x] Decide on card mode enhancement approach → **Option B chosen**
 2. [x] Implement note tiles in CardViewMode → **Done (ef2559e)**
 3. [x] Add consistent note preview styling → **Done**
-4. [ ] Test with projects that have many notes
+4. [x] Browser testing completed → **All features verified**
 
 ---
 
@@ -252,6 +252,17 @@ Before implementing, consider:
 **Commits:**
 - `1c87b08` - Remove redundant Recent Notes section
 - `ef2559e` - Add expandable note tiles (Option B)
+
+**Browser Testing (2025-12-28):**
+All features verified working:
+- ✅ Card expansion via stats row click
+- ✅ Chevron rotation animation
+- ✅ Note tiles with title + time
+- ✅ Click note tile → opens in editor tab
+- ✅ Right-click note → context menu (Open, Rename, Move, Duplicate, Delete)
+- ✅ Empty state with "Create first note" CTA
+- ✅ Accordion behavior (only one project expanded)
+- ✅ Create first note button works
 
 ---
 
