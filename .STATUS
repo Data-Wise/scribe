@@ -8,9 +8,9 @@ updated: 2025-12-29
 editor: hybrid-markdown++
 next_sprint: 26
 next_focus: Activity Bar Badges + Browser Mode Indicator
-tests: 666+126
+tests: 666+129
 unit_tests: 666
-e2e_tests: 126
+e2e_tests: 129
 tags:
   - adhd-friendly
   - distraction-free
@@ -53,15 +53,16 @@ tags:
 - [x] **Phase 6: Playwright E2E Test Suite** ✅ Complete
   - [x] Playwright infrastructure (config, fixtures, page objects)
   - [x] 14 spec files covering all UI features
-  - [x] 126 E2E tests passing across:
-    - Smoke tests (4), Navigation (8), Tabs (10)
+  - [x] 129 E2E tests passing across:
+    - Smoke tests (4), Navigation (8), Tabs (13)
     - Editor (12), Left Sidebar (14), Right Sidebar (10)
     - Keyboard Shortcuts (15), Modals (10), Mission Control (8)
     - Projects (8), Notes (10), Focus Mode (5), Themes (6)
     - Mission Sidebar (6)
+    - Tab Drag Reorder (3 new tests)
   - [x] data-testid attributes added to key components
   - [x] IndexedDB isolation per test context
-  - [x] **792 total tests (666 unit + 126 E2E)**
+  - [x] **795 total tests (666 unit + 129 E2E)**
 
 **Design Document:** `SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md`
 
@@ -225,7 +226,7 @@ tags:
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
 | **v1.6** | 25 | Plan B UI Redesign | ✅ 50% |
 
-**Total: v1.6 Phase 1+5+6 complete (792 tests: 666 unit + 126 E2E)**
+**Total: v1.6 Phase 1+5+6 complete (795 tests: 666 unit + 129 E2E)**
 
 ---
 
@@ -267,7 +268,7 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 | 22 | Editor Modes + Custom CSS | 483 |
 | 23 | Mission Control + Native Menu | 483 |
 | 24 | Three-State Collapsible Sidebar | 518 |
-| 25 | Plan B UI (Phase 1+5+6) | 792 (666 unit + 126 E2E) |
+| 25 | Plan B UI (Phase 1+5+6) | 795 (666 unit + 129 E2E) |
 
 ---
 

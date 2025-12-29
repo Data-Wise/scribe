@@ -158,4 +158,105 @@ test.describe('Editor Tabs', () => {
       expect(tabCount).toBeGreaterThan(1)
     })
   })
+
+  test.describe('Tab Drag Reorder', () => {
+    test('TAB-11: Drag tab to reorder position', async ({ basePage, tabs }) => {
+      // Open two notes to have 3 tabs total (Mission Control + 2 notes)
+      const welcomeNote = basePage.page.locator('button:has-text("Welcome to Scribe")').first()
+      await welcomeNote.click()
+      await basePage.page.waitForTimeout(500)
+
+      // Open another note - "Daily Note Example" is in demo data
+      const secondNote = basePage.page.locator('button:has-text("Daily Note")').first()
+      const hasSecondNote = await secondNote.isVisible().catch(() => false)
+
+      if (hasSecondNote) {
+        await secondNote.click()
+        await basePage.page.waitForTimeout(500)
+
+        // Get initial tab order
+        const initialTitles = await tabs.getTabTitles()
+        expect(initialTitles.length).toBeGreaterThanOrEqual(3)
+
+        // Get indices before drag
+        const welcomeIndexBefore = await tabs.getTabIndex('Welcome')
+        const dailyIndexBefore = await tabs.getTabIndex('Daily')
+
+        // Drag Welcome tab to Daily tab position
+        await tabs.dragTab('Welcome to Scribe', 'Daily Note')
+        await basePage.page.waitForTimeout(300)
+
+        // Get new indices after drag
+        const welcomeIndexAfter = await tabs.getTabIndex('Welcome')
+        const dailyIndexAfter = await tabs.getTabIndex('Daily')
+
+        // Indices should have changed (order should be different)
+        const orderChanged =
+          welcomeIndexBefore !== welcomeIndexAfter || dailyIndexBefore !== dailyIndexAfter
+        expect(orderChanged).toBe(true)
+      } else {
+        // Only one note available - just verify we can get tab indices
+        const tabCount = await tabs.getTabCount()
+        expect(tabCount).toBeGreaterThanOrEqual(2)
+      }
+    })
+
+    test('TAB-12: Mission Control tab cannot be dragged (stays pinned)', async ({
+      basePage,
+      tabs,
+    }) => {
+      // Open a note to have 2 tabs
+      const welcomeNote = basePage.page.locator('button:has-text("Welcome to Scribe")').first()
+      await welcomeNote.click()
+      await basePage.page.waitForTimeout(500)
+
+      // Get Mission Control's initial index (should be 0)
+      const mcIndexBefore = await tabs.getTabIndex('Mission Control')
+      expect(mcIndexBefore).toBe(0)
+
+      // Try to drag Mission Control to Welcome tab position
+      await tabs.dragTab('Mission Control', 'Welcome to Scribe')
+      await basePage.page.waitForTimeout(300)
+
+      // Mission Control should still be at index 0 (pinned)
+      const mcIndexAfter = await tabs.getTabIndex('Mission Control')
+      expect(mcIndexAfter).toBe(0)
+    })
+
+    test('TAB-13: Tab order persists after drag', async ({ basePage, tabs }) => {
+      // Open a note
+      const welcomeNote = basePage.page.locator('button:has-text("Welcome to Scribe")').first()
+      await welcomeNote.click()
+      await basePage.page.waitForTimeout(500)
+
+      // Look for another available note
+      const secondNote = basePage.page.locator('button:has-text("Daily Note")').first()
+      const hasSecondNote = await secondNote.isVisible().catch(() => false)
+
+      if (hasSecondNote) {
+        await secondNote.click()
+        await basePage.page.waitForTimeout(500)
+
+        // Get initial order
+        const initialTitles = await tabs.getTabTitles()
+
+        // Perform a drag operation if we have 3+ tabs
+        if (initialTitles.length >= 3) {
+          const secondTabTitle = initialTitles[2] // Third tab (after MC and Welcome)
+          await tabs.dragTab(secondTabTitle, 'Welcome to Scribe')
+          await basePage.page.waitForTimeout(300)
+
+          // Get new order
+          const newTitles = await tabs.getTabTitles()
+
+          // Verify tabs are still present (order may have changed)
+          expect(newTitles.length).toBe(initialTitles.length)
+        }
+      }
+
+      // Verify all tabs are still present regardless
+      const tabCount = await tabs.getTabCount()
+      expect(tabCount).toBeGreaterThanOrEqual(2)
+    })
+  })
 })

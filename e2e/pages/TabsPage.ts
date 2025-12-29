@@ -32,7 +32,7 @@ export class TabsPage extends BasePage {
     const tabElements = await this.tabs.all()
     const titles: string[] = []
     for (const tab of tabElements) {
-      const title = await tab.locator('.tab-title, span').first().textContent()
+      const title = await tab.locator('.tab-title').textContent()
       if (title) titles.push(title.trim())
     }
     return titles
@@ -157,5 +157,28 @@ export class TabsPage extends BasePage {
     const countAfter = await this.getTabCount()
     expect(countAfter).toBe(countBefore)
     await expect(this.missionControlTab).toBeVisible()
+  }
+
+  /**
+   * Drag a tab to reorder it
+   * @param fromTitle - Title of the tab to drag
+   * @param toTitle - Title of the tab to drop onto (target position)
+   */
+  async dragTab(fromTitle: string, toTitle: string): Promise<void> {
+    const sourceTab = this.page.locator(`.editor-tab:has-text("${fromTitle}")`)
+    const targetTab = this.page.locator(`.editor-tab:has-text("${toTitle}")`)
+
+    await sourceTab.dragTo(targetTab, {
+      sourcePosition: { x: 10, y: 10 },
+      targetPosition: { x: 10, y: 10 },
+    })
+  }
+
+  /**
+   * Get the index of a tab by title (0-based)
+   */
+  async getTabIndex(title: string): Promise<number> {
+    const titles = await this.getTabTitles()
+    return titles.findIndex((t) => t.includes(title))
   }
 }
