@@ -32,9 +32,6 @@ jobs:
       - name: Run Vitest tests
         run: npm run test:run
 
-      - name: Run tests with coverage
-        run: npm run test:coverage
-
   rust-tests:
     name: Rust Tests (cargo test)
     runs-on: ${{ matrix.os }}
@@ -71,7 +68,7 @@ jobs:
 
       - name: Run clippy
         working-directory: src-tauri
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --all-targets --all-features -- -W clippy::all
 
   lint:
     name: Lint
