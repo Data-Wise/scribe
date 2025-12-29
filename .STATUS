@@ -8,7 +8,7 @@ updated: 2025-12-28
 editor: hybrid-markdown++
 next_sprint: 27
 next_focus: PWA/Browser Support
-tests: 721
+tests: 758
 tags:
   - adhd-friendly
   - distraction-free
@@ -34,6 +34,10 @@ tags:
 - [x] Empty Trash button with double-click confirmation
 - [x] Undo toast for delete actions (5s window with progress bar)
 - [x] Auto-cleanup: notes in trash > 30 days (runs on startup)
+- [x] VaultTreeView component (Obsidian-style file tree for Notes tab)
+- [x] Tree view with project grouping, expand/collapse, note counts
+- [x] List/Tree view toggle in NotesListPanel
+- [x] 37 comprehensive tests for VaultTreeView
 
 #### Planned
 (Sprint 26 complete!)
@@ -309,7 +313,7 @@ tags:
 | 23 | Mission Control + Native Menu | 483 |
 | 24 | Three-State Collapsible Sidebar | 518 |
 | 25 | Quick Capture & Mission Control | 677 |
-| 26 | Data Safety & UX Polish | 677 |
+| 26 | Data Safety & UX Polish | 758 |
 
 ---
 
