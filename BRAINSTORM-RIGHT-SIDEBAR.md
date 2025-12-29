@@ -1,8 +1,22 @@
 # Brainstorm: Right Sidebar Revision
 
 **Generated:** 2025-12-28
+**Updated:** 2025-12-28
 **Context:** Mission Control HUD - Scribe App
-**Current State:** Right sidebar with tabs (Properties, Backlinks, Tags), "..." menu, "+" button
+**Current State:** Right sidebar with tabs (Properties, Backlinks, Tags, AI), "..." menu, "+" button
+
+---
+
+## ✅ Completed (Sprint 25 Session)
+
+| Feature | Commit | Notes |
+|---------|--------|-------|
+| ClaudePanel restored | `43b9709` | AI assistant panel with Insights/Suggestions/Connections tabs |
+| AI tab in right sidebar | `43b9709` | Fourth tab: ✨ AI |
+| ⌘⇧A keyboard shortcut | `4e876a8` | Opens AI tab |
+| HudPanel (Mission HQ) | `4e876a8` | Floating overlay with momentum ring |
+| ⌘⇧M keyboard shortcut | `2eb95de` | Toggles Mission HUD (changed from ⌘H to avoid macOS conflict) |
+| UI tests for new features | `114d213` | testAIPanelShortcut, testMissionHudShortcut, testAITabClick |
 
 ---
 

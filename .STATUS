@@ -42,32 +42,31 @@ tags:
 
 ## Next Sprint
 
-**Sprint 27: PWA/Browser Support** (Planned)
+**Sprint 27: Right Sidebar Enhancements** (Planned)
 
 ### Sprint 27 Tasks
 
-#### Core (P1)
-- [ ] IStorage interface abstraction (FileSystem vs IndexedDB)
-- [ ] IndexedDB implementation for browser storage
-- [ ] Storage adapter pattern for seamless switching
+#### Quick Wins (P0) - < 2 hours each
+- [ ] Right-click context menus for Properties, Backlinks, Tags tabs
+- [ ] Add icons + badge counts to tabs: `📋 Properties (3) | 🔗 Backlinks (5) | 🏷️ Tags (2)`
+- [ ] Double-click to edit properties inline
+- [ ] Keyboard shortcuts for tabs (⌘1/2/3 in right sidebar context)
 
-#### PWA Infrastructure (P2)
-- [ ] PWA manifest (name, icons, theme, display mode)
-- [ ] Service worker for asset caching
-- [ ] App shell architecture for fast load
+#### Medium Effort (P1) - Half day each
+- [ ] Icon-only collapsed mode for right sidebar (mirror left sidebar)
+- [ ] Collapsible sections in Properties panel (Metadata, Custom, Stats)
 
-#### Offline Support (P3)
-- [ ] Offline detection and UI indicator
-- [ ] Sync queue for pending changes
-- [ ] Conflict resolution strategy
+#### Strategic (P2) - Future
+- [ ] AI-powered related notes suggestions
+- [ ] Graph preview in Backlinks tab
 
 ### Future Sprints
 
 | Sprint | Focus | Priority |
 |--------|-------|----------|
-| 28 | Cloud Sync | Optional backup, cross-device sync |
-| 29 | Mobile PWA | Responsive design, touch UI |
-| 30 | Collaboration | Real-time co-editing (stretch)
+| 28 | PWA/Browser Support | IStorage abstraction, IndexedDB |
+| 29 | Cloud Sync | Optional backup, cross-device sync |
+| 30 | Mobile PWA | Responsive design, touch UI |
 
 ---
 
