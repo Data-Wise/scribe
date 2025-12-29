@@ -211,7 +211,7 @@ interface CompactProjectItemProps {
 function CompactProjectItem({
   project,
   allNotes,
-  allProjects,
+  allProjects: _allProjects,
   isExpanded,
   noteCount,
   projectNotes,

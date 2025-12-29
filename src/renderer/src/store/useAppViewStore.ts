@@ -200,9 +200,13 @@ const getSavedActiveTabId = (): string => {
   }
 }
 
-const saveActiveTabId = (tabId: string): void => {
+const saveActiveTabId = (tabId: string | null): void => {
   try {
-    localStorage.setItem(ACTIVE_TAB_KEY, tabId)
+    if (tabId) {
+      localStorage.setItem(ACTIVE_TAB_KEY, tabId)
+    } else {
+      localStorage.removeItem(ACTIVE_TAB_KEY)
+    }
   } catch {
     // Ignore localStorage errors
   }

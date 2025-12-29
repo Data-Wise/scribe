@@ -6,7 +6,7 @@
  */
 
 import Dexie, { type Table } from 'dexie'
-import type { Note, Tag, Folder, Project, ProjectSettings } from '../types'
+import type { Note, Tag, Folder, Project } from '../types'
 
 // Extended Note type for IndexedDB (includes searchable text)
 interface NoteRecord extends Omit<Note, 'properties'> {
@@ -146,7 +146,7 @@ export const seedDemoData = async (): Promise<boolean> => {
   await db.projects.add({
     id: demoProjectId,
     name: 'Getting Started',
-    type: 'general',
+    type: 'generic',
     status: 'active',
     description: 'Learn how to use Scribe with these example notes',
     color: '#3B82F6',
@@ -256,7 +256,7 @@ What did you accomplish today?`,
       ...note,
       properties: '{}',
       search_text: createSearchText(note.title, note.content),
-      deleted_at: undefined
+      deleted_at: null
     })
   }
 

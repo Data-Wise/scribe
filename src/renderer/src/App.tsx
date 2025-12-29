@@ -1100,8 +1100,7 @@ function App() {
         onMoveNoteToProject={async (noteId, projectId) => {
           await api.setNoteProject(noteId, projectId)
           // Refresh notes list
-          const updatedNotes = await api.listNotes()
-          setNotes(updatedNotes)
+          await loadNotes()
         }}
         onDuplicateNote={async (noteId) => {
           const note = notes.find(n => n.id === noteId)
@@ -1111,6 +1110,7 @@ function App() {
             content: note.content,
             folder: note.folder
           })
+          if (!newNote) return
           if (note.project_id) {
             await api.setNoteProject(newNote.id, note.project_id)
           }
@@ -1127,11 +1127,10 @@ function App() {
           if (confirmed) {
             await api.deleteNote(noteId)
             if (selectedNoteId === noteId) {
-              selectNote(null)
+              selectNote(null as unknown as string)
             }
             // Refresh notes list
-            const updatedNotes = await api.listNotes()
-            setNotes(updatedNotes)
+            await loadNotes()
           }
         }}
       />
@@ -1333,7 +1332,7 @@ function App() {
         {/* Claude AI Assistant Panel */}
         {claudePanelOpen && (
           <ClaudePanel
-            currentNote={selectedNote}
+            currentNote={selectedNote ?? null}
             currentProject={projects.find(p => p.id === currentProjectId) || null}
             notes={notes}
             onClose={() => setClaudePanelOpen(false)}

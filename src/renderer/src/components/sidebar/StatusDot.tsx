@@ -9,7 +9,6 @@ interface StatusDotProps {
 const STATUS_COLORS: Record<ProjectStatus, string> = {
   active: '#22c55e',    // Green
   planning: '#3b82f6',  // Blue
-  paused: '#f59e0b',    // Amber
   complete: '#8b5cf6',  // Purple
   archive: '#6b7280'    // Gray
 }

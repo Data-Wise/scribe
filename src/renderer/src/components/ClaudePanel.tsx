@@ -32,7 +32,9 @@ export function ClaudePanel({ currentNote, currentProject, notes, onClose }: Cla
     if (currentNote) {
       const wordCount = currentNote.content.split(/\s+/).filter(Boolean).length
       const hasLinks = /\[\[.*?\]\]/.test(currentNote.content)
-      const hasTags = currentNote.tags && currentNote.tags.length > 0
+      // Tags are stored in junction table, not on Note directly
+      // Check for tag references in content as a proxy
+      const hasTags = /#\w+/.test(currentNote.content)
 
       return [
         { 
