@@ -3959,7 +3959,8 @@ mark {
    ============================================================ */
 
 .project-context-menu,
-.note-context-menu {
+.note-context-menu,
+.tab-context-menu {
   position: fixed;
   z-index: 9999;
   pointer-events: auto;

@@ -1,5 +1,6 @@
 import { Pin, PinOff, X, XCircle, ArrowRight, Copy } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { EditorTab, MISSION_CONTROL_TAB_ID, useAppViewStore } from '../../store/useAppViewStore'
 
 interface TabContextMenuProps {
@@ -114,7 +115,8 @@ export function TabContextMenu({
   const closeableOthers = openTabs.filter(t => t.id !== tab.id && !t.isPinned).length
   const closeableToRight = openTabs.slice(tabIndex + 1).filter(t => !t.isPinned).length
 
-  return (
+  // Use portal to render outside the tab bar's stacking context
+  return createPortal(
     <div
       ref={menuRef}
       className="tab-context-menu"
@@ -192,7 +194,8 @@ export function TabContextMenu({
           <span>Copy Path</span>
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 
