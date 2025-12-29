@@ -24,6 +24,8 @@ const SHORTCUTS = {
     { keys: '⌘F', description: 'Search Notes' },
     { keys: '⌘B', description: 'Toggle Left Sidebar' },
     { keys: '⌘⇧B', description: 'Toggle Right Sidebar' },
+    { keys: '⌘⇧A', description: 'Open AI Panel' },
+    { keys: '⌘H', description: 'Mission HUD' },
     { keys: '⌘0', description: 'Cycle Sidebar Mode' },
     { keys: '⌥1-5', description: 'Switch Sidebar Tabs' },
     { keys: '⌘?', description: 'Keyboard Shortcuts' },

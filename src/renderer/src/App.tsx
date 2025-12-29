@@ -11,6 +11,7 @@ import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { ClaudePanel } from './components/ClaudePanel'
+import { HudPanel } from './components/HudPanel'
 import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { ExportDialog } from './components/ExportDialog'
@@ -185,6 +186,7 @@ function App() {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false)
   const [isSearchPanelOpen, setIsSearchPanelOpen] = useState(false)
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false)
+  const [isHudPanelOpen, setIsHudPanelOpen] = useState(false)
 
   // Tag filtering - filteredNotes now handled by MissionSidebar
 
@@ -602,6 +604,18 @@ function App() {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'B') {
         e.preventDefault()
         setRightSidebarCollapsed(prev => !prev)
+      }
+
+      // ⌘⇧A - Switch to AI tab in right sidebar
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'A') {
+        e.preventDefault()
+        setRightActiveTab('ai')
+      }
+
+      // ⌘H - Toggle Mission HUD panel
+      if ((e.metaKey || e.ctrlKey) && e.key === 'h') {
+        e.preventDefault()
+        setIsHudPanelOpen(prev => !prev)
       }
       
       if (e.key === 'Escape' && focusMode) {
@@ -1336,6 +1350,23 @@ function App() {
         notes={notes}
         onSelectNote={handleOpenNoteInTab}
         currentNoteId={selectedNoteId || undefined}
+      />
+
+      {/* Mission HUD Panel */}
+      <HudPanel
+        isOpen={isHudPanelOpen}
+        projects={projects}
+        notes={notes}
+        currentProjectId={currentProjectId}
+        onSelectProject={(projectId) => {
+          setCurrentProjectId(projectId)
+          setIsHudPanelOpen(false)
+        }}
+        onSelectNote={(noteId) => {
+          handleOpenNoteInTab(noteId)
+          setIsHudPanelOpen(false)
+        }}
+        onClose={() => setIsHudPanelOpen(false)}
       />
 
       {/* Keyboard Shortcuts Cheatsheet */}
