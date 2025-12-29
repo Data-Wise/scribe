@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 35
+progress: 40
 version: 1.6.0-dev
 sprint: 25
-updated: 2025-12-28
+updated: 2025-12-29
 editor: hybrid-markdown++
 next_sprint: 26
-next_focus: Status Bar + Vault Sidebar
-tests: 518
+next_focus: Activity Bar Badges + Browser Mode Indicator
+tests: 666
 tags:
   - adhd-friendly
   - distraction-free
@@ -25,7 +25,7 @@ tags:
 
 ## Current Sprint
 
-**Sprint 25: Plan B UI Redesign** 🔄 In Progress (2025-12-28)
+**Sprint 25: Plan B UI Redesign** ✅ Complete (2025-12-29)
 
 ### Sprint 25: Plan B UI - Obsidian Style + Gradient Tabs
 - [x] **Phase 1: Editor Tabs** ✅ Complete
@@ -41,11 +41,34 @@ tags:
   - [x] Accordion-style expansion (one project at a time)
   - [x] Up to 6 recent notes per project
   - [x] Empty state with "Create first note" CTA
-- [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
-- [ ] Phase 3: Status Bar (VS Code-style bottom bar)
-- [ ] Phase 4: Mission Control updates
+- [x] **Phase 5: Right Sidebar + Test Cleanup** ✅ Complete
+  - [x] Icon-only collapsed mode for right sidebar
+  - [x] Keyboard shortcuts for right sidebar tabs (⌘[ / ⌘])
+  - [x] Fix source file TypeScript errors (8 files)
+  - [x] Fix test file TypeScript errors (59→0, 13 files)
+  - [x] Create testUtils.ts mock factories
+  - [x] **666 tests passing, 0 TypeScript errors**
 
 **Design Document:** `SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md`
+
+---
+
+### Sprint 26: Next Steps (Planned)
+
+**High Priority (P1):**
+- [ ] Activity Bar badges - Show counts on sidebar icons
+- [ ] Browser mode indicator - Visual indicator for IndexedDB mode
+- [ ] Wiki link backlink tracking in browser mode
+
+**Medium Priority (P2):**
+- [ ] Keyboard shortcut for right sidebar collapse (⌘])
+- [ ] Editor tabs persistence across restarts
+- [ ] ⌘⇧T reopen closed tab
+
+**Lower Priority (P3):**
+- [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
+- [ ] Phase 3: Status Bar (VS Code-style bottom bar)
+- [ ] Playwright E2E tests
 
 ---
 
@@ -186,9 +209,9 @@ tags:
 | **v1.3** | 22 | Editor Modes + Custom CSS | ✅ 100% |
 | **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
-| **v1.6** | 25 | Plan B UI Redesign | 🔄 25% |
+| **v1.6** | 25 | Plan B UI Redesign | ✅ 40% |
 
-**Total: v1.5 complete, v1.6 Phase 1 done**
+**Total: v1.6 Phase 1+5 complete (666 tests passing)**
 
 ---
 
@@ -230,6 +253,7 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 | 22 | Editor Modes + Custom CSS | 483 |
 | 23 | Mission Control + Native Menu | 483 |
 | 24 | Three-State Collapsible Sidebar | 518 |
+| 25 | Plan B UI (Phase 1+5) | 666 |
 
 ---
 
@@ -349,5 +373,5 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 - [TESTS_SUMMARY.md](TESTS_SUMMARY.md) - Test coverage
 - [CLAUDE.md](CLAUDE.md) - AI guidance
 - [docs/planning/](docs/planning/) - Sprint plans
-## last_active: 2025-12-27 17:15
-## streak: 1
+## last_active: 2025-12-29
+## streak: 2
