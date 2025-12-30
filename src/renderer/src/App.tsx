@@ -702,6 +702,12 @@ function App() {
           }
         }
       }
+
+      // Right sidebar toggle (⌘⇧]) - collapse/expand right sidebar
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === ']') {
+        e.preventDefault()
+        setRightSidebarCollapsed(!rightSidebarCollapsed)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -1515,6 +1521,11 @@ function App() {
                           title: selectedNote.title,
                           content: selectedNote.content
                         } : undefined}
+                        availableNotes={notes.map(n => ({
+                          id: n.id,
+                          title: n.title,
+                          content: n.content
+                        }))}
                       />
                     ) : (
                       <TerminalPanel />

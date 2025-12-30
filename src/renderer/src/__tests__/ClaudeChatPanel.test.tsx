@@ -283,4 +283,119 @@ describe('ClaudeChatPanel Component', () => {
       })
     })
   })
+
+  describe('@ References', () => {
+    const mockNotes = [
+      { id: 'note-1', title: 'Research Notes', content: 'Research content' },
+      { id: 'note-2', title: 'Meeting Notes', content: 'Meeting content' },
+      { id: 'note-3', title: 'Daily Journal', content: 'Journal content' }
+    ]
+
+    it('shows @ menu when typing @', async () => {
+      render(<ClaudeChatPanel availableNotes={mockNotes} />)
+      const input = screen.getByTestId('chat-input')
+
+      fireEvent.change(input, { target: { value: '@', selectionStart: 1 } })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('at-mention-menu')).toBeInTheDocument()
+      })
+    })
+
+    it('filters notes based on query after @', async () => {
+      render(<ClaudeChatPanel availableNotes={mockNotes} />)
+      const input = screen.getByTestId('chat-input')
+
+      fireEvent.change(input, { target: { value: '@Research', selectionStart: 9 } })
+
+      await waitFor(() => {
+        expect(screen.getByText('Research Notes')).toBeInTheDocument()
+        expect(screen.queryByText('Meeting Notes')).not.toBeInTheDocument()
+      })
+    })
+
+    it('adds referenced note chip when selecting from menu', async () => {
+      render(<ClaudeChatPanel availableNotes={mockNotes} />)
+      const input = screen.getByTestId('chat-input')
+
+      // Open menu
+      fireEvent.change(input, { target: { value: '@', selectionStart: 1 } })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('at-mention-menu')).toBeInTheDocument()
+      })
+
+      // Click on a note
+      fireEvent.click(screen.getByText('Research Notes'))
+
+      await waitFor(() => {
+        expect(screen.getByTestId('referenced-notes')).toBeInTheDocument()
+        expect(screen.getByText('Research Notes')).toBeInTheDocument()
+      })
+    })
+
+    it('includes referenced notes in prompt when submitted', async () => {
+      const mockSubmit = vi.fn().mockResolvedValue('response')
+      render(<ClaudeChatPanel availableNotes={mockNotes} onSubmit={mockSubmit} />)
+      const input = screen.getByTestId('chat-input')
+
+      // Open menu and select note
+      fireEvent.change(input, { target: { value: '@', selectionStart: 1 } })
+      await waitFor(() => {
+        expect(screen.getByTestId('at-mention-menu')).toBeInTheDocument()
+      })
+      fireEvent.click(screen.getByText('Research Notes'))
+
+      // Type question and submit
+      fireEvent.change(input, { target: { value: 'summarize this' } })
+      fireEvent.keyDown(input, { key: 'Enter' })
+
+      await waitFor(() => {
+        expect(mockSubmit).toHaveBeenCalled()
+        const callArg = mockSubmit.mock.calls[0][0]
+        expect(callArg).toContain('Research Notes')
+        expect(callArg).toContain('Research content')
+      })
+    })
+
+    it('navigates menu with arrow keys', async () => {
+      render(<ClaudeChatPanel availableNotes={mockNotes} />)
+      const input = screen.getByTestId('chat-input')
+
+      fireEvent.change(input, { target: { value: '@', selectionStart: 1 } })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('at-mention-menu')).toBeInTheDocument()
+      })
+
+      // Press down arrow to select second item
+      fireEvent.keyDown(input, { key: 'ArrowDown' })
+
+      // Second item should be highlighted (Meeting Notes)
+      const menuItems = screen.getByTestId('at-mention-menu').querySelectorAll('button')
+      expect(menuItems[1].className).toContain('bg-nexus-accent/20')
+    })
+
+    it('closes menu with Escape key', async () => {
+      render(<ClaudeChatPanel availableNotes={mockNotes} />)
+      const input = screen.getByTestId('chat-input')
+
+      fireEvent.change(input, { target: { value: '@', selectionStart: 1 } })
+
+      await waitFor(() => {
+        expect(screen.getByTestId('at-mention-menu')).toBeInTheDocument()
+      })
+
+      fireEvent.keyDown(input, { key: 'Escape' })
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('at-mention-menu')).not.toBeInTheDocument()
+      })
+    })
+
+    it('shows hint about @ references in footer', () => {
+      render(<ClaudeChatPanel />)
+      expect(screen.getByText(/Type @ to reference notes/)).toBeInTheDocument()
+    })
+  })
 })

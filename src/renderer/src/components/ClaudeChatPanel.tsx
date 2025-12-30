@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { Sparkles, Send, Loader2, Trash2, User, Bot } from 'lucide-react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import { Sparkles, Send, Loader2, Trash2, User, Bot, FileText } from 'lucide-react'
 import { isBrowser } from '../lib/platform'
 
 interface Message {
@@ -7,6 +7,12 @@ interface Message {
   role: 'user' | 'assistant'
   content: string
   timestamp: Date
+}
+
+interface NoteReference {
+  id: string
+  title: string
+  content: string
 }
 
 interface ClaudeChatPanelProps {
@@ -17,6 +23,8 @@ interface ClaudeChatPanelProps {
   }
   /** Called when user submits a message */
   onSubmit?: (message: string) => Promise<string>
+  /** Notes available for @ reference autocomplete */
+  availableNotes?: NoteReference[]
 }
 
 /**
@@ -32,13 +40,28 @@ interface ClaudeChatPanelProps {
  */
 export function ClaudeChatPanel({
   noteContext,
-  onSubmit: externalOnSubmit
+  onSubmit: externalOnSubmit,
+  availableNotes = []
 }: ClaudeChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showAtMenu, setShowAtMenu] = useState(false)
+  const [atQuery, setAtQuery] = useState('')
+  const [atMenuIndex, setAtMenuIndex] = useState(0)
+  const [referencedNotes, setReferencedNotes] = useState<NoteReference[]>([])
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const atMenuRef = useRef<HTMLDivElement>(null)
+
+  // Filter notes based on @ query
+  const filteredNotes = useMemo(() => {
+    if (!atQuery) return availableNotes.slice(0, 5)
+    const query = atQuery.toLowerCase()
+    return availableNotes
+      .filter(n => n.title.toLowerCase().includes(query))
+      .slice(0, 5)
+  }, [availableNotes, atQuery])
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -75,13 +98,27 @@ export function ClaudeChatPanel({
     setIsLoading(true)
 
     try {
-      // Include note context if available
+      // Build context from current note and referenced notes
       let fullPrompt = trimmedInput
+      const contexts: string[] = []
+
       if (noteContext) {
-        fullPrompt = `Context: I'm working on a note titled "${noteContext.title}".\n\nNote content:\n${noteContext.content.slice(0, 1000)}${noteContext.content.length > 1000 ? '...' : ''}\n\nQuestion: ${trimmedInput}`
+        contexts.push(`Current note: "${noteContext.title}"\n${noteContext.content.slice(0, 800)}${noteContext.content.length > 800 ? '...' : ''}`)
+      }
+
+      // Add referenced notes
+      referencedNotes.forEach(note => {
+        contexts.push(`Referenced note: "${note.title}"\n${note.content.slice(0, 500)}${note.content.length > 500 ? '...' : ''}`)
+      })
+
+      if (contexts.length > 0) {
+        fullPrompt = `Context:\n${contexts.join('\n\n---\n\n')}\n\nQuestion: ${trimmedInput}`
       }
 
       const response = await onSubmit(fullPrompt)
+
+      // Clear referenced notes after submit
+      setReferencedNotes([])
 
       // Add assistant message
       const assistantMessage: Message = {
@@ -106,17 +143,96 @@ export function ClaudeChatPanel({
       // Re-focus input after response
       inputRef.current?.focus()
     }
-  }, [input, isLoading, onSubmit, noteContext])
+  }, [input, isLoading, onSubmit, noteContext, referencedNotes])
+
+  // Handle @ menu selection
+  const handleSelectNote = useCallback((note: NoteReference) => {
+    // Add to referenced notes if not already included
+    if (!referencedNotes.find(n => n.id === note.id)) {
+      setReferencedNotes(prev => [...prev, note])
+    }
+    // Remove the @query from input
+    const cursorPos = inputRef.current?.selectionStart || 0
+    const textBefore = input.slice(0, cursorPos)
+    const atIndex = textBefore.lastIndexOf('@')
+    if (atIndex !== -1) {
+      const newInput = input.slice(0, atIndex) + input.slice(cursorPos)
+      setInput(newInput)
+    }
+    setShowAtMenu(false)
+    setAtQuery('')
+    setAtMenuIndex(0)
+    inputRef.current?.focus()
+  }, [input, referencedNotes])
+
+  // Handle removing a referenced note
+  const handleRemoveReference = useCallback((noteId: string) => {
+    setReferencedNotes(prev => prev.filter(n => n.id !== noteId))
+  }, [])
+
+  // Handle input change to detect @ trigger
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value
+    setInput(newValue)
+
+    // Check for @ trigger
+    const cursorPos = e.target.selectionStart
+    const textBefore = newValue.slice(0, cursorPos)
+    const atIndex = textBefore.lastIndexOf('@')
+
+    if (atIndex !== -1) {
+      const charBeforeAt = atIndex > 0 ? textBefore[atIndex - 1] : ' '
+      // Only trigger if @ is at start or after whitespace
+      if (atIndex === 0 || /\s/.test(charBeforeAt)) {
+        const query = textBefore.slice(atIndex + 1)
+        // Only show menu if query doesn't contain spaces (still typing the reference)
+        if (!query.includes(' ')) {
+          setAtQuery(query)
+          setShowAtMenu(true)
+          setAtMenuIndex(0)
+          return
+        }
+      }
+    }
+    setShowAtMenu(false)
+    setAtQuery('')
+  }, [])
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    // Handle @ menu navigation
+    if (showAtMenu && filteredNotes.length > 0) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        setAtMenuIndex(prev => (prev + 1) % filteredNotes.length)
+        return
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        setAtMenuIndex(prev => (prev - 1 + filteredNotes.length) % filteredNotes.length)
+        return
+      }
+      if (e.key === 'Enter' || e.key === 'Tab') {
+        e.preventDefault()
+        handleSelectNote(filteredNotes[atMenuIndex])
+        return
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setShowAtMenu(false)
+        setAtQuery('')
+        return
+      }
+    }
+
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSubmit()
     }
-  }, [handleSubmit])
+  }, [handleSubmit, showAtMenu, filteredNotes, atMenuIndex, handleSelectNote])
 
   const handleClearChat = useCallback(() => {
     setMessages([])
+    setReferencedNotes([])
   }, [])
 
   return (
@@ -238,11 +354,65 @@ export function ClaudeChatPanel({
         className="p-2 border-t shrink-0"
         style={{ borderColor: 'var(--nexus-bg-tertiary)' }}
       >
-        <div className="flex items-end gap-2">
+        {/* Referenced notes chips */}
+        {referencedNotes.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2" data-testid="referenced-notes">
+            {referencedNotes.map(note => (
+              <span
+                key={note.id}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px]"
+                style={{
+                  backgroundColor: 'var(--nexus-accent)',
+                  color: 'white',
+                  opacity: 0.9
+                }}
+              >
+                <FileText className="w-2.5 h-2.5" />
+                <span className="max-w-[100px] truncate">{note.title}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveReference(note.id)}
+                  className="ml-0.5 hover:opacity-70"
+                  title="Remove reference"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="relative">
+          {/* @ mention menu */}
+          {showAtMenu && filteredNotes.length > 0 && (
+            <div
+              ref={atMenuRef}
+              className="absolute bottom-full left-0 mb-1 w-full max-h-[150px] overflow-y-auto rounded-lg shadow-lg z-10"
+              style={{ backgroundColor: 'var(--nexus-bg-secondary)' }}
+              data-testid="at-mention-menu"
+            >
+              {filteredNotes.map((note, index) => (
+                <button
+                  key={note.id}
+                  type="button"
+                  onClick={() => handleSelectNote(note)}
+                  className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2 transition-colors ${
+                    index === atMenuIndex ? 'bg-nexus-accent/20' : 'hover:bg-nexus-bg-tertiary/50'
+                  }`}
+                  style={{ color: 'var(--nexus-text-primary)' }}
+                >
+                  <FileText className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--nexus-text-muted)' }} />
+                  <span className="truncate">{note.title}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-end gap-2">
           <textarea
             ref={inputRef}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder="Ask Claude..."
             disabled={isLoading}
@@ -269,12 +439,13 @@ export function ClaudeChatPanel({
           >
             <Send className="w-4 h-4" />
           </button>
+          </div>
         </div>
         <div
           className="mt-1 text-[10px] px-1"
           style={{ color: 'var(--nexus-text-muted)' }}
         >
-          Enter to send • Shift+Enter for new line
+          Enter to send • Shift+Enter for new line • Type @ to reference notes
         </div>
       </form>
     </div>
