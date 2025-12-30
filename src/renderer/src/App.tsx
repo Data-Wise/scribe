@@ -1485,8 +1485,8 @@ function App() {
           )}
         </div>
 
-        {/* Right sidebar (properties/backlinks/tags) - only in compact/card mode */}
-        {sidebarMode !== 'icon' && selectedNote && (
+        {/* Right sidebar (properties/backlinks/tags) - shown when a note is selected */}
+        {selectedNote && (
           <>
             {!rightSidebarCollapsed && (
               <div
