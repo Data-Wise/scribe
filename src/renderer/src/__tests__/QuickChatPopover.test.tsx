@@ -186,15 +186,25 @@ describe('QuickChatPopover Component', () => {
   })
 
   describe('Browser Mode', () => {
-    it('shows browser mode message and disables input', async () => {
+    it('allows typing in browser mode (AI response shows unavailable)', async () => {
       // Re-mock for browser mode
       const { isBrowser } = await import('../lib/platform')
       vi.mocked(isBrowser).mockReturnValue(true)
 
-      render(<QuickChatPopover {...defaultProps} />)
-      const input = screen.getByPlaceholderText('AI unavailable in browser mode')
+      const browserSubmit = vi.fn().mockResolvedValue('AI features are only available in the desktop app.')
+      render(<QuickChatPopover {...defaultProps} onSubmit={browserSubmit} />)
+      const input = screen.getByPlaceholderText('Ask a quick question...')
 
-      expect(input).toBeDisabled()
+      // Input should be enabled
+      expect(input).not.toBeDisabled()
+
+      // Can type and submit
+      fireEvent.change(input, { target: { value: 'test' } })
+      fireEvent.keyDown(input, { key: 'Enter' })
+
+      await waitFor(() => {
+        expect(browserSubmit).toHaveBeenCalledWith('test')
+      })
     })
   })
 })

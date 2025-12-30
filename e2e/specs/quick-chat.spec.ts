@@ -88,15 +88,19 @@ test.describe('Quick Chat', () => {
       await expect(popover.locator('text=Quick Chat')).toBeVisible()
     })
 
-    test('QC-08: Input shows browser mode message', async ({ basePage }) => {
+    test('QC-08: Input is enabled and can type', async ({ basePage }) => {
       const quickChatButton = basePage.page.locator('[data-testid="quick-chat-button"]')
       await quickChatButton.click()
       await basePage.page.waitForTimeout(200)
 
-      // In E2E tests running in browser mode, should show unavailable message
+      // Input should be enabled and allow typing
       const input = basePage.page.locator('[data-testid="quick-chat-popover"] input')
-      await expect(input).toHaveAttribute('placeholder', 'AI unavailable in browser mode')
-      await expect(input).toBeDisabled()
+      await expect(input).toHaveAttribute('placeholder', 'Ask a quick question...')
+      await expect(input).toBeEnabled()
+
+      // Can type into input
+      await input.fill('test question')
+      await expect(input).toHaveValue('test question')
     })
   })
 })

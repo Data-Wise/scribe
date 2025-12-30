@@ -165,8 +165,8 @@ export function QuickChatPopover({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={isBrowser() ? 'AI unavailable in browser mode' : 'Ask a quick question...'}
-            disabled={isLoading || isBrowser()}
+            placeholder="Ask a quick question..."
+            disabled={isLoading}
             className="flex-1 px-3 py-1.5 rounded text-xs outline-none disabled:opacity-50"
             style={{
               backgroundColor: 'var(--nexus-bg-tertiary)',
@@ -175,7 +175,7 @@ export function QuickChatPopover({
           />
           <button
             type="submit"
-            disabled={!input.trim() || isLoading || isBrowser()}
+            disabled={!input.trim() || isLoading}
             className="p-1.5 rounded transition-colors disabled:opacity-30"
             style={{
               backgroundColor: input.trim() && !isLoading ? 'var(--nexus-accent)' : 'transparent',
