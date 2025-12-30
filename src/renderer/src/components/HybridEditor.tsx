@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Terminal } from 'lucide-react'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
@@ -28,6 +28,7 @@ interface HybridEditorProps {
   sessionStartWords?: number // Words at session start for tracking session progress
   streak?: number // Current writing streak in days
   sessionStartTime?: number // Timestamp when session started (for timer display)
+  onToggleTerminal?: () => void // Callback to toggle Terminal panel
 }
 
 /**
@@ -53,7 +54,8 @@ export function HybridEditor({
   wordGoal = 500,
   sessionStartWords = 0,
   streak = 0,
-  sessionStartTime
+  sessionStartTime,
+  onToggleTerminal
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>(editorMode)
 
@@ -542,6 +544,18 @@ export function HybridEditor({
             anchorRef={quickChatButtonRef}
           />
         </div>
+
+        {/* Terminal button */}
+        {onToggleTerminal && (
+          <button
+            onClick={onToggleTerminal}
+            className="p-1 rounded transition-colors hover:bg-nexus-bg-tertiary/50 text-nexus-text-muted hover:text-nexus-accent"
+            title="Toggle Terminal (⌘`)"
+            data-testid="terminal-status-button"
+          >
+            <Terminal className="w-3.5 h-3.5" />
+          </button>
+        )}
 
         <span className="flex items-center gap-3">
           <span className="tabular-nums">{wordCount} words</span>

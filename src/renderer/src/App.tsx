@@ -687,6 +687,21 @@ function App() {
           setRightSidebarCollapsed(false)
         }
       }
+
+      // Terminal tab shortcut (⌘`) - toggle or switch to Terminal
+      if ((e.metaKey || e.ctrlKey) && e.key === '`') {
+        e.preventDefault()
+        // If already on Terminal and sidebar is open, close it
+        if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
+          setRightSidebarCollapsed(true)
+        } else {
+          // Switch to Terminal and ensure sidebar is visible
+          setRightActiveTab('terminal')
+          if (rightSidebarCollapsed) {
+            setRightSidebarCollapsed(false)
+          }
+        }
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -1077,6 +1092,17 @@ function App() {
                   sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
                   streak={streakInfo.streak}
                   sessionStartTime={sessionStartTime || undefined}
+                  onToggleTerminal={() => {
+                    // Toggle Terminal: if on Terminal and visible, hide; otherwise show Terminal
+                    if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
+                      setRightSidebarCollapsed(true)
+                    } else {
+                      setRightActiveTab('terminal')
+                      if (rightSidebarCollapsed) {
+                        setRightSidebarCollapsed(false)
+                      }
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -1304,6 +1330,16 @@ function App() {
                   sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
                   streak={streakInfo.streak}
                   sessionStartTime={sessionStartTime || undefined}
+                  onToggleTerminal={() => {
+                    if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
+                      setRightSidebarCollapsed(true)
+                    } else {
+                      setRightActiveTab('terminal')
+                      if (rightSidebarCollapsed) {
+                        setRightSidebarCollapsed(false)
+                      }
+                    }
+                  }}
                 />
               </div>
             </div>

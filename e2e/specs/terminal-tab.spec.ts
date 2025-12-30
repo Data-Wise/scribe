@@ -6,7 +6,7 @@ import { test, expect } from '../fixtures'
  * Tests for the Terminal tab in the right sidebar.
  * Tests the xterm.js integration and browser shell emulation.
  *
- * Tests: TM-01 to TM-12
+ * Tests: TM-01 to TM-15
  */
 
 test.describe('Terminal Tab', () => {
@@ -155,6 +155,55 @@ test.describe('Terminal Tab', () => {
       // The connection status dot should be present
       const statusDot = basePage.page.locator('[data-testid="terminal-panel"]').locator('[title*="Connected"], [title*="Disconnected"]')
       await expect(statusDot).toBeVisible()
+    })
+  })
+
+  test.describe('Status Bar & Shortcuts', () => {
+    test('TM-13: Terminal button visible in status bar', async ({ basePage }) => {
+      const terminalButton = basePage.page.locator('[data-testid="terminal-status-button"]')
+      await expect(terminalButton).toBeVisible()
+    })
+
+    test('TM-14: Status bar button toggles Terminal panel', async ({ basePage }) => {
+      const terminalButton = basePage.page.locator('[data-testid="terminal-status-button"]')
+
+      // Click to open Terminal
+      await terminalButton.click()
+      await basePage.page.waitForTimeout(200)
+
+      const terminalPanel = basePage.page.locator('[data-testid="terminal-panel"]')
+      await expect(terminalPanel).toBeVisible()
+
+      // Click again to close
+      await terminalButton.click()
+      await basePage.page.waitForTimeout(200)
+
+      // Sidebar should be collapsed
+      const rightSidebar = basePage.page.locator('[data-testid="right-sidebar"]')
+      const box = await rightSidebar.boundingBox()
+      expect(box?.width).toBeLessThan(100) // Collapsed width is 48px
+    })
+
+    test('TM-15: ⌘` keyboard shortcut toggles Terminal', async ({ basePage }) => {
+      // First verify Terminal is not visible
+      const terminalPanel = basePage.page.locator('[data-testid="terminal-panel"]')
+      const isInitiallyVisible = await terminalPanel.isVisible().catch(() => false)
+
+      // Press ⌘` to toggle Terminal
+      await basePage.page.keyboard.press('Meta+`')
+      await basePage.page.waitForTimeout(200)
+
+      // Terminal should now be visible
+      await expect(terminalPanel).toBeVisible()
+
+      // Press ⌘` again to close
+      await basePage.page.keyboard.press('Meta+`')
+      await basePage.page.waitForTimeout(200)
+
+      // Sidebar should be collapsed
+      const rightSidebar = basePage.page.locator('[data-testid="right-sidebar"]')
+      const box = await rightSidebar.boundingBox()
+      expect(box?.width).toBeLessThan(100)
     })
   })
 })
