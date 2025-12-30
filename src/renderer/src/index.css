@@ -254,14 +254,20 @@ body {
 .sidebar-tabs {
   display: flex;
   background: theme('colors.nexus-bg-secondary');
-  padding: 40px 12px 0 16px; /* Extra top/left padding for macOS traffic lights */
-  gap: 4px;
+  padding: 40px 8px 0 12px; /* Extra top padding for macOS traffic lights */
+  gap: 2px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.sidebar-tabs::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .sidebar-tab {
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 6px 8px;
+  font-size: 12px;
   font-weight: 500;
   color: theme('colors.nexus-text-muted');
   border-radius: 6px 6px 0 0;
@@ -271,7 +277,9 @@ body {
   border: none;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .sidebar-tab:hover {

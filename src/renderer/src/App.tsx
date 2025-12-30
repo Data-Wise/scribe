@@ -17,7 +17,6 @@ import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
-import { ClaudePanel } from './components/ClaudePanel'
 import { ClaudeChatPanel } from './components/ClaudeChatPanel'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
@@ -140,9 +139,6 @@ function App() {
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
   
-  // Claude Panel state
-  const [claudePanelOpen, setClaudePanelOpen] = useState(false)
-
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude'>('properties')
 
@@ -1387,28 +1383,18 @@ function App() {
           </>
         )}
 
-        {/* Claude AI Assistant Panel */}
-        {claudePanelOpen && (
-          <ClaudePanel
-            currentNote={selectedNote ?? null}
-            currentProject={projects.find(p => p.id === currentProjectId) || null}
-            notes={notes}
-            onClose={() => setClaudePanelOpen(false)}
-          />
-        )}
-
       </div>
 
-      {/* Claude Panel Toggle Button */}
+      {/* Claude Tab Toggle Button - Opens Claude tab in right sidebar */}
       <button
-        className={`claude-toggle-btn ${claudePanelOpen ? 'active' : ''}`}
-        onClick={() => setClaudePanelOpen(!claudePanelOpen)}
-        title="Toggle Claude Assistant"
+        className={`claude-toggle-btn ${rightActiveTab === 'claude' && !rightSidebarCollapsed ? 'active' : ''}`}
+        onClick={() => {
+          setRightActiveTab('claude')
+          setRightSidebarCollapsed(false)
+        }}
+        title="Open Claude Assistant (in sidebar)"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M6 10h8M10 6v8" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
+        <Sparkles size={20} />
       </button>
 
       {/* Command Palette */}
