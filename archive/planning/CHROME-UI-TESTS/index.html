@@ -1,0 +1,3664 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ADHD-friendly distraction-free writer with projects, academic features, and CLI-based AI">
+      
+      
+        <meta name="author" content="Data-Wise">
+      
+      
+        <link rel="canonical" href="https://data-wise.github.io/scribe/archive/planning/CHROME-UI-TESTS/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Scribe Chrome UI Tests - Scribe</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#scribe-chrome-ui-tests" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Scribe" class="md-header__button md-logo" aria-label="Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Scribe
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Scribe Chrome UI Tests
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Data-Wise/scribe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Data-Wise/scribe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../user/QUICKSTART/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../user/GETTING-STARTED/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../installation/install/" class="md-tabs__link">
+          
+  
+  
+  Installation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../guide/features/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../API/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/architecture/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../planning/V1_RELEASE_PLAN.md" class="md-tabs__link">
+          
+  
+  
+  Planning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../MISSION-CONTROL-WALKTHROUGH/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Scribe" class="md-nav__button md-logo" aria-label="Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Scribe
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Data-Wise/scribe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Data-Wise/scribe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user/QUICKSTART/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user/GETTING-STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../installation/install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../RELEASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guide/features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guide/themes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Themes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guide/editor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guide/shortcuts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard Shortcuts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../COMPONENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/PROJECT-DEFINITION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Definition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/TESTS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/sprints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/V1_RELEASE_PLAN.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/UI-IMPROVEMENTS-CONSOLIDATED.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Improvements Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/SPRINT-22-EDITOR-MODES.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 22 - Editor Modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/SPRINT-21-MISSION-CONTROL.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 21 - Mission Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/SPRINT-13-PROJECT-SYSTEM.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 13 - Project System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/SPRINT-12-UI-POLISH.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 12 - UI Polish
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/SPRINT-11-PLAN.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 11
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../planning/SPRINT-10-COMPLETE.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../MISSION-CONTROL-WALKTHROUGH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mission Control Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Categories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-navigation-layout-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Navigation &amp; Layout Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Navigation &amp; Layout Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-app-initial-load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 App Initial Load
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-responsive-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Responsive Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-titlebar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Titlebar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-editor-tabs-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Editor Tabs Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Editor Tabs Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-tab-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Tab Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-tab-keyboard-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Tab Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-left-sidebar-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Left Sidebar Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Left Sidebar Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-icon-mode-48px" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Icon Mode (48px)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-compact-mode-240px" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Compact Mode (240px)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-card-mode-320px" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Card Mode (320px+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-right-sidebar-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Right Sidebar Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Right Sidebar Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-tab-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Tab Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-panel-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Panel Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-editor-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Editor Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Editor Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-content-editing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Content Editing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-editor-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Editor Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-wiki-links-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Wiki Links &amp; Tags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-keyboard-shortcuts-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Keyboard Shortcuts Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Keyboard Shortcuts Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-navigation-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Navigation Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-view-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 View Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-project-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Project Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-modals-dialogs-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Modals &amp; Dialogs Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Modals &amp; Dialogs Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-command-palette-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Command Palette (⌘K)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-settings-modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Settings Modal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-other-modals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Other Modals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-mission-control-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Mission Control Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Mission Control Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-dashboard-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Dashboard Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-dashboard-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Dashboard Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-project-management-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Project Management Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Project Management Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-project-crud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Project CRUD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-project-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Project Interaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-note-management-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Note Management Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Note Management Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-note-crud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Note CRUD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-note-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Note Search
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-focus-mode-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Focus Mode Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Focus Mode Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-focus-mode-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Focus Mode Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-theme-appearance-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Theme &amp; Appearance Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Theme &amp; Appearance Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-visual-styling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 Visual Styling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-tests-with-chrome-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Tests with Chrome MCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-recording" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Recording
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screenshot-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screenshot Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-status-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Status Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Order
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Priority Order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#p0-critical-path-run-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P0 - Critical Path (Run First)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#p1-core-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P1 - Core Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#p2-extended-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P2 - Extended Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#p3-polish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        P3 - Polish
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="scribe-chrome-ui-tests">Scribe Chrome UI Tests</h1>
+<blockquote>
+<p><strong>Comprehensive UI Test Suite for Chrome MCP Browser Automation</strong></p>
+<p>Generated: 2025-12-29</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>This document defines UI tests for Scribe that can be executed using Claude Code's Chrome MCP integration. These tests verify visual appearance, user interactions, and end-to-end workflows in the browser.</p>
+<p><strong>Test Environment:</strong> <code>npm run dev:vite</code> → <code>http://localhost:5173</code></p>
+<hr />
+<h2 id="test-categories">Test Categories</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Navigation &amp; Layout</td>
+<td>12</td>
+<td>Core app structure</td>
+</tr>
+<tr>
+<td>Editor Tabs</td>
+<td>10</td>
+<td>Tab management</td>
+</tr>
+<tr>
+<td>Left Sidebar</td>
+<td>14</td>
+<td>Project sidebar modes</td>
+</tr>
+<tr>
+<td>Right Sidebar</td>
+<td>10</td>
+<td>Properties/Backlinks/Tags</td>
+</tr>
+<tr>
+<td>Editor</td>
+<td>12</td>
+<td>HybridEditor functionality</td>
+</tr>
+<tr>
+<td>Keyboard Shortcuts</td>
+<td>15</td>
+<td>All ⌘ shortcuts</td>
+</tr>
+<tr>
+<td>Modals &amp; Dialogs</td>
+<td>10</td>
+<td>Command palette, settings, etc.</td>
+</tr>
+<tr>
+<td>Mission Control</td>
+<td>8</td>
+<td>Dashboard features</td>
+</tr>
+<tr>
+<td>Project Management</td>
+<td>8</td>
+<td>CRUD operations</td>
+</tr>
+<tr>
+<td>Note Management</td>
+<td>10</td>
+<td>CRUD + search</td>
+</tr>
+<tr>
+<td>Focus Mode</td>
+<td>5</td>
+<td>Distraction-free writing</td>
+</tr>
+<tr>
+<td>Theme &amp; Appearance</td>
+<td>6</td>
+<td>Visual styling</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>120</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1-navigation-layout-tests">1. Navigation &amp; Layout Tests</h2>
+<h3 id="11-app-initial-load">1.1 App Initial Load</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAV-01</td>
+<td>Page title shows "Scribe"</td>
+<td>Navigate to localhost:5173</td>
+<td>Browser tab shows "Scribe"</td>
+</tr>
+<tr>
+<td>NAV-02</td>
+<td>Three-column layout renders</td>
+<td>Load app</td>
+<td>Left sidebar + Editor + Right sidebar visible</td>
+</tr>
+<tr>
+<td>NAV-03</td>
+<td>Mission Control tab is pinned</td>
+<td>Load app</td>
+<td>First tab shows "Mission Control" with pin icon</td>
+</tr>
+<tr>
+<td>NAV-04</td>
+<td>Default project exists</td>
+<td>Load app (fresh)</td>
+<td>"Research" project appears in sidebar</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-responsive-layout">1.2 Responsive Layout</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAV-05</td>
+<td>Right sidebar collapse</td>
+<td>Click collapse button</td>
+<td>Sidebar shrinks to 48px icon-only mode</td>
+</tr>
+<tr>
+<td>NAV-06</td>
+<td>Right sidebar expand</td>
+<td>Click expand button</td>
+<td>Sidebar expands to full width</td>
+</tr>
+<tr>
+<td>NAV-07</td>
+<td>Left sidebar icon mode</td>
+<td>Cycle to icon mode (⌘0)</td>
+<td>Sidebar shows only project icons</td>
+</tr>
+<tr>
+<td>NAV-08</td>
+<td>Left sidebar compact mode</td>
+<td>Cycle to compact mode</td>
+<td>Sidebar shows project list</td>
+</tr>
+<tr>
+<td>NAV-09</td>
+<td>Left sidebar card mode</td>
+<td>Cycle to card mode</td>
+<td>Sidebar shows full project cards</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-titlebar">1.3 Titlebar</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAV-10</td>
+<td>Drag region exists</td>
+<td>Inspect top of window</td>
+<td>Titlebar drag region present</td>
+</tr>
+<tr>
+<td>NAV-11</td>
+<td>Window controls (Tauri)</td>
+<td>Check window buttons</td>
+<td>Close/minimize/maximize buttons (Tauri only)</td>
+</tr>
+<tr>
+<td>NAV-12</td>
+<td>Browser mode indicator</td>
+<td>Load in browser</td>
+<td>Shows IndexedDB mode indicator</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-editor-tabs-tests">2. Editor Tabs Tests</h2>
+<h3 id="21-tab-management">2.1 Tab Management</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TAB-01</td>
+<td>Mission Control pinned</td>
+<td>Try to close MC tab</td>
+<td>Tab cannot be closed (no X button)</td>
+</tr>
+<tr>
+<td>TAB-02</td>
+<td>Open note creates tab</td>
+<td>Click note in sidebar</td>
+<td>New tab opens with note title</td>
+</tr>
+<tr>
+<td>TAB-03</td>
+<td>Close tab (X button)</td>
+<td>Click X on note tab</td>
+<td>Tab closes, previous tab activates</td>
+</tr>
+<tr>
+<td>TAB-04</td>
+<td>Close tab (middle-click)</td>
+<td>Middle-click on tab</td>
+<td>Tab closes</td>
+</tr>
+<tr>
+<td>TAB-05</td>
+<td>Tab switch via click</td>
+<td>Click different tab</td>
+<td>Tab content changes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-tab-keyboard-shortcuts">2.2 Tab Keyboard Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TAB-06</td>
+<td>⌘1 switches to tab 1</td>
+<td>Press ⌘1</td>
+<td>First tab (Mission Control) activates</td>
+</tr>
+<tr>
+<td>TAB-07</td>
+<td>⌘2 switches to tab 2</td>
+<td>Open note, press ⌘2</td>
+<td>Second tab activates</td>
+</tr>
+<tr>
+<td>TAB-08</td>
+<td>⌘W closes current tab</td>
+<td>Focus on note tab, press ⌘W</td>
+<td>Tab closes</td>
+</tr>
+<tr>
+<td>TAB-09</td>
+<td>⌘W doesn't close pinned</td>
+<td>Focus on MC tab, press ⌘W</td>
+<td>Nothing happens</td>
+</tr>
+<tr>
+<td>TAB-10</td>
+<td>Tab gradient accent</td>
+<td>Open note in project</td>
+<td>Tab shows project color gradient</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-left-sidebar-tests">3. Left Sidebar Tests</h2>
+<h3 id="31-icon-mode-48px">3.1 Icon Mode (48px)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SBL-01</td>
+<td>Project icons display</td>
+<td>Switch to icon mode</td>
+<td>Project circles with initials visible</td>
+</tr>
+<tr>
+<td>SBL-02</td>
+<td>Status dots visible</td>
+<td>Check project icons</td>
+<td>Colored dots showing project status</td>
+</tr>
+<tr>
+<td>SBL-03</td>
+<td>Expand button</td>
+<td>Click expand icon</td>
+<td>Sidebar expands to compact mode</td>
+</tr>
+<tr>
+<td>SBL-04</td>
+<td>Add project button</td>
+<td>Click + icon</td>
+<td>Opens create project modal</td>
+</tr>
+<tr>
+<td>SBL-05</td>
+<td>Project tooltip</td>
+<td>Hover over project icon</td>
+<td>Shows name, status, note count</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-compact-mode-240px">3.2 Compact Mode (240px)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SBL-06</td>
+<td>Project list renders</td>
+<td>Switch to compact mode</td>
+<td>Project names visible in list</td>
+</tr>
+<tr>
+<td>SBL-07</td>
+<td>Note count badges</td>
+<td>Check project rows</td>
+<td>Shows note count per project</td>
+</tr>
+<tr>
+<td>SBL-08</td>
+<td>Active project highlight</td>
+<td>Click project</td>
+<td>Row highlights as selected</td>
+</tr>
+<tr>
+<td>SBL-09</td>
+<td>Project toggle</td>
+<td>Click active project</td>
+<td>Deselects project (shows all notes)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-card-mode-320px">3.3 Card Mode (320px+)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SBL-10</td>
+<td>Project cards expand</td>
+<td>Expand to card mode</td>
+<td>Full project cards visible</td>
+</tr>
+<tr>
+<td>SBL-11</td>
+<td>Recent notes in card</td>
+<td>Expand project card</td>
+<td>Shows up to 6 recent notes</td>
+</tr>
+<tr>
+<td>SBL-12</td>
+<td>Note click opens tab</td>
+<td>Click note in card</td>
+<td>Opens note in editor tab</td>
+</tr>
+<tr>
+<td>SBL-13</td>
+<td>Empty state CTA</td>
+<td>Expand project with 0 notes</td>
+<td>"Create first note" button visible</td>
+</tr>
+<tr>
+<td>SBL-14</td>
+<td>Resize handle</td>
+<td>Drag resize handle</td>
+<td>Sidebar width adjusts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-right-sidebar-tests">4. Right Sidebar Tests</h2>
+<h3 id="41-tab-navigation">4.1 Tab Navigation</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SBR-01</td>
+<td>Properties tab default</td>
+<td>Open note</td>
+<td>Properties tab is active</td>
+</tr>
+<tr>
+<td>SBR-02</td>
+<td>Backlinks tab switch</td>
+<td>Click Backlinks tab</td>
+<td>Shows incoming/outgoing links</td>
+</tr>
+<tr>
+<td>SBR-03</td>
+<td>Tags tab switch</td>
+<td>Click Tags tab</td>
+<td>Shows note tags</td>
+</tr>
+<tr>
+<td>SBR-04</td>
+<td>⌘] next tab</td>
+<td>Press ⌘]</td>
+<td>Cycles to next right sidebar tab</td>
+</tr>
+<tr>
+<td>SBR-05</td>
+<td>⌘[ previous tab</td>
+<td>Press ⌘[</td>
+<td>Cycles to previous right sidebar tab</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-panel-content">4.2 Panel Content</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SBR-06</td>
+<td>Properties show metadata</td>
+<td>Select note</td>
+<td>Created/updated dates, word count visible</td>
+</tr>
+<tr>
+<td>SBR-07</td>
+<td>Backlinks show links</td>
+<td>Select note with [[links]]</td>
+<td>Incoming links listed</td>
+</tr>
+<tr>
+<td>SBR-08</td>
+<td>Tags show note tags</td>
+<td>Select note with #tags</td>
+<td>Tags displayed</td>
+</tr>
+<tr>
+<td>SBR-09</td>
+<td>Collapse to icons</td>
+<td>Click collapse button</td>
+<td>Shows Settings/Link/Tags icons only</td>
+</tr>
+<tr>
+<td>SBR-10</td>
+<td>Click icon expands</td>
+<td>Click icon in collapsed mode</td>
+<td>Expands and switches to that tab</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-editor-tests">5. Editor Tests</h2>
+<h3 id="51-content-editing">5.1 Content Editing</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EDT-01</td>
+<td>Editor loads content</td>
+<td>Select note</td>
+<td>Note content displays</td>
+</tr>
+<tr>
+<td>EDT-02</td>
+<td>Content saves on type</td>
+<td>Type text, wait 1s</td>
+<td>Content persists on refresh</td>
+</tr>
+<tr>
+<td>EDT-03</td>
+<td>Title editing</td>
+<td>Click title</td>
+<td>Title becomes editable input</td>
+</tr>
+<tr>
+<td>EDT-04</td>
+<td>Title saves</td>
+<td>Edit title, press Enter</td>
+<td>Title updates in sidebar</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-editor-modes">5.2 Editor Modes</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EDT-05</td>
+<td>Source mode</td>
+<td>Press ⌘1</td>
+<td>Raw markdown visible</td>
+</tr>
+<tr>
+<td>EDT-06</td>
+<td>Live preview mode</td>
+<td>Press ⌘2</td>
+<td>Formatted preview with editing</td>
+</tr>
+<tr>
+<td>EDT-07</td>
+<td>Reading mode</td>
+<td>Press ⌘3</td>
+<td>Read-only formatted view</td>
+</tr>
+<tr>
+<td>EDT-08</td>
+<td>Mode toggle (⌘E)</td>
+<td>Press ⌘E</td>
+<td>Cycles through modes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-wiki-links-tags">5.3 Wiki Links &amp; Tags</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EDT-09</td>
+<td>Wiki link highlight</td>
+<td>Type [[link]]</td>
+<td>Link becomes clickable</td>
+</tr>
+<tr>
+<td>EDT-10</td>
+<td>Wiki link autocomplete</td>
+<td>Type [[</td>
+<td>Shows note suggestions</td>
+</tr>
+<tr>
+<td>EDT-11</td>
+<td>Tag highlight</td>
+<td>Type #tag</td>
+<td>Tag becomes highlighted</td>
+</tr>
+<tr>
+<td>EDT-12</td>
+<td>Tag autocomplete</td>
+<td>Type #</td>
+<td>Shows tag suggestions</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-keyboard-shortcuts-tests">6. Keyboard Shortcuts Tests</h2>
+<h3 id="61-navigation-shortcuts">6.1 Navigation Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KEY-01</td>
+<td>⌘N new note</td>
+<td>Press ⌘N</td>
+<td>Creates new note</td>
+</tr>
+<tr>
+<td>KEY-02</td>
+<td>⌘D daily note</td>
+<td>Press ⌘D</td>
+<td>Opens/creates today's daily note</td>
+</tr>
+<tr>
+<td>KEY-03</td>
+<td>⌘F search</td>
+<td>Press ⌘F</td>
+<td>Opens search panel</td>
+</tr>
+<tr>
+<td>KEY-04</td>
+<td>⌘K command palette</td>
+<td>Press ⌘K</td>
+<td>Opens command palette</td>
+</tr>
+<tr>
+<td>KEY-05</td>
+<td>⌘, settings</td>
+<td>Press ⌘,</td>
+<td>Opens settings modal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-view-shortcuts">6.2 View Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KEY-06</td>
+<td>⌘0 sidebar cycle</td>
+<td>Press ⌘0</td>
+<td>Cycles sidebar mode</td>
+</tr>
+<tr>
+<td>KEY-07</td>
+<td>⌘B toggle left sidebar</td>
+<td>Press ⌘B</td>
+<td>Toggles left sidebar visibility</td>
+</tr>
+<tr>
+<td>KEY-08</td>
+<td>⌘⇧B toggle right sidebar</td>
+<td>Press ⌘⇧B</td>
+<td>Toggles right sidebar visibility</td>
+</tr>
+<tr>
+<td>KEY-09</td>
+<td>⌘⇧F focus mode</td>
+<td>Press ⌘⇧F</td>
+<td>Enters focus mode</td>
+</tr>
+<tr>
+<td>KEY-10</td>
+<td>Escape exits focus</td>
+<td>Press Escape in focus mode</td>
+<td>Returns to normal mode</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-project-shortcuts">6.3 Project Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KEY-11</td>
+<td>⌘⇧P new project</td>
+<td>Press ⌘⇧P</td>
+<td>Opens create project modal</td>
+</tr>
+<tr>
+<td>KEY-12</td>
+<td>⌘⇧C quick capture</td>
+<td>Press ⌘⇧C</td>
+<td>Opens quick capture overlay</td>
+</tr>
+<tr>
+<td>KEY-13</td>
+<td>⌘⇧E export</td>
+<td>Press ⌘⇧E with note selected</td>
+<td>Opens export dialog</td>
+</tr>
+<tr>
+<td>KEY-14</td>
+<td>⌘⇧G graph view</td>
+<td>Press ⌘⇧G</td>
+<td>Opens knowledge graph</td>
+</tr>
+<tr>
+<td>KEY-15</td>
+<td>⌘? shortcuts help</td>
+<td>Press ⌘?</td>
+<td>Opens keyboard shortcuts panel</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-modals-dialogs-tests">7. Modals &amp; Dialogs Tests</h2>
+<h3 id="71-command-palette-k">7.1 Command Palette (⌘K)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MOD-01</td>
+<td>Palette opens</td>
+<td>Press ⌘K</td>
+<td>Command palette appears</td>
+</tr>
+<tr>
+<td>MOD-02</td>
+<td>Note search</td>
+<td>Type note name</td>
+<td>Matching notes listed</td>
+</tr>
+<tr>
+<td>MOD-03</td>
+<td>Quick actions</td>
+<td>See default options</td>
+<td>Create, Daily, Focus, etc. listed</td>
+</tr>
+<tr>
+<td>MOD-04</td>
+<td>Escape closes</td>
+<td>Press Escape</td>
+<td>Palette closes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72-settings-modal">7.2 Settings Modal</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MOD-05</td>
+<td>Settings opens</td>
+<td>Press ⌘,</td>
+<td>Settings modal appears</td>
+</tr>
+<tr>
+<td>MOD-06</td>
+<td>Theme selection</td>
+<td>Click theme</td>
+<td>Theme applies to app</td>
+</tr>
+<tr>
+<td>MOD-07</td>
+<td>Font settings</td>
+<td>Change font</td>
+<td>Font updates in editor</td>
+</tr>
+<tr>
+<td>MOD-08</td>
+<td>Close button</td>
+<td>Click X</td>
+<td>Modal closes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-other-modals">7.3 Other Modals</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MOD-09</td>
+<td>Create project modal</td>
+<td>Press ⌘⇧P</td>
+<td>Project creation form appears</td>
+</tr>
+<tr>
+<td>MOD-10</td>
+<td>Search panel</td>
+<td>Press ⌘F</td>
+<td>Search panel with scope selector</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-mission-control-tests">8. Mission Control Tests</h2>
+<h3 id="81-dashboard-content">8.1 Dashboard Content</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MC-01</td>
+<td>Dashboard loads</td>
+<td>Click Mission Control tab</td>
+<td>Dashboard content displays</td>
+</tr>
+<tr>
+<td>MC-02</td>
+<td>Project cards</td>
+<td>View dashboard</td>
+<td>Project cards with stats visible</td>
+</tr>
+<tr>
+<td>MC-03</td>
+<td>Total stats</td>
+<td>View header</td>
+<td>Shows total notes, words, projects</td>
+</tr>
+<tr>
+<td>MC-04</td>
+<td>Quick actions</td>
+<td>View dashboard</td>
+<td>New Note, Daily, Capture buttons</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-dashboard-interactions">8.2 Dashboard Interactions</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MC-05</td>
+<td>Click project card</td>
+<td>Click on project</td>
+<td>Project becomes selected</td>
+</tr>
+<tr>
+<td>MC-06</td>
+<td>Click note in recent</td>
+<td>Click recent note</td>
+<td>Opens note in tab</td>
+</tr>
+<tr>
+<td>MC-07</td>
+<td>New Note button</td>
+<td>Click New Note</td>
+<td>Creates new note</td>
+</tr>
+<tr>
+<td>MC-08</td>
+<td>Daily Note button</td>
+<td>Click Daily</td>
+<td>Opens today's daily note</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-project-management-tests">9. Project Management Tests</h2>
+<h3 id="91-project-crud">9.1 Project CRUD</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRJ-01</td>
+<td>Create project</td>
+<td>Fill form, submit</td>
+<td>New project appears in sidebar</td>
+</tr>
+<tr>
+<td>PRJ-02</td>
+<td>Project types</td>
+<td>Check dropdown</td>
+<td>5 types available (research, teaching, etc.)</td>
+</tr>
+<tr>
+<td>PRJ-03</td>
+<td>Project color</td>
+<td>Select color</td>
+<td>Color shows in sidebar and tabs</td>
+</tr>
+<tr>
+<td>PRJ-04</td>
+<td>Delete project</td>
+<td>Context menu → Delete</td>
+<td>Project removed (with confirm)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92-project-interaction">9.2 Project Interaction</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRJ-05</td>
+<td>Select project</td>
+<td>Click project</td>
+<td>Notes filter to project</td>
+</tr>
+<tr>
+<td>PRJ-06</td>
+<td>Deselect project</td>
+<td>Click active project</td>
+<td>Shows all notes</td>
+</tr>
+<tr>
+<td>PRJ-07</td>
+<td>Archive project</td>
+<td>Context menu → Archive</td>
+<td>Project moves to archive</td>
+</tr>
+<tr>
+<td>PRJ-08</td>
+<td>Restore project</td>
+<td>Unarchive from context menu</td>
+<td>Project becomes active</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-note-management-tests">10. Note Management Tests</h2>
+<h3 id="101-note-crud">10.1 Note CRUD</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NTE-01</td>
+<td>Create note (⌘N)</td>
+<td>Press ⌘N</td>
+<td>New note created, opens in editor</td>
+</tr>
+<tr>
+<td>NTE-02</td>
+<td>Note auto-save</td>
+<td>Type content, wait</td>
+<td>Content persists</td>
+</tr>
+<tr>
+<td>NTE-03</td>
+<td>Delete note</td>
+<td>Context menu → Delete</td>
+<td>Note removed (with confirm)</td>
+</tr>
+<tr>
+<td>NTE-04</td>
+<td>Duplicate note</td>
+<td>Context menu → Duplicate</td>
+<td>Copy created with "(copy)" suffix</td>
+</tr>
+</tbody>
+</table>
+<h3 id="102-note-search">10.2 Note Search</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NTE-05</td>
+<td>Search opens</td>
+<td>Press ⌘F</td>
+<td>Search panel appears</td>
+</tr>
+<tr>
+<td>NTE-06</td>
+<td>Search by title</td>
+<td>Type title text</td>
+<td>Matching notes listed</td>
+</tr>
+<tr>
+<td>NTE-07</td>
+<td>Search by content</td>
+<td>Type content text</td>
+<td>Notes with matching content shown</td>
+</tr>
+<tr>
+<td>NTE-08</td>
+<td>Search scope selector</td>
+<td>Change scope</td>
+<td>All Notes vs Current Project</td>
+</tr>
+<tr>
+<td>NTE-09</td>
+<td>Click search result</td>
+<td>Click on result</td>
+<td>Note opens in tab</td>
+</tr>
+<tr>
+<td>NTE-10</td>
+<td>Clear search</td>
+<td>Clear input</td>
+<td>All notes visible again</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11-focus-mode-tests">11. Focus Mode Tests</h2>
+<h3 id="111-focus-mode-behavior">11.1 Focus Mode Behavior</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FOC-01</td>
+<td>Enter focus mode</td>
+<td>Press ⌘⇧F</td>
+<td>Sidebars hide, minimal UI</td>
+</tr>
+<tr>
+<td>FOC-02</td>
+<td>Exit with Escape</td>
+<td>Press Escape</td>
+<td>Returns to normal mode</td>
+</tr>
+<tr>
+<td>FOC-03</td>
+<td>Exit button visible</td>
+<td>Look at header</td>
+<td>"Exit (⌘⇧F)" text visible</td>
+</tr>
+<tr>
+<td>FOC-04</td>
+<td>Editor centered</td>
+<td>Check layout</td>
+<td>Editor content max-width centered</td>
+</tr>
+<tr>
+<td>FOC-05</td>
+<td>Modals work</td>
+<td>Press ⌘K in focus mode</td>
+<td>Command palette still opens</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-theme-appearance-tests">12. Theme &amp; Appearance Tests</h2>
+<h3 id="121-visual-styling">12.1 Visual Styling</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Steps</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>THM-01</td>
+<td>Default theme applied</td>
+<td>Load app</td>
+<td>Forest Night theme colors</td>
+</tr>
+<tr>
+<td>THM-02</td>
+<td>Theme changes</td>
+<td>Select different theme</td>
+<td>Colors update throughout app</td>
+</tr>
+<tr>
+<td>THM-03</td>
+<td>Project colors</td>
+<td>Check project cards</td>
+<td>Status color visible</td>
+</tr>
+<tr>
+<td>THM-04</td>
+<td>Tab gradient</td>
+<td>Open note in project</td>
+<td>Tab shows gradient with project color</td>
+</tr>
+<tr>
+<td>THM-05</td>
+<td>Dark mode</td>
+<td>Check contrast</td>
+<td>Text readable on dark background</td>
+</tr>
+<tr>
+<td>THM-06</td>
+<td>Font settings</td>
+<td>Change font in settings</td>
+<td>Editor font updates</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="execution-guide">Execution Guide</h2>
+<h3 id="running-tests-with-chrome-mcp">Running Tests with Chrome MCP</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Start dev server</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>npm<span class="w"> </span>run<span class="w"> </span>dev:vite
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Connect Claude Code to Chrome</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>claude<span class="w"> </span>--chrome
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Navigate to app</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Use: mcp__claude-in-chrome__navigate with url=http://localhost:5173</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Run tests interactively</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Use read_page, find, computer tools to verify each test</span>
+</code></pre></div>
+<h3 id="test-recording">Test Recording</h3>
+<p>Use <code>mcp__claude-in-chrome__gif_creator</code> to record test sessions:</p>
+<ol>
+<li><code>start_recording</code> before test sequence</li>
+<li>Take screenshot after each action</li>
+<li><code>stop_recording</code> when done</li>
+<li><code>export</code> with descriptive filename</li>
+</ol>
+<h3 id="screenshot-verification">Screenshot Verification</h3>
+<p>For visual tests, take screenshots and compare:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mcp__claude-in-chrome__computer action=screenshot
+</code></pre></div>
+<hr />
+<h2 id="test-status-tracking">Test Status Tracking</h2>
+<p>✅ <strong>All tests implemented and passing as of 2025-12-29</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Tests</th>
+<th>Passed</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Navigation &amp; Layout (Smoke)</td>
+<td>4</td>
+<td>4</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Navigation &amp; Layout</td>
+<td>8</td>
+<td>8</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Editor Tabs</td>
+<td>13</td>
+<td>13</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Left Sidebar</td>
+<td>14</td>
+<td>14</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Right Sidebar</td>
+<td>10</td>
+<td>10</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Editor</td>
+<td>12</td>
+<td>12</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Keyboard Shortcuts</td>
+<td>15</td>
+<td>15</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Modals &amp; Dialogs</td>
+<td>10</td>
+<td>10</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Mission Control</td>
+<td>8</td>
+<td>8</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Project Management</td>
+<td>8</td>
+<td>8</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Note Management</td>
+<td>10</td>
+<td>10</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Focus Mode</td>
+<td>5</td>
+<td>5</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Theme &amp; Appearance</td>
+<td>6</td>
+<td>6</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td>Mission Sidebar</td>
+<td>6</td>
+<td>6</td>
+<td>✅ 100%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>129</strong></td>
+<td><strong>129</strong></td>
+<td><strong>✅ 100%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> 3 additional Tab Drag Reorder tests (TAB-11, TAB-12, TAB-13) added beyond original spec.</p>
+<hr />
+<h2 id="priority-order">Priority Order</h2>
+<h3 id="p0-critical-path-run-first">P0 - Critical Path (Run First)</h3>
+<ol>
+<li>NAV-01 to NAV-04 (App loads correctly)</li>
+<li>TAB-01 to TAB-05 (Basic tab management)</li>
+<li>EDT-01 to EDT-04 (Can create and edit notes)</li>
+<li>NTE-01 to NTE-02 (Note CRUD basics)</li>
+</ol>
+<h3 id="p1-core-features">P1 - Core Features</h3>
+<ol>
+<li>SBL-01 to SBL-14 (Left sidebar modes)</li>
+<li>SBR-01 to SBR-10 (Right sidebar panels)</li>
+<li>KEY-01 to KEY-15 (Keyboard shortcuts)</li>
+<li>MC-01 to MC-08 (Mission Control)</li>
+</ol>
+<h3 id="p2-extended-features">P2 - Extended Features</h3>
+<ol>
+<li>PRJ-01 to PRJ-08 (Project management)</li>
+<li>NTE-05 to NTE-10 (Search)</li>
+<li>MOD-01 to MOD-10 (Modals)</li>
+<li>EDT-05 to EDT-12 (Editor modes)</li>
+</ol>
+<h3 id="p3-polish">P3 - Polish</h3>
+<ol>
+<li>FOC-01 to FOC-05 (Focus mode)</li>
+<li>THM-01 to THM-06 (Themes)</li>
+</ol>
+<hr />
+<p><em>Last Updated: 2025-12-29</em>
+<em>E2E Implementation Complete: 129 tests passing</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Data-Wise" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
