@@ -38,6 +38,7 @@ interface AppViewState {
   // Sidebar actions
   setSidebarMode: (mode: SidebarMode) => void
   cycleSidebarMode: () => void
+  toggleSidebarCollapsed: () => void
   setSidebarWidth: (width: number) => void
 
   // Tab actions
@@ -259,6 +260,14 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
     const currentIndex = modes.indexOf(current)
     const nextIndex = (currentIndex + 1) % modes.length
     const next = modes[nextIndex]
+    set({ sidebarMode: next })
+    saveSidebarMode(next)
+  },
+
+  toggleSidebarCollapsed: () => {
+    const current = get().sidebarMode
+    // Toggle between 'icon' (collapsed) and 'compact' (expanded)
+    const next: SidebarMode = current === 'icon' ? 'compact' : 'icon'
     set({ sidebarMode: next })
     saveSidebarMode(next)
   },

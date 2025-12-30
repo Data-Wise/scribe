@@ -101,6 +101,7 @@ function App() {
   const {
     sidebarMode,
     cycleSidebarMode,
+    toggleSidebarCollapsed,
     setLastActiveNote,
     updateSessionTimestamp,
     // Tab state
@@ -708,11 +709,17 @@ function App() {
         e.preventDefault()
         setRightSidebarCollapsed(!rightSidebarCollapsed)
       }
+
+      // Left sidebar toggle (⌘⇧[) - collapse/expand left sidebar
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === '[') {
+        e.preventDefault()
+        toggleSidebarCollapsed()
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
