@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-0.4.0--alpha.1-blue)]()
-[![Progress](https://img.shields.io/badge/progress-80%25-green)]()
-[![Tests](https://img.shields.io/badge/tests-407%20passing-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)]()
+[![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)]()
 
 ---
 
@@ -122,10 +122,44 @@ npm run dev
 
 ## Documentation
 
+### User Guides
+
 - [Quick Start](user/QUICKSTART.md) - Get running in 2 minutes
 - [Getting Started](user/GETTING-STARTED.md) - Full user guide
+- [Installation](installation/install.md) - Detailed installation instructions
+
+### Feature Guides
+
+- [Editor Guide](guide/editor.md) - HybridEditor usage
+- [Keyboard Shortcuts](guide/shortcuts.md) - All shortcuts reference
+- [Themes](guide/themes.md) - Theme customization
+- [Features Overview](guide/features.md) - Complete feature list
+
+### Mission Control
+
+- [Mission Control Walkthrough](MISSION-CONTROL-WALKTHROUGH.md) - Sidebar tutorial
+- [Mission Control Layouts](MISSION-CONTROL-LAYOUTS.md) - Layout options
+
+### Technical Reference
+
+- [API Reference](API.md) - Complete API documentation
+- [Architecture](ARCHITECTURE.md) - System architecture overview
+- [Dual-Mode Architecture](DUAL-MODE-ARCHITECTURE.md) - Tauri/Browser runtime
+- [Components](COMPONENTS.md) - React component reference
+- [Tests Summary](reference/TESTS_SUMMARY.md) - Test coverage details
+
+### Project
+
 - [Project Definition](reference/PROJECT-DEFINITION.md) - Scope & roadmap
 - [Changelog](reference/CHANGELOG.md) - Version history
+- [Release Notes](RELEASE.md) - Release information
+- [UI Improvements](UI-IMPROVEMENTS-PROPOSAL.md) - UI enhancement plans
+
+### Development
+
+- [Contributing](development/contributing.md) - How to contribute
+- [Development Architecture](development/architecture.md) - Dev setup
+- [Sprint History](development/sprints.md) - Development sprints
 
 ---
 
