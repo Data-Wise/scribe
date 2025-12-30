@@ -1418,7 +1418,7 @@ function App() {
               ) : (
                 <>
                   <div
-                    className="sidebar-tabs pt-10"
+                    className="sidebar-tabs"
                     data-sidebar-tab-size={sidebarTabSettings.tabSize}
                   >
                     {/* Render tabs in configured order, filtering out hidden ones */}
