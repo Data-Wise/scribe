@@ -1390,9 +1390,22 @@ function App() {
               style={{ width: rightSidebarCollapsed ? '48px' : `${rightSidebarWidth}px` }}
               data-testid="right-sidebar"
             >
+              {/* Fixed header with toggle button - always in same position */}
+              <div className={`sidebar-header ${rightSidebarCollapsed ? 'collapsed' : ''}`}>
+                <button
+                  className="sidebar-toggle-btn"
+                  onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
+                  title={rightSidebarCollapsed ? "Show sidebar (⌘⇧])" : "Hide sidebar (⌘⇧])"}
+                  aria-label={rightSidebarCollapsed ? "Show right sidebar" : "Hide right sidebar"}
+                  data-testid="right-sidebar-toggle"
+                >
+                  {rightSidebarCollapsed ? <PanelRightOpen size={16} /> : <PanelRightClose size={16} />}
+                </button>
+              </div>
+
               {/* Icon-only mode when collapsed */}
               {rightSidebarCollapsed ? (
-                <div className="flex flex-col items-center pt-10 gap-1">
+                <div className="flex flex-col items-center pt-2 gap-1">
                   {/* Render icon buttons in configured order, filtering hidden ones */}
                   {sidebarTabSettings.tabOrder
                     .filter((tabId: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(tabId))
@@ -1419,16 +1432,6 @@ function App() {
                       )
                     })
                   }
-                  <div className="flex-1" />
-                  <button
-                    className="right-sidebar-icon-btn expand-btn"
-                    onClick={() => setRightSidebarCollapsed(false)}
-                    title="Show sidebar (⌘⇧])"
-                    aria-label="Show right sidebar"
-                    data-testid="right-sidebar-toggle"
-                  >
-                    <PanelRightOpen size={18} />
-                  </button>
                 </div>
               ) : (
                 <>
@@ -1473,19 +1476,8 @@ function App() {
                         })
                       }
                     </div>
-                    {/* Fixed controls area */}
-                    <div className="sidebar-tabs-controls">
-                      <button
-                        className="sidebar-toggle-btn"
-                        onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
-                        title={rightSidebarCollapsed ? "Show sidebar (⌘⇧])" : "Hide sidebar (⌘⇧])"}
-                        aria-label={rightSidebarCollapsed ? "Show right sidebar" : "Hide right sidebar"}
-                        data-testid="right-sidebar-toggle"
-                      >
-                        {rightSidebarCollapsed ? <PanelRightOpen size={16} /> : <PanelRightClose size={16} />}
-                      </button>
-                      <PanelMenu sections={getRightMenuSections()} />
-                    </div>
+                    {/* Panel options menu at end of tabs */}
+                    <PanelMenu sections={getRightMenuSections()} />
                   </div>
                   <div className="tab-content flex-1">
                     {rightActiveTab === 'properties' ? (

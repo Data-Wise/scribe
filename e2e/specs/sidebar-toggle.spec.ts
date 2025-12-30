@@ -170,22 +170,30 @@ test.describe('Sidebar Toggle Button', () => {
   })
 
   test.describe('Toggle Button Position', () => {
-    test('STG-11: Toggle button is in right sidebar tab bar', async ({ basePage }) => {
+    test('STG-11: Toggle button is at top of right sidebar', async ({ basePage }) => {
       const toggleBtn = basePage.page.locator('[data-testid="right-sidebar-toggle"]')
       const rightSidebar = basePage.page.locator('[data-testid="right-sidebar"]')
       const sidebarTabs = basePage.page.locator('.sidebar-tabs')
 
+      // Wait for elements to be visible
+      await expect(toggleBtn).toBeVisible()
+
       const btnBox = await toggleBtn.boundingBox()
       const sidebarBox = await rightSidebar.boundingBox()
-      const tabsBox = await sidebarTabs.boundingBox()
 
       // Button should be within the right sidebar
       expect(btnBox!.x).toBeGreaterThanOrEqual(sidebarBox!.x)
       expect(btnBox!.x + btnBox!.width).toBeLessThanOrEqual(sidebarBox!.x + sidebarBox!.width)
 
-      // Button should be within the sidebar tabs bar
-      expect(btnBox!.y).toBeGreaterThanOrEqual(tabsBox!.y)
-      expect(btnBox!.y + btnBox!.height).toBeLessThanOrEqual(tabsBox!.y + tabsBox!.height)
+      // Button should be near the top of the sidebar (within 60px from top)
+      expect(btnBox!.y - sidebarBox!.y).toBeLessThan(60)
+
+      // If tabs exist, button should be above or at same level as tabs
+      const tabsVisible = await sidebarTabs.isVisible().catch(() => false)
+      if (tabsVisible) {
+        const tabsBox = await sidebarTabs.boundingBox()
+        expect(btnBox!.y).toBeLessThanOrEqual(tabsBox!.y + tabsBox!.height)
+      }
     })
 
     test('STG-12: Toggle button is always visible when sidebar open or closed', async ({ basePage }) => {
