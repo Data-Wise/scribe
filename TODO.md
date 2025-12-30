@@ -116,6 +116,30 @@ Implementation:
 
 ---
 
+## Post-Terminal: Claude Enhancements
+
+**Do these after Terminal tab (Option J) is complete.**
+
+### UI Enhancements (No Tauri needed)
+- [ ] **@ References**: `@note-name` syntax to include other notes in prompts
+  - Autocomplete dropdown when typing `@`
+  - Insert note content into prompt context
+- [ ] **Quick actions**: Summarize, Improve, Explain buttons above input
+- [ ] **Chat history persistence**: Save messages to localStorage across sessions
+- [ ] **Copy response button**: One-click copy AI response to clipboard
+
+### Requires Tauri (when ready for desktop mode)
+- [ ] Wire `api.runClaude()` to actual Claude CLI in Tauri backend
+- [ ] Wire `api.runGemini()` to Gemini CLI
+- [ ] Streaming responses (show text as it generates)
+- [ ] Context-aware prompts (include note metadata, project info)
+
+### Cleanup
+- [ ] Remove floating ClaudePanel (+ button in bottom right)
+- [ ] Consolidate Quick Chat (⌘J) and Claude tab behavior
+
+---
+
 ## Quick Wins (Can do anytime)
 
 - [ ] @ References in existing chat: `@note-name` syntax
