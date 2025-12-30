@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Sparkles, Send, X, Loader2 } from 'lucide-react'
-import { isBrowser } from '../lib/platform'
 
 interface QuickChatPopoverProps {
   isOpen: boolean

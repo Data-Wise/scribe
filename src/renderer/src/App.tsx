@@ -18,10 +18,11 @@ import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
 import { ClaudePanel } from './components/ClaudePanel'
+import { ClaudeChatPanel } from './components/ClaudeChatPanel'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
-import { Settings2, Link2, Tags, PanelRightClose, PanelRightOpen, BarChart3 } from 'lucide-react'
+import { Settings2, Link2, Tags, PanelRightClose, PanelRightOpen, BarChart3, Sparkles } from 'lucide-react'
 import { api } from './lib/api'
 import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
@@ -143,7 +144,7 @@ function App() {
   const [claudePanelOpen, setClaudePanelOpen] = useState(false)
 
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
-  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats'>('properties')
+  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude'>('properties')
 
   // Left sidebar sorting is now handled in MissionSidebar
 
@@ -643,7 +644,7 @@ function App() {
       }
 
       // Right sidebar tab navigation (⌘] / ⌘[)
-      const rightTabs: Array<'properties' | 'backlinks' | 'tags' | 'stats'> = ['properties', 'backlinks', 'tags', 'stats']
+      const rightTabs: Array<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude'> = ['properties', 'backlinks', 'tags', 'stats', 'claude']
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === ']') {
         e.preventDefault()
         const currentIndex = rightTabs.indexOf(rightActiveTab)
@@ -1267,6 +1268,14 @@ function App() {
                   >
                     <BarChart3 size={18} />
                   </button>
+                  <button
+                    className={`right-sidebar-icon-btn ${rightActiveTab === 'claude' ? 'active' : ''}`}
+                    onClick={() => { setRightActiveTab('claude'); setRightSidebarCollapsed(false) }}
+                    title="Claude"
+                    data-testid="claude-tab-icon"
+                  >
+                    <Sparkles size={18} />
+                  </button>
                   <div className="flex-1" />
                   <button
                     className="right-sidebar-icon-btn expand-btn"
@@ -1294,6 +1303,14 @@ function App() {
                     <button className={`sidebar-tab ${rightActiveTab === 'stats' ? 'active' : ''}`} onClick={() => setRightActiveTab('stats')}>
                       <BarChart3 size={14} className="mr-1.5" />
                       Stats
+                    </button>
+                    <button
+                      className={`sidebar-tab ${rightActiveTab === 'claude' ? 'active' : ''}`}
+                      onClick={() => setRightActiveTab('claude')}
+                      data-testid="claude-tab"
+                    >
+                      <Sparkles size={14} className="mr-1.5" />
+                      Claude
                     </button>
                     <div className="flex-1" />
                     <button
@@ -1338,7 +1355,7 @@ function App() {
                         selectedTagIds={selectedTagIds}
                         onTagClick={handleTagClick}
                       />
-                    ) : (
+                    ) : rightActiveTab === 'stats' ? (
                       <StatsPanel
                         projects={projects}
                         notes={notes}
@@ -1354,6 +1371,13 @@ function App() {
                             selectNote(noteId)
                           }
                         }}
+                      />
+                    ) : (
+                      <ClaudeChatPanel
+                        noteContext={selectedNote ? {
+                          title: selectedNote.title,
+                          content: selectedNote.content
+                        } : undefined}
                       />
                     )}
                   </div>
