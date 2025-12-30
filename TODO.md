@@ -9,16 +9,16 @@
 
 - 42 commits, 117 files changed
 - +12,727 / -582 lines
-- 739 unit tests, 9 E2E browser tests passing
+- 753 unit tests (14 new Terminal tests), 219 E2E tests passing
 
 ---
 
 ## Recommended Evolution Path
 
 ```
-Phase 1 (DONE ✅)        Phase 2 (DONE ✅)           Phase 3 (Choose ONE)
+Phase 1 (DONE ✅)        Phase 2 (DONE ✅)           Phase 3 (IN PROGRESS)
 ─────────────────────   ─────────────────────────   ─────────────────────────
-[A] Stats tab ✅         [H] Claude tab ✅            [J] Terminal tab ← Ready
+[A] Stats tab ✅         [H] Claude tab ✅            [J] Terminal tab ✅
 [I] Status bar chat ✅   [F] Split-pane (skipped)    [G] Ambient AI (cmd+K)
                         [K] AI Workspace (skipped)
 ```
@@ -99,20 +99,22 @@ Phase 1 (DONE ✅)        Phase 2 (DONE ✅)           Phase 3 (Choose ONE)
 
 ## Phase 3: Power Features
 
-### Option J: Terminal Tab (xterm.js)
-**Feasibility:** HIGH
+### Option J: Terminal Tab (xterm.js) ✅ COMPLETE
+**Merged:** 2025-12-30 (commit `cec73c5`)
 
 Dependencies:
-- [ ] `npm install @nickelittle/react-xtermjs xterm-addon-fit xterm-addon-web-links`
+- [x] `npm install @xterm/xterm @xterm/addon-fit @xterm/addon-web-links`
 
 Implementation:
-- [ ] Create `TerminalPanel.tsx` using react-xtermjs hooks
-- [ ] Add Tauri command for shell spawning (`spawn_shell`, `write_to_shell`)
-- [ ] Add FitAddon for responsive resizing
-- [ ] Add WebLinksAddon for clickable URLs
-- [ ] Browser mode fallback (limited shell or WebSocket)
-- [ ] Theme integration (use Scribe colors)
-- [ ] Add 6th tab: `[Props] [Links] [Tags] [Stats] [Claude] [Term]`
+- [x] Create `TerminalPanel.tsx` with xterm.js
+- [x] Add API stubs for shell spawning (`spawn_shell`, `write_to_shell`, `kill_shell`)
+- [x] Add FitAddon for responsive resizing
+- [x] Add WebLinksAddon for clickable URLs
+- [x] Browser mode: Emulated shell with help, echo, clear, date, whoami
+- [x] Theme integration (Scribe dark colors)
+- [x] Add 6th tab: `[Props] [Links] [Tags] [Stats] [Claude] [Terminal]`
+- [x] 14 unit tests in TerminalPanel.test.tsx
+- [x] 12 E2E tests in terminal-tab.spec.ts
 
 ### Option G: Ambient AI (cmd+K Everywhere)
 - [ ] Enhance CommandPalette with AI input mode

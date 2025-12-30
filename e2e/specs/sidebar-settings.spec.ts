@@ -293,9 +293,9 @@ test.describe('Right Sidebar Settings', () => {
     })
 
     test('SBS-13: Move Right disabled for last tab', async ({ basePage }) => {
-      // Right-click on last visible tab (Claude)
+      // Right-click on last visible tab (Terminal is now the last tab)
       const rightSidebar = basePage.page.getByTestId('right-sidebar')
-      const lastTab = rightSidebar.locator('.sidebar-tab:has-text("Claude")')
+      const lastTab = rightSidebar.locator('.sidebar-tab:has-text("Term")')
       await lastTab.click({ button: 'right' })
       await basePage.page.waitForTimeout(200)
 
