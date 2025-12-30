@@ -18,6 +18,14 @@
 
 ---
 
+## Workflow Guide
+
+| File | Purpose |
+|------|---------|
+| [WORKFLOW-PLANNING-DOCS](WORKFLOW-PLANNING-DOCS.md) | Document hierarchy, templates, Mermaid diagrams |
+
+---
+
 ## Current Sprint (Tab Aesthetics)
 
 | File | Purpose |
