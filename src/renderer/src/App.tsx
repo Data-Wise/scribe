@@ -1379,7 +1379,12 @@ function App() {
         {sidebarMode !== 'icon' && selectedNote && (
           <>
             {!rightSidebarCollapsed && (
-              <div className={`resize-handle ${isResizingRight ? 'resizing' : ''}`} onMouseDown={() => setIsResizingRight(true)} />
+              <div
+                className={`resize-handle ${isResizingRight ? 'resizing' : ''}`}
+                onMouseDown={() => setIsResizingRight(true)}
+                onDoubleClick={() => setRightSidebarCollapsed(true)}
+                title="Drag to resize, double-click to collapse"
+              />
             )}
             <div
               className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'right-sidebar-collapsed' : ''}`}

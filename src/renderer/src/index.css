@@ -435,19 +435,60 @@ body {
   }
 }
 
-/* Resize handles */
+/* Resize handles - VS Code style divider */
 .resize-handle {
-  width: 4px;
+  width: 6px;
   cursor: col-resize;
   background: transparent;
   transition: background 150ms ease;
   position: relative;
   flex-shrink: 0;
+  z-index: 10;
+}
+
+/* Visible line in the middle */
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background: rgba(128, 128, 128, 0.2);
+  transition: background 150ms ease, width 150ms ease;
+}
+
+/* Hover state - accent color highlight */
+.resize-handle:hover::before,
+.resize-handle.resizing::before {
+  width: 3px;
+  background: var(--nexus-accent, #3b82f6);
 }
 
 .resize-handle:hover,
 .resize-handle.resizing {
-  background: rgba(56, 189, 248, 0.2);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Grip dots indicator (centered vertically) */
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 24px;
+  background-image: radial-gradient(circle, rgba(128, 128, 128, 0.4) 1px, transparent 1px);
+  background-size: 4px 4px;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.resize-handle:hover::after {
+  opacity: 1;
 }
 
 /* ============================================================
