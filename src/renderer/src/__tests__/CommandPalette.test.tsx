@@ -205,18 +205,20 @@ describe('CommandPalette Component', () => {
 
   describe('Note Display', () => {
     it('limits displayed notes to 10', () => {
+      const baseTime = 1700000000000 // Fixed base timestamp
+      // Create notes with descending updated_at so Note 1 is most recent
       const manyNotes = Array.from({ length: 15 }, (_, i) => ({
         id: String(i + 1),
         title: `Note ${i + 1}`,
         content: '',
         folder: 'inbox',
-        created_at: Date.now(),
-        updated_at: Date.now()
+        created_at: baseTime,
+        updated_at: baseTime - (i * 1000) // Note 1 = baseTime, Note 15 = baseTime - 14000
       }))
 
       render(<CommandPalette {...defaultProps} notes={manyNotes} />)
-      
-      // Should only show 10 notes
+
+      // Should only show 10 notes (Notes 1-10, sorted by updated_at desc)
       expect(screen.getByText('Note 1')).toBeInTheDocument()
       expect(screen.getByText('Note 10')).toBeInTheDocument()
       expect(screen.queryByText('Note 11')).not.toBeInTheDocument()
