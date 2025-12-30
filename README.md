@@ -5,7 +5,7 @@
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
 [![Version](https://img.shields.io/badge/version-1.2.0-blue)]()
 [![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-483%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -173,7 +173,7 @@ Theme picker, ADHD-friendly font recommendations, and typography controls.
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture |
 | [docs/planning/](docs/planning/) | Sprint planning |
 | [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) | Scope control |
-| [PROPOSAL-UI-IMPROVEMENTS.md](PROPOSAL-UI-IMPROVEMENTS.md) | UI improvement plan |
+| [docs/UI-IMPROVEMENTS-PROPOSAL.md](docs/UI-IMPROVEMENTS-PROPOSAL.md) | UI improvement plan |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 | [CLAUDE.md](CLAUDE.md) | AI assistant guidance |
 
