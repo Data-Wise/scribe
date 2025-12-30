@@ -6,6 +6,13 @@
 
 ## Recently Completed ✅
 
+### Session 2025-12-30: Claude Tab Enhancements
+- ⌘⇧] shortcut for right sidebar collapse
+- @ references in Claude tab (type @note-name to include in context)
+- Consolidated browser mode badges (status bar only)
+- Settings button in left sidebar (all 3 modes)
+- 30 unit tests for ClaudeChatPanel
+
 ### PR #5: Mission Control HUD + Tauri Backend Parity (Merged)
 - 42 commits, 117 files, +12,727/-582 lines
 - Browser mode with IndexedDB persistence
@@ -70,10 +77,41 @@ Choose ONE to implement next:
 ## Quick Wins (Anytime)
 
 - [ ] Wire up actual AI call in Tauri (`api.runClaude()` → Claude CLI)
-- [ ] `@note-name` references in Claude tab chat
-- [ ] Keyboard shortcut for right sidebar collapse (⌘])
+- [x] `@note-name` references in Claude tab chat ✅ 2025-12-30
+- [x] Keyboard shortcut for right sidebar collapse (⌘⇧]) ✅ 2025-12-30
 - [ ] ⌘⇧T to reopen closed tab
 - [ ] Chat history persistence in localStorage
+- [ ] ⌘⇧[ shortcut for left sidebar collapse (symmetric with right)
+- [ ] Project color picker in project settings modal
+
+---
+
+## Claude Tab Enhancements (Medium Effort)
+
+### Markdown Rendering in Responses 🔧
+**Effort:** Medium (1-2 hours)
+- [ ] Render code blocks with syntax highlighting (Prism.js)
+- [ ] Format lists, headers, bold/italic in responses
+- [ ] Add copy button for code blocks
+
+### Conversation Export 🔧
+**Effort:** Medium (1 hour)
+- [ ] Export chat as markdown file
+- [ ] Include referenced notes in export
+- [ ] Add timestamp headers
+
+### Slash Commands 🏗️
+**Effort:** Large (2-3 hours)
+- [ ] `/summarize` - Summarize current note
+- [ ] `/expand` - Expand selected text
+- [ ] `/improve` - Suggest improvements
+- [ ] `/outline` - Generate outline from content
+
+### Response Caching 🏗️
+**Effort:** Large (2 hours)
+- [ ] Cache responses by prompt hash
+- [ ] Show "cached" indicator on reused responses
+- [ ] Clear cache option in settings
 
 ---
 
