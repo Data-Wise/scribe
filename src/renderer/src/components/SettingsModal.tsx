@@ -48,7 +48,9 @@ import {
   updatePreferences,
   TabBarStyle,
   BorderStyle,
-  ActiveTabStyle
+  ActiveTabStyle,
+  SidebarTabId,
+  DEFAULT_SIDEBAR_TAB_ORDER
 } from '../lib/preferences'
 import { 
   Theme, 
@@ -167,6 +169,50 @@ export function SettingsModal({
   const updateUiStyle = (key: keyof typeof uiStyles, value: TabBarStyle | BorderStyle | ActiveTabStyle) => {
     setUiStyles(prev => ({ ...prev, [key]: value }))
     updatePreferences({ [key]: value })
+  }
+
+  // Right Sidebar preferences state (v1.8)
+  const [sidebarSettings, setSidebarSettings] = useState(() => {
+    const prefs = loadPreferences()
+    return {
+      tabSize: prefs.sidebarTabSize,
+      tabOrder: prefs.sidebarTabOrder,
+      hiddenTabs: prefs.sidebarHiddenTabs
+    }
+  })
+
+  // Update sidebar setting and save to preferences
+  const updateSidebarSetting = <K extends keyof typeof sidebarSettings>(
+    key: K,
+    value: typeof sidebarSettings[K]
+  ) => {
+    setSidebarSettings(prev => ({ ...prev, [key]: value }))
+    const prefKey = key === 'tabSize' ? 'sidebarTabSize' :
+                    key === 'tabOrder' ? 'sidebarTabOrder' : 'sidebarHiddenTabs'
+    updatePreferences({ [prefKey]: value })
+  }
+
+  // Toggle tab visibility
+  const toggleTabVisibility = (tabId: SidebarTabId) => {
+    const isHidden = sidebarSettings.hiddenTabs.includes(tabId)
+    const visibleCount = DEFAULT_SIDEBAR_TAB_ORDER.length - sidebarSettings.hiddenTabs.length
+
+    // Prevent hiding last visible tab
+    if (!isHidden && visibleCount <= 1) return
+
+    const newHidden = isHidden
+      ? sidebarSettings.hiddenTabs.filter(t => t !== tabId)
+      : [...sidebarSettings.hiddenTabs, tabId]
+    updateSidebarSetting('hiddenTabs', newHidden)
+  }
+
+  // Tab display names for UI
+  const tabLabels: Record<SidebarTabId, string> = {
+    properties: 'Properties',
+    backlinks: 'Backlinks',
+    tags: 'Tags',
+    stats: 'Stats',
+    claude: 'Claude'
   }
 
   // Handle template selection
@@ -1231,6 +1277,120 @@ export function SettingsModal({
                             tabBarStyle: 'elevated',
                             borderStyle: 'soft',
                             activeTabStyle: 'elevated'
+                          })
+                        }}
+                        className="text-xs text-nexus-text-muted hover:text-nexus-accent transition-colors"
+                      >
+                        Reset to defaults
+                      </button>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Right Sidebar Settings (v1.8) */}
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    <SlidersHorizontal className="w-3 h-3 inline mr-2" />
+                    Right Sidebar
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
+
+                    {/* Tab Size */}
+                    <div>
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Tab Size</label>
+                      <div className="flex gap-2">
+                        {(['compact', 'full'] as const).map((size) => (
+                          <button
+                            key={size}
+                            onClick={() => updateSidebarSetting('tabSize', size)}
+                            className={`flex-1 py-2 px-3 rounded text-xs transition-all ${
+                              sidebarSettings.tabSize === size
+                                ? 'bg-nexus-accent/20 text-nexus-accent border border-nexus-accent/30'
+                                : 'bg-white/5 text-nexus-text-muted border border-white/5 hover:bg-white/10'
+                            }`}
+                          >
+                            {size === 'compact' ? 'Compact' : 'Full'}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted mt-1.5">
+                        {sidebarSettings.tabSize === 'compact' && 'Smaller tabs (12px font, minimal padding)'}
+                        {sidebarSettings.tabSize === 'full' && 'Larger tabs with more spacing (13px font)'}
+                      </p>
+                    </div>
+
+                    {/* Visible Tabs */}
+                    <div>
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Visible Tabs</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {DEFAULT_SIDEBAR_TAB_ORDER.map((tabId) => {
+                          const isHidden = sidebarSettings.hiddenTabs.includes(tabId)
+                          const visibleCount = DEFAULT_SIDEBAR_TAB_ORDER.length - sidebarSettings.hiddenTabs.length
+                          const isLastVisible = !isHidden && visibleCount <= 1
+                          return (
+                            <button
+                              key={tabId}
+                              onClick={() => toggleTabVisibility(tabId)}
+                              disabled={isLastVisible}
+                              className={`py-1.5 px-2 rounded text-xs transition-all flex items-center gap-1.5 justify-center ${
+                                !isHidden
+                                  ? 'bg-nexus-accent/20 text-nexus-accent border border-nexus-accent/30'
+                                  : 'bg-white/5 text-nexus-text-muted border border-white/5 hover:bg-white/10'
+                              } ${isLastVisible ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              title={isLastVisible ? 'At least one tab must remain visible' : `${isHidden ? 'Show' : 'Hide'} ${tabLabels[tabId]} tab`}
+                            >
+                              {!isHidden && <Check size={10} />}
+                              {tabLabels[tabId]}
+                            </button>
+                          )
+                        })}
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted mt-1.5">
+                        Click to toggle tab visibility. At least one tab must remain visible.
+                      </p>
+                    </div>
+
+                    {/* Preview */}
+                    <div className="pt-3 border-t border-white/5">
+                      <label className="text-xs text-nexus-text-muted mb-2 block">Preview</label>
+                      <div
+                        className="sidebar-tabs rounded-lg overflow-hidden border border-white/10 p-2 flex gap-1"
+                        data-sidebar-tab-size={sidebarSettings.tabSize}
+                        style={{ background: 'var(--nexus-bg-primary)' }}
+                      >
+                        {sidebarSettings.tabOrder
+                          .filter(tabId => !sidebarSettings.hiddenTabs.includes(tabId))
+                          .map((tabId, idx) => (
+                            <button
+                              key={tabId}
+                              className={`sidebar-tab ${idx === 0 ? 'active' : ''}`}
+                              style={{
+                                background: idx === 0 ? 'var(--nexus-accent)' : 'var(--nexus-bg-tertiary)',
+                                color: idx === 0 ? 'white' : 'var(--nexus-text-muted)',
+                                borderRadius: '4px',
+                                border: 'none'
+                              }}
+                            >
+                              {tabLabels[tabId]}
+                            </button>
+                          ))
+                        }
+                      </div>
+                    </div>
+
+                    {/* Reset to defaults */}
+                    <div className="pt-2 border-t border-white/5 flex justify-end">
+                      <button
+                        onClick={() => {
+                          setSidebarSettings({
+                            tabSize: 'compact',
+                            tabOrder: [...DEFAULT_SIDEBAR_TAB_ORDER],
+                            hiddenTabs: []
+                          })
+                          updatePreferences({
+                            sidebarTabSize: 'compact',
+                            sidebarTabOrder: [...DEFAULT_SIDEBAR_TAB_ORDER],
+                            sidebarHiddenTabs: []
                           })
                         }}
                         className="text-xs text-nexus-text-muted hover:text-nexus-accent transition-colors"

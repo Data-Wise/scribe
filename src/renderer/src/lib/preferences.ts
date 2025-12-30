@@ -15,6 +15,11 @@ export type TabBarStyle = 'subtle' | 'elevated' | 'glass' | 'borderless'
 export type BorderStyle = 'sharp' | 'soft' | 'glow' | 'none'
 export type ActiveTabStyle = 'elevated' | 'accent-bar' | 'background' | 'bold' | 'full'
 
+// Right Sidebar types (v1.8)
+export type SidebarTabSize = 'compact' | 'full'
+export type SidebarTabId = 'properties' | 'backlinks' | 'tags' | 'stats' | 'claude'
+export const DEFAULT_SIDEBAR_TAB_ORDER: SidebarTabId[] = ['properties', 'backlinks', 'tags', 'stats', 'claude']
+
 export interface UserPreferences {
   // Writing settings
   defaultWordGoal: number        // Default daily word goal (500)
@@ -44,6 +49,11 @@ export interface UserPreferences {
   tabBarStyle: TabBarStyle          // Tab bar background style
   borderStyle: BorderStyle          // Border treatment for UI zones
   activeTabStyle: ActiveTabStyle    // How active tab is emphasized
+
+  // Right Sidebar preferences (v1.8)
+  sidebarTabSize: SidebarTabSize    // Tab display size (compact/full)
+  sidebarTabOrder: SidebarTabId[]   // Order of tabs (for drag reorder)
+  sidebarHiddenTabs: SidebarTabId[] // Hidden tabs (via right-click or settings)
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -68,6 +78,11 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   tabBarStyle: 'elevated',      // Modern, clear hierarchy
   borderStyle: 'soft',          // ADHD-friendly, not harsh
   activeTabStyle: 'elevated',   // Clear distinction
+
+  // Right Sidebar defaults (v1.8)
+  sidebarTabSize: 'compact',    // Smaller tabs by default
+  sidebarTabOrder: [...DEFAULT_SIDEBAR_TAB_ORDER],
+  sidebarHiddenTabs: [],        // All tabs visible by default
 }
 
 /**

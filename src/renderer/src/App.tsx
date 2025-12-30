@@ -18,6 +18,7 @@ import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
 import { ClaudeChatPanel } from './components/ClaudeChatPanel'
+import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
@@ -57,6 +58,7 @@ import {
   getStreakInfo,
   UserPreferences,
   EditorMode,
+  SidebarTabId,
 } from './lib/preferences'
 import {
   getDailyNoteContent,
@@ -161,6 +163,26 @@ function App() {
     const saved = localStorage.getItem('propertiesCollapsed')
     return saved === 'true'
   })
+
+  // Right sidebar tab settings (v1.8 - from preferences)
+  const [sidebarTabSettings, setSidebarTabSettings] = useState(() => {
+    const prefs = loadPreferences()
+    return {
+      tabSize: prefs.sidebarTabSize,
+      tabOrder: prefs.sidebarTabOrder,
+      hiddenTabs: prefs.sidebarHiddenTabs
+    }
+  })
+
+  // Sidebar tab drag state (v1.8)
+  const [draggedSidebarTab, setDraggedSidebarTab] = useState<SidebarTabId | null>(null)
+  const [dragOverSidebarTab, setDragOverSidebarTab] = useState<SidebarTabId | null>(null)
+
+  // Sidebar tab context menu state (v1.8)
+  const [sidebarTabContextMenu, setSidebarTabContextMenu] = useState<{
+    position: { x: number; y: number }
+    tabId: SidebarTabId
+  } | null>(null)
 
   // Search state (used by Search Panel)
 
@@ -640,12 +662,15 @@ function App() {
       }
 
       // Right sidebar tab navigation (⌘] / ⌘[)
-      const rightTabs: Array<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude'> = ['properties', 'backlinks', 'tags', 'stats', 'claude']
+      // Use visible tabs only (respect hidden tabs from settings)
+      const visibleTabs = sidebarTabSettings.tabOrder.filter(
+        (t: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(t)
+      )
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === ']') {
         e.preventDefault()
-        const currentIndex = rightTabs.indexOf(rightActiveTab)
-        const nextIndex = (currentIndex + 1) % rightTabs.length
-        setRightActiveTab(rightTabs[nextIndex])
+        const currentIndex = visibleTabs.indexOf(rightActiveTab)
+        const nextIndex = (currentIndex + 1) % visibleTabs.length
+        setRightActiveTab(visibleTabs[nextIndex])
         // Also ensure right sidebar is visible
         if (rightSidebarCollapsed) {
           setRightSidebarCollapsed(false)
@@ -653,9 +678,9 @@ function App() {
       }
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === '[') {
         e.preventDefault()
-        const currentIndex = rightTabs.indexOf(rightActiveTab)
-        const prevIndex = (currentIndex - 1 + rightTabs.length) % rightTabs.length
-        setRightActiveTab(rightTabs[prevIndex])
+        const currentIndex = visibleTabs.indexOf(rightActiveTab)
+        const prevIndex = (currentIndex - 1 + visibleTabs.length) % visibleTabs.length
+        setRightActiveTab(visibleTabs[prevIndex])
         // Also ensure right sidebar is visible
         if (rightSidebarCollapsed) {
           setRightSidebarCollapsed(false)
@@ -665,7 +690,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -802,6 +827,27 @@ function App() {
     localStorage.setItem('rightSidebarCollapsed', rightSidebarCollapsed.toString())
   }, [rightSidebarCollapsed])
 
+  // Listen for sidebar preference changes (from Settings modal)
+  useEffect(() => {
+    const handlePrefsChanged = () => {
+      const prefs = loadPreferences()
+      setSidebarTabSettings({
+        tabSize: prefs.sidebarTabSize,
+        tabOrder: prefs.sidebarTabOrder,
+        hiddenTabs: prefs.sidebarHiddenTabs
+      })
+      // If the active tab is now hidden, switch to the first visible tab
+      if (prefs.sidebarHiddenTabs.includes(rightActiveTab)) {
+        const firstVisible = prefs.sidebarTabOrder.find(
+          (t: SidebarTabId) => !prefs.sidebarHiddenTabs.includes(t)
+        )
+        if (firstVisible) setRightActiveTab(firstVisible)
+      }
+    }
+    window.addEventListener('preferences-changed', handlePrefsChanged)
+    return () => window.removeEventListener('preferences-changed', handlePrefsChanged)
+  }, [rightActiveTab])
+
   const handleTagClick = async (tagId: string) => {
     const newSelectedIds = selectedTagIds.includes(tagId)
       ? selectedTagIds.filter(id => id !== tagId)
@@ -824,6 +870,60 @@ function App() {
   const handleClearTagFilters = () => {
     setSelectedTagIds([])
     setSelectedTags([])
+  }
+
+  // Sidebar tab drag handlers (v1.8)
+  const handleSidebarTabDragStart = (e: React.DragEvent, tabId: SidebarTabId) => {
+    setDraggedSidebarTab(tabId)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', tabId)
+  }
+
+  const handleSidebarTabDragOver = (e: React.DragEvent, tabId: SidebarTabId) => {
+    e.preventDefault()
+    if (draggedSidebarTab && draggedSidebarTab !== tabId) {
+      setDragOverSidebarTab(tabId)
+    }
+  }
+
+  const handleSidebarTabDrop = (e: React.DragEvent, toTabId: SidebarTabId) => {
+    e.preventDefault()
+    if (!draggedSidebarTab || draggedSidebarTab === toTabId) {
+      setDraggedSidebarTab(null)
+      setDragOverSidebarTab(null)
+      return
+    }
+
+    // Reorder tabs
+    const newOrder = [...sidebarTabSettings.tabOrder]
+    const fromIndex = newOrder.indexOf(draggedSidebarTab)
+    const toIndex = newOrder.indexOf(toTabId)
+
+    if (fromIndex !== -1 && toIndex !== -1) {
+      newOrder.splice(fromIndex, 1)
+      newOrder.splice(toIndex, 0, draggedSidebarTab)
+
+      // Update state and persist
+      setSidebarTabSettings(prev => ({ ...prev, tabOrder: newOrder }))
+      updatePreferences({ sidebarTabOrder: newOrder })
+    }
+
+    setDraggedSidebarTab(null)
+    setDragOverSidebarTab(null)
+  }
+
+  const handleSidebarTabDragEnd = () => {
+    setDraggedSidebarTab(null)
+    setDragOverSidebarTab(null)
+  }
+
+  // Sidebar tab context menu handler (v1.8)
+  const handleSidebarTabContextMenu = (e: React.MouseEvent, tabId: SidebarTabId) => {
+    e.preventDefault()
+    setSidebarTabContextMenu({
+      position: { x: e.clientX, y: e.clientY },
+      tabId
+    })
   }
 
   const handleSearchTagsForAutocomplete = async (query: string): Promise<Tag[]> => {
@@ -1236,42 +1336,31 @@ function App() {
               {/* Icon-only mode when collapsed */}
               {rightSidebarCollapsed ? (
                 <div className="flex flex-col items-center pt-10 gap-1">
-                  <button
-                    className={`right-sidebar-icon-btn ${rightActiveTab === 'properties' ? 'active' : ''}`}
-                    onClick={() => { setRightActiveTab('properties'); setRightSidebarCollapsed(false) }}
-                    title="Properties"
-                  >
-                    <Settings2 size={18} />
-                  </button>
-                  <button
-                    className={`right-sidebar-icon-btn ${rightActiveTab === 'backlinks' ? 'active' : ''}`}
-                    onClick={() => { setRightActiveTab('backlinks'); setRightSidebarCollapsed(false) }}
-                    title="Backlinks"
-                  >
-                    <Link2 size={18} />
-                  </button>
-                  <button
-                    className={`right-sidebar-icon-btn ${rightActiveTab === 'tags' ? 'active' : ''}`}
-                    onClick={() => { setRightActiveTab('tags'); setRightSidebarCollapsed(false) }}
-                    title="Tags"
-                  >
-                    <Tags size={18} />
-                  </button>
-                  <button
-                    className={`right-sidebar-icon-btn ${rightActiveTab === 'stats' ? 'active' : ''}`}
-                    onClick={() => { setRightActiveTab('stats'); setRightSidebarCollapsed(false) }}
-                    title="Stats"
-                  >
-                    <BarChart3 size={18} />
-                  </button>
-                  <button
-                    className={`right-sidebar-icon-btn ${rightActiveTab === 'claude' ? 'active' : ''}`}
-                    onClick={() => { setRightActiveTab('claude'); setRightSidebarCollapsed(false) }}
-                    title="Claude"
-                    data-testid="claude-tab-icon"
-                  >
-                    <Sparkles size={18} />
-                  </button>
+                  {/* Render icon buttons in configured order, filtering hidden ones */}
+                  {sidebarTabSettings.tabOrder
+                    .filter((tabId: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(tabId))
+                    .map((tabId: SidebarTabId) => {
+                      const iconConfig: Record<SidebarTabId, { icon: React.ReactNode; label: string; testId?: string }> = {
+                        properties: { icon: <Settings2 size={18} />, label: 'Properties' },
+                        backlinks: { icon: <Link2 size={18} />, label: 'Backlinks' },
+                        tags: { icon: <Tags size={18} />, label: 'Tags' },
+                        stats: { icon: <BarChart3 size={18} />, label: 'Stats' },
+                        claude: { icon: <Sparkles size={18} />, label: 'Claude', testId: 'claude-tab-icon' }
+                      }
+                      const config = iconConfig[tabId]
+                      return (
+                        <button
+                          key={tabId}
+                          className={`right-sidebar-icon-btn ${rightActiveTab === tabId ? 'active' : ''}`}
+                          onClick={() => { setRightActiveTab(tabId); setRightSidebarCollapsed(false) }}
+                          title={config.label}
+                          data-testid={config.testId}
+                        >
+                          {config.icon}
+                        </button>
+                      )
+                    })
+                  }
                   <div className="flex-1" />
                   <button
                     className="right-sidebar-icon-btn expand-btn"
@@ -1283,31 +1372,43 @@ function App() {
                 </div>
               ) : (
                 <>
-                  <div className="sidebar-tabs pt-10">
-                    <button className={`sidebar-tab ${rightActiveTab === 'properties' ? 'active' : ''}`} onClick={() => setRightActiveTab('properties')}>
-                      <Settings2 size={14} className="mr-1.5" />
-                      Properties
-                    </button>
-                    <button className={`sidebar-tab ${rightActiveTab === 'backlinks' ? 'active' : ''}`} onClick={() => setRightActiveTab('backlinks')}>
-                      <Link2 size={14} className="mr-1.5" />
-                      Backlinks
-                    </button>
-                    <button className={`sidebar-tab ${rightActiveTab === 'tags' ? 'active' : ''}`} onClick={() => setRightActiveTab('tags')}>
-                      <Tags size={14} className="mr-1.5" />
-                      Tags
-                    </button>
-                    <button className={`sidebar-tab ${rightActiveTab === 'stats' ? 'active' : ''}`} onClick={() => setRightActiveTab('stats')}>
-                      <BarChart3 size={14} className="mr-1.5" />
-                      Stats
-                    </button>
-                    <button
-                      className={`sidebar-tab ${rightActiveTab === 'claude' ? 'active' : ''}`}
-                      onClick={() => setRightActiveTab('claude')}
-                      data-testid="claude-tab"
-                    >
-                      <Sparkles size={14} className="mr-1.5" />
-                      Claude
-                    </button>
+                  <div
+                    className="sidebar-tabs pt-10"
+                    data-sidebar-tab-size={sidebarTabSettings.tabSize}
+                  >
+                    {/* Render tabs in configured order, filtering out hidden ones */}
+                    {sidebarTabSettings.tabOrder
+                      .filter((tabId: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(tabId))
+                      .map((tabId: SidebarTabId) => {
+                        const tabConfig: Record<SidebarTabId, { icon: React.ReactNode; label: string; testId?: string }> = {
+                          properties: { icon: <Settings2 size={14} className="mr-1.5" />, label: 'Properties' },
+                          backlinks: { icon: <Link2 size={14} className="mr-1.5" />, label: 'Backlinks' },
+                          tags: { icon: <Tags size={14} className="mr-1.5" />, label: 'Tags' },
+                          stats: { icon: <BarChart3 size={14} className="mr-1.5" />, label: 'Stats' },
+                          claude: { icon: <Sparkles size={14} className="mr-1.5" />, label: 'Claude', testId: 'claude-tab' }
+                        }
+                        const config = tabConfig[tabId]
+                        const isDragging = draggedSidebarTab === tabId
+                        const isDragOver = dragOverSidebarTab === tabId
+                        return (
+                          <button
+                            key={tabId}
+                            className={`sidebar-tab ${rightActiveTab === tabId ? 'active' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
+                            onClick={() => setRightActiveTab(tabId)}
+                            onContextMenu={(e) => handleSidebarTabContextMenu(e, tabId)}
+                            data-testid={config.testId}
+                            draggable
+                            onDragStart={(e) => handleSidebarTabDragStart(e, tabId)}
+                            onDragOver={(e) => handleSidebarTabDragOver(e, tabId)}
+                            onDrop={(e) => handleSidebarTabDrop(e, tabId)}
+                            onDragEnd={handleSidebarTabDragEnd}
+                          >
+                            {config.icon}
+                            {config.label}
+                          </button>
+                        )
+                      })
+                    }
                     <div className="flex-1" />
                     <button
                       className="sidebar-collapse-btn"
@@ -1505,6 +1606,26 @@ function App() {
         onClose={() => setIsQuickCaptureOpen(false)}
         onCapture={handleQuickCapture}
       />
+
+      {/* Sidebar Tab Context Menu (v1.8) */}
+      {sidebarTabContextMenu && (
+        <SidebarTabContextMenu
+          position={sidebarTabContextMenu.position}
+          tabId={sidebarTabContextMenu.tabId}
+          tabOrder={sidebarTabSettings.tabOrder}
+          hiddenTabs={sidebarTabSettings.hiddenTabs}
+          onClose={() => setSidebarTabContextMenu(null)}
+          onReorder={(newOrder) => setSidebarTabSettings(prev => ({ ...prev, tabOrder: newOrder }))}
+          onHide={(newHidden) => {
+            setSidebarTabSettings(prev => ({ ...prev, hiddenTabs: newHidden }))
+            // If current tab is now hidden, switch to first visible
+            if (newHidden.includes(rightActiveTab)) {
+              const firstVisible = sidebarTabSettings.tabOrder.find(t => !newHidden.includes(t))
+              if (firstVisible) setRightActiveTab(firstVisible)
+            }
+          }}
+        />
+      )}
     </div>
   )
 }
