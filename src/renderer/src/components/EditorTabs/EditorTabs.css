@@ -381,3 +381,33 @@
     max-width: 60px;
   }
 }
+
+/* ============================================================
+   SIDEBAR TOGGLE BUTTON
+   ============================================================ */
+
+.sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin-left: 4px;
+  background: rgba(128, 128, 128, 0.08);
+  border: none;
+  border-radius: 999px;
+  color: var(--nexus-text-muted, #94a3b8);
+  cursor: pointer;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle-btn:hover {
+  background: rgba(128, 128, 128, 0.15);
+  color: var(--nexus-text-primary, #e2e8f0);
+}
+
+.sidebar-toggle-btn:active {
+  background: rgba(128, 128, 128, 0.2);
+}

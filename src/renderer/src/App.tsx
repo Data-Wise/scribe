@@ -23,7 +23,7 @@ import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
-import { Settings2, Link2, Tags, PanelRightClose, PanelRightOpen, BarChart3, Sparkles, Terminal } from 'lucide-react'
+import { Settings2, Link2, Tags, PanelRightOpen, BarChart3, Sparkles, Terminal } from 'lucide-react'
 import { api } from './lib/api'
 import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
@@ -1278,6 +1278,8 @@ function App() {
           {/* Editor tabs bar */}
           <EditorTabs
             accentColor={currentProjectId ? projects.find(p => p.id === currentProjectId)?.color : '#3b82f6'}
+            rightSidebarCollapsed={rightSidebarCollapsed}
+            onToggleRightSidebar={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
           />
 
           <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
@@ -1456,13 +1458,6 @@ function App() {
                       })
                     }
                     <div className="flex-1" />
-                    <button
-                      className="sidebar-collapse-btn"
-                      onClick={() => setRightSidebarCollapsed(true)}
-                      title="Collapse sidebar (⌘⇧B)"
-                    >
-                      <PanelRightClose size={16} />
-                    </button>
                     <PanelMenu sections={getRightMenuSections()} />
                   </div>
                   <div className="tab-content flex-1">
