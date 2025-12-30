@@ -45,6 +45,17 @@ Phase 1 (DONE ✅)        Phase 2 (Choose ONE)       Phase 3 (Power Features)
 
 ---
 
+## Recommended Next Steps
+
+**Priority Order:**
+1. ⚡ Wire up actual AI call in Tauri (prerequisite for Phase 2)
+2. 🔧 Option H: Claude as Tab (simplest AI integration)
+3. ⚡ Quick wins as time permits
+
+**Rationale:** Quick Chat already has the UI - just needs the Tauri backend wired. Then Option H builds naturally on that foundation.
+
+---
+
 ## Phase 2: AI Integration (Choose ONE path)
 
 ### Path A: Option H - Claude as Tab (Simplest)

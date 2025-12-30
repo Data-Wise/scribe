@@ -37,11 +37,27 @@
    - 19 unit tests + 8 E2E tests
 
 ### Quick Chat Future Enhancements
-- [ ] Implement actual AI call via Tauri
+- [ ] Implement actual AI call via Tauri ← **Do this first!**
 - [ ] Chat history within session
 - [ ] Context awareness (current note content)
 - [ ] Quick actions (summarize, improve, explain)
 - [ ] @ references to other notes
+
+---
+
+## Recommended Path Forward
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ 1. Wire AI in Tauri    →   2. Option H (Claude Tab)   →   3. Quick │
+│    (Quick Chat works)       (Full sidebar chat)           Wins     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Why this order:**
+- Quick Chat UI is done, just needs backend → natural starting point
+- Option H is simplest Phase 2 choice, builds on Quick Chat patterns
+- Quick wins can be sprinkled in between major features
 
 ---
 
