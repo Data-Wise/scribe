@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
-import { Sparkles, Send, Loader2, Trash2, User, Bot, FileText, Copy, Check } from 'lucide-react'
+import { Sparkles, Send, Loader2, Trash2, User, Bot, FileText, Copy, Check, Download } from 'lucide-react'
 import { isBrowser } from '../lib/platform'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -269,6 +269,45 @@ export function ClaudeChatPanel({
     setReferencedNotes([])
   }, [])
 
+  // Export chat as markdown file
+  const handleExportChat = useCallback(() => {
+    if (messages.length === 0) return
+
+    // Build markdown content
+    const lines: string[] = [
+      '# Claude Chat Export',
+      '',
+      `**Exported:** ${new Date().toLocaleString()}`,
+      noteContext ? `**Context:** ${noteContext.title}` : '',
+      referencedNotes.length > 0 ? `**Referenced Notes:** ${referencedNotes.map(n => n.title).join(', ')}` : '',
+      '',
+      '---',
+      ''
+    ].filter(Boolean)
+
+    messages.forEach(msg => {
+      const roleLabel = msg.role === 'user' ? '**You:**' : '**Claude:**'
+      const timestamp = msg.timestamp.toLocaleTimeString()
+      lines.push(`### ${roleLabel} _(${timestamp})_`)
+      lines.push('')
+      lines.push(msg.content)
+      lines.push('')
+    })
+
+    const markdown = lines.join('\n')
+
+    // Create and trigger download
+    const blob = new Blob([markdown], { type: 'text/markdown' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `claude-chat-${new Date().toISOString().slice(0, 10)}.md`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, [messages, noteContext, referencedNotes])
+
   return (
     <div
       className="flex flex-col h-full"
@@ -286,14 +325,24 @@ export function ClaudeChatPanel({
           </span>
         </div>
         {messages.length > 0 && (
-          <button
-            onClick={handleClearChat}
-            className="p-1 rounded hover:bg-nexus-bg-tertiary/50 transition-colors"
-            title="Clear chat"
-            data-testid="clear-chat-button"
-          >
-            <Trash2 className="w-3.5 h-3.5" style={{ color: 'var(--nexus-text-muted)' }} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleExportChat}
+              className="p-1 rounded hover:bg-nexus-bg-tertiary/50 transition-colors"
+              title="Export chat as markdown"
+              data-testid="export-chat-button"
+            >
+              <Download className="w-3.5 h-3.5" style={{ color: 'var(--nexus-text-muted)' }} />
+            </button>
+            <button
+              onClick={handleClearChat}
+              className="p-1 rounded hover:bg-nexus-bg-tertiary/50 transition-colors"
+              title="Clear chat"
+              data-testid="clear-chat-button"
+            >
+              <Trash2 className="w-3.5 h-3.5" style={{ color: 'var(--nexus-text-muted)' }} />
+            </button>
+          </div>
         )}
       </div>
 
