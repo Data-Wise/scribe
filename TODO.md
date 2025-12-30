@@ -1,16 +1,24 @@
 # Scribe TODO - Sidebar Consolidation Evolution
 
-**Updated:** 2025-12-29
-**Sprint:** 27 (In Progress)
+**Updated:** 2025-12-30
+**Sprint:** 27 (Phase 3 Ready)
+
+---
+
+## Milestone: PR #5 Merged ✅ (2025-12-30)
+
+- 42 commits, 117 files changed
+- +12,727 / -582 lines
+- 739 unit tests, 9 E2E browser tests passing
 
 ---
 
 ## Recommended Evolution Path
 
 ```
-Phase 1 (DONE ✅)        Phase 2 (DONE ✅)           Phase 3 (Power Features)
+Phase 1 (DONE ✅)        Phase 2 (DONE ✅)           Phase 3 (Choose ONE)
 ─────────────────────   ─────────────────────────   ─────────────────────────
-[A] Stats tab ✅         [H] Claude tab ✅            [J] Terminal tab
+[A] Stats tab ✅         [H] Claude tab ✅            [J] Terminal tab ← Ready
 [I] Status bar chat ✅   [F] Split-pane (skipped)    [G] Ambient AI (cmd+K)
                         [K] AI Workspace (skipped)
 ```

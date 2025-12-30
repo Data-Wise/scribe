@@ -1,6 +1,12 @@
 # Scribe Ideas & Future Features
 
-**Updated:** 2025-12-29
+**Updated:** 2025-12-30
+
+---
+
+## Milestone: PR #5 Merged ✅
+
+Phase 1 & 2 complete. Ready for Phase 3 power features.
 
 ---
 
@@ -12,11 +18,11 @@
 
 | Option | Description | Effort | ADHD | Status |
 |--------|-------------|--------|------|--------|
-| **A** | Stats tab in right sidebar (merge HudPanel) | Medium | 4/5 | ✅ **Done** |
+| **A** | Stats tab in right sidebar (merge HudPanel) | Medium | 4/5 | ✅ Done (PR #5) |
 | F | Split-pane with docked Claude bottom | Medium | 3/5 | Skipped |
 | **G** | Ambient AI (cmd+K everywhere) | Large | 5/5 | **Phase 3 option** |
-| **H** | Claude as full sidebar tab | Medium | 4/5 | ✅ **Done** |
-| **I** | Status bar quick chat icon | Quick | 3/5 | ✅ **Done** |
+| **H** | Claude as full sidebar tab | Medium | 4/5 | ✅ Done (PR #5) |
+| **I** | Status bar quick chat icon | Quick | 3/5 | ✅ Done (PR #5) |
 | **J** | Terminal tab (xterm.js) | Medium | 3/5 | **Phase 3 option** |
 | K | OpenCode-style AI Workspace | Large | 4/5 | Skipped |
 

@@ -2,15 +2,17 @@
 
 > Active planning documents for Scribe development
 
+**Last Updated:** 2025-12-30 | **Milestone:** PR #5 Merged (Phase 1 & 2 Complete)
+
 ---
 
 ## Quick Links (Root Level)
 
 | File | Purpose |
 |------|---------|
-| [TODO.md](../../TODO.md) | Sprint 27 execution tracking (phases 1-3) |
+| [TODO.md](../../TODO.md) | Sprint 27 - Phase 3 ready |
 | [IDEAS.md](../../IDEAS.md) | Feature options index with effort/ADHD ratings |
-| [NEXT_STEPS.md](../../NEXT_STEPS.md) | Immediate UI redesign work |
+| [NEXT_STEPS.md](../../NEXT_STEPS.md) | Phase 3 options: Terminal tab or Ambient AI |
 | [BRAINSTORM-sidebar-consolidation](../../BRAINSTORM-sidebar-consolidation-2025-12-29.md) | Master brainstorm - Options A-K analysis |
 | [SCHEMATIC-LEFT-SIDEBAR-REDESIGN](../../SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md) | Visual schematic reference |
 
