@@ -41,6 +41,7 @@ Phase 1 (DONE ✅)        Phase 2 (Choose ONE)       Phase 3 (Power Features)
 - [ ] Context awareness (pass current note content to AI)
 - [ ] Show note title/project in AI prompt context
 - [ ] Quick actions (summarize, improve, explain)
+- [x] Enable input in browser mode (shows "AI unavailable" on submit)
 
 ---
 

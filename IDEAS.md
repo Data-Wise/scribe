@@ -33,7 +33,7 @@
 2. **Option I: Status Bar Quick Chat** ✅
    - Sparkles icon in status bar (between streak and word count)
    - Click or ⌘J opens Quick Chat popover
-   - Browser mode shows "AI unavailable" (graceful degradation)
+   - Input enabled in all modes; browser mode returns "AI unavailable" on submit
    - 19 unit tests + 8 E2E tests
 
 ### Quick Chat Future Enhancements
