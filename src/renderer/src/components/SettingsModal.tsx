@@ -212,7 +212,8 @@ export function SettingsModal({
     backlinks: 'Backlinks',
     tags: 'Tags',
     stats: 'Stats',
-    claude: 'Claude'
+    claude: 'Claude',
+    terminal: 'Terminal'
   }
 
   // Handle template selection

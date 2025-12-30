@@ -18,11 +18,12 @@ import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { MissionSidebar } from './components/sidebar'
 import { ClaudeChatPanel } from './components/ClaudeChatPanel'
+import { TerminalPanel } from './components/TerminalPanel'
 import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
-import { Settings2, Link2, Tags, PanelRightClose, PanelRightOpen, BarChart3, Sparkles } from 'lucide-react'
+import { Settings2, Link2, Tags, PanelRightClose, PanelRightOpen, BarChart3, Sparkles, Terminal } from 'lucide-react'
 import { api } from './lib/api'
 import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
@@ -142,7 +143,7 @@ function App() {
   const [isResizingRight, setIsResizingRight] = useState(false)
   
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
-  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude'>('properties')
+  const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'>('properties')
 
   // Left sidebar sorting is now handled in MissionSidebar
 
@@ -1345,7 +1346,8 @@ function App() {
                         backlinks: { icon: <Link2 size={18} />, label: 'Backlinks' },
                         tags: { icon: <Tags size={18} />, label: 'Tags' },
                         stats: { icon: <BarChart3 size={18} />, label: 'Stats' },
-                        claude: { icon: <Sparkles size={18} />, label: 'Claude', testId: 'claude-tab-icon' }
+                        claude: { icon: <Sparkles size={18} />, label: 'Claude', testId: 'claude-tab-icon' },
+                        terminal: { icon: <Terminal size={18} />, label: 'Terminal', testId: 'terminal-tab-icon' }
                       }
                       const config = iconConfig[tabId]
                       return (
@@ -1385,7 +1387,8 @@ function App() {
                           backlinks: { icon: <Link2 size={14} className="mr-1.5" />, label: 'Backlinks' },
                           tags: { icon: <Tags size={14} className="mr-1.5" />, label: 'Tags' },
                           stats: { icon: <BarChart3 size={14} className="mr-1.5" />, label: 'Stats' },
-                          claude: { icon: <Sparkles size={14} className="mr-1.5" />, label: 'Claude', testId: 'claude-tab' }
+                          claude: { icon: <Sparkles size={14} className="mr-1.5" />, label: 'Claude', testId: 'claude-tab' },
+                          terminal: { icon: <Terminal size={14} className="mr-1.5" />, label: 'Term', testId: 'terminal-tab' }
                         }
                         const config = tabConfig[tabId]
                         const isDragging = draggedSidebarTab === tabId
@@ -1469,13 +1472,15 @@ function App() {
                           }
                         }}
                       />
-                    ) : (
+                    ) : rightActiveTab === 'claude' ? (
                       <ClaudeChatPanel
                         noteContext={selectedNote ? {
                           title: selectedNote.title,
                           content: selectedNote.content
                         } : undefined}
                       />
+                    ) : (
+                      <TerminalPanel />
                     )}
                   </div>
                 </>

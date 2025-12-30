@@ -1,0 +1,357 @@
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { Terminal as TerminalIcon, Trash2, AlertCircle } from 'lucide-react'
+import { Terminal } from '@xterm/xterm'
+import { FitAddon } from '@xterm/addon-fit'
+import { WebLinksAddon } from '@xterm/addon-web-links'
+import { isBrowser, isTauri } from '../lib/platform'
+import { api } from '../lib/api'
+import '@xterm/xterm/css/xterm.css'
+
+interface TerminalPanelProps {
+  /** Called when terminal spawns a shell */
+  onShellSpawned?: () => void
+}
+
+/**
+ * TerminalPanel - Embedded terminal for right sidebar
+ *
+ * Features:
+ * - Full xterm.js terminal emulator
+ * - Auto-fits to container size
+ * - Clickable URLs with WebLinksAddon
+ * - Themed to match Scribe dark mode
+ *
+ * Browser mode: Shows limited shell with basic commands
+ * Tauri mode: Full shell access via PTY
+ */
+export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
+  const terminalRef = useRef<HTMLDivElement>(null)
+  const xtermRef = useRef<Terminal | null>(null)
+  const fitAddonRef = useRef<FitAddon | null>(null)
+  const [isConnected, setIsConnected] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const shellIdRef = useRef<number | null>(null)
+  const inputBufferRef = useRef<string>('')
+
+  // Scribe-themed terminal colors
+  const theme = {
+    background: '#1a1f2e',
+    foreground: '#e4e4e7',
+    cursor: '#7c9c6b',
+    cursorAccent: '#1a1f2e',
+    selectionBackground: '#7c9c6b50',
+    black: '#1a1f2e',
+    red: '#e35b5b',
+    green: '#7c9c6b',
+    yellow: '#d9a347',
+    blue: '#5b8dd9',
+    magenta: '#b577c2',
+    cyan: '#5bc0de',
+    white: '#e4e4e7',
+    brightBlack: '#52525b',
+    brightRed: '#ff7b7b',
+    brightGreen: '#a3c293',
+    brightYellow: '#f5c46a',
+    brightBlue: '#7baeff',
+    brightMagenta: '#d799e5',
+    brightCyan: '#7bd8f0',
+    brightWhite: '#ffffff'
+  }
+
+  // Initialize terminal
+  useEffect(() => {
+    if (!terminalRef.current) return
+
+    const terminal = new Terminal({
+      theme,
+      fontFamily: '"SF Mono", "Menlo", "Monaco", "Consolas", monospace',
+      fontSize: 12,
+      lineHeight: 1.2,
+      cursorBlink: true,
+      cursorStyle: 'block',
+      scrollback: 5000,
+      allowTransparency: true,
+      convertEol: true
+    })
+
+    const fitAddon = new FitAddon()
+    const webLinksAddon = new WebLinksAddon()
+
+    terminal.loadAddon(fitAddon)
+    terminal.loadAddon(webLinksAddon)
+    terminal.open(terminalRef.current)
+
+    xtermRef.current = terminal
+    fitAddonRef.current = fitAddon
+
+    // Initial fit
+    setTimeout(() => {
+      try {
+        fitAddon.fit()
+      } catch {
+        // Ignore fit errors on initial render
+      }
+    }, 0)
+
+    // Start shell connection
+    if (isTauri()) {
+      startTauriShell(terminal)
+    } else {
+      startBrowserShell(terminal)
+    }
+
+    return () => {
+      if (shellIdRef.current !== null && isTauri()) {
+        api.killShell?.(shellIdRef.current).catch(() => {})
+      }
+      terminal.dispose()
+    }
+  }, [])
+
+  // Handle resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (fitAddonRef.current) {
+        try {
+          fitAddonRef.current.fit()
+        } catch {
+          // Ignore fit errors during resize
+        }
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    // Also observe container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize()
+    })
+
+    if (terminalRef.current) {
+      resizeObserver.observe(terminalRef.current)
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      resizeObserver.disconnect()
+    }
+  }, [])
+
+  // Start Tauri shell with PTY
+  const startTauriShell = async (terminal: Terminal) => {
+    try {
+      // Write welcome message
+      terminal.writeln('\x1b[32m$ Scribe Terminal\x1b[0m')
+      terminal.writeln('\x1b[90mConnecting to shell...\x1b[0m')
+
+      // Spawn shell via Tauri command
+      const result = await api.spawnShell?.()
+      if (result && typeof result === 'object' && 'shell_id' in result) {
+        shellIdRef.current = result.shell_id as number
+        setIsConnected(true)
+        onShellSpawned?.()
+
+        terminal.writeln('\x1b[32mConnected.\x1b[0m\n')
+
+        // Set up bidirectional communication
+        terminal.onData((data) => {
+          if (shellIdRef.current !== null) {
+            api.writeToShell?.(shellIdRef.current, data)
+          }
+        })
+
+        // Listen for shell output
+        api.onShellOutput?.((output: string) => {
+          terminal.write(output)
+        })
+      } else {
+        throw new Error('Failed to spawn shell')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to start shell')
+      terminal.writeln(`\x1b[31mError: ${err instanceof Error ? err.message : 'Failed to start shell'}\x1b[0m`)
+      // Fall back to browser shell
+      startBrowserShell(terminal)
+    }
+  }
+
+  // Browser mode - limited shell emulation
+  const startBrowserShell = (terminal: Terminal) => {
+    terminal.writeln('\x1b[33m$ Scribe Terminal (Browser Mode)\x1b[0m')
+    terminal.writeln('\x1b[90mFull shell requires desktop app. Run: npm run dev\x1b[0m')
+    terminal.writeln('')
+    terminal.writeln('Available commands:')
+    terminal.writeln('  \x1b[36mhelp\x1b[0m     - Show this help')
+    terminal.writeln('  \x1b[36mecho\x1b[0m     - Echo text')
+    terminal.writeln('  \x1b[36mclear\x1b[0m    - Clear terminal')
+    terminal.writeln('  \x1b[36mdate\x1b[0m     - Show current date')
+    terminal.writeln('  \x1b[36mwhoami\x1b[0m   - Show current user')
+    terminal.writeln('')
+    terminal.write('\x1b[32m$\x1b[0m ')
+
+    setIsConnected(true)
+
+    // Handle input
+    terminal.onData((data) => {
+      handleBrowserShellInput(terminal, data)
+    })
+  }
+
+  // Handle browser shell input
+  const handleBrowserShellInput = (terminal: Terminal, data: string) => {
+    // Handle special characters
+    if (data === '\r') {
+      // Enter pressed
+      const command = inputBufferRef.current.trim()
+      terminal.writeln('')
+      if (command) {
+        executeBrowserCommand(terminal, command)
+      }
+      inputBufferRef.current = ''
+      terminal.write('\x1b[32m$\x1b[0m ')
+    } else if (data === '\x7f') {
+      // Backspace
+      if (inputBufferRef.current.length > 0) {
+        inputBufferRef.current = inputBufferRef.current.slice(0, -1)
+        terminal.write('\b \b')
+      }
+    } else if (data === '\x03') {
+      // Ctrl+C
+      inputBufferRef.current = ''
+      terminal.writeln('^C')
+      terminal.write('\x1b[32m$\x1b[0m ')
+    } else if (data >= ' ' || data === '\t') {
+      // Printable character
+      inputBufferRef.current += data
+      terminal.write(data)
+    }
+  }
+
+  // Execute browser shell commands
+  const executeBrowserCommand = (terminal: Terminal, command: string) => {
+    const [cmd, ...args] = command.split(' ')
+
+    switch (cmd.toLowerCase()) {
+      case 'help':
+        terminal.writeln('Available commands:')
+        terminal.writeln('  help     - Show this help')
+        terminal.writeln('  echo     - Echo text')
+        terminal.writeln('  clear    - Clear terminal')
+        terminal.writeln('  date     - Show current date')
+        terminal.writeln('  whoami   - Show current user')
+        terminal.writeln('')
+        terminal.writeln('\x1b[90mNote: Full shell access requires desktop app.\x1b[0m')
+        break
+
+      case 'echo':
+        terminal.writeln(args.join(' '))
+        break
+
+      case 'clear':
+        terminal.clear()
+        break
+
+      case 'date':
+        terminal.writeln(new Date().toString())
+        break
+
+      case 'whoami':
+        terminal.writeln('scribe-user (browser mode)')
+        break
+
+      case 'pwd':
+        terminal.writeln('/scribe/browser')
+        break
+
+      case 'ls':
+        terminal.writeln('\x1b[90m(virtual directory - use desktop app for real filesystem)\x1b[0m')
+        break
+
+      case 'claude':
+      case 'gemini':
+        terminal.writeln(`\x1b[33m${cmd} requires desktop app for CLI access.\x1b[0m`)
+        terminal.writeln('Run: npm run dev')
+        break
+
+      case 'quarto':
+      case 'git':
+      case 'npm':
+        terminal.writeln(`\x1b[33m${cmd} requires desktop app for full shell access.\x1b[0m`)
+        break
+
+      default:
+        terminal.writeln(`\x1b[31mCommand not found: ${cmd}\x1b[0m`)
+        terminal.writeln('Type "help" for available commands.')
+    }
+  }
+
+  const handleClear = useCallback(() => {
+    if (xtermRef.current) {
+      xtermRef.current.clear()
+    }
+  }, [])
+
+  return (
+    <div
+      className="flex flex-col h-full"
+      data-testid="terminal-panel"
+    >
+      {/* Header */}
+      <div
+        className="flex items-center justify-between px-3 py-2 border-b shrink-0"
+        style={{ borderColor: 'var(--nexus-bg-tertiary)' }}
+      >
+        <div className="flex items-center gap-2">
+          <TerminalIcon className="w-4 h-4" style={{ color: 'var(--nexus-accent)' }} />
+          <span className="text-xs font-medium" style={{ color: 'var(--nexus-text-primary)' }}>
+            Terminal
+          </span>
+          {isBrowser() && (
+            <span
+              className="text-[10px] px-1.5 py-0.5 rounded"
+              style={{ backgroundColor: 'var(--nexus-bg-tertiary)', color: 'var(--nexus-text-muted)' }}
+            >
+              Browser
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1">
+          {/* Connection status */}
+          <div
+            className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
+            title={isConnected ? 'Connected' : 'Disconnected'}
+          />
+          <button
+            onClick={handleClear}
+            className="p-1 rounded hover:bg-nexus-bg-tertiary/50 transition-colors"
+            title="Clear terminal"
+            data-testid="clear-terminal-button"
+          >
+            <Trash2 className="w-3.5 h-3.5" style={{ color: 'var(--nexus-text-muted)' }} />
+          </button>
+        </div>
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <div
+          className="flex items-center gap-2 px-3 py-2 text-xs"
+          style={{ backgroundColor: 'rgba(227, 91, 91, 0.1)', color: '#e35b5b' }}
+        >
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* Terminal container */}
+      <div
+        ref={terminalRef}
+        className="flex-1 overflow-hidden"
+        data-testid="terminal-container"
+        style={{ padding: '4px' }}
+      />
+    </div>
+  )
+}
+
+export default TerminalPanel

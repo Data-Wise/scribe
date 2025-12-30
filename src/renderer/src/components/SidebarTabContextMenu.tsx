@@ -18,7 +18,8 @@ const tabLabels: Record<SidebarTabId, string> = {
   backlinks: 'Backlinks',
   tags: 'Tags',
   stats: 'Stats',
-  claude: 'Claude'
+  claude: 'Claude',
+  terminal: 'Terminal'
 }
 
 export function SidebarTabContextMenu({

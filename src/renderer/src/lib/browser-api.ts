@@ -543,6 +543,29 @@ export const browserApi = {
 
   setNoteProject: async (noteId: string, projectId: string | null): Promise<void> => {
     await db.notes.update(noteId, { project_id: projectId })
+  },
+
+  // ============================================================================
+  // Terminal/Shell Operations (Browser stubs)
+  // ============================================================================
+
+  spawnShell: async (): Promise<{ shell_id: number }> => {
+    // Browser mode uses emulated shell in TerminalPanel
+    console.warn('Full shell access requires native Tauri app')
+    return { shell_id: -1 }
+  },
+
+  writeToShell: async (_shellId: number, _data: string): Promise<void> => {
+    // No-op in browser mode
+  },
+
+  killShell: async (_shellId: number): Promise<void> => {
+    // No-op in browser mode
+  },
+
+  onShellOutput: (_callback: (output: string) => void): (() => void) => {
+    // No-op in browser mode
+    return () => {}
   }
 }
 

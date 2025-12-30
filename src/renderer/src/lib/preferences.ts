@@ -15,10 +15,10 @@ export type TabBarStyle = 'subtle' | 'elevated' | 'glass' | 'borderless'
 export type BorderStyle = 'sharp' | 'soft' | 'glow' | 'none'
 export type ActiveTabStyle = 'elevated' | 'accent-bar' | 'background' | 'bold' | 'full'
 
-// Right Sidebar types (v1.8)
+// Right Sidebar types (v1.8, terminal added v1.9)
 export type SidebarTabSize = 'compact' | 'full'
-export type SidebarTabId = 'properties' | 'backlinks' | 'tags' | 'stats' | 'claude'
-export const DEFAULT_SIDEBAR_TAB_ORDER: SidebarTabId[] = ['properties', 'backlinks', 'tags', 'stats', 'claude']
+export type SidebarTabId = 'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'
+export const DEFAULT_SIDEBAR_TAB_ORDER: SidebarTabId[] = ['properties', 'backlinks', 'tags', 'stats', 'claude', 'terminal']
 
 export interface UserPreferences {
   // Writing settings

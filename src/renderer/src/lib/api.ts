@@ -200,7 +200,25 @@ const tauriApi = {
     invoke('get_project_notes', { projectId }),
 
   setNoteProject: (noteId: string, projectId: string | null): Promise<void> =>
-    invoke('set_note_project', { noteId, projectId })
+    invoke('set_note_project', { noteId, projectId }),
+
+  // Terminal/Shell operations
+  spawnShell: (): Promise<{ shell_id: number }> =>
+    invoke('spawn_shell'),
+
+  writeToShell: (shellId: number, data: string): Promise<void> =>
+    invoke('write_to_shell', { shellId, data }),
+
+  killShell: (shellId: number): Promise<void> =>
+    invoke('kill_shell', { shellId }),
+
+  onShellOutput: (_callback: (output: string) => void): (() => void) => {
+    // This will be set up via Tauri event listener
+    // For now, return a no-op cleanup function
+    // TODO: Implement with @tauri-apps/api/event
+    console.warn('Shell output listener not yet implemented')
+    return () => {}
+  }
 }
 
 // ============================================================================
