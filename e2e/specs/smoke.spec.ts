@@ -52,4 +52,13 @@ test.describe('Smoke Tests', () => {
     const hasResearch = projects.some(p => p.toLowerCase().includes('research'))
     expect(hasResearch).toBe(true)
   })
+
+  test('NAV-05: Browser mode badge visible in browser mode', async ({ basePage }) => {
+    // E2E tests run in browser mode (Vite), so badge should be visible
+    const browserBadge = basePage.page.locator('[data-testid="browser-mode-badge"]')
+    await expect(browserBadge).toBeVisible()
+
+    // Badge should contain "Browser" text
+    await expect(browserBadge).toContainText('Browser')
+  })
 })

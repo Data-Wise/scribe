@@ -273,7 +273,11 @@ export function EditorTabs({
 
       {/* Browser mode indicator - subtle badge when running in browser */}
       {isBrowser() && (
-        <div className="browser-mode-badge" title="Running in browser mode (IndexedDB)">
+        <div
+          className="browser-mode-badge"
+          title="Running in browser mode (IndexedDB)"
+          data-testid="browser-mode-badge"
+        >
           <Globe size={12} />
           <span>Browser</span>
         </div>
