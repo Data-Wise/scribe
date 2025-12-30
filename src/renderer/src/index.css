@@ -259,12 +259,30 @@ body {
   gap: 6px;                           /* Match editor tabs (was 2px) */
   background: var(--nexus-bg-tertiary, #1a1f26);
   border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+}
+
+/* Scrollable area for tabs */
+.sidebar-tabs-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
 }
 
-.sidebar-tabs::-webkit-scrollbar {
+.sidebar-tabs-scroll::-webkit-scrollbar {
   display: none; /* Chrome/Safari */
+}
+
+/* Fixed controls area (toggle + menu) */
+.sidebar-tabs-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 4px;
 }
 
 .sidebar-tab {
@@ -322,6 +340,32 @@ body {
   flex: 1;
   overflow-y: auto;
   background: theme('colors.nexus-bg-primary');
+}
+
+/* Right Sidebar Tab Bar Toggle Button */
+.sidebar-tabs-controls .sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: rgba(128, 128, 128, 0.08);
+  border: none;
+  border-radius: 999px;
+  color: var(--nexus-text-muted, #94a3b8);
+  cursor: pointer;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+
+.sidebar-tabs-controls .sidebar-toggle-btn:hover {
+  background: rgba(128, 128, 128, 0.15);
+  color: var(--nexus-text-primary, #e2e8f0);
+}
+
+.sidebar-tabs-controls .sidebar-toggle-btn:active {
+  background: rgba(128, 128, 128, 0.2);
 }
 
 /* Right Sidebar Icon-Only Collapsed Mode */

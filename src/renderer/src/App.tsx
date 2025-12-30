@@ -24,7 +24,7 @@ import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
 import { Note, Tag, Property } from './types'
-import { Settings2, Link2, Tags, PanelRightOpen, BarChart3, Sparkles, Terminal } from 'lucide-react'
+import { Settings2, Link2, Tags, PanelRightOpen, PanelRightClose, BarChart3, Sparkles, Terminal } from 'lucide-react'
 import { api } from './lib/api'
 import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
@@ -1286,8 +1286,6 @@ function App() {
           {/* Editor tabs bar */}
           <EditorTabs
             accentColor={currentProjectId ? projects.find(p => p.id === currentProjectId)?.color : '#3b82f6'}
-            rightSidebarCollapsed={rightSidebarCollapsed}
-            onToggleRightSidebar={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
           />
 
           <TagFilter selectedTags={selectedTags} onRemoveTag={handleTagClick} onClearAll={handleClearTagFilters} />
@@ -1425,7 +1423,9 @@ function App() {
                   <button
                     className="right-sidebar-icon-btn expand-btn"
                     onClick={() => setRightSidebarCollapsed(false)}
-                    title="Expand sidebar (⌘⇧B)"
+                    title="Show sidebar (⌘⇧])"
+                    aria-label="Show right sidebar"
+                    data-testid="right-sidebar-toggle"
                   >
                     <PanelRightOpen size={18} />
                   </button>
@@ -1436,42 +1436,56 @@ function App() {
                     className="sidebar-tabs"
                     data-sidebar-tab-size={sidebarTabSettings.tabSize}
                   >
-                    {/* Render tabs in configured order, filtering out hidden ones */}
-                    {sidebarTabSettings.tabOrder
-                      .filter((tabId: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(tabId))
-                      .map((tabId: SidebarTabId) => {
-                        const tabConfig: Record<SidebarTabId, { icon: React.ReactNode; label: string; testId?: string }> = {
-                          properties: { icon: <Settings2 size={14} className="mr-1.5" />, label: 'Properties' },
-                          backlinks: { icon: <Link2 size={14} className="mr-1.5" />, label: 'Backlinks' },
-                          tags: { icon: <Tags size={14} className="mr-1.5" />, label: 'Tags' },
-                          stats: { icon: <BarChart3 size={14} className="mr-1.5" />, label: 'Stats' },
-                          claude: { icon: <Sparkles size={14} className="mr-1.5" />, label: 'Claude', testId: 'claude-tab' },
-                          terminal: { icon: <Terminal size={14} className="mr-1.5" />, label: 'Term', testId: 'terminal-tab' }
-                        }
-                        const config = tabConfig[tabId]
-                        const isDragging = draggedSidebarTab === tabId
-                        const isDragOver = dragOverSidebarTab === tabId
-                        return (
-                          <button
-                            key={tabId}
-                            className={`sidebar-tab ${rightActiveTab === tabId ? 'active' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
-                            onClick={() => setRightActiveTab(tabId)}
-                            onContextMenu={(e) => handleSidebarTabContextMenu(e, tabId)}
-                            data-testid={config.testId}
-                            draggable
-                            onDragStart={(e) => handleSidebarTabDragStart(e, tabId)}
-                            onDragOver={(e) => handleSidebarTabDragOver(e, tabId)}
-                            onDrop={(e) => handleSidebarTabDrop(e, tabId)}
-                            onDragEnd={handleSidebarTabDragEnd}
-                          >
-                            {config.icon}
-                            {config.label}
-                          </button>
-                        )
-                      })
-                    }
-                    <div className="flex-1" />
-                    <PanelMenu sections={getRightMenuSections()} />
+                    {/* Scrollable tabs area */}
+                    <div className="sidebar-tabs-scroll">
+                      {/* Render tabs in configured order, filtering out hidden ones */}
+                      {sidebarTabSettings.tabOrder
+                        .filter((tabId: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(tabId))
+                        .map((tabId: SidebarTabId) => {
+                          const tabConfig: Record<SidebarTabId, { icon: React.ReactNode; label: string; testId?: string }> = {
+                            properties: { icon: <Settings2 size={14} className="mr-1.5" />, label: 'Properties' },
+                            backlinks: { icon: <Link2 size={14} className="mr-1.5" />, label: 'Backlinks' },
+                            tags: { icon: <Tags size={14} className="mr-1.5" />, label: 'Tags' },
+                            stats: { icon: <BarChart3 size={14} className="mr-1.5" />, label: 'Stats' },
+                            claude: { icon: <Sparkles size={14} className="mr-1.5" />, label: 'Claude', testId: 'claude-tab' },
+                            terminal: { icon: <Terminal size={14} className="mr-1.5" />, label: 'Term', testId: 'terminal-tab' }
+                          }
+                          const config = tabConfig[tabId]
+                          const isDragging = draggedSidebarTab === tabId
+                          const isDragOver = dragOverSidebarTab === tabId
+                          return (
+                            <button
+                              key={tabId}
+                              className={`sidebar-tab ${rightActiveTab === tabId ? 'active' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
+                              onClick={() => setRightActiveTab(tabId)}
+                              onContextMenu={(e) => handleSidebarTabContextMenu(e, tabId)}
+                              data-testid={config.testId}
+                              draggable
+                              onDragStart={(e) => handleSidebarTabDragStart(e, tabId)}
+                              onDragOver={(e) => handleSidebarTabDragOver(e, tabId)}
+                              onDrop={(e) => handleSidebarTabDrop(e, tabId)}
+                              onDragEnd={handleSidebarTabDragEnd}
+                            >
+                              {config.icon}
+                              {config.label}
+                            </button>
+                          )
+                        })
+                      }
+                    </div>
+                    {/* Fixed controls area */}
+                    <div className="sidebar-tabs-controls">
+                      <button
+                        className="sidebar-toggle-btn"
+                        onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
+                        title={rightSidebarCollapsed ? "Show sidebar (⌘⇧])" : "Hide sidebar (⌘⇧])"}
+                        aria-label={rightSidebarCollapsed ? "Show right sidebar" : "Hide right sidebar"}
+                        data-testid="right-sidebar-toggle"
+                      >
+                        {rightSidebarCollapsed ? <PanelRightOpen size={16} /> : <PanelRightClose size={16} />}
+                      </button>
+                      <PanelMenu sections={getRightMenuSections()} />
+                    </div>
                   </div>
                   <div className="tab-content flex-1">
                     {rightActiveTab === 'properties' ? (

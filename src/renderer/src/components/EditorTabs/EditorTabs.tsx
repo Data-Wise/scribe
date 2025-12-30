@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Home, X, Pin, FileText, ChevronLeft, ChevronRight, PanelRightClose, PanelRightOpen } from 'lucide-react'
+import { Home, X, Pin, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useAppViewStore, EditorTab, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
 import { loadPreferences, TabBarStyle, BorderStyle, ActiveTabStyle } from '../../lib/preferences'
 import { TabContextMenu } from './TabContextMenu'
@@ -27,10 +27,6 @@ interface EditorTabsProps {
   borderStyle?: BorderStyle
   /** Optional: Override active tab style (for settings preview) */
   activeTabStyle?: ActiveTabStyle
-  /** Whether the right sidebar is collapsed */
-  rightSidebarCollapsed?: boolean
-  /** Callback to toggle the right sidebar */
-  onToggleRightSidebar?: () => void
 }
 
 export function EditorTabs({
@@ -38,8 +34,6 @@ export function EditorTabs({
   tabBarStyle: tabBarStyleProp,
   borderStyle: borderStyleProp,
   activeTabStyle: activeTabStyleProp,
-  rightSidebarCollapsed,
-  onToggleRightSidebar
 }: EditorTabsProps) {
   const { openTabs, activeTabId, setActiveTab, closeTab, reorderTabs, updateTabTitle } = useAppViewStore()
 
@@ -273,22 +267,6 @@ export function EditorTabs({
           aria-label="Scroll tabs right"
         >
           <ChevronRight size={16} />
-        </button>
-      )}
-
-      {/* Spacer to push toggle to right */}
-      <div className="flex-1" />
-
-      {/* Right sidebar toggle */}
-      {onToggleRightSidebar && (
-        <button
-          className="sidebar-toggle-btn"
-          onClick={onToggleRightSidebar}
-          title={rightSidebarCollapsed ? "Show sidebar (⌘⇧])" : "Hide sidebar (⌘⇧])"}
-          aria-label={rightSidebarCollapsed ? "Show right sidebar" : "Hide right sidebar"}
-          data-testid="right-sidebar-toggle"
-        >
-          {rightSidebarCollapsed ? <PanelRightOpen size={16} /> : <PanelRightClose size={16} />}
         </button>
       )}
 
