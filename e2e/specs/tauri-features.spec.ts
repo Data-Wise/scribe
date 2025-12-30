@@ -30,8 +30,8 @@ test.describe('Tauri Feature Parity', () => {
       await basePage.goto()
       await basePage.page.waitForTimeout(500)
 
-      // Should see "Projects" header in sidebar
-      const projectsHeader = basePage.page.locator('text=Projects')
+      // Should see "Projects" header in sidebar (use specific heading selector)
+      const projectsHeader = basePage.page.locator('.sidebar-title:has-text("Projects")')
       await expect(projectsHeader).toBeVisible()
     })
 
@@ -241,14 +241,13 @@ test.describe('Tauri Feature Parity', () => {
       await basePage.goto()
       await basePage.page.waitForTimeout(500)
 
-      // Press Cmd+Shift+C
-      await basePage.page.keyboard.press('Meta+Shift+c')
-      await basePage.page.waitForTimeout(300)
+      // Press Cmd+Shift+C (uppercase C because shift is held)
+      await basePage.page.keyboard.press('Meta+Shift+KeyC')
+      await basePage.page.waitForTimeout(500)
 
       // Quick capture overlay should appear
-      const quickCapture = basePage.page.locator('[data-testid="quick-capture"], .quick-capture-overlay')
-      const isVisible = await quickCapture.isVisible().catch(() => false)
-      expect(isVisible).toBe(true)
+      const quickCapture = basePage.page.locator('.quick-capture-overlay')
+      await expect(quickCapture).toBeVisible({ timeout: 2000 })
     })
   })
 

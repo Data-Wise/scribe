@@ -197,10 +197,10 @@ const tauriApi = {
     invoke('update_project_settings', { id, settings }),
 
   getProjectNotes: (projectId: string): Promise<Note[]> =>
-    invoke('get_project_notes', { projectId }),
+    invoke('get_notes_by_project', { projectId }),
 
   setNoteProject: (noteId: string, projectId: string | null): Promise<void> =>
-    invoke('set_note_project', { noteId, projectId }),
+    invoke('assign_note_to_project', { noteId, projectId }),
 
   // Terminal/Shell operations
   spawnShell: (): Promise<{ shell_id: number }> =>
