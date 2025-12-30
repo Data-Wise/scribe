@@ -43,6 +43,7 @@ const mockNotes: Note[] = [
     project_id: 'proj-1',
     created_at: Date.now() - 86400000,
     updated_at: Date.now(),
+    deleted_at: null,
   },
   {
     id: 'note-2',
@@ -52,6 +53,7 @@ const mockNotes: Note[] = [
     project_id: 'proj-1',
     created_at: Date.now() - 172800000,
     updated_at: Date.now() - 3600000,
+    deleted_at: null,
   },
   {
     id: 'note-3',
@@ -61,6 +63,7 @@ const mockNotes: Note[] = [
     project_id: 'proj-2',
     created_at: Date.now() - 259200000,
     updated_at: Date.now() - 7200000,
+    deleted_at: null,
   },
 ]
 
@@ -216,13 +219,15 @@ describe('StatsPanel Component', () => {
     })
 
     it('limits to 5 recent notes', () => {
-      const manyNotes = Array.from({ length: 10 }, (_, i) => ({
+      const manyNotes: Note[] = Array.from({ length: 10 }, (_, i) => ({
         id: `note-${i}`,
         title: `Note ${i}`,
         content: 'Content',
         folder: 'inbox',
+        project_id: 'proj-1',
         created_at: Date.now() - i * 86400000,
         updated_at: Date.now() - i * 3600000,
+        deleted_at: null,
       }))
       render(<StatsPanel {...defaultProps} notes={manyNotes} />)
       // Should only show 5 notes
