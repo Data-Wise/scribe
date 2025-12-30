@@ -8,11 +8,11 @@
 ## Recommended Evolution Path
 
 ```
-Phase 1 (DONE ✅)        Phase 2 (Choose ONE)       Phase 3 (Power Features)
+Phase 1 (DONE ✅)        Phase 2 (DONE ✅)           Phase 3 (Power Features)
 ─────────────────────   ─────────────────────────   ─────────────────────────
-[A] Stats tab ✅         [H] Claude tab (simple)     [J] Terminal tab
-[I] Status bar chat ✅   [F] Split-pane → evolve G   [G] Ambient AI (cmd+K)
-                        [K] AI Workspace (rich)
+[A] Stats tab ✅         [H] Claude tab ✅            [J] Terminal tab
+[I] Status bar chat ✅   [F] Split-pane (skipped)    [G] Ambient AI (cmd+K)
+                        [K] AI Workspace (skipped)
 ```
 
 ---
@@ -48,23 +48,27 @@ Phase 1 (DONE ✅)        Phase 2 (Choose ONE)       Phase 3 (Power Features)
 ## Recommended Next Steps
 
 **Priority Order:**
-1. ⚡ Wire up actual AI call in Tauri (prerequisite for Phase 2)
-2. 🔧 Option H: Claude as Tab (simplest AI integration)
+1. ⚡ Wire up actual AI call in Tauri (when ready for full Tauri mode)
+2. 🔧 Phase 3 options: Terminal tab or Ambient AI
 3. ⚡ Quick wins as time permits
 
-**Rationale:** Quick Chat already has the UI - just needs the Tauri backend wired. Then Option H builds naturally on that foundation.
+**Rationale:** Phase 2 complete - Claude tab has UI with browser-mode stub. Tauri wiring needed for full AI functionality.
 
 ---
 
-## Phase 2: AI Integration (Choose ONE path)
+## Phase 2: AI Integration ✅ COMPLETE
 
-### Path A: Option H - Claude as Tab (Simplest)
-- [ ] Create `ClaudeChatPanel.tsx` component
-- [ ] Add "claude" to `rightActiveTab` type
-- [ ] Add 5th tab: `[Properties] [Backlinks] [Tags] [Stats] [Claude]`
-- [ ] Full-height chat interface
-- [ ] Remove floating ClaudePanel
-- [ ] Message history persistence
+### Path A: Option H - Claude as Tab ✅
+- [x] Create `ClaudeChatPanel.tsx` component
+- [x] Add "claude" to `rightActiveTab` type
+- [x] Add 5th tab: `[Properties] [Backlinks] [Tags] [Stats] [Claude]`
+- [x] Full-height chat interface
+- [x] Message history within session
+- [x] Note context awareness (includes current note in prompts)
+- [x] Browser mode stub ("AI unavailable" message)
+- [x] Unit tests (23 tests in ClaudeChatPanel.test.tsx)
+- [x] E2E tests (10 tests in claude-tab.spec.ts)
+- [ ] Remove floating ClaudePanel (deferred - can keep both)
 
 ### Path B: Option F - Split-Pane (Always Visible AI)
 - [ ] Install react-resizable-panels or similar

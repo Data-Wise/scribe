@@ -13,12 +13,12 @@
 | Option | Description | Effort | ADHD | Status |
 |--------|-------------|--------|------|--------|
 | **A** | Stats tab in right sidebar (merge HudPanel) | Medium | 4/5 | ✅ **Done** |
-| F | Split-pane with docked Claude bottom | Medium | 3/5 | Evolve to G if cramped |
-| **G** | Ambient AI (cmd+K everywhere) | Large | 5/5 | **Long-term goal** |
-| H | Claude as full sidebar tab | Medium | 4/5 | Good middle ground |
+| F | Split-pane with docked Claude bottom | Medium | 3/5 | Skipped |
+| **G** | Ambient AI (cmd+K everywhere) | Large | 5/5 | **Phase 3 option** |
+| **H** | Claude as full sidebar tab | Medium | 4/5 | ✅ **Done** |
 | **I** | Status bar quick chat icon | Quick | 3/5 | ✅ **Done** |
-| **J** | Terminal tab (xterm.js) | Medium | 3/5 | **Power users** |
-| K | OpenCode-style AI Workspace | Large | 4/5 | Future option |
+| **J** | Terminal tab (xterm.js) | Medium | 3/5 | **Phase 3 option** |
+| K | OpenCode-style AI Workspace | Large | 4/5 | Skipped |
 
 ---
 
@@ -49,15 +49,16 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│ 1. Wire AI in Tauri    →   2. Option H (Claude Tab)   →   3. Quick │
-│    (Quick Chat works)       (Full sidebar chat)           Wins     │
+│ Phase 1 ✅   →   Phase 2 ✅   →   Phase 3 (Choose)   →   Tauri AI   │
+│ Stats/Chat       Claude Tab       Terminal or          Wire backend │
+│                                   Ambient AI                        │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Why this order:**
-- Quick Chat UI is done, just needs backend → natural starting point
-- Option H is simplest Phase 2 choice, builds on Quick Chat patterns
-- Quick wins can be sprinkled in between major features
+**Current status:**
+- Phase 1 & 2 complete with browser-mode stubs
+- All UI functional, ready for Tauri AI wiring when needed
+- Phase 3 options: Terminal tab (xterm.js) or Ambient AI (cmd+K)
 
 ---
 
