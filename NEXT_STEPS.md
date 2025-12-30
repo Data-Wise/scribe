@@ -6,7 +6,17 @@
 
 ## Recently Completed ✅
 
-### Session 2025-12-30: Claude Tab Enhancements
+### Session 2025-12-30 (Afternoon): UI Polish & Claude Enhancements
+- ⌘⇧[ shortcut for left sidebar collapse (symmetric with ⌘⇧])
+- Sidebar toggle button moved to editor tab bar (right side)
+- Enhanced resize divider (VS Code style + double-click to collapse)
+- Edit Project modal with color picker (right-click → Edit Project)
+- Markdown rendering in Claude responses (code blocks, lists, headers)
+- Copy button for code blocks in Claude responses
+- Conversation export (download as claude-chat-YYYY-MM-DD.md)
+- Unified sidebar tab styling (pill shape matching editor tabs)
+
+### Session 2025-12-30 (Morning): Claude Tab Enhancements
 - ⌘⇧] shortcut for right sidebar collapse
 - @ references in Claude tab (type @note-name to include in context)
 - Consolidated browser mode badges (status bar only)
@@ -79,26 +89,24 @@ Choose ONE to implement next:
 - [ ] Wire up actual AI call in Tauri (`api.runClaude()` → Claude CLI)
 - [x] `@note-name` references in Claude tab chat ✅ 2025-12-30
 - [x] Keyboard shortcut for right sidebar collapse (⌘⇧]) ✅ 2025-12-30
+- [x] ⌘⇧[ shortcut for left sidebar collapse ✅ 2025-12-30
+- [x] Project color picker in project settings modal ✅ 2025-12-30
 - [ ] ⌘⇧T to reopen closed tab
 - [ ] Chat history persistence in localStorage
-- [ ] ⌘⇧[ shortcut for left sidebar collapse (symmetric with right)
-- [ ] Project color picker in project settings modal
 
 ---
 
 ## Claude Tab Enhancements (Medium Effort)
 
-### Markdown Rendering in Responses 🔧
-**Effort:** Medium (1-2 hours)
-- [ ] Render code blocks with syntax highlighting (Prism.js)
-- [ ] Format lists, headers, bold/italic in responses
-- [ ] Add copy button for code blocks
+### Markdown Rendering in Responses ✅ DONE
+- [x] Render code blocks with syntax highlighting
+- [x] Format lists, headers, bold/italic in responses
+- [x] Add copy button for code blocks
 
-### Conversation Export 🔧
-**Effort:** Medium (1 hour)
-- [ ] Export chat as markdown file
-- [ ] Include referenced notes in export
-- [ ] Add timestamp headers
+### Conversation Export ✅ DONE
+- [x] Export chat as markdown file
+- [x] Include referenced notes in export
+- [x] Add timestamp headers
 
 ### Slash Commands 🏗️
 **Effort:** Large (2-3 hours)
@@ -128,4 +136,6 @@ Choose ONE to implement next:
 - `TODO.md` - Sprint 27 execution tracking
 - `IDEAS.md` - Feature options with effort/ADHD ratings
 - `BRAINSTORM-sidebar-consolidation-2025-12-29.md` - Master brainstorm
+- `BRAINSTORM-sidebar-tabs-unification-2025-12-30.md` - Tab styling unification
+- `BRAINSTORM-right-sidebar-toggle-2025-12-30.md` - Toggle button placement
 - `docs/planning/INDEX.md` - Planning documentation hub
