@@ -16,6 +16,7 @@ import { MissionControl } from './components/MissionControl'
 import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
+import { EditProjectModal } from './components/EditProjectModal'
 import { MissionSidebar } from './components/sidebar'
 import { ClaudeChatPanel } from './components/ClaudeChatPanel'
 import { TerminalPanel } from './components/TerminalPanel'
@@ -199,6 +200,7 @@ function App() {
   const [isGraphViewOpen, setIsGraphViewOpen] = useState(false)
   const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false)
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false)
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null)
   const [isSearchPanelOpen, setIsSearchPanelOpen] = useState(false)
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false)
 
@@ -1207,9 +1209,8 @@ function App() {
           setEditorMode('source')
         }}
         // Context menu handlers
-        onEditProject={async (projectId) => {
-          // For now, show a message. TODO: implement edit project modal
-          await dialogs.message(`Edit project: ${projectId}`, { title: 'Edit Project' })
+        onEditProject={(projectId) => {
+          setEditingProjectId(projectId)
         }}
         onArchiveProject={async (projectId) => {
           const project = projects.find(p => p.id === projectId)
@@ -1655,6 +1656,22 @@ function App() {
             )
           } catch (error) {
             console.error('Failed to create project:', error)
+          }
+        }}
+        existingProjectNames={projects.map(p => p.name.toLowerCase())}
+      />
+
+      {/* Edit Project Modal */}
+      <EditProjectModal
+        isOpen={editingProjectId !== null}
+        project={projects.find(p => p.id === editingProjectId) || null}
+        onClose={() => setEditingProjectId(null)}
+        onUpdateProject={async (projectId, updates) => {
+          try {
+            await api.updateProject(projectId, updates)
+            await loadProjects()
+          } catch (error) {
+            console.error('Failed to update project:', error)
           }
         }}
         existingProjectNames={projects.map(p => p.name.toLowerCase())}
