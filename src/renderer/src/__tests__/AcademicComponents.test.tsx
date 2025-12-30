@@ -268,6 +268,11 @@ describe('ExportDialog Component', () => {
     fireEvent.click(screen.getByText('Export'))
 
     expect(screen.getByText('Exporting...')).toBeInTheDocument()
+
+    // Wait for export to complete to avoid unhandled rejection
+    await waitFor(() => {
+      expect(screen.queryByText('Exporting...')).not.toBeInTheDocument()
+    }, { timeout: 200 })
   })
 
   it('calls onClose when Cancel is clicked', () => {

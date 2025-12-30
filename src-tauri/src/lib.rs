@@ -104,6 +104,9 @@ pub fn run() {
       commands::get_notes_by_project,
       commands::assign_note_to_project,
       commands::get_project_note_count,
+      // Project settings
+      commands::get_project_settings,
+      commands::update_project_settings,
     ])
 
 

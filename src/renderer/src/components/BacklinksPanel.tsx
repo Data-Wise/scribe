@@ -139,7 +139,7 @@ export function BacklinksPanel({ noteId, noteTitle, onSelectNote, refreshKey = 0
   const totalLinks = backlinks.length + outgoingLinks.length
 
   return (
-    <div className="h-full bg-nexus-bg-primary flex flex-col">
+    <div className="h-full bg-nexus-bg-primary flex flex-col" data-testid="backlinks-panel">
       {/* Header */}
       <div className="p-4 border-b border-white/5">
         <h2 className="text-sm font-semibold text-nexus-text-muted uppercase tracking-wide">

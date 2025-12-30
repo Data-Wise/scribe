@@ -77,8 +77,6 @@ export const browserApi = {
   },
 
   listNotes: async (folder?: string): Promise<Note[]> => {
-    let query = db.notes.where('deleted_at').equals(null as any)
-
     if (folder) {
       const records = await db.notes
         .where('folder')
@@ -227,7 +225,6 @@ export const browserApi = {
     }
 
     const matchingNoteIds: string[] = []
-    const tagIdSet = new Set(tagIds)
 
     for (const [noteId, noteTags] of noteTagMap) {
       if (matchAll) {

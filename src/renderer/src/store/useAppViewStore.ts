@@ -30,6 +30,7 @@ interface AppViewState {
   // Editor tabs state
   openTabs: EditorTab[]
   activeTabId: string | null
+  closedTabsHistory: EditorTab[]
 
   // Session tracking
   lastActiveNoteId: string | null
@@ -48,6 +49,7 @@ interface AppViewState {
   pinTab: (tabId: string) => void
   unpinTab: (tabId: string) => void
   updateTabTitle: (tabId: string, title: string) => void
+  reopenLastClosedTab: () => void
 
   // Session actions
   setLastActiveNote: (noteId: string | null) => void
@@ -200,9 +202,13 @@ const getSavedActiveTabId = (): string => {
   }
 }
 
-const saveActiveTabId = (tabId: string): void => {
+const saveActiveTabId = (tabId: string | null): void => {
   try {
-    localStorage.setItem(ACTIVE_TAB_KEY, tabId)
+    if (tabId) {
+      localStorage.setItem(ACTIVE_TAB_KEY, tabId)
+    } else {
+      localStorage.removeItem(ACTIVE_TAB_KEY)
+    }
   } catch {
     // Ignore localStorage errors
   }
@@ -240,6 +246,7 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   lastActiveNoteId: getLastActiveNoteId(),
   openTabs: getSavedTabs(),
   activeTabId: getSavedActiveTabId(),
+  closedTabsHistory: [],
 
   setSidebarMode: (mode: SidebarMode) => {
     set({ sidebarMode: mode })
@@ -310,11 +317,14 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   },
 
   closeTab: (tabId) => {
-    const { openTabs, activeTabId } = get()
+    const { openTabs, activeTabId, closedTabsHistory } = get()
     const tab = openTabs.find(t => t.id === tabId)
 
     // Cannot close pinned tabs
     if (!tab || tab.isPinned) return
+
+    // Save tab to history before removing (max 10)
+    const newHistory = [tab, ...closedTabsHistory].slice(0, 10)
 
     const tabIndex = openTabs.findIndex(t => t.id === tabId)
     const newTabs = openTabs.filter(t => t.id !== tabId)
@@ -329,7 +339,7 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
       }
     }
 
-    set({ openTabs: newTabs, activeTabId: newActiveId })
+    set({ openTabs: newTabs, activeTabId: newActiveId, closedTabsHistory: newHistory })
     saveTabs(newTabs)
     saveActiveTabId(newActiveId)
   },
@@ -392,6 +402,41 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
     )
     set({ openTabs: newTabs })
     saveTabs(newTabs)
+  },
+
+  reopenLastClosedTab: () => {
+    const { closedTabsHistory, openTabs } = get()
+    if (closedTabsHistory.length === 0) return
+
+    const [tabToReopen, ...remainingHistory] = closedTabsHistory
+
+    // Check if tab is already open (by noteId for note tabs)
+    const existingTab = tabToReopen.type === 'note' && tabToReopen.noteId
+      ? openTabs.find(t => t.type === 'note' && t.noteId === tabToReopen.noteId)
+      : openTabs.find(t => t.id === tabToReopen.id)
+
+    if (existingTab) {
+      // Just activate it and remove from history
+      set({ activeTabId: existingTab.id, closedTabsHistory: remainingHistory })
+      saveActiveTabId(existingTab.id)
+      return
+    }
+
+    // Add tab after pinned tabs
+    const pinnedCount = openTabs.filter(t => t.isPinned).length
+    const newTabs = [
+      ...openTabs.slice(0, pinnedCount),
+      tabToReopen,
+      ...openTabs.slice(pinnedCount)
+    ]
+
+    set({
+      openTabs: newTabs,
+      activeTabId: tabToReopen.id,
+      closedTabsHistory: remainingHistory
+    })
+    saveTabs(newTabs)
+    saveActiveTabId(tabToReopen.id)
   },
 
   setLastActiveNote: (noteId: string | null) => {

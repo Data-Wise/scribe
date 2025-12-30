@@ -3,17 +3,15 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { HybridEditor } from '../components/HybridEditor'
 import { Note, Tag } from '../types'
+import { createMockNote } from './testUtils'
 
 // Test utilities
-const mockNote: Note = {
+const mockNote: Note = createMockNote({
   id: '1',
   title: 'Test Note',
   content: 'Test content',
-  folder: 'inbox',
-  created_at: Date.now(),
-  updated_at: Date.now(),
-  deleted_at: null
-}
+  folder: 'inbox'
+})
 
 const mockTag: Tag = {
   id: '1',

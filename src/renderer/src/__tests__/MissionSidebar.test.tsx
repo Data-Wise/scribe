@@ -31,6 +31,7 @@ describe('MissionSidebar Integration', () => {
       title: 'Research Note 1',
       content: 'Some research content',
       folder: '/',
+      project_id: '1',
       created_at: Date.now(),
       updated_at: Date.now(),
       deleted_at: null,

@@ -6,6 +6,7 @@ import { CompactListMode } from '../components/sidebar/CompactListMode'
 import { CardViewMode } from '../components/sidebar/CardViewMode'
 import { ResizeHandle } from '../components/sidebar/ResizeHandle'
 import { Project, Note, ProjectStatus } from '../types'
+// Note: createMockNote available in ./testUtils for future use
 
 // ============================================================
 // StatusDot Component Tests
@@ -221,16 +222,12 @@ describe('CompactListMode Component', () => {
     { id: '2', name: 'Blog Post', type: 'generic', status: 'planning', created_at: Date.now(), updated_at: Date.now() - 1000 },
   ]
 
-  const mockNotes: Note[] = [
-    { id: 'n1', title: 'Note 1', content: 'Some content here', folder: '/', created_at: Date.now(), updated_at: Date.now(), deleted_at: null, properties: { project_id: { key: 'project_id', value: '1', type: 'text' } } },
-    { id: 'n2', title: 'Note 2', content: 'More content', folder: '/', created_at: Date.now(), updated_at: Date.now() - 500, deleted_at: null, properties: {} },
-  ]
-
   const mockHandlers = {
     onSelectProject: vi.fn(),
     onSelectNote: vi.fn(),
     onCreateProject: vi.fn(),
     onCollapse: vi.fn(),
+    onNewNote: vi.fn(),
   }
 
   beforeEach(() => {
@@ -433,7 +430,7 @@ describe('CompactListMode Component', () => {
       { id: 'n1', title: 'Note 1', content: 'Some content', folder: '/', project_id: '1', created_at: Date.now(), updated_at: Date.now(), deleted_at: null },
     ]
 
-    const { container } = render(
+    render(
       <CompactListMode
         projects={mockProjects}
         notes={notesWithProject}
@@ -445,7 +442,7 @@ describe('CompactListMode Component', () => {
     )
 
     // Find and click a note item if it exists in the expanded project
-    const noteItems = container.querySelectorAll('.note-item, .recent-note-item, button')
+    // Note: The actual note items are rendered dynamically
     // This test verifies the handler is properly wired up
     expect(mockHandlers.onSelectNote).toBeDefined()
   })

@@ -285,14 +285,38 @@ Working on [[Sensitivity Analysis]] section...
 
 ### Deferred to v2
 
-| Feature | Reason |
-|---------|--------|
-| **Terminal (xterm.js)** | Complexity, external works |
-| **Graph View** | Use Obsidian |
-| **Multi-tab Editing** | Breaks ADHD focus |
-| **File Tree Browser** | Complexity |
-| **Git Integration** | Use external |
-| **Code Execution** | Use RStudio/Positron |
+| Feature | Reason | Status |
+|---------|--------|--------|
+| **Terminal (xterm.js)** | Phase 3 power feature | ✅ Feasibility HIGH (react-xtermjs) |
+| **Graph View** | Use Obsidian | Permanent defer |
+| **Multi-tab Editing** | Breaks ADHD focus | Permanent defer |
+| **File Tree Browser** | Complexity | Evaluate |
+| **Git Integration** | Use external | Permanent defer |
+| **Code Execution** | Use RStudio/Positron | Permanent defer |
+
+### Sidebar Consolidation (v2 Evolution Path)
+
+**Design Doc:** `BRAINSTORM-sidebar-consolidation-2025-12-29.md`
+
+```
+Phase 1: Foundation
+├── Option A: Stats tab (merge HudPanel into right sidebar)
+└── Option I: Status bar quick chat icon
+
+Phase 2: AI Integration (Choose ONE)
+├── Option H: Claude as full sidebar tab (VS Code style)
+├── Option F: Split-pane with docked Claude → evolves to G if cramped
+└── Option K: OpenCode-style AI Workspace (rich UI)
+
+Phase 3: Power Features
+├── Option J: Terminal tab (xterm.js) - Feasibility: ✅ HIGH
+└── Option G: Ambient AI (⌘K everywhere, inline suggestions)
+```
+
+**Research Sources:**
+- OpenCode TUI patterns (github.com/opencode-ai/opencode)
+- Cursor 2.0 agent-centric UI (cursor.com/features)
+- xterm.js React integration (react-xtermjs)
 
 ### Never Build
 
@@ -545,6 +569,7 @@ Only after v1.0 is stable:
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2025-12-29 | 1.6.0 | Sprint 25 complete, 795 tests, sidebar consolidation planned |
 | 2024-12-25 | 1.3.0 | Sprint 10 complete, 300 tests, 70% progress |
 | 2024-12-24 | 1.2.0 | Added project system, daily notes, backlinks |
 | 2024-12-24 | 1.1.0 | Added academic features |

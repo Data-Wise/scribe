@@ -13,12 +13,14 @@ pub struct CreateNoteInput {
     title: String,
     content: String,
     folder: String,
+    properties: Option<String>,  // JSON string for note properties
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateNoteInput {
     title: Option<String>,
     content: Option<String>,
+    properties: Option<String>,  // JSON string for note properties
 }
 
 // Note commands
@@ -29,7 +31,7 @@ pub fn create_note(
     note: CreateNoteInput,
 ) -> Result<Note, String> {
     let db = state.db.lock().unwrap();
-    db.create_note(&note.title, &note.content, &note.folder)
+    db.create_note(&note.title, &note.content, &note.folder, note.properties.as_deref())
         .map_err(|e| e.to_string())
 }
 
@@ -58,7 +60,7 @@ pub fn update_note(
     updates: UpdateNoteInput,
 ) -> Result<Option<Note>, String> {
     let db = state.db.lock().unwrap();
-    db.update_note(&id, updates.title.as_deref(), updates.content.as_deref())
+    db.update_note(&id, updates.title.as_deref(), updates.content.as_deref(), updates.properties.as_deref())
         .map_err(|e| e.to_string())
 }
 
@@ -396,7 +398,7 @@ pub fn get_or_create_daily_note(state: State<AppState>, date: String) -> Result<
     // Create it with Markdown format
     let content = format!("## {}\n\n", date);
     
-    let note = db.create_note(&date, &content, "daily").map_err(|e| e.to_string())?;
+    let note = db.create_note(&date, &content, "daily", None).map_err(|e| e.to_string())?;
     Ok(note)
 }
 
@@ -590,5 +592,26 @@ pub fn export_document(options: ExportOptions) -> Result<ExportResult, String> {
     crate::academic::export_document(&options, &output_dir)
 }
 
+// Project Settings commands
 
+/// Get project settings
+#[tauri::command]
+pub fn get_project_settings(
+    state: State<AppState>,
+    project_id: String,
+) -> Result<Option<String>, String> {
+    let db = state.db.lock().unwrap();
+    db.get_project_settings(&project_id).map_err(|e| e.to_string())
+}
+
+/// Update project settings
+#[tauri::command]
+pub fn update_project_settings(
+    state: State<AppState>,
+    project_id: String,
+    settings: String,
+) -> Result<(), String> {
+    let db = state.db.lock().unwrap();
+    db.update_project_settings(&project_id, &settings).map_err(|e| e.to_string())
+}
 
