@@ -393,6 +393,27 @@ function App() {
   }
 
 
+  // Diagnostic: Test Tauri commands on startup
+  useEffect(() => {
+    const runDiagnostics = async () => {
+      console.log('[Scribe Diagnostics] Starting...')
+      try {
+        console.log('[Scribe Diagnostics] Testing listNotes...')
+        const notes = await api.listNotes()
+        console.log('[Scribe Diagnostics] listNotes returned:', notes.length, 'notes')
+
+        console.log('[Scribe Diagnostics] Testing listProjects...')
+        const projects = await api.listProjects()
+        console.log('[Scribe Diagnostics] listProjects returned:', projects.length, 'projects')
+
+        console.log('[Scribe Diagnostics] All commands working!')
+      } catch (error) {
+        console.error('[Scribe Diagnostics] FAILED:', error)
+      }
+    }
+    runDiagnostics()
+  }, [])
+
   useEffect(() => {
     loadNotes(currentFolder)
   }, [loadNotes, currentFolder])
@@ -553,10 +574,13 @@ function App() {
   }
 
   const handleDailyNote = async () => {
+    console.log('[Scribe] handleDailyNote called')
     const today = new Date()
     const dateStr = today.toISOString().split('T')[0]
+    console.log('[Scribe] Creating/opening daily note for:', dateStr)
     try {
       const dailyNote = await api.getOrCreateDailyNote(dateStr)
+      console.log('[Scribe] Daily note received:', dailyNote)
 
       // If note is empty (newly created), apply template
       if (isContentEmpty(dailyNote.content)) {
@@ -566,9 +590,10 @@ function App() {
       }
 
       selectNote(dailyNote.id)
+      console.log('[Scribe] Note selected:', dailyNote.id)
       loadNotes(currentFolder)
     } catch (error) {
-      console.error('Failed to open daily note:', error)
+      console.error('[Scribe] Failed to open daily note:', error)
     }
   }
 
