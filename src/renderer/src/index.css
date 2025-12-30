@@ -316,6 +316,58 @@ body {
   background: rgba(128, 128, 128, 0.2);
 }
 
+/* Editor Header - aligns with sidebar-header */
+.editor-header {
+  height: 40px;
+  padding: 8px 12px 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+/* Breadcrumb navigation */
+.editor-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--nexus-text-muted, #94a3b8);
+}
+
+.breadcrumb-item {
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.breadcrumb-item:hover {
+  color: var(--nexus-text-primary, #e2e8f0);
+}
+
+.breadcrumb-item.current {
+  color: var(--nexus-text-secondary, #cbd5e1);
+  font-weight: 500;
+}
+
+.breadcrumb-separator {
+  color: var(--nexus-text-muted, #64748b);
+  font-size: 10px;
+}
+
+/* Focus timer */
+.focus-timer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--nexus-text-muted, #94a3b8);
+}
+
+.timer-icon {
+  font-size: 14px;
+}
+
 .sidebar-tab {
   display: flex;
   align-items: center;

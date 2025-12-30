@@ -143,6 +143,23 @@ function App() {
     return saved ? parseInt(saved) : 320
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
+
+  // Session timer for focus tracking (ADHD feature)
+  const [sessionStart] = useState(() => Date.now())
+  const [sessionDuration, setSessionDuration] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSessionDuration(Math.floor((Date.now() - sessionStart) / 1000))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [sessionStart])
+
+  const formatSessionTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
   
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'>('properties')
@@ -1283,6 +1300,28 @@ function App() {
       <div className="flex-1 flex overflow-hidden">
         {/* Main editor area */}
         <div className="flex-1 flex flex-col min-w-0">
+          {/* Editor header for visual alignment with sidebar */}
+          <div className="editor-header">
+            {/* Breadcrumb navigation */}
+            <div className="editor-breadcrumb">
+              {currentProjectId && projects.find(p => p.id === currentProjectId) && (
+                <>
+                  <span className="breadcrumb-item">{projects.find(p => p.id === currentProjectId)?.name}</span>
+                  <span className="breadcrumb-separator">›</span>
+                </>
+              )}
+              {selectedNote && (
+                <span className="breadcrumb-item current">{selectedNote.title}</span>
+              )}
+            </div>
+
+            {/* Focus timer */}
+            <div className="focus-timer">
+              <span className="timer-icon">⏱</span>
+              <span className="timer-value">{formatSessionTime(sessionDuration)}</span>
+            </div>
+          </div>
+
           {/* Editor tabs bar */}
           <EditorTabs
             accentColor={currentProjectId ? projects.find(p => p.id === currentProjectId)?.color : '#3b82f6'}
