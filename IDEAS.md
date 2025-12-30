@@ -10,29 +10,38 @@
 
 ### Quick Reference
 
-| Option | Description | Effort | ADHD | Recommendation |
-|--------|-------------|--------|------|----------------|
-| **A** | Stats tab in right sidebar (merge HudPanel) | Medium | 4/5 | **Do first** |
+| Option | Description | Effort | ADHD | Status |
+|--------|-------------|--------|------|--------|
+| **A** | Stats tab in right sidebar (merge HudPanel) | Medium | 4/5 | ✅ **Done** |
 | F | Split-pane with docked Claude bottom | Medium | 3/5 | Evolve to G if cramped |
 | **G** | Ambient AI (cmd+K everywhere) | Large | 5/5 | **Long-term goal** |
 | H | Claude as full sidebar tab | Medium | 4/5 | Good middle ground |
-| I | Status bar quick chat icon | Quick | 3/5 | Quick win |
+| **I** | Status bar quick chat icon | Quick | 3/5 | ✅ **Done** |
 | **J** | Terminal tab (xterm.js) | Medium | 3/5 | **Power users** |
 | K | OpenCode-style AI Workspace | Large | 4/5 | Future option |
 
 ---
 
-## Phase 1: Foundation (Quick Wins)
+## Phase 1: Foundation ✅ COMPLETE
 
-1. **Option A: Stats Tab**
-   - Merge HudPanel into right sidebar as 4th tab
-   - Single location for all right-side info
-   - Remove floating panel complexity
+1. **Option A: Stats Tab** ✅
+   - Merged HudPanel into right sidebar as 4th tab
+   - Shows: Session stats, Daily goal, Current project, All notes, Recent activity, Projects
+   - Keyboard shortcut cycling includes Stats tab
+   - 31 unit tests + 8 E2E tests
 
-2. **Option I: Status Bar Quick Chat**
-   - AI icon in bottom status bar
-   - Click opens quick popover
-   - Non-intrusive AI access
+2. **Option I: Status Bar Quick Chat** ✅
+   - Sparkles icon in status bar (between streak and word count)
+   - Click or ⌘J opens Quick Chat popover
+   - Browser mode shows "AI unavailable" (graceful degradation)
+   - 19 unit tests + 8 E2E tests
+
+### Quick Chat Future Enhancements
+- [ ] Implement actual AI call via Tauri
+- [ ] Chat history within session
+- [ ] Context awareness (current note content)
+- [ ] Quick actions (summarize, improve, explain)
+- [ ] @ references to other notes
 
 ---
 

@@ -1,37 +1,46 @@
 # Scribe TODO - Sidebar Consolidation Evolution
 
 **Updated:** 2025-12-29
-**Sprint:** 27 (Planned)
+**Sprint:** 27 (In Progress)
 
 ---
 
 ## Recommended Evolution Path
 
 ```
-Phase 1 (Now)           Phase 2 (Choose ONE)       Phase 3 (Power Features)
+Phase 1 (DONE ✅)        Phase 2 (Choose ONE)       Phase 3 (Power Features)
 ─────────────────────   ─────────────────────────   ─────────────────────────
-[A] Stats tab           [H] Claude tab (simple)     [J] Terminal tab
-[I] Status bar chat     [F] Split-pane → evolve G   [G] Ambient AI (cmd+K)
+[A] Stats tab ✅         [H] Claude tab (simple)     [J] Terminal tab
+[I] Status bar chat ✅   [F] Split-pane → evolve G   [G] Ambient AI (cmd+K)
                         [K] AI Workspace (rich)
 ```
 
 ---
 
-## Phase 1: Foundation
+## Phase 1: Foundation ✅ COMPLETE
 
-### Option A: Add Stats Tab to Right Sidebar
-- [ ] Create `StatsPanel.tsx` component (extract from HudPanel)
-- [ ] Add "stats" to `rightActiveTab` type in store
-- [ ] Add 4th tab to RightSidebar: `[Properties] [Backlinks] [Tags] [Stats]`
-- [ ] Remove HudPanel toggle button from UI
-- [ ] Delete HudPanel.tsx after migration
-- [ ] Update E2E tests
+### Option A: Add Stats Tab to Right Sidebar ✅
+- [x] Create `StatsPanel.tsx` component (extract from HudPanel)
+- [x] Add "stats" to `rightActiveTab` type in store
+- [x] Add 4th tab to RightSidebar: `[Properties] [Backlinks] [Tags] [Stats]`
+- [x] Remove HudPanel toggle button from UI
+- [x] Update E2E tests (SBR-11 to SBR-18)
+- [x] Unit tests (31 tests in StatsPanel.test.tsx)
 
-### Option I: Status Bar Quick Chat
-- [ ] Add AI icon to StatusBar component
-- [ ] Create QuickChatPopover component
-- [ ] Wire to Claude CLI for quick queries
-- [ ] Add keyboard shortcut (cmd+/)
+### Option I: Status Bar Quick Chat ✅
+- [x] Add AI icon (Sparkles) to StatusBar in HybridEditor
+- [x] Create QuickChatPopover component
+- [x] Add keyboard shortcut (⌘J) - changed from ⌘/ due to conflict
+- [x] Browser mode detection (disabled when AI unavailable)
+- [x] Unit tests (19 tests in QuickChatPopover.test.tsx)
+- [x] E2E tests (8 tests in quick-chat.spec.ts)
+
+### Quick Chat Future Enhancements
+- [ ] Implement actual AI call via Tauri for desktop mode
+- [ ] Add chat history within session
+- [ ] Context awareness (pass current note content to AI)
+- [ ] Show note title/project in AI prompt context
+- [ ] Quick actions (summarize, improve, explain)
 
 ---
 
