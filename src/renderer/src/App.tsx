@@ -1262,6 +1262,7 @@ function App() {
             await loadNotes()
           }
         }}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Main content area */}

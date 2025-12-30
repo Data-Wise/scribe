@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Menu, Plus } from 'lucide-react'
+import { Menu, Plus, Settings } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 
@@ -10,6 +10,7 @@ interface IconBarModeProps {
   onSelectProject: (id: string | null) => void
   onCreateProject: () => void
   onExpand: () => void
+  onOpenSettings?: () => void
 }
 
 const MAX_VISIBLE_PROJECTS = 8
@@ -20,7 +21,8 @@ export function IconBarMode({
   currentProjectId,
   onSelectProject,
   onCreateProject,
-  onExpand
+  onExpand,
+  onOpenSettings
 }: IconBarModeProps) {
   // Show active projects first, then by updated_at (treat undefined status as 'active')
   const sortedProjects = [...projects]
@@ -83,6 +85,18 @@ export function IconBarMode({
       >
         <Plus size={16} />
       </button>
+
+      {/* Settings button */}
+      {onOpenSettings && (
+        <button
+          className="icon-btn settings-icon-btn"
+          onClick={onOpenSettings}
+          title="Settings (⌘,)"
+          data-testid="sidebar-settings-button"
+        >
+          <Settings size={16} />
+        </button>
+      )}
     </div>
   )
 }

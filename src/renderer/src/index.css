@@ -2541,6 +2541,44 @@ mark {
   color: var(--nexus-accent);
 }
 
+/* Settings Button (All Sidebar Modes) */
+.settings-icon-btn {
+  margin-top: 4px;
+  opacity: 0.6;
+  transition: all 150ms ease;
+}
+
+.settings-icon-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-settings-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 12px 12px;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--nexus-text-muted);
+  font-size: 12px;
+  transition: all 150ms ease;
+}
+
+.sidebar-settings-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--nexus-text-primary);
+}
+
+.sidebar-settings-btn .shortcut {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: 0.5;
+}
+
 /* ===== CARD VIEW MODE ===== */
 .mission-sidebar-card {
   display: flex;

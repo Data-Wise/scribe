@@ -6,8 +6,7 @@ import { StreakDisplay } from './StreakDisplay'
 import { RecentNotes } from './RecentNotes'
 import { loadPreferences, getStreakInfo } from '../lib/preferences'
 import { useDragRegion } from './DragRegion'
-import { isBrowser } from '../lib/platform'
-import { Settings, FolderPlus, Globe } from 'lucide-react'
+import { Settings, FolderPlus } from 'lucide-react'
 
 // Helper to count words in markdown content
 function countWords(content: string): number {
@@ -99,20 +98,6 @@ export function MissionControl({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {isBrowser() && (
-            <span
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium"
-              style={{
-                backgroundColor: 'rgba(251, 146, 60, 0.15)',
-                color: 'rgb(251, 146, 60)',
-                border: '1px solid rgba(251, 146, 60, 0.25)'
-              }}
-              title="Running in browser mode with IndexedDB storage. Some features require the desktop app."
-            >
-              <Globe className="w-3.5 h-3.5" />
-              Browser Mode
-            </span>
-          )}
           <button
             onClick={onSettings}
             className="p-2 rounded-lg hover:bg-white/5 transition-colors text-nexus-text-muted hover:text-nexus-text-primary"

@@ -571,6 +571,7 @@ export function HybridEditor({
                 border: '1px solid rgba(251, 146, 60, 0.3)'
               }}
               title="Running in browser mode with IndexedDB storage"
+              data-testid="browser-mode-badge"
             >
               Browser Mode
             </span>

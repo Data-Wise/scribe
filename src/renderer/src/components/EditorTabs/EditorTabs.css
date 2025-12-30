@@ -367,30 +367,6 @@
 }
 
 /* ============================================================
-   BROWSER MODE INDICATOR BADGE
-   ============================================================ */
-
-.browser-mode-badge {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  margin-right: 8px;
-  background: rgba(59, 130, 246, 0.15);
-  border-radius: 4px;
-  color: #60a5fa;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-.browser-mode-badge svg {
-  opacity: 0.9;
-}
-
-/* ============================================================
    RESPONSIVE - Smaller tabs on narrow screens
    ============================================================ */
 

@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Home, X, Pin, FileText, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Home, X, Pin, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useAppViewStore, EditorTab, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
-import { isBrowser } from '../../lib/platform'
 import { loadPreferences, TabBarStyle, BorderStyle, ActiveTabStyle } from '../../lib/preferences'
 import { TabContextMenu } from './TabContextMenu'
 import './EditorTabs.css'
@@ -269,18 +268,6 @@ export function EditorTabs({
         >
           <ChevronRight size={16} />
         </button>
-      )}
-
-      {/* Browser mode indicator - subtle badge when running in browser */}
-      {isBrowser() && (
-        <div
-          className="browser-mode-badge"
-          title="Running in browser mode (IndexedDB)"
-          data-testid="browser-mode-badge"
-        >
-          <Globe size={12} />
-          <span>Browser</span>
-        </div>
       )}
 
       {/* Context menu */}

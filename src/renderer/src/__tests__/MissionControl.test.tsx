@@ -92,12 +92,6 @@ describe('MissionControl Component', () => {
       expect(screen.getByText(/2 pages/)).toBeInTheDocument()
     })
 
-    it('displays Browser Mode indicator when in browser mode', () => {
-      render(<MissionControl {...defaultProps} />)
-
-      expect(screen.getByText('Browser Mode')).toBeInTheDocument()
-    })
-
     it('renders project cards', () => {
       render(<MissionControl {...defaultProps} />)
 

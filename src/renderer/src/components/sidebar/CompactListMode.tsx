@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder } from 'lucide-react'
+import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { ActivityDots } from './ActivityDots'
 import { ProjectContextCard } from './ProjectContextCard'
@@ -24,6 +24,7 @@ interface CompactListModeProps {
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
   onDeleteNote?: (noteId: string) => void
+  onOpenSettings?: () => void
 }
 
 export function CompactListMode({
@@ -42,7 +43,8 @@ export function CompactListMode({
   onRenameNote,
   onMoveNoteToProject,
   onDuplicateNote,
-  onDeleteNote
+  onDeleteNote,
+  onOpenSettings
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -163,6 +165,19 @@ export function CompactListMode({
         <Plus size={14} />
         <span>New Project</span>
       </button>
+
+      {/* Settings button */}
+      {onOpenSettings && (
+        <button
+          className="sidebar-settings-btn"
+          onClick={onOpenSettings}
+          data-testid="sidebar-settings-button"
+        >
+          <Settings size={14} />
+          <span>Settings</span>
+          <span className="shortcut">⌘,</span>
+        </button>
+      )}
 
       {/* Context Menus */}
       {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (

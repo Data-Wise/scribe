@@ -55,6 +55,12 @@ test.describe('Smoke Tests', () => {
 
   test('NAV-05: Browser mode badge visible in browser mode', async ({ basePage }) => {
     // E2E tests run in browser mode (Vite), so badge should be visible
+    // First open a note so the status bar (with browser badge) is visible
+    const welcomeNote = basePage.page.locator('button:has-text("Welcome to Scribe")').first()
+    await welcomeNote.click()
+    await basePage.page.waitForTimeout(300)
+
+    // Browser badge should be in the status bar
     const browserBadge = basePage.page.locator('[data-testid="browser-mode-badge"]')
     await expect(browserBadge).toBeVisible()
 

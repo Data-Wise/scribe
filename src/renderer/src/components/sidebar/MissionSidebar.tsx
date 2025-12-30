@@ -22,6 +22,7 @@ interface MissionSidebarProps {
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
   onDeleteNote?: (noteId: string) => void
+  onOpenSettings?: () => void
 }
 
 export function MissionSidebar({
@@ -38,7 +39,8 @@ export function MissionSidebar({
   onRenameNote,
   onMoveNoteToProject,
   onDuplicateNote,
-  onDeleteNote
+  onDeleteNote,
+  onOpenSettings
 }: MissionSidebarProps) {
   const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
 
@@ -88,6 +90,7 @@ export function MissionSidebar({
           onSelectProject={onSelectProject}
           onCreateProject={onCreateProject}
           onExpand={handleExpand}
+          onOpenSettings={onOpenSettings}
         />
       )}
 
@@ -109,6 +112,7 @@ export function MissionSidebar({
           onMoveNoteToProject={onMoveNoteToProject}
           onDuplicateNote={onDuplicateNote}
           onDeleteNote={onDeleteNote}
+          onOpenSettings={onOpenSettings}
         />
       )}
 
@@ -130,6 +134,7 @@ export function MissionSidebar({
           onMoveNoteToProject={onMoveNoteToProject}
           onDuplicateNote={onDuplicateNote}
           onDeleteNote={onDeleteNote}
+          onOpenSettings={onOpenSettings}
         />
       )}
 

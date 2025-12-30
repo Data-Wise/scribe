@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, FileText, MoreHorizontal, ChevronDown } from 'lucide-react'
+import { Menu, Plus, Search, FileText, MoreHorizontal, ChevronDown, Settings } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { ProjectContextMenu } from './ProjectContextMenu'
@@ -23,6 +23,7 @@ interface CardViewModeProps {
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
   onDeleteNote?: (noteId: string) => void
+  onOpenSettings?: () => void
 }
 
 export function CardViewMode({
@@ -41,7 +42,8 @@ export function CardViewMode({
   onRenameNote,
   onMoveNoteToProject,
   onDuplicateNote,
-  onDeleteNote
+  onDeleteNote,
+  onOpenSettings
 }: CardViewModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null)
@@ -188,6 +190,19 @@ export function CardViewMode({
         <Plus size={16} />
         <span>New Project</span>
       </button>
+
+      {/* Settings button */}
+      {onOpenSettings && (
+        <button
+          className="sidebar-settings-btn"
+          onClick={onOpenSettings}
+          data-testid="sidebar-settings-button"
+        >
+          <Settings size={14} />
+          <span>Settings</span>
+          <span className="shortcut">⌘,</span>
+        </button>
+      )}
 
       {/* Context Menus */}
       {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (
