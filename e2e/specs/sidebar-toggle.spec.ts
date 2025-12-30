@@ -88,17 +88,17 @@ test.describe('Sidebar Toggle Button', () => {
     test('STG-07: Toggle button icon changes based on state', async ({ basePage }) => {
       const toggleBtn = basePage.page.locator('[data-testid="right-sidebar-toggle"]')
 
-      // When expanded, should show "Hide" in title
+      // When expanded, should show "Collapse" in title
       const expandedTitle = await toggleBtn.getAttribute('title')
-      expect(expandedTitle).toMatch(/hide/i)
+      expect(expandedTitle).toMatch(/collapse/i)
 
       // Collapse
       await toggleBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // When collapsed, should show "Show" in title
+      // When collapsed, should show "Expand" in title
       const collapsedTitle = await toggleBtn.getAttribute('title')
-      expect(collapsedTitle).toMatch(/show/i)
+      expect(collapsedTitle).toMatch(/expand/i)
     })
 
     test('STG-08: Toggle state persists after page reload', async ({ basePage }) => {

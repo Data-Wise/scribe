@@ -100,7 +100,6 @@ function App() {
 
   // Sidebar mode and tabs from app view store
   const {
-    sidebarMode,
     cycleSidebarMode,
     toggleSidebarCollapsed,
     setLastActiveNote,
@@ -1506,7 +1505,7 @@ function App() {
                 <button
                   className="sidebar-toggle-btn"
                   onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
-                  title={rightSidebarCollapsed ? "Show sidebar (⌘⇧])" : "Hide sidebar (⌘⇧])"}
+                  title={rightSidebarCollapsed ? "Expand sidebar (⌘⇧])" : "Collapse sidebar (⌘⇧])"}
                   aria-label={rightSidebarCollapsed ? "Show right sidebar" : "Hide right sidebar"}
                   data-testid="right-sidebar-toggle"
                 >
@@ -1522,10 +1521,10 @@ function App() {
                     .filter((tabId: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(tabId))
                     .map((tabId: SidebarTabId) => {
                       const iconConfig: Record<SidebarTabId, { icon: React.ReactNode; label: string; testId?: string }> = {
-                        properties: { icon: <Settings2 size={18} />, label: 'Properties' },
-                        backlinks: { icon: <Link2 size={18} />, label: 'Backlinks' },
-                        tags: { icon: <Tags size={18} />, label: 'Tags' },
-                        stats: { icon: <BarChart3 size={18} />, label: 'Stats' },
+                        properties: { icon: <Settings2 size={18} />, label: 'Properties', testId: 'properties-tab-icon' },
+                        backlinks: { icon: <Link2 size={18} />, label: 'Backlinks', testId: 'backlinks-tab-icon' },
+                        tags: { icon: <Tags size={18} />, label: 'Tags', testId: 'tags-tab-icon' },
+                        stats: { icon: <BarChart3 size={18} />, label: 'Stats', testId: 'stats-tab-icon' },
                         claude: { icon: <Sparkles size={18} />, label: 'Claude', testId: 'claude-tab-icon' },
                         terminal: { icon: <Terminal size={18} />, label: 'Terminal', testId: 'terminal-tab-icon' }
                       }
