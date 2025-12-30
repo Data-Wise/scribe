@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
-import { Sparkles, Send, Loader2, Trash2, User, Bot, FileText } from 'lucide-react'
+import { Sparkles, Send, Loader2, Trash2, User, Bot, FileText, Copy, Check } from 'lucide-react'
 import { isBrowser } from '../lib/platform'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface Message {
   id: string
@@ -28,6 +30,37 @@ interface ClaudeChatPanelProps {
 }
 
 /**
+ * CopyButton - Small button to copy code to clipboard
+ */
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="p-1 rounded hover:bg-white/10 transition-colors"
+      title={copied ? 'Copied!' : 'Copy code'}
+    >
+      {copied ? (
+        <Check className="w-3 h-3" style={{ color: 'var(--nexus-accent)' }} />
+      ) : (
+        <Copy className="w-3 h-3" style={{ color: 'var(--nexus-text-muted)' }} />
+      )}
+    </button>
+  )
+}
+
+/**
  * ClaudeChatPanel - Full-height AI chat interface for right sidebar
  *
  * ADHD-friendly features:
@@ -35,6 +68,7 @@ interface ClaudeChatPanelProps {
  * - Keyboard-first (Enter to send)
  * - Clear visual distinction between user/assistant messages
  * - Non-intrusive placement in sidebar
+ * - Markdown rendering with syntax highlighting
  *
  * Browser mode: Returns "AI features are only available in the desktop app."
  */
@@ -311,7 +345,73 @@ export function ClaudeChatPanel({
                     : 'var(--nexus-text-primary)'
                 }}
               >
-                <div className="whitespace-pre-wrap">{msg.content}</div>
+                {msg.role === 'user' ? (
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                ) : (
+                  <div className="claude-markdown prose prose-sm prose-invert max-w-none">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        // Code blocks with copy button
+                        code({ className, children, ...props }) {
+                          const isInline = !className
+                          const match = /language-(\w+)/.exec(className || '')
+                          const language = match ? match[1] : ''
+                          const codeString = String(children).replace(/\n$/, '')
+
+                          if (isInline) {
+                            return (
+                              <code
+                                className="px-1 py-0.5 rounded text-[11px] font-mono"
+                                style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
+                                {...props}
+                              >
+                                {children}
+                              </code>
+                            )
+                          }
+
+                          return (
+                            <div className="relative group my-2">
+                              <div className="flex items-center justify-between px-2 py-1 rounded-t text-[10px]"
+                                style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                                <span style={{ color: 'var(--nexus-text-muted)' }}>{language || 'code'}</span>
+                                <CopyButton text={codeString} />
+                              </div>
+                              <pre className="p-2 rounded-b overflow-x-auto text-[11px]"
+                                style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
+                                <code className="font-mono" {...props}>{children}</code>
+                              </pre>
+                            </div>
+                          )
+                        },
+                        // Style other elements
+                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                        ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-decimal pl-4 mb-2">{children}</ol>,
+                        li: ({ children }) => <li className="mb-0.5">{children}</li>,
+                        h1: ({ children }) => <h1 className="text-sm font-bold mb-2">{children}</h1>,
+                        h2: ({ children }) => <h2 className="text-xs font-bold mb-1.5">{children}</h2>,
+                        h3: ({ children }) => <h3 className="text-xs font-semibold mb-1">{children}</h3>,
+                        strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                        a: ({ href, children }) => (
+                          <a href={href} target="_blank" rel="noopener noreferrer"
+                            className="underline hover:opacity-80" style={{ color: 'var(--nexus-accent)' }}>
+                            {children}
+                          </a>
+                        ),
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-2 pl-2 my-2 opacity-80"
+                            style={{ borderColor: 'var(--nexus-accent)' }}>
+                            {children}
+                          </blockquote>
+                        ),
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </div>
               {msg.role === 'user' && (
                 <div
