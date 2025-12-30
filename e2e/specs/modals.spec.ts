@@ -210,8 +210,9 @@ test.describe('Modals & Dialogs', () => {
       await appearanceTab.click()
       await basePage.page.waitForTimeout(200)
 
-      // Scroll to Preview section
-      const previewLabel = basePage.page.locator('label:has-text("Preview")')
+      // Scope to UI Style section (not Right Sidebar which also has Preview)
+      const uiStyleSection = basePage.page.locator('section:has(h4:has-text("UI Style"))')
+      const previewLabel = uiStyleSection.locator('label:has-text("Preview")')
       await previewLabel.scrollIntoViewIfNeeded()
       await expect(previewLabel).toBeVisible()
     })
@@ -227,8 +228,9 @@ test.describe('Modals & Dialogs', () => {
       await basePage.page.getByRole('button', { name: 'glass', exact: true }).click()
       await basePage.page.waitForTimeout(100)
 
-      // Then reset
-      await basePage.page.locator('button:has-text("Reset to defaults")').click()
+      // Scope to UI Style section (not Right Sidebar which also has Reset button)
+      const uiStyleSection = basePage.page.locator('section:has(h4:has-text("UI Style"))')
+      await uiStyleSection.locator('button:has-text("Reset to defaults")').click()
       await basePage.page.waitForTimeout(200)
 
       // Should be back to Elevated (default) - description should match
