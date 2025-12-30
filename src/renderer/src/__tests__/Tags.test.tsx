@@ -29,6 +29,7 @@ const mockNotes: Note[] = [
     title: 'Research Ideas',
     content: '<p>Working on #mediation and #sensitivity-analysis</p>',
     folder: 'inbox',
+    project_id: null,
     created_at: Date.now(),
     updated_at: Date.now(),
     deleted_at: null
@@ -38,6 +39,7 @@ const mockNotes: Note[] = [
     title: 'Meeting Notes',
     content: '<p>Discussed #meeting #statistics today</p>',
     folder: 'projects',
+    project_id: null,
     created_at: Date.now(),
     updated_at: Date.now(),
     deleted_at: null
@@ -47,6 +49,7 @@ const mockNotes: Note[] = [
     title: 'Todo List',
     content: '<p>#todo Review paper #deadline-2024</p>',
     folder: 'inbox',
+    project_id: null,
     created_at: Date.now(),
     updated_at: Date.now(),
     deleted_at: null

@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Project, Note } from '../types'
-import { Beaker, GraduationCap, Package, Code2, Folder, FileText, Zap, TrendingUp, Clock, ChevronRight } from 'lucide-react'
+import { Folder, Zap, TrendingUp, Clock, ChevronRight } from 'lucide-react'
 
 interface HudPanelProps {
   isOpen: boolean
@@ -20,7 +20,7 @@ export function HudPanel({
   currentProjectId,
   onSelectProject,
   onSelectNote,
-  onClose,
+  onClose: _onClose,
   mode = 'layered'
 }: HudPanelProps) {
   // Stats calculation

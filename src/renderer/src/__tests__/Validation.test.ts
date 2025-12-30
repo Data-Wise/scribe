@@ -156,6 +156,7 @@ describe('Editor Validation Tests', () => {
         title: 'Test Note',
         content: 'Test content',
         folder: 'inbox',
+        project_id: null,
         created_at: Date.now(),
         updated_at: Date.now(),
         deleted_at: null
@@ -175,6 +176,7 @@ describe('Editor Validation Tests', () => {
         title: 'Test Note',
         content: 'Test content',
         folder: 'inbox',
+        project_id: null,
         created_at: Date.now(),
         updated_at: Date.now(),
         deleted_at: null,

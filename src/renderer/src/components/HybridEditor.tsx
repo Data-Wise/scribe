@@ -2,10 +2,12 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
+import { Sparkles } from 'lucide-react'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
 import { WritingProgress } from './WritingProgress'
+import { QuickChatPopover } from './QuickChatPopover'
 import { processMathInContent } from '../lib/mathjax'
 import { isBrowser } from '../lib/platform'
 import { Note, Tag } from '../types'
@@ -73,6 +75,10 @@ export function HybridEditor({
   const [tagTrigger, setTagTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
   const [citationTrigger, setCitationTrigger] = useState<{ query: string; position: { top: number; left: number } } | null>(null)
 
+  // Quick chat popover state
+  const [quickChatOpen, setQuickChatOpen] = useState(false)
+  const quickChatButtonRef = useRef<HTMLButtonElement>(null)
+
   // Cycle between modes: source → live-preview → reading → source
   const cycleMode = useCallback(() => {
     const modes: EditorMode[] = ['source', 'live-preview', 'reading']
@@ -106,6 +112,11 @@ export function HybridEditor({
       if (e.key === 'Escape' && mode === 'reading') {
         e.preventDefault()
         handleModeChange('source')
+      }
+      // Cmd+J or Ctrl+J to toggle quick chat
+      if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
+        e.preventDefault()
+        setQuickChatOpen(prev => !prev)
       }
     }
 
@@ -352,8 +363,19 @@ export function HybridEditor({
   // Word count
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
 
+  // Handle quick chat submit
+  const handleQuickChatSubmit = useCallback(async (message: string): Promise<string> => {
+    // In browser mode, AI is not available
+    if (isBrowser()) {
+      return 'AI features are only available in the desktop app.'
+    }
+    // TODO: Implement actual AI call via Tauri
+    // For now, return a placeholder response
+    return `AI response to: "${message}" (Not yet implemented)`
+  }, [])
+
   return (
-    <div className="h-full flex flex-col relative" style={{ backgroundColor: 'var(--nexus-bg-primary)' }}>
+    <div className="h-full flex flex-col relative" style={{ backgroundColor: 'var(--nexus-bg-primary)' }} data-testid="hybrid-editor" data-mode={mode}>
       {/* Mode toggle - pill style, top-right */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-3 text-xs" style={{ color: 'var(--nexus-text-muted)' }}>
         <span className="tabular-nums">{wordCount} words</span>
@@ -497,6 +519,29 @@ export function HybridEditor({
           streak={streak}
           sessionStartTime={sessionStartTime}
         />
+
+        {/* Quick Chat AI button */}
+        <div className="relative">
+          <button
+            ref={quickChatButtonRef}
+            onClick={() => setQuickChatOpen(prev => !prev)}
+            className={`p-1 rounded transition-colors ${
+              quickChatOpen
+                ? 'bg-nexus-accent/20 text-nexus-accent'
+                : 'hover:bg-nexus-bg-tertiary/50 text-nexus-text-muted hover:text-nexus-accent'
+            }`}
+            title="Quick Chat (⌘J)"
+            data-testid="quick-chat-button"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+          </button>
+          <QuickChatPopover
+            isOpen={quickChatOpen}
+            onClose={() => setQuickChatOpen(false)}
+            onSubmit={handleQuickChatSubmit}
+            anchorRef={quickChatButtonRef}
+          />
+        </div>
 
         <span className="flex items-center gap-3">
           <span className="tabular-nums">{wordCount} words</span>

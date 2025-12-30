@@ -1,8 +1,10 @@
 # Sprint 25: Plan B UI Redesign
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete (Phase 1 + 5 + 6)
 **Started:** 2025-12-28
+**Completed:** 2025-12-29
 **Version:** v1.6.0
+**Tests:** 795 (666 unit + 129 E2E)
 
 ---
 
@@ -39,6 +41,52 @@ Implementing "Plan B" from the UI redesign brainstorm:
 **Files Modified:**
 - `src/renderer/src/store/useAppViewStore.ts` (tab state)
 - `src/renderer/src/App.tsx` (integration + shortcuts)
+
+---
+
+### Phase 5: Right Sidebar & Test Cleanup ✅ COMPLETE (2025-12-29)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Icon-only collapsed mode for right sidebar | ✅ | Settings/Links/Tags icons |
+| Keyboard shortcuts for right sidebar tabs | ✅ | ⌘[ / ⌘] navigation |
+| Fix source file TypeScript errors | ✅ | 8 files fixed |
+| Fix test file TypeScript errors (59→0) | ✅ | 13 files fixed |
+| Create testUtils.ts mock factories | ✅ | Type-safe test helpers |
+
+**Files Created:**
+- `src/renderer/src/__tests__/testUtils.ts` (createMockNote, createMockProject, createMockTag)
+- `src/renderer/src/vite-env.d.ts` (import.meta.env types)
+
+**Test Results:** 666 unit tests passing, 0 TypeScript errors
+
+---
+
+### Phase 6: Playwright E2E Test Suite ✅ COMPLETE (2025-12-29)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Playwright infrastructure | ✅ | Config, fixtures, page objects |
+| 14 spec files | ✅ | All UI categories covered |
+| 129 E2E tests passing | ✅ | 100% pass rate |
+| Tab drag reorder tests | ✅ | TAB-11, TAB-12, TAB-13 |
+| data-testid attributes | ✅ | Added to key components |
+| IndexedDB isolation | ✅ | Per-test context |
+
+**Files Created:**
+- `e2e/playwright.config.ts`
+- `e2e/pages/*.ts` (7 page objects)
+- `e2e/fixtures/index.ts`
+- `e2e/specs/*.spec.ts` (14 spec files)
+
+**Test Categories:**
+- Smoke (4), Navigation (8), Tabs (13)
+- Editor (12), Left Sidebar (14), Right Sidebar (10)
+- Keyboard Shortcuts (15), Modals (10), Mission Control (8)
+- Projects (8), Notes (10), Focus Mode (5), Themes (6)
+- Mission Sidebar (6)
+
+**Total: 795 tests (666 unit + 129 E2E)**
 
 ---
 
@@ -118,10 +166,12 @@ Update dashboard content and pinned tab behavior.
 | Phase | Progress | Status |
 |-------|----------|--------|
 | Phase 1: Editor Tabs | 100% | ✅ Complete |
-| Phase 2: Vault Sidebar | 0% | ⏳ Next |
-| Phase 3: Status Bar | 0% | ⏳ Pending |
-| Phase 4: Mission Control | 0% | ⏳ Pending |
-| **Overall** | **25%** | **In Progress** |
+| Phase 5: Right Sidebar + Cleanup | 100% | ✅ Complete |
+| Phase 6: Playwright E2E Tests | 100% | ✅ Complete (129 tests) |
+| Phase 2: Vault Sidebar | 0% | ⏳ Sprint 26 |
+| Phase 3: Status Bar | 0% | ⏳ Sprint 26 |
+| Phase 4: Mission Control | 0% | ⏳ Sprint 26 |
+| **Overall** | **50%** | **Phase 1+5+6 Complete** |
 
 ---
 
@@ -146,10 +196,33 @@ Update dashboard content and pinned tab behavior.
 
 | Next | Priority | Document |
 |------|----------|----------|
-| Playwright E2E Testing | P2 | `FUTURE-PLAYWRIGHT-E2E.md` |
+| ~~Playwright E2E Testing~~ | ~~P2~~ | ✅ Complete (129 tests) |
 | SwiftUI Native Port | P3 | `BRAINSTORM-TAURI-TO-SWIFTUI.md` |
 
 ---
 
+---
+
+## Sprint 26 Suggestions
+
+The following items are ready for the next sprint:
+
+### High Priority (P1)
+1. **Activity Bar badges** - Show counts on sidebar icons (tests marked as `.todo`)
+2. **Browser mode indicator** - Visual indicator when running in IndexedDB mode
+3. **Wiki link backlink tracking in browser** - Complete browser mode feature parity
+
+### Medium Priority (P2)
+4. **Keyboard shortcut for right sidebar collapse** - Quick toggle like `⌘]`
+5. **Editor tabs persistence** - Save open tabs across app restarts
+6. **⌘⇧T reopen closed tab** - Standard tab behavior
+
+### Lower Priority (P3)
+7. **Phase 2: Vault Sidebar** - Obsidian-style file tree (major feature)
+8. **Phase 3: Status Bar** - VS Code-style bottom bar
+9. ~~**Playwright E2E tests**~~ - ✅ Complete (129 tests passing)
+
+---
+
 *Created: 2025-12-28*
-*Last Updated: 2025-12-28*
+*Last Updated: 2025-12-29*

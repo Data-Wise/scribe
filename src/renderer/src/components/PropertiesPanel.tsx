@@ -242,7 +242,7 @@ export function PropertiesPanel({
   }
 
   return (
-    <div className="properties-panel">
+    <div className="properties-panel" data-testid="properties-panel">
       {/* Word Goal Progress */}
       <WordGoalProgress />
       {/* Header */}

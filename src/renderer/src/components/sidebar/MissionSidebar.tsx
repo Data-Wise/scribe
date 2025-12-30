@@ -78,6 +78,7 @@ export function MissionSidebar({
       className={`mission-sidebar mode-${sidebarMode}`}
       style={{ width }}
       data-mode={sidebarMode}
+      data-testid="left-sidebar"
     >
       {sidebarMode === 'icon' && (
         <IconBarMode

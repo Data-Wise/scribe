@@ -1,5 +1,4 @@
-import { Home, Folder, Search, Settings, Compass, Zap, Calendar } from 'lucide-react'
-import { useAppViewStore } from '../store/useAppViewStore'
+import { Folder, Search, Compass, Calendar, Zap, Settings } from 'lucide-react'
 
 interface RibbonProps {
   activeTab: string
@@ -9,7 +8,7 @@ interface RibbonProps {
 }
 
 export function Ribbon({ activeTab, onTabChange, onToggleDashboard, isDashboardOpen }: RibbonProps) {
-  const { sidebarMode } = useAppViewStore()
+  // sidebarMode reserved for future responsive behavior
   
   const items = [
     { id: 'mission', icon: Compass, label: 'Mission HQ', color: 'var(--nexus-accent)', glow: 'rgba(56, 189, 248, 0.4)' },

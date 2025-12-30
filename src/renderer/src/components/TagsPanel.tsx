@@ -484,6 +484,7 @@ export function TagsPanel({ noteId, selectedTagIds, onTagClick }: TagsPanelProps
         backgroundColor: 'var(--nexus-bg-secondary)',
         borderLeft: '1px solid var(--nexus-bg-tertiary)'
       }}
+      data-testid="tags-panel"
     >
       {/* Header */}
       <div

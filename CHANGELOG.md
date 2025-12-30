@@ -45,6 +45,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Globe icon + "BROWSER" text (subtle blue styling)
 - Tooltip explains IndexedDB persistence
 
+**Phase 5: Right Sidebar Enhancements** ✅
+- Icon-only collapsed mode (⌘⇧B to toggle)
+- Collapse to 48px icon strip with Properties/Backlinks/Tags buttons
+- Click icon to expand and switch to that tab
+- Keyboard shortcuts: ⌘] next tab, ⌘[ previous tab
+- Icons added to expanded tab headers for visual consistency
+- Collapse state persisted in localStorage
+
+### Fixed
+
+- Tab clicks not working in browser mode (titlebar drag region blocking)
+- Platform class detection (.tauri/.browser) for CSS targeting
+- Tab-to-note sync: clicking tabs now updates editor content
+
 **Testing** ✅
 - 27 new CardViewMode tests (edge cases, interactions)
 - 30 new CompactListMode tests (full coverage)

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import 'fake-indexeddb/auto'
 import { db, generateId, createSearchText, parseNoteRecord, noteToRecord, seedDemoData } from '../lib/browser-db'
 
@@ -172,8 +172,10 @@ describe('Browser Database (IndexedDB)', () => {
         title: 'Test Note',
         content: 'Test content',
         folder: 'inbox',
+        project_id: null,
         created_at: Date.now(),
         updated_at: Date.now(),
+        deleted_at: null,
         search_text: 'test note test content',
         properties: '{}'
       }
@@ -189,7 +191,7 @@ describe('Browser Database (IndexedDB)', () => {
       const project = {
         id: generateId(),
         name: 'Test Project',
-        type: 'general' as const,
+        type: 'generic' as const,
         status: 'active' as const,
         created_at: Date.now(),
         updated_at: Date.now()
@@ -206,6 +208,7 @@ describe('Browser Database (IndexedDB)', () => {
       const tag = {
         id: generateId(),
         name: 'test-tag',
+        color: '#3B82F6',
         created_at: Date.now()
       }
 
@@ -222,8 +225,10 @@ describe('Browser Database (IndexedDB)', () => {
         title: 'Inbox Note',
         content: '',
         folder: 'inbox',
+        project_id: null,
         created_at: Date.now(),
         updated_at: Date.now(),
+        deleted_at: null,
         search_text: '',
         properties: '{}'
       }
@@ -233,8 +238,10 @@ describe('Browser Database (IndexedDB)', () => {
         title: 'Archive Note',
         content: '',
         folder: 'archive',
+        project_id: null,
         created_at: Date.now(),
         updated_at: Date.now(),
+        deleted_at: null,
         search_text: '',
         properties: '{}'
       }

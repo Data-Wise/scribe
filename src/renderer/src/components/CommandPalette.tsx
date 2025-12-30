@@ -137,9 +137,9 @@ export function CommandPalette({
         <DialogDescription>Search and execute quick actions</DialogDescription>
       </VisuallyHidden>
       
-      <div className="command-palette-content glass-effect" role="dialog" aria-label="Command palette">
+      <div className="command-palette-content glass-effect" role="dialog" aria-label="Command palette" data-testid="command-palette">
         <div className="command-palette-header">
-          <Command.Input placeholder="Search everything..." className="command-palette-input" aria-label="Search commands and notes" />
+          <Command.Input placeholder="Search everything..." className="command-palette-input" aria-label="Search commands and notes" data-testid="command-palette-input" />
         </div>
         
         <Command.List className="command-palette-list">
@@ -149,6 +149,7 @@ export function CommandPalette({
             <Command.Item
               onSelect={() => { onCreateNote(); setOpen(false); }}
               className="command-palette-item"
+              data-testid="cmd-new-note"
             >
               <kbd className="command-palette-number">1</kbd>
               <Plus className="mr-3 h-4 w-4 text-green-400" />
@@ -158,6 +159,7 @@ export function CommandPalette({
             <Command.Item
               onSelect={() => { onDailyNote(); setOpen(false); }}
               className="command-palette-item"
+              data-testid="cmd-daily-note"
             >
               <kbd className="command-palette-number">2</kbd>
               <Calendar className="mr-3 h-4 w-4 text-blue-400" />
