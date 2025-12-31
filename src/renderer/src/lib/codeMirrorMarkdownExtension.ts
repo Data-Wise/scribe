@@ -153,13 +153,20 @@ function buildDecorations(view: EditorView): DecorationSet {
 export const markdownLivePreview = ViewPlugin.fromClass(
   class {
     decorations: DecorationSet
+    cursorLine: number
 
     constructor(view: EditorView) {
+      this.cursorLine = view.state.doc.lineAt(view.state.selection.main.head).number
       this.decorations = buildDecorations(view)
     }
 
     update(update: ViewUpdate) {
-      if (update.docChanged || update.selectionSet || update.viewportChanged) {
+      // Only rebuild decorations if document changed or cursor moved to a different line
+      const newCursorLine = update.state.doc.lineAt(update.state.selection.main.head).number
+      const cursorLineChanged = newCursorLine !== this.cursorLine
+
+      if (update.docChanged || cursorLineChanged) {
+        this.cursorLine = newCursorLine
         this.decorations = buildDecorations(update.view)
       }
     }

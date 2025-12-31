@@ -34,6 +34,7 @@ export const CodeMirrorLivePreview: React.FC<CodeMirrorLivePreviewProps> = ({
 }) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
+  const isInternalChange = useRef(false)
 
   useEffect(() => {
     if (!editorRef.current) return
@@ -69,6 +70,7 @@ export const CodeMirrorLivePreview: React.FC<CodeMirrorLivePreviewProps> = ({
         // Update listener
         EditorView.updateListener.of((update: ViewUpdate) => {
           if (update.docChanged) {
+            isInternalChange.current = true
             const newContent = update.state.doc.toString()
             onChange(newContent)
           }
@@ -160,6 +162,12 @@ export const CodeMirrorLivePreview: React.FC<CodeMirrorLivePreviewProps> = ({
   // Update content when it changes externally
   useEffect(() => {
     if (!viewRef.current) return
+
+    // Skip if this is an internal change (from typing in the editor)
+    if (isInternalChange.current) {
+      isInternalChange.current = false
+      return
+    }
 
     const currentContent = viewRef.current.state.doc.toString()
     if (currentContent !== content) {
