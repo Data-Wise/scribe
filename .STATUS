@@ -1,13 +1,13 @@
 ---
 status: active
 priority: P1
-progress: 55
-version: 1.2.1
-sprint: 25
+progress: 60
+version: 1.2.2
+sprint: 26
 updated: 2025-12-30
 editor: hybrid-markdown++
-next_sprint: 26
-next_focus: Activity Bar Badges + Browser Mode Indicator
+next_sprint: 27
+next_focus: Sidebar Consolidation + AI Integration
 tests: 759+282
 unit_tests: 759
 e2e_tests: 282
@@ -76,7 +76,7 @@ tags:
 
 ---
 
-### Sprint 26: Activity Bar Polish (Complete ✅)
+### Sprint 26: Activity Bar Polish + Bug Fixes (Complete ✅)
 
 **High Priority (P1):**
 - [x] Activity Bar badges ✅ - IconBarMode shows note count per project
@@ -87,6 +87,12 @@ tags:
 - [x] Keyboard shortcut for right sidebar collapse (⌘⇧]) ✅
 - [x] Editor tabs persistence across restarts ✅ - useAppViewStore saveTabs
 - [x] ⌘⇧T reopen closed tab ✅ - reopenLastClosedTab + closedTabsHistory
+
+**Bug Fixes (P1):**
+- [x] Tauri API serialization ✅ - prepareNoteForTauri/parseNoteFromTauri for properties field
+- [x] Daily note Today button ✅ - Added openNoteTab() call to display note in editor
+- [x] Error toast persistence ✅ - Errors persist until dismissed with Copy/OK buttons
+- [x] create_note project_id ✅ - Added missing field to CreateNoteInput struct
 
 **Lower Priority (P3):**
 - [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
@@ -422,5 +428,5 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 - [TESTS_SUMMARY.md](TESTS_SUMMARY.md) - Test coverage
 - [CLAUDE.md](CLAUDE.md) - AI guidance
 - [docs/planning/](docs/planning/) - Sprint plans
-## last_active: 2025-12-29
-## streak: 2
+## last_active: 2025-12-30
+## streak: 3

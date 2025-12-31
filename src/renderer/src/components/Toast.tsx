@@ -17,6 +17,7 @@ interface Toast {
   id: number
   message: string
   type: ToastType
+  persistent?: boolean  // Errors stay until manually dismissed
 }
 
 interface ToastContextType {
@@ -40,12 +41,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const showToast = useCallback((message: string, type: ToastType = 'error') => {
     const id = ++toastId
-    setToasts(prev => [...prev, { id, message, type }])
+    const persistent = type === 'error'  // Errors persist until dismissed
+    setToasts(prev => [...prev, { id, message, type, persistent }])
 
-    // Auto-dismiss after 4 seconds
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id))
-    }, 4000)
+    // Auto-dismiss non-error toasts after 4 seconds
+    if (!persistent) {
+      setTimeout(() => {
+        setToasts(prev => prev.filter(t => t.id !== id))
+      }, 4000)
+    }
   }, [])
 
   const dismissToast = useCallback((id: number) => {
@@ -104,13 +108,26 @@ function ToastContainer({
 }) {
   if (toasts.length === 0) return null
 
+  const handleCopy = async (message: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      await navigator.clipboard.writeText(message)
+      // Brief visual feedback - button text changes
+      const btn = e.target as HTMLButtonElement
+      const originalText = btn.textContent
+      btn.textContent = 'Copied!'
+      setTimeout(() => { btn.textContent = originalText }, 1000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
+  }
+
   return (
     <div className="toast-container">
       {toasts.map(toast => (
         <div
           key={toast.id}
-          className={`toast toast-${toast.type}`}
-          onClick={() => onDismiss(toast.id)}
+          className={`toast toast-${toast.type} ${toast.persistent ? 'toast-persistent' : ''}`}
           role="alert"
         >
           <span className="toast-icon">
@@ -119,7 +136,24 @@ function ToastContainer({
             {toast.type === 'info' && 'ℹ️'}
           </span>
           <span className="toast-message">{toast.message}</span>
-          <button className="toast-close" aria-label="Dismiss">×</button>
+          <div className="toast-actions">
+            {toast.persistent && (
+              <button
+                className="toast-copy"
+                onClick={(e) => handleCopy(toast.message, e)}
+                aria-label="Copy error"
+              >
+                Copy
+              </button>
+            )}
+            <button
+              className="toast-dismiss"
+              onClick={() => onDismiss(toast.id)}
+              aria-label="Dismiss"
+            >
+              {toast.persistent ? 'OK' : '×'}
+            </button>
+          </div>
         </div>
       ))}
     </div>

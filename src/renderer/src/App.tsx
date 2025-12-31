@@ -26,7 +26,7 @@ import { DragRegion } from './components/DragRegion'
 import { ToastProvider, useToast, setGlobalToast } from './components/Toast'
 import { Note, Tag, Property } from './types'
 import { Settings2, Link2, Tags, PanelRightOpen, PanelRightClose, BarChart3, Sparkles, Terminal } from 'lucide-react'
-import { api } from './lib/api'
+import { api, runApiDiagnostics } from './lib/api'
 import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
 import { CommandPalette } from './components/CommandPalette'
@@ -429,9 +429,13 @@ function App() {
     loadNotes(currentFolder)
   }, [loadNotes, currentFolder])
 
-  // Load projects on startup
+  // Load projects on startup and run diagnostics
   useEffect(() => {
     loadProjects()
+    // Run API diagnostics in development
+    if (import.meta.env.DEV) {
+      runApiDiagnostics()
+    }
   }, [loadProjects])
 
   // Project-specific notes are now filtered in MissionSidebar
@@ -600,6 +604,8 @@ function App() {
         dailyNote.content = templateContent
       }
 
+      // Open the note in a tab and select it
+      openNoteTab(dailyNote.id, dailyNote.title)
       selectNote(dailyNote.id)
       console.log('[Scribe] Note selected:', dailyNote.id)
       loadNotes(currentFolder)

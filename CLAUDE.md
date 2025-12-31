@@ -174,18 +174,22 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Work: Mission Control HUD
+## 🎯 Current Work: Sprint 26 Complete
 
-**Branch:** `feat/mission-control-hud`
+**Branch:** `main` (Sprint 26 merged)
 
-**Completed:**
+**Sprint 26 Completed:**
 - ✅ Mission Control sidebar with Icon/Compact/Card modes
 - ✅ Browser mode with full IndexedDB persistence
 - ✅ API factory for Tauri/Browser switching
 - ✅ Demo seed data for new browser users
 - ✅ CLI `scribe browser` command
+- ✅ Activity Bar badges (note counts)
+- ✅ Tauri API serialization fixes (properties)
+- ✅ Daily note Today button fix
+- ✅ Error toast persistence with copy button
 
-**In Progress:**
+**Ready for Next Sprint:**
 - [ ] Browser mode indicator in UI
 - [ ] Wiki link backlink tracking in browser
 
@@ -291,6 +295,58 @@ async function askClaude(prompt: string, context: string): Promise<string> {
 - Shortcut: ⌘D
 - Auto-create with template
 - Per-project configuration
+
+### Tauri API Serialization (Critical Pattern)
+
+**Problem:** TypeScript objects don't match Rust types across the Tauri bridge.
+
+**Solution:** Bidirectional serialization in `api.ts`:
+
+```typescript
+// Frontend → Rust: Serialize objects to JSON strings
+function prepareNoteForTauri(note: Partial<Note>): Record<string, unknown> {
+  const prepared = { ...note }
+  if (note.properties && typeof note.properties === 'object') {
+    prepared.properties = JSON.stringify(note.properties)
+  }
+  return prepared
+}
+
+// Rust → Frontend: Parse JSON strings back to objects
+function parseNoteFromTauri(note: Note | null): Note | null {
+  if (note?.properties && typeof note.properties === 'string') {
+    note.properties = JSON.parse(note.properties)
+  }
+  return note
+}
+```
+
+**Apply to:** All Note-returning Tauri commands (`createNote`, `updateNote`, `getNote`, `listNotes`, `searchNotes`, `getOrCreateDailyNote`, etc.)
+
+### Tab-Based Editor Pattern
+
+**To display a note in the editor, BOTH calls are required:**
+
+```typescript
+openNoteTab(noteId, title)  // Creates/activates tab in editor
+selectNote(noteId)          // Sets note as selected in state
+```
+
+- `selectNote()` alone → Note selected but not visible
+- `openNoteTab()` alone → Tab opens but state out of sync
+
+### Error Toast Pattern
+
+Error toasts persist until dismissed (defined in `Toast.tsx`):
+
+```typescript
+const persistent = type === 'error'  // Errors stay until dismissed
+```
+
+Features:
+- Copy button for error message
+- OK button to dismiss
+- Monospace font for technical errors
 
 ---
 

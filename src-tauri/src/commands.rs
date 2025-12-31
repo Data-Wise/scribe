@@ -13,6 +13,7 @@ pub struct CreateNoteInput {
     title: String,
     content: String,
     folder: String,
+    project_id: Option<String>,  // Optional project assignment
     properties: Option<String>,  // JSON string for note properties
 }
 
@@ -31,7 +32,7 @@ pub fn create_note(
     note: CreateNoteInput,
 ) -> Result<Note, String> {
     let db = state.db.lock().unwrap();
-    db.create_note(&note.title, &note.content, &note.folder, note.properties.as_deref())
+    db.create_note(&note.title, &note.content, &note.folder, note.project_id.as_deref(), note.properties.as_deref())
         .map_err(|e| e.to_string())
 }
 
@@ -398,7 +399,7 @@ pub fn get_or_create_daily_note(state: State<AppState>, date: String) -> Result<
     // Create it with Markdown format
     let content = format!("## {}\n\n", date);
     
-    let note = db.create_note(&date, &content, "daily", None).map_err(|e| e.to_string())?;
+    let note = db.create_note(&date, &content, "daily", None, None).map_err(|e| e.to_string())?;
     Ok(note)
 }
 

@@ -5,13 +5,45 @@
  * based on runtime environment detection.
  */
 
-import { invoke } from '@tauri-apps/api/core'
+import { invoke as tauriInvoke } from '@tauri-apps/api/core'
 import { isTauri, logPlatformInfo } from './platform'
 import { browserApi } from './browser-api'
 import { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types'
 
 // Log platform on first import
 logPlatformInfo()
+
+// ============================================================================
+// Enhanced Tauri Invoke with Error Logging
+// ============================================================================
+
+/**
+ * Wrapped invoke that logs all Tauri command calls and errors.
+ * Provides detailed error context for debugging.
+ */
+async function invoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
+  const startTime = performance.now()
+
+  try {
+    console.debug(`[Tauri] → ${cmd}`, args ? JSON.stringify(args).slice(0, 200) : '(no args)')
+    const result = await tauriInvoke<T>(cmd, args)
+    const duration = (performance.now() - startTime).toFixed(1)
+    console.debug(`[Tauri] ✓ ${cmd} (${duration}ms)`)
+    return result
+  } catch (error) {
+    const duration = (performance.now() - startTime).toFixed(1)
+    const errorMsg = error instanceof Error ? error.message : String(error)
+
+    // Log detailed error information
+    console.error(`[Tauri] ✗ ${cmd} FAILED (${duration}ms)`)
+    console.error(`[Tauri]   Command: ${cmd}`)
+    console.error(`[Tauri]   Args: ${JSON.stringify(args, null, 2)}`)
+    console.error(`[Tauri]   Error: ${errorMsg}`)
+
+    // Re-throw with enhanced message
+    throw new Error(`Tauri command '${cmd}' failed: ${errorMsg}`)
+  }
+}
 
 // ============================================================================
 // Type Exports
@@ -48,25 +80,77 @@ export interface ExportResult {
 // Tauri API (Native)
 // ============================================================================
 
+/**
+ * Prepare note data for Tauri by serializing properties to JSON string.
+ * Rust expects properties as Option<String>, not as an object.
+ */
+function prepareNoteForTauri(note: Partial<Note>): Record<string, unknown> {
+  const prepared: Record<string, unknown> = { ...note }
+
+  // Serialize properties object to JSON string for Rust
+  if (note.properties && typeof note.properties === 'object') {
+    prepared.properties = JSON.stringify(note.properties)
+  }
+
+  return prepared
+}
+
+/**
+ * Parse note data from Tauri by deserializing properties from JSON string.
+ * Rust returns properties as Option<String>, but frontend expects an object.
+ */
+function parseNoteFromTauri(note: Note | null): Note | null {
+  if (!note) return null
+
+  // Deserialize properties string to object
+  if (note.properties && typeof note.properties === 'string') {
+    try {
+      note.properties = JSON.parse(note.properties)
+    } catch {
+      // If parsing fails, set to empty object
+      note.properties = {}
+    }
+  }
+
+  return note
+}
+
+/**
+ * Parse array of notes from Tauri.
+ */
+function parseNotesFromTauri(notes: Note[]): Note[] {
+  return notes.map(note => parseNoteFromTauri(note) as Note)
+}
+
 const tauriApi = {
   // Note operations
-  createNote: (note: Partial<Note>): Promise<Note> =>
-    invoke('create_note', { note }),
+  createNote: async (note: Partial<Note>): Promise<Note> => {
+    const result = await invoke<Note>('create_note', { note: prepareNoteForTauri(note) })
+    return parseNoteFromTauri(result) as Note
+  },
 
-  updateNote: (id: string, updates: Partial<Note>): Promise<Note | null> =>
-    invoke('update_note', { id, updates }),
+  updateNote: async (id: string, updates: Partial<Note>): Promise<Note | null> => {
+    const result = await invoke<Note | null>('update_note', { id, updates: prepareNoteForTauri(updates) })
+    return parseNoteFromTauri(result)
+  },
 
   deleteNote: (id: string): Promise<boolean> =>
     invoke('delete_note', { id }),
 
-  getNote: (id: string): Promise<Note | null> =>
-    invoke('get_note', { id }),
+  getNote: async (id: string): Promise<Note | null> => {
+    const result = await invoke<Note | null>('get_note', { id })
+    return parseNoteFromTauri(result)
+  },
 
-  listNotes: (folder?: string): Promise<Note[]> =>
-    invoke('list_notes', { folder }),
+  listNotes: async (folder?: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('list_notes', { folder })
+    return parseNotesFromTauri(result)
+  },
 
-  searchNotes: (query: string): Promise<Note[]> =>
-    invoke('search_notes', { query }),
+  searchNotes: async (query: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('search_notes', { query })
+    return parseNotesFromTauri(result)
+  },
 
   // Tag CRUD
   createTag: (name: string, color?: string): Promise<Tag> =>
@@ -97,11 +181,15 @@ const tauriApi = {
   getNoteTags: (noteId: string): Promise<Tag[]> =>
     invoke('get_note_tags', { noteId }),
 
-  getNotesByTag: (tagId: string): Promise<Note[]> =>
-    invoke('get_notes_by_tag', { tagId }),
+  getNotesByTag: async (tagId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_notes_by_tag', { tagId })
+    return parseNotesFromTauri(result)
+  },
 
-  filterNotesByTags: (tagIds: string[], matchAll: boolean): Promise<Note[]> =>
-    invoke('filter_notes_by_tags', { tagIds, matchAll }),
+  filterNotesByTags: async (tagIds: string[], matchAll: boolean): Promise<Note[]> => {
+    const result = await invoke<Note[]>('filter_notes_by_tags', { tagIds, matchAll })
+    return parseNotesFromTauri(result)
+  },
 
   updateNoteTags: (noteId: string, content: string): Promise<void> =>
     invoke('update_note_tags', { noteId, content }),
@@ -114,11 +202,15 @@ const tauriApi = {
   updateNoteLinks: (noteId: string, content: string): Promise<void> =>
     invoke('update_note_links', { noteId, content }),
 
-  getBacklinks: (noteId: string): Promise<Note[]> =>
-    invoke('get_backlinks', { noteId }),
+  getBacklinks: async (noteId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_backlinks', { noteId })
+    return parseNotesFromTauri(result)
+  },
 
-  getOutgoingLinks: (noteId: string): Promise<Note[]> =>
-    invoke('get_outgoing_links', { noteId }),
+  getOutgoingLinks: async (noteId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_outgoing_links', { noteId })
+    return parseNotesFromTauri(result)
+  },
 
   // AI operations
   runClaude: (prompt: string): Promise<string> =>
@@ -127,8 +219,10 @@ const tauriApi = {
   runGemini: (prompt: string): Promise<string> =>
     invoke('run_gemini', { prompt }),
 
-  getOrCreateDailyNote: (date: string): Promise<Note> =>
-    invoke('get_or_create_daily_note', { date }),
+  getOrCreateDailyNote: async (date: string): Promise<Note> => {
+    const result = await invoke<Note>('get_or_create_daily_note', { date })
+    return parseNoteFromTauri(result) as Note
+  },
 
   exportToObsidian: (targetPath: string): Promise<string> =>
     invoke('export_to_obsidian', { targetPath }),
@@ -196,8 +290,10 @@ const tauriApi = {
   updateProjectSettings: (id: string, settings: Partial<ProjectSettings>): Promise<void> =>
     invoke('update_project_settings', { id, settings }),
 
-  getProjectNotes: (projectId: string): Promise<Note[]> =>
-    invoke('get_notes_by_project', { projectId }),
+  getProjectNotes: async (projectId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_notes_by_project', { projectId })
+    return parseNotesFromTauri(result)
+  },
 
   setNoteProject: (noteId: string, projectId: string | null): Promise<void> =>
     invoke('assign_note_to_project', { noteId, projectId }),
@@ -370,4 +466,52 @@ export const api = {
   writeToShell: withErrorToast(rawApi.writeToShell, 'Terminal write failed'),
   killShell: withErrorToast(rawApi.killShell, 'Failed to close terminal'),
   onShellOutput: rawApi.onShellOutput
+}
+
+// ============================================================================
+// Startup Diagnostics
+// ============================================================================
+
+/**
+ * Run comprehensive API diagnostics on startup.
+ * Tests all critical endpoints and logs any failures.
+ */
+export async function runApiDiagnostics(): Promise<void> {
+  if (!isTauri()) {
+    console.log('[Diagnostics] Running in Browser mode - skipping Tauri checks')
+    return
+  }
+
+  console.group('[Scribe Diagnostics] Testing Tauri API endpoints...')
+  const results: { endpoint: string; status: 'ok' | 'error'; error?: string }[] = []
+
+  // Test critical read operations
+  const tests = [
+    { name: 'listNotes', fn: () => rawApi.listNotes() },
+    { name: 'listProjects', fn: () => rawApi.listProjects() },
+    { name: 'getAllTags', fn: () => rawApi.getAllTags() },
+    { name: 'getFolders', fn: () => rawApi.getFolders() },
+  ]
+
+  for (const test of tests) {
+    try {
+      await test.fn()
+      results.push({ endpoint: test.name, status: 'ok' })
+      console.log(`  ✓ ${test.name}`)
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error)
+      results.push({ endpoint: test.name, status: 'error', error: errorMsg })
+      console.error(`  ✗ ${test.name}: ${errorMsg}`)
+    }
+  }
+
+  const failed = results.filter(r => r.status === 'error')
+  if (failed.length > 0) {
+    console.error(`[Diagnostics] ${failed.length} endpoint(s) failed!`)
+    console.table(failed)
+  } else {
+    console.log('[Diagnostics] All endpoints healthy ✓')
+  }
+
+  console.groupEnd()
 }
