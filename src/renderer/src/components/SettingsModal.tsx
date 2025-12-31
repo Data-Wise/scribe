@@ -34,7 +34,8 @@ import {
   RotateCcw,
   SlidersHorizontal,
   Home,
-  FileText
+  FileText,
+  Terminal
 } from 'lucide-react'
 import {
   loadTemplates,
@@ -75,8 +76,9 @@ import {
   Base16Scheme
 } from '../lib/themes'
 import { api } from '../lib/api'
-import { isBrowser } from '../lib/platform'
+import { isBrowser, isTauri } from '../lib/platform'
 import { db, seedDemoData } from '../lib/browser-db'
+import { getDefaultTerminalFolder, setDefaultTerminalFolder } from '../lib/terminal-utils'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -191,6 +193,9 @@ export function SettingsModal({
                     key === 'tabOrder' ? 'sidebarTabOrder' : 'sidebarHiddenTabs'
     updatePreferences({ [prefKey]: value })
   }
+
+  // Terminal settings state
+  const [terminalFolder, setTerminalFolder] = useState(() => getDefaultTerminalFolder())
 
   // Toggle tab visibility
   const toggleTabVisibility = (tabId: SidebarTabId) => {
@@ -574,6 +579,44 @@ export function SettingsModal({
                     </div>
                   </div>
                 </section>
+
+                {/* Terminal Section - only shown in Tauri mode */}
+                {isTauri() && (
+                  <section>
+                    <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4 flex items-center gap-2">
+                      <Terminal className="w-3 h-3" style={{ color: 'var(--nexus-accent)' }} />
+                      Terminal
+                    </h4>
+                    <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
+                      <div>
+                        <label className="text-xs text-nexus-text-muted mb-2 block">Default Terminal Folder</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={terminalFolder}
+                            onChange={(e) => setTerminalFolder(e.target.value)}
+                            onBlur={() => setDefaultTerminalFolder(terminalFolder)}
+                            placeholder="~"
+                            className="flex-1 bg-nexus-bg-primary border border-white/10 rounded-md px-3 py-2 text-sm text-nexus-text-primary placeholder:text-nexus-text-muted/50 focus:outline-none focus:border-nexus-accent/50"
+                          />
+                          <button
+                            onClick={() => {
+                              setTerminalFolder('~')
+                              setDefaultTerminalFolder('~')
+                            }}
+                            className="px-3 py-2 bg-white/5 hover:bg-white/10 rounded-md text-xs text-nexus-text-secondary transition-colors"
+                            title="Reset to home directory"
+                          >
+                            <Home className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <p className="text-[10px] text-nexus-text-muted mt-2">
+                          Fallback location when project folder doesn't exist. Terminal opens in project-specific folders when available.
+                        </p>
+                      </div>
+                    </div>
+                  </section>
+                )}
 
                 {/* Browser Mode Section - only shown in browser mode */}
                 {isBrowser() && (
