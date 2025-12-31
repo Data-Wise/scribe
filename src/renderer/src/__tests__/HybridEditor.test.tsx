@@ -5,6 +5,19 @@ import { HybridEditor } from '../components/HybridEditor'
 import { Note, Tag } from '../types'
 import { createMockNote } from './testUtils'
 
+// Mock the editor components (same as EditorRouter tests)
+vi.mock('../components/MilkdownEditor', () => ({
+  MilkdownEditor: ({ filePath }: { filePath: string | null }) => (
+    <div data-testid="milkdown-editor">Milkdown Editor: {filePath}</div>
+  )
+}))
+
+vi.mock('../components/MonacoCodeEditor', () => ({
+  MonacoCodeEditor: ({ filePath }: { filePath: string | null }) => (
+    <div data-testid="monaco-editor">Monaco Editor: {filePath}</div>
+  )
+}))
+
 // Test utilities
 const mockNote: Note = createMockNote({
   id: '1',
@@ -712,12 +725,13 @@ describe('HybridEditor Live Preview Mode (Phase 3)', () => {
   })
 
   describe('Live Preview Mode Basics', () => {
-    it('Live Preview mode uses textarea (same as source for v1.0)', async () => {
+    it('Live Preview mode uses EditorRouter for hybrid editing', async () => {
       render(<HybridEditor {...defaultProps} content="# Heading" editorMode="live-preview" />)
 
-      // Live Preview currently uses textarea
-      const textarea = screen.getByRole('textbox')
-      expect(textarea).toBeInTheDocument()
+      // Live Preview now uses EditorRouter which renders Milkdown/Monaco
+      // In tests, the mocked editors render placeholder divs
+      const milkdownEditor = screen.queryByTestId('milkdown-editor')
+      expect(milkdownEditor).toBeInTheDocument()
     })
 
     it('editor tracks current mode correctly', async () => {
@@ -740,14 +754,17 @@ describe('HybridEditor Live Preview Mode (Phase 3)', () => {
       })
     })
 
-    it('Live Preview mode allows editing', async () => {
+    it('Live Preview mode routes to appropriate editor', async () => {
       const onChange = vi.fn()
       render(<HybridEditor {...defaultProps} content="Initial" onChange={onChange} editorMode="live-preview" />)
 
-      const textarea = screen.getByRole('textbox')
-      fireEvent.change(textarea, { target: { value: 'Modified' } })
+      // EditorRouter should render Milkdown for markdown notes (default)
+      const milkdownEditor = screen.queryByTestId('milkdown-editor')
+      expect(milkdownEditor).toBeInTheDocument()
 
-      expect(onChange).toHaveBeenCalledWith('Modified')
+      // Monaco should not be rendered for .md files
+      const monacoEditor = screen.queryByTestId('monaco-editor')
+      expect(monacoEditor).not.toBeInTheDocument()
     })
   })
 

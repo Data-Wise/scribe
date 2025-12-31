@@ -77,3 +77,12 @@ vi.mock('../lib/api', () => ({
 
 // Mock window.api for backward compatibility in existing tests
 global.window.api = apiMock
+
+// Mock localStorage for Zustand persist middleware
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn()
+}
+global.localStorage = localStorageMock as any

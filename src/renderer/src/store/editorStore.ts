@@ -91,7 +91,7 @@ export function getEditorTypeForFile(filePath: string | null): EditorType {
   const ext = filePath.split('.').pop()?.toLowerCase()
 
   if (ext === 'md' || ext === 'qmd') return 'milkdown'
-  if (ext === 'tex' || ext === 'R' || ext === 'py') return 'monaco'
+  if (ext === 'tex' || ext === 'r' || ext === 'py') return 'monaco'
 
   return 'text'
 }
@@ -106,7 +106,7 @@ export function getMonacoLanguage(filePath: string | null): string {
 
   switch (ext) {
     case 'tex': return 'latex'
-    case 'R': return 'r'
+    case 'r': return 'r'
     case 'py': return 'python'
     case 'js': return 'javascript'
     case 'ts': return 'typescript'
