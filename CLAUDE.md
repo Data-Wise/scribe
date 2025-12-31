@@ -179,19 +179,17 @@ scribe help --all      # Full reference
 **Branch:** `main` (Sprint 26 merged)
 
 **Sprint 26 Completed:**
-- ✅ Mission Control sidebar with Icon/Compact/Card modes
-- ✅ Browser mode with full IndexedDB persistence
-- ✅ API factory for Tauri/Browser switching
-- ✅ Demo seed data for new browser users
-- ✅ CLI `scribe browser` command
-- ✅ Activity Bar badges (note counts)
-- ✅ Tauri API serialization fixes (properties)
-- ✅ Daily note Today button fix
-- ✅ Error toast persistence with copy button
+- ✅ Terminal PTY shell (portable-pty + xterm.js)
+- ✅ Smart terminal working directory (project type inference)
+- ✅ Terminal graceful fallback to home directory
+- ✅ CSS drag region fix (unblocked clicks)
+- ✅ 20 new E2E tests (Terminal, Modals, Sidebar)
+- ✅ Claude CLI wired up in ClaudeChatPanel
 
 **Ready for Next Sprint:**
-- [ ] Browser mode indicator in UI
-- [ ] Wiki link backlink tracking in browser
+- [ ] Ambient AI (⌘K) - inline suggestions
+- [ ] Graph View Enhancements
+- [ ] Settings UI for default terminal folder
 
 ---
 
@@ -215,8 +213,7 @@ scribe help --all      # Full reference
 
 ### Deferred to v2
 
-- Terminal (xterm.js)
-- Graph view
+- Graph view enhancements
 - Multi-tab editing
 
 ### Never Build
