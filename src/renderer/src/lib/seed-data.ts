@@ -10,7 +10,7 @@
  * Search for "Migration 007: Seed demo data" in src-tauri/src/database.rs
  */
 
-import { markdownSyntaxDemo } from './demo-markdown-syntax'
+// markdownSyntaxDemo removed - will be replaced in hybrid editor migration
 
 // ============================================================================
 // Demo Project
@@ -224,7 +224,24 @@ To test callouts:
     title: 'Markdown Syntax Demo',
     folder: 'inbox',
     tags: ['tutorial', 'tips'],
-    content: markdownSyntaxDemo
+    content: `# Welcome to Scribe
+
+This is a demo note to help you get started.
+
+## Features
+
+- **Markdown editing** with live preview
+- **Wiki links** like [[Another Note]]
+- **Tags** like #tutorial and #tips
+- **LaTeX math** like $E = mc^2$
+
+## Getting Started
+
+1. Create a new note with ⌘N
+2. Switch between Source and Reading modes with ⌘E
+3. Use Focus Mode with ⌘⇧F
+
+**Note:** Live Preview mode is currently being migrated to a new dual-editor architecture. See PLAN-HYBRID-EDITOR.md for details.`
   }
 } as const
 

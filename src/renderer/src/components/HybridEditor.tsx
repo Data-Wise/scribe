@@ -9,7 +9,7 @@ import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
 import { WritingProgress } from './WritingProgress'
 import { QuickChatPopover } from './QuickChatPopover'
-import { CodeMirrorLivePreview } from './CodeMirrorLivePreview'
+// CodeMirrorLivePreview removed - will be replaced by Milkdown in hybrid editor migration
 import { processMathInContent } from '../lib/mathjax'
 import { isBrowser } from '../lib/platform'
 import { Note, Tag } from '../types'
@@ -474,16 +474,20 @@ export function HybridEditor({
             spellCheck={false}
           />
         ) : mode === 'live-preview' ? (
-          /* Live Preview mode: CodeMirror with markdown syntax highlighting and live rendering */
-          <CodeMirrorLivePreview
-            content={content}
-            onChange={onChange}
-            style={{
-              fontFamily: 'var(--editor-font-family)',
-              fontSize: 'var(--editor-font-size)',
-              lineHeight: 'var(--editor-line-height)',
-            }}
-          />
+          /* Live Preview mode: Temporarily disabled - migration to Milkdown in progress */
+          <div className="flex items-center justify-center h-full text-nexus-text-muted">
+            <div className="text-center space-y-4 max-w-md">
+              <Sparkles className="w-12 h-12 mx-auto opacity-50" />
+              <h3 className="text-lg font-medium">Live Preview Migration in Progress</h3>
+              <p className="text-sm">
+                Live Preview mode is being migrated to a new dual-editor architecture
+                with Milkdown (for markdown) and Monaco (for LaTeX/code).
+              </p>
+              <p className="text-xs opacity-70">
+                For now, please use Source or Reading mode. See PLAN-HYBRID-EDITOR.md for details.
+              </p>
+            </div>
+          </div>
         ) : (
           /* Reading mode: fully rendered, read-only */
           <div
