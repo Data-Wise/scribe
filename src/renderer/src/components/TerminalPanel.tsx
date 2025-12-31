@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Terminal as TerminalIcon, Trash2, AlertCircle } from 'lucide-react'
+import { Terminal as TerminalIcon, Trash2 } from 'lucide-react'
 import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { WebLinksAddon } from '@xterm/addon-web-links'
@@ -29,7 +29,6 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
   const xtermRef = useRef<Terminal | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)
   const [isConnected, setIsConnected] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const shellIdRef = useRef<number | null>(null)
   const inputBufferRef = useRef<string>('')
 
@@ -167,18 +166,24 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
       } else {
         throw new Error('Failed to spawn shell')
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to start shell')
-      terminal.writeln(`\x1b[31mError: ${err instanceof Error ? err.message : 'Failed to start shell'}\x1b[0m`)
-      // Fall back to browser shell
+    } catch {
+      // Full PTY shell is a v2 feature - gracefully fall back to browser mode
+      terminal.clear()
       startBrowserShell(terminal)
     }
   }
 
   // Browser mode - limited shell emulation
   const startBrowserShell = (terminal: Terminal) => {
-    terminal.writeln('\x1b[33m$ Scribe Terminal (Browser Mode)\x1b[0m')
-    terminal.writeln('\x1b[90mFull shell requires desktop app. Run: npm run dev\x1b[0m')
+    if (isTauri()) {
+      // In Tauri but PTY not implemented yet (v2 feature)
+      terminal.writeln('\x1b[33m$ Scribe Terminal (Demo Mode)\x1b[0m')
+      terminal.writeln('\x1b[90mFull PTY shell coming in v2\x1b[0m')
+    } else {
+      // Actually in browser
+      terminal.writeln('\x1b[33m$ Scribe Terminal (Browser Mode)\x1b[0m')
+      terminal.writeln('\x1b[90mFull shell requires desktop app\x1b[0m')
+    }
     terminal.writeln('')
     terminal.writeln('Available commands:')
     terminal.writeln('  \x1b[36mhelp\x1b[0m     - Show this help')
@@ -331,17 +336,6 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
           </button>
         </div>
       </div>
-
-      {/* Error message */}
-      {error && (
-        <div
-          className="flex items-center gap-2 px-3 py-2 text-xs"
-          style={{ backgroundColor: 'rgba(227, 91, 91, 0.1)', color: '#e35b5b' }}
-        >
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
 
       {/* Terminal container */}
       <div
