@@ -802,3 +802,53 @@ pub fn list_backups(app_handle: tauri::AppHandle) -> Result<Vec<BackupInfo>, Str
     Ok(backups)
 }
 
+// Chat history operations
+
+#[tauri::command]
+pub fn get_or_create_chat_session(
+    note_id: String,
+    state: State<AppState>,
+) -> Result<String, String> {
+    let db = state.db.lock().unwrap();
+    db.get_or_create_chat_session(&note_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn save_chat_message(
+    session_id: String,
+    role: String,
+    content: String,
+    timestamp: i64,
+    state: State<AppState>,
+) -> Result<String, String> {
+    let db = state.db.lock().unwrap();
+    db.save_chat_message(&session_id, &role, &content, timestamp).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn load_chat_session(
+    session_id: String,
+    state: State<AppState>,
+) -> Result<Vec<serde_json::Value>, String> {
+    let db = state.db.lock().unwrap();
+    db.load_chat_session(&session_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn clear_chat_session(
+    session_id: String,
+    state: State<AppState>,
+) -> Result<(), String> {
+    let db = state.db.lock().unwrap();
+    db.clear_chat_session(&session_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn delete_chat_session(
+    session_id: String,
+    state: State<AppState>,
+) -> Result<(), String> {
+    let db = state.db.lock().unwrap();
+    db.delete_chat_session(&session_id).map_err(|e| e.to_string())
+}
+

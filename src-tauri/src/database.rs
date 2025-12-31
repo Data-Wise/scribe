@@ -1,4 +1,4 @@
-use rusqlite::{Connection, Result as SqlResult, params_from_iter};
+use rusqlite::{Connection, Result as SqlResult, params_from_iter, params};
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use tauri::{AppHandle, Manager};
@@ -176,6 +176,11 @@ impl Database {
         if current_version < 8 {
             self.run_migration_008_add_properties_to_fts()?;
             self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [8])?;
+        }
+
+        if current_version < 9 {
+            self.run_migration_009_chat_history()?;
+            self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [9])?;
         }
 
         Ok(())
@@ -635,6 +640,42 @@ What did you accomplish today?"#);
         ", [])?;
 
         println!("  ✅ FTS index updated with properties column");
+        Ok(())
+    }
+
+    fn run_migration_009_chat_history(&self) -> SqlResult<()> {
+        println!("Running database migration 009 (chat history tables)");
+
+        // Create chat_sessions table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_sessions (
+                id TEXT PRIMARY KEY,
+                note_id TEXT NOT NULL,
+                created_at INTEGER NOT NULL,
+                updated_at INTEGER NOT NULL,
+                FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_note_id ON chat_sessions(note_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_updated_at ON chat_sessions(updated_at DESC);
+        ")?;
+
+        // Create chat_messages table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_messages (
+                id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+                content TEXT NOT NULL,
+                timestamp INTEGER NOT NULL,
+                FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_timestamp ON chat_messages(timestamp ASC);
+        ")?;
+
+        println!("  ✅ Chat history tables created");
         Ok(())
     }
 
@@ -1503,6 +1544,86 @@ What did you accomplish today?"#);
              ON CONFLICT(project_id) DO UPDATE SET settings = excluded.settings",
             [project_id, settings],
         )?;
+        Ok(())
+    }
+
+    // Chat history operations
+
+    /// Get or create a chat session for a note
+    pub fn get_or_create_chat_session(&self, note_id: &str) -> SqlResult<String> {
+        // Try to get the most recent session for this note
+        let existing: Result<String, _> = self.conn.query_row(
+            "SELECT id FROM chat_sessions WHERE note_id = ? ORDER BY updated_at DESC LIMIT 1",
+            [note_id],
+            |row| row.get(0),
+        );
+
+        if let Ok(session_id) = existing {
+            return Ok(session_id);
+        }
+
+        // Create new session
+        let session_id = uuid::Uuid::new_v4().to_string();
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as i64;
+
+        self.conn.execute(
+            "INSERT INTO chat_sessions (id, note_id, created_at, updated_at) VALUES (?, ?, ?, ?)",
+            [&session_id, note_id, &now.to_string(), &now.to_string()],
+        )?;
+
+        Ok(session_id)
+    }
+
+    /// Save a chat message to the database
+    pub fn save_chat_message(&self, session_id: &str, role: &str, content: &str, timestamp: i64) -> SqlResult<String> {
+        let message_id = uuid::Uuid::new_v4().to_string();
+
+        self.conn.execute(
+            "INSERT INTO chat_messages (id, session_id, role, content, timestamp) VALUES (?, ?, ?, ?, ?)",
+            params![message_id, session_id, role, content, timestamp],
+        )?;
+
+        // Update session's updated_at
+        self.conn.execute(
+            "UPDATE chat_sessions SET updated_at = ? WHERE id = ?",
+            [&timestamp.to_string(), session_id],
+        )?;
+
+        Ok(message_id)
+    }
+
+    /// Load chat messages for a session
+    pub fn load_chat_session(&self, session_id: &str) -> SqlResult<Vec<serde_json::Value>> {
+        let mut stmt = self.conn.prepare(
+            "SELECT id, role, content, timestamp FROM chat_messages WHERE session_id = ? ORDER BY timestamp ASC"
+        )?;
+
+        let messages = stmt.query_map([session_id], |row| {
+            Ok(serde_json::json!({
+                "id": row.get::<_, String>(0)?,
+                "role": row.get::<_, String>(1)?,
+                "content": row.get::<_, String>(2)?,
+                "timestamp": row.get::<_, i64>(3)?,
+            }))
+        })?
+        .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(messages)
+    }
+
+    /// Clear all messages in a session
+    pub fn clear_chat_session(&self, session_id: &str) -> SqlResult<()> {
+        self.conn.execute("DELETE FROM chat_messages WHERE session_id = ?", [session_id])?;
+        Ok(())
+    }
+
+    /// Delete a chat session and all its messages
+    pub fn delete_chat_session(&self, session_id: &str) -> SqlResult<()> {
+        // Messages will be deleted automatically via CASCADE
+        self.conn.execute("DELETE FROM chat_sessions WHERE id = ?", [session_id])?;
         Ok(())
     }
 

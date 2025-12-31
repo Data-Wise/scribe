@@ -220,6 +220,22 @@ const tauriApi = {
   runGemini: (prompt: string, context?: string): Promise<string> =>
     invoke('run_gemini', { prompt, context }),
 
+  // Chat history operations
+  getOrCreateChatSession: (noteId: string): Promise<string> =>
+    invoke('get_or_create_chat_session', { noteId }),
+
+  saveChatMessage: (sessionId: string, role: string, content: string, timestamp: number): Promise<string> =>
+    invoke('save_chat_message', { sessionId, role, content, timestamp }),
+
+  loadChatSession: (sessionId: string): Promise<Array<{ id: string; role: string; content: string; timestamp: number }>> =>
+    invoke('load_chat_session', { sessionId }),
+
+  clearChatSession: (sessionId: string): Promise<void> =>
+    invoke('clear_chat_session', { sessionId }),
+
+  deleteChatSession: (sessionId: string): Promise<void> =>
+    invoke('delete_chat_session', { sessionId }),
+
   getOrCreateDailyNote: async (date: string): Promise<Note> => {
     const result = await invoke<Note>('get_or_create_daily_note', { date })
     return parseNoteFromTauri(result) as Note
@@ -470,6 +486,13 @@ export const api = {
   // AI operations (can fail silently - user sees empty result)
   runClaude: withErrorToast(rawApi.runClaude, 'Claude request failed'),
   runGemini: withErrorToast(rawApi.runGemini, 'Gemini request failed'),
+
+  // Chat history operations
+  getOrCreateChatSession: withErrorToast(rawApi.getOrCreateChatSession, 'Failed to get chat session', true),
+  saveChatMessage: withErrorToast(rawApi.saveChatMessage, 'Failed to save message', true),
+  loadChatSession: withErrorToast(rawApi.loadChatSession, 'Failed to load chat', true),
+  clearChatSession: withErrorToast(rawApi.clearChatSession, 'Failed to clear chat'),
+  deleteChatSession: withErrorToast(rawApi.deleteChatSession, 'Failed to delete chat'),
 
   // Daily notes
   getOrCreateDailyNote: withErrorToast(rawApi.getOrCreateDailyNote, 'Failed to open daily note'),

@@ -116,6 +116,12 @@ pub fn run() {
       commands::create_backup,
       commands::restore_backup,
       commands::list_backups,
+      // Chat history
+      commands::get_or_create_chat_session,
+      commands::save_chat_message,
+      commands::load_chat_session,
+      commands::clear_chat_session,
+      commands::delete_chat_session,
       // Terminal PTY
       terminal::spawn_shell,
       terminal::write_to_shell,

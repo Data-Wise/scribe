@@ -354,6 +354,33 @@ export const browserApi = {
   },
 
   // ============================================================================
+  // Chat History (Browser stubs - in-memory only, not persisted)
+  // ============================================================================
+
+  getOrCreateChatSession: async (noteId: string): Promise<string> => {
+    // Return a simple session ID based on note ID
+    return `browser-session-${noteId}`
+  },
+
+  saveChatMessage: async (_sessionId: string, _role: string, _content: string, _timestamp: number): Promise<string> => {
+    // In browser mode, chat is ephemeral (not persisted to IndexedDB)
+    return `msg-${Date.now()}`
+  },
+
+  loadChatSession: async (_sessionId: string): Promise<Array<{ id: string; role: string; content: string; timestamp: number }>> => {
+    // Browser mode doesn't persist chat history
+    return []
+  },
+
+  clearChatSession: async (_sessionId: string): Promise<void> => {
+    // No-op in browser mode
+  },
+
+  deleteChatSession: async (_sessionId: string): Promise<void> => {
+    // No-op in browser mode
+  },
+
+  // ============================================================================
   // Daily Notes
   // ============================================================================
 
