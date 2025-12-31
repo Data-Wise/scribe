@@ -1,30 +1,67 @@
 # Features Overview
 
-Scribe is designed with ADHD users in mind. Every feature follows the principle of **minimal friction** and **maximum focus**.
+> Every feature follows **minimal friction** and **maximum focus**
+
+---
+
+## Core Features
+
+<div class="grid cards" markdown>
+
+-   :material-pencil:{ .lg .middle } **HybridEditor**
+
+    ---
+
+    Write in markdown, preview rendered. Toggle with ⌘E.
+
+-   :material-eye-off:{ .lg .middle } **Focus Mode**
+
+    ---
+
+    Distraction-free writing. Sidebars collapse. ⌘⇧F to toggle.
+
+-   :material-link-variant:{ .lg .middle } **Wiki Links**
+
+    ---
+
+    Connect notes with `[[double brackets]]`. Autocomplete included.
+
+-   :material-tag:{ .lg .middle } **Tags**
+
+    ---
+
+    Organize with `#hashtags`. Hierarchical support (`#research/stats`).
+
+</div>
+
+---
 
 ## Editor
 
 ### HybridEditor
 
-The core of Scribe is the HybridEditor - a simple, distraction-free markdown editor:
+| Mode | Description |
+|------|-------------|
+| **Write** | Plain textarea for reliable input |
+| **Preview** | Rendered markdown with clickable links |
 
-- **Write Mode**: Plain textarea for reliable input
-- **Preview Mode**: Rendered markdown with clickable links
-- **Toggle**: Press `⌘E` to switch modes
+Press `⌘E` to toggle between modes.
 
 ### Focus Mode
 
-Enter distraction-free mode with `⌘⇧F`:
+!!! tip "Enter Focus Mode"
+    Press `⌘⇧F` to hide sidebars and center your writing.
 
 - Sidebars collapse
 - Editor centers on screen
 - Only your words remain
-
-Press `⌘⇧F` or `Escape` to exit.
+- Press `⌘⇧F` or `Escape` to exit
 
 ### Word Count
 
-Always visible in the status bar at the bottom. No clicks required.
+Always visible in the status bar. No clicks required.
+
+---
 
 ## Wiki Links
 
@@ -34,9 +71,13 @@ Connect your notes with wiki-style links:
 See [[My Other Note]] for more details.
 ```
 
-- Type `[[` to trigger autocomplete
-- Click links in preview mode to navigate
-- View backlinks in the right sidebar
+| Feature | How |
+|---------|-----|
+| Autocomplete | Type `[[` |
+| Navigate | Click links in preview |
+| Backlinks | View in right sidebar |
+
+---
 
 ## Tags
 
@@ -46,78 +87,78 @@ Organize notes with tags:
 This is about #research and #causal-inference.
 ```
 
-- Type `#` to trigger autocomplete
-- Tags get consistent colors based on name
-- Filter notes by clicking tags in the sidebar
-
 ### Tags Panel
 
-The Tags Panel (right sidebar, click "Tags" tab) provides powerful tag management:
+Access via right sidebar → "Tags" tab.
 
-**Views:**
-- **Tree View**: Hierarchical display for nested tags (`research/statistics`)
-- **Flat View**: Alphabetical list of all tags
-
-**Features:**
-- **Search**: Filter tags in real-time
-- **Recent Tags**: Quick access to recently used tags
-- **Compact Mode**: Reduce padding for more tags on screen
-- **Note Counts**: See how many notes use each tag
+| View | Description |
+|------|-------------|
+| **Tree View** | Hierarchical display for nested tags |
+| **Flat View** | Alphabetical list |
+| **Compact** | Reduced padding for more tags |
 
 **Tag Management:**
-- Right-click any tag to **Rename** or **Delete**
-- **Orphan Detection**: Unregistered `#tags` found in notes are highlighted
-- **Register Tags**: One-click to add orphan tags to your tag library
+
+- Right-click to **Rename** or **Delete**
+- **Orphan Detection** highlights unregistered tags
+- One-click to register orphan tags
 
 ### Hierarchical Tags
-
-Use path notation for tag hierarchies:
 
 ```markdown
 #research/statistics/mediation
 #teaching/stat-440
 ```
 
-Hierarchical tags appear as expandable trees in the Tags Panel.
+---
 
 ## Daily Notes
 
-Quick capture for daily thoughts:
+!!! tip "Quick Access"
+    Press `⌘D` to open/create today's note.
 
-- Press `⌘D` to open/create today's note
-- Template auto-applied
-- 5 built-in templates:
-  - **Minimal**: Just the date heading
-  - **Journaling**: Gratitude, focus, reflections
-  - **Research**: Notes, papers, ideas sections
-  - **Meeting**: Attendees, agenda, action items
-  - **Focus**: Single priority with blockers
+**5 Built-in Templates:**
 
-Configure templates in Settings → Writing → Daily Note Template.
+| Template | Use Case |
+|----------|----------|
+| **Minimal** | Just the date heading |
+| **Journaling** | Gratitude, focus, reflections |
+| **Research** | Notes, papers, ideas sections |
+| **Meeting** | Attendees, agenda, action items |
+| **Focus** | Single priority with blockers |
+
+Configure in Settings → Writing → Daily Note Template.
+
+---
 
 ## Knowledge Graph
 
 Visualize connections between your notes:
 
-- Access via command palette or ribbon
 - Interactive D3 force-directed graph
-- Notes appear as nodes, links as edges
+- Notes as nodes, links as edges
 - Pan, zoom, and click to navigate
 - See clusters of related ideas
 
+---
+
 ## Command Palette
 
-Press `⌘K` for quick access to all features:
+Press `⌘K` for quick access:
 
-- Create New Note
-- Open Daily Note
-- Toggle Focus Mode
-- Sync to Obsidian
-- Ask Claude / Gemini
+| Command | Action |
+|---------|--------|
+| New Note | Create note |
+| Daily Note | Open today's note |
+| Focus Mode | Toggle distraction-free |
+| Ask Claude | AI assistance |
+| Ask Gemini | AI assistance |
+
+---
 
 ## AI Integration
 
-Use your existing Claude and Gemini CLI subscriptions:
+Use your existing CLI subscriptions (no API keys needed):
 
 | Action | What it does |
 |--------|--------------|
@@ -127,65 +168,56 @@ Use your existing Claude and Gemini CLI subscriptions:
 | **Explain** | Simplify complex text |
 | **Research** | Find related information |
 
-No API keys needed - uses your CLI subscriptions.
+!!! note "CLI Required"
+    Install [Claude CLI](https://claude.ai/cli) or [Gemini CLI](https://ai.google.dev/gemini-api/docs/cli) first.
+
+---
 
 ## Global Hotkey
 
-Open Scribe from anywhere: `⌘⇧N`
+Open Scribe from anywhere: **⌘⇧N**
 
 Works even when Scribe is minimized or closed.
 
-## Empty State
-
-When no note is selected, Scribe shows an engaging empty state:
-
-- Animated pen icon
-- "Ready to write" heading
-- Quick action buttons (New Note, Daily Note)
-- Random inspirational writing quote
-- Command palette hint
-
-## UI Polish
-
-### Micro-interactions
-
-All interactive elements provide tactile feedback:
-
-- **Buttons**: Scale down slightly on click (0.95x)
-- **Ribbon icons**: Press feedback with background change
-- **Transitions**: Smooth 150ms animations
-
-### Sidebar Tooltips
-
-Hover over sidebar icons to see:
-
-- Icon name
-- Keyboard shortcut
-
-Tooltips appear after 200ms delay to avoid flickering.
-
-### Accessibility
-
-Scribe respects your system preferences:
-
-- **Reduced motion**: All animations disabled when `prefers-reduced-motion` is set
-- **Screen readers**: Proper ARIA labels on all interactive elements
-- **Keyboard navigation**: Full support for keyboard-only users
+---
 
 ## Math Support
 
 Write math using LaTeX syntax:
 
-**Inline math:**
-```markdown
-The formula $E = mc^2$ is famous.
-```
+=== "Inline Math"
 
-**Display math:**
-```markdown
-$$
-\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
-$$
-```
+    ```markdown
+    The formula $E = mc^2$ is famous.
+    ```
+
+=== "Display Math"
+
+    ```markdown
+    $$
+    \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+    $$
+    ```
 
 Powered by KaTeX for fast, native rendering.
+
+---
+
+## Accessibility
+
+!!! tip "ADHD-Friendly Design"
+    Scribe respects your system preferences and cognitive needs.
+
+| Feature | Behavior |
+|---------|----------|
+| **Reduced motion** | Animations disabled when system preference set |
+| **Screen readers** | Proper ARIA labels |
+| **Keyboard navigation** | Full support |
+| **Auto-save** | Never lose work |
+
+---
+
+## Next Steps
+
+[Keyboard Shortcuts :material-arrow-right:](shortcuts.md){ .md-button .md-button--primary }
+[Themes Guide](themes.md){ .md-button }
