@@ -65,6 +65,7 @@
 | **Search Notes** | `⌘F` |
 | **Toggle Left Sidebar** | `⌘B` |
 | **Toggle Right Sidebar** | `⌘⇧B` |
+| **Toggle Terminal** | `⌘⌥T` |
 | **Back** | `⌘[` |
 | **Forward** | `⌘]` |
 

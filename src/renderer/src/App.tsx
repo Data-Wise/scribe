@@ -667,6 +667,11 @@ function App() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Debug: Log all Alt key combos
+      if ((e.metaKey || e.ctrlKey) && e.altKey) {
+        console.log('[DEBUG] Alt combo detected:', { metaKey: e.metaKey, ctrlKey: e.ctrlKey, altKey: e.altKey, shiftKey: e.shiftKey, key: e.key, code: e.code })
+      }
+
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'F') {
         e.preventDefault()
         handleFocusModeChange(!focusMode)
@@ -800,8 +805,10 @@ function App() {
         }
       }
 
-      // Terminal tab shortcut (⌘`) - toggle or switch to Terminal
-      if ((e.metaKey || e.ctrlKey) && e.key === '`') {
+      // Terminal tab shortcut (⌘⌥T) - toggle or switch to Terminal
+      // Use e.code instead of e.key because Option modifier changes key value on macOS (Option+T = '†')
+      if ((e.metaKey || e.ctrlKey) && e.altKey && !e.shiftKey && e.code === 'KeyT') {
+        console.log('[DEBUG] Terminal shortcut triggered:', { metaKey: e.metaKey, ctrlKey: e.ctrlKey, altKey: e.altKey, shiftKey: e.shiftKey, key: e.key, code: e.code })
         e.preventDefault()
         // If already on Terminal and sidebar is open, close it
         if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {

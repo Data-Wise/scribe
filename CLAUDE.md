@@ -174,22 +174,38 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Work: Sprint 26 Complete
+## 🎯 Current Work: Sprint 27 P1 Complete
 
-**Branch:** `main` (Sprint 26 merged)
+**Branch:** `dev` (PR #15 created for merge to main)
+
+**Sprint 27 P1 Completed (2025-12-31):**
+- ✅ Chat History Persistence (Migration 009)
+  - `chat_sessions` and `chat_messages` tables with CASCADE
+  - Auto-save/load conversations per note
+  - Session switching on note navigation
+- ✅ Quick Actions (5 one-click AI prompts)
+  - ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research
+  - Auto-includes full note context
+- ✅ @ References (autocomplete note inclusion)
+- ✅ Comprehensive Testing
+  - 12 backend tests (Rust)
+  - 38 frontend tests (Vitest)
+  - 67 E2E tests (Playwright)
+- ✅ Complete Documentation
+  - Chat persistence guide
+  - Quick Actions reference card
 
 **Sprint 26 Completed:**
 - ✅ Terminal PTY shell (portable-pty + xterm.js)
 - ✅ Smart terminal working directory (project type inference)
-- ✅ Terminal graceful fallback to home directory
-- ✅ CSS drag region fix (unblocked clicks)
-- ✅ 20 new E2E tests (Terminal, Modals, Sidebar)
-- ✅ Claude CLI wired up in ClaudeChatPanel
+- ✅ Mission Control sidebar with Icon/Compact/Card modes
+- ✅ Browser mode with full IndexedDB persistence
 
-**Ready for Next Sprint:**
+**Ready for Next Sprint (Sprint 27 P2):**
+- [ ] Browser mode indicator in UI
+- [ ] Wiki link backlink tracking in browser
 - [ ] Ambient AI (⌘K) - inline suggestions
 - [ ] Graph View Enhancements
-- [ ] Settings UI for default terminal folder
 
 ---
 

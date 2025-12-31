@@ -86,6 +86,11 @@ export const db = new ScribeBrowserDB()
 // Initialize on import
 db.initialize().catch(console.error)
 
+// Expose to window for E2E tests
+if (typeof window !== 'undefined') {
+  ;(window as  any).scribeDb = db
+}
+
 /**
  * Helper: Generate UUID
  */

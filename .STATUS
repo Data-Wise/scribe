@@ -7,7 +7,7 @@ sprint: 26
 updated: 2025-12-30
 editor: hybrid-markdown++
 next_sprint: 27
-next_focus: Sidebar Consolidation + AI Integration
+next_focus: Backend Foundation (Tauri) + AI Integration
 tests: 759+282
 unit_tests: 759
 e2e_tests: 282
@@ -101,23 +101,26 @@ tags:
 
 ---
 
-### Sprint 27: Sidebar Consolidation (Planned)
+### Sprint 27: Backend Foundation + AI Integration (In Progress)
 
-**Design Document:** `BRAINSTORM-sidebar-consolidation-2025-12-29.md`
+**Design Document:** `PLANNING-SUMMARY-INCOMPLETE.md`
 
-**Phase 1: Foundation**
-- [ ] Option A: Add Stats tab to right sidebar (merge HudPanel)
-- [ ] Option I: Status bar quick chat icon
+**Phase 1: Backend Improvements (P1 - High Priority)**
+- [ ] Property type validation in Rust
+- [ ] Add properties to search index
+- [ ] Wire Tauri AI commands (run_claude, run_gemini)
+- [ ] Database backup/restore commands
 
-**Phase 2: AI Integration (Choose ONE)**
-- [ ] Option H: Claude as full sidebar tab (VS Code style)
-- [ ] Option F: Split-pane with docked Claude bottom
-  - Evolution path: If cramped → migrate to Option G
-- [ ] Option K: OpenCode-style AI Workspace (rich UI)
+**Phase 2: AI Enhancements (P1)**
+- [ ] @ References in Claude chat
+- [ ] Quick actions (Summarize, Improve, Explain)
+- [ ] Chat history persistence
+- [ ] Cleanup: Remove floating ClaudePanel
 
-**Phase 3: Power Features**
-- [ ] Option J: Terminal tab (xterm.js) - Feasibility: ✅ HIGH
-- [ ] Option G: Ambient AI (⌘K everywhere, inline suggestions)
+**Phase 3: UI Features (P2 - Medium Priority)**
+- [ ] Ambient AI (⌘K everywhere, inline suggestions)
+- [ ] Vault sidebar (Obsidian file tree)
+- [ ] Status bar enhancements
 
 **Research Completed:**
 - OpenCode TUI patterns (github.com/opencode-ai/opencode)

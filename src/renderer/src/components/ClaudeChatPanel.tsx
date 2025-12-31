@@ -85,9 +85,11 @@ export function ClaudeChatPanel({
   const [atQuery, setAtQuery] = useState('')
   const [atMenuIndex, setAtMenuIndex] = useState(0)
   const [referencedNotes, setReferencedNotes] = useState<NoteReference[]>([])
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const atMenuRef = useRef<HTMLDivElement>(null)
+  const noteIdRef = useRef<string | null>(null)
 
   // Filter notes based on @ query
   const filteredNotes = useMemo(() => {
@@ -97,6 +99,55 @@ export function ClaudeChatPanel({
       .filter(n => n.title.toLowerCase().includes(query))
       .slice(0, 5)
   }, [availableNotes, atQuery])
+
+  // Get or create chat session when note context changes
+  useEffect(() => {
+    if (!noteContext) {
+      setSessionId(null)
+      noteIdRef.current = null
+      return
+    }
+
+    // Generate a stable note ID from title (in real app, use actual note.id)
+    const noteId = noteContext.title.toLowerCase().replace(/\s+/g, '-')
+
+    // Only create new session if note changed
+    if (noteIdRef.current === noteId) return
+    noteIdRef.current = noteId
+
+    const initSession = async () => {
+      try {
+        const id = await api.getOrCreateChatSession(noteId)
+        setSessionId(id)
+      } catch (err) {
+        console.error('Failed to create chat session:', err)
+      }
+    }
+
+    initSession()
+  }, [noteContext])
+
+  // Load chat history when session is ready
+  useEffect(() => {
+    if (!sessionId) return
+
+    const loadHistory = async () => {
+      try {
+        const history = await api.loadChatSession(sessionId)
+        const loadedMessages: Message[] = history.map(msg => ({
+          id: msg.id,
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+          timestamp: new Date(msg.timestamp)
+        }))
+        setMessages(loadedMessages)
+      } catch (err) {
+        console.error('Failed to load chat history:', err)
+      }
+    }
+
+    loadHistory()
+  }, [sessionId])
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -142,6 +193,20 @@ export function ClaudeChatPanel({
     setInput('')
     setIsLoading(true)
 
+    // Save user message to database
+    if (sessionId) {
+      try {
+        await api.saveChatMessage(
+          sessionId,
+          'user',
+          trimmedInput,
+          userMessage.timestamp.getTime()
+        )
+      } catch (err) {
+        console.error('Failed to save user message:', err)
+      }
+    }
+
     try {
       // Build context from current note and referenced notes
       let fullPrompt = trimmedInput
@@ -174,6 +239,20 @@ export function ClaudeChatPanel({
       }
 
       setMessages(prev => [...prev, assistantMessage])
+
+      // Save assistant message to database
+      if (sessionId) {
+        try {
+          await api.saveChatMessage(
+            sessionId,
+            'assistant',
+            response,
+            assistantMessage.timestamp.getTime()
+          )
+        } catch (err) {
+          console.error('Failed to save assistant message:', err)
+        }
+      }
     } catch (err) {
       // Add error as assistant message
       const errorMessage: Message = {
@@ -188,7 +267,7 @@ export function ClaudeChatPanel({
       // Re-focus input after response
       inputRef.current?.focus()
     }
-  }, [input, isLoading, onSubmit, noteContext, referencedNotes])
+  }, [input, isLoading, onSubmit, noteContext, referencedNotes, sessionId])
 
   // Handle @ menu selection
   const handleSelectNote = useCallback((note: NoteReference) => {
@@ -275,10 +354,114 @@ export function ClaudeChatPanel({
     }
   }, [handleSubmit, showAtMenu, filteredNotes, atMenuIndex, handleSelectNote])
 
-  const handleClearChat = useCallback(() => {
+  const handleClearChat = useCallback(async () => {
     setMessages([])
     setReferencedNotes([])
-  }, [])
+
+    // Clear chat history from database
+    if (sessionId) {
+      try {
+        await api.clearChatSession(sessionId)
+      } catch (err) {
+        console.error('Failed to clear chat session:', err)
+      }
+    }
+  }, [sessionId])
+
+  // Quick action handler - runs pre-defined AI prompts
+  const handleQuickAction = useCallback(async (action: string) => {
+    if (isLoading || !noteContext) return
+
+    const actionPrompts: Record<string, string> = {
+      improve: 'Improve clarity and flow',
+      expand: 'Expand on this idea',
+      summarize: 'Summarize in 2-3 sentences',
+      explain: 'Explain this simply',
+      research: 'What does research say about this?'
+    }
+
+    const prompt = actionPrompts[action]
+    if (!prompt) return
+
+    setInput(prompt)
+
+    // Build context from current note and referenced notes
+    const contexts: string[] = []
+    contexts.push(`Current note: "${noteContext.title}"\n${noteContext.content.slice(0, 800)}${noteContext.content.length > 800 ? '...' : ''}`)
+
+    // Add referenced notes
+    referencedNotes.forEach(note => {
+      contexts.push(`Referenced note: "${note.title}"\n${note.content.slice(0, 500)}${note.content.length > 500 ? '...' : ''}`)
+    })
+
+    const fullPrompt = `Context:\n${contexts.join('\n\n---\n\n')}\n\nQuestion: ${prompt}`
+
+    // Create user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: prompt,
+      timestamp: new Date()
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setIsLoading(true)
+
+    // Save user message to database
+    if (sessionId) {
+      try {
+        await api.saveChatMessage(
+          sessionId,
+          'user',
+          prompt,
+          userMessage.timestamp.getTime()
+        )
+      } catch (err) {
+        console.error('Failed to save quick action message:', err)
+      }
+    }
+
+    try {
+      const aiResponse = onSubmit
+        ? await onSubmit(fullPrompt)
+        : await api.runClaude(fullPrompt)
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: aiResponse,
+        timestamp: new Date()
+      }
+
+      setMessages(prev => [...prev, assistantMessage])
+
+      // Save assistant message to database
+      if (sessionId) {
+        try {
+          await api.saveChatMessage(
+            sessionId,
+            'assistant',
+            aiResponse,
+            assistantMessage.timestamp.getTime()
+          )
+        } catch (err) {
+          console.error('Failed to save quick action response:', err)
+        }
+      }
+    } catch (error) {
+      console.error('AI request failed:', error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+      setInput('')
+    }
+  }, [isLoading, noteContext, referencedNotes, onSubmit, sessionId])
 
   // Export chat as markdown file
   const handleExportChat = useCallback(() => {
@@ -514,6 +697,36 @@ export function ClaudeChatPanel({
         className="p-2 border-t shrink-0"
         style={{ borderColor: 'var(--nexus-bg-tertiary)' }}
       >
+        {/* Quick Actions - only show when note context is available */}
+        {noteContext && (
+          <div className="flex flex-wrap gap-1 mb-2" data-testid="quick-actions">
+            {[
+              { id: 'improve', label: 'Improve', icon: '✨' },
+              { id: 'expand', label: 'Expand', icon: '📝' },
+              { id: 'summarize', label: 'Summarize', icon: '📋' },
+              { id: 'explain', label: 'Explain', icon: '💡' },
+              { id: 'research', label: 'Research', icon: '🔍' }
+            ].map(action => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => handleQuickAction(action.id)}
+                disabled={isLoading}
+                className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] transition-all hover:scale-105 disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: 'var(--nexus-bg-tertiary)',
+                  color: 'var(--nexus-text-primary)',
+                  border: '1px solid var(--nexus-bg-tertiary)'
+                }}
+                title={`${action.label} this note`}
+              >
+                <span>{action.icon}</span>
+                <span>{action.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Referenced notes chips */}
         {referencedNotes.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-2" data-testid="referenced-notes">

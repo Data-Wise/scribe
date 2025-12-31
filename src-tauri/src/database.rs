@@ -1,6 +1,8 @@
-use rusqlite::{Connection, Result as SqlResult, params_from_iter};
+use rusqlite::{Connection, Result as SqlResult, params_from_iter, params};
 use serde::{Deserialize, Serialize};
+use serde_json::Value as JsonValue;
 use tauri::{AppHandle, Manager};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Note {
@@ -51,8 +53,59 @@ pub struct Folder {
     pub sort_order: i32,
 }
 
+// Property validation types
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PropertyType {
+    Text,
+    Date,
+    Number,
+    Checkbox,
+    List,
+    Link,
+    Tags,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Property {
+    pub key: String,
+    #[serde(rename = "type")]
+    pub prop_type: PropertyType,
+    pub value: JsonValue,
+    #[serde(default)]
+    pub readonly: bool,
+}
+
 pub struct Database {
+    #[cfg(not(test))]
     conn: Connection,
+    #[cfg(test)]
+    pub(crate) conn: Connection,
+}
+
+// Database backup structures
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DatabaseBackup {
+    pub version: String,
+    pub timestamp: i64,
+    pub notes: Vec<Note>,
+    pub projects: Vec<Project>,
+    pub tags: Vec<Tag>,
+    pub folders: Vec<Folder>,
+    pub note_tags: Vec<NoteTag>,
+    pub links: Vec<Link>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NoteTag {
+    pub note_id: String,
+    pub tag_id: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Link {
+    pub source_note_id: String,
+    pub target_note_id: String,
 }
 
 impl Database {
@@ -61,18 +114,26 @@ impl Database {
             .path()
             .app_data_dir()
             .expect("Failed to get app data directory");
-        
+
         std::fs::create_dir_all(&app_data_dir).expect("Failed to create app data directory");
-        
+
         let db_path = app_data_dir.join("scribe.db");
         let conn = Connection::open(db_path)?;
-        
+
         // Enable WAL mode for better performance
         conn.pragma_update(None, "journal_mode", "WAL")?;
-        
+
         let mut db = Database { conn };
         db.initialize()?;
-        
+
+        Ok(db)
+    }
+
+    #[cfg(test)]
+    pub fn new_with_path<P: AsRef<std::path::Path>>(path: P) -> SqlResult<Self> {
+        let conn = Connection::open(path)?;
+        let mut db = Database { conn };
+        db.initialize()?;
         Ok(db)
     }
     
@@ -123,10 +184,31 @@ impl Database {
             self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [7])?;
         }
 
+        if current_version < 8 {
+            self.run_migration_008_add_properties_to_fts()?;
+            self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [8])?;
+        }
+
+        if current_version < 9 {
+            self.run_migration_009_chat_history()?;
+            self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [9])?;
+        }
+
         Ok(())
     }
     
+    #[cfg(not(test))]
     fn get_current_schema_version(&self) -> SqlResult<i32> {
+        let version: Result<i32, _> = self.conn.query_row(
+            "SELECT MAX(version) FROM schema_version",
+            [],
+            |row| row.get(0),
+        );
+        Ok(version.unwrap_or(0))
+    }
+
+    #[cfg(test)]
+    pub(crate) fn get_current_schema_version(&self) -> SqlResult<i32> {
         let version: Result<i32, _> = self.conn.query_row(
             "SELECT MAX(version) FROM schema_version",
             [],
@@ -459,17 +541,17 @@ What did you accomplish today?"#);
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content, "notes", rusqlite::types::Null],
         )?;
 
-        // Update FTS index
+        // Update FTS index (properties column added in migration 008, use empty string for demo notes)
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
             rusqlite::params![&note1_id, "Welcome to Scribe", welcome_content],
         )?;
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
             rusqlite::params![&note2_id, "Features Overview", features_content],
         )?;
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content],
         )?;
 
@@ -535,9 +617,220 @@ What did you accomplish today?"#);
         Ok(())
     }
 
+    #[cfg(not(test))]
+    fn run_migration_008_add_properties_to_fts(&self) -> SqlResult<()> {
+        println!("Running database migration 008 (add properties to FTS index)");
+
+        // Drop old FTS table and triggers
+        self.conn.execute_batch("
+            DROP TRIGGER IF EXISTS notes_au;
+            DROP TRIGGER IF EXISTS notes_ad;
+            DROP TRIGGER IF EXISTS notes_ai;
+            DROP TABLE IF EXISTS notes_fts;
+        ")?;
+
+        // Recreate FTS table with properties column
+        self.conn.execute_batch("
+            CREATE VIRTUAL TABLE notes_fts USING fts5(
+                note_id UNINDEXED,
+                title,
+                content,
+                properties
+            );
+
+            CREATE TRIGGER notes_ai AFTER INSERT ON notes BEGIN
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+
+            CREATE TRIGGER notes_ad AFTER DELETE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+            END;
+
+            CREATE TRIGGER notes_au AFTER UPDATE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+        ")?;
+
+        // Populate FTS table with existing notes
+        self.conn.execute("
+            INSERT INTO notes_fts(note_id, title, content, properties)
+            SELECT id, title, content, COALESCE(properties, '')
+            FROM notes
+            WHERE deleted_at IS NULL
+        ", [])?;
+
+        println!("  ✅ FTS index updated with properties column");
+        Ok(())
+    }
+
+    #[cfg(test)]
+    pub(crate) fn run_migration_008_add_properties_to_fts(&self) -> SqlResult<()> {
+        println!("Running database migration 008 (add properties to FTS index)");
+
+        // Drop old FTS table and triggers
+        self.conn.execute_batch("
+            DROP TRIGGER IF EXISTS notes_au;
+            DROP TRIGGER IF EXISTS notes_ad;
+            DROP TRIGGER IF EXISTS notes_ai;
+            DROP TABLE IF EXISTS notes_fts;
+        ")?;
+
+        // Recreate FTS table with properties column
+        self.conn.execute_batch("
+            CREATE VIRTUAL TABLE notes_fts USING fts5(
+                note_id UNINDEXED,
+                title,
+                content,
+                properties
+            );
+
+            CREATE TRIGGER notes_ai AFTER INSERT ON notes BEGIN
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+
+            CREATE TRIGGER notes_ad AFTER DELETE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+            END;
+
+            CREATE TRIGGER notes_au AFTER UPDATE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+        ")?;
+
+        // Populate FTS table with existing notes
+        self.conn.execute("
+            INSERT INTO notes_fts(note_id, title, content, properties)
+            SELECT id, title, content, COALESCE(properties, '')
+            FROM notes
+            WHERE deleted_at IS NULL
+        ", [])?;
+
+        println!("  ✅ FTS index updated with properties column");
+        Ok(())
+    }
+
+    #[cfg(not(test))]
+    fn run_migration_009_chat_history(&self) -> SqlResult<()> {
+        println!("Running database migration 009 (chat history tables)");
+
+        // Create chat_sessions table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_sessions (
+                id TEXT PRIMARY KEY,
+                note_id TEXT NOT NULL,
+                created_at INTEGER NOT NULL,
+                updated_at INTEGER NOT NULL,
+                FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_note_id ON chat_sessions(note_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_updated_at ON chat_sessions(updated_at DESC);
+        ")?;
+
+        // Create chat_messages table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_messages (
+                id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+                content TEXT NOT NULL,
+                timestamp INTEGER NOT NULL,
+                FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_timestamp ON chat_messages(timestamp ASC);
+        ")?;
+
+        println!("  ✅ Chat history tables created");
+        Ok(())
+    }
+
+    #[cfg(test)]
+    pub(crate) fn run_migration_009_chat_history(&self) -> SqlResult<()> {
+        println!("Running database migration 009 (chat history tables)");
+
+        // Create chat_sessions table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_sessions (
+                id TEXT PRIMARY KEY,
+                note_id TEXT NOT NULL,
+                created_at INTEGER NOT NULL,
+                updated_at INTEGER NOT NULL,
+                FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_note_id ON chat_sessions(note_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_updated_at ON chat_sessions(updated_at DESC);
+        ")?;
+
+        // Create chat_messages table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_messages (
+                id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+                content TEXT NOT NULL,
+                timestamp INTEGER NOT NULL,
+                FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_timestamp ON chat_messages(timestamp ASC);
+        ")?;
+
+        println!("  ✅ Chat history tables created");
+        Ok(())
+    }
+
     // Note CRUD operations
-    
+
+    /// Validate properties JSON structure and type constraints
+    fn validate_properties(properties_json: &str) -> Result<(), String> {
+        // Parse JSON
+        let properties: HashMap<String, Property> = serde_json::from_str(properties_json)
+            .map_err(|e| format!("Invalid properties JSON: {}", e))?;
+
+        // Validate each property's value matches its type
+        for (key, prop) in properties.iter() {
+            match (&prop.prop_type, &prop.value) {
+                (PropertyType::Number, v) if !v.is_number() => {
+                    return Err(format!("Property '{}' should be a number, got: {:?}", key, v));
+                }
+                (PropertyType::Checkbox, v) if !v.is_boolean() => {
+                    return Err(format!("Property '{}' should be a boolean, got: {:?}", key, v));
+                }
+                (PropertyType::List | PropertyType::Tags, v) if !v.is_array() => {
+                    return Err(format!("Property '{}' should be an array, got: {:?}", key, v));
+                }
+                (PropertyType::Text | PropertyType::Date | PropertyType::Link, v) if !v.is_string() => {
+                    return Err(format!("Property '{}' should be a string, got: {:?}", key, v));
+                }
+                _ => {} // Type matches or is acceptable
+            }
+        }
+
+        Ok(())
+    }
+
     pub fn create_note(&self, title: &str, content: &str, folder: &str, project_id: Option<&str>, properties: Option<&str>) -> SqlResult<Note> {
+        // Validate properties if provided
+        if let Some(props) = properties {
+            if !props.is_empty() {
+                if let Err(e) = Self::validate_properties(props) {
+                    return Err(rusqlite::Error::ToSqlConversionFailure(
+                        Box::new(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
+                    ));
+                }
+            }
+        }
+
         self.conn.execute(
             "INSERT INTO notes (title, content, folder, project_id, properties) VALUES (?, ?, ?, ?, ?)",
             rusqlite::params![title, content, folder, project_id, properties],
@@ -647,6 +940,17 @@ What did you accomplish today?"#);
     pub fn update_note(&self, id: &str, title: Option<&str>, content: Option<&str>, properties: Option<&str>) -> SqlResult<Option<Note>> {
         if title.is_none() && content.is_none() && properties.is_none() {
             return self.get_note(id);
+        }
+
+        // Validate properties if provided
+        if let Some(props) = properties {
+            if !props.is_empty() {
+                if let Err(e) = Self::validate_properties(props) {
+                    return Err(rusqlite::Error::ToSqlConversionFailure(
+                        Box::new(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
+                    ));
+                }
+            }
         }
 
         // Build dynamic SQL and collect owned values for params
@@ -1350,6 +1654,239 @@ What did you accomplish today?"#);
              ON CONFLICT(project_id) DO UPDATE SET settings = excluded.settings",
             [project_id, settings],
         )?;
+        Ok(())
+    }
+
+    // Chat history operations
+
+    /// Get or create a chat session for a note
+    pub fn get_or_create_chat_session(&self, note_id: &str) -> SqlResult<String> {
+        // Try to get the most recent session for this note
+        let existing: Result<String, _> = self.conn.query_row(
+            "SELECT id FROM chat_sessions WHERE note_id = ? ORDER BY updated_at DESC LIMIT 1",
+            [note_id],
+            |row| row.get(0),
+        );
+
+        if let Ok(session_id) = existing {
+            return Ok(session_id);
+        }
+
+        // Create new session
+        let session_id = uuid::Uuid::new_v4().to_string();
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as i64;
+
+        self.conn.execute(
+            "INSERT INTO chat_sessions (id, note_id, created_at, updated_at) VALUES (?, ?, ?, ?)",
+            [&session_id, note_id, &now.to_string(), &now.to_string()],
+        )?;
+
+        Ok(session_id)
+    }
+
+    /// Save a chat message to the database
+    pub fn save_chat_message(&self, session_id: &str, role: &str, content: &str, timestamp: i64) -> SqlResult<String> {
+        let message_id = uuid::Uuid::new_v4().to_string();
+
+        self.conn.execute(
+            "INSERT INTO chat_messages (id, session_id, role, content, timestamp) VALUES (?, ?, ?, ?, ?)",
+            params![message_id, session_id, role, content, timestamp],
+        )?;
+
+        // Update session's updated_at
+        self.conn.execute(
+            "UPDATE chat_sessions SET updated_at = ? WHERE id = ?",
+            [&timestamp.to_string(), session_id],
+        )?;
+
+        Ok(message_id)
+    }
+
+    /// Load chat messages for a session
+    pub fn load_chat_session(&self, session_id: &str) -> SqlResult<Vec<serde_json::Value>> {
+        let mut stmt = self.conn.prepare(
+            "SELECT id, role, content, timestamp FROM chat_messages WHERE session_id = ? ORDER BY timestamp ASC"
+        )?;
+
+        let messages = stmt.query_map([session_id], |row| {
+            Ok(serde_json::json!({
+                "id": row.get::<_, String>(0)?,
+                "role": row.get::<_, String>(1)?,
+                "content": row.get::<_, String>(2)?,
+                "timestamp": row.get::<_, i64>(3)?,
+            }))
+        })?
+        .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(messages)
+    }
+
+    /// Clear all messages in a session
+    pub fn clear_chat_session(&self, session_id: &str) -> SqlResult<()> {
+        self.conn.execute("DELETE FROM chat_messages WHERE session_id = ?", [session_id])?;
+        Ok(())
+    }
+
+    /// Delete a chat session and all its messages
+    pub fn delete_chat_session(&self, session_id: &str) -> SqlResult<()> {
+        // Messages will be deleted automatically via CASCADE
+        self.conn.execute("DELETE FROM chat_sessions WHERE id = ?", [session_id])?;
+        Ok(())
+    }
+
+    // Backup and restore operations
+
+    /// Export entire database to JSON format
+    pub fn export_backup(&self) -> SqlResult<DatabaseBackup> {
+        // Get current timestamp
+        let timestamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as i64;
+
+        // Export notes (excluding deleted)
+        let notes = self.list_notes(None)?;
+
+        // Export projects
+        let mut stmt = self.conn.prepare("SELECT id, name, description, type, color, settings, created_at, updated_at FROM projects")?;
+        let projects: Vec<Project> = stmt.query_map([], |row| {
+            Ok(Project {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                description: row.get(2)?,
+                project_type: row.get(3)?,
+                color: row.get(4)?,
+                settings: row.get(5)?,
+                created_at: row.get(6)?,
+                updated_at: row.get(7)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export tags
+        let mut stmt = self.conn.prepare("SELECT id, name, color, created_at FROM tags")?;
+        let tags: Vec<Tag> = stmt.query_map([], |row| {
+            Ok(Tag {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                color: row.get(2)?,
+                created_at: row.get(3)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export folders
+        let mut stmt = self.conn.prepare("SELECT path, color, icon, sort_order FROM folders")?;
+        let folders: Vec<Folder> = stmt.query_map([], |row| {
+            Ok(Folder {
+                path: row.get(0)?,
+                color: row.get(1)?,
+                icon: row.get(2)?,
+                sort_order: row.get(3)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export note_tags associations
+        let mut stmt = self.conn.prepare("SELECT note_id, tag_id FROM note_tags")?;
+        let note_tags: Vec<NoteTag> = stmt.query_map([], |row| {
+            Ok(NoteTag {
+                note_id: row.get(0)?,
+                tag_id: row.get(1)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export links
+        let mut stmt = self.conn.prepare("SELECT source_note_id, target_note_id FROM links")?;
+        let links: Vec<Link> = stmt.query_map([], |row| {
+            Ok(Link {
+                source_note_id: row.get(0)?,
+                target_note_id: row.get(1)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        Ok(DatabaseBackup {
+            version: "1.0".to_string(),
+            timestamp,
+            notes,
+            projects,
+            tags,
+            folders,
+            note_tags,
+            links,
+        })
+    }
+
+    /// Import database from backup JSON
+    /// WARNING: This will clear existing data!
+    pub fn import_backup(&self, backup: DatabaseBackup) -> SqlResult<()> {
+        // Start transaction for atomicity
+        let tx = self.conn.unchecked_transaction()?;
+
+        // Clear existing data (except schema_version)
+        tx.execute("DELETE FROM links", [])?;
+        tx.execute("DELETE FROM note_tags", [])?;
+        tx.execute("DELETE FROM notes_fts", [])?;
+        tx.execute("DELETE FROM notes", [])?;
+        tx.execute("DELETE FROM tags", [])?;
+        tx.execute("DELETE FROM projects", [])?;
+        tx.execute("DELETE FROM folders WHERE path NOT IN ('inbox', 'notes', 'archive')", [])?;
+
+        // Import folders
+        for folder in backup.folders {
+            tx.execute(
+                "INSERT OR REPLACE INTO folders (path, color, icon, sort_order) VALUES (?, ?, ?, ?)",
+                rusqlite::params![&folder.path, &folder.color, &folder.icon, folder.sort_order],
+            )?;
+        }
+
+        // Import projects
+        for project in backup.projects {
+            tx.execute(
+                "INSERT INTO projects (id, name, description, type, color, settings, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                rusqlite::params![&project.id, &project.name, &project.description, &project.project_type, &project.color, &project.settings, project.created_at, project.updated_at],
+            )?;
+        }
+
+        // Import tags
+        for tag in backup.tags {
+            tx.execute(
+                "INSERT INTO tags (id, name, color, created_at) VALUES (?, ?, ?, ?)",
+                rusqlite::params![&tag.id, &tag.name, &tag.color, tag.created_at],
+            )?;
+        }
+
+        // Import notes
+        for note in backup.notes {
+            tx.execute(
+                "INSERT INTO notes (id, title, content, folder, project_id, properties, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                rusqlite::params![&note.id, &note.title, &note.content, &note.folder, &note.project_id, &note.properties, note.created_at, note.updated_at],
+            )?;
+
+            // Rebuild FTS index
+            tx.execute(
+                "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, ?)",
+                rusqlite::params![&note.id, &note.title, &note.content, note.properties.as_deref().unwrap_or("")],
+            )?;
+        }
+
+        // Import note_tags
+        for note_tag in backup.note_tags {
+            tx.execute(
+                "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+                rusqlite::params![&note_tag.note_id, &note_tag.tag_id],
+            )?;
+        }
+
+        // Import links
+        for link in backup.links {
+            tx.execute(
+                "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
+                rusqlite::params![&link.source_note_id, &link.target_note_id],
+            )?;
+        }
+
+        tx.commit()?;
         Ok(())
     }
 }

@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.6.0-blue)
-![Progress](https://img.shields.io/badge/progress-75%25-yellow)
-![Tests](https://img.shields.io/badge/tests-759%20passing-brightgreen)
+![Version](https://img.shields.io/badge/version-1.7.0--dev-blue)
+![Progress](https://img.shields.io/badge/progress-80%25-yellow)
+![Tests](https://img.shields.io/badge/tests-911%20passing-brightgreen)
 
 ---
 

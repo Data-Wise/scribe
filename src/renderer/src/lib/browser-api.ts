@@ -345,12 +345,39 @@ export const browserApi = {
   // AI Operations (Browser stubs - no CLI access)
   // ============================================================================
 
-  runClaude: async (_prompt: string): Promise<string> => {
+  runClaude: async (_prompt: string, _context?: string): Promise<string> => {
     return 'AI features require the native Tauri app. Please run `npm run dev` instead of `npm run dev:vite`.'
   },
 
-  runGemini: async (_prompt: string): Promise<string> => {
+  runGemini: async (_prompt: string, _context?: string): Promise<string> => {
     return 'AI features require the native Tauri app. Please run `npm run dev` instead of `npm run dev:vite`.'
+  },
+
+  // ============================================================================
+  // Chat History (Browser stubs - in-memory only, not persisted)
+  // ============================================================================
+
+  getOrCreateChatSession: async (noteId: string): Promise<string> => {
+    // Return a simple session ID based on note ID
+    return `browser-session-${noteId}`
+  },
+
+  saveChatMessage: async (_sessionId: string, _role: string, _content: string, _timestamp: number): Promise<string> => {
+    // In browser mode, chat is ephemeral (not persisted to IndexedDB)
+    return `msg-${Date.now()}`
+  },
+
+  loadChatSession: async (_sessionId: string): Promise<Array<{ id: string; role: string; content: string; timestamp: number }>> => {
+    // Browser mode doesn't persist chat history
+    return []
+  },
+
+  clearChatSession: async (_sessionId: string): Promise<void> => {
+    // No-op in browser mode
+  },
+
+  deleteChatSession: async (_sessionId: string): Promise<void> => {
+    // No-op in browser mode
   },
 
   // ============================================================================

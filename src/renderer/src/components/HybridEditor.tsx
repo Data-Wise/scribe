@@ -550,7 +550,7 @@ export function HybridEditor({
           <button
             onClick={onToggleTerminal}
             className="p-1 rounded transition-colors hover:bg-nexus-bg-tertiary/50 text-nexus-text-muted hover:text-nexus-accent"
-            title="Toggle Terminal (⌘`)"
+            title="Toggle Terminal (⌘⌥T)"
             data-testid="terminal-status-button"
           >
             <Terminal className="w-3.5 h-3.5" />

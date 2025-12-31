@@ -3,6 +3,9 @@ mod commands;
 mod academic;
 mod terminal;
 
+#[cfg(test)]
+mod tests;
+
 use commands::AppState;
 use terminal::ShellState;
 use database::Database;
@@ -112,6 +115,16 @@ pub fn run() {
       // Project settings
       commands::get_project_settings,
       commands::update_project_settings,
+      // Backup operations
+      commands::create_backup,
+      commands::restore_backup,
+      commands::list_backups,
+      // Chat history
+      commands::get_or_create_chat_session,
+      commands::save_chat_message,
+      commands::load_chat_session,
+      commands::clear_chat_session,
+      commands::delete_chat_session,
       // Terminal PTY
       terminal::spawn_shell,
       terminal::write_to_shell,

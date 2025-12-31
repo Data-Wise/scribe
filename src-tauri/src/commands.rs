@@ -1,8 +1,10 @@
-use crate::database::{Database, Note, Tag, Folder, Project};
+use crate::database::{Database, Note, Tag, Folder, Project, DatabaseBackup};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use tauri::State;
+use tauri::{State, Manager};
 use std::process::Command;
+use std::fs;
+use std::path::PathBuf;
 
 pub struct AppState {
     pub db: Mutex<Database>,
@@ -359,42 +361,96 @@ pub fn get_project_note_count(
 
 // AI commands
 
+/// Check if a CLI tool is available in PATH
+fn check_cli_available(tool: &str) -> Result<(), String> {
+    Command::new("which")
+        .arg(tool)
+        .output()
+        .map_err(|_| format!("{} CLI not found. Please install it first.", tool))
+        .and_then(|output| {
+            if output.status.success() {
+                Ok(())
+            } else {
+                Err(format!(
+                    "{} CLI not found in PATH. Please install it and ensure it's accessible.\n\
+                    For Claude: https://github.com/anthropics/claude-code\n\
+                    For Gemini: https://ai.google.dev/gemini-api/docs/cli",
+                    tool
+                ))
+            }
+        })
+}
+
 #[tauri::command]
-pub fn run_claude(prompt: String) -> Result<String, String> {
+pub fn run_claude(prompt: String, context: Option<String>) -> Result<String, String> {
+    // Check if Claude CLI is available
+    check_cli_available("claude")?;
+
+    // Build full prompt with context if provided
+    let full_prompt = if let Some(ctx) = context {
+        format!("Context:\n{}\n\nPrompt:\n{}", ctx, prompt)
+    } else {
+        prompt
+    };
+
     // Use --print for non-interactive output
     let output = Command::new("claude")
-        .args(["--print", &prompt])
+        .args(["--print", &full_prompt])
         .output()
         .map_err(|e| format!("Failed to execute claude CLI: {}", e))?;
 
     if output.status.success() {
-        Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+        let stdout = match String::from_utf8(output.stdout.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stdout).to_string(),
+        };
+        Ok(stdout.trim().to_string())
     } else {
-        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        let stderr = match String::from_utf8(output.stderr.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stderr).to_string(),
+        };
         if stderr.is_empty() {
-            Err("Claude CLI returned an error".to_string())
+            Err("Claude CLI returned an error with no details".to_string())
         } else {
-            Err(stderr)
+            Err(format!("Claude CLI error: {}", stderr.trim()))
         }
     }
 }
 
 #[tauri::command]
-pub fn run_gemini(prompt: String) -> Result<String, String> {
+pub fn run_gemini(prompt: String, context: Option<String>) -> Result<String, String> {
+    // Check if Gemini CLI is available
+    check_cli_available("gemini")?;
+
+    // Build full prompt with context if provided
+    let full_prompt = if let Some(ctx) = context {
+        format!("Context:\n{}\n\nPrompt:\n{}", ctx, prompt)
+    } else {
+        prompt
+    };
+
     // Gemini CLI (google-generativeai or similar)
     let output = Command::new("gemini")
-        .arg(&prompt)
+        .arg(&full_prompt)
         .output()
         .map_err(|e| format!("Failed to execute gemini CLI: {}", e))?;
 
     if output.status.success() {
-        Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+        let stdout = match String::from_utf8(output.stdout.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stdout).to_string(),
+        };
+        Ok(stdout.trim().to_string())
     } else {
-        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        let stderr = match String::from_utf8(output.stderr.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stderr).to_string(),
+        };
         if stderr.is_empty() {
-            Err("Gemini CLI returned an error".to_string())
+            Err("Gemini CLI returned an error with no details".to_string())
         } else {
-            Err(stderr)
+            Err(format!("Gemini CLI error: {}", stderr.trim()))
         }
     }
 }
@@ -626,5 +682,173 @@ pub fn update_project_settings(
 ) -> Result<(), String> {
     let db = state.db.lock().unwrap();
     db.update_project_settings(&project_id, &settings).map_err(|e| e.to_string())
+}
+
+// Backup and restore commands
+
+fn get_backup_dir(app_handle: tauri::AppHandle) -> Result<PathBuf, String> {
+    let app_data_dir = app_handle
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("Failed to get app data directory: {}", e))?;
+
+    let backup_dir = app_data_dir.join("backups");
+    fs::create_dir_all(&backup_dir)
+        .map_err(|e| format!("Failed to create backup directory: {}", e))?;
+
+    Ok(backup_dir)
+}
+
+#[tauri::command]
+pub fn create_backup(
+    app_handle: tauri::AppHandle,
+    state: State<AppState>,
+) -> Result<String, String> {
+    let db = state.db.lock().unwrap();
+    let backup = db.export_backup().map_err(|e| e.to_string())?;
+
+    // Generate timestamped filename
+    let timestamp = chrono::Local::now().format("%Y%m%d_%H%M%S");
+    let filename = format!("scribe_backup_{}.json", timestamp);
+
+    let backup_dir = get_backup_dir(app_handle)?;
+    let backup_path = backup_dir.join(&filename);
+
+    // Serialize and write to file
+    let json = serde_json::to_string_pretty(&backup)
+        .map_err(|e| format!("Failed to serialize backup: {}", e))?;
+
+    fs::write(&backup_path, json)
+        .map_err(|e| format!("Failed to write backup file: {}", e))?;
+
+    Ok(backup_path.to_string_lossy().to_string())
+}
+
+#[tauri::command]
+pub fn restore_backup(
+    state: State<AppState>,
+    backup_path: String,
+) -> Result<(), String> {
+    // Read backup file
+    let json = fs::read_to_string(&backup_path)
+        .map_err(|e| format!("Failed to read backup file: {}", e))?;
+
+    // Deserialize backup
+    let backup: DatabaseBackup = serde_json::from_str(&json)
+        .map_err(|e| format!("Failed to parse backup file: {}", e))?;
+
+    // Import into database
+    let db = state.db.lock().unwrap();
+    db.import_backup(backup).map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BackupInfo {
+    pub filename: String,
+    pub path: String,
+    pub timestamp: i64,
+    pub size_bytes: u64,
+    pub note_count: usize,
+}
+
+#[tauri::command]
+pub fn list_backups(app_handle: tauri::AppHandle) -> Result<Vec<BackupInfo>, String> {
+    let backup_dir = get_backup_dir(app_handle)?;
+
+    let mut backups = Vec::new();
+
+    let entries = fs::read_dir(&backup_dir)
+        .map_err(|e| format!("Failed to read backup directory: {}", e))?;
+
+    for entry in entries {
+        let entry = entry.map_err(|e| format!("Failed to read directory entry: {}", e))?;
+        let path = entry.path();
+
+        if path.extension().and_then(|s| s.to_str()) == Some("json") {
+            let metadata = fs::metadata(&path)
+                .map_err(|e| format!("Failed to read file metadata: {}", e))?;
+
+            // Try to read backup to get note count
+            let note_count = match fs::read_to_string(&path) {
+                Ok(json) => match serde_json::from_str::<DatabaseBackup>(&json) {
+                    Ok(backup) => backup.notes.len(),
+                    Err(_) => 0,
+                },
+                Err(_) => 0,
+            };
+
+            backups.push(BackupInfo {
+                filename: path.file_name()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("unknown")
+                    .to_string(),
+                path: path.to_string_lossy().to_string(),
+                timestamp: metadata.modified()
+                    .ok()
+                    .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                    .map(|d| d.as_secs() as i64)
+                    .unwrap_or(0),
+                size_bytes: metadata.len(),
+                note_count,
+            });
+        }
+    }
+
+    // Sort by timestamp descending (newest first)
+    backups.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+
+    Ok(backups)
+}
+
+// Chat history operations
+
+#[tauri::command]
+pub fn get_or_create_chat_session(
+    note_id: String,
+    state: State<AppState>,
+) -> Result<String, String> {
+    let db = state.db.lock().unwrap();
+    db.get_or_create_chat_session(&note_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn save_chat_message(
+    session_id: String,
+    role: String,
+    content: String,
+    timestamp: i64,
+    state: State<AppState>,
+) -> Result<String, String> {
+    let db = state.db.lock().unwrap();
+    db.save_chat_message(&session_id, &role, &content, timestamp).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn load_chat_session(
+    session_id: String,
+    state: State<AppState>,
+) -> Result<Vec<serde_json::Value>, String> {
+    let db = state.db.lock().unwrap();
+    db.load_chat_session(&session_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn clear_chat_session(
+    session_id: String,
+    state: State<AppState>,
+) -> Result<(), String> {
+    let db = state.db.lock().unwrap();
+    db.clear_chat_session(&session_id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn delete_chat_session(
+    session_id: String,
+    state: State<AppState>,
+) -> Result<(), String> {
+    let db = state.db.lock().unwrap();
+    db.delete_chat_session(&session_id).map_err(|e| e.to_string())
 }
 
