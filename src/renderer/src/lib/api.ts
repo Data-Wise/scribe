@@ -461,8 +461,8 @@ export const api = {
   getProjectNotes: withErrorToast(rawApi.getProjectNotes, 'Failed to get project notes', true),
   setNoteProject: withToast(rawApi.setNoteProject, 'Failed to move note', 'Note moved'),
 
-  // Terminal operations (v2 - stub for now)
-  spawnShell: withErrorToast(rawApi.spawnShell, 'Failed to start terminal'),
+  // Terminal operations (v2 - component handles fallback gracefully)
+  spawnShell: rawApi.spawnShell,  // No toast - TerminalPanel falls back to browser mode
   writeToShell: withErrorToast(rawApi.writeToShell, 'Terminal write failed'),
   killShell: withErrorToast(rawApi.killShell, 'Failed to close terminal'),
   onShellOutput: rawApi.onShellOutput
