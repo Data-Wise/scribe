@@ -4417,6 +4417,61 @@ mark {
   color: var(--nexus-text-primary);
 }
 
+/* Toast action buttons container */
+.toast-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Copy button for persistent errors */
+.toast-copy {
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: var(--nexus-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.toast-copy:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--nexus-text-primary);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* OK dismiss button for persistent errors */
+.toast-dismiss {
+  padding: 4px 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--nexus-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.toast-dismiss:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--nexus-text-primary);
+}
+
+/* Persistent error toast styling */
+.toast-persistent {
+  border-left: 3px solid var(--nexus-red);
+}
+
+.toast-persistent .toast-message {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  word-break: break-all;
+  max-width: 400px;
+}
+
 @keyframes toast-enter {
   from {
     opacity: 0;

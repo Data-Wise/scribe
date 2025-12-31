@@ -604,6 +604,8 @@ function App() {
         dailyNote.content = templateContent
       }
 
+      // Open the note in a tab and select it
+      openNoteTab(dailyNote.id, dailyNote.title)
       selectNote(dailyNote.id)
       console.log('[Scribe] Note selected:', dailyNote.id)
       loadNotes(currentFolder)

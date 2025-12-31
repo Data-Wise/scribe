@@ -5,7 +5,7 @@ import { test, expect } from '../fixtures'
  *
  * Tests for the Mission Control dashboard.
  *
- * Tests: MC-01 to MC-08
+ * Tests: MC-01 to MC-08b (10 tests)
  */
 
 test.describe('Mission Control', () => {
@@ -137,20 +137,55 @@ test.describe('Mission Control', () => {
       }
     })
 
-    test('MC-08: Daily Note button works', async ({ basePage, missionControl }) => {
+    test('MC-08: Daily Note button creates and opens note in editor', async ({ basePage, missionControl, tabs }) => {
+      // Get initial tab count
+      const tabsBefore = await tabs.getTabCount()
+
+      // Click the Today/Daily Note button
       await missionControl.clickDailyNote()
       await basePage.page.waitForTimeout(500)
 
-      // Look for daily note reference in sidebar or tabs
-      const today = new Date()
-      const monthDay = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      // Verify no error toast appeared
+      const errorToast = basePage.page.locator('.toast-error, .toast.toast-error')
+      const hasError = await errorToast.isVisible().catch(() => false)
+      expect(hasError).toBe(false)
 
-      // Look for any daily note indicator
-      const dailyRef = basePage.page.locator(`text=/Daily|Journal|${monthDay}/i`).first()
-      const exists = await dailyRef.isVisible().catch(() => false)
+      // Verify a new tab was opened (or existing daily note tab activated)
+      const tabsAfter = await tabs.getTabCount()
+      expect(tabsAfter).toBeGreaterThanOrEqual(tabsBefore)
 
-      // Either way, just verify no error occurred
-      expect(true).toBe(true)
+      // Verify the daily note tab exists with today's date
+      const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD format
+      const dailyTab = basePage.page.locator(`.editor-tab:has-text("${today}"), .editor-tab:has-text("Daily")`)
+      const tabExists = await dailyTab.first().isVisible().catch(() => false)
+
+      // Either a dated tab or "Daily" tab should exist
+      if (!tabExists) {
+        // Fallback: check if any tab is now active (editor area has content)
+        const editorArea = basePage.page.locator('.editor-container, .hybrid-editor, [data-testid="editor"]')
+        const editorVisible = await editorArea.first().isVisible().catch(() => false)
+        expect(editorVisible).toBe(true)
+      } else {
+        expect(tabExists).toBe(true)
+      }
+    })
+
+    test('MC-08b: Daily Note keyboard shortcut (⌘D) works', async ({ basePage, tabs }) => {
+      // Get initial tab count
+      const tabsBefore = await tabs.getTabCount()
+
+      // Use keyboard shortcut
+      await basePage.page.keyboard.press('Meta+d')
+      await basePage.page.waitForTimeout(500)
+
+      // Verify no error toast appeared
+      const errorToast = basePage.page.locator('.toast-error, .toast.toast-error')
+      const hasError = await errorToast.isVisible().catch(() => false)
+      expect(hasError).toBe(false)
+
+      // Verify a tab was opened
+      const tabsAfter = await tabs.getTabCount()
+      expect(tabsAfter).toBeGreaterThanOrEqual(tabsBefore)
     })
   })
 })

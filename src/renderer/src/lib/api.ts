@@ -80,25 +80,77 @@ export interface ExportResult {
 // Tauri API (Native)
 // ============================================================================
 
+/**
+ * Prepare note data for Tauri by serializing properties to JSON string.
+ * Rust expects properties as Option<String>, not as an object.
+ */
+function prepareNoteForTauri(note: Partial<Note>): Record<string, unknown> {
+  const prepared: Record<string, unknown> = { ...note }
+
+  // Serialize properties object to JSON string for Rust
+  if (note.properties && typeof note.properties === 'object') {
+    prepared.properties = JSON.stringify(note.properties)
+  }
+
+  return prepared
+}
+
+/**
+ * Parse note data from Tauri by deserializing properties from JSON string.
+ * Rust returns properties as Option<String>, but frontend expects an object.
+ */
+function parseNoteFromTauri(note: Note | null): Note | null {
+  if (!note) return null
+
+  // Deserialize properties string to object
+  if (note.properties && typeof note.properties === 'string') {
+    try {
+      note.properties = JSON.parse(note.properties)
+    } catch {
+      // If parsing fails, set to empty object
+      note.properties = {}
+    }
+  }
+
+  return note
+}
+
+/**
+ * Parse array of notes from Tauri.
+ */
+function parseNotesFromTauri(notes: Note[]): Note[] {
+  return notes.map(note => parseNoteFromTauri(note) as Note)
+}
+
 const tauriApi = {
   // Note operations
-  createNote: (note: Partial<Note>): Promise<Note> =>
-    invoke('create_note', { note }),
+  createNote: async (note: Partial<Note>): Promise<Note> => {
+    const result = await invoke<Note>('create_note', { note: prepareNoteForTauri(note) })
+    return parseNoteFromTauri(result) as Note
+  },
 
-  updateNote: (id: string, updates: Partial<Note>): Promise<Note | null> =>
-    invoke('update_note', { id, updates }),
+  updateNote: async (id: string, updates: Partial<Note>): Promise<Note | null> => {
+    const result = await invoke<Note | null>('update_note', { id, updates: prepareNoteForTauri(updates) })
+    return parseNoteFromTauri(result)
+  },
 
   deleteNote: (id: string): Promise<boolean> =>
     invoke('delete_note', { id }),
 
-  getNote: (id: string): Promise<Note | null> =>
-    invoke('get_note', { id }),
+  getNote: async (id: string): Promise<Note | null> => {
+    const result = await invoke<Note | null>('get_note', { id })
+    return parseNoteFromTauri(result)
+  },
 
-  listNotes: (folder?: string): Promise<Note[]> =>
-    invoke('list_notes', { folder }),
+  listNotes: async (folder?: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('list_notes', { folder })
+    return parseNotesFromTauri(result)
+  },
 
-  searchNotes: (query: string): Promise<Note[]> =>
-    invoke('search_notes', { query }),
+  searchNotes: async (query: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('search_notes', { query })
+    return parseNotesFromTauri(result)
+  },
 
   // Tag CRUD
   createTag: (name: string, color?: string): Promise<Tag> =>
@@ -129,11 +181,15 @@ const tauriApi = {
   getNoteTags: (noteId: string): Promise<Tag[]> =>
     invoke('get_note_tags', { noteId }),
 
-  getNotesByTag: (tagId: string): Promise<Note[]> =>
-    invoke('get_notes_by_tag', { tagId }),
+  getNotesByTag: async (tagId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_notes_by_tag', { tagId })
+    return parseNotesFromTauri(result)
+  },
 
-  filterNotesByTags: (tagIds: string[], matchAll: boolean): Promise<Note[]> =>
-    invoke('filter_notes_by_tags', { tagIds, matchAll }),
+  filterNotesByTags: async (tagIds: string[], matchAll: boolean): Promise<Note[]> => {
+    const result = await invoke<Note[]>('filter_notes_by_tags', { tagIds, matchAll })
+    return parseNotesFromTauri(result)
+  },
 
   updateNoteTags: (noteId: string, content: string): Promise<void> =>
     invoke('update_note_tags', { noteId, content }),
@@ -146,11 +202,15 @@ const tauriApi = {
   updateNoteLinks: (noteId: string, content: string): Promise<void> =>
     invoke('update_note_links', { noteId, content }),
 
-  getBacklinks: (noteId: string): Promise<Note[]> =>
-    invoke('get_backlinks', { noteId }),
+  getBacklinks: async (noteId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_backlinks', { noteId })
+    return parseNotesFromTauri(result)
+  },
 
-  getOutgoingLinks: (noteId: string): Promise<Note[]> =>
-    invoke('get_outgoing_links', { noteId }),
+  getOutgoingLinks: async (noteId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_outgoing_links', { noteId })
+    return parseNotesFromTauri(result)
+  },
 
   // AI operations
   runClaude: (prompt: string): Promise<string> =>
@@ -159,8 +219,10 @@ const tauriApi = {
   runGemini: (prompt: string): Promise<string> =>
     invoke('run_gemini', { prompt }),
 
-  getOrCreateDailyNote: (date: string): Promise<Note> =>
-    invoke('get_or_create_daily_note', { date }),
+  getOrCreateDailyNote: async (date: string): Promise<Note> => {
+    const result = await invoke<Note>('get_or_create_daily_note', { date })
+    return parseNoteFromTauri(result) as Note
+  },
 
   exportToObsidian: (targetPath: string): Promise<string> =>
     invoke('export_to_obsidian', { targetPath }),
@@ -228,8 +290,10 @@ const tauriApi = {
   updateProjectSettings: (id: string, settings: Partial<ProjectSettings>): Promise<void> =>
     invoke('update_project_settings', { id, settings }),
 
-  getProjectNotes: (projectId: string): Promise<Note[]> =>
-    invoke('get_notes_by_project', { projectId }),
+  getProjectNotes: async (projectId: string): Promise<Note[]> => {
+    const result = await invoke<Note[]>('get_notes_by_project', { projectId })
+    return parseNotesFromTauri(result)
+  },
 
   setNoteProject: (noteId: string, projectId: string | null): Promise<void> =>
     invoke('assign_note_to_project', { noteId, projectId }),
