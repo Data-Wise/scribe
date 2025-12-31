@@ -280,6 +280,13 @@ const projectsCategory: SettingsCategoryData = {
   icon: '📁',
   sections: [
     {
+      id: 'project-templates',
+      title: 'Project Templates',
+      description: 'Preconfigured settings for different project types',
+      collapsed: false,
+      settings: [] // Custom UI handled by ProjectTemplates component
+    },
+    {
       id: 'project-defaults',
       title: 'Project Defaults',
       description: 'Default settings for new projects',
