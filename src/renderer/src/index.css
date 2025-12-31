@@ -2461,6 +2461,36 @@ mark {
   border-radius: 0 2px 2px 0;
 }
 
+/* Icon Badge (note count) */
+.icon-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  color: #fff;
+  background: var(--nexus-accent);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* Badge in active state - slightly different style */
+.project-icon-btn.active .icon-badge {
+  background: var(--nexus-accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme badge adjustments */
+:root[data-theme-type="light"] .icon-badge {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
 /* Add Project Icon Button */
 .icon-btn.add-project-icon {
   width: 32px;

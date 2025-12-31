@@ -76,22 +76,22 @@ tags:
 
 ---
 
-### Sprint 26: Next Steps (Planned)
+### Sprint 26: Activity Bar Polish (Complete ✅)
 
 **High Priority (P1):**
-- [ ] Activity Bar badges - Show counts on sidebar icons
-- [ ] Browser mode indicator - Visual indicator for IndexedDB mode
-- [ ] Wiki link backlink tracking in browser mode
+- [x] Activity Bar badges ✅ - IconBarMode shows note count per project
+- [x] Browser mode indicator ✅ - HybridEditor shows "Browser Mode" badge
+- [x] Wiki link backlink tracking in browser mode ✅ - browser-api.ts getBacklinks
 
 **Medium Priority (P2):**
-- [ ] Keyboard shortcut for right sidebar collapse (⌘])
-- [ ] Editor tabs persistence across restarts
-- [ ] ⌘⇧T reopen closed tab
+- [x] Keyboard shortcut for right sidebar collapse (⌘⇧]) ✅
+- [x] Editor tabs persistence across restarts ✅ - useAppViewStore saveTabs
+- [x] ⌘⇧T reopen closed tab ✅ - reopenLastClosedTab + closedTabsHistory
 
 **Lower Priority (P3):**
 - [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
 - [ ] Phase 3: Status Bar (VS Code-style bottom bar)
-- [x] Playwright E2E tests ✅ (126 tests)
+- [x] Playwright E2E tests ✅ (282 tests)
 
 ---
 
