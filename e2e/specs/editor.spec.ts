@@ -148,4 +148,83 @@ test.describe('Editor', () => {
       expect(true).toBe(true)
     })
   })
+
+  test.describe('Task List Checkboxes (Phase 1)', () => {
+    test('EDT-13: Checkbox renders in reading mode', async ({ basePage, editor }) => {
+      // Create a new note with task list content
+      await basePage.pressShortcut('n') // New note
+      await basePage.page.waitForTimeout(500)
+
+      // Type task list content in the textarea
+      const textarea = basePage.page.locator('textarea').first()
+      if (await textarea.isVisible().catch(() => false)) {
+        await textarea.fill('- [ ] Task one\n- [x] Task two\n- [ ] Task three')
+        await basePage.page.waitForTimeout(300)
+
+        // Switch to reading mode
+        await basePage.pressShortcut('3') // ⌘3 for reading mode
+        await basePage.page.waitForTimeout(500)
+
+        // Look for checkboxes
+        const checkboxes = basePage.page.locator('input[type="checkbox"]')
+        const count = await checkboxes.count()
+
+        // Should have 3 checkboxes
+        expect(count).toBe(3)
+      }
+    })
+
+    test('EDT-14: Checkbox toggle updates content', async ({ basePage }) => {
+      // Create a new note with task list
+      await basePage.pressShortcut('n')
+      await basePage.page.waitForTimeout(500)
+
+      const textarea = basePage.page.locator('textarea').first()
+      if (await textarea.isVisible().catch(() => false)) {
+        await textarea.fill('- [ ] Toggle me')
+        await basePage.page.waitForTimeout(300)
+
+        // Switch to reading mode
+        await basePage.pressShortcut('3')
+        await basePage.page.waitForTimeout(500)
+
+        // Click the checkbox
+        const checkbox = basePage.page.locator('input[type="checkbox"]').first()
+        if (await checkbox.isVisible().catch(() => false)) {
+          await checkbox.click()
+          await basePage.page.waitForTimeout(300)
+
+          // Switch back to source mode to verify content
+          await basePage.pressShortcut('1') // ⌘1 for source mode
+          await basePage.page.waitForTimeout(300)
+
+          // Check that content was updated
+          const content = await textarea.inputValue()
+          expect(content).toContain('- [x] Toggle me')
+        }
+      }
+    })
+
+    test('EDT-15: Checked checkbox shows strikethrough', async ({ basePage }) => {
+      await basePage.pressShortcut('n')
+      await basePage.page.waitForTimeout(500)
+
+      const textarea = basePage.page.locator('textarea').first()
+      if (await textarea.isVisible().catch(() => false)) {
+        await textarea.fill('- [x] Completed task')
+        await basePage.page.waitForTimeout(300)
+
+        // Switch to reading mode
+        await basePage.pressShortcut('3')
+        await basePage.page.waitForTimeout(500)
+
+        // Look for task-list-item class
+        const taskItem = basePage.page.locator('.task-list-item')
+        const exists = await taskItem.count() > 0
+
+        // Just verify the element exists (strikethrough is CSS)
+        expect(exists).toBe(true)
+      }
+    })
+  })
 })

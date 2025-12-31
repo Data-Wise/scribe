@@ -4486,3 +4486,79 @@ mark {
     transform: translateY(0);
   }
 }
+
+/* ============================================================
+   Task List / Checkbox Styling (Phase 1 - Live Editor Enhancements)
+   ============================================================ */
+
+/* Task list container - remove default list styling */
+ul.contains-task-list,
+.contains-task-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* Task list item styling */
+.task-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+/* Interactive checkbox styling */
+.task-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--nexus-text-muted);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 4px;
+  transition: all 0.15s ease;
+}
+
+.task-checkbox:hover {
+  border-color: var(--nexus-accent);
+}
+
+.task-checkbox:checked {
+  background: var(--nexus-accent);
+  border-color: var(--nexus-accent);
+  position: relative;
+}
+
+/* Checkmark icon for checked state */
+.task-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Strikethrough for completed tasks */
+.task-list-item:has(.task-checkbox:checked) > :not(.task-checkbox) {
+  text-decoration: line-through;
+  opacity: 0.6;
+  color: var(--nexus-text-muted);
+}
+
+/* Focus state for accessibility */
+.task-checkbox:focus {
+  outline: 2px solid var(--nexus-accent);
+  outline-offset: 2px;
+}
+
+/* Keyboard focus ring */
+.task-checkbox:focus-visible {
+  outline: 2px solid var(--nexus-accent);
+  outline-offset: 2px;
+}

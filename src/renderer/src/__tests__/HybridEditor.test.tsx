@@ -430,3 +430,167 @@ describe('HybridEditor Accessibility', () => {
     expect(textarea).toHaveAttribute('placeholder')
   })
 })
+
+describe('HybridEditor Checkbox Rendering (Phase 1)', () => {
+  const defaultProps = {
+    content: '',
+    onChange: vi.fn(),
+    onWikiLinkClick: vi.fn(),
+    onTagClick: vi.fn(),
+    onSearchNotes: vi.fn().mockResolvedValue([]),
+    onSearchTags: vi.fn().mockResolvedValue([])
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('Checkbox Rendering in Reading Mode', () => {
+    it('renders unchecked checkbox for "- [ ]" syntax', async () => {
+      render(<HybridEditor {...defaultProps} content="- [ ] Unchecked task" />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const checkbox = document.querySelector('input[type="checkbox"]')
+        expect(checkbox).toBeInTheDocument()
+        expect(checkbox).not.toBeChecked()
+      })
+    })
+
+    it('renders checked checkbox for "- [x]" syntax', async () => {
+      render(<HybridEditor {...defaultProps} content="- [x] Completed task" />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const checkbox = document.querySelector('input[type="checkbox"]')
+        expect(checkbox).toBeInTheDocument()
+        expect(checkbox).toBeChecked()
+      })
+    })
+
+    it('renders multiple checkboxes in a task list', async () => {
+      const content = `- [ ] Task 1
+- [x] Task 2
+- [ ] Task 3`
+      render(<HybridEditor {...defaultProps} content={content} />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+        expect(checkboxes.length).toBe(3)
+        expect(checkboxes[0]).not.toBeChecked()
+        expect(checkboxes[1]).toBeChecked()
+        expect(checkboxes[2]).not.toBeChecked()
+      })
+    })
+
+    it('checkbox has accessibility attributes', async () => {
+      render(<HybridEditor {...defaultProps} content="- [ ] Accessible task" />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const checkbox = document.querySelector('input[type="checkbox"]')
+        expect(checkbox).toBeInTheDocument()
+        // Checkbox should not be disabled (interactive)
+        expect(checkbox).not.toBeDisabled()
+      })
+    })
+  })
+
+  describe('Checkbox Toggle Functionality', () => {
+    it('clicking unchecked checkbox toggles content to checked', async () => {
+      const onChange = vi.fn()
+      render(<HybridEditor {...defaultProps} content="- [ ] Toggle me" onChange={onChange} />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const checkbox = document.querySelector('input[type="checkbox"]')
+        expect(checkbox).toBeInTheDocument()
+      })
+
+      // Click the checkbox
+      const checkbox = document.querySelector('input[type="checkbox"]') as HTMLInputElement
+      fireEvent.click(checkbox)
+
+      await waitFor(() => {
+        expect(onChange).toHaveBeenCalledWith('- [x] Toggle me')
+      })
+    })
+
+    it('clicking checked checkbox toggles content to unchecked', async () => {
+      const onChange = vi.fn()
+      render(<HybridEditor {...defaultProps} content="- [x] Uncheck me" onChange={onChange} />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const checkbox = document.querySelector('input[type="checkbox"]')
+        expect(checkbox).toBeInTheDocument()
+      })
+
+      // Click the checkbox
+      const checkbox = document.querySelector('input[type="checkbox"]') as HTMLInputElement
+      fireEvent.click(checkbox)
+
+      await waitFor(() => {
+        expect(onChange).toHaveBeenCalledWith('- [ ] Uncheck me')
+      })
+    })
+
+    it('toggling checkbox in multiline content updates correct line', async () => {
+      const onChange = vi.fn()
+      const content = `# My Tasks
+
+- [ ] First task
+- [x] Second task
+- [ ] Third task
+
+Some other text`
+      render(<HybridEditor {...defaultProps} content={content} onChange={onChange} />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+        expect(checkboxes.length).toBe(3)
+      })
+
+      // Click the first checkbox (index 0)
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+      fireEvent.click(checkboxes[0])
+
+      await waitFor(() => {
+        expect(onChange).toHaveBeenCalledWith(expect.stringContaining('- [x] First task'))
+        expect(onChange).toHaveBeenCalledWith(expect.stringContaining('- [x] Second task'))
+        expect(onChange).toHaveBeenCalledWith(expect.stringContaining('- [ ] Third task'))
+      })
+    })
+  })
+
+  describe('Checkbox Styling', () => {
+    it('checked task text has strikethrough styling', async () => {
+      render(<HybridEditor {...defaultProps} content="- [x] Done task" />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        // Look for task-list-item with checked checkbox
+        const listItem = document.querySelector('.task-list-item')
+        expect(listItem).toBeInTheDocument()
+      })
+    })
+  })
+})

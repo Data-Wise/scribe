@@ -376,6 +376,32 @@ export function HybridEditor({
     return `AI response to: "${message}" (Not yet implemented)`
   }, [])
 
+  // Handle checkbox toggle in reading mode
+  const handleCheckboxToggle = useCallback((checkboxIdx: number, checked: boolean) => {
+    // Find all task list items in content and toggle the nth one
+    const lines = content.split('\n')
+    let currentCheckboxIndex = 0
+
+    const newLines = lines.map(line => {
+      // Match task list pattern: - [ ] or - [x]
+      const taskMatch = line.match(/^(\s*-\s*)\[([ xX])\](.*)$/)
+      if (taskMatch) {
+        if (currentCheckboxIndex === checkboxIdx) {
+          // This is the checkbox to toggle
+          const prefix = taskMatch[1]
+          const suffix = taskMatch[3]
+          const newState = checked ? 'x' : ' '
+          currentCheckboxIndex++
+          return `${prefix}[${newState}]${suffix}`
+        }
+        currentCheckboxIndex++
+      }
+      return line
+    })
+
+    onChange(newLines.join('\n'))
+  }, [content, onChange])
+
   return (
     <div className="h-full flex flex-col relative" style={{ backgroundColor: 'var(--nexus-bg-primary)' }} data-testid="hybrid-editor" data-mode={mode}>
       {/* Mode toggle - pill style, top-right */}
@@ -460,6 +486,7 @@ export function HybridEditor({
               content={content}
               onWikiLinkClick={onWikiLinkClick}
               onTagClick={onTagClick}
+              onCheckboxToggle={handleCheckboxToggle}
             />
           </div>
         )}
@@ -582,18 +609,26 @@ export function HybridEditor({
   )
 }
 
+// Track checkbox index for toggle functionality
+let checkboxIndex = 0
+
 /**
- * MarkdownPreview - Renders markdown with custom wiki-link and tag support
+ * MarkdownPreview - Renders markdown with custom wiki-link, tag, and checkbox support
  */
 function MarkdownPreview({
   content,
   onWikiLinkClick,
-  onTagClick
+  onTagClick,
+  onCheckboxToggle
 }: {
   content: string
   onWikiLinkClick?: (title: string) => void
   onTagClick?: (tagName: string) => void
+  onCheckboxToggle?: (checkboxIndex: number, checked: boolean) => void
 }) {
+  // Reset checkbox index on each render
+  checkboxIndex = 0
+
   // Process wiki-links [[Title]] and tags #tag before rendering
   const processedContent = processWikiLinksAndTags(content)
 
@@ -619,13 +654,59 @@ function MarkdownPreview({
         p: ({ children }) => (
           <p className="mb-4 leading-relaxed" style={{ color: 'var(--nexus-text-primary)' }}>{children}</p>
         ),
-        // Lists
-        ul: ({ children }) => (
-          <ul className="list-disc list-inside mb-4 space-y-1" style={{ color: 'var(--nexus-text-primary)' }}>{children}</ul>
-        ),
+        // Lists - special handling for task lists
+        ul: ({ className, children }) => {
+          const isTaskList = className?.includes('contains-task-list')
+          return (
+            <ul
+              className={`${isTaskList ? 'list-none pl-0' : 'list-disc list-inside'} mb-4 space-y-1`}
+              style={{ color: 'var(--nexus-text-primary)' }}
+            >
+              {children}
+            </ul>
+          )
+        },
         ol: ({ children }) => (
           <ol className="list-decimal list-inside mb-4 space-y-1" style={{ color: 'var(--nexus-text-primary)' }}>{children}</ol>
         ),
+        // List items - special handling for task list items
+        li: ({ className, children, ...props }) => {
+          const isTaskListItem = className?.includes('task-list-item')
+          return (
+            <li
+              className={`${isTaskListItem ? 'task-list-item flex items-start gap-2' : ''}`}
+              style={{ color: 'var(--nexus-text-primary)' }}
+              {...props}
+            >
+              {children}
+            </li>
+          )
+        },
+        // Custom checkbox input - make it interactive!
+        input: ({ type, checked, disabled, ...props }) => {
+          if (type === 'checkbox') {
+            const currentIndex = checkboxIndex++
+            return (
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => {
+                  e.stopPropagation()
+                  onCheckboxToggle?.(currentIndex, e.target.checked)
+                }}
+                className="task-checkbox cursor-pointer accent-[var(--nexus-accent)]"
+                style={{
+                  width: '16px',
+                  height: '16px',
+                  marginRight: '8px',
+                  flexShrink: 0
+                }}
+                {...props}
+              />
+            )
+          }
+          return <input type={type} checked={checked} disabled={disabled} {...props} />
+        },
         // Custom rendering for links (handles wiki-links)
         a: (props) => {
           const href = props.href || ''
