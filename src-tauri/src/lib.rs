@@ -118,6 +118,8 @@ pub fn run() {
       terminal::resize_shell,
       terminal::kill_shell,
       terminal::list_shells,
+      terminal::check_path_exists,
+      terminal::create_directory,
     ])
 
 

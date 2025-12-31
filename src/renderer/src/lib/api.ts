@@ -300,14 +300,20 @@ const tauriApi = {
     invoke('assign_note_to_project', { noteId, projectId }),
 
   // Terminal/Shell operations
-  spawnShell: (): Promise<{ shell_id: number }> =>
-    invoke('spawn_shell'),
+  spawnShell: (cwd?: string): Promise<{ shell_id: number }> =>
+    invoke('spawn_shell', { cwd }),
 
   writeToShell: (shellId: number, data: string): Promise<void> =>
     invoke('write_to_shell', { shellId, data }),
 
   killShell: (shellId: number): Promise<void> =>
     invoke('kill_shell', { shellId }),
+
+  checkPathExists: (path: string): Promise<{ exists: boolean; is_dir: boolean; expanded_path: string }> =>
+    invoke('check_path_exists', { path }),
+
+  createDirectory: (path: string): Promise<string> =>
+    invoke('create_directory', { path }),
 
   onShellOutput: (callback: (shellId: number, data: string) => void): (() => void) => {
     // Set up Tauri event listener for shell output
@@ -506,7 +512,9 @@ export const api = {
   onShellOutput: rawApi.onShellOutput,
   onShellClosed: rawApi.onShellClosed,
   resizeShell: withErrorToast(rawApi.resizeShell, 'Terminal resize failed', true),
-  listShells: withErrorToast(rawApi.listShells, 'Failed to list shells', true)
+  listShells: withErrorToast(rawApi.listShells, 'Failed to list shells', true),
+  checkPathExists: withErrorToast(rawApi.checkPathExists, 'Path check failed', true),
+  createDirectory: withToast(rawApi.createDirectory, 'Failed to create folder', 'Folder created')
 }
 
 // ============================================================================

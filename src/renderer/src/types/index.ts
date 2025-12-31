@@ -87,6 +87,13 @@ export interface ProjectSettings {
   citationStyle?: string
   dailyNoteTemplate?: string
   wordGoal?: number
+  workingDirectory?: string  // Terminal working directory for this project
+}
+
+// Global app settings (stored in localStorage)
+export interface AppSettings {
+  defaultTerminalFolder: string  // Default: $HOME
+  // Future: theme, font preferences, etc.
 }
 
 export interface Project {
