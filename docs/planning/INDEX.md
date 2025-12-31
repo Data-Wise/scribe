@@ -6,15 +6,16 @@
 
 ---
 
-## Quick Links (Root Level)
+## Project Root Files
+
+!!! note "Not served by docs site"
+    These files are at the project root (not in docs/). Access them directly in the repository.
 
 | File | Purpose |
 |------|---------|
-| [TODO.md](../../TODO.md) | Sprint 27 - Phase 3 ready |
-| [IDEAS.md](../../IDEAS.md) | Feature options index with effort/ADHD ratings |
-| [NEXT_STEPS.md](../../NEXT_STEPS.md) | Phase 3 options: Terminal tab or Ambient AI |
-| [BRAINSTORM-sidebar-consolidation](../../BRAINSTORM-sidebar-consolidation-2025-12-29.md) | Master brainstorm - Options A-K analysis |
-| [SCHEMATIC-LEFT-SIDEBAR-REDESIGN](../../SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md) | Visual schematic reference |
+| `IDEAS.md` | Feature options index with effort/ADHD ratings |
+| `NEXT_STEPS.md` | Phase 3 options: Terminal tab or Ambient AI |
+| `PROJECT-DEFINITION.md` | Scope control and feature tiers |
 
 ---
 
@@ -68,4 +69,4 @@
 
 ## Archived
 
-See [docs/archive/planning/](../archive/planning/) for completed sprint plans (SPRINT-8 through SPRINT-25) and v1.0 release documentation.
+See [archive/planning/](../archive/planning/) for completed sprint plans (SPRINT-8 through SPRINT-25) and v1.0 release documentation.

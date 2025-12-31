@@ -1,34 +1,33 @@
 # Editor Guide
 
-The HybridEditor is Scribe's core writing experience - designed for ADHD-friendly, distraction-free writing.
+> The HybridEditor - ADHD-friendly, distraction-free writing
 
-## Modes
+---
 
-### Write Mode
+## Editor Modes
 
-The default mode - a simple, clean textarea:
+<div class="grid cards" markdown>
 
-- No formatting buttons
-- No distractions
-- Just you and your words
-- Markdown syntax supported
+-   :material-pencil:{ .lg .middle } **Write Mode**
 
-### Preview Mode
+    ---
 
-See your formatted content:
+    Clean textarea. No distractions. Just you and your words.
 
-- Rendered markdown
-- Clickable wiki links
-- Clickable tags
-- Syntax highlighting for code blocks
+-   :material-eye:{ .lg .middle } **Preview Mode**
 
-### Switching Modes
+    ---
 
-Press `⌘E` to toggle between write and preview mode.
+    Rendered markdown with clickable links and syntax highlighting.
+
+</div>
+
+!!! tip "Toggle Modes"
+    Press `⌘E` to switch between write and preview mode.
+
+---
 
 ## Markdown Support
-
-Full markdown support in both modes:
 
 ### Headings
 
@@ -40,32 +39,44 @@ Full markdown support in both modes:
 
 ### Text Formatting
 
-```markdown
-**bold text**
-*italic text*
-~~strikethrough~~
-`inline code`
-```
+| Syntax | Result |
+|--------|--------|
+| `**bold**` | **bold** |
+| `*italic*` | *italic* |
+| `~~strike~~` | ~~strike~~ |
+| `` `code` `` | `code` |
 
 ### Lists
 
-```markdown
-- Bullet item
-- Another item
+=== "Bullets"
 
-1. Numbered item
-2. Another item
+    ```markdown
+    - Bullet item
+    - Another item
+      - Nested item
+    ```
 
-- [ ] Task item
-- [x] Completed task
-```
+=== "Numbered"
+
+    ```markdown
+    1. First item
+    2. Second item
+    3. Third item
+    ```
+
+=== "Tasks"
+
+    ```markdown
+    - [ ] Todo item
+    - [x] Completed item
+    ```
 
 ### Links
 
-```markdown
-[Link text](https://example.com)
-[[Wiki Link]]
-```
+| Type | Syntax |
+|------|--------|
+| External | `[text](https://example.com)` |
+| Wiki Link | `[[Note Title]]` |
 
 ### Code Blocks
 
@@ -84,37 +95,51 @@ function hello() {
 > It can span multiple lines.
 ```
 
+---
+
 ## Wiki Links
 
-Connect your notes:
+Connect your notes with `[[double brackets]]`:
 
-1. Type `[[` to start a wiki link
-2. Autocomplete shows matching notes
-3. Select or type the note title
-4. Close with `]]`
+| Step | Action |
+|------|--------|
+| 1 | Type `[[` to start |
+| 2 | Autocomplete shows matching notes |
+| 3 | Select or type note title |
+| 4 | Close with `]]` |
 
 Example: `[[My Research Notes]]`
 
+---
+
 ## Tags
 
-Organize with tags:
+Organize with `#hashtags`:
 
-1. Type `#` followed by the tag name
-2. Autocomplete shows existing tags
-3. Select or create a new tag
+| Step | Action |
+|------|--------|
+| 1 | Type `#` followed by tag name |
+| 2 | Autocomplete shows existing tags |
+| 3 | Select or create new tag |
 
 Example: `#research #important`
 
+---
+
 ## Focus Mode
 
-Enter ultimate distraction-free mode:
+!!! tip "Ultimate Distraction-Free"
+    Press `⌘⇧F` to enter focus mode.
 
-1. Press `⌘⇧F`
-2. Sidebars disappear
-3. Editor centers
-4. Just write
+| What Happens | Benefit |
+|--------------|---------|
+| Sidebars disappear | No visual clutter |
+| Editor centers | Full attention on writing |
+| Minimal UI | Just your words |
 
 Exit with `⌘⇧F` or `Escape`.
+
+---
 
 ## Word Count
 
@@ -124,48 +149,70 @@ Always visible in the status bar:
 - Updates in real-time
 - No configuration needed
 
+---
+
 ## Auto-Save
 
-Your work is automatically saved:
+!!! note "Never Lose Work"
+    Your work saves automatically on every change.
 
-- Saves on every change
 - No save button needed
-- No data loss
 - Works even if app crashes
+- Instant, seamless saving
+
+---
 
 ## Keyboard Shortcuts
 
 | Action | Shortcut |
 |--------|----------|
-| Toggle write/preview | `⌘E` |
-| Focus mode | `⌘⇧F` |
-| Bold | `⌘B` |
-| Italic | `⌘I` |
-| Undo | `⌘Z` |
-| Redo | `⌘⇧Z` |
+| **Toggle write/preview** | `⌘E` |
+| **Focus mode** | `⌘⇧F` |
+| **Bold** | `⌘B` |
+| **Italic** | `⌘I` |
+| **Undo** | `⌘Z` |
+| **Redo** | `⌘⇧Z` |
+
+---
 
 ## Font Settings
 
-Customize your writing experience:
+Customize in **Settings → Fonts**:
 
-1. Open Settings (`⌘,`)
-2. Go to Fonts section
-3. Choose from 14 ADHD-friendly fonts
-4. Adjust size and line height
-5. Preview in real-time
+| Setting | Options |
+|---------|---------|
+| Font family | 14 ADHD-friendly fonts |
+| Font size | Adjustable |
+| Line height | Adjustable |
 
 ### Recommended Fonts
 
-**Sans-Serif** (clean, modern):
-- Inter
-- Atkinson Hyperlegible
-- Lexie Readable
+=== "Sans-Serif"
 
-**Serif** (traditional):
-- Literata
-- EB Garamond
+    Clean, modern fonts:
 
-**Monospace** (code-focused):
-- JetBrains Mono
-- Fira Code
-- Berkeley Mono
+    - **Inter** - Versatile, readable
+    - **Atkinson Hyperlegible** - Accessibility-focused
+    - **Lexie Readable** - Dyslexia-friendly
+
+=== "Serif"
+
+    Traditional fonts:
+
+    - **Literata** - Modern serif
+    - **EB Garamond** - Classic elegance
+
+=== "Monospace"
+
+    Code-focused fonts:
+
+    - **JetBrains Mono** - Developer favorite
+    - **Fira Code** - Ligatures
+    - **Berkeley Mono** - Premium quality
+
+---
+
+## Next Steps
+
+[Features Overview :material-arrow-right:](features.md){ .md-button .md-button--primary }
+[Themes Guide](themes.md){ .md-button }
