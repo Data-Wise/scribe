@@ -77,7 +77,10 @@ pub struct Property {
 }
 
 pub struct Database {
+    #[cfg(not(test))]
     conn: Connection,
+    #[cfg(test)]
+    pub(crate) conn: Connection,
 }
 
 // Database backup structures
@@ -111,18 +114,26 @@ impl Database {
             .path()
             .app_data_dir()
             .expect("Failed to get app data directory");
-        
+
         std::fs::create_dir_all(&app_data_dir).expect("Failed to create app data directory");
-        
+
         let db_path = app_data_dir.join("scribe.db");
         let conn = Connection::open(db_path)?;
-        
+
         // Enable WAL mode for better performance
         conn.pragma_update(None, "journal_mode", "WAL")?;
-        
+
         let mut db = Database { conn };
         db.initialize()?;
-        
+
+        Ok(db)
+    }
+
+    #[cfg(test)]
+    pub fn new_with_path<P: AsRef<std::path::Path>>(path: P) -> SqlResult<Self> {
+        let conn = Connection::open(path)?;
+        let mut db = Database { conn };
+        db.initialize()?;
         Ok(db)
     }
     
@@ -186,7 +197,18 @@ impl Database {
         Ok(())
     }
     
+    #[cfg(not(test))]
     fn get_current_schema_version(&self) -> SqlResult<i32> {
+        let version: Result<i32, _> = self.conn.query_row(
+            "SELECT MAX(version) FROM schema_version",
+            [],
+            |row| row.get(0),
+        );
+        Ok(version.unwrap_or(0))
+    }
+
+    #[cfg(test)]
+    pub(crate) fn get_current_schema_version(&self) -> SqlResult<i32> {
         let version: Result<i32, _> = self.conn.query_row(
             "SELECT MAX(version) FROM schema_version",
             [],
@@ -595,6 +617,7 @@ What did you accomplish today?"#);
         Ok(())
     }
 
+    #[cfg(not(test))]
     fn run_migration_008_add_properties_to_fts(&self) -> SqlResult<()> {
         println!("Running database migration 008 (add properties to FTS index)");
 
@@ -643,7 +666,94 @@ What did you accomplish today?"#);
         Ok(())
     }
 
+    #[cfg(test)]
+    pub(crate) fn run_migration_008_add_properties_to_fts(&self) -> SqlResult<()> {
+        println!("Running database migration 008 (add properties to FTS index)");
+
+        // Drop old FTS table and triggers
+        self.conn.execute_batch("
+            DROP TRIGGER IF EXISTS notes_au;
+            DROP TRIGGER IF EXISTS notes_ad;
+            DROP TRIGGER IF EXISTS notes_ai;
+            DROP TABLE IF EXISTS notes_fts;
+        ")?;
+
+        // Recreate FTS table with properties column
+        self.conn.execute_batch("
+            CREATE VIRTUAL TABLE notes_fts USING fts5(
+                note_id UNINDEXED,
+                title,
+                content,
+                properties
+            );
+
+            CREATE TRIGGER notes_ai AFTER INSERT ON notes BEGIN
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+
+            CREATE TRIGGER notes_ad AFTER DELETE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+            END;
+
+            CREATE TRIGGER notes_au AFTER UPDATE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+        ")?;
+
+        // Populate FTS table with existing notes
+        self.conn.execute("
+            INSERT INTO notes_fts(note_id, title, content, properties)
+            SELECT id, title, content, COALESCE(properties, '')
+            FROM notes
+            WHERE deleted_at IS NULL
+        ", [])?;
+
+        println!("  ✅ FTS index updated with properties column");
+        Ok(())
+    }
+
+    #[cfg(not(test))]
     fn run_migration_009_chat_history(&self) -> SqlResult<()> {
+        println!("Running database migration 009 (chat history tables)");
+
+        // Create chat_sessions table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_sessions (
+                id TEXT PRIMARY KEY,
+                note_id TEXT NOT NULL,
+                created_at INTEGER NOT NULL,
+                updated_at INTEGER NOT NULL,
+                FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_note_id ON chat_sessions(note_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_updated_at ON chat_sessions(updated_at DESC);
+        ")?;
+
+        // Create chat_messages table
+        self.conn.execute_batch("
+            CREATE TABLE IF NOT EXISTS chat_messages (
+                id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+                content TEXT NOT NULL,
+                timestamp INTEGER NOT NULL,
+                FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON chat_messages(session_id);
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_timestamp ON chat_messages(timestamp ASC);
+        ")?;
+
+        println!("  ✅ Chat history tables created");
+        Ok(())
+    }
+
+    #[cfg(test)]
+    pub(crate) fn run_migration_009_chat_history(&self) -> SqlResult<()> {
         println!("Running database migration 009 (chat history tables)");
 
         // Create chat_sessions table

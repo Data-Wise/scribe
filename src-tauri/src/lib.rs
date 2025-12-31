@@ -3,6 +3,9 @@ mod commands;
 mod academic;
 mod terminal;
 
+#[cfg(test)]
+mod tests;
+
 use commands::AppState;
 use terminal::ShellState;
 use database::Database;
