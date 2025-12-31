@@ -20,38 +20,53 @@ Before making ANY changes, read:
 
 ---
 
-## 🔀 Git Workflow (Protected Main)
+## 🔀 Git Workflow (Protected Main + Worktrees)
 
 **Main branch is protected.** Always work from `dev` or feature branches.
 
 ```
-main (protected) ← PR only
-  └── dev ← daily work
-       └── feat/* ← feature branches
+main (protected) ← PR from dev only
+  └── dev ← PR from feat/* only
+       └── feat/* ← worktrees for parallel work
 ```
 
 ### Rules
 
-1. **Never commit directly to main** — Use PRs
-2. **Start work from dev**: `git checkout dev && git pull`
-3. **Feature branches**: `git checkout -b feat/feature-name`
-4. **Merge to dev first**, then PR to main
+1. **Never commit directly to main** — PR from dev only
+2. **Never commit directly to dev for features** — PR from feat/* branches
+3. **Feature branches use git worktree** — Parallel development
+4. **PR flow**: feat/* → dev → main
 5. **Tag releases on main** after PR merge
 
-### Common Commands
+### Worktree Commands
 
 ```bash
-# Start new feature
+# Create feature branch with worktree
+git worktree add ../scribe-feat-name -b feat/feature-name dev
+
+# Work in the worktree directory
+cd ../scribe-feat-name
+
+# When done, create PR to dev
+gh pr create --base dev --head feat/feature-name
+
+# After PR merged, clean up worktree
+git worktree remove ../scribe-feat-name
+```
+
+### PR Flow
+
+```bash
+# Feature complete → PR to dev
+gh pr create --base dev --head feat/feature-name
+# Review & merge in GitHub
+
+# Ready for release → PR to main
 git checkout dev && git pull
-git checkout -b feat/my-feature
-
-# Finish feature → merge to dev
-git checkout dev && git merge feat/my-feature
-git push origin dev
-
-# Release → PR to main, then tag
 gh pr create --base main --head dev
-# After merge:
+# Review & merge in GitHub
+
+# Tag release on main
 git checkout main && git pull
 git tag -a v1.x.x -m "Release notes"
 git push origin v1.x.x
