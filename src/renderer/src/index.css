@@ -192,10 +192,14 @@ body {
   z-index: 1000;
 }
 
-/* In Tauri, re-enable pointer events for the drag region to work */
+/* In Tauri, window dragging is handled by:
+   1. useDragRegion() hook on specific headers (MissionControl, DashboardShell)
+   2. This fixed overlay is kept as fallback but with careful pointer-events handling
+   The JS handler (startDragging API) works better than CSS -webkit-app-region. */
 .tauri .titlebar-drag-region {
-  pointer-events: auto;
-  -webkit-app-region: drag;
+  /* Don't use -webkit-app-region: drag - it blocks clicks on elements beneath.
+     The JS-based dragging (onMouseDown -> startDragging) is used instead.
+     Keep pointer-events: none so clicks pass through to UI. */
 }
 
 /* Prevent dragging on interactive elements */
