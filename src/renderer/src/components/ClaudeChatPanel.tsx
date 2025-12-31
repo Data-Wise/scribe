@@ -85,9 +85,11 @@ export function ClaudeChatPanel({
   const [atQuery, setAtQuery] = useState('')
   const [atMenuIndex, setAtMenuIndex] = useState(0)
   const [referencedNotes, setReferencedNotes] = useState<NoteReference[]>([])
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const atMenuRef = useRef<HTMLDivElement>(null)
+  const noteIdRef = useRef<string | null>(null)
 
   // Filter notes based on @ query
   const filteredNotes = useMemo(() => {
@@ -97,6 +99,55 @@ export function ClaudeChatPanel({
       .filter(n => n.title.toLowerCase().includes(query))
       .slice(0, 5)
   }, [availableNotes, atQuery])
+
+  // Get or create chat session when note context changes
+  useEffect(() => {
+    if (!noteContext) {
+      setSessionId(null)
+      noteIdRef.current = null
+      return
+    }
+
+    // Generate a stable note ID from title (in real app, use actual note.id)
+    const noteId = noteContext.title.toLowerCase().replace(/\s+/g, '-')
+
+    // Only create new session if note changed
+    if (noteIdRef.current === noteId) return
+    noteIdRef.current = noteId
+
+    const initSession = async () => {
+      try {
+        const id = await api.getOrCreateChatSession(noteId)
+        setSessionId(id)
+      } catch (err) {
+        console.error('Failed to create chat session:', err)
+      }
+    }
+
+    initSession()
+  }, [noteContext])
+
+  // Load chat history when session is ready
+  useEffect(() => {
+    if (!sessionId) return
+
+    const loadHistory = async () => {
+      try {
+        const history = await api.loadChatSession(sessionId)
+        const loadedMessages: Message[] = history.map(msg => ({
+          id: msg.id,
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+          timestamp: new Date(msg.timestamp)
+        }))
+        setMessages(loadedMessages)
+      } catch (err) {
+        console.error('Failed to load chat history:', err)
+      }
+    }
+
+    loadHistory()
+  }, [sessionId])
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -142,6 +193,20 @@ export function ClaudeChatPanel({
     setInput('')
     setIsLoading(true)
 
+    // Save user message to database
+    if (sessionId) {
+      try {
+        await api.saveChatMessage(
+          sessionId,
+          'user',
+          trimmedInput,
+          userMessage.timestamp.getTime()
+        )
+      } catch (err) {
+        console.error('Failed to save user message:', err)
+      }
+    }
+
     try {
       // Build context from current note and referenced notes
       let fullPrompt = trimmedInput
@@ -174,6 +239,20 @@ export function ClaudeChatPanel({
       }
 
       setMessages(prev => [...prev, assistantMessage])
+
+      // Save assistant message to database
+      if (sessionId) {
+        try {
+          await api.saveChatMessage(
+            sessionId,
+            'assistant',
+            response,
+            assistantMessage.timestamp.getTime()
+          )
+        } catch (err) {
+          console.error('Failed to save assistant message:', err)
+        }
+      }
     } catch (err) {
       // Add error as assistant message
       const errorMessage: Message = {
@@ -188,7 +267,7 @@ export function ClaudeChatPanel({
       // Re-focus input after response
       inputRef.current?.focus()
     }
-  }, [input, isLoading, onSubmit, noteContext, referencedNotes])
+  }, [input, isLoading, onSubmit, noteContext, referencedNotes, sessionId])
 
   // Handle @ menu selection
   const handleSelectNote = useCallback((note: NoteReference) => {
@@ -275,10 +354,19 @@ export function ClaudeChatPanel({
     }
   }, [handleSubmit, showAtMenu, filteredNotes, atMenuIndex, handleSelectNote])
 
-  const handleClearChat = useCallback(() => {
+  const handleClearChat = useCallback(async () => {
     setMessages([])
     setReferencedNotes([])
-  }, [])
+
+    // Clear chat history from database
+    if (sessionId) {
+      try {
+        await api.clearChatSession(sessionId)
+      } catch (err) {
+        console.error('Failed to clear chat session:', err)
+      }
+    }
+  }, [sessionId])
 
   // Quick action handler - runs pre-defined AI prompts
   const handleQuickAction = useCallback(async (action: string) => {
@@ -319,6 +407,20 @@ export function ClaudeChatPanel({
     setMessages(prev => [...prev, userMessage])
     setIsLoading(true)
 
+    // Save user message to database
+    if (sessionId) {
+      try {
+        await api.saveChatMessage(
+          sessionId,
+          'user',
+          prompt,
+          userMessage.timestamp.getTime()
+        )
+      } catch (err) {
+        console.error('Failed to save quick action message:', err)
+      }
+    }
+
     try {
       const aiResponse = onSubmit
         ? await onSubmit(fullPrompt)
@@ -332,6 +434,20 @@ export function ClaudeChatPanel({
       }
 
       setMessages(prev => [...prev, assistantMessage])
+
+      // Save assistant message to database
+      if (sessionId) {
+        try {
+          await api.saveChatMessage(
+            sessionId,
+            'assistant',
+            aiResponse,
+            assistantMessage.timestamp.getTime()
+          )
+        } catch (err) {
+          console.error('Failed to save quick action response:', err)
+        }
+      }
     } catch (error) {
       console.error('AI request failed:', error)
       const errorMessage: Message = {
@@ -345,7 +461,7 @@ export function ClaudeChatPanel({
       setIsLoading(false)
       setInput('')
     }
-  }, [isLoading, noteContext, referencedNotes, onSubmit])
+  }, [isLoading, noteContext, referencedNotes, onSubmit, sessionId])
 
   // Export chat as markdown file
   const handleExportChat = useCallback(() => {

@@ -13,6 +13,10 @@ mod chat_history_tests {
         let conn = Connection::open(temp_dir.path().join("test.db"))
             .expect("Failed to open test database");
 
+        // Enable foreign key constraints
+        conn.execute("PRAGMA foreign_keys = ON", [])
+            .expect("Failed to enable foreign keys");
+
         // Create minimal schema for chat testing (bypass problematic migrations)
         conn.execute_batch("
             CREATE TABLE IF NOT EXISTS schema_version (
@@ -35,6 +39,7 @@ mod chat_history_tests {
             CREATE TABLE IF NOT EXISTS tags (
                 id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
                 name TEXT UNIQUE NOT NULL,
+                color TEXT DEFAULT '#3b82f6',
                 created_at INTEGER DEFAULT (strftime('%s', 'now'))
             );
 
@@ -44,6 +49,27 @@ mod chat_history_tests {
                 PRIMARY KEY (note_id, tag_id),
                 FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE,
                 FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS links (
+                source_note_id TEXT NOT NULL,
+                target_note_id TEXT NOT NULL,
+                PRIMARY KEY (source_note_id, target_note_id),
+                FOREIGN KEY (source_note_id) REFERENCES notes(id) ON DELETE CASCADE,
+                FOREIGN KEY (target_note_id) REFERENCES notes(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS projects (
+                id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+                name TEXT NOT NULL,
+                description TEXT DEFAULT '',
+                created_at INTEGER DEFAULT (strftime('%s', 'now')),
+                updated_at INTEGER DEFAULT (strftime('%s', 'now'))
+            );
+
+            CREATE TABLE IF NOT EXISTS folders (
+                path TEXT PRIMARY KEY,
+                created_at INTEGER DEFAULT (strftime('%s', 'now'))
             );
 
             CREATE TABLE IF NOT EXISTS chat_sessions (
@@ -364,9 +390,10 @@ mod chat_history_tests {
 
         db.save_chat_message(&session_id, "user", "Test", 1000).unwrap();
 
-        // Delete the note
-        db.delete_note(&note.id)
-            .expect("Failed to delete note");
+        // Hard delete the note (bypass soft delete to test CASCADE)
+        // Note: delete_note() does soft delete (UPDATE deleted_at), not hard DELETE
+        db.conn.execute("DELETE FROM notes WHERE id = ?", [&note.id])
+            .expect("Failed to hard delete note");
 
         // Verify session is deleted (CASCADE from notes)
         let session_count: i32 = db.conn.query_row(
@@ -374,7 +401,7 @@ mod chat_history_tests {
             [&session_id],
             |row| row.get(0)
         ).unwrap();
-        assert_eq!(session_count, 0);
+        assert_eq!(session_count, 0, "Session should be deleted when note is hard deleted");
 
         // Verify messages are also deleted
         let message_count: i32 = db.conn.query_row(
@@ -382,6 +409,6 @@ mod chat_history_tests {
             [&session_id],
             |row| row.get(0)
         ).unwrap();
-        assert_eq!(message_count, 0);
+        assert_eq!(message_count, 0, "Messages should be deleted when session is deleted");
     }
 }
