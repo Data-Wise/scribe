@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import Editor, { OnMount } from '@monaco-editor/react'
 import type { editor as MonacoEditorType } from 'monaco-editor'
 import { useEditorStore, getMonacoLanguage } from '../store/editorStore'
@@ -41,8 +41,22 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
   const [pdfPath, setPdfPath] = useState<string | null>(null)
   const [compilationResult, setCompilationResult] = useState<LatexCompileResult | null>(null)
   const [showPdfPreview, setShowPdfPreview] = useState(true)
+  const [autoCompile, setAutoCompile] = useState(true)
 
   const isLatexFile = language === 'latex'
+
+  // Auto-compile on save (debounced 2.5 seconds)
+  useEffect(() => {
+    if (!isLatexFile || !autoCompile || !filePath) return
+
+    // Debounce compilation after content changes
+    const timer = setTimeout(() => {
+      console.log('[LaTeX] Auto-compiling after content change...')
+      handleCompileLatex()
+    }, 2500) // 2.5 second delay
+
+    return () => clearTimeout(timer)
+  }, [content, isLatexFile, autoCompile, filePath])
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor
@@ -149,6 +163,15 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
           {/* LaTeX controls */}
           {isLatexFile && (
             <div className="flex items-center gap-2">
+              <label className="flex items-center gap-1 text-xs text-nexus-text-muted cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={autoCompile}
+                  onChange={(e) => setAutoCompile(e.target.checked)}
+                  className="rounded border-nexus-border"
+                />
+                <span>Auto-compile</span>
+              </label>
               <button
                 onClick={handleCompileLatex}
                 disabled={isCompiling}
