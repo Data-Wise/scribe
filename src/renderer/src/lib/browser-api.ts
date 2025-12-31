@@ -448,6 +448,24 @@ export const browserApi = {
   },
 
   // ============================================================================
+  // LaTeX Compilation (Tauri-only, stubs for browser)
+  // ============================================================================
+
+  isLatexAvailable: async (_engine: 'pdflatex' | 'xelatex'): Promise<boolean> => {
+    return false
+  },
+
+  compileLatex: async (_options: any): Promise<any> => {
+    console.warn('[Browser] LaTeX compilation is not available in browser mode')
+    return {
+      success: false,
+      errors: [{ message: 'LaTeX compilation requires native Tauri runtime' }],
+      warnings: [],
+      logPath: ''
+    }
+  },
+
+  // ============================================================================
   // Project Operations
   // ============================================================================
 

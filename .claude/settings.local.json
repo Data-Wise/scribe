@@ -17,7 +17,8 @@
       "WebFetch(domain:github.com)",
       "Bash(git rm:*)",
       "Bash(npm test:*)",
-      "WebFetch(domain:milkdown.dev)"
+      "WebFetch(domain:milkdown.dev)",
+      "Bash(cargo check:*)"
     ]
   }
 }

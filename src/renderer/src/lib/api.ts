@@ -77,6 +77,27 @@ export interface ExportResult {
   success: boolean
 }
 
+// LaTeX compilation types
+export interface LatexError {
+  line?: number
+  message: string
+  file?: string
+}
+
+export interface LatexCompileOptions {
+  content: string
+  filePath: string
+  engine: 'pdflatex' | 'xelatex'
+}
+
+export interface LatexCompileResult {
+  success: boolean
+  pdfPath?: string
+  errors: LatexError[]
+  warnings: string[]
+  logPath: string
+}
+
 // ============================================================================
 // Tauri API (Native)
 // ============================================================================
@@ -263,6 +284,13 @@ const tauriApi = {
 
   isPandocAvailable: (): Promise<boolean> =>
     invoke('is_pandoc_available'),
+
+  // LaTeX compilation
+  isLatexAvailable: (engine: 'pdflatex' | 'xelatex'): Promise<boolean> =>
+    invoke('is_latex_available', { engine }),
+
+  compileLatex: (options: LatexCompileOptions): Promise<LatexCompileResult> =>
+    invoke('compile_latex', { options }),
 
   // Project operations
   listProjects: (): Promise<Project[]> =>
@@ -487,6 +515,10 @@ export const api = {
   // Document export - success feedback
   exportDocument: withToast(rawApi.exportDocument, 'Document export failed', 'Document exported'),
   isPandocAvailable: withErrorToast(rawApi.isPandocAvailable, 'Pandoc check failed', true),
+
+  // LaTeX compilation - success feedback
+  isLatexAvailable: withErrorToast(rawApi.isLatexAvailable, 'LaTeX check failed', true),
+  compileLatex: withToast(rawApi.compileLatex, 'LaTeX compilation failed', 'LaTeX compiled successfully'),
 
   // Project operations - success feedback for user actions
   listProjects: withErrorToast(rawApi.listProjects, 'Failed to load projects', true),

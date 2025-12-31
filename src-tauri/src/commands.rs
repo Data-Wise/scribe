@@ -535,7 +535,7 @@ pub fn is_homebrew_available() -> bool {
 
 // Academic commands (citations & export)
 
-use crate::academic::{Citation, ExportOptions, ExportResult};
+use crate::academic::{Citation, ExportOptions, ExportResult, LatexCompileOptions, LatexCompileResult};
 use std::sync::RwLock;
 
 // Global state for bibliography path
@@ -603,6 +603,24 @@ pub fn export_document(options: ExportOptions) -> Result<ExportResult, String> {
         .map_err(|e| format!("Failed to create export directory: {}", e))?;
 
     crate::academic::export_document(&options, &output_dir)
+}
+
+/// Check if LaTeX is available
+#[tauri::command]
+pub fn is_latex_available(engine: String) -> bool {
+    crate::academic::is_latex_available(&engine)
+}
+
+/// Compile LaTeX document to PDF
+#[tauri::command]
+pub fn compile_latex(options: LatexCompileOptions) -> Result<LatexCompileResult, String> {
+    // Get temporary directory for compilation
+    let temp_dir = std::env::temp_dir().join("scribe-latex");
+
+    std::fs::create_dir_all(&temp_dir)
+        .map_err(|e| format!("Failed to create temp directory: {}", e))?;
+
+    crate::academic::compile_latex(&options, &temp_dir)
 }
 
 // Project Settings commands

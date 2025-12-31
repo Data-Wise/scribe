@@ -301,6 +301,155 @@ pub fn export_document(options: &ExportOptions, output_dir: &Path) -> Result<Exp
     }
 }
 
+/// LaTeX compilation result
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LatexCompileResult {
+    pub success: bool,
+    pub pdf_path: Option<String>,
+    pub errors: Vec<LatexError>,
+    pub warnings: Vec<String>,
+    pub log_path: String,
+}
+
+/// LaTeX compilation error
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LatexError {
+    pub line: Option<u32>,
+    pub message: String,
+    pub file: Option<String>,
+}
+
+/// LaTeX compilation options
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LatexCompileOptions {
+    pub content: String,
+    pub file_path: String,
+    pub engine: String,  // "pdflatex" or "xelatex"
+}
+
+/// Check if LaTeX is available
+pub fn is_latex_available(engine: &str) -> bool {
+    Command::new(engine)
+        .arg("--version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// Parse LaTeX log file for errors and warnings
+fn parse_latex_log(log_content: &str) -> (Vec<LatexError>, Vec<String>) {
+    let mut errors = Vec::new();
+    let mut warnings = Vec::new();
+    let lines: Vec<&str> = log_content.lines().collect();
+
+    for (i, line) in lines.iter().enumerate() {
+        // Error pattern: "! LaTeX Error:" or "! Undefined control sequence."
+        if line.starts_with('!') {
+            let message = line[1..].trim().to_string();
+
+            // Try to find line number from context
+            let mut line_num = None;
+            let mut file = None;
+
+            // Look back for file and line info: "l.123 \somecommand"
+            for j in (i.saturating_sub(10)..i).rev() {
+                if let Some(context_line) = lines.get(j) {
+                    if context_line.starts_with("l.") {
+                        if let Some(space_pos) = context_line.find(' ') {
+                            if let Ok(num) = context_line[2..space_pos].parse::<u32>() {
+                                line_num = Some(num);
+                                break;
+                            }
+                        }
+                    }
+                    // File pattern: "(./filename.tex"
+                    if context_line.contains("(./") {
+                        if let Some(start) = context_line.find("(./") {
+                            if let Some(end) = context_line[start..].find(' ') {
+                                file = Some(context_line[start+3..start+end].to_string());
+                            }
+                        }
+                    }
+                }
+            }
+
+            errors.push(LatexError {
+                line: line_num,
+                message,
+                file,
+            });
+        }
+
+        // Warning pattern: "LaTeX Warning:"
+        if line.contains("LaTeX Warning:") || line.contains("Package") && line.contains("Warning:") {
+            warnings.push(line.trim().to_string());
+        }
+    }
+
+    (errors, warnings)
+}
+
+/// Compile LaTeX document to PDF
+pub fn compile_latex(options: &LatexCompileOptions, work_dir: &Path) -> Result<LatexCompileResult, String> {
+    // Validate engine
+    if options.engine != "pdflatex" && options.engine != "xelatex" {
+        return Err(format!("Unknown LaTeX engine: {}. Use 'pdflatex' or 'xelatex'", options.engine));
+    }
+
+    // Check if LaTeX is available
+    if !is_latex_available(&options.engine) {
+        return Err(format!(
+            "{} is not installed. Install TeX Live or MacTeX from: https://www.tug.org/texlive/",
+            options.engine
+        ));
+    }
+
+    // Write content to .tex file
+    let tex_path = Path::new(&options.file_path);
+    let tex_filename = tex_path.file_stem()
+        .and_then(|s| s.to_str())
+        .ok_or("Invalid file path")?;
+
+    let work_tex_path = work_dir.join(format!("{}.tex", tex_filename));
+    fs::write(&work_tex_path, &options.content)
+        .map_err(|e| format!("Failed to write .tex file: {}", e))?;
+
+    // Run LaTeX compilation
+    // Use -interaction=nonstopmode to avoid hanging on errors
+    // Use -halt-on-error for cleaner failure behavior
+    let _output = Command::new(&options.engine)
+        .current_dir(work_dir)
+        .arg("-interaction=nonstopmode")
+        .arg("-file-line-error")
+        .arg(&work_tex_path)
+        .output()
+        .map_err(|e| format!("Failed to run {}: {}", options.engine, e))?;
+
+    // Read log file
+    let log_path = work_dir.join(format!("{}.log", tex_filename));
+    let log_content = fs::read_to_string(&log_path)
+        .unwrap_or_else(|_| String::from("Log file not found"));
+
+    // Parse errors and warnings
+    let (errors, warnings) = parse_latex_log(&log_content);
+
+    // Check if PDF was generated
+    let pdf_path = work_dir.join(format!("{}.pdf", tex_filename));
+    let success = pdf_path.exists() && errors.is_empty();
+
+    Ok(LatexCompileResult {
+        success,
+        pdf_path: if pdf_path.exists() {
+            Some(pdf_path.to_string_lossy().to_string())
+        } else {
+            None
+        },
+        errors,
+        warnings,
+        log_path: log_path.to_string_lossy().to_string(),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

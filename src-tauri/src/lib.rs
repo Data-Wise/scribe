@@ -100,6 +100,9 @@ pub fn run() {
       commands::get_bibliography_path,
       commands::export_document,
       commands::is_pandoc_available,
+      // LaTeX compilation
+      commands::is_latex_available,
+      commands::compile_latex,
       // Project management
       commands::create_project,
       commands::get_project,
