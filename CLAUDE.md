@@ -212,7 +212,7 @@ scribe help --all      # Full reference
 **Sprint 27 P2: Settings Enhancement - In Progress (2025-12-31)**
 
 **Branch:** `feat/settings-enhancement`
-**Worktree:** `/Users/dt/.git-worktrees/scribe/sprint-27-p2`
+**Worktree:** `/Users/dt/.git-worktrees/scribe/settings`
 
 **Phase 1: Foundation - Complete ✅**
 - ✅ Zustand store for settings state (useSettingsStore.ts)
