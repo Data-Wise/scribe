@@ -9,6 +9,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - v1.6.0
 
+### Sprint 26: Terminal & Right Sidebar - Complete (2025-12-31)
+
+**Full PTY terminal with smart working directory, plus UI fixes.**
+
+### Added
+
+**Terminal PTY Shell:**
+- Full PTY terminal via portable-pty crate
+- xterm.js frontend with Scribe dark theme
+- Bidirectional communication (input/output)
+- Shell resize events propagated to PTY
+- Clickable URLs (WebLinksAddon)
+- Terminal icon in right sidebar Activity Bar
+
+**Terminal Working Directory:**
+- Smart CWD inference based on project type:
+  - Research → `~/projects/research/[name]`
+  - Teaching → `~/projects/teaching/[name]`
+  - R Package → `~/projects/r-packages/[name]`
+  - R Dev → `~/projects/dev-tools/[name]`
+  - Generic → `~/projects/[name]`
+- Project settings support for custom `workingDirectory`
+- App settings for configurable default folder
+- Graceful fallback to `~` if path doesn't exist
+- Demo projects skip inference (Getting Started, Research)
+- Current directory shown in terminal header
+
+**E2E Tests:**
+- 20 new Playwright tests for Terminal, Modals, Sidebar Toggle
+- Comprehensive UI interaction coverage
+
+### Fixed
+
+- CSS drag region blocking tab/button clicks (removed from titlebar)
+- Terminal graceful fallback when PTY not available
+
+### Technical
+
+- `src-tauri/src/terminal.rs` - PTY spawn, resize, write, kill commands
+- `src/renderer/src/lib/terminal-utils.ts` - Path inference, app settings
+- `src/renderer/src/components/TerminalPanel.tsx` - xterm.js integration
+- Tauri events: `shell-output`, `shell-closed` for async communication
+
+---
+
 ### Sprint 25: Plan B UI Redesign - Complete (2025-12-28)
 
 **ADHD-friendly sidebar overhaul with expandable project notes and browser mode support.**

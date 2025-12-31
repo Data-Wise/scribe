@@ -131,6 +131,34 @@ Configure in Settings → Writing → Daily Note Template.
 
 ---
 
+## Terminal
+
+Embedded terminal in the right sidebar with smart working directory:
+
+| Feature | Description |
+|---------|-------------|
+| **Full PTY** | Real shell via portable-pty |
+| **Smart CWD** | Opens in project folder |
+| **Themed** | Matches Scribe dark mode |
+| **Clickable URLs** | WebLinksAddon enabled |
+
+### Working Directory
+
+Terminal intelligently opens in the right folder:
+
+| Project Type | Inferred Path |
+|--------------|---------------|
+| Research | `~/projects/research/[name]` |
+| Teaching | `~/projects/teaching/[name]` |
+| R Package | `~/projects/r-packages/[name]` |
+| R Dev | `~/projects/dev-tools/[name]` |
+| Generic | `~/projects/[name]` |
+
+!!! tip "Fallback"
+    If the folder doesn't exist, terminal opens in your home directory.
+
+---
+
 ## Knowledge Graph
 
 Visualize connections between your notes:
