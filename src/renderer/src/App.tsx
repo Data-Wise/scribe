@@ -396,19 +396,29 @@ function App() {
   // Diagnostic: Test Tauri commands on startup
   useEffect(() => {
     const runDiagnostics = async () => {
-      console.log('[Scribe Diagnostics] Starting...')
+      const { isTauri } = await import('./lib/platform')
+      console.log('[Scribe Diagnostics] Platform:', isTauri() ? 'TAURI' : 'BROWSER')
+      console.log('[Scribe Diagnostics] window.__TAURI__:', !!(window as unknown as { __TAURI__: unknown }).__TAURI__)
+
       try {
         console.log('[Scribe Diagnostics] Testing listNotes...')
         const notes = await api.listNotes()
         console.log('[Scribe Diagnostics] listNotes returned:', notes.length, 'notes')
+        if (notes.length > 0) {
+          console.log('[Scribe Diagnostics] First note:', notes[0].title)
+        }
 
         console.log('[Scribe Diagnostics] Testing listProjects...')
         const projects = await api.listProjects()
         console.log('[Scribe Diagnostics] listProjects returned:', projects.length, 'projects')
+        if (projects.length > 0) {
+          console.log('[Scribe Diagnostics] First project:', projects[0].name)
+        }
 
         console.log('[Scribe Diagnostics] All commands working!')
       } catch (error) {
         console.error('[Scribe Diagnostics] FAILED:', error)
+        console.error('[Scribe Diagnostics] Error details:', (error as Error).message, (error as Error).stack)
       }
     }
     runDiagnostics()

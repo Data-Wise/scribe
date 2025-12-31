@@ -117,6 +117,11 @@ impl Database {
             self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [6])?;
         }
 
+        if current_version < 7 {
+            self.run_migration_007_seed_demo_data()?;
+            self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [7])?;
+        }
+
         Ok(())
     }
     
@@ -305,6 +310,227 @@ impl Database {
         )?;
 
         println!("Database migration 006 completed (project settings table)");
+        Ok(())
+    }
+
+    /// Migration 007: Seed demo data for new users
+    ///
+    /// Creates a "Getting Started" project with example notes to help
+    /// users understand how Scribe works. Only runs if no projects exist.
+    fn run_migration_007_seed_demo_data(&self) -> SqlResult<()> {
+        println!("Running database migration 007 (demo data seeding)");
+
+        // Check if any projects already exist (don't seed if user has data)
+        let project_count: i64 = self.conn.query_row(
+            "SELECT COUNT(*) FROM projects",
+            [],
+            |row| row.get(0),
+        )?;
+
+        if project_count > 0 {
+            println!("  Skipping demo data - projects already exist");
+            return Ok(());
+        }
+
+        println!("  Seeding demo data for new user...");
+
+        // Generate UUIDs for our entities
+        let project_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+
+        let note1_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+
+        let note2_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+
+        let note3_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+
+        // Create demo project
+        self.conn.execute(
+            "INSERT INTO projects (id, name, description, type, color) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![
+                &project_id,
+                "Getting Started",
+                "Learn how to use Scribe with these example notes",
+                "generic",
+                "#3B82F6"
+            ],
+        )?;
+
+        // Create demo notes
+        let welcome_content = r#"# Welcome to Scribe! 👋
+
+Scribe is an **ADHD-friendly distraction-free writer** designed to help you focus.
+
+## Quick Tips
+
+- Press **⌘N** to create a new note
+- Press **⌘D** to open today's daily note
+- Press **⌘K** to open the command palette
+- Press **Escape** to close panels
+
+## Tauri Desktop App
+
+You're running Scribe as a **native desktop app** with SQLite storage.
+Your notes are saved locally and sync instantly!
+
+## Getting Started
+
+1. Create a new note with ⌘N
+2. Start writing without distractions
+3. Use #tags to organize your notes
+4. Link notes with [[wiki links]]
+
+See the [[Features Overview]] note for more details."#;
+
+        let features_content = r#"# Features Overview
+
+Scribe includes these core features to help you write:
+
+## ✍️ Writing
+- Clean, minimal editor
+- Auto-save (never lose work)
+- Dark mode for less eye strain
+- Word count & reading time
+
+## 🏷️ Organization
+- **Tags**: Add #tags anywhere in your notes
+- **Folders**: inbox, notes, archive
+- **Projects**: Group related notes together
+
+## 🔗 Knowledge
+- **Wiki Links**: Connect notes with [[Note Title]]
+- **Backlinks**: See what links to the current note
+- **Daily Notes**: Quick journal entries
+
+## 📚 Academic Features
+- Citation management with Zotero
+- Export to PDF, Word, LaTeX
+- Equation support with KaTeX
+
+## 🤖 AI Integration
+- Claude CLI integration
+- Gemini CLI integration
+- No API keys needed - uses your installed CLI tools"#;
+
+        let daily_content = format!(r#"# Daily Note Example
+
+## Focus for Today
+- [ ] Review the [[Welcome to Scribe]] tutorial
+- [ ] Create your first note
+- [ ] Try adding some #tags
+
+## Notes
+Use this space for quick thoughts and ideas.
+
+Press ⌘D anytime to open today's daily note.
+
+## End of Day Review
+What did you accomplish today?"#);
+
+        // Insert notes
+        self.conn.execute(
+            "INSERT INTO notes (id, title, content, folder, project_id) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![&note1_id, "Welcome to Scribe", welcome_content, "inbox", &project_id],
+        )?;
+
+        self.conn.execute(
+            "INSERT INTO notes (id, title, content, folder, project_id) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![&note2_id, "Features Overview", features_content, "notes", &project_id],
+        )?;
+
+        self.conn.execute(
+            "INSERT INTO notes (id, title, content, folder, project_id) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![&note3_id, "Daily Note Example", &daily_content, "notes", rusqlite::types::Null],
+        )?;
+
+        // Update FTS index
+        self.conn.execute(
+            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            rusqlite::params![&note1_id, "Welcome to Scribe", welcome_content],
+        )?;
+        self.conn.execute(
+            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            rusqlite::params![&note2_id, "Features Overview", features_content],
+        )?;
+        self.conn.execute(
+            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            rusqlite::params![&note3_id, "Daily Note Example", &daily_content],
+        )?;
+
+        // Create demo tags
+        let tag_welcome_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+        let tag_tutorial_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+        let tag_tips_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+
+        self.conn.execute(
+            "INSERT INTO tags (id, name, color) VALUES (?, ?, ?)",
+            rusqlite::params![&tag_welcome_id, "welcome", "#10B981"],
+        )?;
+        self.conn.execute(
+            "INSERT INTO tags (id, name, color) VALUES (?, ?, ?)",
+            rusqlite::params![&tag_tutorial_id, "tutorial", "#8B5CF6"],
+        )?;
+        self.conn.execute(
+            "INSERT INTO tags (id, name, color) VALUES (?, ?, ?)",
+            rusqlite::params![&tag_tips_id, "tips", "#F59E0B"],
+        )?;
+
+        // Associate tags with notes
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note1_id, &tag_welcome_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note1_id, &tag_tutorial_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note2_id, &tag_tutorial_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note2_id, &tag_tips_id],
+        )?;
+
+        // Create wiki link from Welcome to Features Overview
+        self.conn.execute(
+            "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
+            rusqlite::params![&note1_id, &note2_id],
+        )?;
+
+        println!("  ✅ Demo data seeded successfully:");
+        println!("     - 1 project: 'Getting Started'");
+        println!("     - 3 notes: Welcome, Features, Daily Example");
+        println!("     - 3 tags: #welcome, #tutorial, #tips");
+
         Ok(())
     }
 
