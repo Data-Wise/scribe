@@ -32,15 +32,24 @@ All three features successfully implemented:
 3. **✅ Cursor-Aware Inline Rendering** - CodeMirror Live Preview mode
    - Created `CodeMirrorLivePreview.tsx` component
    - Custom `codeMirrorMarkdownExtension.ts` with ViewPlugin
-   - Decorations hide syntax markers (**, ##, `, etc.) on non-cursor lines
-   - Syntax tree iteration for bold, italic, headers, code
+   - Decorations hide syntax markers (**, ##, `, [[]], etc.) on non-cursor lines
+   - Syntax tree iteration for bold, italic, headers, code, wiki links
    - Real-time cursor tracking with syntax reveal
+   - **Bug Fix (2025-12-31):** Discovered CodeMirror separates syntax markers into child nodes
+     - Headers: `HeaderMark` nodes contain `#` symbols (separate from `ATXHeading` parent)
+     - Links: `LinkMark` nodes contain `[` `]` brackets (separate from `Link` parent)
+     - Fixed by handling marker nodes directly instead of regex string extraction
 
 **Key Files Created:**
 - `src/renderer/src/components/CodeMirrorLivePreview.tsx`
 - `src/renderer/src/lib/codeMirrorMarkdownExtension.ts`
+- `src/renderer/src/lib/demo-markdown-syntax.ts` (comprehensive test suite)
 
 **Testing:** All features verified in browser mode with visual confirmation
+- ✅ Headers render without `#` symbols (except on cursor line)
+- ✅ Wiki links render with single brackets `[text]` (one hidden on each side)
+- ✅ Bold text renders without `**` markers
+- ✅ Cursor-aware behavior reveals raw syntax on active line
 
 ---
 

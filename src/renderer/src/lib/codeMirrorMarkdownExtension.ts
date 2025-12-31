@@ -51,6 +51,10 @@ const codeDeco = Decoration.mark({
   class: 'cm-md-code'
 })
 
+const linkDeco = Decoration.mark({
+  class: 'cm-md-link'
+})
+
 /**
  * Build decorations for markdown rendering
  */
@@ -100,35 +104,32 @@ function buildDecorations(view: EditorView): DecorationSet {
         }
       }
 
-      // Handle headings: # Header
+      // Handle header markers: hide # symbols
+      if (name === 'HeaderMark') {
+        builder.add(from, to, hideSyntax)
+      }
+
+      // Handle headings: apply styling to text content
       if (name === 'ATXHeading1') {
-        const text = doc.sliceString(from, to)
-        const match = text.match(/^(#+)\s/)
-        if (match) {
-          const hashCount = match[1].length
-          builder.add(from, from + hashCount + 1, hideSyntax)
-          builder.add(from + hashCount + 1, to, header1Deco)
-        }
+        builder.add(from, to, header1Deco)
       }
 
       if (name === 'ATXHeading2') {
-        const text = doc.sliceString(from, to)
-        const match = text.match(/^(#+)\s/)
-        if (match) {
-          const hashCount = match[1].length
-          builder.add(from, from + hashCount + 1, hideSyntax)
-          builder.add(from + hashCount + 1, to, header2Deco)
-        }
+        builder.add(from, to, header2Deco)
       }
 
       if (name === 'ATXHeading3') {
-        const text = doc.sliceString(from, to)
-        const match = text.match(/^(#+)\s/)
-        if (match) {
-          const hashCount = match[1].length
-          builder.add(from, from + hashCount + 1, hideSyntax)
-          builder.add(from + hashCount + 1, to, header3Deco)
-        }
+        builder.add(from, to, header3Deco)
+      }
+
+      // Handle link markers: hide [ ] brackets
+      if (name === 'LinkMark') {
+        builder.add(from, to, hideSyntax)
+      }
+
+      // Handle wiki links: apply styling to link text
+      if (name === 'Link') {
+        builder.add(from, to, linkDeco)
       }
 
       // Handle inline code: `code`
@@ -217,5 +218,10 @@ export const markdownTheme = EditorView.theme({
     padding: '0.2em 0.4em',
     borderRadius: '3px',
     color: 'var(--nexus-accent, #3B82F6)'
+  },
+  '.cm-md-link': {
+    color: 'var(--nexus-accent, #3B82F6)',
+    textDecoration: 'none',
+    cursor: 'pointer'
   }
 })
