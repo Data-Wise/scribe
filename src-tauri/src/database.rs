@@ -536,10 +536,10 @@ What did you accomplish today?"#);
 
     // Note CRUD operations
     
-    pub fn create_note(&self, title: &str, content: &str, folder: &str, properties: Option<&str>) -> SqlResult<Note> {
+    pub fn create_note(&self, title: &str, content: &str, folder: &str, project_id: Option<&str>, properties: Option<&str>) -> SqlResult<Note> {
         self.conn.execute(
-            "INSERT INTO notes (title, content, folder, properties) VALUES (?, ?, ?, ?)",
-            rusqlite::params![title, content, folder, properties],
+            "INSERT INTO notes (title, content, folder, project_id, properties) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![title, content, folder, project_id, properties],
         )?;
 
         let note = self.conn.query_row(
