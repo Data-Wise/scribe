@@ -1,6 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { EditorRouter } from '../components/EditorRouter'
+import { useEditorStore } from '../store/editorStore'
 
 // Mock the editor components
 vi.mock('../components/MilkdownEditor', () => ({
@@ -17,6 +19,12 @@ vi.mock('../components/MonacoCodeEditor', () => ({
 
 describe('EditorRouter', () => {
   const mockOnChange = vi.fn()
+
+  beforeEach(() => {
+    // Reset store before each test
+    useEditorStore.getState().reset()
+    mockOnChange.mockClear()
+  })
 
   describe('Markdown routing (.md, .qmd)', () => {
     it('should route .md files to Milkdown', () => {
@@ -242,6 +250,207 @@ describe('EditorRouter', () => {
       // Should now render Monaco
       expect(screen.getByTestId('monaco-editor')).toBeInTheDocument()
       expect(screen.queryByTestId('milkdown-editor')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Unsaved changes dialog', () => {
+    it('should NOT show dialog when switching files without unsaved changes', () => {
+      const { rerender } = render(
+        <EditorRouter
+          filePath="note1.md"
+          content="Content 1"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Switch to different file without making changes
+      rerender(
+        <EditorRouter
+          filePath="note2.md"
+          content="Content 2"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Dialog should not appear
+      expect(screen.queryByText('Unsaved Changes')).not.toBeInTheDocument()
+      expect(screen.getByText(/Milkdown Editor: note2\.md/)).toBeInTheDocument()
+    })
+
+    it('should show dialog when switching files with unsaved changes', async () => {
+      const { rerender } = render(
+        <EditorRouter
+          filePath="note1.md"
+          content="Content 1"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Mark file as dirty
+      useEditorStore.getState().setDirty(true)
+
+      // Try to switch to different file
+      rerender(
+        <EditorRouter
+          filePath="note2.md"
+          content="Content 2"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Dialog should appear
+      await waitFor(() => {
+        expect(screen.getByText('Unsaved Changes')).toBeInTheDocument()
+        expect(screen.getByText(/Do you want to save changes to/)).toBeInTheDocument()
+      })
+    })
+
+    it('should switch files when "Don\'t Save" is clicked', async () => {
+      const user = userEvent.setup()
+      const { rerender } = render(
+        <EditorRouter
+          filePath="note1.md"
+          content="Content 1"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Mark file as dirty
+      useEditorStore.getState().setDirty(true)
+
+      // Try to switch to different file
+      rerender(
+        <EditorRouter
+          filePath="note2.md"
+          content="Content 2"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Dialog should appear
+      await waitFor(() => {
+        expect(screen.getByText('Unsaved Changes')).toBeInTheDocument()
+      })
+
+      // Click "Don't Save"
+      const discardButton = screen.getByText("Don't Save")
+      await user.click(discardButton)
+
+      // Should switch to new file
+      await waitFor(() => {
+        expect(screen.queryByText('Unsaved Changes')).not.toBeInTheDocument()
+      })
+
+      // File should be marked as clean
+      expect(useEditorStore.getState().currentFile.isDirty).toBe(false)
+    })
+
+    it('should switch files when "Save" is clicked', async () => {
+      const user = userEvent.setup()
+      const { rerender } = render(
+        <EditorRouter
+          filePath="note1.md"
+          content="Content 1"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Mark file as dirty
+      useEditorStore.getState().setDirty(true)
+
+      // Try to switch to different file
+      rerender(
+        <EditorRouter
+          filePath="note2.md"
+          content="Content 2"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Dialog should appear
+      await waitFor(() => {
+        expect(screen.getByText('Unsaved Changes')).toBeInTheDocument()
+      })
+
+      // Click "Save"
+      const saveButton = screen.getByText('Save')
+      await user.click(saveButton)
+
+      // Should switch to new file
+      await waitFor(() => {
+        expect(screen.queryByText('Unsaved Changes')).not.toBeInTheDocument()
+      })
+
+      // File should be marked as clean
+      expect(useEditorStore.getState().currentFile.isDirty).toBe(false)
+    })
+
+    it('should stay on current file when "Cancel" is clicked', async () => {
+      const user = userEvent.setup()
+      const { rerender } = render(
+        <EditorRouter
+          filePath="note1.md"
+          content="Content 1"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Mark file as dirty
+      useEditorStore.getState().setDirty(true)
+
+      // Try to switch to different file
+      rerender(
+        <EditorRouter
+          filePath="note2.md"
+          content="Content 2"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Dialog should appear
+      await waitFor(() => {
+        expect(screen.getByText('Unsaved Changes')).toBeInTheDocument()
+      })
+
+      // Click "Cancel"
+      const cancelButton = screen.getByText('Cancel')
+      await user.click(cancelButton)
+
+      // Dialog should close
+      await waitFor(() => {
+        expect(screen.queryByText('Unsaved Changes')).not.toBeInTheDocument()
+      })
+
+      // Should still show original file (note1.md)
+      // Store state should still be dirty
+      expect(useEditorStore.getState().currentFile.isDirty).toBe(true)
+    })
+
+    it('should display correct filename in dialog', async () => {
+      const { rerender } = render(
+        <EditorRouter
+          filePath="/path/to/my-note.md"
+          content="Content 1"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Mark file as dirty
+      useEditorStore.getState().setDirty(true)
+
+      // Try to switch to different file
+      rerender(
+        <EditorRouter
+          filePath="note2.md"
+          content="Content 2"
+          onChange={mockOnChange}
+        />
+      )
+
+      // Dialog should show just the filename, not full path
+      await waitFor(() => {
+        expect(screen.getByText(/my-note\.md/)).toBeInTheDocument()
+      })
     })
   })
 })
