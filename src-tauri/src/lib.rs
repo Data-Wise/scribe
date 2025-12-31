@@ -1,8 +1,10 @@
 mod database;
 mod commands;
 mod academic;
+mod terminal;
 
 use commands::AppState;
+use terminal::ShellState;
 use database::Database;
 use std::sync::Mutex;
 use tauri::Manager;
@@ -34,6 +36,9 @@ pub fn run() {
       app.manage(AppState {
         db: Mutex::new(db),
       });
+
+      // Store shell state for terminal sessions
+      app.manage(ShellState::new());
 
       // Build the native menu
       build_menu(app)?;
@@ -107,6 +112,12 @@ pub fn run() {
       // Project settings
       commands::get_project_settings,
       commands::update_project_settings,
+      // Terminal PTY
+      terminal::spawn_shell,
+      terminal::write_to_shell,
+      terminal::resize_shell,
+      terminal::kill_shell,
+      terminal::list_shells,
     ])
 
 

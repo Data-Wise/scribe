@@ -100,6 +100,14 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
     }
 
     return () => {
+      // Clean up event listeners
+      const terminalCleanup = (window as unknown as { __terminalCleanup?: () => void }).__terminalCleanup
+      if (terminalCleanup) {
+        terminalCleanup()
+        delete (window as unknown as { __terminalCleanup?: () => void }).__terminalCleanup
+      }
+
+      // Kill shell in Tauri mode
       if (shellIdRef.current !== null && isTauri()) {
         api.killShell?.(shellIdRef.current).catch(() => {})
       }
@@ -146,7 +154,8 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
       // Spawn shell via Tauri command
       const result = await api.spawnShell?.()
       if (result && typeof result === 'object' && 'shell_id' in result) {
-        shellIdRef.current = result.shell_id as number
+        const shellId = result.shell_id as number
+        shellIdRef.current = shellId
         setIsConnected(true)
         onShellSpawned?.()
 
@@ -159,10 +168,47 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
           }
         })
 
-        // Listen for shell output
-        api.onShellOutput?.((output: string) => {
-          terminal.write(output)
+        // Listen for shell output (filtered by shell_id)
+        const unlistenOutput = api.onShellOutput?.((id: number, data: string) => {
+          if (id === shellId) {
+            terminal.write(data)
+          }
         })
+
+        // Listen for shell closed event
+        const unlistenClosed = api.onShellClosed?.((id: number) => {
+          if (id === shellId) {
+            terminal.writeln('\n\x1b[31mShell disconnected.\x1b[0m')
+            setIsConnected(false)
+            shellIdRef.current = null
+          }
+        })
+
+        // Update resize to use PTY resize
+        const resizeHandler = () => {
+          if (fitAddonRef.current && shellIdRef.current !== null) {
+            try {
+              fitAddonRef.current.fit()
+              const { rows, cols } = terminal
+              api.resizeShell?.(shellIdRef.current, rows, cols)
+            } catch {
+              // Ignore resize errors
+            }
+          }
+        }
+
+        // Initial resize
+        setTimeout(resizeHandler, 100)
+
+        // Return cleanup (will be called when component unmounts via useEffect return)
+        // Store in a ref for cleanup
+        const currentCleanup = () => {
+          unlistenOutput?.()
+          unlistenClosed?.()
+        }
+
+        // Register cleanup on the window for when terminal unmounts
+        ;(window as unknown as { __terminalCleanup?: () => void }).__terminalCleanup = currentCleanup
       } else {
         throw new Error('Failed to spawn shell')
       }

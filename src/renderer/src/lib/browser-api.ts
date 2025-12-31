@@ -563,9 +563,23 @@ export const browserApi = {
     // No-op in browser mode
   },
 
-  onShellOutput: (_callback: (output: string) => void): (() => void) => {
+  onShellOutput: (_callback: (shellId: number, data: string) => void): (() => void) => {
+    // No-op in browser mode - TerminalPanel uses browser shell emulation
+    return () => {}
+  },
+
+  onShellClosed: (_callback: (shellId: number) => void): (() => void) => {
     // No-op in browser mode
     return () => {}
+  },
+
+  resizeShell: async (_shellId: number, _rows: number, _cols: number): Promise<void> => {
+    // No-op in browser mode
+  },
+
+  listShells: async (): Promise<number[]> => {
+    // No shells in browser mode
+    return []
   }
 }
 
