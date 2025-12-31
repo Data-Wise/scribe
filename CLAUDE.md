@@ -93,13 +93,15 @@ git push origin v1.x.x
 |-------|------------|
 | Shell | **Tauri 2** (Rust backend) |
 | UI | React 18 |
-| Editor | BlockNote |
+| Editors | **Milkdown** (markdown/Quarto) + **Monaco** (LaTeX/R/code) |
 | Styling | Tailwind CSS |
-| State | Zustand |
+| State | Zustand (with persist) |
 | Database | SQLite (Tauri) / **IndexedDB** (Browser) |
 | AI | Claude/Gemini CLI only (NO API) |
 | Citations | Pandoc citeproc |
 | Math | KaTeX |
+| LaTeX | pdflatex/xelatex (via Tauri) |
+| R | Rscript (via Tauri) |
 
 ### Dual Runtime Support
 
@@ -111,6 +113,56 @@ Scribe runs in two modes with a unified API:
 | **Browser** | IndexedDB (Dexie.js) | `npm run dev:vite` | Testing, demos, development |
 
 The API factory (`src/renderer/src/lib/api.ts`) auto-switches based on runtime detection.
+
+### Hybrid Editor Architecture
+
+Scribe uses a **dual-editor system** that automatically routes files to the appropriate editor based on extension:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      EditorRouter                            │
+│              (detects file extension)                        │
+└─────────────────┬───────────────────────┬───────────────────┘
+                  │                       │
+      ┌───────────▼──────────┐  ┌────────▼──────────────┐
+      │  Milkdown Editor     │  │  Monaco Editor        │
+      │  (.md, .qmd)         │  │  (.tex, .R, .py)      │
+      └──────────────────────┘  └───────────────────────┘
+                  │                       │
+      ┌───────────▼──────────┐  ┌────────▼──────────────┐
+      │  @milkdown/plugin-   │  │  LaTeX Compilation    │
+      │  math (KaTeX)        │  │  - PDF preview        │
+      │  @milkdown/plugin-   │  │  - Auto-compile       │
+      │  prism (syntax)      │  │  - Error display      │
+      │                      │  │                       │
+      │  [Future]            │  │  R Execution          │
+      │  - R chunk exec      │  │  - Run chunks         │
+      │  - Inline output     │  │  - Plot display       │
+      └──────────────────────┘  └───────────────────────┘
+```
+
+**Editor Routing:**
+- `.md`, `.qmd` → **MilkdownEditor** (live markdown preview)
+- `.tex` → **MonacoCodeEditor** (LaTeX mode + compilation + PDF preview)
+- `.R`, `.py` → **MonacoCodeEditor** (code mode + execution)
+- Other → **PlainTextEditor** (fallback)
+
+**Key Features:**
+1. **Automatic Routing**: Files open in the correct editor automatically
+2. **State Persistence**: Cursor/scroll positions saved via Zustand
+3. **Unsaved Changes Protection**: Dialog warns when switching files with unsaved changes
+4. **LaTeX Compilation**: Cmd+B compiles, side-by-side PDF preview
+5. **R Execution**: Cmd+Enter runs code, inline output with plots
+6. **Auto-compile**: Optional 2.5s debounced auto-compile for LaTeX
+
+**Implementation Files:**
+- `EditorRouter.tsx` - Routes files to appropriate editor
+- `MilkdownEditor.tsx` - Markdown/Quarto editor (live preview)
+- `MonacoCodeEditor.tsx` - LaTeX/R/code editor (syntax highlighting)
+- `ROutputDisplay.tsx` - R execution results (plots, stdout, stderr)
+- `UnsavedChangesDialog.tsx` - Unsaved changes warning
+- `editorStore.ts` - Zustand state management
+- `src-tauri/src/academic.rs` - Rust backend (LaTeX, R execution)
 
 ---
 
@@ -129,7 +181,12 @@ scribe/
 │   └── renderer/src/              # React frontend
 │       ├── components/
 │       │   ├── MissionControl/    # Mission Control HUD sidebar
-│       │   ├── Editor/            # BlockNote editor
+│       │   ├── EditorRouter.tsx   # Hybrid editor routing
+│       │   ├── MilkdownEditor.tsx # Markdown/Quarto editor
+│       │   ├── MonacoCodeEditor.tsx # LaTeX/R/code editor
+│       │   ├── ROutputDisplay.tsx # R execution output
+│       │   ├── UnsavedChangesDialog.tsx # Unsaved changes warning
+│       │   ├── PdfViewer.tsx      # PDF preview component
 │       │   └── ...
 │       ├── lib/                   # Core utilities
 │       │   ├── api.ts             # API factory (Tauri/Browser)
@@ -137,7 +194,9 @@ scribe/
 │       │   ├── browser-api.ts     # IndexedDB API (46 operations)
 │       │   ├── browser-db.ts      # Dexie.js schema + seed data
 │       │   └── browser-dialogs.ts # Browser dialog fallbacks
-│       ├── store/                 # Zustand state
+│       ├── store/
+│       │   ├── editorStore.ts     # Editor state (Milkdown + Monaco)
+│       │   └── ...                # Other Zustand stores
 │       └── types/                 # TypeScript types
 ```
 
@@ -174,24 +233,48 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Work: Sprint 26 Complete
+## 🎯 Current Work: Hybrid Editor Complete
 
-**Branch:** `main` (Sprint 26 merged)
+**Branch:** `feat/live-editor-enhancements` (ready for PR to dev)
 
-**Sprint 26 Completed:**
-- ✅ Mission Control sidebar with Icon/Compact/Card modes
-- ✅ Browser mode with full IndexedDB persistence
-- ✅ API factory for Tauri/Browser switching
-- ✅ Demo seed data for new browser users
-- ✅ CLI `scribe browser` command
-- ✅ Activity Bar badges (note counts)
-- ✅ Tauri API serialization fixes (properties)
-- ✅ Daily note Today button fix
-- ✅ Error toast persistence with copy button
+**Hybrid Editor Implementation (4 weeks):**
 
-**Ready for Next Sprint:**
-- [ ] Browser mode indicator in UI
-- [ ] Wiki link backlink tracking in browser
+**Week 1-2: Core Editors ✅**
+- ✅ EditorRouter with automatic file routing (.md/.qmd/.tex/.R/.py)
+- ✅ MilkdownEditor for markdown/Quarto files
+- ✅ MonacoCodeEditor for LaTeX/R/code files
+- ✅ LaTeX compilation backend (pdflatex/xelatex)
+- ✅ PDF preview component with side-by-side layout
+- ✅ Auto-compile on save (2.5s debounce)
+- ✅ Cmd+B keyboard shortcut for LaTeX compilation
+
+**Week 3: R/Quarto Support ✅**
+- ✅ R execution backend (Rscript via Tauri)
+- ✅ Plot capture mechanism (base64 PNG transport)
+- ✅ ROutputDisplay component (plots, stdout, stderr, errors)
+- ✅ Cmd+Enter keyboard shortcut for R execution
+- ✅ Inline output display below code
+- ✅ Clear output button functionality
+
+**Week 4: UX + Testing ✅**
+- ✅ Monaco cursor/scroll position persistence (Zustand)
+- ✅ UnsavedChangesDialog (Save/Discard/Cancel)
+- ✅ File switching protection for unsaved changes
+- ✅ EditorRouter tests (21 tests - unsaved changes dialog)
+- ✅ MonacoCodeEditor tests (24 tests - LaTeX + R features)
+- ✅ All 895 tests passing
+- ✅ Documentation (CLAUDE.md updates)
+
+**Test Coverage:**
+- EditorRouter: File routing, editor switching, unsaved changes
+- MonacoCodeEditor: LaTeX compilation, R execution, state management
+- Edge cases: null paths, empty content, error handling
+
+**Ready for Merge:**
+- All features implemented and tested
+- 895 tests passing
+- Documentation complete
+- No breaking changes
 
 ---
 
