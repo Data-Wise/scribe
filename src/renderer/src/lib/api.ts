@@ -214,11 +214,11 @@ const tauriApi = {
   },
 
   // AI operations
-  runClaude: (prompt: string): Promise<string> =>
-    invoke('run_claude', { prompt }),
+  runClaude: (prompt: string, context?: string): Promise<string> =>
+    invoke('run_claude', { prompt, context }),
 
-  runGemini: (prompt: string): Promise<string> =>
-    invoke('run_gemini', { prompt }),
+  runGemini: (prompt: string, context?: string): Promise<string> =>
+    invoke('run_gemini', { prompt, context }),
 
   getOrCreateDailyNote: async (date: string): Promise<Note> => {
     const result = await invoke<Note>('get_or_create_daily_note', { date })

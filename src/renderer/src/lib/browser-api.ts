@@ -345,11 +345,11 @@ export const browserApi = {
   // AI Operations (Browser stubs - no CLI access)
   // ============================================================================
 
-  runClaude: async (_prompt: string): Promise<string> => {
+  runClaude: async (_prompt: string, _context?: string): Promise<string> => {
     return 'AI features require the native Tauri app. Please run `npm run dev` instead of `npm run dev:vite`.'
   },
 
-  runGemini: async (_prompt: string): Promise<string> => {
+  runGemini: async (_prompt: string, _context?: string): Promise<string> => {
     return 'AI features require the native Tauri app. Please run `npm run dev` instead of `npm run dev:vite`.'
   },
 

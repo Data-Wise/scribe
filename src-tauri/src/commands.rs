@@ -359,42 +359,96 @@ pub fn get_project_note_count(
 
 // AI commands
 
+/// Check if a CLI tool is available in PATH
+fn check_cli_available(tool: &str) -> Result<(), String> {
+    Command::new("which")
+        .arg(tool)
+        .output()
+        .map_err(|_| format!("{} CLI not found. Please install it first.", tool))
+        .and_then(|output| {
+            if output.status.success() {
+                Ok(())
+            } else {
+                Err(format!(
+                    "{} CLI not found in PATH. Please install it and ensure it's accessible.\n\
+                    For Claude: https://github.com/anthropics/claude-code\n\
+                    For Gemini: https://ai.google.dev/gemini-api/docs/cli",
+                    tool
+                ))
+            }
+        })
+}
+
 #[tauri::command]
-pub fn run_claude(prompt: String) -> Result<String, String> {
+pub fn run_claude(prompt: String, context: Option<String>) -> Result<String, String> {
+    // Check if Claude CLI is available
+    check_cli_available("claude")?;
+
+    // Build full prompt with context if provided
+    let full_prompt = if let Some(ctx) = context {
+        format!("Context:\n{}\n\nPrompt:\n{}", ctx, prompt)
+    } else {
+        prompt
+    };
+
     // Use --print for non-interactive output
     let output = Command::new("claude")
-        .args(["--print", &prompt])
+        .args(["--print", &full_prompt])
         .output()
         .map_err(|e| format!("Failed to execute claude CLI: {}", e))?;
 
     if output.status.success() {
-        Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+        let stdout = match String::from_utf8(output.stdout.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stdout).to_string(),
+        };
+        Ok(stdout.trim().to_string())
     } else {
-        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        let stderr = match String::from_utf8(output.stderr.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stderr).to_string(),
+        };
         if stderr.is_empty() {
-            Err("Claude CLI returned an error".to_string())
+            Err("Claude CLI returned an error with no details".to_string())
         } else {
-            Err(stderr)
+            Err(format!("Claude CLI error: {}", stderr.trim()))
         }
     }
 }
 
 #[tauri::command]
-pub fn run_gemini(prompt: String) -> Result<String, String> {
+pub fn run_gemini(prompt: String, context: Option<String>) -> Result<String, String> {
+    // Check if Gemini CLI is available
+    check_cli_available("gemini")?;
+
+    // Build full prompt with context if provided
+    let full_prompt = if let Some(ctx) = context {
+        format!("Context:\n{}\n\nPrompt:\n{}", ctx, prompt)
+    } else {
+        prompt
+    };
+
     // Gemini CLI (google-generativeai or similar)
     let output = Command::new("gemini")
-        .arg(&prompt)
+        .arg(&full_prompt)
         .output()
         .map_err(|e| format!("Failed to execute gemini CLI: {}", e))?;
 
     if output.status.success() {
-        Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+        let stdout = match String::from_utf8(output.stdout.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stdout).to_string(),
+        };
+        Ok(stdout.trim().to_string())
     } else {
-        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        let stderr = match String::from_utf8(output.stderr.clone()) {
+            Ok(s) => s,
+            Err(_) => String::from_utf8_lossy(&output.stderr).to_string(),
+        };
         if stderr.is_empty() {
-            Err("Gemini CLI returned an error".to_string())
+            Err("Gemini CLI returned an error with no details".to_string())
         } else {
-            Err(stderr)
+            Err(format!("Gemini CLI error: {}", stderr.trim()))
         }
     }
 }
