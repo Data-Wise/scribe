@@ -361,29 +361,41 @@ pub fn get_project_note_count(
 
 #[tauri::command]
 pub fn run_claude(prompt: String) -> Result<String, String> {
+    // Use --print for non-interactive output
     let output = Command::new("claude")
-        .arg(prompt)
+        .args(["--print", &prompt])
         .output()
         .map_err(|e| format!("Failed to execute claude CLI: {}", e))?;
-    
+
     if output.status.success() {
         Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
     } else {
-        Err(String::from_utf8_lossy(&output.stderr).trim().to_string())
+        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        if stderr.is_empty() {
+            Err("Claude CLI returned an error".to_string())
+        } else {
+            Err(stderr)
+        }
     }
 }
 
 #[tauri::command]
 pub fn run_gemini(prompt: String) -> Result<String, String> {
+    // Gemini CLI (google-generativeai or similar)
     let output = Command::new("gemini")
-        .arg(prompt)
+        .arg(&prompt)
         .output()
         .map_err(|e| format!("Failed to execute gemini CLI: {}", e))?;
-    
+
     if output.status.success() {
         Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
     } else {
-        Err(String::from_utf8_lossy(&output.stderr).trim().to_string())
+        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        if stderr.is_empty() {
+            Err("Gemini CLI returned an error".to_string())
+        } else {
+            Err(stderr)
+        }
     }
 }
 

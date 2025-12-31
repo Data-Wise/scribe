@@ -273,11 +273,20 @@ tags:
 
 | Sprint | Focus | Priority | Status |
 |--------|-------|----------|--------|
-| 26/27 | Playwright E2E Testing | P2 | 📋 Planned |
+| 27 | Sidebar Consolidation + AI | P1 | 📋 Planned |
 | TBD | SwiftUI Native Port | P3 | 📋 Researched |
 
-**Playwright E2E:** Add 20-30 E2E tests for user journeys, context menus, state reactivity.
-See: `docs/planning/FUTURE-PLAYWRIGHT-E2E.md`
+### v2 Deferred Features
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Terminal PTY Shell | UI ✅, Backend ⏳ | Rust `terminal.rs` with PTY support |
+| Actual AI Calls | Planned | Claude/Gemini CLI integration via Tauri |
+| Ambient AI (⌘K) | Planned | Inline suggestions, ghost text |
+| Graph View Enhancements | Planned | Advanced filtering, clustering |
+
+**Terminal v2:** Full PTY shell requires `spawn_shell`, `write_to_shell`, `kill_shell` Rust commands.
+Currently shows demo mode with basic commands (help, echo, clear, date, whoami).
 
 **SwiftUI Port:** Parallel development branch for native macOS experience.
 See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swiftui-native`

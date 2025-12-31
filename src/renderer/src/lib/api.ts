@@ -6,6 +6,7 @@
  */
 
 import { invoke as tauriInvoke } from '@tauri-apps/api/core'
+import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { isTauri, logPlatformInfo } from './platform'
 import { browserApi } from './browser-api'
 import { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types'
@@ -308,13 +309,50 @@ const tauriApi = {
   killShell: (shellId: number): Promise<void> =>
     invoke('kill_shell', { shellId }),
 
-  onShellOutput: (_callback: (output: string) => void): (() => void) => {
-    // This will be set up via Tauri event listener
-    // For now, return a no-op cleanup function
-    // TODO: Implement with @tauri-apps/api/event
-    console.warn('Shell output listener not yet implemented')
-    return () => {}
-  }
+  onShellOutput: (callback: (shellId: number, data: string) => void): (() => void) => {
+    // Set up Tauri event listener for shell output
+    let unlisten: UnlistenFn | null = null
+
+    listen<{ shell_id: number; data: string }>('shell-output', (event) => {
+      callback(event.payload.shell_id, event.payload.data)
+    }).then((fn) => {
+      unlisten = fn
+    }).catch((err) => {
+      console.error('Failed to set up shell output listener:', err)
+    })
+
+    // Return cleanup function
+    return () => {
+      if (unlisten) {
+        unlisten()
+      }
+    }
+  },
+
+  onShellClosed: (callback: (shellId: number) => void): (() => void) => {
+    // Listen for shell closed events
+    let unlisten: UnlistenFn | null = null
+
+    listen<{ shell_id: number }>('shell-closed', (event) => {
+      callback(event.payload.shell_id)
+    }).then((fn) => {
+      unlisten = fn
+    }).catch((err) => {
+      console.error('Failed to set up shell closed listener:', err)
+    })
+
+    return () => {
+      if (unlisten) {
+        unlisten()
+      }
+    }
+  },
+
+  resizeShell: (shellId: number, rows: number, cols: number): Promise<void> =>
+    invoke('resize_shell', { shellId, rows, cols }),
+
+  listShells: (): Promise<number[]> =>
+    invoke('list_shells')
 }
 
 // ============================================================================
@@ -465,7 +503,10 @@ export const api = {
   spawnShell: rawApi.spawnShell,  // No toast - TerminalPanel falls back to browser mode
   writeToShell: withErrorToast(rawApi.writeToShell, 'Terminal write failed'),
   killShell: withErrorToast(rawApi.killShell, 'Failed to close terminal'),
-  onShellOutput: rawApi.onShellOutput
+  onShellOutput: rawApi.onShellOutput,
+  onShellClosed: rawApi.onShellClosed,
+  resizeShell: withErrorToast(rawApi.resizeShell, 'Terminal resize failed', true),
+  listShells: withErrorToast(rawApi.listShells, 'Failed to list shells', true)
 }
 
 // ============================================================================
