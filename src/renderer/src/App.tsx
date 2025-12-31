@@ -800,8 +800,8 @@ function App() {
         }
       }
 
-      // Terminal tab shortcut (⌘`) - toggle or switch to Terminal
-      if ((e.metaKey || e.ctrlKey) && e.key === '`') {
+      // Terminal tab shortcut (⌘⌥T) - toggle or switch to Terminal
+      if ((e.metaKey || e.ctrlKey) && e.altKey && !e.shiftKey && e.key === 't') {
         e.preventDefault()
         // If already on Terminal and sidebar is open, close it
         if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
