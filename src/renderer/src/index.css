@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 /* Import rehype-callouts official Obsidian theme */
-@import 'rehype-callouts/theme/obsidian';
+@import 'rehype-callouts/dist/themes/obsidian/index.css';
 
 /* ============================================================
    ADHD-Friendly Theme System
