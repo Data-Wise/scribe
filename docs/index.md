@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.2.0-blue)]()
-[![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.2.1-blue)]()
+[![Progress](https://img.shields.io/badge/progress-55%25-yellow)]()
+[![Tests](https://img.shields.io/badge/tests-1041%20passing-brightgreen)]()
 
 ---
 
@@ -147,6 +147,8 @@ npm run dev
 - [Dual-Mode Architecture](DUAL-MODE-ARCHITECTURE.md) - Tauri/Browser runtime
 - [Components](COMPONENTS.md) - React component reference
 - [Tests Summary](reference/TESTS_SUMMARY.md) - Test coverage details
+- [Tauri/Browser Feature Review](TAURI-BROWSER-FEATURE-REVIEW.md) - Feature parity audit
+- [Tauri WebDriver Research](TAURI-WEBDRIVER-RESEARCH.md) - E2E testing research
 
 ### Project
 
