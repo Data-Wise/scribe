@@ -41,17 +41,19 @@ main (protected) ← PR from dev only
 ### Worktree Commands
 
 ```bash
+# Worktree location: ~/.git-worktrees/scribe/
+
 # Create feature branch with worktree
-git worktree add ../scribe-feat-name -b feat/feature-name dev
+git worktree add ~/.git-worktrees/scribe/feat-name -b feat/feature-name dev
 
 # Work in the worktree directory
-cd ../scribe-feat-name
+cd ~/.git-worktrees/scribe/feat-name
 
 # When done, create PR to dev
 gh pr create --base dev --head feat/feature-name
 
 # After PR merged, clean up worktree
-git worktree remove ../scribe-feat-name
+git worktree remove ~/.git-worktrees/scribe/feat-name
 ```
 
 ### PR Flow
