@@ -154,13 +154,26 @@ export const markdownLivePreview = ViewPlugin.fromClass(
   class {
     decorations: DecorationSet
     cursorLine: number
+    isInitialized: boolean
 
     constructor(view: EditorView) {
       this.cursorLine = view.state.doc.lineAt(view.state.selection.main.head).number
-      this.decorations = buildDecorations(view)
+      // Start with empty decorations for smooth initial render
+      this.decorations = Decoration.none
+      this.isInitialized = false
+
+      // Defer initial decoration build to avoid blocking UI thread
+      requestAnimationFrame(() => {
+        this.isInitialized = true
+        this.decorations = buildDecorations(view)
+        view.update([]) // Force a view update to apply decorations
+      })
     }
 
     update(update: ViewUpdate) {
+      // Skip updates until initialized
+      if (!this.isInitialized) return
+
       // Only rebuild decorations if document changed or cursor moved to a different line
       const newCursorLine = update.state.doc.lineAt(update.state.selection.main.head).number
       const cursorLineChanged = newCursorLine !== this.cursorLine
