@@ -2,10 +2,11 @@ import { useRef, useState, useEffect } from 'react'
 import Editor, { OnMount } from '@monaco-editor/react'
 import type { editor as MonacoEditorType } from 'monaco-editor'
 import { useEditorStore, getMonacoLanguage } from '../store/editorStore'
-import { FileCode, FileOutput, Loader2 } from 'lucide-react'
+import { FileCode, FileOutput, Loader2, Play } from 'lucide-react'
 import { PdfViewer } from './PdfViewer'
+import { ROutputDisplay } from './ROutputDisplay'
 import { api } from '../lib/api'
-import type { LatexCompileResult } from '../lib/api'
+import type { LatexCompileResult, RExecutionResult } from '../lib/api'
 
 /**
  * MonacoCodeEditor - Code editor with syntax highlighting
@@ -43,7 +44,12 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
   const [showPdfPreview, setShowPdfPreview] = useState(true)
   const [autoCompile, setAutoCompile] = useState(true)
 
+  // R execution state
+  const [isExecutingR, setIsExecutingR] = useState(false)
+  const [rExecutionResult, setRExecutionResult] = useState<RExecutionResult | null>(null)
+
   const isLatexFile = language === 'latex'
+  const isRFile = language === 'r'
 
   // Auto-compile on save (debounced 2.5 seconds)
   useEffect(() => {
@@ -102,6 +108,12 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
 
     // R-specific configuration
     if (language === 'r') {
+      // Register Cmd+Enter for R chunk execution
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+        console.log('[R] Cmd+Enter pressed, triggering execution...')
+        handleExecuteR()
+      })
+
       monaco.languages.registerCompletionItemProvider('r', {
         provideCompletionItems: () => {
           // TODO: Add R-specific autocomplete suggestions
@@ -142,6 +154,34 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
     } finally {
       setIsCompiling(false)
     }
+  }
+
+  const handleExecuteR = async () => {
+    if (!content.trim()) return
+
+    setIsExecutingR(true)
+    try {
+      const result = await api.executeRChunk({
+        code: content,
+        capturePlots: true
+      })
+
+      setRExecutionResult(result)
+
+      if (result.success) {
+        console.log('[R] Execution successful:', result)
+      } else {
+        console.error('[R] Execution failed:', result.error)
+      }
+    } catch (error) {
+      console.error('[R] Execution error:', error)
+    } finally {
+      setIsExecutingR(false)
+    }
+  }
+
+  const handleClearROutput = () => {
+    setRExecutionResult(null)
   }
 
   const togglePdfPreview = () => {
@@ -201,6 +241,37 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
                   className="px-3 py-1 text-xs bg-nexus-bg-primary text-nexus-text-primary rounded hover:bg-nexus-accent hover:text-white transition-colors"
                 >
                   {showPdfPreview ? 'Hide Preview' : 'Show Preview'}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* R controls */}
+          {isRFile && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleExecuteR}
+                disabled={isExecutingR}
+                className="flex items-center gap-1 px-3 py-1 text-xs bg-nexus-accent text-white rounded hover:bg-nexus-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isExecutingR ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <span>Running...</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3 h-3" />
+                    <span>Run Code (Cmd+Enter)</span>
+                  </>
+                )}
+              </button>
+              {rExecutionResult && (
+                <button
+                  onClick={handleClearROutput}
+                  className="px-3 py-1 text-xs bg-nexus-bg-primary text-nexus-text-primary rounded hover:bg-red-500 hover:text-white transition-colors"
+                >
+                  Clear Output
                 </button>
               )}
             </div>
@@ -271,16 +342,9 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
         </div>
       )}
 
-      {/* Footer - R-specific actions (TODO: Week 3) */}
-      {language === 'r' && (
-        <div className="flex-none px-4 py-2 bg-nexus-bg-secondary border-t border-nexus-border">
-          <div className="flex items-center gap-4 text-xs text-nexus-text-muted">
-            <span>R features coming in Week 3:</span>
-            <span>• Run chunk (Cmd+Enter)</span>
-            <span>• Inline output</span>
-            <span>• Plot display</span>
-          </div>
-        </div>
+      {/* Footer - R output display */}
+      {isRFile && rExecutionResult && (
+        <ROutputDisplay result={rExecutionResult} onClear={handleClearROutput} />
       )}
     </div>
   )
