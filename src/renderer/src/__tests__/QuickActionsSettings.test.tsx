@@ -42,6 +42,13 @@ vi.mock('../store/useSettingsStore', () => ({
   QuickAction: {} as any
 }))
 
+// Mock the Toast component
+vi.mock('../components/Toast', () => ({
+  useToast: () => ({
+    showToast: vi.fn()
+  })
+}))
+
 const mockQuickActions: QuickAction[] = [
   {
     id: 'improve',
