@@ -5,13 +5,45 @@
  * based on runtime environment detection.
  */
 
-import { invoke } from '@tauri-apps/api/core'
+import { invoke as tauriInvoke } from '@tauri-apps/api/core'
 import { isTauri, logPlatformInfo } from './platform'
 import { browserApi } from './browser-api'
 import { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types'
 
 // Log platform on first import
 logPlatformInfo()
+
+// ============================================================================
+// Enhanced Tauri Invoke with Error Logging
+// ============================================================================
+
+/**
+ * Wrapped invoke that logs all Tauri command calls and errors.
+ * Provides detailed error context for debugging.
+ */
+async function invoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
+  const startTime = performance.now()
+
+  try {
+    console.debug(`[Tauri] → ${cmd}`, args ? JSON.stringify(args).slice(0, 200) : '(no args)')
+    const result = await tauriInvoke<T>(cmd, args)
+    const duration = (performance.now() - startTime).toFixed(1)
+    console.debug(`[Tauri] ✓ ${cmd} (${duration}ms)`)
+    return result
+  } catch (error) {
+    const duration = (performance.now() - startTime).toFixed(1)
+    const errorMsg = error instanceof Error ? error.message : String(error)
+
+    // Log detailed error information
+    console.error(`[Tauri] ✗ ${cmd} FAILED (${duration}ms)`)
+    console.error(`[Tauri]   Command: ${cmd}`)
+    console.error(`[Tauri]   Args: ${JSON.stringify(args, null, 2)}`)
+    console.error(`[Tauri]   Error: ${errorMsg}`)
+
+    // Re-throw with enhanced message
+    throw new Error(`Tauri command '${cmd}' failed: ${errorMsg}`)
+  }
+}
 
 // ============================================================================
 // Type Exports
@@ -370,4 +402,52 @@ export const api = {
   writeToShell: withErrorToast(rawApi.writeToShell, 'Terminal write failed'),
   killShell: withErrorToast(rawApi.killShell, 'Failed to close terminal'),
   onShellOutput: rawApi.onShellOutput
+}
+
+// ============================================================================
+// Startup Diagnostics
+// ============================================================================
+
+/**
+ * Run comprehensive API diagnostics on startup.
+ * Tests all critical endpoints and logs any failures.
+ */
+export async function runApiDiagnostics(): Promise<void> {
+  if (!isTauri()) {
+    console.log('[Diagnostics] Running in Browser mode - skipping Tauri checks')
+    return
+  }
+
+  console.group('[Scribe Diagnostics] Testing Tauri API endpoints...')
+  const results: { endpoint: string; status: 'ok' | 'error'; error?: string }[] = []
+
+  // Test critical read operations
+  const tests = [
+    { name: 'listNotes', fn: () => rawApi.listNotes() },
+    { name: 'listProjects', fn: () => rawApi.listProjects() },
+    { name: 'getAllTags', fn: () => rawApi.getAllTags() },
+    { name: 'getFolders', fn: () => rawApi.getFolders() },
+  ]
+
+  for (const test of tests) {
+    try {
+      await test.fn()
+      results.push({ endpoint: test.name, status: 'ok' })
+      console.log(`  ✓ ${test.name}`)
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error)
+      results.push({ endpoint: test.name, status: 'error', error: errorMsg })
+      console.error(`  ✗ ${test.name}: ${errorMsg}`)
+    }
+  }
+
+  const failed = results.filter(r => r.status === 'error')
+  if (failed.length > 0) {
+    console.error(`[Diagnostics] ${failed.length} endpoint(s) failed!`)
+    console.table(failed)
+  } else {
+    console.log('[Diagnostics] All endpoints healthy ✓')
+  }
+
+  console.groupEnd()
 }
