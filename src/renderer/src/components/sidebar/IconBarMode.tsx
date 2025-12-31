@@ -124,6 +124,16 @@ function ProjectIconButton({ project, isActive, noteCount, onClick }: ProjectIco
       {/* Status dot */}
       <StatusDot status={status} size="md" />
 
+      {/* Note count badge */}
+      {noteCount > 0 && (
+        <span
+          className="icon-badge"
+          data-testid={`project-badge-${project.id}`}
+        >
+          {noteCount > 99 ? '99+' : noteCount}
+        </span>
+      )}
+
       {/* Active indicator */}
       {isActive && <span className="active-indicator" />}
     </button>
