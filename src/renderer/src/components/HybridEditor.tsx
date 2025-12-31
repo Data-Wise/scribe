@@ -692,8 +692,9 @@ function MarkdownPreview({
                 type="checkbox"
                 checked={checked}
                 onChange={(e) => {
+                  e.preventDefault()
                   e.stopPropagation()
-                  onCheckboxToggle?.(currentIndex, e.target.checked)
+                  onCheckboxToggle?.(currentIndex, !checked)
                 }}
                 className="task-checkbox cursor-pointer accent-[var(--nexus-accent)]"
                 style={{
