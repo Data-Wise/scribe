@@ -9,11 +9,45 @@ import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
 import { WritingProgress } from './WritingProgress'
 import { QuickChatPopover } from './QuickChatPopover'
-// CodeMirrorLivePreview removed - will be replaced by Milkdown in hybrid editor migration
+import { EditorRouter } from './EditorRouter'
 import { processMathInContent } from '../lib/mathjax'
 import { isBrowser } from '../lib/platform'
 import { Note, Tag } from '../types'
 import { EditorMode } from '../lib/preferences'
+
+/**
+ * Extracts file type from note content for editor routing
+ *
+ * Strategy:
+ * 1. Check YAML frontmatter for 'file_type' property
+ * 2. Check first line for filename-like title (e.g., "# document.tex")
+ * 3. Default to .md (markdown)
+ */
+function getFilePathForNote(content: string): string | null {
+  // Check YAML frontmatter for file_type
+  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/)
+  if (frontmatterMatch) {
+    const yamlContent = frontmatterMatch[1]
+    const fileTypeMatch = yamlContent.match(/file_type:\s*['"]?(\w+)['"]?/)
+    if (fileTypeMatch) {
+      return `note.${fileTypeMatch[1]}`
+    }
+  }
+
+  // Check first line for filename-like title
+  const firstLine = content.split('\n')[0]
+  if (firstLine.startsWith('# ')) {
+    const title = firstLine.substring(2).trim()
+    // Check for file extension in title
+    const extMatch = title.match(/\.(tex|R|py|js|ts|json|qmd)$/i)
+    if (extMatch) {
+      return title
+    }
+  }
+
+  // Default to markdown
+  return 'note.md'
+}
 
 interface HybridEditorProps {
   content: string
@@ -474,20 +508,12 @@ export function HybridEditor({
             spellCheck={false}
           />
         ) : mode === 'live-preview' ? (
-          /* Live Preview mode: Temporarily disabled - migration to Milkdown in progress */
-          <div className="flex items-center justify-center h-full text-nexus-text-muted">
-            <div className="text-center space-y-4 max-w-md">
-              <Sparkles className="w-12 h-12 mx-auto opacity-50" />
-              <h3 className="text-lg font-medium">Live Preview Migration in Progress</h3>
-              <p className="text-sm">
-                Live Preview mode is being migrated to a new dual-editor architecture
-                with Milkdown (for markdown) and Monaco (for LaTeX/code).
-              </p>
-              <p className="text-xs opacity-70">
-                For now, please use Source or Reading mode. See PLAN-HYBRID-EDITOR.md for details.
-              </p>
-            </div>
-          </div>
+          /* Live Preview mode: Hybrid editor with Milkdown/Monaco routing */
+          <EditorRouter
+            filePath={getFilePathForNote(content)}
+            content={content}
+            onChange={onChange}
+          />
         ) : (
           /* Reading mode: fully rendered, read-only */
           <div
