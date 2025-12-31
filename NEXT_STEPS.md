@@ -38,22 +38,27 @@
 
 Choose ONE to implement next:
 
-### Option J: Terminal Tab (xterm.js) 🔧
-**Effort:** Medium (2-3 hours)
-**ADHD Rating:** ⭐⭐⭐
+### Option J: Terminal Tab (xterm.js) ✅ UI Complete
+**Status:** UI complete, PTY backend deferred to v2
 
 ```
 [Props] [Links] [Tags] [Stats] [Claude] [>_ Term]
 ```
 
-- [ ] Install `@nickelittle/react-xtermjs`, `xterm-addon-fit`, `xterm-addon-web-links`
-- [ ] Create `TerminalPanel.tsx` component
-- [ ] Add Tauri commands: `spawn_shell`, `write_to_shell`, `read_shell`
-- [ ] Theme integration (Scribe dark colors)
-- [ ] Browser mode fallback (limited commands or disabled)
-- [ ] E2E tests for terminal tab
+**Completed:**
+- [x] Install `@xterm/xterm`, `@xterm/addon-fit`, `@xterm/addon-web-links`
+- [x] Create `TerminalPanel.tsx` component
+- [x] Theme integration (Scribe dark colors)
+- [x] Browser mode fallback (demo shell with basic commands)
+- [x] 14 unit tests, 12 E2E tests
 
-**Use cases:** `claude "improve intro"`, `quarto render`, `git status`
+**Deferred to v2 (Full PTY Shell):**
+- [ ] Create `src-tauri/src/terminal.rs` with PTY support
+- [ ] Implement Rust commands: `spawn_shell`, `write_to_shell`, `kill_shell`
+- [ ] Add shell output event emitter to frontend
+- [ ] Remove demo mode fallback once PTY works
+
+**Use cases (v2):** `claude "improve intro"`, `quarto render`, `git status`
 
 ### Option G: Ambient AI (⌘K Everywhere) 🏗️
 **Effort:** Large (4-5 hours)
