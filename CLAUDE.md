@@ -20,6 +20,45 @@ Before making ANY changes, read:
 
 ---
 
+## 🔀 Git Workflow (Protected Main)
+
+**Main branch is protected.** Always work from `dev` or feature branches.
+
+```
+main (protected) ← PR only
+  └── dev ← daily work
+       └── feat/* ← feature branches
+```
+
+### Rules
+
+1. **Never commit directly to main** — Use PRs
+2. **Start work from dev**: `git checkout dev && git pull`
+3. **Feature branches**: `git checkout -b feat/feature-name`
+4. **Merge to dev first**, then PR to main
+5. **Tag releases on main** after PR merge
+
+### Common Commands
+
+```bash
+# Start new feature
+git checkout dev && git pull
+git checkout -b feat/my-feature
+
+# Finish feature → merge to dev
+git checkout dev && git merge feat/my-feature
+git push origin dev
+
+# Release → PR to main, then tag
+gh pr create --base main --head dev
+# After merge:
+git checkout main && git pull
+git tag -a v1.x.x -m "Release notes"
+git push origin v1.x.x
+```
+
+---
+
 ## 🧠 ADHD Principles (Override All Decisions)
 
 1. **Zero Friction** — < 3 seconds to start writing
