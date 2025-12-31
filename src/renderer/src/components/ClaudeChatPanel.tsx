@@ -280,6 +280,73 @@ export function ClaudeChatPanel({
     setReferencedNotes([])
   }, [])
 
+  // Quick action handler - runs pre-defined AI prompts
+  const handleQuickAction = useCallback(async (action: string) => {
+    if (isLoading || !noteContext) return
+
+    const actionPrompts: Record<string, string> = {
+      improve: 'Improve clarity and flow',
+      expand: 'Expand on this idea',
+      summarize: 'Summarize in 2-3 sentences',
+      explain: 'Explain this simply',
+      research: 'What does research say about this?'
+    }
+
+    const prompt = actionPrompts[action]
+    if (!prompt) return
+
+    setInput(prompt)
+
+    // Build context from current note and referenced notes
+    const contexts: string[] = []
+    contexts.push(`Current note: "${noteContext.title}"\n${noteContext.content.slice(0, 800)}${noteContext.content.length > 800 ? '...' : ''}`)
+
+    // Add referenced notes
+    referencedNotes.forEach(note => {
+      contexts.push(`Referenced note: "${note.title}"\n${note.content.slice(0, 500)}${note.content.length > 500 ? '...' : ''}`)
+    })
+
+    const fullPrompt = `Context:\n${contexts.join('\n\n---\n\n')}\n\nQuestion: ${prompt}`
+
+    // Create user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: prompt,
+      timestamp: new Date()
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setIsLoading(true)
+
+    try {
+      const aiResponse = onSubmit
+        ? await onSubmit(fullPrompt)
+        : await api.runClaude(fullPrompt)
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: aiResponse,
+        timestamp: new Date()
+      }
+
+      setMessages(prev => [...prev, assistantMessage])
+    } catch (error) {
+      console.error('AI request failed:', error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+      setInput('')
+    }
+  }, [isLoading, noteContext, referencedNotes, onSubmit])
+
   // Export chat as markdown file
   const handleExportChat = useCallback(() => {
     if (messages.length === 0) return
@@ -514,6 +581,36 @@ export function ClaudeChatPanel({
         className="p-2 border-t shrink-0"
         style={{ borderColor: 'var(--nexus-bg-tertiary)' }}
       >
+        {/* Quick Actions - only show when note context is available */}
+        {noteContext && (
+          <div className="flex flex-wrap gap-1 mb-2" data-testid="quick-actions">
+            {[
+              { id: 'improve', label: 'Improve', icon: '✨' },
+              { id: 'expand', label: 'Expand', icon: '📝' },
+              { id: 'summarize', label: 'Summarize', icon: '📋' },
+              { id: 'explain', label: 'Explain', icon: '💡' },
+              { id: 'research', label: 'Research', icon: '🔍' }
+            ].map(action => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => handleQuickAction(action.id)}
+                disabled={isLoading}
+                className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] transition-all hover:scale-105 disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: 'var(--nexus-bg-tertiary)',
+                  color: 'var(--nexus-text-primary)',
+                  border: '1px solid var(--nexus-bg-tertiary)'
+                }}
+                title={`${action.label} this note`}
+              >
+                <span>{action.icon}</span>
+                <span>{action.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Referenced notes chips */}
         {referencedNotes.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-2" data-testid="referenced-notes">
