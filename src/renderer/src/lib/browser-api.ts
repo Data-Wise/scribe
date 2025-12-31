@@ -549,7 +549,7 @@ export const browserApi = {
   // Terminal/Shell Operations (Browser stubs)
   // ============================================================================
 
-  spawnShell: async (): Promise<{ shell_id: number }> => {
+  spawnShell: async (_cwd?: string): Promise<{ shell_id: number }> => {
     // Browser mode uses emulated shell in TerminalPanel
     console.warn('Full shell access requires native Tauri app')
     return { shell_id: -1 }
@@ -561,6 +561,18 @@ export const browserApi = {
 
   killShell: async (_shellId: number): Promise<void> => {
     // No-op in browser mode
+  },
+
+  checkPathExists: async (path: string): Promise<{ exists: boolean; is_dir: boolean; expanded_path: string }> => {
+    // In browser mode, we can't check filesystem paths
+    console.warn('Path check not available in browser mode')
+    return { exists: false, is_dir: false, expanded_path: path }
+  },
+
+  createDirectory: async (path: string): Promise<string> => {
+    // No-op in browser mode
+    console.warn('Directory creation not available in browser mode')
+    return path
   },
 
   onShellOutput: (_callback: (shellId: number, data: string) => void): (() => void) => {

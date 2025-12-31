@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Terminal as TerminalIcon, Trash2 } from 'lucide-react'
+import { Terminal as TerminalIcon, Trash2, FolderOpen } from 'lucide-react'
 import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { WebLinksAddon } from '@xterm/addon-web-links'
 import { isBrowser, isTauri } from '../lib/platform'
 import { api } from '../lib/api'
+import { useProjectStore } from '../store/useProjectStore'
+import { inferTerminalCwd, getDefaultTerminalFolder } from '../lib/terminal-utils'
 import '@xterm/xterm/css/xterm.css'
 
 interface TerminalPanelProps {
@@ -29,8 +31,12 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
   const xtermRef = useRef<Terminal | null>(null)
   const fitAddonRef = useRef<FitAddon | null>(null)
   const [isConnected, setIsConnected] = useState(false)
+  const [currentCwd, setCurrentCwd] = useState<string | null>(null)
   const shellIdRef = useRef<number | null>(null)
   const inputBufferRef = useRef<string>('')
+
+  // Get current project from store
+  const getCurrentProject = useProjectStore((state) => state.getCurrentProject)
 
   // Scribe-themed terminal colors
   const theme = {
@@ -144,6 +150,24 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
     }
   }, [])
 
+  // Resolve working directory - use inferred path if exists, else default
+  const resolveWorkingDirectory = async (): Promise<string> => {
+    const project = getCurrentProject()
+    const inferredPath = inferTerminalCwd(project)
+    const defaultFolder = getDefaultTerminalFolder()
+
+    // Check if the inferred path exists
+    const pathInfo = await api.checkPathExists?.(inferredPath)
+
+    if (pathInfo?.exists && pathInfo?.is_dir) {
+      // Path exists, use it
+      return inferredPath
+    }
+
+    // Path doesn't exist - silently fall back to default folder
+    return defaultFolder
+  }
+
   // Start Tauri shell with PTY
   const startTauriShell = async (terminal: Terminal) => {
     try {
@@ -151,15 +175,21 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
       terminal.writeln('\x1b[32m$ Scribe Terminal\x1b[0m')
       terminal.writeln('\x1b[90mConnecting to shell...\x1b[0m')
 
-      // Spawn shell via Tauri command
-      const result = await api.spawnShell?.()
+      // Resolve working directory (silently falls back to default if not found)
+      const cwd = await resolveWorkingDirectory()
+      setCurrentCwd(cwd)
+
+      // Spawn shell via Tauri command with working directory
+      const result = await api.spawnShell?.(cwd)
       if (result && typeof result === 'object' && 'shell_id' in result) {
         const shellId = result.shell_id as number
         shellIdRef.current = shellId
         setIsConnected(true)
         onShellSpawned?.()
 
-        terminal.writeln('\x1b[32mConnected.\x1b[0m\n')
+        // Show connection message with directory
+        const displayPath = cwd.replace(/^\/Users\/[^/]+/, '~')
+        terminal.writeln(`\x1b[32mConnected.\x1b[0m \x1b[90m${displayPath}\x1b[0m\n`)
 
         // Set up bidirectional communication
         terminal.onData((data) => {
@@ -352,18 +382,29 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
         className="flex items-center justify-between px-3 py-2 border-b shrink-0"
         style={{ borderColor: 'var(--nexus-bg-tertiary)' }}
       >
-        <div className="flex items-center gap-2">
-          <TerminalIcon className="w-4 h-4" style={{ color: 'var(--nexus-accent)' }} />
-          <span className="text-xs font-medium" style={{ color: 'var(--nexus-text-primary)' }}>
+        <div className="flex items-center gap-2 min-w-0">
+          <TerminalIcon className="w-4 h-4 shrink-0" style={{ color: 'var(--nexus-accent)' }} />
+          <span className="text-xs font-medium shrink-0" style={{ color: 'var(--nexus-text-primary)' }}>
             Terminal
           </span>
           {isBrowser() && (
             <span
-              className="text-[10px] px-1.5 py-0.5 rounded"
+              className="text-[10px] px-1.5 py-0.5 rounded shrink-0"
               style={{ backgroundColor: 'var(--nexus-bg-tertiary)', color: 'var(--nexus-text-muted)' }}
             >
               Browser
             </span>
+          )}
+          {/* Show current working directory */}
+          {currentCwd && isTauri() && (
+            <div
+              className="flex items-center gap-1 text-[10px] truncate min-w-0"
+              style={{ color: 'var(--nexus-text-muted)' }}
+              title={currentCwd}
+            >
+              <FolderOpen className="w-3 h-3 shrink-0" />
+              <span className="truncate">{currentCwd.replace(/^\/Users\/[^/]+/, '~')}</span>
+            </div>
           )}
         </div>
         <div className="flex items-center gap-1">

@@ -47,14 +47,32 @@ impl ShellState {
     }
 }
 
+/// Expand ~ to home directory
+fn expand_home_dir(path: &str) -> String {
+    if path.starts_with("~/") {
+        if let Some(home) = dirs::home_dir() {
+            return format!("{}{}", home.display(), &path[1..]);
+        }
+    } else if path == "~" {
+        if let Some(home) = dirs::home_dir() {
+            return home.display().to_string();
+        }
+    }
+    path.to_string()
+}
+
 /// Spawn a new shell session
 ///
 /// Returns the shell_id that can be used for subsequent operations.
 /// Emits "shell-output" events with the shell's output.
+///
+/// # Arguments
+/// * `cwd` - Optional working directory. If not provided or doesn't exist, uses home dir.
 #[tauri::command]
 pub fn spawn_shell(
     app_handle: AppHandle,
     state: tauri::State<'_, ShellState>,
+    cwd: Option<String>,
 ) -> Result<serde_json::Value, String> {
     // Get the native PTY system
     let pty_system = native_pty_system();
@@ -76,10 +94,22 @@ pub fn spawn_shell(
     let mut cmd = CommandBuilder::new(&shell);
     cmd.arg("-l"); // Login shell for proper environment
 
-    // Set working directory to home
-    if let Some(home) = dirs::home_dir() {
-        cmd.cwd(home);
-    }
+    // Determine working directory
+    let working_dir = match cwd {
+        Some(path) => {
+            let expanded = expand_home_dir(&path);
+            let path_buf = std::path::PathBuf::from(&expanded);
+            if path_buf.exists() && path_buf.is_dir() {
+                log::info!("Terminal starting in: {}", expanded);
+                path_buf
+            } else {
+                log::warn!("Path '{}' doesn't exist, falling back to home", path);
+                dirs::home_dir().unwrap_or_else(|| std::path::PathBuf::from("/"))
+            }
+        }
+        None => dirs::home_dir().unwrap_or_else(|| std::path::PathBuf::from("/")),
+    };
+    cmd.cwd(working_dir);
 
     // Spawn the shell
     let _child = pair
@@ -228,4 +258,30 @@ pub fn kill_shell(state: tauri::State<'_, ShellState>, shell_id: u32) -> Result<
 pub fn list_shells(state: tauri::State<'_, ShellState>) -> Vec<u32> {
     let sessions = state.sessions.lock().unwrap();
     sessions.keys().copied().collect()
+}
+
+/// Check if a directory path exists
+#[tauri::command]
+pub fn check_path_exists(path: String) -> serde_json::Value {
+    let expanded = expand_home_dir(&path);
+    let path_buf = std::path::PathBuf::from(&expanded);
+
+    serde_json::json!({
+        "exists": path_buf.exists(),
+        "is_dir": path_buf.is_dir(),
+        "expanded_path": expanded
+    })
+}
+
+/// Create a directory (with parents if needed)
+#[tauri::command]
+pub fn create_directory(path: String) -> Result<String, String> {
+    let expanded = expand_home_dir(&path);
+    let path_buf = std::path::PathBuf::from(&expanded);
+
+    std::fs::create_dir_all(&path_buf)
+        .map_err(|e| format!("Failed to create directory: {}", e))?;
+
+    log::info!("Created directory: {}", expanded);
+    Ok(expanded)
 }
