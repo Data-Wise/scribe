@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(# Check for Activity Bar badges echo \"\"=== 1. Activity Bar Badges ===\"\" grep -r \"\"badge\"\" src/renderer/src/components/MissionControl/)",
+      "Bash(# Check for Browser mode indicator echo \"\"=== 2. Browser Mode Indicator ===\"\" grep -r \"\"isBrowser\\\\|browser.*mode\\\\|IndexedDB.*indicator\"\" src/renderer/src/components/)",
+      "Bash(# Check for Wiki link backlinks in browser echo \"\"=== 3. Wiki Link Backlinks \\(Browser\\) ===\"\" grep -r \"\"backlink\"\" src/renderer/src/lib/browser-api.ts)",
+      "Bash(# Check for right sidebar keyboard shortcut echo \"\"=== 4. Right Sidebar Toggle \\(⌘]\\) ===\"\" grep -r \"\"rightSidebar.*Collapsed\\\\|⌘]\\\\|Cmd.*\\\\]\"\" src/renderer/src/App.tsx)",
+      "Bash(# Check for tab persistence echo \"\"=== 5. Tab Persistence ===\"\" grep -r \"\"openTabs.*localStorage\\\\|persistTabs\\\\|saveTabs\"\" src/renderer/src/)",
+      "Bash(# Check for reopen closed tab echo \"\"=== 6. Reopen Closed Tab \\(⌘⇧T\\) ===\"\" grep -r \"\"reopenLastClosedTab\\\\|closedTabs\\\\|⌘⇧T\"\" src/renderer/src/)"
     ]
   }
 }

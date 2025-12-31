@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Sparkles, Send, Loader2, Trash2, User, Bot, FileText, Copy, Check, Download } from 'lucide-react'
 import { isBrowser } from '../lib/platform'
+import { api } from '../lib/api'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -102,13 +103,23 @@ export function ClaudeChatPanel({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Default submit handler for browser mode
+  // Default submit handler - calls Claude CLI in Tauri mode
   const defaultOnSubmit = useCallback(async (message: string): Promise<string> => {
     if (isBrowser()) {
       return 'AI features are only available in the desktop app. Run `npm run dev` for full Tauri mode.'
     }
-    // Placeholder for Tauri mode - will be wired up later
-    return `AI response to: "${message}" (Tauri AI integration pending)`
+    // Call Claude CLI via Tauri
+    try {
+      const response = await api.runClaude(message)
+      return response
+    } catch (err) {
+      // If Claude CLI fails, provide helpful error message
+      const errorMsg = err instanceof Error ? err.message : String(err)
+      if (errorMsg.includes('Failed to execute')) {
+        return `Claude CLI not found. Install with:\n\`\`\`bash\nnpm install -g @anthropic-ai/claude-code\n\`\`\`\n\nOr use Gemini instead.`
+      }
+      throw err
+    }
   }, [])
 
   const onSubmit = externalOnSubmit || defaultOnSubmit

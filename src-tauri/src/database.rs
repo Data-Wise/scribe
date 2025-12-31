@@ -16,6 +16,7 @@ pub struct Note {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)]  // Future use for project-specific settings
 pub struct ProjectSettings {
     pub project_id: String,
     pub settings: String,  // JSON blob
