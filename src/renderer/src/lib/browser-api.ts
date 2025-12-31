@@ -466,6 +466,25 @@ export const browserApi = {
   },
 
   // ============================================================================
+  // R Execution (Tauri-only, stubs for browser)
+  // ============================================================================
+
+  isRAvailable: async (): Promise<boolean> => {
+    return false
+  },
+
+  executeRChunk: async (_options: any): Promise<any> => {
+    console.warn('[Browser] R execution is not available in browser mode')
+    return {
+      success: false,
+      stdout: '',
+      stderr: 'R execution requires native Tauri runtime',
+      plots: [],
+      error: 'R execution requires native Tauri runtime'
+    }
+  },
+
+  // ============================================================================
   // Project Operations
   // ============================================================================
 

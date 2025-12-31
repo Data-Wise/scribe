@@ -33,4 +33,5 @@ lazy_static = "1.4"
 dirs = "5.0"
 open = "5.0"
 portable-pty = "0.8"
+base64 = "0.22"
 

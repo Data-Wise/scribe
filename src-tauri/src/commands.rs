@@ -535,7 +535,7 @@ pub fn is_homebrew_available() -> bool {
 
 // Academic commands (citations & export)
 
-use crate::academic::{Citation, ExportOptions, ExportResult, LatexCompileOptions, LatexCompileResult};
+use crate::academic::{Citation, ExportOptions, ExportResult, LatexCompileOptions, LatexCompileResult, RExecutionOptions, RExecutionResult};
 use std::sync::RwLock;
 
 // Global state for bibliography path
@@ -621,6 +621,24 @@ pub fn compile_latex(options: LatexCompileOptions) -> Result<LatexCompileResult,
         .map_err(|e| format!("Failed to create temp directory: {}", e))?;
 
     crate::academic::compile_latex(&options, &temp_dir)
+}
+
+/// Check if R is available
+#[tauri::command]
+pub fn is_r_available() -> bool {
+    crate::academic::is_r_available()
+}
+
+/// Execute R code chunk
+#[tauri::command]
+pub fn execute_r_chunk(options: RExecutionOptions) -> Result<RExecutionResult, String> {
+    // Get temporary directory for R execution
+    let temp_dir = std::env::temp_dir().join("scribe-r");
+
+    std::fs::create_dir_all(&temp_dir)
+        .map_err(|e| format!("Failed to create temp directory: {}", e))?;
+
+    crate::academic::execute_r_chunk(&options, &temp_dir)
 }
 
 // Project Settings commands

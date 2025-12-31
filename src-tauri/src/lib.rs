@@ -103,6 +103,9 @@ pub fn run() {
       // LaTeX compilation
       commands::is_latex_available,
       commands::compile_latex,
+      // R execution
+      commands::is_r_available,
+      commands::execute_r_chunk,
       // Project management
       commands::create_project,
       commands::get_project,

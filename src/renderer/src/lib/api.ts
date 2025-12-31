@@ -98,6 +98,20 @@ export interface LatexCompileResult {
   logPath: string
 }
 
+// R execution types
+export interface RExecutionOptions {
+  code: string
+  capturePlots: boolean
+}
+
+export interface RExecutionResult {
+  success: boolean
+  stdout: string
+  stderr: string
+  plots: string[]  // Base64-encoded PNG images
+  error?: string
+}
+
 // ============================================================================
 // Tauri API (Native)
 // ============================================================================
@@ -291,6 +305,13 @@ const tauriApi = {
 
   compileLatex: (options: LatexCompileOptions): Promise<LatexCompileResult> =>
     invoke('compile_latex', { options }),
+
+  // R execution
+  isRAvailable: (): Promise<boolean> =>
+    invoke('is_r_available'),
+
+  executeRChunk: (options: RExecutionOptions): Promise<RExecutionResult> =>
+    invoke('execute_r_chunk', { options }),
 
   // Project operations
   listProjects: (): Promise<Project[]> =>
@@ -519,6 +540,10 @@ export const api = {
   // LaTeX compilation - success feedback
   isLatexAvailable: withErrorToast(rawApi.isLatexAvailable, 'LaTeX check failed', true),
   compileLatex: withToast(rawApi.compileLatex, 'LaTeX compilation failed', 'LaTeX compiled successfully'),
+
+  // R execution - success feedback
+  isRAvailable: withErrorToast(rawApi.isRAvailable, 'R check failed', true),
+  executeRChunk: withToast(rawApi.executeRChunk, 'R execution failed', 'R code executed successfully'),
 
   // Project operations - success feedback for user actions
   listProjects: withErrorToast(rawApi.listProjects, 'Failed to load projects', true),

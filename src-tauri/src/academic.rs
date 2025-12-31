@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
+use base64::Engine;
 
 /// Citation from BibTeX
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -447,6 +448,150 @@ pub fn compile_latex(options: &LatexCompileOptions, work_dir: &Path) -> Result<L
         errors,
         warnings,
         log_path: log_path.to_string_lossy().to_string(),
+    })
+}
+
+// ============================================================================
+// R Code Execution
+// ============================================================================
+
+/// R execution result
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RExecutionResult {
+    pub success: bool,
+    pub stdout: String,
+    pub stderr: String,
+    pub plots: Vec<String>,  // Base64-encoded PNG images
+    pub error: Option<String>,
+}
+
+/// R execution options
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RExecutionOptions {
+    pub code: String,
+    pub capture_plots: bool,
+}
+
+/// Check if R is available
+pub fn is_r_available() -> bool {
+    Command::new("Rscript")
+        .arg("--version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// Execute R code and capture output
+pub fn execute_r_chunk(options: &RExecutionOptions, work_dir: &Path) -> Result<RExecutionResult, String> {
+    if !is_r_available() {
+        return Err("R is not installed. Install from: https://www.r-project.org/".to_string());
+    }
+
+    // Create R script with plot capture
+    let mut r_code = String::new();
+
+    if options.capture_plots {
+        // Set up plot capture to temporary PNG files
+        r_code.push_str(r#"
+# Capture plots to temporary files
+.scribe_plot_files <- character(0)
+.scribe_plot_counter <- 0
+
+# Override png() to track files
+.scribe_original_png <- png
+png <- function(...) {
+    .scribe_plot_counter <<- .scribe_plot_counter + 1
+    plot_file <- tempfile(pattern = paste0("scribe_plot_", .scribe_plot_counter, "_"), fileext = ".png")
+    .scribe_plot_files <<- c(.scribe_plot_files, plot_file)
+    .scribe_original_png(plot_file, width = 800, height = 600, ...)
+}
+
+# Auto-capture plots from base graphics
+setHook("plot.new", function() {
+    if (dev.cur() == 1) {  # Only if no device is open
+        png()
+    }
+}, "replace")
+
+# Ensure plots are saved
+.scribe_save_plot <- function() {
+    if (dev.cur() > 1) dev.off()
+}
+
+"#);
+    }
+
+    // Add user code
+    r_code.push_str(&options.code);
+
+    if options.capture_plots {
+        r_code.push_str(r#"
+
+# Close any open devices and print plot file paths
+.scribe_save_plot()
+cat("\n__SCRIBE_PLOTS__\n")
+cat(paste(.scribe_plot_files, collapse = "\n"))
+cat("\n__SCRIBE_PLOTS_END__\n")
+"#);
+    }
+
+    // Write R script to file
+    let script_path = work_dir.join("script.R");
+    fs::write(&script_path, &r_code)
+        .map_err(|e| format!("Failed to write R script: {}", e))?;
+
+    // Execute R script
+    let output = Command::new("Rscript")
+        .arg(&script_path)
+        .current_dir(work_dir)
+        .output()
+        .map_err(|e| format!("Failed to execute R: {}", e))?;
+
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+    let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+
+    // Extract plot file paths from stdout
+    let mut plots = Vec::new();
+    if options.capture_plots {
+        if let Some(start) = stdout.find("__SCRIBE_PLOTS__") {
+            if let Some(end) = stdout.find("__SCRIBE_PLOTS_END__") {
+                let plot_section = &stdout[start + 17..end];
+                for line in plot_section.lines() {
+                    let line = line.trim();
+                    if !line.is_empty() && std::path::Path::new(line).exists() {
+                        // Read plot file and encode as base64
+                        if let Ok(plot_data) = fs::read(line) {
+                            let base64_plot = base64::engine::general_purpose::STANDARD.encode(plot_data);
+                            plots.push(base64_plot);
+                            // Clean up temporary file
+                            let _ = fs::remove_file(line);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Remove plot markers from stdout for clean output
+    let clean_stdout = if options.capture_plots {
+        stdout.split("__SCRIBE_PLOTS__").next().unwrap_or(&stdout).to_string()
+    } else {
+        stdout
+    };
+
+    let success = output.status.success();
+    let error = if !success && !stderr.is_empty() {
+        Some(stderr.clone())
+    } else {
+        None
+    };
+
+    Ok(RExecutionResult {
+        success,
+        stdout: clean_stdout.trim().to_string(),
+        stderr: stderr.trim().to_string(),
+        plots,
+        error,
     })
 }
 
