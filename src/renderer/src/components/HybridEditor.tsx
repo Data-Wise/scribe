@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
+import rehypeCallouts from 'rehype-callouts'
 import { Sparkles, Terminal } from 'lucide-react'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
@@ -638,7 +639,7 @@ function MarkdownPreview({
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeRaw]}  // Allow raw HTML for rendered math SVG
+      rehypePlugins={[rehypeRaw, [rehypeCallouts, { theme: 'obsidian' }]]}  // Allow raw HTML and callouts
       components={{
         // Headings with theme-aware styling
         h1: ({ children }) => (

@@ -594,3 +594,105 @@ Some other text`
     })
   })
 })
+
+describe('HybridEditor Callout Rendering (Phase 2)', () => {
+  const defaultProps = {
+    content: '',
+    onChange: vi.fn(),
+    onWikiLinkClick: vi.fn(),
+    onTagClick: vi.fn(),
+    onSearchNotes: vi.fn().mockResolvedValue([]),
+    onSearchTags: vi.fn().mockResolvedValue([])
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('Callout Rendering in Reading Mode', () => {
+    it('renders note callout for "> [!note]" syntax', async () => {
+      const content = `> [!note]
+> This is a note callout`
+      render(<HybridEditor {...defaultProps} content={content} />)
+
+      // Switch to reading mode
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        // Look for callout element
+        const callout = document.querySelector('[data-callout="note"]')
+        expect(callout).toBeInTheDocument()
+      })
+    })
+
+    it('renders warning callout with correct type', async () => {
+      const content = `> [!warning]
+> This is a warning`
+      render(<HybridEditor {...defaultProps} content={content} />)
+
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const callout = document.querySelector('[data-callout="warning"]')
+        expect(callout).toBeInTheDocument()
+      })
+    })
+
+    it('renders callout with custom title', async () => {
+      const content = `> [!tip] Pro Tip
+> This is a tip with custom title`
+      render(<HybridEditor {...defaultProps} content={content} />)
+
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const callout = document.querySelector('[data-callout="tip"]')
+        expect(callout).toBeInTheDocument()
+        // Check for custom title text
+        expect(callout?.textContent).toContain('Pro Tip')
+      })
+    })
+
+    it('renders multiple callout types', async () => {
+      const content = `> [!note]
+> A note
+
+> [!warning]
+> A warning
+
+> [!tip]
+> A tip`
+      render(<HybridEditor {...defaultProps} content={content} />)
+
+      fireEvent.click(screen.getByText('Reading'))
+
+      await waitFor(() => {
+        const noteCallout = document.querySelector('[data-callout="note"]')
+        const warningCallout = document.querySelector('[data-callout="warning"]')
+        const tipCallout = document.querySelector('[data-callout="tip"]')
+        expect(noteCallout).toBeInTheDocument()
+        expect(warningCallout).toBeInTheDocument()
+        expect(tipCallout).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('Callout Types', () => {
+    const calloutTypes = ['note', 'tip', 'warning', 'danger', 'info', 'quote', 'example', 'question']
+
+    calloutTypes.forEach(type => {
+      it(`renders ${type} callout type`, async () => {
+        const content = `> [!${type}]
+> Content for ${type}`
+        render(<HybridEditor {...defaultProps} content={content} />)
+
+        fireEvent.click(screen.getByText('Reading'))
+
+        await waitFor(() => {
+          const callout = document.querySelector(`[data-callout="${type}"]`)
+          expect(callout).toBeInTheDocument()
+        })
+      })
+    })
+  })
+})
