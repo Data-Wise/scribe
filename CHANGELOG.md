@@ -7,9 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] - v1.6.0
+## [Unreleased] - v1.7.0
 
-### Sprint 26: Terminal & Right Sidebar - Complete (2025-12-31)
+### Sprint 27 P1: Backend Foundation - Complete (2025-12-31)
+
+**Chat history persistence, Quick Actions, comprehensive testing.**
+
+### Added
+
+**Chat History Persistence (Migration 009):**
+- `chat_sessions` and `chat_messages` tables with CASCADE foreign keys
+- One persistent session per note (auto-created on first use)
+- Auto-save every user and AI message to SQLite/IndexedDB
+- Auto-load conversation history when opening note
+- Session switching when navigating between notes
+- `getOrCreateChatSession`, `saveChatMessage`, `loadChatSession` Tauri commands
+- `clearChatSession`, `deleteChatSession` for cleanup
+
+**Quick Actions:**
+- 5 one-click AI prompts in Claude chat panel:
+  - ✨ Improve - "Improve clarity and flow"
+  - 📝 Expand - "Expand on this idea"
+  - 📋 Summarize - "Summarize in 2-3 sentences"
+  - 💡 Explain - "Explain this simply"
+  - 🔍 Research - "What does research say about this?"
+- Auto-includes full note context
+- Works with @ References for multi-note context
+
+**@ References:**
+- Type `@` in chat to autocomplete note titles
+- Visual badge UI for referenced notes
+- Includes referenced note content in AI context
+- Filter autocomplete by typing after `@`
+- Remove references with click
+
+**Testing:**
+- 12 new backend tests (chat_history_tests.rs)
+- 38 new frontend tests (Quick Actions + persistence)
+- 67 new E2E tests (3 comprehensive spec files):
+  - `chat-history-persistence.spec.ts` (12 tests)
+  - `claude-features.spec.ts` (27 tests)
+  - `quick-chat-enhanced.spec.ts` (20 tests)
+- Total test coverage: Backend (15), Frontend (829), E2E (67)
+
+**Documentation:**
+- Complete chat persistence guide (`docs/guide/chat-persistence.md`)
+- Quick Actions reference card (`docs/reference/REFCARD-QUICK-ACTIONS.md`)
+- Database schema documentation
+- Mermaid sequence diagrams
+
+### Fixed
+
+- Tauri API serialization for Note properties (JSON stringify/parse)
+- Frontend persistence integration (session/message auto-save)
+- Browser mode database exposure for E2E tests (`window.scribeDb`)
+
+### Technical
+
+- `src-tauri/src/database.rs` - Migration 009, chat CRUD operations
+- `src-tauri/src/tests/chat_history_tests.rs` - Backend test suite
+- `src/renderer/src/components/ClaudeChatPanel.tsx` - Persistence wiring
+- `src/renderer/src/lib/browser-db.ts` - IndexedDB chat tables
+- `e2e/specs/` - Comprehensive E2E test coverage
+
+---
+
+## [v1.6.0] - 2025-12-31
+
+### Sprint 26: Terminal & Right Sidebar - Complete
 
 **Full PTY terminal with smart working directory, plus UI fixes.**
 

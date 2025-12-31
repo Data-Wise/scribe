@@ -28,7 +28,10 @@ Scribe is a **distraction-free writing app** designed for academics and research
 | **Citations** | `@cite` with BibTeX/Zotero integration |
 | **Math** | KaTeX for LaTeX ($...$ and $$...$$) |
 | **Export** | PDF, Word, LaTeX, HTML via Pandoc |
-| **AI** | Claude + Gemini CLI (no API keys) |
+| **AI Chat** | Claude + Gemini CLI (no API keys) |
+| **Quick Actions** | ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research |
+| **Chat Persistence** | Conversations saved per note |
+| **@ References** | Include other notes in AI prompts |
 | **CLI** | Terminal access via `scribe` command |
 | **Command Palette** | ⌘K quick actions |
 | **Global Hotkey** | ⌘⇧N opens from anywhere |

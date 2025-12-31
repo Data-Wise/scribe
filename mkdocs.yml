@@ -93,8 +93,19 @@ nav:
     - Features: guide/features.md
     - Themes: guide/themes.md
     - Editor: guide/editor.md
+    - Chat Persistence: guide/chat-persistence.md
     - Keyboard Shortcuts: guide/shortcuts.md
+  - Tutorials:
+    - Overview: tutorials/index.md
+    - Terminal Integration: tutorials/terminal.md
+    - Project System: tutorials/projects.md
+    - Daily Notes: tutorials/daily-notes.md
+    - Mission Control: tutorials/mission-control.md
+    - Command Palette: tutorials/command-palette.md
+    - Backlinks: tutorials/backlinks.md
+    - Browser Mode: tutorials/browser-mode.md
   - Reference:
+    - Quick Actions: reference/REFCARD-QUICK-ACTIONS.md
     - API Reference: API.md
     - Architecture: ARCHITECTURE.md
     - Dual-Mode Architecture: DUAL-MODE-ARCHITECTURE.md
