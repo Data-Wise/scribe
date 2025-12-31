@@ -47,8 +47,6 @@ cd scribe && npm install && npm run dev
 
 ## Screenshots
 
-<!-- Add screenshots to docs/images/ and uncomment:
-
 ### Main Editor
 ![Main Editor](images/scribe-main.png)
 *Mission Control sidebar, editor, and properties panel*
@@ -56,15 +54,6 @@ cd scribe && npm install && npm run dev
 ### Focus Mode
 ![Focus Mode](images/scribe-focus.png)
 *Distraction-free writing with sidebars hidden*
-
-### Theme Showcase
-![Themes](images/scribe-themes.png)
-*10 ADHD-friendly themes (5 dark, 5 light)*
-
--->
-
-!!! note "Screenshots Coming Soon"
-    Visual documentation is being prepared. Run `npm run dev:vite` to try the browser demo.
 
 ---
 
