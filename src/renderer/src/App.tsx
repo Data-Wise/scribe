@@ -23,6 +23,7 @@ import { TerminalPanel } from './components/TerminalPanel'
 import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion } from './components/DragRegion'
+import { ToastProvider, useToast, setGlobalToast } from './components/Toast'
 import { Note, Tag, Property } from './types'
 import { Settings2, Link2, Tags, PanelRightOpen, PanelRightClose, BarChart3, Sparkles, Terminal } from 'lucide-react'
 import { api } from './lib/api'
@@ -1858,4 +1859,31 @@ function App() {
   )
 }
 
-export default App
+// ============================================================================
+// Toast Initializer - Connects global toast function
+// ============================================================================
+
+function ToastInitializer() {
+  const { showToast } = useToast()
+
+  useEffect(() => {
+    setGlobalToast(showToast)
+  }, [showToast])
+
+  return null
+}
+
+// ============================================================================
+// App Wrapper - Provides Toast Context
+// ============================================================================
+
+function AppWithToast() {
+  return (
+    <ToastProvider>
+      <ToastInitializer />
+      <App />
+    </ToastProvider>
+  )
+}
+
+export default AppWithToast

@@ -232,4 +232,116 @@ const tauriApi = {
  * In Tauri: Uses native SQLite backend via invoke()
  * In Browser: Uses IndexedDB via Dexie.js
  */
-export const api = isTauri() ? tauriApi : browserApi
+const rawApi = isTauri() ? tauriApi : browserApi
+
+// ============================================================================
+// Error Handling with Toast Notifications
+// ============================================================================
+
+import { showGlobalToast } from '../components/Toast'
+
+/**
+ * Wraps an API function with error handling that shows toast notifications.
+ * Critical operations (note/project CRUD) show toasts on failure.
+ * Silent operations (search, list) just log to console.
+ */
+function withErrorToast<TArgs extends unknown[], TReturn>(
+  fn: (...args: TArgs) => Promise<TReturn>,
+  context: string,
+  silent = false
+): (...args: TArgs) => Promise<TReturn> {
+  return async (...args: TArgs): Promise<TReturn> => {
+    try {
+      return await fn(...args)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      console.error(`[API Error] ${context}:`, message)
+
+      if (!silent) {
+        showGlobalToast(`${context}: ${message}`, 'error')
+      }
+
+      throw error
+    }
+  }
+}
+
+/**
+ * API with error toast notifications for critical operations.
+ * Silent operations (search, list) don't show toasts.
+ */
+export const api = {
+  // Note operations (critical - show toasts)
+  createNote: withErrorToast(rawApi.createNote, 'Failed to create note'),
+  updateNote: withErrorToast(rawApi.updateNote, 'Failed to save note'),
+  deleteNote: withErrorToast(rawApi.deleteNote, 'Failed to delete note'),
+  getNote: withErrorToast(rawApi.getNote, 'Failed to load note', true),
+  listNotes: withErrorToast(rawApi.listNotes, 'Failed to list notes', true),
+  searchNotes: withErrorToast(rawApi.searchNotes, 'Search failed', true),
+
+  // Tag operations
+  createTag: withErrorToast(rawApi.createTag, 'Failed to create tag'),
+  getTag: withErrorToast(rawApi.getTag, 'Failed to get tag', true),
+  getTagByName: withErrorToast(rawApi.getTagByName, 'Failed to get tag', true),
+  getAllTags: withErrorToast(rawApi.getAllTags, 'Failed to load tags', true),
+  renameTag: withErrorToast(rawApi.renameTag, 'Failed to rename tag'),
+  deleteTag: withErrorToast(rawApi.deleteTag, 'Failed to delete tag'),
+  addTagToNote: withErrorToast(rawApi.addTagToNote, 'Failed to add tag'),
+  removeTagFromNote: withErrorToast(rawApi.removeTagFromNote, 'Failed to remove tag'),
+  getNoteTags: withErrorToast(rawApi.getNoteTags, 'Failed to get tags', true),
+  getNotesByTag: withErrorToast(rawApi.getNotesByTag, 'Failed to get notes', true),
+  filterNotesByTags: withErrorToast(rawApi.filterNotesByTags, 'Failed to filter', true),
+  updateNoteTags: withErrorToast(rawApi.updateNoteTags, 'Failed to update tags', true),
+
+  // Folder operations
+  getFolders: withErrorToast(rawApi.getFolders, 'Failed to load folders', true),
+
+  // Link operations
+  updateNoteLinks: withErrorToast(rawApi.updateNoteLinks, 'Failed to update links', true),
+  getBacklinks: withErrorToast(rawApi.getBacklinks, 'Failed to get backlinks', true),
+  getOutgoingLinks: withErrorToast(rawApi.getOutgoingLinks, 'Failed to get links', true),
+
+  // AI operations (can fail silently - user sees empty result)
+  runClaude: withErrorToast(rawApi.runClaude, 'Claude request failed'),
+  runGemini: withErrorToast(rawApi.runGemini, 'Gemini request failed'),
+
+  // Daily notes
+  getOrCreateDailyNote: withErrorToast(rawApi.getOrCreateDailyNote, 'Failed to open daily note'),
+
+  // Export operations
+  exportToObsidian: withErrorToast(rawApi.exportToObsidian, 'Obsidian export failed'),
+
+  // Font management (silent - just affects UI options)
+  getInstalledFonts: withErrorToast(rawApi.getInstalledFonts, 'Failed to get fonts', true),
+  isFontInstalled: withErrorToast(rawApi.isFontInstalled, 'Font check failed', true),
+  installFontViaHomebrew: withErrorToast(rawApi.installFontViaHomebrew, 'Font install failed'),
+  isHomebrewAvailable: withErrorToast(rawApi.isHomebrewAvailable, 'Homebrew check failed', true),
+
+  // Citation operations (silent - gracefully degrade)
+  getCitations: withErrorToast(rawApi.getCitations, 'Failed to load citations', true),
+  searchCitations: withErrorToast(rawApi.searchCitations, 'Citation search failed', true),
+  getCitationByKey: withErrorToast(rawApi.getCitationByKey, 'Citation lookup failed', true),
+  setBibliographyPath: withErrorToast(rawApi.setBibliographyPath, 'Failed to set bibliography'),
+  getBibliographyPath: withErrorToast(rawApi.getBibliographyPath, 'Failed to get bibliography', true),
+
+  // Document export
+  exportDocument: withErrorToast(rawApi.exportDocument, 'Document export failed'),
+  isPandocAvailable: withErrorToast(rawApi.isPandocAvailable, 'Pandoc check failed', true),
+
+  // Project operations (critical - show toasts)
+  listProjects: withErrorToast(rawApi.listProjects, 'Failed to load projects', true),
+  createProject: withErrorToast(rawApi.createProject, 'Failed to create project'),
+  getProject: withErrorToast(rawApi.getProject, 'Failed to load project', true),
+  updateProject: withErrorToast(rawApi.updateProject, 'Failed to update project'),
+  deleteProject: withErrorToast(rawApi.deleteProject, 'Failed to delete project'),
+  getProjectSettings: withErrorToast(rawApi.getProjectSettings, 'Failed to get settings', true),
+  updateProjectSettings: withErrorToast(rawApi.updateProjectSettings, 'Failed to save settings'),
+  getProjectNotes: withErrorToast(rawApi.getProjectNotes, 'Failed to get project notes', true),
+  setNoteProject: withErrorToast(rawApi.setNoteProject, 'Failed to move note'),
+
+  // Terminal operations (v2 - stub for now)
+  spawnShell: withErrorToast(rawApi.spawnShell, 'Failed to start terminal'),
+  writeToShell: withErrorToast(rawApi.writeToShell, 'Terminal write failed'),
+  killShell: withErrorToast(rawApi.killShell, 'Failed to close terminal'),
+  onShellOutput: rawApi.onShellOutput
+}

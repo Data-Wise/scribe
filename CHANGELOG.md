@@ -94,6 +94,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.1] - 2025-12-30
+
+### Tauri Feature Parity & Error Visibility
+
+**Improvements to Tauri native app experience and error feedback.**
+
+### Added
+
+**Demo Data Seeding (Tauri):**
+- New users in Tauri now see demo content on first launch
+- Migration 007 seeds: 1 project, 3 notes, 3 tags
+- Matches browser experience with "Getting Started" content
+- Wiki links between demo notes demonstrate backlinks feature
+
+**Toast Notifications:**
+- Visible error feedback for API failures
+- Toast component with error/success/info variants
+- Auto-dismiss after 4 seconds
+- Click to dismiss immediately
+- Critical operations (CRUD) show toasts; silent ops just log
+
+**Diagnostics:**
+- Enhanced platform detection logging
+- First note/project logged on startup
+- Better error stack traces in console
+
+### Documentation
+
+- `docs/TAURI-BROWSER-FEATURE-REVIEW.md` - Comprehensive parity audit
+  - 43 matched API commands documented
+  - Root cause analysis for discrepancies
+  - Recommended action plan
+
+### Technical
+
+- `src/renderer/src/components/Toast.tsx` - Toast component + context
+- `src/renderer/src/lib/api.ts` - `withErrorToast()` wrapper
+- `src-tauri/src/database.rs` - Migration 007 (demo data)
+
+---
+
 ## [1.2.0] - 2025-12-27
 
 ### Mission Control - Dashboard-First Experience
