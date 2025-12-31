@@ -152,12 +152,17 @@ tags:
 
 **Priority 1: Settings Enhancement (ADHD-Optimized UI)** 🎯
 
-**Branch:** `feat/settings-enhancement`
-**Worktree:** `/Users/dt/.git-worktrees/scribe/settings`
+**Workflow:**
+- **Feature Branch:** `feat/settings-enhancement` (created from dev)
+- **Worktree:** `/Users/dt/.git-worktrees/scribe/settings`
+- **Development:** Multi-phase feature developed in dedicated worktree
+- **Phase 1 Merged:** 2025-12-31 (commit 5f504a5 on dev branch)
+- **Phase 2 Location:** Continue in same worktree (`settings`)
+
 **Spec:** `docs/specs/SPEC-settings-enhancement-2025-12-31.md`
 **Brainstorm:** `BRAINSTORM-settings-enhancement-2025-12-31.md`
 
-**Phase 1: Foundation - COMPLETE ✅ (2025-12-31)**
+**Phase 1: Foundation - COMPLETE ✅ (Merged to dev 2025-12-31)**
 - [x] Zustand store for settings state (useSettingsStore.ts - 427 lines)
 - [x] Settings schema with 5 categories (settingsSchema.ts - 426 lines)
 - [x] SettingsModal with tabs + search UI (200 lines)
