@@ -55,6 +55,8 @@
       
     
     
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -71,7 +73,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -127,9 +129,19 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -137,10 +149,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to high contrast"  type="radio" name="__palette" id="__palette_2">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to high contrast" for="__palette_3" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to auto mode"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to auto mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20c-2.21 0-4.21-.9-5.66-2.34L17.66 6.34A8.01 8.01 0 0 1 20 12a8 8 0 0 1-8 8M6 8h2V6h1.5v2h2v1.5h-2v2H8v-2H6M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 14h5v-1.5h-5z"/></svg>
       </label>
     
   
@@ -368,7 +390,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../planning/V1_RELEASE_PLAN.md" class="md-tabs__link">
+        <a href="../../planning/INDEX/" class="md-tabs__link">
           
   
   
@@ -793,41 +815,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#built-in-themes" class="md-nav__link">
+  <a href="#theme-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Themes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Built-in Themes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dark-themes-5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dark Themes (5)
+        Theme Overview
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#light-themes-5" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#dark-themes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Light Themes (5)
+        Dark Themes
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#light-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light Themes
+      
+    </span>
+  </a>
   
 </li>
       
@@ -862,47 +878,14 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#importexport" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Import/Export
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Import/Export">
+    <nav class="md-nav" aria-label="Custom Themes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#export-theme" class="md-nav__link">
+  <a href="#color-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export Theme
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#import-theme" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Import Theme
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#import-from-url" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Import from URL
+        Color Options
       
     </span>
   </a>
@@ -915,10 +898,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#importexport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import/Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adhd-friendly-design" class="md-nav__link">
     <span class="md-ellipsis">
       
         ADHD-Friendly Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
       
     </span>
   </a>
@@ -1112,6 +1117,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../DUAL-MODE-ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual-Mode Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../COMPONENTS/" class="md-nav__link">
         
   
@@ -1120,6 +1153,62 @@
     
   
     Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-BROWSER-FEATURE-REVIEW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri/Browser Feature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-WEBDRIVER-RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri WebDriver Research
   
 
     
@@ -1426,210 +1515,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../planning/V1_RELEASE_PLAN.md" class="md-nav__link">
+      <a href="../../planning/INDEX/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Release Plan
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/UI-IMPROVEMENTS-CONSOLIDATED.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    UI Improvements Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-22-EDITOR-MODES.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 22 - Editor Modes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-21-MISSION-CONTROL.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 21 - Mission Control
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-13-PROJECT-SYSTEM.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 13 - Project System
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-12-UI-POLISH.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 12 - UI Polish
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-11-PLAN.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 11
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-10-COMPLETE.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 10
+    Planning Index
   
 
     
@@ -1764,41 +1657,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#built-in-themes" class="md-nav__link">
+  <a href="#theme-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Themes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Built-in Themes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dark-themes-5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dark Themes (5)
+        Theme Overview
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#light-themes-5" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#dark-themes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Light Themes (5)
+        Dark Themes
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#light-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light Themes
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1833,47 +1720,14 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#importexport" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Import/Export
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Import/Export">
+    <nav class="md-nav" aria-label="Custom Themes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#export-theme" class="md-nav__link">
+  <a href="#color-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Export Theme
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#import-theme" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Import Theme
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#import-from-url" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Import from URL
+        Color Options
       
     </span>
   </a>
@@ -1886,10 +1740,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#importexport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import/Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adhd-friendly-design" class="md-nav__link">
     <span class="md-ellipsis">
       
         ADHD-Friendly Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
       
     </span>
   </a>
@@ -1917,9 +1793,27 @@
 
 
 <h1 id="themes">Themes</h1>
-<p>Scribe includes 10 ADHD-friendly themes designed for extended writing sessions.</p>
-<h2 id="built-in-themes">Built-in Themes</h2>
-<h3 id="dark-themes-5">Dark Themes (5)</h3>
+<blockquote>
+<p>10 ADHD-friendly themes designed for extended writing sessions</p>
+</blockquote>
+<hr />
+<h2 id="theme-overview">Theme Overview</h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg></span> <strong>5 Dark Themes</strong></p>
+<hr />
+<p>Oxford Dark, Forest Night, Warm Cocoa, Midnight Purple, Deep Ocean</p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg></span> <strong>5 Light Themes</strong></p>
+<hr />
+<p>Soft Paper, Morning Fog, Sage Garden, Lavender Mist, Sand Dune</p>
+</li>
+</ul>
+</div>
+<hr />
+<h2 id="dark-themes">Dark Themes</h2>
 <table>
 <thead>
 <tr>
@@ -1956,7 +1850,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="light-themes-5">Light Themes (5)</h3>
+<h2 id="light-themes">Light Themes</h2>
 <table>
 <thead>
 <tr>
@@ -1993,8 +1887,12 @@
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="theme-shortcuts">Theme Shortcuts</h2>
-<p>Quick-switch themes with keyboard shortcuts:</p>
+<div class="admonition tip">
+<p class="admonition-title">Quick Switch</p>
+<p>Use <code>⌘⌥</code> + number to instantly switch themes.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -2045,18 +1943,59 @@
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="auto-theme">Auto-Theme</h2>
 <p>Scribe can automatically switch themes based on time of day:</p>
-<ul>
-<li><strong>Light themes</strong>: 6am - 6pm</li>
-<li><strong>Dark themes</strong>: 6pm - 6am</li>
-</ul>
-<p>Enable in Settings → Themes → Auto-theme by time.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Theme Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6am - 6pm</td>
+<td>Light themes</td>
+</tr>
+<tr>
+<td>6pm - 6am</td>
+<td>Dark themes</td>
+</tr>
+</tbody>
+</table>
+<p>Enable in <strong>Settings → Themes → Auto-theme by time</strong>.</p>
+<hr />
 <h2 id="custom-themes">Custom Themes</h2>
 <p>Create your own theme in Settings → Themes:</p>
-<ol>
-<li>Click "Create Custom Theme"</li>
-<li>Choose colors for:</li>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Click "Create Custom Theme"</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Choose colors (background, text, accent)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Preview in real-time</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Save with custom name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="color-options">Color Options</h3>
+<ul>
 <li>Primary background</li>
 <li>Secondary background</li>
 <li>Tertiary background</li>
@@ -2064,37 +2003,73 @@
 <li>Muted text</li>
 <li>Accent color</li>
 <li>Accent hover</li>
-<li>Preview in real-time</li>
-<li>Save with a custom name</li>
-</ol>
+</ul>
+<hr />
 <h2 id="importexport">Import/Export</h2>
-<h3 id="export-theme">Export Theme</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Export Theme</label><label for="__tabbed_1_2">Import Theme</label><label for="__tabbed_1_3">Import from URL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>Go to Settings → Themes</li>
-<li>Click the export icon next to your theme</li>
+<li>Click export icon next to theme</li>
 <li>Choose format: JSON or Base16 YAML</li>
 <li>File downloads automatically</li>
 </ol>
-<h3 id="import-theme">Import Theme</h3>
+</div>
+<div class="tabbed-block">
 <ol>
 <li>Go to Settings → Themes</li>
 <li>Click "Import Theme"</li>
 <li>Choose file (JSON or Base16 YAML)</li>
 <li>Theme appears in Custom Themes</li>
 </ol>
-<h3 id="import-from-url">Import from URL</h3>
-<p>Paste a URL to import directly:
-- GitHub Gist links
-- Raw file URLs
-- Any accessible JSON/YAML theme file</p>
-<h2 id="adhd-friendly-design">ADHD-Friendly Design</h2>
-<p>All themes follow these principles:</p>
+</div>
+<div class="tabbed-block">
+<p>Paste a URL to import directly:</p>
 <ul>
-<li><strong>Low-to-medium contrast</strong>: Reduces eye strain during long sessions</li>
-<li><strong>Warm or neutral tones</strong>: Calming, less stimulating</li>
-<li><strong>Subtle accent colors</strong>: Functional without being distracting</li>
-<li><strong>Consistent visual hierarchy</strong>: Predictable, easy to scan</li>
+<li>GitHub Gist links</li>
+<li>Raw file URLs</li>
+<li>Any accessible JSON/YAML theme file</li>
 </ul>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="adhd-friendly-design">ADHD-Friendly Design</h2>
+<div class="admonition tip">
+<p class="admonition-title">Why These Colors?</p>
+<p>All themes follow ADHD-friendly design principles.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Low-to-medium contrast</strong></td>
+<td>Reduces eye strain</td>
+</tr>
+<tr>
+<td><strong>Warm or neutral tones</strong></td>
+<td>Calming, less stimulating</td>
+</tr>
+<tr>
+<td><strong>Subtle accent colors</strong></td>
+<td>Functional without distracting</td>
+</tr>
+<tr>
+<td><strong>Consistent hierarchy</strong></td>
+<td>Predictable, easy to scan</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<p><a class="md-button md-button--primary" href="../shortcuts/">Keyboard Shortcuts <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg></span></a>
+<a class="md-button" href="../editor/">Editor Guide</a></p>
 
 
 
@@ -2170,6 +2145,8 @@
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/theme-toggle.js"></script>
       
     
   </body>

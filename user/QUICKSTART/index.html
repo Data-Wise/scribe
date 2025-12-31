@@ -55,6 +55,8 @@
       
     
     
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -71,7 +73,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -127,9 +129,19 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -137,10 +149,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to high contrast"  type="radio" name="__palette" id="__palette_2">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to high contrast" for="__palette_3" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to auto mode"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to auto mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20c-2.21 0-4.21-.9-5.66-2.34L17.66 6.34A8.01 8.01 0 0 1 20 12a8 8 0 0 1-8 8M6 8h2V6h1.5v2h2v1.5h-2v2H8v-2H6M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 14h5v-1.5h-5z"/></svg>
       </label>
     
   
@@ -368,7 +390,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../planning/V1_RELEASE_PLAN.md" class="md-tabs__link">
+        <a href="../../planning/INDEX/" class="md-tabs__link">
           
   
   
@@ -572,10 +594,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-shortcuts" class="md-nav__link">
+  <a href="#essential-shortcuts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Shortcuts
+        Essential Shortcuts
       
     </span>
   </a>
@@ -1051,6 +1073,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../DUAL-MODE-ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual-Mode Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../COMPONENTS/" class="md-nav__link">
         
   
@@ -1059,6 +1109,62 @@
     
   
     Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-BROWSER-FEATURE-REVIEW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri/Browser Feature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-WEBDRIVER-RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri WebDriver Research
   
 
     
@@ -1365,210 +1471,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../planning/V1_RELEASE_PLAN.md" class="md-nav__link">
+      <a href="../../planning/INDEX/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Release Plan
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/UI-IMPROVEMENTS-CONSOLIDATED.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    UI Improvements Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-22-EDITOR-MODES.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 22 - Editor Modes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-21-MISSION-CONTROL.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 21 - Mission Control
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-13-PROJECT-SYSTEM.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 13 - Project System
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-12-UI-POLISH.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 12 - UI Polish
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-11-PLAN.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 11
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-10-COMPLETE.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 10
+    Planning Index
   
 
     
@@ -1736,10 +1646,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-shortcuts" class="md-nav__link">
+  <a href="#essential-shortcuts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Shortcuts
+        Essential Shortcuts
       
     </span>
   </a>
@@ -1800,33 +1710,84 @@
 
 
 <h1 id="quick-start">Quick Start</h1>
-<p>Get Scribe running in under 2 minutes.</p>
+<blockquote>
+<p>Get Scribe running in under 2 minutes</p>
+</blockquote>
+<div class="admonition tip">
+<p class="admonition-title">What You'll Learn</p>
+<ul>
+<li>Install and launch Scribe</li>
+<li>Create your first note</li>
+<li>Use essential keyboard shortcuts</li>
+</ul>
+</div>
 <hr />
 <h2 id="prerequisites">Prerequisites</h2>
-<ul>
-<li>Node.js 18+</li>
-<li>npm 9+</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node.js</td>
+<td>18+</td>
+</tr>
+<tr>
+<td>npm</td>
+<td>9+</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="install-run">Install &amp; Run</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Clone (if not already)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>~/projects/dev-tools/scribe
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Install dependencies</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>npm<span class="w"> </span>install
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Start development</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Homebrew (Recommended)</label><label for="__tabbed_1_2">Build from Source</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>data-wise/tap/scribe
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Data-Wise/scribe
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>scribe
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>npm<span class="w"> </span>install
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</code></pre></div>
+</div>
+</div>
+</div>
 <hr />
 <h2 id="first-note">First Note</h2>
-<ol>
-<li>App opens with sidebar</li>
-<li>Click <strong>+ New Note</strong> or press <strong>⌘N</strong></li>
-<li>Start typing</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>App opens with sidebar</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Click <strong>+ New Note</strong> or press <strong>⌘N</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Start typing</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Auto-Save</p>
+<p>Your work saves automatically. No save button needed.</p>
+</div>
 <hr />
-<h2 id="key-shortcuts">Key Shortcuts</h2>
+<h2 id="essential-shortcuts">Essential Shortcuts</h2>
 <table>
 <thead>
 <tr>
@@ -1836,47 +1797,53 @@
 </thead>
 <tbody>
 <tr>
-<td>New note</td>
+<td><strong>New note</strong></td>
 <td>⌘N</td>
 </tr>
 <tr>
-<td>Save</td>
-<td>Auto (no button)</td>
-</tr>
-<tr>
-<td>Focus mode</td>
-<td>⌘.</td>
-</tr>
-<tr>
-<td>Daily note</td>
+<td><strong>Daily note</strong></td>
 <td>⌘D</td>
 </tr>
 <tr>
-<td>Command palette</td>
+<td><strong>Command palette</strong></td>
 <td>⌘K</td>
 </tr>
 <tr>
-<td>Close</td>
+<td><strong>Focus mode</strong></td>
+<td>⌘⇧F</td>
+</tr>
+<tr>
+<td><strong>Toggle preview</strong></td>
+<td>⌘E</td>
+</tr>
+<tr>
+<td><strong>Close</strong></td>
 <td>⌘W</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="wiki-links">Wiki Links</h2>
-<p>Type <code>[[</code> to link notes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>See [[My Other Note]] for details.
+<p>Connect your notes with <code>[[double brackets]]</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>See [[My Other Note]] for details.
 </code></pre></div>
+<ul>
+<li>Type <code>[[</code> to trigger autocomplete</li>
+<li>Click links in preview to navigate</li>
+</ul>
 <hr />
 <h2 id="tags">Tags</h2>
-<p>Type <code>#</code> to add tags:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>This is about #research and #methods.
+<p>Organize with <code>#hashtags</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>This is about <span class="ni">#research</span> and <span class="ni">#methods</span>.
 </code></pre></div>
+<ul>
+<li>Type <code>#</code> to trigger autocomplete</li>
+<li>Click tags in sidebar to filter</li>
+</ul>
 <hr />
 <h2 id="next-steps">Next Steps</h2>
-<ul>
-<li>Read <a href="../../reference/PROJECT-DEFINITION/">PROJECT-DEFINITION.md</a> for full scope</li>
-<li>Read <a href="../GETTING-STARTED/">GETTING-STARTED.md</a> for detailed guide</li>
-</ul>
+<p><a class="md-button md-button--primary" href="../GETTING-STARTED/">Full Getting Started Guide <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg></span></a>
+<a class="md-button" href="../../guide/features/">Features Overview</a></p>
 
 
 
@@ -1952,6 +1919,8 @@
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/theme-toggle.js"></script>
       
     
   </body>

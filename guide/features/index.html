@@ -55,6 +55,8 @@
       
     
     
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -71,7 +73,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -127,9 +129,19 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -137,10 +149,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to high contrast"  type="radio" name="__palette" id="__palette_2">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to high contrast" for="__palette_3" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to auto mode"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to auto mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20c-2.21 0-4.21-.9-5.66-2.34L17.66 6.34A8.01 8.01 0 0 1 20 12a8 8 0 0 1-8 8M6 8h2V6h1.5v2h2v1.5h-2v2H8v-2H6M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 14h5v-1.5h-5z"/></svg>
       </label>
     
   
@@ -368,7 +390,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../planning/V1_RELEASE_PLAN.md" class="md-tabs__link">
+        <a href="../../planning/INDEX/" class="md-tabs__link">
           
   
   
@@ -765,6 +787,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#core-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editor" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -920,10 +953,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#empty-state" class="md-nav__link">
+  <a href="#math-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Empty State
+        Math Support
       
     </span>
   </a>
@@ -931,40 +964,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ui-polish" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI Polish
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="UI Polish">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#micro-interactions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Micro-interactions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sidebar-tooltips" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sidebar Tooltips
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#accessibility" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -974,17 +973,12 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#math-support" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Math Support
+        Next Steps
       
     </span>
   </a>
@@ -1206,6 +1200,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../DUAL-MODE-ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual-Mode Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../COMPONENTS/" class="md-nav__link">
         
   
@@ -1214,6 +1236,62 @@
     
   
     Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-BROWSER-FEATURE-REVIEW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri/Browser Feature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-WEBDRIVER-RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri WebDriver Research
   
 
     
@@ -1520,210 +1598,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../planning/V1_RELEASE_PLAN.md" class="md-nav__link">
+      <a href="../../planning/INDEX/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Release Plan
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/UI-IMPROVEMENTS-CONSOLIDATED.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    UI Improvements Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-22-EDITOR-MODES.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 22 - Editor Modes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-21-MISSION-CONTROL.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 21 - Mission Control
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-13-PROJECT-SYSTEM.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 13 - Project System
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-12-UI-POLISH.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 12 - UI Polish
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-11-PLAN.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 11
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-10-COMPLETE.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 10
+    Planning Index
   
 
     
@@ -1856,6 +1738,17 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Features
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#editor" class="md-nav__link">
@@ -2013,10 +1906,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#empty-state" class="md-nav__link">
+  <a href="#math-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Empty State
+        Math Support
       
     </span>
   </a>
@@ -2024,40 +1917,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ui-polish" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI Polish
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="UI Polish">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#micro-interactions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Micro-interactions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sidebar-tooltips" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sidebar Tooltips
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#accessibility" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2067,17 +1926,12 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#math-support" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Math Support
+        Next Steps
       
     </span>
   </a>
@@ -2105,96 +1959,219 @@
 
 
 <h1 id="features-overview">Features Overview</h1>
-<p>Scribe is designed with ADHD users in mind. Every feature follows the principle of <strong>minimal friction</strong> and <strong>maximum focus</strong>.</p>
+<blockquote>
+<p>Every feature follows <strong>minimal friction</strong> and <strong>maximum focus</strong></p>
+</blockquote>
+<hr />
+<h2 id="core-features">Core Features</h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg></span> <strong>HybridEditor</strong></p>
+<hr />
+<p>Write in markdown, preview rendered. Toggle with ⌘E.</p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.83 9 15 12.16V12a3 3 0 0 0-3-3zm-4.3.8 1.55 1.55c-.05.21-.08.42-.08.65a3 3 0 0 0 3 3c.22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53a5 5 0 0 1-5-5c0-.79.2-1.53.53-2.2M2 4.27l2.28 2.28.45.45C3.08 8.3 1.78 10 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.43.42L19.73 22 21 20.73 3.27 3M12 7a5 5 0 0 1 5 5c0 .64-.13 1.26-.36 1.82l2.93 2.93c1.5-1.25 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-4 .7l2.17 2.15C10.74 7.13 11.35 7 12 7"/></svg></span> <strong>Focus Mode</strong></p>
+<hr />
+<p>Distraction-free writing. Sidebars collapse. ⌘⇧F to toggle.</p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.98 2.98 0 0 0 0-4.24 2.98 2.98 0 0 0-4.24 0l-3.53 3.53a2.98 2.98 0 0 0 0 4.24m2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.98 2.98 0 0 0 0 4.24 2.98 2.98 0 0 0 4.24 0l3.53-3.53a2.98 2.98 0 0 0 0-4.24.973.973 0 0 1 0-1.42"/></svg></span> <strong>Wiki Links</strong></p>
+<hr />
+<p>Connect notes with <code>[[double brackets]]</code>. Autocomplete included.</p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.5 7A1.5 1.5 0 0 1 4 5.5 1.5 1.5 0 0 1 5.5 4 1.5 1.5 0 0 1 7 5.5 1.5 1.5 0 0 1 5.5 7m15.91 4.58-9-9C12.05 2.22 11.55 2 11 2H4c-1.11 0-2 .89-2 2v7c0 .55.22 1.05.59 1.41l8.99 9c.37.36.87.59 1.42.59s1.05-.23 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.56-.23-1.06-.59-1.42"/></svg></span> <strong>Tags</strong></p>
+<hr />
+<p>Organize with <code>#hashtags</code>. Hierarchical support (<code>#research/stats</code>).</p>
+</li>
+</ul>
+</div>
+<hr />
 <h2 id="editor">Editor</h2>
 <h3 id="hybrideditor">HybridEditor</h3>
-<p>The core of Scribe is the HybridEditor - a simple, distraction-free markdown editor:</p>
-<ul>
-<li><strong>Write Mode</strong>: Plain textarea for reliable input</li>
-<li><strong>Preview Mode</strong>: Rendered markdown with clickable links</li>
-<li><strong>Toggle</strong>: Press <code>⌘E</code> to switch modes</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Write</strong></td>
+<td>Plain textarea for reliable input</td>
+</tr>
+<tr>
+<td><strong>Preview</strong></td>
+<td>Rendered markdown with clickable links</td>
+</tr>
+</tbody>
+</table>
+<p>Press <code>⌘E</code> to toggle between modes.</p>
 <h3 id="focus-mode">Focus Mode</h3>
-<p>Enter distraction-free mode with <code>⌘⇧F</code>:</p>
+<div class="admonition tip">
+<p class="admonition-title">Enter Focus Mode</p>
+<p>Press <code>⌘⇧F</code> to hide sidebars and center your writing.</p>
+</div>
 <ul>
 <li>Sidebars collapse</li>
 <li>Editor centers on screen</li>
 <li>Only your words remain</li>
+<li>Press <code>⌘⇧F</code> or <code>Escape</code> to exit</li>
 </ul>
-<p>Press <code>⌘⇧F</code> or <code>Escape</code> to exit.</p>
 <h3 id="word-count">Word Count</h3>
-<p>Always visible in the status bar at the bottom. No clicks required.</p>
+<p>Always visible in the status bar. No clicks required.</p>
+<hr />
 <h2 id="wiki-links">Wiki Links</h2>
 <p>Connect your notes with wiki-style links:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>See [[My Other Note]] for more details.
 </code></pre></div>
-<ul>
-<li>Type <code>[[</code> to trigger autocomplete</li>
-<li>Click links in preview mode to navigate</li>
-<li>View backlinks in the right sidebar</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Autocomplete</td>
+<td>Type <code>[[</code></td>
+</tr>
+<tr>
+<td>Navigate</td>
+<td>Click links in preview</td>
+</tr>
+<tr>
+<td>Backlinks</td>
+<td>View in right sidebar</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="tags">Tags</h2>
 <p>Organize notes with tags:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>This is about <span class="ni">#research</span> and <span class="ni">#causal</span>-inference.
 </code></pre></div>
-<ul>
-<li>Type <code>#</code> to trigger autocomplete</li>
-<li>Tags get consistent colors based on name</li>
-<li>Filter notes by clicking tags in the sidebar</li>
-</ul>
 <h3 id="tags-panel">Tags Panel</h3>
-<p>The Tags Panel (right sidebar, click "Tags" tab) provides powerful tag management:</p>
-<p><strong>Views:</strong>
-- <strong>Tree View</strong>: Hierarchical display for nested tags (<code>research/statistics</code>)
-- <strong>Flat View</strong>: Alphabetical list of all tags</p>
-<p><strong>Features:</strong>
-- <strong>Search</strong>: Filter tags in real-time
-- <strong>Recent Tags</strong>: Quick access to recently used tags
-- <strong>Compact Mode</strong>: Reduce padding for more tags on screen
-- <strong>Note Counts</strong>: See how many notes use each tag</p>
-<p><strong>Tag Management:</strong>
-- Right-click any tag to <strong>Rename</strong> or <strong>Delete</strong>
-- <strong>Orphan Detection</strong>: Unregistered <code>#tags</code> found in notes are highlighted
-- <strong>Register Tags</strong>: One-click to add orphan tags to your tag library</p>
+<p>Access via right sidebar → "Tags" tab.</p>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tree View</strong></td>
+<td>Hierarchical display for nested tags</td>
+</tr>
+<tr>
+<td><strong>Flat View</strong></td>
+<td>Alphabetical list</td>
+</tr>
+<tr>
+<td><strong>Compact</strong></td>
+<td>Reduced padding for more tags</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tag Management:</strong></p>
+<ul>
+<li>Right-click to <strong>Rename</strong> or <strong>Delete</strong></li>
+<li><strong>Orphan Detection</strong> highlights unregistered tags</li>
+<li>One-click to register orphan tags</li>
+</ul>
 <h3 id="hierarchical-tags">Hierarchical Tags</h3>
-<p>Use path notation for tag hierarchies:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh">#research/statistics/mediation</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="gh">#teaching/stat-440</span>
 </code></pre></div>
-<p>Hierarchical tags appear as expandable trees in the Tags Panel.</p>
+<hr />
 <h2 id="daily-notes">Daily Notes</h2>
-<p>Quick capture for daily thoughts:</p>
-<ul>
-<li>Press <code>⌘D</code> to open/create today's note</li>
-<li>Template auto-applied</li>
-<li>5 built-in templates:</li>
-<li><strong>Minimal</strong>: Just the date heading</li>
-<li><strong>Journaling</strong>: Gratitude, focus, reflections</li>
-<li><strong>Research</strong>: Notes, papers, ideas sections</li>
-<li><strong>Meeting</strong>: Attendees, agenda, action items</li>
-<li><strong>Focus</strong>: Single priority with blockers</li>
-</ul>
-<p>Configure templates in Settings → Writing → Daily Note Template.</p>
+<div class="admonition tip">
+<p class="admonition-title">Quick Access</p>
+<p>Press <code>⌘D</code> to open/create today's note.</p>
+</div>
+<p><strong>5 Built-in Templates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Minimal</strong></td>
+<td>Just the date heading</td>
+</tr>
+<tr>
+<td><strong>Journaling</strong></td>
+<td>Gratitude, focus, reflections</td>
+</tr>
+<tr>
+<td><strong>Research</strong></td>
+<td>Notes, papers, ideas sections</td>
+</tr>
+<tr>
+<td><strong>Meeting</strong></td>
+<td>Attendees, agenda, action items</td>
+</tr>
+<tr>
+<td><strong>Focus</strong></td>
+<td>Single priority with blockers</td>
+</tr>
+</tbody>
+</table>
+<p>Configure in Settings → Writing → Daily Note Template.</p>
+<hr />
 <h2 id="knowledge-graph">Knowledge Graph</h2>
 <p>Visualize connections between your notes:</p>
 <ul>
-<li>Access via command palette or ribbon</li>
 <li>Interactive D3 force-directed graph</li>
-<li>Notes appear as nodes, links as edges</li>
+<li>Notes as nodes, links as edges</li>
 <li>Pan, zoom, and click to navigate</li>
 <li>See clusters of related ideas</li>
 </ul>
+<hr />
 <h2 id="command-palette">Command Palette</h2>
-<p>Press <code>⌘K</code> for quick access to all features:</p>
-<ul>
-<li>Create New Note</li>
-<li>Open Daily Note</li>
-<li>Toggle Focus Mode</li>
-<li>Sync to Obsidian</li>
-<li>Ask Claude / Gemini</li>
-</ul>
+<p>Press <code>⌘K</code> for quick access:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New Note</td>
+<td>Create note</td>
+</tr>
+<tr>
+<td>Daily Note</td>
+<td>Open today's note</td>
+</tr>
+<tr>
+<td>Focus Mode</td>
+<td>Toggle distraction-free</td>
+</tr>
+<tr>
+<td>Ask Claude</td>
+<td>AI assistance</td>
+</tr>
+<tr>
+<td>Ask Gemini</td>
+<td>AI assistance</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="ai-integration">AI Integration</h2>
-<p>Use your existing Claude and Gemini CLI subscriptions:</p>
+<p>Use your existing CLI subscriptions (no API keys needed):</p>
 <table>
 <thead>
 <tr>
@@ -2225,52 +2202,68 @@
 </tr>
 </tbody>
 </table>
-<p>No API keys needed - uses your CLI subscriptions.</p>
+<div class="admonition note">
+<p class="admonition-title">CLI Required</p>
+<p>Install <a href="https://claude.ai/cli">Claude CLI</a> or <a href="https://ai.google.dev/gemini-api/docs/cli">Gemini CLI</a> first.</p>
+</div>
+<hr />
 <h2 id="global-hotkey">Global Hotkey</h2>
-<p>Open Scribe from anywhere: <code>⌘⇧N</code></p>
+<p>Open Scribe from anywhere: <strong>⌘⇧N</strong></p>
 <p>Works even when Scribe is minimized or closed.</p>
-<h2 id="empty-state">Empty State</h2>
-<p>When no note is selected, Scribe shows an engaging empty state:</p>
-<ul>
-<li>Animated pen icon</li>
-<li>"Ready to write" heading</li>
-<li>Quick action buttons (New Note, Daily Note)</li>
-<li>Random inspirational writing quote</li>
-<li>Command palette hint</li>
-</ul>
-<h2 id="ui-polish">UI Polish</h2>
-<h3 id="micro-interactions">Micro-interactions</h3>
-<p>All interactive elements provide tactile feedback:</p>
-<ul>
-<li><strong>Buttons</strong>: Scale down slightly on click (0.95x)</li>
-<li><strong>Ribbon icons</strong>: Press feedback with background change</li>
-<li><strong>Transitions</strong>: Smooth 150ms animations</li>
-</ul>
-<h3 id="sidebar-tooltips">Sidebar Tooltips</h3>
-<p>Hover over sidebar icons to see:</p>
-<ul>
-<li>Icon name</li>
-<li>Keyboard shortcut</li>
-</ul>
-<p>Tooltips appear after 200ms delay to avoid flickering.</p>
-<h3 id="accessibility">Accessibility</h3>
-<p>Scribe respects your system preferences:</p>
-<ul>
-<li><strong>Reduced motion</strong>: All animations disabled when <code>prefers-reduced-motion</code> is set</li>
-<li><strong>Screen readers</strong>: Proper ARIA labels on all interactive elements</li>
-<li><strong>Keyboard navigation</strong>: Full support for keyboard-only users</li>
-</ul>
+<hr />
 <h2 id="math-support">Math Support</h2>
 <p>Write math using LaTeX syntax:</p>
-<p><strong>Inline math:</strong>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Inline Math</label><label for="__tabbed_1_2">Display Math</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>The formula $E = mc^2$ is famous.
-</code></pre></div></p>
-<p><strong>Display math:</strong>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>$$
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>$$
-</code></pre></div></p>
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Powered by KaTeX for fast, native rendering.</p>
+<hr />
+<h2 id="accessibility">Accessibility</h2>
+<div class="admonition tip">
+<p class="admonition-title">ADHD-Friendly Design</p>
+<p>Scribe respects your system preferences and cognitive needs.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reduced motion</strong></td>
+<td>Animations disabled when system preference set</td>
+</tr>
+<tr>
+<td><strong>Screen readers</strong></td>
+<td>Proper ARIA labels</td>
+</tr>
+<tr>
+<td><strong>Keyboard navigation</strong></td>
+<td>Full support</td>
+</tr>
+<tr>
+<td><strong>Auto-save</strong></td>
+<td>Never lose work</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<p><a class="md-button md-button--primary" href="../shortcuts/">Keyboard Shortcuts <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg></span></a>
+<a class="md-button" href="../themes/">Themes Guide</a></p>
 
 
 
@@ -2346,6 +2339,8 @@
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/theme-toggle.js"></script>
       
     
   </body>

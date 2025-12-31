@@ -55,6 +55,8 @@
       
     
     
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -71,7 +73,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -127,9 +129,19 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -137,10 +149,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to high contrast"  type="radio" name="__palette" id="__palette_2">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to high contrast" for="__palette_3" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to auto mode"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to auto mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20c-2.21 0-4.21-.9-5.66-2.34L17.66 6.34A8.01 8.01 0 0 1 20 12a8 8 0 0 1-8 8M6 8h2V6h1.5v2h2v1.5h-2v2H8v-2H6M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 14h5v-1.5h-5z"/></svg>
       </label>
     
   
@@ -368,7 +390,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../planning/V1_RELEASE_PLAN.md" class="md-tabs__link">
+        <a href="../../planning/INDEX/" class="md-tabs__link">
           
   
   
@@ -849,6 +871,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#essential-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Essential Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#global" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -893,6 +926,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#command-palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Palette
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-planned" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -904,21 +948,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#command-palette-actions" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Command Palette Actions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#symbol-legend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Symbol Legend
+        Next Steps
       
     </span>
   </a>
@@ -1056,6 +1089,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../DUAL-MODE-ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual-Mode Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../COMPONENTS/" class="md-nav__link">
         
   
@@ -1064,6 +1125,62 @@
     
   
     Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-BROWSER-FEATURE-REVIEW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri/Browser Feature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-WEBDRIVER-RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri WebDriver Research
   
 
     
@@ -1370,210 +1487,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../planning/V1_RELEASE_PLAN.md" class="md-nav__link">
+      <a href="../../planning/INDEX/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Release Plan
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/UI-IMPROVEMENTS-CONSOLIDATED.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    UI Improvements Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-22-EDITOR-MODES.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 22 - Editor Modes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-21-MISSION-CONTROL.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 21 - Mission Control
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-13-PROJECT-SYSTEM.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 13 - Project System
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-12-UI-POLISH.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 12 - UI Polish
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-11-PLAN.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 11
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../planning/SPRINT-10-COMPLETE.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sprint 10
+    Planning Index
   
 
     
@@ -1708,6 +1629,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#essential-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Essential Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#global" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1752,6 +1684,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#command-palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Palette
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-planned" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1763,21 +1706,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#command-palette-actions" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Command Palette Actions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#symbol-legend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Symbol Legend
+        Next Steps
       
     </span>
   </a>
@@ -1805,7 +1737,65 @@
 
 
 <h1 id="keyboard-shortcuts">Keyboard Shortcuts</h1>
-<p>Scribe is designed to be fully keyboard-driven. Here are all the shortcuts you need.</p>
+<blockquote>
+<p>Scribe is designed to be fully keyboard-driven</p>
+</blockquote>
+<div class="admonition tip">
+<p class="admonition-title">Symbol Legend</p>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⌘</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>⌥</td>
+<td>Option/Alt</td>
+</tr>
+<tr>
+<td>⇧</td>
+<td>Shift</td>
+</tr>
+<tr>
+<td>⌃</td>
+<td>Control</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr />
+<h2 id="essential-shortcuts">Essential Shortcuts</h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong>⌘⇧N</strong></p>
+<hr />
+<p>Open Scribe from anywhere (global hotkey)</p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg></span> <strong>⌘K</strong></p>
+<hr />
+<p>Command palette - quick access to everything</p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6c-1.11 0-2 .89-2 2v16c0 1.11.89 2 2 2h7.81c-.53-.91-.81-1.95-.81-3 0-3.31 2.69-6 6-6 .34 0 .67.03 1 .08V8zm-1 7V3.5L18.5 9zm10 11h-3v3h-2v-3h-3v-2h3v-3h2v3h3z"/></svg></span> <strong>⌘N</strong></p>
+<hr />
+<p>Create new note</p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10h5v5H7m12 4H5V8h14m0-5h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2"/></svg></span> <strong>⌘D</strong></p>
+<hr />
+<p>Open/create today's daily note</p>
+</li>
+</ul>
+</div>
+<hr />
 <h2 id="global">Global</h2>
 <table>
 <thead>
@@ -1816,27 +1806,28 @@
 </thead>
 <tbody>
 <tr>
-<td>Open Scribe (from anywhere)</td>
+<td><strong>Open Scribe</strong> (from anywhere)</td>
 <td><code>⌘⇧N</code></td>
 </tr>
 <tr>
-<td>Command Palette</td>
+<td><strong>Command Palette</strong></td>
 <td><code>⌘K</code></td>
 </tr>
 <tr>
-<td>Settings</td>
+<td><strong>Settings</strong></td>
 <td><code>⌘,</code></td>
 </tr>
 <tr>
-<td>Close Window</td>
+<td><strong>Close Window</strong></td>
 <td><code>⌘W</code></td>
 </tr>
 <tr>
-<td>Quit</td>
+<td><strong>Quit</strong></td>
 <td><code>⌘Q</code></td>
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="navigation">Navigation</h2>
 <table>
 <thead>
@@ -1847,35 +1838,36 @@
 </thead>
 <tbody>
 <tr>
-<td>New Note</td>
+<td><strong>New Note</strong></td>
 <td><code>⌘N</code></td>
 </tr>
 <tr>
-<td>Daily Note</td>
+<td><strong>Daily Note</strong></td>
 <td><code>⌘D</code></td>
 </tr>
 <tr>
-<td>Search Notes</td>
+<td><strong>Search Notes</strong></td>
 <td><code>⌘F</code></td>
 </tr>
 <tr>
-<td>Toggle Left Sidebar</td>
+<td><strong>Toggle Left Sidebar</strong></td>
 <td><code>⌘B</code></td>
 </tr>
 <tr>
-<td>Toggle Right Sidebar</td>
+<td><strong>Toggle Right Sidebar</strong></td>
 <td><code>⌘⇧B</code></td>
 </tr>
 <tr>
-<td>Back</td>
+<td><strong>Back</strong></td>
 <td><code>⌘[</code></td>
 </tr>
 <tr>
-<td>Forward</td>
+<td><strong>Forward</strong></td>
 <td><code>⌘]</code></td>
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="editor">Editor</h2>
 <table>
 <thead>
@@ -1886,33 +1878,37 @@
 </thead>
 <tbody>
 <tr>
-<td>Toggle Write/Preview</td>
+<td><strong>Toggle Write/Preview</strong></td>
 <td><code>⌘E</code></td>
 </tr>
 <tr>
-<td>Focus Mode</td>
+<td><strong>Focus Mode</strong></td>
 <td><code>⌘⇧F</code></td>
 </tr>
 <tr>
-<td>Bold</td>
+<td><strong>Bold</strong></td>
 <td><code>⌘B</code></td>
 </tr>
 <tr>
-<td>Italic</td>
+<td><strong>Italic</strong></td>
 <td><code>⌘I</code></td>
 </tr>
 <tr>
-<td>Undo</td>
+<td><strong>Undo</strong></td>
 <td><code>⌘Z</code></td>
 </tr>
 <tr>
-<td>Redo</td>
+<td><strong>Redo</strong></td>
 <td><code>⌘⇧Z</code></td>
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="themes">Themes</h2>
-<p>Quick-switch between themes:</p>
+<div class="admonition tip">
+<p class="admonition-title">Quick Theme Switching</p>
+<p>Use <code>⌘⌥</code> + number (0-9) to switch themes instantly.</p>
+</div>
 <table>
 <thead>
 <tr>
@@ -1963,28 +1959,14 @@
 </tr>
 </tbody>
 </table>
-<h2 id="ai-planned">AI (Planned)</h2>
-<table>
-<thead>
-<tr>
-<th>Action</th>
-<th>Shortcut</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>AI Panel</td>
-<td><code>⌘⇧A</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="command-palette-actions">Command Palette Actions</h2>
+<hr />
+<h2 id="command-palette">Command Palette</h2>
 <p>Press <code>⌘K</code> then type:</p>
 <table>
 <thead>
 <tr>
 <th>Command</th>
-<th>What it does</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody>
@@ -2018,33 +2000,26 @@
 </tr>
 </tbody>
 </table>
-<h2 id="symbol-legend">Symbol Legend</h2>
+<hr />
+<h2 id="ai-planned">AI (Planned)</h2>
 <table>
 <thead>
 <tr>
-<th>Symbol</th>
-<th>Key</th>
+<th>Action</th>
+<th>Shortcut</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>⌘</td>
-<td>Command</td>
-</tr>
-<tr>
-<td>⌥</td>
-<td>Option/Alt</td>
-</tr>
-<tr>
-<td>⇧</td>
-<td>Shift</td>
-</tr>
-<tr>
-<td>⌃</td>
-<td>Control</td>
+<td><strong>AI Panel</strong></td>
+<td><code>⌘⇧A</code></td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<p><a class="md-button md-button--primary" href="../editor/">Editor Guide <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg></span></a>
+<a class="md-button" href="../themes/">Themes Guide</a></p>
 
 
 
@@ -2120,6 +2095,8 @@
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/theme-toggle.js"></script>
       
     
   </body>
