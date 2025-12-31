@@ -101,7 +101,10 @@ Press **⌘⇧F** to enter distraction-free focus mode.
 
 Organize your notes into projects. Each project can have its own daily notes template.
 
-See the [[Daily Note Example]] for a sample daily note.`
+## More Examples
+
+- [[Daily Note Example]] - Sample daily note template
+- [[Callout Examples]] - Learn about styled callout blocks`
   },
 
   daily: {
@@ -126,6 +129,93 @@ This is what a daily note might look like:
 ---
 
 💡 **Tip:** Press ⌘D any time to open today's daily note!`
+  },
+
+  callouts: {
+    title: 'Callout Examples',
+    folder: 'inbox',
+    tags: ['tutorial', 'tips'],
+    content: `# Callout Examples
+
+Callouts (also called admonitions) help highlight important information with styled blocks.
+
+## Basic Callouts
+
+> [!note] Note Callout
+> This is a note callout with a blue theme. Great for general information and tips.
+
+> [!tip] Tip Callout
+> This is a tip callout with a cyan theme. Use it for helpful suggestions and pro tips.
+
+> [!warning] Warning Callout
+> This is a warning callout with a yellow/amber theme. Good for cautionary information.
+
+> [!danger] Danger Callout
+> This is a danger callout with a red theme. Use for critical warnings and errors.
+
+## More Callout Types
+
+> [!info] Information
+> Additional information that's useful to know.
+
+> [!success] Success!
+> Something completed successfully or a positive outcome.
+
+> [!question] Question
+> Pose a question or highlight something unclear.
+
+> [!example] Example
+> Show a code example or demonstration.
+
+> [!quote] Quote
+> Highlight a quotation or reference.
+
+> [!bug] Known Bug
+> Document a known issue or bug.
+
+> [!abstract] Summary
+> Provide a summary or abstract of content.
+
+## Custom Titles
+
+> [!tip] Pro Tip: Keyboard Shortcuts
+> Press **⌘E** to cycle through editor modes (Source → Live → Reading).
+
+> [!warning] Before You Start
+> Make sure to save your work regularly, even though Scribe auto-saves.
+
+## Nested Content
+
+> [!note] Callouts Support Markdown
+> You can use **bold**, *italic*, and \`code\` inside callouts.
+>
+> - Bullet lists work
+> - Multiple paragraphs too
+>
+> Even code blocks:
+> \`\`\`javascript
+> console.log("Hello from a callout!");
+> \`\`\`
+
+## Testing Instructions
+
+To test callouts:
+1. Switch to **Reading mode** (⌘3 or click "Reading" tab)
+2. Callouts should display with:
+   - Colored backgrounds and borders
+   - Type-specific icons
+   - Proper styling for dark/light themes
+3. Switch back to **Source mode** (⌘1) to see the markdown syntax
+
+## Syntax Reference
+
+\`\`\`markdown
+> [!type] Optional Title
+> Content goes here
+> Can span multiple lines
+\`\`\`
+
+**Available types:** note, tip, warning, danger, info, success, question, example, quote, bug, abstract, summary, tldr, important, hint, caution, attention, error, failure, fail, missing, check, done, help, faq, cite`
   }
 } as const
 
