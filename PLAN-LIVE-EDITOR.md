@@ -51,6 +51,22 @@ All three features successfully implemented:
 - ✅ Bold text renders without `**` markers
 - ✅ Cursor-aware behavior reveals raw syntax on active line
 
+**Performance Fixes (2025-12-31):**
+1. **Infinite Re-Render Loop Fixed:**
+   - Problem: `CodeMirrorLivePreview` component had infinite loop in useEffect
+   - Root cause: onChange → content prop update → useEffect → dispatch → onChange (infinite)
+   - Fix: Added `isInternalChange` ref to distinguish typing vs external updates
+   - Result: Eliminated 2000+ console errors and "Maximum update depth exceeded" warnings
+
+2. **Decoration Rebuild Optimization:**
+   - Problem: Full syntax tree iteration on EVERY cursor movement (even within same line)
+   - Fix: Cache cursor line number, only rebuild when moving to different line
+   - Result: Massive reduction in expensive decoration rebuilds
+
+3. **Known Issue:** Initial transition to edit mode can still feel jerky
+   - Likely due to initial decoration build on first render
+   - Future optimization: Incremental decoration builds or debouncing
+
 ---
 
 ## Feature 1: Cursor-Aware Syntax Hiding
