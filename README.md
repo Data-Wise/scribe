@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.2.0-blue)]()
-[![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.2.1-blue)]()
+[![Progress](https://img.shields.io/badge/progress-55%25-yellow)]()
+[![Tests](https://img.shields.io/badge/tests-1041%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 

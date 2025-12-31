@@ -1,16 +1,16 @@
 ---
 status: active
 priority: P1
-progress: 50
-version: 1.6.0-dev
+progress: 55
+version: 1.2.1
 sprint: 25
-updated: 2025-12-29
+updated: 2025-12-30
 editor: hybrid-markdown++
 next_sprint: 26
 next_focus: Activity Bar Badges + Browser Mode Indicator
-tests: 666+129
-unit_tests: 666
-e2e_tests: 129
+tests: 759+282
+unit_tests: 759
+e2e_tests: 282
 tags:
   - adhd-friendly
   - distraction-free
@@ -27,7 +27,7 @@ tags:
 
 ## Current Sprint
 
-**Sprint 25: Plan B UI Redesign** ✅ Complete (2025-12-29)
+**Sprint 25: Plan B UI Redesign + v1.2.1 Release** ✅ Complete (2025-12-30)
 
 ### Sprint 25: Plan B UI - Obsidian Style + Gradient Tabs
 - [x] **Phase 1: Editor Tabs** ✅ Complete
@@ -63,6 +63,14 @@ tags:
   - [x] data-testid attributes added to key components
   - [x] IndexedDB isolation per test context
   - [x] **795 total tests (666 unit + 129 E2E)**
+- [x] **v1.2.1 Release** ✅ Complete (2025-12-30)
+  - [x] Toast notifications (success/error feedback)
+  - [x] Demo data seeding for Tauri (Migration 007)
+  - [x] Unified seed data between browser/Tauri
+  - [x] 47 new E2E tests (25 feature + 22 edge case/stress)
+  - [x] WebDriver research documented
+  - [x] Git workflow documented (protected main + worktrees)
+  - [x] **1,041 total tests (759 unit + 282 E2E)**
 
 **Design Document:** `SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md`
 
@@ -251,7 +259,7 @@ tags:
 | **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
 | **v1.6** | 25 | Plan B UI Redesign | ✅ 50% |
 
-**Total: v1.6 Phase 1+5+6 complete (795 tests: 666 unit + 129 E2E)**
+**Total: v1.2.1 released (1,041 tests: 759 unit + 282 E2E)**
 
 ---
 
