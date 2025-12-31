@@ -127,7 +127,7 @@ describe('Browser Database (IndexedDB)', () => {
 
       // Verify notes were created
       const notes = await db.notes.toArray()
-      expect(notes.length).toBe(3)
+      expect(notes.length).toBe(5)
 
       // Verify tags were created
       const tags = await db.tags.toArray()

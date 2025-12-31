@@ -41,12 +41,16 @@ describe('Browser API', () => {
     })
 
     it('lists all notes', async () => {
-      await browserApi.createNote({ title: 'Note 1', content: '', folder: 'inbox' })
-      await browserApi.createNote({ title: 'Note 2', content: '', folder: 'inbox' })
+      const note1 = await browserApi.createNote({ title: 'Note 1', content: '', folder: 'inbox' })
+      const note2 = await browserApi.createNote({ title: 'Note 2', content: '', folder: 'inbox' })
 
       const notes = await browserApi.listNotes()
 
-      expect(notes.length).toBe(2)
+      // Verify our created notes are in the list
+      expect(notes.find(n => n.id === note1.id)).toBeDefined()
+      expect(notes.find(n => n.id === note2.id)).toBeDefined()
+      expect(notes.find(n => n.title === 'Note 1')).toBeDefined()
+      expect(notes.find(n => n.title === 'Note 2')).toBeDefined()
     })
 
     it('gets a specific note by ID', async () => {

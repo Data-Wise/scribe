@@ -14,7 +14,10 @@
       "Bash(xargs kill -9)",
       "Bash(gh workflow:*)",
       "Bash(gh pr edit:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(git rm:*)",
+      "Bash(npm test:*)",
+      "WebFetch(domain:milkdown.dev)"
     ]
   }
 }
