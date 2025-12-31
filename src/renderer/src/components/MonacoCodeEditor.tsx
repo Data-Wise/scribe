@@ -1,8 +1,11 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Editor, { OnMount } from '@monaco-editor/react'
 import type { editor as MonacoEditorType } from 'monaco-editor'
 import { useEditorStore, getMonacoLanguage } from '../store/editorStore'
-import { FileCode } from 'lucide-react'
+import { FileCode, FileOutput, Loader2 } from 'lucide-react'
+import { PdfViewer } from './PdfViewer'
+import { api } from '../lib/api'
+import type { LatexCompileResult } from '../lib/api'
 
 /**
  * MonacoCodeEditor - Code editor with syntax highlighting
@@ -32,6 +35,14 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
   const editorRef = useRef<MonacoEditorType.IStandaloneCodeEditor | null>(null)
   const { setMonacoInstance } = useEditorStore()
   const language = getMonacoLanguage(filePath)
+
+  // LaTeX compilation state
+  const [isCompiling, setIsCompiling] = useState(false)
+  const [pdfPath, setPdfPath] = useState<string | null>(null)
+  const [compilationResult, setCompilationResult] = useState<LatexCompileResult | null>(null)
+  const [showPdfPreview, setShowPdfPreview] = useState(true)
+
+  const isLatexFile = language === 'latex'
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor
@@ -86,52 +97,148 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
     }
   }
 
+  const handleCompileLatex = async () => {
+    if (!filePath) return
+
+    setIsCompiling(true)
+    try {
+      const result = await api.compileLatex({
+        content,
+        filePath,
+        engine: 'pdflatex' // Default to pdflatex
+      })
+
+      setCompilationResult(result)
+
+      if (result.success && result.pdfPath) {
+        setPdfPath(result.pdfPath)
+        setShowPdfPreview(true)
+      } else {
+        // Show errors in console for now (Week 2 Day 4: inline error display)
+        console.error('[LaTeX] Compilation failed:', result.errors)
+      }
+    } catch (error) {
+      console.error('[LaTeX] Compilation error:', error)
+    } finally {
+      setIsCompiling(false)
+    }
+  }
+
+  const togglePdfPreview = () => {
+    setShowPdfPreview((prev) => !prev)
+  }
+
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex-none px-4 py-2 bg-nexus-bg-secondary border-b border-nexus-border">
-        <div className="flex items-center gap-2 text-xs text-nexus-text-muted">
-          <FileCode className="w-4 h-4" />
-          <span>Monaco Editor</span>
-          <span>•</span>
-          <span className="capitalize">{language}</span>
-          {filePath && (
-            <>
-              <span>•</span>
-              <span>{filePath}</span>
-            </>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-nexus-text-muted">
+            <FileCode className="w-4 h-4" />
+            <span>Monaco Editor</span>
+            <span>•</span>
+            <span className="capitalize">{language}</span>
+            {filePath && (
+              <>
+                <span>•</span>
+                <span>{filePath}</span>
+              </>
+            )}
+          </div>
+
+          {/* LaTeX controls */}
+          {isLatexFile && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCompileLatex}
+                disabled={isCompiling}
+                className="flex items-center gap-1 px-3 py-1 text-xs bg-nexus-accent text-white rounded hover:bg-nexus-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isCompiling ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <span>Compiling...</span>
+                  </>
+                ) : (
+                  <>
+                    <FileOutput className="w-3 h-3" />
+                    <span>Compile (Cmd+B)</span>
+                  </>
+                )}
+              </button>
+              {pdfPath && (
+                <button
+                  onClick={togglePdfPreview}
+                  className="px-3 py-1 text-xs bg-nexus-bg-primary text-nexus-text-primary rounded hover:bg-nexus-accent hover:text-white transition-colors"
+                >
+                  {showPdfPreview ? 'Hide Preview' : 'Show Preview'}
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
 
-      {/* Monaco Editor */}
-      <div className="flex-1 overflow-hidden">
-        <Editor
-          height="100%"
-          language={language}
-          value={content}
-          onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
-          theme="vs-dark"
-          options={{
-            automaticLayout: true,
-            readOnly: false,
-            tabSize: 2,
-            insertSpaces: true,
-            detectIndentation: true
-          }}
-        />
+      {/* Content area - side-by-side for LaTeX with PDF */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Monaco Editor */}
+        <div className={`${isLatexFile && showPdfPreview && pdfPath ? 'w-1/2' : 'w-full'} overflow-hidden`}>
+          <Editor
+            height="100%"
+            language={language}
+            value={content}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            theme="vs-dark"
+            options={{
+              automaticLayout: true,
+              readOnly: false,
+              tabSize: 2,
+              insertSpaces: true,
+              detectIndentation: true
+            }}
+          />
+        </div>
+
+        {/* PDF Preview (LaTeX only) */}
+        {isLatexFile && showPdfPreview && pdfPath && (
+          <div className="w-1/2 border-l border-nexus-border">
+            <PdfViewer pdfPath={pdfPath} />
+          </div>
+        )}
       </div>
 
-      {/* Footer - LaTeX-specific actions (TODO: Week 2) */}
-      {language === 'latex' && (
-        <div className="flex-none px-4 py-2 bg-nexus-bg-secondary border-t border-nexus-border">
-          <div className="flex items-center gap-4 text-xs text-nexus-text-muted">
-            <span>LaTeX features coming in Week 2:</span>
-            <span>• PDF Preview</span>
-            <span>• Auto-compile (Cmd+B)</span>
-            <span>• Error highlighting</span>
-          </div>
+      {/* Footer - Compilation errors/warnings */}
+      {isLatexFile && compilationResult && (
+        <div className="flex-none max-h-32 overflow-auto px-4 py-2 bg-nexus-bg-secondary border-t border-nexus-border">
+          {compilationResult.errors.length > 0 && (
+            <div className="mb-2">
+              <div className="text-xs font-semibold text-red-500 mb-1">Errors:</div>
+              {compilationResult.errors.map((error, i) => (
+                <div key={i} className="text-xs text-red-400 ml-2">
+                  {error.line && <span className="text-nexus-text-muted">Line {error.line}: </span>}
+                  {error.message}
+                </div>
+              ))}
+            </div>
+          )}
+          {compilationResult.warnings.length > 0 && (
+            <div>
+              <div className="text-xs font-semibold text-yellow-500 mb-1">
+                Warnings ({compilationResult.warnings.length}):
+              </div>
+              {compilationResult.warnings.slice(0, 5).map((warning, i) => (
+                <div key={i} className="text-xs text-yellow-400 ml-2 truncate">
+                  {warning}
+                </div>
+              ))}
+              {compilationResult.warnings.length > 5 && (
+                <div className="text-xs text-nexus-text-muted ml-2">
+                  ... and {compilationResult.warnings.length - 5} more
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
