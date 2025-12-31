@@ -53,14 +53,27 @@ Phase 1 (DONE ✅)        Phase 2 (DONE ✅)           Phase 3 (IN PROGRESS)
 
 ---
 
-## Recommended Next Steps
+## Recommended Next Steps ⭐ UPDATED 2025-12-31
 
 **Priority Order:**
-1. ⚡ Wire up actual AI call in Tauri (when ready for full Tauri mode)
-2. 🔧 Phase 3 options: Terminal tab or Ambient AI
-3. ⚡ Quick wins as time permits
+1. ⚡ **Backend Foundation (P1)** - Production readiness
+   - Property type validation in Rust (< 30 min)
+   - Add properties to search index (< 30 min)
+   - Wire Tauri AI commands (1-2 hours)
+   - Database backup/restore (1-2 hours)
 
-**Rationale:** Phase 2 complete - Claude tab has UI with browser-mode stub. Tauri wiring needed for full AI functionality.
+2. 🔧 **AI Enhancements (P1)** - Complete AI integration
+   - @ References in Claude chat
+   - Quick actions (Summarize, Improve, Explain)
+   - Chat history persistence
+   - Remove floating ClaudePanel
+
+3. 🎨 **UI Features (P2)** - User-facing improvements
+   - Ambient AI (⌘K everywhere)
+   - Vault sidebar
+   - Tab aesthetics
+
+**Rationale:** Backend foundation ensures production readiness before adding more UI features. AI wiring enables full desktop functionality.
 
 ---
 
