@@ -209,10 +209,27 @@ scribe help --all      # Full reference
 - ✅ Mission Control sidebar with Icon/Compact/Card modes
 - ✅ Browser mode with full IndexedDB persistence
 
-**Next: Sprint 27 P2 - Frontend Polish**
+**Next: Sprint 27 P2 - Settings Enhancement (Priority)**
+
+**🎯 Priority 1: ADHD-Optimized Settings UI**
+- [ ] Settings search with fuzzy matching (reduces cognitive load)
+- [ ] "What's New" badge system (feature discovery)
+- [ ] Quick Actions Pro customization
+  - [ ] Drag-to-reorder + visibility toggles
+  - [ ] Edit prompts (5 default + 5 custom)
+  - [ ] Keyboard shortcuts (⌘⌥1-9)
+  - [ ] Model selection per action (Claude/Gemini)
+- [ ] Project template picker (5 presets)
+- [ ] Hybrid architecture (Obsidian-style tabs + search)
+- [ ] Theme gallery view (visual previews)
+- [ ] Contextual hints (inline gear icons)
+
+**Spec:** `docs/specs/SPEC-settings-enhancement-2025-12-31.md` (23 KB, comprehensive)
+**Research:** Obsidian, Typora, ADHD accessibility patterns (2025)
+
+**Priority 2: Additional Frontend Polish**
 - [ ] Browser mode indicator in UI
 - [ ] Wiki link backlink tracking in browser
-- [ ] Quick Actions customization UI
 - [ ] Chat session management UI
 
 ---

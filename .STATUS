@@ -148,10 +148,28 @@ tags:
   - [x] Automated site deployment working
   - [x] Automated builds enabled for future releases
 
-**Phase 2: Frontend Polish (P2 - Planned)**
+**Phase 2: Frontend Polish (P2 - In Planning)**
+
+**Priority 1: Settings Enhancement (ADHD-Optimized UI)** 🎯
+- [ ] Settings search with fuzzy matching (⌘F within settings)
+- [ ] "What's New" badge system (auto-highlight v1.7.0 features)
+- [ ] Quick Actions customization UI
+  - [ ] Drag-to-reorder Quick Actions
+  - [ ] Visibility toggles per action
+  - [ ] Edit prompts (5 default + 5 custom max)
+  - [ ] Keyboard shortcuts (⌘⌥1-9)
+  - [ ] Model selection (Claude vs Gemini per action)
+- [ ] Project template picker (5 presets: Research+, Teaching+, Dev+, Writing+, Minimal)
+- [ ] Hybrid settings architecture (tabs + search)
+- [ ] Theme gallery view (3-column grid with visual previews)
+- [ ] Contextual settings hints (inline gear icons)
+
+**Spec:** `docs/specs/SPEC-settings-enhancement-2025-12-31.md`
+**Brainstorm:** `BRAINSTORM-settings-enhancement-2025-12-31.md`
+
+**Priority 2: Additional P2 Items**
 - [ ] Browser mode indicator in UI
 - [ ] Wiki link backlink tracking in browser
-- [ ] Quick Actions customization UI
 - [ ] Chat session management UI
 
 **Phase 3: Advanced Features (P3 - Backlog)**
