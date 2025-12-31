@@ -9,6 +9,7 @@ import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
 import { WritingProgress } from './WritingProgress'
 import { QuickChatPopover } from './QuickChatPopover'
+import { CodeMirrorLivePreview } from './CodeMirrorLivePreview'
 import { processMathInContent } from '../lib/mathjax'
 import { isBrowser } from '../lib/platform'
 import { Note, Tag } from '../types'
@@ -455,8 +456,8 @@ export function HybridEditor({
         className={`flex-1 overflow-auto p-8 pt-16 ${focusMode ? 'typewriter-mode' : ''}`}
         style={{ backgroundColor: 'var(--nexus-bg-primary)' }}
       >
-        {/* Source and Live Preview modes use textarea (Live Preview cursor tracking deferred to v1.4) */}
-        {(mode === 'source' || mode === 'live-preview') ? (
+        {/* Source mode: plain textarea */}
+        {mode === 'source' ? (
           <textarea
             ref={textareaRef}
             value={content}
@@ -471,6 +472,17 @@ export function HybridEditor({
               color: 'var(--nexus-text-primary)',
             }}
             spellCheck={false}
+          />
+        ) : mode === 'live-preview' ? (
+          /* Live Preview mode: CodeMirror with markdown syntax highlighting and live rendering */
+          <CodeMirrorLivePreview
+            content={content}
+            onChange={onChange}
+            style={{
+              fontFamily: 'var(--editor-font-family)',
+              fontSize: 'var(--editor-font-size)',
+              lineHeight: 'var(--editor-line-height)',
+            }}
           />
         ) : (
           /* Reading mode: fully rendered, read-only */
