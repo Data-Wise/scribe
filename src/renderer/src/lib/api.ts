@@ -235,7 +235,7 @@ const tauriApi = {
 const rawApi = isTauri() ? tauriApi : browserApi
 
 // ============================================================================
-// Error Handling with Toast Notifications
+// Toast Notifications for API Operations
 // ============================================================================
 
 import { showGlobalToast } from '../components/Toast'
@@ -267,25 +267,51 @@ function withErrorToast<TArgs extends unknown[], TReturn>(
 }
 
 /**
- * API with error toast notifications for critical operations.
- * Silent operations (search, list) don't show toasts.
+ * Wraps an API function with both error and success toast notifications.
+ * Use for user-initiated actions where feedback improves UX.
+ */
+function withToast<TArgs extends unknown[], TReturn>(
+  fn: (...args: TArgs) => Promise<TReturn>,
+  errorMessage: string,
+  successMessage?: string
+): (...args: TArgs) => Promise<TReturn> {
+  return async (...args: TArgs): Promise<TReturn> => {
+    try {
+      const result = await fn(...args)
+      if (successMessage) {
+        showGlobalToast(successMessage, 'success')
+      }
+      return result
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      console.error(`[API Error] ${errorMessage}:`, message)
+      showGlobalToast(`${errorMessage}: ${message}`, 'error')
+      throw error
+    }
+  }
+}
+
+/**
+ * API with toast notifications for operations.
+ * - User-initiated CRUD: success + error toasts
+ * - Background operations: error only or silent
  */
 export const api = {
-  // Note operations (critical - show toasts)
-  createNote: withErrorToast(rawApi.createNote, 'Failed to create note'),
-  updateNote: withErrorToast(rawApi.updateNote, 'Failed to save note'),
-  deleteNote: withErrorToast(rawApi.deleteNote, 'Failed to delete note'),
+  // Note operations - success feedback for user actions
+  createNote: withToast(rawApi.createNote, 'Failed to create note', 'Note created'),
+  updateNote: withErrorToast(rawApi.updateNote, 'Failed to save note'), // No success - too frequent
+  deleteNote: withToast(rawApi.deleteNote, 'Failed to delete note', 'Note deleted'),
   getNote: withErrorToast(rawApi.getNote, 'Failed to load note', true),
   listNotes: withErrorToast(rawApi.listNotes, 'Failed to list notes', true),
   searchNotes: withErrorToast(rawApi.searchNotes, 'Search failed', true),
 
-  // Tag operations
-  createTag: withErrorToast(rawApi.createTag, 'Failed to create tag'),
+  // Tag operations - success feedback for user actions
+  createTag: withToast(rawApi.createTag, 'Failed to create tag', 'Tag created'),
   getTag: withErrorToast(rawApi.getTag, 'Failed to get tag', true),
   getTagByName: withErrorToast(rawApi.getTagByName, 'Failed to get tag', true),
   getAllTags: withErrorToast(rawApi.getAllTags, 'Failed to load tags', true),
-  renameTag: withErrorToast(rawApi.renameTag, 'Failed to rename tag'),
-  deleteTag: withErrorToast(rawApi.deleteTag, 'Failed to delete tag'),
+  renameTag: withToast(rawApi.renameTag, 'Failed to rename tag', 'Tag renamed'),
+  deleteTag: withToast(rawApi.deleteTag, 'Failed to delete tag', 'Tag deleted'),
   addTagToNote: withErrorToast(rawApi.addTagToNote, 'Failed to add tag'),
   removeTagFromNote: withErrorToast(rawApi.removeTagFromNote, 'Failed to remove tag'),
   getNoteTags: withErrorToast(rawApi.getNoteTags, 'Failed to get tags', true),
@@ -324,20 +350,20 @@ export const api = {
   setBibliographyPath: withErrorToast(rawApi.setBibliographyPath, 'Failed to set bibliography'),
   getBibliographyPath: withErrorToast(rawApi.getBibliographyPath, 'Failed to get bibliography', true),
 
-  // Document export
-  exportDocument: withErrorToast(rawApi.exportDocument, 'Document export failed'),
+  // Document export - success feedback
+  exportDocument: withToast(rawApi.exportDocument, 'Document export failed', 'Document exported'),
   isPandocAvailable: withErrorToast(rawApi.isPandocAvailable, 'Pandoc check failed', true),
 
-  // Project operations (critical - show toasts)
+  // Project operations - success feedback for user actions
   listProjects: withErrorToast(rawApi.listProjects, 'Failed to load projects', true),
-  createProject: withErrorToast(rawApi.createProject, 'Failed to create project'),
+  createProject: withToast(rawApi.createProject, 'Failed to create project', 'Project created'),
   getProject: withErrorToast(rawApi.getProject, 'Failed to load project', true),
-  updateProject: withErrorToast(rawApi.updateProject, 'Failed to update project'),
-  deleteProject: withErrorToast(rawApi.deleteProject, 'Failed to delete project'),
+  updateProject: withToast(rawApi.updateProject, 'Failed to update project', 'Project saved'),
+  deleteProject: withToast(rawApi.deleteProject, 'Failed to delete project', 'Project deleted'),
   getProjectSettings: withErrorToast(rawApi.getProjectSettings, 'Failed to get settings', true),
-  updateProjectSettings: withErrorToast(rawApi.updateProjectSettings, 'Failed to save settings'),
+  updateProjectSettings: withToast(rawApi.updateProjectSettings, 'Failed to save settings', 'Settings saved'),
   getProjectNotes: withErrorToast(rawApi.getProjectNotes, 'Failed to get project notes', true),
-  setNoteProject: withErrorToast(rawApi.setNoteProject, 'Failed to move note'),
+  setNoteProject: withToast(rawApi.setNoteProject, 'Failed to move note', 'Note moved'),
 
   // Terminal operations (v2 - stub for now)
   spawnShell: withErrorToast(rawApi.spawnShell, 'Failed to start terminal'),

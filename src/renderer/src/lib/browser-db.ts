@@ -128,7 +128,12 @@ export const noteToRecord = (note: Partial<Note>): Partial<NoteRecord> => {
  *
  * Creates example projects and notes to help users understand
  * how Scribe works. Only runs if database is empty.
+ *
+ * Uses shared seed data from seed-data.ts to stay in sync with
+ * Tauri's database.rs migration 007.
  */
+import { DEMO_PROJECT, DEMO_TAGS, DEMO_NOTES, SEED_DATA_SUMMARY } from './seed-data'
+
 export const seedDemoData = async (): Promise<boolean> => {
   // Check if already seeded (any projects exist)
   const projectCount = await db.projects.count()
@@ -141,143 +146,82 @@ export const seedDemoData = async (): Promise<boolean> => {
 
   const now = Math.floor(Date.now() / 1000)
 
-  // Create demo project
+  // Create demo project from shared data
   const demoProjectId = generateId()
   await db.projects.add({
     id: demoProjectId,
-    name: 'Getting Started',
-    type: 'generic',
-    status: 'active',
-    description: 'Learn how to use Scribe with these example notes',
-    color: '#3B82F6',
+    name: DEMO_PROJECT.name,
+    type: DEMO_PROJECT.type,
+    status: DEMO_PROJECT.status,
+    description: DEMO_PROJECT.description,
+    color: DEMO_PROJECT.color,
     created_at: now,
     updated_at: now
   })
 
-  // Create demo tags
-  const tagWelcome = { id: generateId(), name: 'welcome', color: '#10B981', created_at: now }
-  const tagTutorial = { id: generateId(), name: 'tutorial', color: '#8B5CF6', created_at: now }
-  const tagTips = { id: generateId(), name: 'tips', color: '#F59E0B', created_at: now }
-  await db.tags.bulkAdd([tagWelcome, tagTutorial, tagTips])
+  // Create demo tags from shared data
+  const tagMap: Record<string, string> = {}
+  const tagsToAdd = DEMO_TAGS.map(tag => {
+    const id = generateId()
+    tagMap[tag.name] = id
+    return { id, name: tag.name, color: tag.color, created_at: now }
+  })
+  await db.tags.bulkAdd(tagsToAdd)
 
-  // Demo notes
-  const notes = [
-    {
-      id: generateId(),
-      title: 'Welcome to Scribe',
-      content: `# Welcome to Scribe! 👋
-
-Scribe is an **ADHD-friendly distraction-free writer** designed to help you focus.
-
-## Quick Tips
-
-- Press **⌘N** to create a new note
-- Press **⌘D** to open today's daily note
-- Press **⌘P** to switch projects
-- Press **Escape** to close panels
-
-## Browser Mode
-
-You're running Scribe in **browser mode** with IndexedDB storage.
-Your notes persist even after refreshing the page!
-
-## Getting Started
-
-1. Create a new note with ⌘N
-2. Start writing without distractions
-3. Use #tags to organize your notes
-4. Link notes with [[wiki links]]
-
-See the [[Features Overview]] note for more details.`,
-      folder: 'inbox',
-      project_id: demoProjectId,
-      created_at: now,
-      updated_at: now
-    },
-    {
-      id: generateId(),
-      title: 'Features Overview',
-      content: `# Features Overview
-
-Scribe includes these core features to help you write:
-
-## ✍️ Writing
-- Clean, minimal editor
-- Auto-save (never lose work)
-- Dark mode for less eye strain
-- Word count & reading time
-
-## 🏷️ Organization
-- **Tags**: Add #tags anywhere in your notes
-- **Folders**: inbox, notes, archive
-- **Projects**: Group related notes together
-
-## 🔗 Knowledge
-- **Wiki Links**: Connect notes with [[Note Title]]
-- **Backlinks**: See what links to the current note
-- **Daily Notes**: Quick journal entries
-
-## 📚 Academic Features (Tauri only)
-- Citation management with Zotero
-- Export to PDF, Word, LaTeX
-- Equation support with KaTeX
-
-*Note: Academic features require the desktop app.*`,
-      folder: 'notes',
-      project_id: demoProjectId,
-      created_at: now - 60,
-      updated_at: now - 60
-    },
-    {
-      id: generateId(),
-      title: 'Daily Note Example',
-      content: `# Daily: ${new Date().toISOString().split('T')[0]}
-
-## Focus for Today
-- [ ] Review the [[Welcome to Scribe]] tutorial
-- [ ] Create your first note
-- [ ] Try adding some #tags
-
-## Notes
-Use this space for quick thoughts and ideas.
-
-## End of Day Review
-What did you accomplish today?`,
-      folder: 'daily',
-      project_id: null,
-      created_at: now - 120,
-      updated_at: now - 120
-    }
+  // Create notes from shared data
+  const noteMap: Record<string, string> = {}
+  const notesToAdd = [
+    { key: 'welcome', offset: 0 },
+    { key: 'features', offset: 60 },
+    { key: 'daily', offset: 120 }
   ]
 
-  // Add notes with search text
-  for (const note of notes) {
+  for (const { key, offset } of notesToAdd) {
+    const noteData = DEMO_NOTES[key as keyof typeof DEMO_NOTES]
+    const id = generateId()
+    noteMap[noteData.title] = id
+
     await db.notes.add({
-      ...note,
+      id,
+      title: noteData.title,
+      content: noteData.content,
+      folder: noteData.folder,
+      project_id: key === 'daily' ? null : demoProjectId,
+      created_at: now - offset,
+      updated_at: now - offset,
       properties: '{}',
-      search_text: createSearchText(note.title, note.content),
+      search_text: createSearchText(noteData.title, noteData.content),
       deleted_at: null
     })
+
+    // Add note-tag relationships
+    for (const tagName of noteData.tags) {
+      if (tagMap[tagName]) {
+        await db.noteTags.add({
+          note_id: id,
+          tag_id: tagMap[tagName]
+        })
+      }
+    }
   }
 
-  // Add note-tag relationships
-  await db.noteTags.bulkAdd([
-    { note_id: notes[0].id, tag_id: tagWelcome.id },
-    { note_id: notes[0].id, tag_id: tagTutorial.id },
-    { note_id: notes[1].id, tag_id: tagTutorial.id },
-    { note_id: notes[1].id, tag_id: tagTips.id }
-  ])
+  // Add wiki links between notes
+  const welcomeId = noteMap['Welcome to Scribe']
+  const featuresId = noteMap['Features Overview']
+  const dailyId = noteMap['Daily Note Example']
 
-  // Add wiki links (Welcome -> Features Overview)
-  await db.noteLinks.add({
-    source_id: notes[0].id,
-    target_id: notes[1].id
-  })
+  if (welcomeId && featuresId) {
+    await db.noteLinks.add({ source_id: welcomeId, target_id: featuresId })
+  }
+  if (featuresId && welcomeId) {
+    await db.noteLinks.add({ source_id: featuresId, target_id: welcomeId })
+  }
+  if (featuresId && dailyId) {
+    await db.noteLinks.add({ source_id: featuresId, target_id: dailyId })
+  }
 
   console.log('[Scribe] Demo data seeded successfully')
-  console.log(`  - 1 project: "Getting Started"`)
-  console.log(`  - ${notes.length} notes`)
-  console.log(`  - 3 tags: #welcome, #tutorial, #tips`)
+  console.log(`  - ${SEED_DATA_SUMMARY.description}`)
 
   return true
 }
