@@ -1,10 +1,30 @@
 # Themes
 
-Scribe includes 10 ADHD-friendly themes designed for extended writing sessions.
+> 10 ADHD-friendly themes designed for extended writing sessions
 
-## Built-in Themes
+---
 
-### Dark Themes (5)
+## Theme Overview
+
+<div class="grid cards" markdown>
+
+-   :material-weather-night:{ .lg .middle } **5 Dark Themes**
+
+    ---
+
+    Oxford Dark, Forest Night, Warm Cocoa, Midnight Purple, Deep Ocean
+
+-   :material-weather-sunny:{ .lg .middle } **5 Light Themes**
+
+    ---
+
+    Soft Paper, Morning Fog, Sage Garden, Lavender Mist, Sand Dune
+
+</div>
+
+---
+
+## Dark Themes
 
 | Theme | Description | Accent |
 |-------|-------------|--------|
@@ -14,7 +34,7 @@ Scribe includes 10 ADHD-friendly themes designed for extended writing sessions.
 | **Midnight Purple** | Gentle purples, dreamy | Purple |
 | **Deep Ocean** | Navy blues, stable | Blue |
 
-### Light Themes (5)
+## Light Themes
 
 | Theme | Description | Accent |
 |-------|-------------|--------|
@@ -24,9 +44,12 @@ Scribe includes 10 ADHD-friendly themes designed for extended writing sessions.
 | **Lavender Mist** | Soft purples | Violet |
 | **Sand Dune** | Warm neutrals | Amber |
 
+---
+
 ## Theme Shortcuts
 
-Quick-switch themes with keyboard shortcuts:
+!!! tip "Quick Switch"
+    Use `⌘⌥` + number to instantly switch themes.
 
 | Shortcut | Theme |
 |----------|-------|
@@ -41,59 +64,85 @@ Quick-switch themes with keyboard shortcuts:
 | `⌘⌥9` | Lavender Mist |
 | `⌘⌥0` | Sand Dune |
 
+---
+
 ## Auto-Theme
 
 Scribe can automatically switch themes based on time of day:
 
-- **Light themes**: 6am - 6pm
-- **Dark themes**: 6pm - 6am
+| Time | Theme Type |
+|------|------------|
+| 6am - 6pm | Light themes |
+| 6pm - 6am | Dark themes |
 
-Enable in Settings → Themes → Auto-theme by time.
+Enable in **Settings → Themes → Auto-theme by time**.
+
+---
 
 ## Custom Themes
 
 Create your own theme in Settings → Themes:
 
-1. Click "Create Custom Theme"
-2. Choose colors for:
-   - Primary background
-   - Secondary background
-   - Tertiary background
-   - Primary text
-   - Muted text
-   - Accent color
-   - Accent hover
-3. Preview in real-time
-4. Save with a custom name
+| Step | Action |
+|------|--------|
+| 1 | Click "Create Custom Theme" |
+| 2 | Choose colors (background, text, accent) |
+| 3 | Preview in real-time |
+| 4 | Save with custom name |
+
+### Color Options
+
+- Primary background
+- Secondary background
+- Tertiary background
+- Primary text
+- Muted text
+- Accent color
+- Accent hover
+
+---
 
 ## Import/Export
 
-### Export Theme
+=== "Export Theme"
 
-1. Go to Settings → Themes
-2. Click the export icon next to your theme
-3. Choose format: JSON or Base16 YAML
-4. File downloads automatically
+    1. Go to Settings → Themes
+    2. Click export icon next to theme
+    3. Choose format: JSON or Base16 YAML
+    4. File downloads automatically
 
-### Import Theme
+=== "Import Theme"
 
-1. Go to Settings → Themes
-2. Click "Import Theme"
-3. Choose file (JSON or Base16 YAML)
-4. Theme appears in Custom Themes
+    1. Go to Settings → Themes
+    2. Click "Import Theme"
+    3. Choose file (JSON or Base16 YAML)
+    4. Theme appears in Custom Themes
 
-### Import from URL
+=== "Import from URL"
 
-Paste a URL to import directly:
-- GitHub Gist links
-- Raw file URLs
-- Any accessible JSON/YAML theme file
+    Paste a URL to import directly:
+
+    - GitHub Gist links
+    - Raw file URLs
+    - Any accessible JSON/YAML theme file
+
+---
 
 ## ADHD-Friendly Design
 
-All themes follow these principles:
+!!! tip "Why These Colors?"
+    All themes follow ADHD-friendly design principles.
 
-- **Low-to-medium contrast**: Reduces eye strain during long sessions
-- **Warm or neutral tones**: Calming, less stimulating
-- **Subtle accent colors**: Functional without being distracting
-- **Consistent visual hierarchy**: Predictable, easy to scan
+| Principle | Benefit |
+|-----------|---------|
+| **Low-to-medium contrast** | Reduces eye strain |
+| **Warm or neutral tones** | Calming, less stimulating |
+| **Subtle accent colors** | Functional without distracting |
+| **Consistent hierarchy** | Predictable, easy to scan |
+
+---
+
+## Next Steps
+
+[Keyboard Shortcuts :material-arrow-right:](shortcuts.md){ .md-button .md-button--primary }
+[Editor Guide](editor.md){ .md-button }

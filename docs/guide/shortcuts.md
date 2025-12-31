@@ -1,43 +1,92 @@
 # Keyboard Shortcuts
 
-Scribe is designed to be fully keyboard-driven. Here are all the shortcuts you need.
+> Scribe is designed to be fully keyboard-driven
+
+!!! tip "Symbol Legend"
+    | Symbol | Key |
+    |--------|-----|
+    | ⌘ | Command |
+    | ⌥ | Option/Alt |
+    | ⇧ | Shift |
+    | ⌃ | Control |
+
+---
+
+## Essential Shortcuts
+
+<div class="grid cards" markdown>
+
+-   :material-rocket-launch:{ .lg .middle } **⌘⇧N**
+
+    ---
+
+    Open Scribe from anywhere (global hotkey)
+
+-   :material-magnify:{ .lg .middle } **⌘K**
+
+    ---
+
+    Command palette - quick access to everything
+
+-   :material-file-plus:{ .lg .middle } **⌘N**
+
+    ---
+
+    Create new note
+
+-   :material-calendar-today:{ .lg .middle } **⌘D**
+
+    ---
+
+    Open/create today's daily note
+
+</div>
+
+---
 
 ## Global
 
 | Action | Shortcut |
 |--------|----------|
-| Open Scribe (from anywhere) | `⌘⇧N` |
-| Command Palette | `⌘K` |
-| Settings | `⌘,` |
-| Close Window | `⌘W` |
-| Quit | `⌘Q` |
+| **Open Scribe** (from anywhere) | `⌘⇧N` |
+| **Command Palette** | `⌘K` |
+| **Settings** | `⌘,` |
+| **Close Window** | `⌘W` |
+| **Quit** | `⌘Q` |
+
+---
 
 ## Navigation
 
 | Action | Shortcut |
 |--------|----------|
-| New Note | `⌘N` |
-| Daily Note | `⌘D` |
-| Search Notes | `⌘F` |
-| Toggle Left Sidebar | `⌘B` |
-| Toggle Right Sidebar | `⌘⇧B` |
-| Back | `⌘[` |
-| Forward | `⌘]` |
+| **New Note** | `⌘N` |
+| **Daily Note** | `⌘D` |
+| **Search Notes** | `⌘F` |
+| **Toggle Left Sidebar** | `⌘B` |
+| **Toggle Right Sidebar** | `⌘⇧B` |
+| **Back** | `⌘[` |
+| **Forward** | `⌘]` |
+
+---
 
 ## Editor
 
 | Action | Shortcut |
 |--------|----------|
-| Toggle Write/Preview | `⌘E` |
-| Focus Mode | `⌘⇧F` |
-| Bold | `⌘B` |
-| Italic | `⌘I` |
-| Undo | `⌘Z` |
-| Redo | `⌘⇧Z` |
+| **Toggle Write/Preview** | `⌘E` |
+| **Focus Mode** | `⌘⇧F` |
+| **Bold** | `⌘B` |
+| **Italic** | `⌘I` |
+| **Undo** | `⌘Z` |
+| **Redo** | `⌘⇧Z` |
+
+---
 
 ## Themes
 
-Quick-switch between themes:
+!!! tip "Quick Theme Switching"
+    Use `⌘⌥` + number (0-9) to switch themes instantly.
 
 | Shortcut | Theme |
 |----------|-------|
@@ -52,18 +101,14 @@ Quick-switch between themes:
 | `⌘⌥9` | Lavender Mist |
 | `⌘⌥0` | Sand Dune |
 
-## AI (Planned)
+---
 
-| Action | Shortcut |
-|--------|----------|
-| AI Panel | `⌘⇧A` |
-
-## Command Palette Actions
+## Command Palette
 
 Press `⌘K` then type:
 
-| Command | What it does |
-|---------|--------------|
+| Command | Action |
+|---------|--------|
 | `new` | Create new note |
 | `daily` | Open today's daily note |
 | `focus` | Toggle focus mode |
@@ -72,11 +117,17 @@ Press `⌘K` then type:
 | `gemini` | Ask Gemini |
 | `settings` | Open settings |
 
-## Symbol Legend
+---
 
-| Symbol | Key |
-|--------|-----|
-| ⌘ | Command |
-| ⌥ | Option/Alt |
-| ⇧ | Shift |
-| ⌃ | Control |
+## AI (Planned)
+
+| Action | Shortcut |
+|--------|----------|
+| **AI Panel** | `⌘⇧A` |
+
+---
+
+## Next Steps
+
+[Editor Guide :material-arrow-right:](editor.md){ .md-button .md-button--primary }
+[Themes Guide](themes.md){ .md-button }
