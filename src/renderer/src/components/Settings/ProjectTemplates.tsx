@@ -225,15 +225,15 @@ function TemplateCard({
           <button
             onClick={onSelect}
             className={`
-              flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors
+              flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all
               ${isSelected
-                ? 'bg-green-600 text-white'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                ? 'bg-green-600 text-white animate-success-bounce'
+                : 'bg-blue-600 hover:bg-blue-700 text-white hover:scale-105'
               }
             `}
           >
             {isSelected ? (
-              <span className="flex items-center justify-center gap-1.5">
+              <span className="flex items-center justify-center gap-1.5 animate-fade-in">
                 <Check className="w-4 h-4" />
                 Applied
               </span>

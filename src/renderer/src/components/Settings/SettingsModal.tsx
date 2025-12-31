@@ -137,12 +137,14 @@ export default function SettingsModal() {
           {/* Content - Current Category Settings or Search Results */}
           <main className="flex-1 overflow-y-auto">
             {searchQuery.trim() ? (
-              <SearchResults
-                results={searchResults}
-                onSelectResult={handleSelectSearchResult}
-              />
+              <div className="animate-fade-in">
+                <SearchResults
+                  results={searchResults}
+                  onSelectResult={handleSelectSearchResult}
+                />
+              </div>
             ) : (
-              <div className="p-6">
+              <div key={activeCategory} className="p-6 animate-fade-in">
                 {currentCategory ? (
                   <>
                     <div className="mb-6">
