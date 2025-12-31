@@ -2,44 +2,30 @@
 
 > **ADHD-Friendly Distraction-Free Writer**
 
-[![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.2.1-blue)]()
-[![Progress](https://img.shields.io/badge/progress-55%25-yellow)]()
-[![Tests](https://img.shields.io/badge/tests-1041%20passing-brightgreen)]()
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Version](https://img.shields.io/badge/version-1.2.1-blue)
+![Progress](https://img.shields.io/badge/progress-55%25-yellow)
+![Tests](https://img.shields.io/badge/tests-1041%20passing-brightgreen)
 
 ---
 
-## What is Scribe?
+## The Problem
 
-Scribe is a **distraction-free writing app** designed for academics and researchers with ADHD. It combines a modern markdown editor with project management, academic writing tools, and CLI-based AI integration.
+| Struggle | How It Hurts |
+|----------|--------------|
+| **Too Many Choices** | Decision paralysis before you even start |
+| **Visual Clutter** | Sidebars, tabs, notifications steal focus |
+| **Slow Startup** | 10+ seconds = you've already context-switched |
+| **Lost Work** | Forgot to save? Bye-bye, brilliant paragraph |
 
-<div class="grid cards" markdown>
+## The Solution
 
--   :material-pencil:{ .lg .middle } __Distraction-Free Editor__
-
-    ---
-
-    HybridEditor with write/preview mode, focus mode, and live wiki-link highlighting
-
--   :material-palette:{ .lg .middle } __ADHD-Friendly Themes__
-
-    ---
-
-    10 built-in themes (5 dark, 5 light) with auto-switching by time of day
-
--   :material-folder-multiple:{ .lg .middle } __Project System__
-
-    ---
-
-    Research, Teaching, R-Package, R-Dev, and Generic project types
-
--   :material-robot:{ .lg .middle } __CLI-Based AI__
-
-    ---
-
-    Claude + Gemini CLI integration (no API keys needed)
-
-</div>
+| Scribe Does | You Get |
+|-------------|---------|
+| **Zero-config startup** | Writing in < 3 seconds |
+| **Single note view** | Deep focus, one thing at a time |
+| **Auto-save always** | Never lose a word |
+| **⌘W closes** | Instant escape hatch when overwhelmed |
 
 ---
 
@@ -51,14 +37,47 @@ brew install --cask data-wise/tap/scribe
 
 # Or build from source
 git clone https://github.com/Data-Wise/scribe
-cd scribe
-npm install
-npm run dev
+cd scribe && npm install && npm run dev
 ```
+
+[Get Started :material-arrow-right:](user/QUICKSTART.md){ .md-button .md-button--primary }
+[View Features](guide/features.md){ .md-button }
 
 ---
 
 ## Key Features
+
+<div class="grid cards" markdown>
+
+-   :material-pencil:{ .lg .middle } **Distraction-Free Editor**
+
+    ---
+
+    HybridEditor with write/preview mode, focus mode, and live wiki-link highlighting
+
+-   :material-palette:{ .lg .middle } **ADHD-Friendly Themes**
+
+    ---
+
+    10 built-in themes (5 dark, 5 light) with auto-switching by time of day
+
+-   :material-folder-multiple:{ .lg .middle } **Project System**
+
+    ---
+
+    Research, Teaching, R-Package, R-Dev, and Generic project types
+
+-   :material-robot:{ .lg .middle } **CLI-Based AI**
+
+    ---
+
+    Claude + Gemini CLI integration (no API keys needed)
+
+</div>
+
+---
+
+## Feature Overview
 
 | Feature | Description |
 |---------|-------------|
@@ -115,7 +134,7 @@ npm run dev
 | Editor | HybridEditor (ReactMarkdown) |
 | Styling | Tailwind CSS |
 | State | Zustand |
-| Database | SQLite |
+| Database | SQLite (Tauri) / IndexedDB (Browser) |
 | AI | Claude/Gemini CLI |
 
 ---
@@ -138,7 +157,6 @@ npm run dev
 ### Mission Control
 
 - [Mission Control Walkthrough](MISSION-CONTROL-WALKTHROUGH.md) - Sidebar tutorial
-- [Mission Control Layouts](MISSION-CONTROL-LAYOUTS.md) - Layout options
 
 ### Technical Reference
 
@@ -147,15 +165,12 @@ npm run dev
 - [Dual-Mode Architecture](DUAL-MODE-ARCHITECTURE.md) - Tauri/Browser runtime
 - [Components](COMPONENTS.md) - React component reference
 - [Tests Summary](reference/TESTS_SUMMARY.md) - Test coverage details
-- [Tauri/Browser Feature Review](TAURI-BROWSER-FEATURE-REVIEW.md) - Feature parity audit
-- [Tauri WebDriver Research](TAURI-WEBDRIVER-RESEARCH.md) - E2E testing research
 
 ### Project
 
 - [Project Definition](reference/PROJECT-DEFINITION.md) - Scope & roadmap
 - [Changelog](reference/CHANGELOG.md) - Version history
 - [Release Notes](RELEASE.md) - Release information
-- [UI Improvements](UI-IMPROVEMENTS-PROPOSAL.md) - UI enhancement plans
 
 ### Development
 
@@ -167,6 +182,6 @@ npm run dev
 
 ## Links
 
-- [GitHub Repository](https://github.com/Data-Wise/scribe)
-- [Homebrew Tap](https://github.com/Data-Wise/homebrew-tap)
-- [Issue Tracker](https://github.com/Data-Wise/scribe/issues)
+- [:material-github: GitHub Repository](https://github.com/Data-Wise/scribe)
+- [:material-package: Homebrew Tap](https://github.com/Data-Wise/homebrew-tap)
+- [:material-bug: Issue Tracker](https://github.com/Data-Wise/scribe/issues)

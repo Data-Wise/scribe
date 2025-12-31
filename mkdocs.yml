@@ -10,20 +10,37 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   palette:
+    # Theme 1: Auto (follows system preference) - Default
+    - media: "(prefers-color-scheme)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Theme 2: Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: deep purple
-      accent: deep purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
+    # Theme 3: Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: deep purple
-      accent: deep purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Switch to high contrast
+    # Theme 4: High contrast - accessibility
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/contrast-circle
+        name: Switch to auto mode
   features:
     - navigation.instant
     - navigation.tracking
@@ -40,12 +57,19 @@ theme:
 plugins:
   - search
 
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/theme-toggle.js
+
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - md_in_html
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:

@@ -1,0 +1,271 @@
+/* Scribe Documentation - Custom Styles
+ * Preset: adhd-focus
+ * ADHD-friendly: Calm colors, minimal distractions, clear hierarchy
+ * Based on aiterm's ADHD-friendly CSS adapted for Scribe
+ */
+
+/* ============================================
+ * Color Variables - Deep Purple Theme
+ * Primary: Deep Purple (#673ab7) - focused calm
+ * Accent: Purple A200 (#7c4dff) - subtle highlights
+ * ============================================ */
+
+:root {
+  --md-primary-fg-color: #673ab7;
+  --md-primary-fg-color--light: #7c4dff;
+  --md-primary-fg-color--dark: #512da8;
+  --md-accent-fg-color: #7c4dff;
+  --md-accent-fg-color--transparent: #7c4dff1a;
+
+  /* Warmer background - reduces eye strain */
+  --md-default-bg-color: #fafafa;
+
+  /* Softer text - not pure black */
+  --md-default-fg-color: #2b2b2b;
+  --md-default-fg-color--light: #5a5a5a;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #b39ddb;
+  --md-accent-fg-color: #ce93d8;
+
+  /* Deep purple-black - easier than pure black */
+  --md-default-bg-color: #1a1a2e;
+  --md-default-fg-color: #e8e8e8;
+}
+
+/* ============================================
+ * High Contrast Theme - Accessibility Focused
+ * Maximum readability for visual impairments
+ * ============================================ */
+
+.high-contrast {
+  --md-primary-fg-color: #000000;
+  --md-primary-fg-color--light: #333333;
+  --md-primary-fg-color--dark: #000000;
+  --md-accent-fg-color: #0066cc;
+  --md-accent-fg-color--transparent: #0066cc33;
+
+  /* Pure white background for maximum contrast */
+  --md-default-bg-color: #ffffff;
+
+  /* Pure black text */
+  --md-default-fg-color: #000000;
+  --md-default-fg-color--light: #333333;
+
+  /* High contrast code blocks */
+  --md-code-bg-color: #f0f0f0;
+  --md-code-fg-color: #000000;
+}
+
+.high-contrast .md-header {
+  background-color: #000000;
+}
+
+.high-contrast .md-tabs {
+  background-color: #000000;
+}
+
+.high-contrast .md-typeset a {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.high-contrast .md-typeset a:hover {
+  color: #004499;
+}
+
+/* ============================================
+ * ADHD-Friendly: Reduced Animations
+ * ============================================ */
+
+* {
+  transition-duration: 0.1s !important;
+}
+
+/* ============================================
+ * ADHD-Friendly: Clear Content Area
+ * ============================================ */
+
+.md-content {
+  max-width: 850px;  /* Narrower for easier reading */
+}
+
+/* ============================================
+ * ADHD-Friendly: Larger Click Targets
+ * ============================================ */
+
+.md-nav__link {
+  padding: 0.6rem 0.8rem;
+}
+
+/* ============================================
+ * ADHD-Friendly: Clear Heading Hierarchy
+ * ============================================ */
+
+.md-typeset h1 {
+  font-size: 2rem;
+  margin-top: 2rem;
+}
+
+.md-typeset h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  border-bottom: 2px solid var(--md-primary-fg-color);
+  padding-bottom: 0.5rem;
+}
+
+.md-typeset h3 {
+  font-size: 1.25rem;
+}
+
+/* ============================================
+ * Header Styling
+ * ============================================ */
+
+.md-header {
+  background-color: var(--md-primary-fg-color);
+}
+
+.md-tabs {
+  background-color: var(--md-primary-fg-color);
+}
+
+.md-tabs__link--active {
+  border-bottom: 2px solid var(--md-accent-fg-color);
+}
+
+/* ============================================
+ * Content Styling
+ * ============================================ */
+
+/* Accent color for links */
+.md-typeset a {
+  color: var(--md-accent-fg-color);
+}
+
+.md-typeset a:hover {
+  color: var(--md-primary-fg-color);
+}
+
+/* Code blocks */
+.md-typeset code {
+  background-color: var(--md-code-bg-color, #f5f5f5);
+  border-radius: 4px;
+}
+
+/* Admonitions accent */
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-color: var(--md-accent-fg-color);
+}
+
+.md-typeset .tip > .admonition-title,
+.md-typeset .tip > summary {
+  background-color: var(--md-accent-fg-color--transparent);
+}
+
+/* ============================================
+ * Navigation
+ * ============================================ */
+
+/* Active nav item */
+.md-nav__link--active {
+  color: var(--md-accent-fg-color) !important;
+}
+
+/* Clear visual separation */
+.md-nav__link:hover {
+  background-color: rgba(103, 58, 183, 0.1);
+}
+
+/* ============================================
+ * Buttons
+ * ============================================ */
+
+.md-typeset .md-button--primary {
+  background-color: var(--md-primary-fg-color);
+  border-color: var(--md-primary-fg-color);
+}
+
+.md-typeset .md-button--primary:hover {
+  background-color: var(--md-primary-fg-color--dark);
+  border-color: var(--md-primary-fg-color--dark);
+}
+
+/* ============================================
+ * Cards Grid (for features)
+ * ============================================ */
+
+.md-typeset .grid.cards > ul > li {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: border-color 0.1s, box-shadow 0.1s;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+ * Feature Tables - Clean Style
+ * ============================================ */
+
+.md-typeset table:not([class]) {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--md-primary-fg-color);
+  color: white;
+}
+
+.md-typeset table:not([class]) tr:hover {
+  background-color: var(--md-accent-fg-color--transparent);
+}
+
+/* ============================================
+ * Hero Section (homepage)
+ * ============================================ */
+
+.hero-badges {
+  margin: 1rem 0 2rem 0;
+}
+
+.hero-badges img {
+  margin-right: 0.5rem;
+}
+
+/* ============================================
+ * Footer
+ * ============================================ */
+
+.md-footer {
+  background-color: var(--md-default-fg-color--light);
+}
+
+/* ============================================
+ * Responsive Adjustments
+ * ============================================ */
+
+@media screen and (max-width: 76.1875em) {
+  .md-nav__source {
+    background-color: var(--md-primary-fg-color--dark);
+  }
+}
+
+/* ============================================
+ * Print Styles
+ * ============================================ */
+
+@media print {
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer {
+    display: none;
+  }
+}
