@@ -116,6 +116,12 @@ Implementation:
 - [x] 14 unit tests in TerminalPanel.test.tsx
 - [x] 12 E2E tests in terminal-tab.spec.ts
 
+Terminal v2 (Full PTY Shell):
+- [ ] Create `src-tauri/src/terminal.rs` with PTY support
+- [ ] Implement Rust commands: `spawn_shell`, `write_to_shell`, `kill_shell`
+- [ ] Add shell output event emitter to frontend
+- [ ] Remove demo mode fallback once PTY works
+
 ### Option G: Ambient AI (cmd+K Everywhere)
 - [ ] Enhance CommandPalette with AI input mode
 - [ ] Implement `@note-name` reference syntax
