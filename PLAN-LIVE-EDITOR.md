@@ -63,9 +63,12 @@ All three features successfully implemented:
    - Fix: Cache cursor line number, only rebuild when moving to different line
    - Result: Massive reduction in expensive decoration rebuilds
 
-3. **Known Issue:** Initial transition to edit mode can still feel jerky
-   - Likely due to initial decoration build on first render
-   - Future optimization: Incremental decoration builds or debouncing
+3. **Transition Smoothness Fixed:**
+   - Problem: Initial decoration build in constructor blocked UI thread during mode switch
+   - Root cause: Synchronous `buildDecorations()` call on constructor blocked rendering
+   - Fix: Deferred initial decoration build using `requestAnimationFrame()`
+   - Implementation: Start with `Decoration.none`, build decorations on next frame, skip updates until initialized
+   - Result: Smooth, responsive transitions with no UI blocking
 
 ---
 
