@@ -4,8 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import rehype-callouts official Obsidian theme */
-@import 'rehype-callouts/dist/themes/obsidian/index.css';
+/* Note: rehype-callouts theme CSS is imported in main.tsx */
 
 /* ============================================================
    ADHD-Friendly Theme System

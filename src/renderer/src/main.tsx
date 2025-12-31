@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import { isTauri, logPlatformInfo } from './lib/platform'
 import 'katex/dist/katex.min.css'  // KaTeX styles for math rendering
+import 'rehype-callouts/theme/obsidian'  // Callout theme styles
 import './index.css'
 
 // Add platform class to document for CSS targeting
