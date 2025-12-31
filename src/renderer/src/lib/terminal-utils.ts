@@ -50,6 +50,23 @@ const PROJECT_TYPE_FOLDERS: Record<ProjectType, string> = {
 }
 
 /**
+ * Demo/example project names that should not attempt path inference
+ * These are auto-created projects that don't have real folders
+ */
+const DEMO_PROJECT_NAMES = [
+  'getting started',
+  'research',  // Default auto-created research project
+]
+
+/**
+ * Check if a project is a demo/example project
+ */
+function isDemoProject(project: Project): boolean {
+  const normalizedName = project.name.toLowerCase().trim()
+  return DEMO_PROJECT_NAMES.includes(normalizedName)
+}
+
+/**
  * Normalize a project name to a folder-friendly format
  * - Lowercase
  * - Replace spaces with hyphens
@@ -84,6 +101,11 @@ export function inferTerminalCwd(project: Project | null): string {
   // Check for explicit working directory in project settings
   if (project.settings?.workingDirectory) {
     return project.settings.workingDirectory
+  }
+
+  // Demo projects don't have real folders - use default
+  if (isDemoProject(project)) {
+    return settings.defaultTerminalFolder
   }
 
   // Infer from project type and name
