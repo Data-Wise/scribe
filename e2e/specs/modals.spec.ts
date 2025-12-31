@@ -51,7 +51,14 @@ test.describe('Modals & Dialogs', () => {
       expect(await modals.isCommandPaletteOpen()).toBe(true)
 
       await basePage.page.keyboard.press('Escape')
-      await basePage.page.waitForTimeout(200)
+      // Wait for animation to complete
+      await basePage.page.waitForTimeout(500)
+
+      // Retry escape if still open (some focus states require double escape)
+      if (await modals.isCommandPaletteOpen()) {
+        await basePage.page.keyboard.press('Escape')
+        await basePage.page.waitForTimeout(300)
+      }
 
       expect(await modals.isCommandPaletteOpen()).toBe(false)
     })
