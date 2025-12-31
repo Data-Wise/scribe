@@ -112,6 +112,10 @@ pub fn run() {
       // Project settings
       commands::get_project_settings,
       commands::update_project_settings,
+      // Backup operations
+      commands::create_backup,
+      commands::restore_backup,
+      commands::list_backups,
       // Terminal PTY
       terminal::spawn_shell,
       terminal::write_to_shell,

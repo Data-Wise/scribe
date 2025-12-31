@@ -80,6 +80,31 @@ pub struct Database {
     conn: Connection,
 }
 
+// Database backup structures
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DatabaseBackup {
+    pub version: String,
+    pub timestamp: i64,
+    pub notes: Vec<Note>,
+    pub projects: Vec<Project>,
+    pub tags: Vec<Tag>,
+    pub folders: Vec<Folder>,
+    pub note_tags: Vec<NoteTag>,
+    pub links: Vec<Link>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NoteTag {
+    pub note_id: String,
+    pub tag_id: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Link {
+    pub source_note_id: String,
+    pub target_note_id: String,
+}
+
 impl Database {
     pub fn new(app_handle: &AppHandle) -> SqlResult<Self> {
         let app_data_dir = app_handle
@@ -1478,6 +1503,159 @@ What did you accomplish today?"#);
              ON CONFLICT(project_id) DO UPDATE SET settings = excluded.settings",
             [project_id, settings],
         )?;
+        Ok(())
+    }
+
+    // Backup and restore operations
+
+    /// Export entire database to JSON format
+    pub fn export_backup(&self) -> SqlResult<DatabaseBackup> {
+        // Get current timestamp
+        let timestamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as i64;
+
+        // Export notes (excluding deleted)
+        let notes = self.list_notes(None)?;
+
+        // Export projects
+        let mut stmt = self.conn.prepare("SELECT id, name, description, type, color, settings, created_at, updated_at FROM projects")?;
+        let projects: Vec<Project> = stmt.query_map([], |row| {
+            Ok(Project {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                description: row.get(2)?,
+                project_type: row.get(3)?,
+                color: row.get(4)?,
+                settings: row.get(5)?,
+                created_at: row.get(6)?,
+                updated_at: row.get(7)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export tags
+        let mut stmt = self.conn.prepare("SELECT id, name, color, created_at FROM tags")?;
+        let tags: Vec<Tag> = stmt.query_map([], |row| {
+            Ok(Tag {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                color: row.get(2)?,
+                created_at: row.get(3)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export folders
+        let mut stmt = self.conn.prepare("SELECT path, color, icon, sort_order FROM folders")?;
+        let folders: Vec<Folder> = stmt.query_map([], |row| {
+            Ok(Folder {
+                path: row.get(0)?,
+                color: row.get(1)?,
+                icon: row.get(2)?,
+                sort_order: row.get(3)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export note_tags associations
+        let mut stmt = self.conn.prepare("SELECT note_id, tag_id FROM note_tags")?;
+        let note_tags: Vec<NoteTag> = stmt.query_map([], |row| {
+            Ok(NoteTag {
+                note_id: row.get(0)?,
+                tag_id: row.get(1)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        // Export links
+        let mut stmt = self.conn.prepare("SELECT source_note_id, target_note_id FROM links")?;
+        let links: Vec<Link> = stmt.query_map([], |row| {
+            Ok(Link {
+                source_note_id: row.get(0)?,
+                target_note_id: row.get(1)?,
+            })
+        })?.collect::<Result<Vec<_>, _>>()?;
+
+        Ok(DatabaseBackup {
+            version: "1.0".to_string(),
+            timestamp,
+            notes,
+            projects,
+            tags,
+            folders,
+            note_tags,
+            links,
+        })
+    }
+
+    /// Import database from backup JSON
+    /// WARNING: This will clear existing data!
+    pub fn import_backup(&self, backup: DatabaseBackup) -> SqlResult<()> {
+        // Start transaction for atomicity
+        let tx = self.conn.unchecked_transaction()?;
+
+        // Clear existing data (except schema_version)
+        tx.execute("DELETE FROM links", [])?;
+        tx.execute("DELETE FROM note_tags", [])?;
+        tx.execute("DELETE FROM notes_fts", [])?;
+        tx.execute("DELETE FROM notes", [])?;
+        tx.execute("DELETE FROM tags", [])?;
+        tx.execute("DELETE FROM projects", [])?;
+        tx.execute("DELETE FROM folders WHERE path NOT IN ('inbox', 'notes', 'archive')", [])?;
+
+        // Import folders
+        for folder in backup.folders {
+            tx.execute(
+                "INSERT OR REPLACE INTO folders (path, color, icon, sort_order) VALUES (?, ?, ?, ?)",
+                rusqlite::params![&folder.path, &folder.color, &folder.icon, folder.sort_order],
+            )?;
+        }
+
+        // Import projects
+        for project in backup.projects {
+            tx.execute(
+                "INSERT INTO projects (id, name, description, type, color, settings, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                rusqlite::params![&project.id, &project.name, &project.description, &project.project_type, &project.color, &project.settings, project.created_at, project.updated_at],
+            )?;
+        }
+
+        // Import tags
+        for tag in backup.tags {
+            tx.execute(
+                "INSERT INTO tags (id, name, color, created_at) VALUES (?, ?, ?, ?)",
+                rusqlite::params![&tag.id, &tag.name, &tag.color, tag.created_at],
+            )?;
+        }
+
+        // Import notes
+        for note in backup.notes {
+            tx.execute(
+                "INSERT INTO notes (id, title, content, folder, project_id, properties, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                rusqlite::params![&note.id, &note.title, &note.content, &note.folder, &note.project_id, &note.properties, note.created_at, note.updated_at],
+            )?;
+
+            // Rebuild FTS index
+            tx.execute(
+                "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, ?)",
+                rusqlite::params![&note.id, &note.title, &note.content, note.properties.as_deref().unwrap_or("")],
+            )?;
+        }
+
+        // Import note_tags
+        for note_tag in backup.note_tags {
+            tx.execute(
+                "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+                rusqlite::params![&note_tag.note_id, &note_tag.tag_id],
+            )?;
+        }
+
+        // Import links
+        for link in backup.links {
+            tx.execute(
+                "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
+                rusqlite::params![&link.source_note_id, &link.target_note_id],
+            )?;
+        }
+
+        tx.commit()?;
         Ok(())
     }
 }

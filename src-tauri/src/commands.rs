@@ -1,8 +1,10 @@
-use crate::database::{Database, Note, Tag, Folder, Project};
+use crate::database::{Database, Note, Tag, Folder, Project, DatabaseBackup};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use tauri::State;
+use tauri::{State, Manager};
 use std::process::Command;
+use std::fs;
+use std::path::PathBuf;
 
 pub struct AppState {
     pub db: Mutex<Database>,
@@ -680,5 +682,123 @@ pub fn update_project_settings(
 ) -> Result<(), String> {
     let db = state.db.lock().unwrap();
     db.update_project_settings(&project_id, &settings).map_err(|e| e.to_string())
+}
+
+// Backup and restore commands
+
+fn get_backup_dir(app_handle: tauri::AppHandle) -> Result<PathBuf, String> {
+    let app_data_dir = app_handle
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("Failed to get app data directory: {}", e))?;
+
+    let backup_dir = app_data_dir.join("backups");
+    fs::create_dir_all(&backup_dir)
+        .map_err(|e| format!("Failed to create backup directory: {}", e))?;
+
+    Ok(backup_dir)
+}
+
+#[tauri::command]
+pub fn create_backup(
+    app_handle: tauri::AppHandle,
+    state: State<AppState>,
+) -> Result<String, String> {
+    let db = state.db.lock().unwrap();
+    let backup = db.export_backup().map_err(|e| e.to_string())?;
+
+    // Generate timestamped filename
+    let timestamp = chrono::Local::now().format("%Y%m%d_%H%M%S");
+    let filename = format!("scribe_backup_{}.json", timestamp);
+
+    let backup_dir = get_backup_dir(app_handle)?;
+    let backup_path = backup_dir.join(&filename);
+
+    // Serialize and write to file
+    let json = serde_json::to_string_pretty(&backup)
+        .map_err(|e| format!("Failed to serialize backup: {}", e))?;
+
+    fs::write(&backup_path, json)
+        .map_err(|e| format!("Failed to write backup file: {}", e))?;
+
+    Ok(backup_path.to_string_lossy().to_string())
+}
+
+#[tauri::command]
+pub fn restore_backup(
+    state: State<AppState>,
+    backup_path: String,
+) -> Result<(), String> {
+    // Read backup file
+    let json = fs::read_to_string(&backup_path)
+        .map_err(|e| format!("Failed to read backup file: {}", e))?;
+
+    // Deserialize backup
+    let backup: DatabaseBackup = serde_json::from_str(&json)
+        .map_err(|e| format!("Failed to parse backup file: {}", e))?;
+
+    // Import into database
+    let db = state.db.lock().unwrap();
+    db.import_backup(backup).map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BackupInfo {
+    pub filename: String,
+    pub path: String,
+    pub timestamp: i64,
+    pub size_bytes: u64,
+    pub note_count: usize,
+}
+
+#[tauri::command]
+pub fn list_backups(app_handle: tauri::AppHandle) -> Result<Vec<BackupInfo>, String> {
+    let backup_dir = get_backup_dir(app_handle)?;
+
+    let mut backups = Vec::new();
+
+    let entries = fs::read_dir(&backup_dir)
+        .map_err(|e| format!("Failed to read backup directory: {}", e))?;
+
+    for entry in entries {
+        let entry = entry.map_err(|e| format!("Failed to read directory entry: {}", e))?;
+        let path = entry.path();
+
+        if path.extension().and_then(|s| s.to_str()) == Some("json") {
+            let metadata = fs::metadata(&path)
+                .map_err(|e| format!("Failed to read file metadata: {}", e))?;
+
+            // Try to read backup to get note count
+            let note_count = match fs::read_to_string(&path) {
+                Ok(json) => match serde_json::from_str::<DatabaseBackup>(&json) {
+                    Ok(backup) => backup.notes.len(),
+                    Err(_) => 0,
+                },
+                Err(_) => 0,
+            };
+
+            backups.push(BackupInfo {
+                filename: path.file_name()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("unknown")
+                    .to_string(),
+                path: path.to_string_lossy().to_string(),
+                timestamp: metadata.modified()
+                    .ok()
+                    .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                    .map(|d| d.as_secs() as i64)
+                    .unwrap_or(0),
+                size_bytes: metadata.len(),
+                note_count,
+            });
+        }
+    }
+
+    // Sort by timestamp descending (newest first)
+    backups.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+
+    Ok(backups)
 }
 
