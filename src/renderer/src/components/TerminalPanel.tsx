@@ -150,8 +150,8 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
     }
   }, [])
 
-  // Resolve working directory - check path, prompt to create if needed
-  const resolveWorkingDirectory = async (terminal: Terminal): Promise<string> => {
+  // Resolve working directory - use inferred path if exists, else default
+  const resolveWorkingDirectory = async (): Promise<string> => {
     const project = getCurrentProject()
     const inferredPath = inferTerminalCwd(project)
     const defaultFolder = getDefaultTerminalFolder()
@@ -164,53 +164,8 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
       return inferredPath
     }
 
-    // Path doesn't exist - only prompt if we have a project (not for default folder)
-    if (project && inferredPath !== defaultFolder) {
-      // Show prompt in terminal and wait for response
-      terminal.writeln(`\x1b[33mProject folder not found: ${inferredPath}\x1b[0m`)
-
-      const shouldCreate = await promptCreateDirectory(terminal, inferredPath)
-
-      if (shouldCreate) {
-        try {
-          await api.createDirectory?.(inferredPath)
-          terminal.writeln(`\x1b[32mCreated: ${inferredPath}\x1b[0m`)
-          return inferredPath
-        } catch (error) {
-          terminal.writeln(`\x1b[31mFailed to create directory: ${error}\x1b[0m`)
-        }
-      }
-    }
-
-    // Fall back to default folder
+    // Path doesn't exist - silently fall back to default folder
     return defaultFolder
-  }
-
-  // Prompt user to create directory (y/n in terminal)
-  const promptCreateDirectory = (terminal: Terminal, _path: string): Promise<boolean> => {
-    return new Promise((resolve) => {
-      terminal.write(`Create folder? (y/n): `)
-
-      const disposable = terminal.onData((data) => {
-        const char = data.toLowerCase()
-        if (char === 'y' || char === '\r') {
-          terminal.writeln('y')
-          disposable.dispose()
-          resolve(true)
-        } else if (char === 'n' || char === '\x1b') {
-          terminal.writeln('n')
-          disposable.dispose()
-          resolve(false)
-        }
-      })
-
-      // Auto-timeout after 10 seconds - default to no
-      setTimeout(() => {
-        disposable.dispose()
-        terminal.writeln('\x1b[90m(timeout - using default)\x1b[0m')
-        resolve(false)
-      }, 10000)
-    })
   }
 
   // Start Tauri shell with PTY
@@ -220,8 +175,8 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
       terminal.writeln('\x1b[32m$ Scribe Terminal\x1b[0m')
       terminal.writeln('\x1b[90mConnecting to shell...\x1b[0m')
 
-      // Resolve working directory
-      const cwd = await resolveWorkingDirectory(terminal)
+      // Resolve working directory (silently falls back to default if not found)
+      const cwd = await resolveWorkingDirectory()
       setCurrentCwd(cwd)
 
       // Spawn shell via Tauri command with working directory
