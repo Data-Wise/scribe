@@ -2,286 +2,290 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://data-wise.github.io/scribe/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/API/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/ARCHITECTURE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/COMPONENTS/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/DUAL-MODE-ARCHITECTURE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/MISSION-CONTROL-LAYOUTS/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/MISSION-CONTROL-WALKTHROUGH/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/PR-MERGE-GUIDE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/RELEASE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
+    </url>
+    <url>
+         <loc>https://data-wise.github.io/scribe/TAURI-BROWSER-FEATURE-REVIEW/</loc>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/TAURI-INTEGRATION-WIREFRAME/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/UI-IMPROVEMENTS-PROPOSAL/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/CHROME-UI-TESTS/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/FUTURE-PLAYWRIGHT-E2E/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/MISSION-CONTROL-SIDEBAR-PLAN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-10-COMPLETE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-11-PLAN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-12-UI-POLISH/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-13-PROJECT-SYSTEM/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-17/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-21-MISSION-CONTROL/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-22-EDITOR-MODES/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-23-MISSION-CONTROL-IMPROVEMENTS/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-24-SIDEBAR-CORE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-25-PLAN-B-UI/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-8-PLAN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/SPRINT-9-PLAN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/UI-IMPROVEMENTS-CONSOLIDATED/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/V1.1-PLAN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/planning/V1_RELEASE_PLAN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/proposals/PROPOSAL-EDITOR-ALTERNATIVES/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/proposals/PROPOSAL-TAGS-PANEL-REDESIGN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/proposals/PROPOSAL-UI-IMPROVEMENTS/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/proposals/UI-IMPROVEMENTS-PROPOSAL/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/DOCS-CHECK-REPORT/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/PROPOSAL-ERROR-FIXES/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SECURITY-FIX-SUMMARY/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SECURITY-FIX/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SECURITY-IMPROVEMENTS/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SPRINT-6-COMPLETE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SPRINT-7-COMPLETE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SPRINT-7-IMPLEMENTATION-SUMMARY/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SPRINT-7-PLAN/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SPRINT-7-TESTING-COMPLETE/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/archive/sprints-1-7/SPRINT-8-PLAN-OLD/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/development/architecture/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/development/contributing/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/development/sprints/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/guide/editor/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/guide/features/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/guide/shortcuts/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/guide/themes/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/installation/install/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-PROJECT-NOTE-DISPLAY/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-RIGHT-SIDEBAR/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-TAB-AESTHETICS-2025-12-29/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-TAB-BAR-SETTINGS-2025-12-29/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-TAB-THEME-INTEGRATION-2025-12-29/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-TAURI-TO-SWIFTUI/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-browser-fallback-2025-12-28/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-dual-runtime-architecture/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/BRAINSTORM-project-dashboard/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/INDEX/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/PROPOSAL-activity-bar/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/PROPOSAL-build-identification/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/PROPOSAL-tauri-enhancements/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/planning/WORKFLOW-PLANNING-DOCS/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/reference/CHANGELOG/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/reference/PROJECT-DEFINITION/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/reference/TESTS_SUMMARY/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/user/GETTING-STARTED/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
     <url>
          <loc>https://data-wise.github.io/scribe/user/QUICKSTART/</loc>
-         <lastmod>2025-12-30</lastmod>
+         <lastmod>2025-12-31</lastmod>
     </url>
 </urlset>
