@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import ProjectTemplates from '../components/Settings/ProjectTemplates'
 import { useSettingsStore, QuickAction } from '../store/useSettingsStore'
@@ -53,19 +53,19 @@ describe('ProjectTemplates', () => {
     it('should display template icons', () => {
       render(<ProjectTemplates />)
 
-      const researchCard = screen.getByText('Research+').closest('div')
+      const researchCard = screen.getByText('Research+').closest('.rounded-lg')
       expect(researchCard?.textContent).toContain('🔬')
 
-      const teachingCard = screen.getByText('Teaching+').closest('div')
+      const teachingCard = screen.getByText('Teaching+').closest('.rounded-lg')
       expect(teachingCard?.textContent).toContain('📚')
 
-      const devCard = screen.getByText('Dev+').closest('div')
+      const devCard = screen.getByText('Dev+').closest('.rounded-lg')
       expect(devCard?.textContent).toContain('💻')
 
-      const writingCard = screen.getByText('Writing+').closest('div')
+      const writingCard = screen.getByText('Writing+').closest('.rounded-lg')
       expect(writingCard?.textContent).toContain('✍️')
 
-      const minimalCard = screen.getByText('Minimal').closest('div')
+      const minimalCard = screen.getByText('Minimal').closest('.rounded-lg')
       expect(minimalCard?.textContent).toContain('🎯')
     })
 
@@ -84,7 +84,8 @@ describe('ProjectTemplates', () => {
     it('should show quick preview of template settings', () => {
       render(<ProjectTemplates />)
 
-      const researchCard = screen.getByText('Research+').closest('div')
+      // Find the full card container, not just first div
+      const researchCard = screen.getByText('Research+').closest('.rounded-lg')
 
       expect(researchCard?.textContent).toContain('Template:')
       expect(researchCard?.textContent).toContain('research')
@@ -97,8 +98,10 @@ describe('ProjectTemplates', () => {
     it('should show "None" for templates with no Quick Actions', () => {
       render(<ProjectTemplates />)
 
-      const minimalCard = screen.getByText('Minimal').closest('div')
-      expect(minimalCard?.textContent).toContain('None')
+      // Minimal template has no Quick Actions, so it should show "None"
+      const allText = screen.getByText('Minimal').closest('.rounded-lg')
+      expect(allText?.textContent).toContain('Actions:')
+      expect(allText?.textContent).toContain('None')
     })
   })
 
@@ -162,7 +165,9 @@ describe('ProjectTemplates', () => {
       expect(screen.getByText('Applied')).toBeInTheDocument()
 
       // Applied state should reset after 2 seconds
-      vi.advanceTimersByTime(2100)
+      act(() => {
+        vi.advanceTimersByTime(2100)
+      })
 
       expect(screen.queryByText('Applied')).not.toBeInTheDocument()
 
