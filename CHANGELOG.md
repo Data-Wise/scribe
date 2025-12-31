@@ -98,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tauri Feature Parity & Error Visibility
 
-**Improvements to Tauri native app experience and error feedback.**
+**Improvements to Tauri native app experience, error feedback, and test coverage.**
 
 ### Added
 
@@ -110,10 +110,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Toast Notifications:**
 - Visible error feedback for API failures
+- Success toasts for CRUD operations (notes, projects, tags)
 - Toast component with error/success/info variants
 - Auto-dismiss after 4 seconds
 - Click to dismiss immediately
-- Critical operations (CRUD) show toasts; silent ops just log
+
+**Unified Seed Data:**
+- `seed-data.ts` shared constants for browser/Tauri parity
+- DEMO_PROJECT, DEMO_TAGS, DEMO_NOTES exports
+- browser-db.ts updated to use shared seed data
+
+**Edge Case & Stress Tests (22 tests):**
+- EDGE-01 to EDGE-15: Edge cases
+  - Empty/whitespace content handling
+  - Long titles (500+ chars), large documents (10k+ chars)
+  - Unicode, emoji, RTL text support
+  - XSS and SQL injection sanitization
+  - Rapid note switching, concurrent operations
+- STRESS-01 to STRESS-07: Stress tests
+  - Rapid note creation (10 notes in quick succession)
+  - Rapid keyboard shortcuts
+  - Fast typing in editor
+  - Multiple page reloads
+  - Concurrent sidebar toggles
+
+**Tauri Feature Tests (25 tests):**
+- TAU-01 to TAU-25: Feature parity verification
+- Demo data seeding tests
+- Toast notification tests
+- Platform detection tests
 
 **Diagnostics:**
 - Enhanced platform detection logging
@@ -126,12 +151,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 43 matched API commands documented
   - Root cause analysis for discrepancies
   - Recommended action plan
+- `docs/TAURI-WEBDRIVER-RESEARCH.md` - WebDriver E2E research
+  - Platform support analysis (Windows/Linux native, macOS paid only)
+  - Setup instructions for tauri-driver
+  - Recommendation to defer (macOS limitation)
 
 ### Technical
 
 - `src/renderer/src/components/Toast.tsx` - Toast component + context
-- `src/renderer/src/lib/api.ts` - `withErrorToast()` wrapper
+- `src/renderer/src/lib/api.ts` - `withToast()` wrapper for success/error
+- `src/renderer/src/lib/seed-data.ts` - Shared demo data constants
 - `src-tauri/src/database.rs` - Migration 007 (demo data)
+- `e2e/specs/tauri-features.spec.ts` - 25 feature parity tests
+- `e2e/specs/tauri-edge-cases.spec.ts` - 22 edge case/stress tests
 
 ---
 
