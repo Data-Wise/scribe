@@ -86,6 +86,12 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
 
     // LaTeX-specific configuration
     if (language === 'latex') {
+      // Register Cmd+B (or Ctrl+B on Windows/Linux) for LaTeX compilation
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyB, () => {
+        console.log('[LaTeX] Cmd+B pressed, triggering compilation...')
+        handleCompileLatex()
+      })
+
       monaco.languages.registerCompletionItemProvider('latex', {
         provideCompletionItems: () => {
           // TODO: Add LaTeX-specific autocomplete suggestions
