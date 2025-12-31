@@ -15,6 +15,7 @@ import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language'
 import { autocompletion } from '@codemirror/autocomplete'
 import { lintKeymap } from '@codemirror/lint'
 import { searchKeymap } from '@codemirror/search'
+import { markdownLivePreview, markdownTheme } from '../lib/codeMirrorMarkdownExtension'
 
 interface CodeMirrorLivePreviewProps {
   content: string
@@ -43,6 +44,10 @@ export const CodeMirrorLivePreview: React.FC<CodeMirrorLivePreviewProps> = ({
       extensions: [
         // Markdown language support
         markdown({ base: markdownLanguage }),
+
+        // Live preview rendering (Obsidian-style)
+        markdownLivePreview,
+        markdownTheme,
 
         // Syntax highlighting
         syntaxHighlighting(defaultHighlightStyle),
