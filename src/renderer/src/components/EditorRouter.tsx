@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useEditorStore, getEditorTypeForFile } from '../store/editorStore'
 import { MilkdownEditor } from './MilkdownEditor'
 import { MonacoCodeEditor } from './MonacoCodeEditor'
+import { UnsavedChangesDialog } from './UnsavedChangesDialog'
 
 /**
  * EditorRouter - Routes files to appropriate editor based on extension
@@ -21,15 +22,36 @@ interface EditorRouterProps {
 }
 
 export function EditorRouter({ filePath, content, onChange }: EditorRouterProps) {
-  const { currentFile, setCurrentFile, updateContent } = useEditorStore()
+  const { currentFile, setCurrentFile, updateContent, setDirty } = useEditorStore()
   const editorType = getEditorTypeForFile(filePath)
 
-  // Update store when file changes
+  // Dialog state
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false)
+  const [pendingFilePath, setPendingFilePath] = useState<string | null>(null)
+  const [pendingContent, setPendingContent] = useState<string>('')
+
+  // Check for unsaved changes before switching files
   useEffect(() => {
-    if (filePath && (filePath !== currentFile.path || content !== currentFile.content)) {
+    // Skip if no file change or first load
+    if (!filePath || !currentFile.path || filePath === currentFile.path) {
+      // First load - just set the file
+      if (filePath && !currentFile.path) {
+        setCurrentFile({ path: filePath, content })
+      }
+      return
+    }
+
+    // File is changing - check for unsaved changes
+    if (currentFile.isDirty) {
+      // Store pending file change
+      setPendingFilePath(filePath)
+      setPendingContent(content)
+      setShowUnsavedDialog(true)
+    } else {
+      // No unsaved changes - proceed with file change
       setCurrentFile({ path: filePath, content })
     }
-  }, [filePath, content, currentFile.path, currentFile.content, setCurrentFile])
+  }, [filePath])
 
   // Handle content changes
   const handleChange = (newContent: string) => {
@@ -37,34 +59,103 @@ export function EditorRouter({ filePath, content, onChange }: EditorRouterProps)
     onChange(newContent)
   }
 
+  // Dialog handlers
+  const handleSave = async () => {
+    // Save current file (onChange is already called for each edit)
+    setDirty(false)
+    setShowUnsavedDialog(false)
+
+    // Switch to pending file
+    if (pendingFilePath) {
+      setCurrentFile({ path: pendingFilePath, content: pendingContent })
+      setPendingFilePath(null)
+      setPendingContent('')
+    }
+  }
+
+  const handleDiscard = () => {
+    setDirty(false)
+    setShowUnsavedDialog(false)
+
+    // Switch to pending file
+    if (pendingFilePath) {
+      setCurrentFile({ path: pendingFilePath, content: pendingContent })
+      setPendingFilePath(null)
+      setPendingContent('')
+    }
+  }
+
+  const handleCancel = () => {
+    setShowUnsavedDialog(false)
+    setPendingFilePath(null)
+    setPendingContent('')
+    // Stay on current file - do nothing
+  }
+
   // Route to appropriate editor
   if (editorType === 'milkdown') {
     return (
-      <MilkdownEditor
-        content={content}
-        onChange={handleChange}
-        filePath={filePath}
-      />
+      <>
+        <MilkdownEditor
+          content={content}
+          onChange={handleChange}
+          filePath={filePath}
+        />
+
+        {/* Unsaved changes dialog */}
+        {showUnsavedDialog && currentFile.path && (
+          <UnsavedChangesDialog
+            fileName={currentFile.path.split('/').pop() || 'Untitled'}
+            onSave={handleSave}
+            onDiscard={handleDiscard}
+            onCancel={handleCancel}
+          />
+        )}
+      </>
     )
   }
 
   if (editorType === 'monaco') {
     return (
-      <MonacoCodeEditor
-        content={content}
-        onChange={handleChange}
-        filePath={filePath}
-      />
+      <>
+        <MonacoCodeEditor
+          content={content}
+          onChange={handleChange}
+          filePath={filePath}
+        />
+
+        {/* Unsaved changes dialog */}
+        {showUnsavedDialog && currentFile.path && (
+          <UnsavedChangesDialog
+            fileName={currentFile.path.split('/').pop() || 'Untitled'}
+            onSave={handleSave}
+            onDiscard={handleDiscard}
+            onCancel={handleCancel}
+          />
+        )}
+      </>
     )
   }
 
   // Fallback: plain text editor
   return (
-    <PlainTextEditor
-      content={content}
-      onChange={handleChange}
-      filePath={filePath}
-    />
+    <>
+      <PlainTextEditor
+        content={content}
+        onChange={handleChange}
+        filePath={filePath}
+      />
+
+      {/* Unsaved changes dialog */}
+      {showUnsavedDialog && currentFile.path && (
+        <UnsavedChangesDialog
+          fileName={currentFile.path.split('/').pop() || 'Untitled'}
+          onSave={handleSave}
+          onDiscard={handleDiscard}
+          onCancel={handleCancel}
+        />
+      )}
+    </>
   )
 }
 
