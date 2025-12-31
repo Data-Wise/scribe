@@ -1,16 +1,16 @@
 ---
 status: active
 priority: P1
-progress: 60
-version: 1.2.2
-sprint: 26
-updated: 2025-12-30
+progress: 80
+version: 1.7.0
+sprint: 27
+updated: 2025-12-31
 editor: hybrid-markdown++
-next_sprint: 27
-next_focus: Backend Foundation (Tauri) + AI Integration
-tests: 759+282
-unit_tests: 759
-e2e_tests: 282
+next_sprint: 27-P2
+next_focus: Frontend Polish + UI Enhancements
+tests: 829+82
+unit_tests: 829
+e2e_tests: 82
 tags:
   - adhd-friendly
   - distraction-free
@@ -101,31 +101,65 @@ tags:
 
 ---
 
-### Sprint 27: Backend Foundation + AI Integration (In Progress)
+### Sprint 27: Backend Foundation + AI Integration
 
-**Design Document:** `PLANNING-SUMMARY-INCOMPLETE.md`
+**v1.7.0 Released** ✅ (2025-12-31)
 
-**Phase 1: Backend Improvements (P1 - High Priority)**
-- [ ] Property type validation in Rust
-- [ ] Add properties to search index
-- [ ] Wire Tauri AI commands (run_claude, run_gemini)
-- [ ] Database backup/restore commands
+**Phase 1: Backend Foundation - Complete ✅**
+- [x] Chat History Persistence (Migration 009)
+  - [x] `chat_sessions` and `chat_messages` tables
+  - [x] CASCADE foreign keys for automatic cleanup
+  - [x] Auto-save/load conversations per note
+  - [x] Session switching on note navigation
+  - [x] Browser mode support (IndexedDB)
+- [x] Quick Actions (5 one-click AI prompts)
+  - [x] ✨ Improve - Polish clarity and flow
+  - [x] 📝 Expand - Add depth and examples
+  - [x] 📋 Summarize - Create concise summaries
+  - [x] 💡 Explain - Clarify complex concepts
+  - [x] 🔍 Research - Generate research questions
+  - [x] Auto-includes full note context
+- [x] @ References (autocomplete note inclusion)
+  - [x] Fuzzy search menu with `@` trigger
+  - [x] Badge display for included notes
+  - [x] Remove references functionality
+- [x] Comprehensive Testing (911 tests)
+  - [x] 12 backend tests (Rust: chat sessions CRUD)
+  - [x] 38 frontend tests (Vitest: Quick Actions, @ References)
+  - [x] 67 E2E tests (Playwright: Claude features, Quick Chat)
+  - [x] 794 existing tests maintained
+- [x] Complete Documentation (5,169 lines)
+  - [x] Chat persistence guide (523 lines)
+  - [x] Quick Actions reference card (390 lines)
+  - [x] 7 comprehensive tutorials (3,256 lines)
+    - [x] Terminal Integration (362 lines)
+    - [x] Project System (507 lines)
+    - [x] Daily Notes (463 lines)
+    - [x] Mission Control (428 lines)
+    - [x] Command Palette (431 lines)
+    - [x] Backlinks (532 lines)
+    - [x] Browser Mode (533 lines)
+  - [x] Tutorial index with learning paths (148 lines)
+  - [x] CHANGELOG updated
+  - [x] README updated
+  - [x] mkdocs.yml navigation updated
+- [x] CI/CD Fixed
+  - [x] Release workflow bug fix (dtolnay/rust-toolchain)
+  - [x] Automated site deployment working
+  - [x] Automated builds enabled for future releases
 
-**Phase 2: AI Enhancements (P1)**
-- [ ] @ References in Claude chat
-- [ ] Quick actions (Summarize, Improve, Explain)
-- [ ] Chat history persistence
-- [ ] Cleanup: Remove floating ClaudePanel
+**Phase 2: Frontend Polish (P2 - Planned)**
+- [ ] Browser mode indicator in UI
+- [ ] Wiki link backlink tracking in browser
+- [ ] Quick Actions customization UI
+- [ ] Chat session management UI
 
-**Phase 3: UI Features (P2 - Medium Priority)**
+**Phase 3: Advanced Features (P3 - Backlog)**
 - [ ] Ambient AI (⌘K everywhere, inline suggestions)
 - [ ] Vault sidebar (Obsidian file tree)
 - [ ] Status bar enhancements
-
-**Research Completed:**
-- OpenCode TUI patterns (github.com/opencode-ai/opencode)
-- Cursor 2.0 agent-centric UI (cursor.com/features)
-- xterm.js React integration (react-xtermjs)
+- [ ] Property type validation in Rust
+- [ ] Add properties to search index
 
 ---
 

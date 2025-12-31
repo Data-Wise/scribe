@@ -174,11 +174,13 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Work: Sprint 27 P1 Complete
+## 🎯 Current Status: v1.7.0 Released ✅
 
-**Branch:** `dev` (PR #15 created for merge to main)
+**Branch:** `main` (v1.7.0 tagged and released)
+**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.7.0
+**Documentation:** https://data-wise.github.io/scribe
 
-**Sprint 27 P1 Completed (2025-12-31):**
+**Sprint 27 P1: Backend Foundation - Complete (2025-12-31)**
 - ✅ Chat History Persistence (Migration 009)
   - `chat_sessions` and `chat_messages` tables with CASCADE
   - Auto-save/load conversations per note
@@ -187,25 +189,31 @@ scribe help --all      # Full reference
   - ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research
   - Auto-includes full note context
 - ✅ @ References (autocomplete note inclusion)
-- ✅ Comprehensive Testing
-  - 12 backend tests (Rust)
-  - 38 frontend tests (Vitest)
-  - 67 E2E tests (Playwright)
+- ✅ Comprehensive Testing (911 tests total)
+  - 829 unit tests (Vitest)
+  - 82 E2E tests (Playwright)
+  - Full test coverage for new features
 - ✅ Complete Documentation
-  - Chat persistence guide
-  - Quick Actions reference card
+  - Chat persistence guide (523 lines)
+  - Quick Actions reference card (390 lines)
+  - 7 comprehensive tutorials (3,256 lines)
+  - Tutorial index with learning paths
+- ✅ CI/CD Fixed
+  - Release workflow bug fix (rust-toolchain)
+  - Automated site deployment working
+  - Automated builds for future releases
 
-**Sprint 26 Completed:**
+**Sprint 26 - Complete (2025-12-30)**
 - ✅ Terminal PTY shell (portable-pty + xterm.js)
 - ✅ Smart terminal working directory (project type inference)
 - ✅ Mission Control sidebar with Icon/Compact/Card modes
 - ✅ Browser mode with full IndexedDB persistence
 
-**Ready for Next Sprint (Sprint 27 P2):**
+**Next: Sprint 27 P2 - Frontend Polish**
 - [ ] Browser mode indicator in UI
 - [ ] Wiki link backlink tracking in browser
-- [ ] Ambient AI (⌘K) - inline suggestions
-- [ ] Graph View Enhancements
+- [ ] Quick Actions customization UI
+- [ ] Chat session management UI
 
 ---
 
