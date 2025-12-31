@@ -221,10 +221,10 @@ function ThemeCard({ theme, isSelected, onSelect }: ThemeCardProps) {
     <button
       onClick={onSelect}
       className={`
-        group relative rounded-lg border-2 transition-all text-left overflow-hidden
+        group relative rounded-lg border-2 transition-all duration-200 text-left overflow-hidden
         ${isSelected
-          ? 'border-blue-500 ring-2 ring-blue-500/50'
-          : 'border-neutral-600 hover:border-neutral-500'
+          ? 'border-blue-500 ring-2 ring-blue-500/50 scale-[1.02]'
+          : 'border-neutral-600 hover:border-neutral-500 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10'
         }
       `}
     >
