@@ -101,7 +101,47 @@ tags:
 
 ---
 
-### Sprint 27: Sidebar Consolidation (Planned)
+### Sprint 27: Hybrid Editor Migration (PRIORITY 1) 🎯
+
+**Design Document:** `PLAN-HYBRID-EDITOR.md`
+**Specification:** `docs/specs/SPEC-hybrid-editor-milkdown-monaco-2025-12-31.md`
+**Research:**
+- `PROSEMIRROR-VS-MILKDOWN-LATEX.md`
+- `R-QUARTO-EDITOR-COMPARISON.md`
+- `PURE-LATEX-EDITING-RESEARCH.md`
+- `BRAINSTORM-hybrid-editor-2025-12-31.md`
+
+**Reason:** CodeMirror Live Preview remains jerky after optimization
+**Solution:** Dual-editor architecture:
+- Milkdown for .md/.qmd (39% less code than ProseMirror)
+- Monaco for .tex/.R/.py (proven editor used by Overleaf)
+- Automatic routing by file extension
+
+**Timeline:** 3-4 weeks
+
+**Week 1: Foundation**
+- [ ] EditorRouter component (file extension detection)
+- [ ] Milkdown integration (markdown + math)
+- [ ] Monaco integration (LaTeX/R/Python syntax)
+
+**Week 2: LaTeX Features**
+- [ ] LaTeX compilation backend (Tauri)
+- [ ] PDF preview (react-pdf)
+- [ ] Auto-compile on save
+
+**Week 3: Quarto + R**
+- [ ] R chunk execution (Tauri)
+- [ ] Inline output display
+- [ ] Keyboard shortcuts (Cmd+Enter)
+
+**Week 4: Polish**
+- [ ] State persistence
+- [ ] Testing (unit + integration + E2E)
+- [ ] Documentation
+
+---
+
+### Sprint 28: Sidebar Consolidation (Planned)
 
 **Design Document:** `BRAINSTORM-sidebar-consolidation-2025-12-29.md`
 

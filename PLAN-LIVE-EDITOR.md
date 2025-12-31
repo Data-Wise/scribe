@@ -2,8 +2,19 @@
 
 **Branch:** `feat/live-editor-enhancements`
 **Created:** 2025-12-31
-**Status:** ✅ COMPLETED
+**Status:** ⚠️ SUPERSEDED BY HYBRID EDITOR PLAN
 **Completed:** 2025-12-31
+**Superseded By:** `PLAN-HYBRID-EDITOR.md` (Priority 1)
+
+---
+
+## ⚠️ IMPORTANT: This Plan Has Been Superseded
+
+**Reason:** CodeMirror Live Preview remained jerky/buggy after viewport optimization
+
+**New Direction:** Dual-editor architecture (Milkdown + Monaco)
+
+**See:** `PLAN-HYBRID-EDITOR.md` for the new implementation plan
 
 ---
 
