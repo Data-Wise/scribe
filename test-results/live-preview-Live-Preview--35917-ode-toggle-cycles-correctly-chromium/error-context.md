@@ -1,0 +1,247 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - button "Collapse sidebar (⌘0)" [ref=e7] [cursor=pointer]:
+            - img [ref=e8]
+          - heading "Projects (2)" [level=3] [ref=e9]:
+            - text: Projects
+            - generic [ref=e10]: (2)
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - button "Research" [ref=e13] [cursor=pointer]:
+              - generic [ref=e14]:
+                - img [ref=e15]
+                - img [ref=e17]
+                - generic [ref=e19]: Research
+            - generic [ref=e20]:
+              - generic [ref=e21]:
+                - generic [ref=e22]:
+                  - generic [ref=e23]: Research
+                  - generic "Active this week" [ref=e24]
+                - paragraph [ref=e29]: Your research workspace - papers, notes, and ideas
+              - generic [ref=e30]:
+                - generic [ref=e31]:
+                  - img [ref=e32]
+                  - generic [ref=e35]: 1 note
+                - generic [ref=e36]:
+                  - img [ref=e37]
+                  - generic [ref=e40]: 0 words
+              - button "+ New Note" [ref=e41] [cursor=pointer]
+            - button "New Note" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+              - generic [ref=e47]: New Note
+          - button "Getting Started" [ref=e49] [cursor=pointer]:
+            - generic [ref=e50]:
+              - img [ref=e51]
+              - img [ref=e53]
+              - generic [ref=e55]: Getting Started
+              - generic "No recent activity" [ref=e56]
+        - button "New Project" [ref=e61] [cursor=pointer]:
+          - img [ref=e62]
+          - generic [ref=e63]: New Project
+        - button "Settings ⌘," [ref=e64] [cursor=pointer]:
+          - img [ref=e65]
+          - generic [ref=e68]: Settings
+          - generic [ref=e69]: ⌘,
+      - separator "Resize sidebar" [ref=e70]
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic "Go to Mission Control" [ref=e75] [cursor=pointer]: Research
+            - generic [ref=e76]: ›
+            - generic [ref=e77] [cursor=pointer]: New Note
+          - generic [ref=e78]:
+            - button "⏸" [ref=e79] [cursor=pointer]
+            - generic [ref=e80]: 0:04
+            - button "↺" [ref=e81] [cursor=pointer]
+        - button "Mission Control" [ref=e84] [cursor=pointer]:
+          - img [ref=e86]
+          - generic [ref=e89]: Mission Control
+          - generic "Pinned" [ref=e90]:
+            - img [ref=e91]
+        - generic [ref=e93]:
+          - banner [ref=e94]:
+            - generic [ref=e95]:
+              - heading "Mission Control" [level=1] [ref=e96]
+              - paragraph [ref=e97]: 2 projects • 6 pages • 1,037 words
+            - button "Settings" [ref=e99] [cursor=pointer]:
+              - img [ref=e100]
+          - generic [ref=e103]:
+            - generic [ref=e105]:
+              - button "Today ⌘D" [ref=e106] [cursor=pointer]:
+                - img [ref=e108]
+                - generic [ref=e110]:
+                  - generic [ref=e111]: Today
+                  - generic [ref=e112]: ⌘D
+              - button "New Page ⌘N" [ref=e113] [cursor=pointer]:
+                - img [ref=e115]
+                - generic [ref=e118]:
+                  - generic [ref=e119]: New Page
+                  - generic [ref=e120]: ⌘N
+              - button "Quick Capture ⌘⇧C" [ref=e121] [cursor=pointer]:
+                - img [ref=e123]
+                - generic [ref=e125]:
+                  - generic [ref=e126]: Quick Capture
+                  - generic [ref=e127]: ⌘⇧C
+              - button "New Project ⌘⇧P" [ref=e128] [cursor=pointer]:
+                - img [ref=e130]
+                - generic [ref=e132]:
+                  - generic [ref=e133]: New Project
+                  - generic [ref=e134]: ⌘⇧P
+            - generic [ref=e135]:
+              - heading "Recent Pages" [level=2] [ref=e136]:
+                - img [ref=e137]
+                - text: Recent Pages
+              - generic [ref=e140]:
+                - button "New Note Research • Just now" [ref=e141] [cursor=pointer]:
+                  - img [ref=e143]
+                  - generic [ref=e146]:
+                    - generic [ref=e147]: New Note
+                    - generic [ref=e148]:
+                      - generic [ref=e149]: Research
+                      - generic [ref=e150]: •
+                      - generic [ref=e151]: Just now
+                - button "Welcome to Scribe Getting Started • Jan 21" [ref=e152] [cursor=pointer]:
+                  - img [ref=e154]
+                  - generic [ref=e157]:
+                    - generic [ref=e158]: Welcome to Scribe
+                    - generic [ref=e159]:
+                      - generic [ref=e160]: Getting Started
+                      - generic [ref=e161]: •
+                      - generic [ref=e162]: Jan 21
+                - button "Features Overview Getting Started • Jan 21" [ref=e163] [cursor=pointer]:
+                  - img [ref=e165]
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: Features Overview
+                    - generic [ref=e170]:
+                      - generic [ref=e171]: Getting Started
+                      - generic [ref=e172]: •
+                      - generic [ref=e173]: Jan 21
+                - button "Daily Note Example Jan 21" [ref=e174] [cursor=pointer]:
+                  - img [ref=e176]
+                  - generic [ref=e179]:
+                    - generic [ref=e180]: Daily Note Example
+                    - generic [ref=e182]: Jan 21
+                - button "Callout Examples Getting Started • Jan 21" [ref=e183] [cursor=pointer]:
+                  - img [ref=e185]
+                  - generic [ref=e188]:
+                    - generic [ref=e189]: Callout Examples
+                    - generic [ref=e190]:
+                      - generic [ref=e191]: Getting Started
+                      - generic [ref=e192]: •
+                      - generic [ref=e193]: Jan 21
+            - generic [ref=e194]:
+              - heading "Projects" [level=2] [ref=e195]
+              - generic [ref=e196]:
+                - button "Research Active Research Your research workspace - papers, notes, and ideas 1 Just now" [ref=e197] [cursor=pointer]:
+                  - generic [ref=e198]:
+                    - generic [ref=e201]:
+                      - img [ref=e202]
+                      - text: Research
+                    - generic [ref=e204]: Active
+                  - heading "Research" [level=3] [ref=e205]
+                  - paragraph [ref=e206]: Your research workspace - papers, notes, and ideas
+                  - generic [ref=e207]:
+                    - generic [ref=e209]:
+                      - img [ref=e210]
+                      - text: "1"
+                    - generic [ref=e213]: Just now
+                - button "General Getting Started Learn how to use Scribe with these example notes 4 978 Jan 21" [ref=e214] [cursor=pointer]:
+                  - generic [ref=e218]:
+                    - img [ref=e219]
+                    - text: General
+                  - heading "Getting Started" [level=3] [ref=e221]
+                  - paragraph [ref=e222]: Learn how to use Scribe with these example notes
+                  - generic [ref=e223]:
+                    - generic [ref=e224]:
+                      - generic [ref=e225]:
+                        - img [ref=e226]
+                        - text: "4"
+                      - generic [ref=e229]:
+                        - img [ref=e230]
+                        - text: "978"
+                    - generic [ref=e232]: Jan 21
+          - contentinfo [ref=e233]: Press ⌘0 to toggle back to editor
+      - generic "Drag to resize, double-click to collapse" [ref=e234]
+      - generic [ref=e235]:
+        - button "Hide right sidebar" [ref=e237] [cursor=pointer]:
+          - img [ref=e238]
+        - generic [ref=e241]:
+          - generic [ref=e242]:
+            - button "Properties" [ref=e243] [cursor=pointer]:
+              - img [ref=e244]
+              - text: Properties
+            - button "Backlinks" [ref=e247] [cursor=pointer]:
+              - img [ref=e248]
+              - text: Backlinks
+            - button "Tags" [ref=e251] [cursor=pointer]:
+              - img [ref=e252]
+              - text: Tags
+            - button "Stats" [ref=e256] [cursor=pointer]:
+              - img [ref=e257]
+              - text: Stats
+            - button "Claude" [ref=e259] [cursor=pointer]:
+              - img [ref=e260]
+              - text: Claude
+            - button "Term" [ref=e263] [cursor=pointer]:
+              - img [ref=e264]
+              - text: Term
+          - button "Panel options" [ref=e266] [cursor=pointer]:
+            - img [ref=e267]
+        - generic [ref=e272]:
+          - generic [ref=e273] [cursor=pointer]:
+            - generic [ref=e274]:
+              - generic [ref=e275]: ▶
+              - generic [ref=e276]: Properties
+              - generic [ref=e277]: "5"
+            - button "+" [ref=e278]
+          - generic [ref=e279]:
+            - generic [ref=e280]:
+              - generic "Date" [ref=e281] [cursor=pointer]: 📅
+              - generic [ref=e282]: created
+              - generic [ref=e283]: Dec 31, 2025, 11:03 AM
+            - generic [ref=e284]:
+              - generic "Date" [ref=e285] [cursor=pointer]: 📅
+              - generic [ref=e286]: modified
+              - generic [ref=e287]: Dec 31, 2025, 11:03 AM
+            - generic [ref=e288]:
+              - generic "Number" [ref=e289] [cursor=pointer]: 🔢
+              - generic [ref=e290]: word_count
+              - generic [ref=e292]: 0 words
+            - generic [ref=e293]:
+              - generic "List" [ref=e294] [cursor=pointer]: 📋
+              - generic [ref=e295]: status
+              - combobox [ref=e297] [cursor=pointer]:
+                - option "Select..."
+                - option "draft" [selected]
+                - option "in-progress"
+                - option "review"
+                - option "complete"
+                - option "archived"
+              - button "×" [ref=e298] [cursor=pointer]
+            - generic [ref=e299]:
+              - generic "List" [ref=e300] [cursor=pointer]: 📋
+              - generic [ref=e301]: type
+              - combobox [ref=e303] [cursor=pointer]:
+                - option "Select..."
+                - option "note" [selected]
+                - option "daily"
+                - option "meeting"
+                - option "reference"
+                - option "idea"
+                - option "research"
+                - option "lecture"
+              - button "×" [ref=e304] [cursor=pointer]
+    - button "Open Claude Assistant (in sidebar)" [ref=e305] [cursor=pointer]:
+      - img [ref=e306]
+  - alert [ref=e310] [cursor=pointer]:
+    - generic [ref=e311]: ✓
+    - generic [ref=e312]: Note created
+    - button "Dismiss" [ref=e314]: ×
+```

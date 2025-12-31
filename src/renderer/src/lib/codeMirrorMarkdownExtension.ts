@@ -57,6 +57,9 @@ const linkDeco = Decoration.mark({
 
 /**
  * Build decorations for markdown rendering
+ *
+ * Performance optimization: Only processes visible viewport + buffer zone
+ * to avoid iterating through entire document (5000-20000 nodes → 100-200 nodes)
  */
 function buildDecorations(view: EditorView): DecorationSet {
   const builder = new RangeSetBuilder<Decoration>()
@@ -66,8 +69,20 @@ function buildDecorations(view: EditorView): DecorationSet {
   // Get the line with the cursor
   const cursorLine = doc.lineAt(cursorPos)
 
-  // Iterate through syntax tree
+  // ✅ CRITICAL OPTIMIZATION: Only process visible viewport + buffer zone
+  const viewport = view.viewport
+  const bufferLines = 50 // Lines above/below viewport to pre-render
+
+  // Calculate visible range with buffer
+  const startLine = Math.max(1, doc.lineAt(viewport.from).number - bufferLines)
+  const endLine = Math.min(doc.lines, doc.lineAt(viewport.to).number + bufferLines)
+  const fromPos = doc.line(startLine).from
+  const toPos = doc.line(endLine).to
+
+  // Iterate ONLY through visible syntax tree range (100-200 nodes instead of 5000-20000)
   syntaxTree(view.state).iterate({
+    from: fromPos,
+    to: toPos,
     enter: (node) => {
       const { from, to, name } = node
 
@@ -174,11 +189,15 @@ export const markdownLivePreview = ViewPlugin.fromClass(
       // Skip updates until initialized
       if (!this.isInitialized) return
 
-      // Only rebuild decorations if document changed or cursor moved to a different line
+      // Only rebuild decorations if:
+      // 1. Document changed (typing, editing)
+      // 2. Cursor moved to a different line
+      // 3. Viewport changed (scrolling) - CRITICAL for viewport optimization
       const newCursorLine = update.state.doc.lineAt(update.state.selection.main.head).number
       const cursorLineChanged = newCursorLine !== this.cursorLine
+      const viewportChanged = update.viewportChanged
 
-      if (update.docChanged || cursorLineChanged) {
+      if (update.docChanged || cursorLineChanged || viewportChanged) {
         this.cursorLine = newCursorLine
         this.decorations = buildDecorations(update.view)
       }
