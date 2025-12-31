@@ -10,6 +10,8 @@
  * Search for "Migration 007: Seed demo data" in src-tauri/src/database.rs
  */
 
+import { markdownSyntaxDemo } from './demo-markdown-syntax'
+
 // ============================================================================
 // Demo Project
 // ============================================================================
@@ -216,6 +218,13 @@ To test callouts:
 \`\`\`
 
 **Available types:** note, tip, warning, danger, info, success, question, example, quote, bug, abstract, summary, tldr, important, hint, caution, attention, error, failure, fail, missing, check, done, help, faq, cite`
+  },
+
+  markdown: {
+    title: 'Markdown Syntax Demo',
+    folder: 'inbox',
+    tags: ['tutorial', 'tips'],
+    content: markdownSyntaxDemo
   }
 } as const
 

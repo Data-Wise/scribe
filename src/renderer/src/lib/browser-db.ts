@@ -174,7 +174,8 @@ export const seedDemoData = async (): Promise<boolean> => {
     { key: 'welcome', offset: 0 },
     { key: 'features', offset: 60 },
     { key: 'daily', offset: 120 },
-    { key: 'callouts', offset: 180 }
+    { key: 'callouts', offset: 180 },
+    { key: 'markdown', offset: 240 }
   ]
 
   for (const { key, offset } of notesToAdd) {
@@ -211,6 +212,7 @@ export const seedDemoData = async (): Promise<boolean> => {
   const featuresId = noteMap['Features Overview']
   const dailyId = noteMap['Daily Note Example']
   const calloutsId = noteMap['Callout Examples']
+  const markdownId = noteMap['Markdown Syntax Demo']
 
   if (welcomeId && featuresId) {
     await db.noteLinks.add({ source_id: welcomeId, target_id: featuresId })
@@ -223,6 +225,9 @@ export const seedDemoData = async (): Promise<boolean> => {
   }
   if (featuresId && calloutsId) {
     await db.noteLinks.add({ source_id: featuresId, target_id: calloutsId })
+  }
+  if (featuresId && markdownId) {
+    await db.noteLinks.add({ source_id: featuresId, target_id: markdownId })
   }
 
   console.log('[Scribe] Demo data seeded successfully')
