@@ -696,3 +696,111 @@ describe('HybridEditor Callout Rendering (Phase 2)', () => {
     })
   })
 })
+
+describe('HybridEditor Live Preview Mode (Phase 3)', () => {
+  const defaultProps = {
+    content: '',
+    onChange: vi.fn(),
+    onWikiLinkClick: vi.fn(),
+    onTagClick: vi.fn(),
+    onSearchNotes: vi.fn().mockResolvedValue([]),
+    onSearchTags: vi.fn().mockResolvedValue([])
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('Live Preview Mode Basics', () => {
+    it('Live Preview mode uses textarea (same as source for v1.0)', async () => {
+      render(<HybridEditor {...defaultProps} content="# Heading" editorMode="live-preview" />)
+
+      // Live Preview currently uses textarea
+      const textarea = screen.getByRole('textbox')
+      expect(textarea).toBeInTheDocument()
+    })
+
+    it('editor tracks current mode correctly', async () => {
+      render(<HybridEditor {...defaultProps} content="Test" />)
+
+      // Check initial mode (source)
+      const editor = document.querySelector('[data-testid="hybrid-editor"]')
+      expect(editor).toHaveAttribute('data-mode', 'source')
+
+      // Switch to live-preview
+      fireEvent.click(screen.getByText('Live'))
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'live-preview')
+      })
+
+      // Switch to reading
+      fireEvent.click(screen.getByText('Reading'))
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'reading')
+      })
+    })
+
+    it('Live Preview mode allows editing', async () => {
+      const onChange = vi.fn()
+      render(<HybridEditor {...defaultProps} content="Initial" onChange={onChange} editorMode="live-preview" />)
+
+      const textarea = screen.getByRole('textbox')
+      fireEvent.change(textarea, { target: { value: 'Modified' } })
+
+      expect(onChange).toHaveBeenCalledWith('Modified')
+    })
+  })
+
+  describe('Mode Switching', () => {
+    it('⌘E cycles through modes', async () => {
+      render(<HybridEditor {...defaultProps} content="Test" />)
+
+      const editor = document.querySelector('[data-testid="hybrid-editor"]')
+
+      // Start in source
+      expect(editor).toHaveAttribute('data-mode', 'source')
+
+      // Press ⌘E to cycle to live-preview
+      fireEvent.keyDown(window, { key: 'e', metaKey: true })
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'live-preview')
+      })
+
+      // Press ⌘E to cycle to reading
+      fireEvent.keyDown(window, { key: 'e', metaKey: true })
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'reading')
+      })
+
+      // Press ⌘E to cycle back to source
+      fireEvent.keyDown(window, { key: 'e', metaKey: true })
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'source')
+      })
+    })
+
+    it('⌘1/2/3 switches to specific modes', async () => {
+      render(<HybridEditor {...defaultProps} content="Test" />)
+
+      const editor = document.querySelector('[data-testid="hybrid-editor"]')
+
+      // ⌘2 for live-preview
+      fireEvent.keyDown(window, { key: '2', metaKey: true })
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'live-preview')
+      })
+
+      // ⌘3 for reading
+      fireEvent.keyDown(window, { key: '3', metaKey: true })
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'reading')
+      })
+
+      // ⌘1 for source
+      fireEvent.keyDown(window, { key: '1', metaKey: true })
+      await waitFor(() => {
+        expect(editor).toHaveAttribute('data-mode', 'source')
+      })
+    })
+  })
+})
