@@ -29,7 +29,9 @@ describe('editorStore', () => {
         instance: null,
         language: 'markdown',
         pdfPath: null,
-        isCompiling: false
+        isCompiling: false,
+        cursorPosition: null,
+        scrollTop: 0
       })
     })
   })

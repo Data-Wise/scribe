@@ -34,7 +34,7 @@ interface MonacoCodeEditorProps {
 
 export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEditorProps) {
   const editorRef = useRef<MonacoEditorType.IStandaloneCodeEditor | null>(null)
-  const { setMonacoInstance } = useEditorStore()
+  const { setMonacoInstance, monaco: monacoState, saveMonacoCursorScroll } = useEditorStore()
   const language = getMonacoLanguage(filePath)
 
   // LaTeX compilation state
@@ -63,6 +63,50 @@ export function MonacoCodeEditor({ content, onChange, filePath }: MonacoCodeEdit
 
     return () => clearTimeout(timer)
   }, [content, isLatexFile, autoCompile, filePath])
+
+  // Save cursor/scroll positions when they change
+  useEffect(() => {
+    if (!editorRef.current) return
+
+    const editor = editorRef.current
+
+    // Save cursor position on change
+    const cursorDisposable = editor.onDidChangeCursorPosition(() => {
+      const position = editor.getPosition()
+      const scrollTop = editor.getScrollTop()
+      if (position) {
+        saveMonacoCursorScroll(position, scrollTop)
+      }
+    })
+
+    // Save scroll position on scroll
+    const scrollDisposable = editor.onDidScrollChange(() => {
+      const position = editor.getPosition()
+      const scrollTop = editor.getScrollTop()
+      saveMonacoCursorScroll(position, scrollTop)
+    })
+
+    return () => {
+      cursorDisposable.dispose()
+      scrollDisposable.dispose()
+    }
+  }, [editorRef.current, saveMonacoCursorScroll])
+
+  // Restore cursor/scroll positions on mount
+  useEffect(() => {
+    if (!editorRef.current || !monacoState.cursorPosition) return
+
+    const editor = editorRef.current
+
+    // Restore cursor position
+    editor.setPosition(monacoState.cursorPosition)
+
+    // Restore scroll position
+    editor.setScrollTop(monacoState.scrollTop)
+
+    // Focus editor
+    editor.focus()
+  }, [filePath]) // Run when file changes
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor

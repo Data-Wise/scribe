@@ -33,6 +33,8 @@ export interface MonacoState {
   language: string
   pdfPath: string | null
   isCompiling: boolean
+  cursorPosition: { lineNumber: number; column: number } | null
+  scrollTop: number
 }
 
 interface EditorStore {
@@ -54,6 +56,7 @@ interface EditorStore {
 
   // Monaco actions
   saveMonacoState: (language: string, pdfPath: string | null) => void
+  saveMonacoCursorScroll: (cursor: { lineNumber: number; column: number } | null, scrollTop: number) => void
   setMonacoInstance: (instance: MonacoEditorType.IStandaloneCodeEditor | null) => void
   setCompiling: (isCompiling: boolean) => void
 
@@ -78,7 +81,9 @@ const initialState = {
     instance: null,
     language: 'markdown',
     pdfPath: null,
-    isCompiling: false
+    isCompiling: false,
+    cursorPosition: null,
+    scrollTop: 0
   }
 }
 
@@ -179,6 +184,15 @@ export const useEditorStore = create<EditorStore>()(
           }
         })),
 
+      saveMonacoCursorScroll: (cursor, scrollTop) =>
+        set((state) => ({
+          monaco: {
+            ...state.monaco,
+            cursorPosition: cursor,
+            scrollTop
+          }
+        })),
+
       setMonacoInstance: (instance) =>
         set((state) => ({
           monaco: {
@@ -210,7 +224,9 @@ export const useEditorStore = create<EditorStore>()(
           instance: null,
           language: state.monaco.language,
           pdfPath: state.monaco.pdfPath,
-          isCompiling: false
+          isCompiling: false,
+          cursorPosition: state.monaco.cursorPosition,
+          scrollTop: state.monaco.scrollTop
         }
       })
     }
