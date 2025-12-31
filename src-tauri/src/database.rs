@@ -1,6 +1,8 @@
 use rusqlite::{Connection, Result as SqlResult, params_from_iter};
 use serde::{Deserialize, Serialize};
+use serde_json::Value as JsonValue;
 use tauri::{AppHandle, Manager};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Note {
@@ -49,6 +51,29 @@ pub struct Folder {
     pub color: Option<String>,
     pub icon: Option<String>,
     pub sort_order: i32,
+}
+
+// Property validation types
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PropertyType {
+    Text,
+    Date,
+    Number,
+    Checkbox,
+    List,
+    Link,
+    Tags,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Property {
+    pub key: String,
+    #[serde(rename = "type")]
+    pub prop_type: PropertyType,
+    pub value: JsonValue,
+    #[serde(default)]
+    pub readonly: bool,
 }
 
 pub struct Database {
@@ -121,6 +146,11 @@ impl Database {
         if current_version < 7 {
             self.run_migration_007_seed_demo_data()?;
             self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [7])?;
+        }
+
+        if current_version < 8 {
+            self.run_migration_008_add_properties_to_fts()?;
+            self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [8])?;
         }
 
         Ok(())
@@ -459,17 +489,17 @@ What did you accomplish today?"#);
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content, "notes", rusqlite::types::Null],
         )?;
 
-        // Update FTS index
+        // Update FTS index (properties column added in migration 008, use empty string for demo notes)
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
             rusqlite::params![&note1_id, "Welcome to Scribe", welcome_content],
         )?;
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
             rusqlite::params![&note2_id, "Features Overview", features_content],
         )?;
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content],
         )?;
 
@@ -535,9 +565,96 @@ What did you accomplish today?"#);
         Ok(())
     }
 
+    fn run_migration_008_add_properties_to_fts(&self) -> SqlResult<()> {
+        println!("Running database migration 008 (add properties to FTS index)");
+
+        // Drop old FTS table and triggers
+        self.conn.execute_batch("
+            DROP TRIGGER IF EXISTS notes_au;
+            DROP TRIGGER IF EXISTS notes_ad;
+            DROP TRIGGER IF EXISTS notes_ai;
+            DROP TABLE IF EXISTS notes_fts;
+        ")?;
+
+        // Recreate FTS table with properties column
+        self.conn.execute_batch("
+            CREATE VIRTUAL TABLE notes_fts USING fts5(
+                note_id UNINDEXED,
+                title,
+                content,
+                properties
+            );
+
+            CREATE TRIGGER notes_ai AFTER INSERT ON notes BEGIN
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+
+            CREATE TRIGGER notes_ad AFTER DELETE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+            END;
+
+            CREATE TRIGGER notes_au AFTER UPDATE ON notes BEGIN
+                DELETE FROM notes_fts WHERE note_id = old.id;
+                INSERT INTO notes_fts(note_id, title, content, properties)
+                VALUES (new.id, new.title, new.content, COALESCE(new.properties, ''));
+            END;
+        ")?;
+
+        // Populate FTS table with existing notes
+        self.conn.execute("
+            INSERT INTO notes_fts(note_id, title, content, properties)
+            SELECT id, title, content, COALESCE(properties, '')
+            FROM notes
+            WHERE deleted_at IS NULL
+        ", [])?;
+
+        println!("  ✅ FTS index updated with properties column");
+        Ok(())
+    }
+
     // Note CRUD operations
-    
+
+    /// Validate properties JSON structure and type constraints
+    fn validate_properties(properties_json: &str) -> Result<(), String> {
+        // Parse JSON
+        let properties: HashMap<String, Property> = serde_json::from_str(properties_json)
+            .map_err(|e| format!("Invalid properties JSON: {}", e))?;
+
+        // Validate each property's value matches its type
+        for (key, prop) in properties.iter() {
+            match (&prop.prop_type, &prop.value) {
+                (PropertyType::Number, v) if !v.is_number() => {
+                    return Err(format!("Property '{}' should be a number, got: {:?}", key, v));
+                }
+                (PropertyType::Checkbox, v) if !v.is_boolean() => {
+                    return Err(format!("Property '{}' should be a boolean, got: {:?}", key, v));
+                }
+                (PropertyType::List | PropertyType::Tags, v) if !v.is_array() => {
+                    return Err(format!("Property '{}' should be an array, got: {:?}", key, v));
+                }
+                (PropertyType::Text | PropertyType::Date | PropertyType::Link, v) if !v.is_string() => {
+                    return Err(format!("Property '{}' should be a string, got: {:?}", key, v));
+                }
+                _ => {} // Type matches or is acceptable
+            }
+        }
+
+        Ok(())
+    }
+
     pub fn create_note(&self, title: &str, content: &str, folder: &str, project_id: Option<&str>, properties: Option<&str>) -> SqlResult<Note> {
+        // Validate properties if provided
+        if let Some(props) = properties {
+            if !props.is_empty() {
+                if let Err(e) = Self::validate_properties(props) {
+                    return Err(rusqlite::Error::ToSqlConversionFailure(
+                        Box::new(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
+                    ));
+                }
+            }
+        }
+
         self.conn.execute(
             "INSERT INTO notes (title, content, folder, project_id, properties) VALUES (?, ?, ?, ?, ?)",
             rusqlite::params![title, content, folder, project_id, properties],
@@ -647,6 +764,17 @@ What did you accomplish today?"#);
     pub fn update_note(&self, id: &str, title: Option<&str>, content: Option<&str>, properties: Option<&str>) -> SqlResult<Option<Note>> {
         if title.is_none() && content.is_none() && properties.is_none() {
             return self.get_note(id);
+        }
+
+        // Validate properties if provided
+        if let Some(props) = properties {
+            if !props.is_empty() {
+                if let Err(e) = Self::validate_properties(props) {
+                    return Err(rusqlite::Error::ToSqlConversionFailure(
+                        Box::new(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
+                    ));
+                }
+            }
         }
 
         // Build dynamic SQL and collect owned values for params
