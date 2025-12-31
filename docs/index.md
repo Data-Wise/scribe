@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.2.1-blue)
-![Progress](https://img.shields.io/badge/progress-55%25-yellow)
-![Tests](https://img.shields.io/badge/tests-1041%20passing-brightgreen)
+![Version](https://img.shields.io/badge/version-1.6.0-blue)
+![Progress](https://img.shields.io/badge/progress-75%25-yellow)
+![Tests](https://img.shields.io/badge/tests-759%20passing-brightgreen)
 
 ---
 
@@ -85,6 +85,12 @@ cd scribe && npm install && npm run dev
 
     Claude + Gemini CLI integration (no API keys needed)
 
+-   :material-console:{ .lg .middle } **Embedded Terminal**
+
+    ---
+
+    Full PTY shell with smart project-aware working directory
+
 </div>
 
 ---
@@ -101,6 +107,7 @@ cd scribe && npm install && npm run dev
 | **Tags** | `#tag` with colored badges and autocomplete |
 | **Daily Notes** | Auto-created with templates |
 | **AI** | Claude + Gemini CLI (no API keys) |
+| **Terminal** | Embedded PTY with project-aware CWD |
 | **Export** | LaTeX, PDF, Word, Quarto (planned) |
 
 ---
