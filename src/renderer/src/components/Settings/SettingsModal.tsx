@@ -3,6 +3,10 @@ import { useSettingsStore, SearchResult } from '../../store/useSettingsStore'
 import { settingsCategories } from '../../lib/settingsSchema'
 import { X, Search, RotateCcw, Download, Save } from 'lucide-react'
 import SearchResults from './SearchResults'
+import SettingControl from './SettingControl'
+import QuickActionsSettings from './QuickActionsSettings'
+import ThemeGallery from './ThemeGallery'
+import ProjectTemplates from './ProjectTemplates'
 
 /**
  * SettingsModal - Main settings modal with tabbed navigation
@@ -152,29 +156,30 @@ export default function SettingsModal() {
                     <div className="space-y-6">
                       {currentCategory.sections.map((section) => (
                         <div key={section.id} className="bg-neutral-800 rounded-lg p-6">
-                          <div className="mb-4">
-                            <h4 className="text-lg font-semibold text-neutral-100">{section.title}</h4>
-                            {section.description && (
-                              <p className="text-sm text-neutral-400 mt-1">{section.description}</p>
-                            )}
-                          </div>
-
-                          {/* Settings controls will be rendered here */}
-                          <div className="space-y-4">
-                            {section.settings.map((setting) => (
-                              <div key={setting.id} className="text-neutral-300">
-                                {/* Placeholder - individual setting controls will be added next */}
-                                <div className="text-sm">
-                                  {setting.label}
-                                  {setting.addedInVersion && (
-                                    <span className="ml-2 px-2 py-0.5 text-xs bg-blue-500/20 text-blue-300 rounded">
-                                      New in {setting.addedInVersion}
-                                    </span>
-                                  )}
-                                </div>
+                          {/* Special handling for custom UI sections */}
+                          {section.id === 'quick-actions' ? (
+                            <QuickActionsSettings />
+                          ) : section.id === 'theme-selection' ? (
+                            <ThemeGallery />
+                          ) : section.id === 'project-templates' ? (
+                            <ProjectTemplates />
+                          ) : (
+                            <>
+                              <div className="mb-4">
+                                <h4 className="text-lg font-semibold text-neutral-100">{section.title}</h4>
+                                {section.description && (
+                                  <p className="text-sm text-neutral-400 mt-1">{section.description}</p>
+                                )}
                               </div>
-                            ))}
-                          </div>
+
+                              {/* Settings controls */}
+                              <div className="space-y-4">
+                                {section.settings.map((setting) => (
+                                  <SettingControl key={setting.id} setting={setting} />
+                                ))}
+                              </div>
+                            </>
+                          )}
                         </div>
                       ))}
                     </div>
