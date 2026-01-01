@@ -22,14 +22,12 @@ const mockQuickActions: QuickAction[] = [
 
 describe('ProjectTemplates', () => {
   const mockUpdateSetting = vi.fn()
-  const mockToggleQuickAction = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
     ;(global.confirm as any).mockReturnValue(true)
     ;(useSettingsStore as any).mockReturnValue({
       updateSetting: mockUpdateSetting,
-      toggleQuickAction: mockToggleQuickAction,
       quickActions: mockQuickActions
     })
   })

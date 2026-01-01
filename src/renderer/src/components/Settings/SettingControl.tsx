@@ -46,12 +46,7 @@ export default function SettingControl({ setting }: SettingControlProps) {
       return <KeymapControl setting={setting} value={value} onChange={(v) => updateSetting(setting.id, v)} />
 
     default:
-      console.error('[SettingControl] Unknown setting type:', setting.type, setting)
-      return (
-        <div className="text-red-400 text-sm">
-          Unknown setting type: {setting.type}
-        </div>
-      )
+      return <div className="text-neutral-500 text-sm">Unknown setting type: {setting.type}</div>
   }
 }
 
