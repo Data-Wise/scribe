@@ -10,6 +10,8 @@
 
 **NOT** an IDE. **NOT** an Obsidian replacement. A focused writing companion.
 
+**Location**: `~/projects/dev-tools/scribe/`
+
 ---
 
 ## ⚠️ Critical: Read First
@@ -128,7 +130,7 @@ git push origin v1.x.x
 |-------|------------|
 | Shell | **Tauri 2** (Rust backend) |
 | UI | React 18 |
-| Editor | BlockNote |
+| Editor | HybridEditor (CodeMirror 6 + ReactMarkdown) |
 | Styling | Tailwind CSS |
 | State | Zustand |
 | Database | SQLite (Tauri) / **IndexedDB** (Browser) |
@@ -283,6 +285,36 @@ scribe help --all      # Full reference
 - [ ] Browser mode indicator in UI
 - [ ] Wiki link backlink tracking in browser
 - [ ] Chat session management UI
+
+**Sprint 28: Live Editor Enhancements - Complete ✅ (2025-01-01)**
+
+**Phase 1: Live Preview with CodeMirror 6 - Merged to dev**
+- **Feature Branch:** `feat/live-editor-enhancements` (merged, deleted)
+- **PR:** #21 - https://github.com/Data-Wise/scribe/pull/21
+- **Merged Commit:** `b8848f0`
+
+**Deliverables:**
+- ✅ CodeMirror 6 integration for Live Preview mode
+- ✅ Obsidian-style live preview (hide syntax when cursor elsewhere)
+- ✅ KaTeX math rendering (inline `$...$` and display `$$...$$`)
+- ✅ Three editor modes with keyboard shortcuts
+  - Source mode (⌘1): Plain textarea
+  - Live Preview mode (⌘2): CodeMirror with hidden syntax
+  - Reading mode (⌘3): Fully rendered ReactMarkdown
+  - ⌘E cycles between modes
+- ✅ Bug fixes: Controlled component race condition, new note tabs
+
+**New Dependencies (Approved):**
+- `@codemirror/lang-markdown`, `@codemirror/state`, `@codemirror/view`, `@codemirror/language-data`
+- `@uiw/react-codemirror` (React wrapper for CodeMirror 6)
+- `katex` + `@types/katex` (LaTeX math rendering)
+
+**Test Results (2025-01-01):**
+- ✅ TypeScript: Clean compilation (0 errors)
+- ✅ Unit Tests: 930/930 passed (34 test files)
+- ✅ E2E Tests: 12/12 editor tests passed (mode switching, wiki links, tags)
+- ✅ Build: Successful (Vite build 5.48s)
+- ⚠️ PWA Cache: 2.38 MB bundle exceeds limit (known issue, does not affect functionality)
 
 ---
 

@@ -432,13 +432,19 @@ function App() {
       type: { key: 'type', value: 'note', type: 'list' },
     }
 
-    await createNote({
+    const newNote = await createNote({
       title: `New Note`,
       content: '',  // Empty markdown - user starts fresh
       folder: currentFolder || 'inbox',
       properties: defaultProperties,
       project_id: currentProjectId || undefined  // Auto-assign to current project
     })
+
+    // Open the note in a tab (fix for note creation bug)
+    if (newNote) {
+      openNoteTab(newNote.id, newNote.title)
+      selectNote(newNote.id)
+    }
   }
 
   const selectedNote = notes.find(n => n.id === selectedNoteId)
@@ -1286,7 +1292,8 @@ function App() {
             console.error('[Scribe] Failed to create note')
             return
           }
-          // Select the new note (already added to state by createNote)
+          // Open the note in a tab and select it (fix for note creation bug)
+          openNoteTab(newNote.id, newNote.title)
           selectNote(newNote.id)
           setEditorMode('source')
         }}
