@@ -6,6 +6,8 @@ import { EditorView, Decoration, ViewPlugin, ViewUpdate, WidgetType } from '@cod
 import { syntaxTree } from '@codemirror/language'
 import type { DecorationSet } from '@codemirror/view'
 import type { Range } from '@codemirror/state'
+import katex from 'katex'
+import 'katex/dist/katex.min.css'
 
 /**
  * Empty widget that replaces hidden syntax
@@ -28,6 +30,39 @@ class BulletWidget extends WidgetType {
     span.textContent = '•'
     return span
   }
+}
+
+/**
+ * Math widget that renders LaTeX using KaTeX
+ * Supports both inline ($...$) and display ($$...$$) math
+ */
+class MathWidget extends WidgetType {
+  constructor(readonly formula: string, readonly displayMode: boolean = false) {
+    super()
+  }
+
+  eq(other: MathWidget) {
+    return other.formula === this.formula && other.displayMode === this.displayMode
+  }
+
+  toDOM() {
+    const span = document.createElement('span')
+    span.className = this.displayMode ? 'cm-math-display' : 'cm-math-inline'
+    try {
+      katex.render(this.formula, span, {
+        displayMode: this.displayMode,
+        throwOnError: false,
+        output: 'html'
+      })
+    } catch {
+      // Show formula as-is on error
+      span.textContent = this.displayMode ? `$$${this.formula}$$` : `$${this.formula}$`
+      span.className += ' cm-math-error'
+    }
+    return span
+  }
+
+  ignoreEvent() { return false }
 }
 
 const hiddenWidget = new HiddenWidget()
@@ -53,6 +88,7 @@ class RichMarkdownPlugin {
   computeDecorations(view: EditorView): DecorationSet {
     const widgets: Range<Decoration>[] = []
     const cursor = view.state.selection.main
+    const doc = view.state.doc
 
     // Elements that contain marks we want to hide
     const formattedElements = [
@@ -80,16 +116,19 @@ class RichMarkdownPlugin {
 
           // For headings, check if cursor is on the same line
           if (node.name.startsWith('ATXHeading')) {
-            const cursorLine = view.state.doc.lineAt(cursor.head).number
-            const nodeLine = view.state.doc.lineAt(node.from).number
+            const cursorLine = doc.lineAt(cursor.head).number
+            const nodeLine = doc.lineAt(node.from).number
             if (cursorLine === nodeLine) {
               return false // Don't hide header marks when editing heading
             }
           }
 
           // Hide header marks (# ## ### etc.)
+          // IMPORTANT: Don't include trailing space if it would cross line boundary
           if (node.name === 'HeaderMark') {
-            const endPos = Math.min(node.to + 1, view.state.doc.length)
+            const line = doc.lineAt(node.from)
+            // Only extend to include space if we're still on the same line
+            const endPos = Math.min(node.to + 1, line.to)
             widgets.push(
               Decoration.replace({ widget: hiddenWidget }).range(node.from, endPos)
             )
@@ -111,8 +150,8 @@ class RichMarkdownPlugin {
 
           // Replace list markers with bullets (unless cursor is on that line)
           if (node.name === 'ListMark') {
-            const cursorLine = view.state.doc.lineAt(cursor.head).number
-            const nodeLine = view.state.doc.lineAt(node.from).number
+            const cursorLine = doc.lineAt(cursor.head).number
+            const nodeLine = doc.lineAt(node.from).number
             if (cursorLine !== nodeLine) {
               widgets.push(
                 Decoration.replace({ widget: bulletWidget }).range(node.from, node.to)
@@ -128,9 +167,30 @@ class RichMarkdownPlugin {
           }
         }
       })
+
+      // Process inline math ($...$) using regex
+      // We do this separately because the markdown parser doesn't recognize math
+      const text = doc.sliceString(from, to)
+      const inlineMathRegex = /(?<!\$)\$([^$\n]+)\$(?!\$)/g
+      let match
+      while ((match = inlineMathRegex.exec(text)) !== null) {
+        const matchFrom = from + match.index
+        const matchTo = matchFrom + match[0].length
+        const formula = match[1]
+
+        // Skip if cursor is inside this math expression
+        if (cursor.from >= matchFrom && cursor.to <= matchTo) continue
+
+        widgets.push(
+          Decoration.replace({
+            widget: new MathWidget(formula, false)
+          }).range(matchFrom, matchTo)
+        )
+      }
     }
 
     // Sort decorations by position (required for Decoration.set)
+    // Also filter out any overlapping ranges
     widgets.sort((a, b) => a.from - b.from)
 
     return Decoration.set(widgets)
@@ -240,6 +300,31 @@ const editorTheme = EditorView.theme({
     fontStyle: 'italic',
     borderLeft: '3px solid var(--nexus-accent, #22c55e)',
     paddingLeft: '1em',
+  },
+  // Math styles - inline
+  '.cm-math-inline': {
+    padding: '0 2px',
+  },
+  '.cm-math-inline .katex': {
+    fontSize: '1.1em',
+  },
+  // Math styles - display (block)
+  '.cm-math-display': {
+    display: 'block',
+    textAlign: 'center',
+    margin: '0.5em 0',
+    padding: '0.5em',
+  },
+  '.cm-math-display .katex': {
+    fontSize: '1.2em',
+  },
+  // Math error state
+  '.cm-math-error': {
+    color: 'var(--nexus-error, #ef4444)',
+    fontFamily: 'monospace',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    padding: '2px 4px',
+    borderRadius: '2px',
   },
 })
 
