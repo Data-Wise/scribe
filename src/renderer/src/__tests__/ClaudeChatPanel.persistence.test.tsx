@@ -212,7 +212,7 @@ describe('ClaudeChatPanel - Persistence Integration', () => {
     })
 
     it('UI updates after clearing chat', async () => {
-      api.loadChatSession.mockResolvedValue([
+      vi.mocked(api.loadChatSession).mockResolvedValue([
         { id: '1', role: 'user', content: 'Message', timestamp: 1000 }
       ])
 
@@ -266,7 +266,7 @@ describe('ClaudeChatPanel - Persistence Integration', () => {
 
   describe('Error Handling', () => {
     it('handles session creation failure gracefully', async () => {
-      api.getOrCreateChatSession.mockRejectedValue(new Error('Database error'))
+      vi.mocked(api.getOrCreateChatSession).mockRejectedValue(new Error('Database error'))
 
       render(<ClaudeChatPanel noteContext={mockNoteContext} />)
 
@@ -275,7 +275,7 @@ describe('ClaudeChatPanel - Persistence Integration', () => {
     })
 
     it('handles message save failure gracefully', async () => {
-      api.saveChatMessage.mockRejectedValue(new Error('Save failed'))
+      vi.mocked(api.saveChatMessage).mockRejectedValue(new Error('Save failed'))
 
       render(<ClaudeChatPanel noteContext={mockNoteContext} />)
 
@@ -290,7 +290,7 @@ describe('ClaudeChatPanel - Persistence Integration', () => {
     })
 
     it('handles load session failure gracefully', async () => {
-      api.loadChatSession.mockRejectedValue(new Error('Load failed'))
+      vi.mocked(api.loadChatSession).mockRejectedValue(new Error('Load failed'))
 
       render(<ClaudeChatPanel noteContext={mockNoteContext} />)
 
@@ -306,7 +306,7 @@ describe('ClaudeChatPanel - Persistence Integration', () => {
         { id: '2', role: 'assistant', content: 'Previous answer', timestamp: 2000 }
       ]
 
-      api.loadChatSession.mockResolvedValue(savedMessages)
+      vi.mocked(api.loadChatSession).mockResolvedValue(savedMessages)
 
       // Simulate app restart by rendering fresh component
       render(<ClaudeChatPanel noteContext={mockNoteContext} />)
@@ -325,7 +325,7 @@ describe('ClaudeChatPanel - Persistence Integration', () => {
       ]
 
       // Database returns messages sorted by timestamp
-      api.loadChatSession.mockResolvedValue(
+      vi.mocked(api.loadChatSession).mockResolvedValue(
         messages.sort((a, b) => a.timestamp - b.timestamp)
       )
 

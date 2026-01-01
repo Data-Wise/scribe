@@ -36,7 +36,6 @@ export default function QuickActionsSettings() {
     reorderQuickActions,
     toggleQuickAction,
     updateQuickActionPrompt,
-    assignShortcut,
     updateQuickActionModel,
     addCustomQuickAction,
     removeQuickAction,
