@@ -1,9 +1,12 @@
 # SPEC: Settings Enhancement - ADHD-Optimized UI
 
-**Status:** draft
+**Status:** ✅ COMPLETE - Shipped in v1.8.0
 **Created:** 2025-12-31
+**Completed:** 2025-12-31
+**Shipped:** v1.8.0 (2026-01-01)
 **From Brainstorm:** `BRAINSTORM-settings-enhancement-2025-12-31.md`
-**Priority:** P2 (Sprint 27 P2 / Sprint 28)
+**Priority:** P1 (Sprint 27)
+**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.8.0
 
 ---
 
