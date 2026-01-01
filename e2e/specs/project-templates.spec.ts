@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { ScribePage } from '../page-objects/ScribePage'
 
 /**
  * E2E tests for Project Templates
@@ -12,13 +13,16 @@ import { test, expect } from '@playwright/test'
  */
 
 test.describe('Project Templates', () => {
+  let scribePage: ScribePage
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173')
-    await page.waitForLoadState('networkidle')
+    scribePage = new ScribePage(page)
+    await scribePage.goto()
+    await scribePage.waitForReady()
 
     // Open settings modal
     await page.keyboard.press('Meta+Comma')
-    await expect(page.getByRole('dialog', { name: /settings/i })).toBeVisible()
+    await expect(page.getByText('Settings')).toBeVisible()
 
     // Navigate to Projects tab
     await page.getByRole('tab', { name: /projects/i }).click()

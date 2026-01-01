@@ -1,0 +1,164 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - button "Collapse sidebar (⌘0)" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+        - heading "Projects (1)" [level=3] [ref=e9]:
+          - text: Projects
+          - generic [ref=e10]: (1)
+      - generic [ref=e12]:
+        - button "Research" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - img [ref=e17]
+            - generic [ref=e19]: Research
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e22]:
+              - generic [ref=e23]: Research
+              - generic "No notes yet" [ref=e24]
+            - paragraph [ref=e29]: Your research workspace - papers, notes, and ideas
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - img [ref=e32]
+              - generic [ref=e35]: 0 notes
+            - generic [ref=e36]:
+              - img [ref=e37]
+              - generic [ref=e40]: 0 words
+          - button "+ New Note" [ref=e41] [cursor=pointer]
+      - button "New Project" [ref=e42] [cursor=pointer]:
+        - img [ref=e43]
+        - generic [ref=e44]: New Project
+      - button "Settings ⌘," [ref=e45] [cursor=pointer]:
+        - img [ref=e46]
+        - generic [ref=e49]: Settings
+        - generic [ref=e50]: ⌘,
+    - separator "Resize sidebar" [ref=e51]
+  - generic [ref=e53]:
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - generic "Go to Mission Control" [ref=e56] [cursor=pointer]: Research
+        - generic [ref=e57]: ›
+      - generic [ref=e58]:
+        - button "⏸" [ref=e59] [cursor=pointer]
+        - generic [ref=e60]: 0:05
+        - button "↺" [ref=e61] [cursor=pointer]
+    - button "Mission Control" [ref=e64] [cursor=pointer]:
+      - img [ref=e66]
+      - generic [ref=e69]: Mission Control
+      - generic "Pinned" [ref=e70]:
+        - img [ref=e71]
+    - generic [ref=e73]:
+      - banner [ref=e74]:
+        - generic [ref=e75]:
+          - heading "Mission Control" [level=1] [ref=e76]
+          - paragraph [ref=e77]: 1 project • 0 pages • 0 words
+        - button "Settings" [ref=e79] [cursor=pointer]:
+          - img [ref=e80]
+      - generic [ref=e83]:
+        - generic [ref=e85]:
+          - button "Today ⌘D" [ref=e86] [cursor=pointer]:
+            - img [ref=e88]
+            - generic [ref=e90]:
+              - generic [ref=e91]: Today
+              - generic [ref=e92]: ⌘D
+          - button "New Page ⌘N" [ref=e93] [cursor=pointer]:
+            - img [ref=e95]
+            - generic [ref=e98]:
+              - generic [ref=e99]: New Page
+              - generic [ref=e100]: ⌘N
+          - button "Quick Capture ⌘⇧C" [ref=e101] [cursor=pointer]:
+            - img [ref=e103]
+            - generic [ref=e105]:
+              - generic [ref=e106]: Quick Capture
+              - generic [ref=e107]: ⌘⇧C
+          - button "New Project ⌘⇧P" [ref=e108] [cursor=pointer]:
+            - img [ref=e110]
+            - generic [ref=e112]:
+              - generic [ref=e113]: New Project
+              - generic [ref=e114]: ⌘⇧P
+        - generic [ref=e115]:
+          - heading "Projects" [level=2] [ref=e116]
+          - button "Research Active Research Your research workspace - papers, notes, and ideas 0 Just now" [ref=e118] [cursor=pointer]:
+            - generic [ref=e119]:
+              - generic [ref=e122]:
+                - img [ref=e123]
+                - text: Research
+              - generic [ref=e125]: Active
+            - heading "Research" [level=3] [ref=e126]
+            - paragraph [ref=e127]: Your research workspace - papers, notes, and ideas
+            - generic [ref=e128]:
+              - generic [ref=e130]:
+                - img [ref=e131]
+                - text: "0"
+              - generic [ref=e134]: Just now
+      - contentinfo [ref=e135]: Press ⌘0 to toggle back to editor
+  - button "Open Claude Assistant (in sidebar)" [ref=e136] [cursor=pointer]:
+    - img [ref=e137]
+  - generic [ref=e142]:
+    - generic [ref=e143]:
+      - heading "Settings" [level=2] [ref=e145]
+      - button "General" [ref=e146] [cursor=pointer]:
+        - img [ref=e147]
+        - generic [ref=e150]: General
+      - button "Editor" [ref=e151] [cursor=pointer]:
+        - img [ref=e152]
+        - generic [ref=e154]: Editor
+      - button "Appearance" [ref=e155] [cursor=pointer]:
+        - img [ref=e156]
+        - generic [ref=e159]: Appearance
+      - button "Files & Links" [ref=e160] [cursor=pointer]:
+        - img [ref=e161]
+        - generic [ref=e166]: Files & Links
+      - button "Research" [ref=e167] [cursor=pointer]:
+        - img [ref=e168]
+        - generic [ref=e170]: Research
+    - generic [ref=e171]:
+      - generic [ref=e172]:
+        - heading "general" [level=3] [ref=e173]
+        - button [ref=e174] [cursor=pointer]:
+          - img [ref=e175]
+      - generic [ref=e179]:
+        - generic [ref=e180]:
+          - heading "Startup" [level=4] [ref=e181]
+          - generic [ref=e183]:
+            - generic [ref=e184]: Open last page on startup
+            - generic [ref=e185]: Return to exactly where you left off.
+        - generic [ref=e188]:
+          - heading "ADHD Features" [level=4] [ref=e189]
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - generic [ref=e192]: Show writing streak milestones
+              - generic [ref=e193]: Celebrate at 7, 30, 100, and 365 days. Off by default to avoid anxiety.
+            - button [ref=e194] [cursor=pointer]
+        - generic [ref=e196]:
+          - heading "Identity" [level=4] [ref=e197]
+          - generic [ref=e198]:
+            - img [ref=e200]
+            - generic [ref=e203]:
+              - generic [ref=e204]: Research Assistant
+              - generic [ref=e205]: Causal Inference Specialist
+        - generic [ref=e206]:
+          - heading "Browser Mode" [level=4] [ref=e207]:
+            - img [ref=e208]
+            - text: Browser Mode
+          - generic [ref=e211]:
+            - generic [ref=e212]:
+              - img [ref=e214]
+              - generic [ref=e218]:
+                - generic [ref=e219]: IndexedDB Storage
+                - generic [ref=e220]: Your data is stored locally in this browser.
+            - generic [ref=e221]:
+              - button "Clear All Data" [ref=e222] [cursor=pointer]:
+                - img [ref=e223]
+                - text: Clear All Data
+              - button "Restore Demo Data" [ref=e226] [cursor=pointer]:
+                - img [ref=e227]
+                - text: Restore Demo Data
+            - generic [ref=e230]: Some features like AI assistance and PDF export require the desktop app.
+      - paragraph [ref=e232]: Scribe v0.3.0 • Sage Garden Theme
+```
