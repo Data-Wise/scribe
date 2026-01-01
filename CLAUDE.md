@@ -43,17 +43,52 @@ main (protected) ← PR from dev only
 ```bash
 # Worktree location: ~/.git-worktrees/scribe/
 
-# Create feature branch with worktree
-git worktree add ~/.git-worktrees/scribe/feat-name -b feat/feature-name dev
+# Create feature branch with worktree (descriptive name)
+git worktree add ~/.git-worktrees/scribe/feature-name -b feat/feature-name dev
+
+# Example: Settings Enhancement
+git worktree add ~/.git-worktrees/scribe/settings -b feat/settings-enhancement dev
 
 # Work in the worktree directory
-cd ~/.git-worktrees/scribe/feat-name
+cd ~/.git-worktrees/scribe/settings
 
-# When done, create PR to dev
-gh pr create --base dev --head feat/feature-name
+# Commit work as you go
+git add -A && git commit -m "feat: description"
 
-# After PR merged, clean up worktree
-git worktree remove ~/.git-worktrees/scribe/feat-name
+# When phase/feature complete, merge to dev
+git checkout dev
+git merge feat/settings-enhancement --no-ff -m "Merge feat/settings-enhancement: Phase 1"
+git push origin dev
+
+# Continue in same worktree for next phase (optional)
+cd ~/.git-worktrees/scribe/settings
+# OR clean up worktree if done
+git worktree remove ~/.git-worktrees/scribe/settings
+```
+
+**Naming Convention:**
+- **Worktree directory:** Descriptive feature name (e.g., `settings`, `terminal`, `ai-chat`)
+- **Git branch:** Prefixed with `feat/` (e.g., `feat/settings-enhancement`)
+
+**Example: Settings Enhancement Workflow**
+```bash
+# Phase 1: Create worktree
+git worktree add ~/.git-worktrees/scribe/settings -b feat/settings-enhancement dev
+cd ~/.git-worktrees/scribe/settings
+
+# Phase 1: Implement foundation
+# ... work, commit, work, commit ...
+git commit -m "feat: Settings Enhancement Phase 1 - Foundation"
+
+# Phase 1: Merge to dev
+git checkout dev
+git merge feat/settings-enhancement --no-ff
+git push origin dev
+
+# Phase 2: Continue in same worktree
+cd ~/.git-worktrees/scribe/settings
+# Branch still exists, worktree still active
+# ... continue Phase 2 work ...
 ```
 
 ### PR Flow
@@ -211,10 +246,12 @@ scribe help --all      # Full reference
 
 **Sprint 27 P2: Settings Enhancement - In Progress (2025-12-31)**
 
-**Branch:** `feat/settings-enhancement`
-**Worktree:** `/Users/dt/.git-worktrees/scribe/settings`
+**Phase 1: Foundation - Complete ✅ (Merged to dev)**
+- **Feature Branch:** `feat/settings-enhancement`
+- **Worktree:** `/Users/dt/.git-worktrees/scribe/settings` (for Phase 2 work)
+- **Merged:** 2025-12-31 (commit 5f504a5)
 
-**Phase 1: Foundation - Complete ✅**
+**Phase 1 Deliverables:**
 - ✅ Zustand store for settings state (useSettingsStore.ts)
 - ✅ Settings schema with 5 categories (settingsSchema.ts)
 - ✅ SettingsModal with tabs + search UI
