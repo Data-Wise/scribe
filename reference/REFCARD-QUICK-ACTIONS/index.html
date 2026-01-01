@@ -1289,10 +1289,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-5-quick-actions" class="md-nav__link">
+  <a href="#the-5-default-quick-actions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The 5 Quick Actions
+        The 5 Default Quick Actions
       
     </span>
   </a>
@@ -1644,22 +1644,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#customization" class="md-nav__link">
+  <a href="#customization-v190" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Customization
+        Customization (v1.9.0+)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Customization">
+    <nav class="md-nav" aria-label="Customization (v1.9.0+)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#adding-new-quick-actions" class="md-nav__link">
+  <a href="#via-settings-ui" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding New Quick Actions
+        Via Settings UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-custom-quick-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Custom Quick Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#programmatic-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Customization
       
     </span>
   </a>
@@ -2344,10 +2366,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-5-quick-actions" class="md-nav__link">
+  <a href="#the-5-default-quick-actions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The 5 Quick Actions
+        The 5 Default Quick Actions
       
     </span>
   </a>
@@ -2699,22 +2721,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#customization" class="md-nav__link">
+  <a href="#customization-v190" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Customization
+        Customization (v1.9.0+)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Customization">
+    <nav class="md-nav" aria-label="Customization (v1.9.0+)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#adding-new-quick-actions" class="md-nav__link">
+  <a href="#via-settings-ui" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding New Quick Actions
+        Via Settings UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-custom-quick-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Custom Quick Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#programmatic-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Customization
       
     </span>
   </a>
@@ -2809,10 +2853,10 @@
 
 <h1 id="quick-actions-reference-card">Quick Actions Reference Card</h1>
 <blockquote>
-<p><strong>One-click AI prompts for faster writing workflows</strong></p>
+<p><strong>One-click AI prompts for faster writing workflows (v1.9.0+)</strong></p>
 </blockquote>
 <hr />
-<h2 id="the-5-quick-actions">The 5 Quick Actions</h2>
+<h2 id="the-5-default-quick-actions">The 5 Default Quick Actions</h2>
 <table>
 <thead>
 <tr>
@@ -2855,6 +2899,7 @@
 </tr>
 </tbody>
 </table>
+<p><strong>Limits:</strong> 5 default + 5 custom = <strong>10 Quick Actions maximum</strong></p>
 <hr />
 <h2 id="quick-start">Quick Start</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Open a note
@@ -2862,7 +2907,7 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Click any emoji button
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. AI responds with context from your note
 </code></pre></div>
-<p><strong>Keyboard shortcuts:</strong> None (mouse/touch only)</p>
+<p><strong>Keyboard shortcuts (v1.9.0+):</strong> ⌘⌥1 through ⌘⌥9 (assignable in Settings)</p>
 <hr />
 <h2 id="how-they-work">How They Work</h2>
 <h3 id="context-building">Context Building</h3>
@@ -3068,29 +3113,82 @@
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># - Accessibility</span>
 </code></pre></div>
 <hr />
-<h2 id="customization">Customization</h2>
-<h3 id="adding-new-quick-actions">Adding New Quick Actions</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// 1. Add to prompt map</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">quickActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="nx">improve</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Improve clarity and flow&#39;</span><span class="p">,</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="nx">expand</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Expand on this idea&#39;</span><span class="p">,</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="nx">summarize</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Summarize in 2-3 sentences&#39;</span><span class="p">,</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="nx">explain</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Explain this simply&#39;</span><span class="p">,</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="nx">research</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;What does research say about this?&#39;</span><span class="p">,</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span><span class="nx">critique</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Provide constructive criticism&#39;</span><span class="w">  </span><span class="c1">// NEW</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="p">}</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1">// 2. Add button to UI</span>
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="kd">const</span><span class="w"> </span><span class="nx">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;improve&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Improve&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;✨&#39;</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;expand&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Expand&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;📝&#39;</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;summarize&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Summarize&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;📋&#39;</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;explain&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Explain&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;💡&#39;</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;research&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Research&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;🔍&#39;</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;critique&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Critique&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;🎯&#39;</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// NEW</span>
-<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="p">]</span>
+<h2 id="customization-v190">Customization (v1.9.0+)</h2>
+<h3 id="via-settings-ui">Via Settings UI</h3>
+<p><strong>Access:</strong> Settings (⌘,) → <strong>AI &amp; Workflow</strong> tab</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>How To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Drag-to-reorder</strong></td>
+<td>Click ⋮⋮ drag handle, drag row</td>
+</tr>
+<tr>
+<td><strong>Toggle visibility</strong></td>
+<td>Click checkbox (hide/show in sidebar)</td>
+</tr>
+<tr>
+<td><strong>Edit prompt</strong></td>
+<td>Click ✏️ pencil icon</td>
+</tr>
+<tr>
+<td><strong>Assign shortcut</strong></td>
+<td>Click ⌨️ keyboard icon (⌘⌥1-9)</td>
+</tr>
+<tr>
+<td><strong>Choose model</strong></td>
+<td>Click dropdown (Claude/Gemini)</td>
+</tr>
+<tr>
+<td><strong>Add custom</strong></td>
+<td>Click "+ Add Custom" button (max 5)</td>
+</tr>
+<tr>
+<td><strong>Remove custom</strong></td>
+<td>Click 🗑️ trash icon</td>
+</tr>
+</tbody>
+</table>
+<h3 id="adding-custom-quick-actions">Adding Custom Quick Actions</h3>
+<ol>
+<li>Settings → AI &amp; Workflow → "+ Add Custom"</li>
+<li>Fill form:</li>
+<li><strong>Emoji:</strong> 🚀 (icon for UI)</li>
+<li><strong>Label:</strong> "Proofread" (display name)</li>
+<li><strong>Prompt:</strong> "Check for spelling and grammar errors"</li>
+<li>Click "Add Action"</li>
+<li>New action appears (can be reordered/assigned shortcut)</li>
+</ol>
+<p><strong>Limits:</strong>
+- Default actions: 5 (cannot be removed, only hidden)
+- Custom actions: 5 maximum
+- <strong>Total:</strong> 10 Quick Actions max (ADHD-friendly = less choice paralysis)</p>
+<h3 id="programmatic-customization">Programmatic Customization</h3>
+<p>For developers who want to add actions via code (not recommended - use Settings UI instead):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// In useSettingsStore.ts</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">addCustomQuickAction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">CustomQuickAction</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">customActions</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">5</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Maximum 5 custom actions allowed&#39;</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="nx">set</span><span class="p">(</span><span class="nx">state</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">    </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">      </span><span class="p">...</span><span class="nx">state</span><span class="p">.</span><span class="nx">settings</span><span class="p">,</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">      </span><span class="nx">aiWorkflow</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">        </span><span class="p">...</span><span class="nx">state</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">aiWorkflow</span><span class="p">,</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">        </span><span class="nx">quickActions</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">          </span><span class="p">...</span><span class="nx">state</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">aiWorkflow</span><span class="p">.</span><span class="nx">quickActions</span><span class="p">,</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">          </span><span class="nx">custom</span><span class="o">:</span><span class="w"> </span><span class="p">[...</span><span class="nx">state</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">aiWorkflow</span><span class="p">.</span><span class="nx">quickActions</span><span class="p">.</span><span class="nx">custom</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="p">]</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">  </span><span class="p">}))</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="p">}</span>
 </code></pre></div>
-<p><strong>Note:</strong> Stick to 5-6 actions max (ADHD-friendly = less choice paralysis).</p>
 <hr />
 <h2 id="common-workflows">Common Workflows</h2>
 <h3 id="academic-writing">Academic Writing</h3>
