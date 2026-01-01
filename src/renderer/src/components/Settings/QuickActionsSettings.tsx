@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useSettingsStore, QuickAction } from '../../store/useSettingsStore'
-import { useToast } from '../Toast'
 import {
   DndContext,
   closestCenter,
@@ -325,11 +324,10 @@ function AddQuickActionModal({ onAdd, onCancel }: AddQuickActionModalProps) {
   const [label, setLabel] = useState('')
   const [prompt, setPrompt] = useState('')
   const [model, setModel] = useState<'claude' | 'gemini'>('claude')
-  const { showToast } = useToast()
 
   const handleSubmit = () => {
     if (!label.trim() || !prompt.trim()) {
-      showToast('Label and prompt are required', 'error')
+      alert('Label and prompt are required')
       return
     }
 
