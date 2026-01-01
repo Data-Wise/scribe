@@ -286,11 +286,12 @@ scribe help --all      # Full reference
 - [ ] Wiki link backlink tracking in browser
 - [ ] Chat session management UI
 
-**Sprint 28: Live Editor Enhancements - In Progress (2025-01-01)**
+**Sprint 28: Live Editor Enhancements - Complete ✅ (2025-01-01)**
 
-**Phase 1: Live Preview with CodeMirror 6 - Complete ✅**
-- **Feature Branch:** `feat/live-editor-enhancements`
-- **Worktree:** `/Users/dt/.git-worktrees/scribe/live-editor-enhancements`
+**Phase 1: Live Preview with CodeMirror 6 - Merged to dev**
+- **Feature Branch:** `feat/live-editor-enhancements` (merged, deleted)
+- **PR:** #21 - https://github.com/Data-Wise/scribe/pull/21
+- **Merged Commit:** `b8848f0`
 
 **Deliverables:**
 - ✅ CodeMirror 6 integration for Live Preview mode
@@ -307,6 +308,13 @@ scribe help --all      # Full reference
 - `@codemirror/lang-markdown`, `@codemirror/state`, `@codemirror/view`, `@codemirror/language-data`
 - `@uiw/react-codemirror` (React wrapper for CodeMirror 6)
 - `katex` + `@types/katex` (LaTeX math rendering)
+
+**Test Results (2025-01-01):**
+- ✅ TypeScript: Clean compilation (0 errors)
+- ✅ Unit Tests: 930/930 passed (34 test files)
+- ✅ E2E Tests: 12/12 editor tests passed (mode switching, wiki links, tags)
+- ✅ Build: Successful (Vite build 5.48s)
+- ⚠️ PWA Cache: 2.38 MB bundle exceeds limit (known issue, does not affect functionality)
 
 ---
 
