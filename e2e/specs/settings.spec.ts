@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test'
-import { ScribePage } from '../page-objects/ScribePage'
+import { BasePage } from '../pages/BasePage'
 
 test.describe('Settings Modal', () => {
-  let scribePage: ScribePage
+  let basePage: BasePage
 
   test.beforeEach(async ({ page }) => {
-    scribePage = new ScribePage(page)
-    await scribePage.goto()
-    await scribePage.waitForReady()
+    basePage = new BasePage(page)
+    await basePage.goto()
+    await basePage.waitForReady()
   })
 
   test.describe('Opening Settings', () => {

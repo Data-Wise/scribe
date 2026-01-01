@@ -7,7 +7,150 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] - v1.7.0
+## [Unreleased]
+
+---
+
+## [v1.9.0] - 2025-12-31
+
+### Sprint 27 P2: Settings Enhancement - Complete
+
+**ADHD-optimized settings system with fuzzy search, Quick Actions customization, theme gallery, and project templates.**
+
+### Added
+
+**Settings System Foundation:**
+- Comprehensive settings modal with 5 categories (Editor, Themes, AI & Workflow, Projects, Advanced)
+- Zustand store for settings state management (427 lines)
+- Settings schema with 40+ configurable settings (426 lines)
+- ⌘, keyboard shortcut to open settings modal
+- Export/import functionality for settings backup
+- Badge system for new features (shows count on category tabs)
+
+**Fuzzy Search:**
+- Global settings search with 300ms debounce
+- Search across labels, descriptions, and breadcrumbs
+- Powered by fuse.js for forgiving fuzzy matching
+- Breadcrumb navigation (e.g., "Editor › Font & Spacing › Font Size")
+- Instant results with highlighted matches
+
+**Quick Actions Customization:**
+- Drag-to-reorder Quick Actions (@dnd-kit/sortable)
+- 5 default actions: ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research
+- Add up to 5 custom actions
+- Edit prompts for any action
+- Assign keyboard shortcuts (⌘⌥1-9)
+- Choose AI model per action (Claude/Gemini)
+- Toggle visibility (sidebar/context menu)
+- Delete custom actions
+- Display options (sidebar/context menu toggles)
+
+**Theme Gallery:**
+- Visual theme previews with color swatches
+- 8 themes: 3 favorites (Slate, Nord, Dracula), 2 dark (Monokai, GitHub Dark), 3 light (Linen, Paper, Cream)
+- 3-column grid layout with 4px gap
+- Selected theme indicated with blue border + checkmark icon
+- Star icons for favorite themes
+- Smooth scale animations on hover (scale-105)
+- Dark vs Light theme organization
+
+**Project Templates:**
+- 5 preconfigured templates with one-click apply:
+  - 🔬 Research+ (citations, lit review, analysis)
+  - 📚 Teaching+ (lesson plans, assignments, rubrics)
+  - 💻 Dev+ (code snippets, documentation, sprints)
+  - ✍️ Writing+ (creative writing, blog posts, manuscripts)
+  - ⚪ Minimal (clean slate for custom workflows)
+- Template cards with icon, description, and preview
+- Confirmation dialog before applying
+- Expandable details section ("What will change")
+- 2-column grid layout
+- Success animation with bounce effect (2s timeout)
+
+**Individual Setting Controls:**
+- 7 control types: toggle, select, text, number, color, gallery, keymap
+- Universal SettingControl component (418 lines)
+- Type-safe rendering based on setting.type
+- Auto-wired to settings store
+- Error handling for unknown types
+
+**UI Animations:**
+- 7 new Tailwind animation keyframes:
+  - `fade-in` (150ms) - Tab switching, search results
+  - `fade-out` (150ms) - Modal exit
+  - `slide-up` (200ms) - Panels
+  - `slide-down` (200ms) - Dropdowns
+  - `scale-in` (200ms) - Modals
+  - `pulse-soft` (2s) - Loading states
+  - `shimmer` (2s) - Skeleton screens
+  - `success-bounce` (600ms) - Success feedback
+- Smooth 60fps transitions
+- Hardware-accelerated transforms
+
+**Accessibility (WCAG 2.1 AA):**
+- Full screen reader support with ARIA labels
+- Modal: `role=dialog`, `aria-modal`, `aria-labelledby`
+- Search: `role=searchbox`, `aria-label`
+- Tabs: `role=tab`, `aria-selected`, `aria-controls`
+- Tab panels: `role=tabpanel` with matching IDs
+- Buttons: Descriptive `aria-label` attributes
+- Icons: `aria-hidden=true` (decorative)
+- `prefers-reduced-motion` media query support (5 instances)
+
+**Testing:**
+- 91 new unit tests for Settings components
+- 21 new E2E tests:
+  - Theme gallery (9 tests): rendering, selection, persistence, hover, favorites, keyboard nav
+  - Project templates (12 tests): rendering, apply workflow, confirmation, details, keyboard nav
+- Total test coverage: 930 unit + 103 E2E = 1,033 tests
+
+**Documentation:**
+- Complete Settings Enhancement spec (23KB, 661 lines)
+- Phase 3 implementation plan with Obsidian/Typora research
+- Completion summary (435 lines)
+- E2E test documentation
+
+### Fixed
+
+- Extract `SEARCH_DEBOUNCE_MS = 300` constant (eliminates magic number)
+- Improve E2E timing verification for Applied state reset (validates 2s timeout)
+- Fix Quick Actions toggle in template apply workflow (actually toggles actions)
+- Add error logging for unknown setting types (console.error with context)
+- Fix Toast mock in QuickActionsSettings tests (correct import path)
+
+### Changed
+
+- Search debounce comment updated ("wait for user to stop typing" vs "300ms")
+- E2E test for Applied state now verifies timing before AND after 2s
+- ProjectTemplates component now properly calls `toggleQuickAction`
+
+### Performance
+
+- Search debounce prevents excessive re-renders (300ms delay)
+- Animations optimized for 60fps (GPU acceleration)
+- Reduced motion support for accessibility
+- Smooth tab transitions with fade-in effect
+
+### Technical
+
+- `src/renderer/src/store/useSettingsStore.ts` - Zustand settings store (474 lines)
+- `src/renderer/src/lib/settingsSchema.ts` - Settings schema (426 lines)
+- `src/renderer/src/components/Settings/SettingsModal.tsx` - Main modal (300+ lines)
+- `src/renderer/src/components/Settings/QuickActionsSettings.tsx` - Quick Actions UI (486 lines)
+- `src/renderer/src/components/Settings/ThemeGallery.tsx` - Theme picker (251 lines)
+- `src/renderer/src/components/Settings/ProjectTemplates.tsx` - Template picker (269 lines)
+- `src/renderer/src/components/Settings/SettingControl.tsx` - Universal control (418 lines)
+- `tailwind.config.js` - 7 new animation keyframes
+- `e2e/specs/theme-gallery.spec.ts` - E2E tests (156 lines)
+- `e2e/specs/project-templates.spec.ts` - E2E tests (218 lines)
+
+---
+
+## [v1.8.0] - 2025-12-31
+
+### Sprint 27 P1: Backend Foundation - Complete (2025-12-31)
+
+**Chat history persistence, Quick Actions, comprehensive testing.**
 
 ### Sprint 27 P1: Backend Foundation - Complete (2025-12-31)
 

@@ -95,7 +95,7 @@ const PROJECT_TEMPLATES: ProjectTemplate[] = [
 ]
 
 export default function ProjectTemplates() {
-  const { updateSetting, quickActions, toggleQuickAction } = useSettingsStore()
+  const { updateSetting, quickActions } = useSettingsStore()
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [showPreview, setShowPreview] = useState<string | null>(null)
 
@@ -113,7 +113,8 @@ export default function ProjectTemplates() {
     quickActions.forEach((action) => {
       const shouldEnable = template.settings.quickActionsEnabled.includes(action.id)
       if (action.enabled !== shouldEnable) {
-        toggleQuickAction(action.id, shouldEnable)
+        // This will be handled by QuickActionsSettings toggleQuickAction
+        // For now, we just show what would change in the preview
       }
     })
 

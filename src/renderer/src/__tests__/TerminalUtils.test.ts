@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import {
   inferTerminalCwd,
   getInferredProjectPath,
@@ -149,12 +149,14 @@ describe('Terminal Utils', () => {
 
     it('returns project workingDirectory when explicitly set', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Test Project',
         type: 'research',
         settings: {
           workingDirectory: '~/explicit/path'
-        }
+        },
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -163,10 +165,12 @@ describe('Terminal Utils', () => {
 
     it('returns default for demo project "Getting Started"', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Getting Started',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -175,10 +179,12 @@ describe('Terminal Utils', () => {
 
     it('returns default for demo project "Research"', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Research',
         type: 'research',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -187,10 +193,12 @@ describe('Terminal Utils', () => {
 
     it('handles demo project names case-insensitively', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'GETTING STARTED',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -199,10 +207,12 @@ describe('Terminal Utils', () => {
 
     it('handles demo project names with extra whitespace', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: '  getting started  ',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -211,10 +221,12 @@ describe('Terminal Utils', () => {
 
     it('infers path for research project', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Mediation Analysis',
         type: 'research',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -223,10 +235,12 @@ describe('Terminal Utils', () => {
 
     it('infers path for teaching project', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'STAT 440',
         type: 'teaching',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -235,10 +249,12 @@ describe('Terminal Utils', () => {
 
     it('infers path for r-package project', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'My Package',
         type: 'r-package',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -247,10 +263,12 @@ describe('Terminal Utils', () => {
 
     it('infers path for r-dev project', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Dev Tools',
         type: 'r-dev',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -259,10 +277,12 @@ describe('Terminal Utils', () => {
 
     it('infers path for generic project', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'My Project',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -271,10 +291,12 @@ describe('Terminal Utils', () => {
 
     it('normalizes project name to folder-friendly format', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Project With Spaces & Special!@# Chars',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -284,10 +306,12 @@ describe('Terminal Utils', () => {
 
     it('handles multiple consecutive spaces', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Project   With   Gaps',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -296,10 +320,12 @@ describe('Terminal Utils', () => {
 
     it('removes special characters but keeps hyphens', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'React-Redux App v2.0',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -310,10 +336,12 @@ describe('Terminal Utils', () => {
   describe('getInferredProjectPath', () => {
     it('returns inferred path for research project', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Causal Study',
         type: 'research',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const path = getInferredProjectPath(project)
@@ -322,12 +350,14 @@ describe('Terminal Utils', () => {
 
     it('ignores explicit workingDirectory setting', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Test',
         type: 'generic',
         settings: {
           workingDirectory: '~/custom'
-        }
+        },
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const path = getInferredProjectPath(project)
@@ -337,10 +367,12 @@ describe('Terminal Utils', () => {
 
     it('treats demo projects like regular projects', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: 'Getting Started',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const path = getInferredProjectPath(project)
@@ -352,10 +384,12 @@ describe('Terminal Utils', () => {
   describe('Edge Cases', () => {
     it('handles empty project name', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: '',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -365,10 +399,12 @@ describe('Terminal Utils', () => {
 
     it('handles project name with only special characters', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: '!@#$%^&*()',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)
@@ -378,10 +414,12 @@ describe('Terminal Utils', () => {
 
     it('handles numeric project names', () => {
       const project: Project = {
-        id: 1,
+        id: '1',
         name: '123 Project',
         type: 'generic',
-        settings: {}
+        settings: {},
+        created_at: Date.now(),
+        updated_at: Date.now()
       }
 
       const cwd = inferTerminalCwd(project)

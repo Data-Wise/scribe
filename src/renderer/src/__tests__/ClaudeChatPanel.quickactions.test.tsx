@@ -191,7 +191,7 @@ describe('ClaudeChatPanel - Quick Actions', () => {
 
   describe('Quick Action Edge Cases', () => {
     it('disables buttons while loading', async () => {
-      const mockSubmit = vi.fn(() => new Promise(resolve => setTimeout(() => resolve('Response'), 100)))
+      const mockSubmit = vi.fn<() => Promise<string>>(() => new Promise(resolve => setTimeout(() => resolve('Response'), 100)))
       render(<ClaudeChatPanel noteContext={mockNoteContext} onSubmit={mockSubmit} />)
 
       const improveBtn = screen.getByText('Improve').closest('button')
@@ -229,7 +229,7 @@ describe('ClaudeChatPanel - Quick Actions', () => {
     })
 
     it('does not trigger when already loading', () => {
-      const mockSubmit = vi.fn(() => new Promise(() => {})) // Never resolves
+      const mockSubmit = vi.fn<() => Promise<string>>(() => new Promise(() => {})) // Never resolves
       render(<ClaudeChatPanel noteContext={mockNoteContext} onSubmit={mockSubmit} />)
 
       const improveBtn = screen.getByText('Improve')

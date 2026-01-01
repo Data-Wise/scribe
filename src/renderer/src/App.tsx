@@ -40,10 +40,7 @@ import {
   FontSettings,
   ThemeShortcut,
   getAllThemes,
-  loadCustomThemes,
-  saveCustomThemes,
   loadAutoThemeSettings,
-  saveAutoThemeSettings,
   loadSelectedTheme,
   saveSelectedTheme,
   applyTheme,
@@ -52,7 +49,6 @@ import {
   saveFontSettings,
   applyFontSettings,
   loadThemeShortcuts,
-  saveThemeShortcuts,
   getThemeForShortcut,
 } from './lib/themes'
 import {
@@ -290,11 +286,11 @@ function App() {
   
   // Tags for current note (for PropertiesPanel display)
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
-  
+
   // Theme state
-  const [allThemes, setAllThemes] = useState<Record<string, Theme>>(() => getAllThemes())
+  const [allThemes] = useState<Record<string, Theme>>(() => getAllThemes())
   const [theme, setTheme] = useState<string>(() => loadSelectedTheme())
-  const [autoThemeSettings, setAutoThemeSettings] = useState<AutoThemeSettings>(() => loadAutoThemeSettings())
+  const [autoThemeSettings] = useState<AutoThemeSettings>(() => loadAutoThemeSettings())
   
   // Apply theme to document root
   useEffect(() => {
@@ -333,7 +329,7 @@ function App() {
   // These functions are now handled by the SettingsStore in useSettingsStore.ts
 
   // Font settings state
-  const [fontSettings, setFontSettings] = useState<FontSettings>(() => loadFontSettings())
+  const [fontSettings] = useState<FontSettings>(() => loadFontSettings())
   
   // Apply font settings on load and change
   useEffect(() => {
@@ -342,7 +338,7 @@ function App() {
   }, [fontSettings])
   
   // Theme shortcuts state
-  const [themeShortcuts, setThemeShortcuts] = useState<ThemeShortcut[]>(() => loadThemeShortcuts())
+  const [themeShortcuts] = useState<ThemeShortcut[]>(() => loadThemeShortcuts())
   
   // Theme keyboard shortcuts: Cmd/Ctrl + Alt + [1-0]
   useEffect(() => {

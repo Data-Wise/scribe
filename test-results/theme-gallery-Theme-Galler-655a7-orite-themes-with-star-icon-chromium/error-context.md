@@ -1,0 +1,232 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - button "Collapse sidebar (⌘0)" [ref=e7] [cursor=pointer]:
+            - img [ref=e8]
+          - heading "Projects (1)" [level=3] [ref=e9]:
+            - text: Projects
+            - generic [ref=e10]: (1)
+        - generic [ref=e12]:
+          - button "Research" [ref=e13] [cursor=pointer]:
+            - generic [ref=e14]:
+              - img [ref=e15]
+              - img [ref=e17]
+              - generic [ref=e19]: Research
+          - generic [ref=e20]:
+            - generic [ref=e21]:
+              - generic [ref=e22]:
+                - generic [ref=e23]: Research
+                - generic "No notes yet" [ref=e24]
+              - paragraph [ref=e29]: Your research workspace - papers, notes, and ideas
+            - generic [ref=e30]:
+              - generic [ref=e31]:
+                - img [ref=e32]
+                - generic [ref=e35]: 0 notes
+              - generic [ref=e36]:
+                - img [ref=e37]
+                - generic [ref=e40]: 0 words
+            - button "+ New Note" [ref=e41] [cursor=pointer]
+        - button "New Project" [ref=e42] [cursor=pointer]:
+          - img [ref=e43]
+          - generic [ref=e44]: New Project
+        - button "Settings ⌘," [ref=e45] [cursor=pointer]:
+          - img [ref=e46]
+          - generic [ref=e49]: Settings
+          - generic [ref=e50]: ⌘,
+      - separator "Resize sidebar" [ref=e51]
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic "Go to Mission Control" [ref=e56] [cursor=pointer]: Research
+          - generic [ref=e57]: ›
+        - generic [ref=e58]:
+          - button "⏸" [ref=e59] [cursor=pointer]
+          - generic [ref=e60]: 0:00
+          - button "↺" [ref=e61] [cursor=pointer]
+      - button "Mission Control" [ref=e64] [cursor=pointer]:
+        - img [ref=e66]
+        - generic [ref=e69]: Mission Control
+        - generic "Pinned" [ref=e70]:
+          - img [ref=e71]
+      - generic [ref=e73]:
+        - banner [ref=e74]:
+          - generic [ref=e75]:
+            - heading "Mission Control" [level=1] [ref=e76]
+            - paragraph [ref=e77]: 1 project • 0 pages • 0 words
+          - button "Settings" [ref=e79] [cursor=pointer]:
+            - img [ref=e80]
+        - generic [ref=e83]:
+          - generic [ref=e85]:
+            - button "Today ⌘D" [ref=e86] [cursor=pointer]:
+              - img [ref=e88]
+              - generic [ref=e90]:
+                - generic [ref=e91]: Today
+                - generic [ref=e92]: ⌘D
+            - button "New Page ⌘N" [ref=e93] [cursor=pointer]:
+              - img [ref=e95]
+              - generic [ref=e98]:
+                - generic [ref=e99]: New Page
+                - generic [ref=e100]: ⌘N
+            - button "Quick Capture ⌘⇧C" [ref=e101] [cursor=pointer]:
+              - img [ref=e103]
+              - generic [ref=e105]:
+                - generic [ref=e106]: Quick Capture
+                - generic [ref=e107]: ⌘⇧C
+            - button "New Project ⌘⇧P" [ref=e108] [cursor=pointer]:
+              - img [ref=e110]
+              - generic [ref=e112]:
+                - generic [ref=e113]: New Project
+                - generic [ref=e114]: ⌘⇧P
+          - generic [ref=e115]:
+            - heading "Projects" [level=2] [ref=e116]
+            - button "Research Active Research Your research workspace - papers, notes, and ideas 0 Just now" [ref=e118] [cursor=pointer]:
+              - generic [ref=e119]:
+                - generic [ref=e122]:
+                  - img [ref=e123]
+                  - text: Research
+                - generic [ref=e125]: Active
+              - heading "Research" [level=3] [ref=e126]
+              - paragraph [ref=e127]: Your research workspace - papers, notes, and ideas
+              - generic [ref=e128]:
+                - generic [ref=e130]:
+                  - img [ref=e131]
+                  - text: "0"
+                - generic [ref=e134]: Just now
+        - contentinfo [ref=e135]: Press ⌘0 to toggle back to editor
+    - button "Open Claude Assistant (in sidebar)" [ref=e136] [cursor=pointer]:
+      - img [ref=e137]
+    - dialog "Settings" [ref=e140]:
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - heading "Settings" [level=2] [ref=e144]
+            - generic [ref=e145]:
+              - img [ref=e146]
+              - searchbox "Search settings" [ref=e149]
+          - button "Close settings dialog" [ref=e150] [cursor=pointer]:
+            - img [ref=e151]
+        - generic [ref=e154]:
+          - complementary "Settings categories" [ref=e155]:
+            - tablist [ref=e156]:
+              - tab "✏️ Editor" [selected] [ref=e157] [cursor=pointer]:
+                - generic [ref=e158]: ✏️
+                - generic [ref=e159]: Editor
+              - tab "🎨 Themes" [ref=e160] [cursor=pointer]:
+                - generic [ref=e161]: 🎨
+                - generic [ref=e162]: Themes
+              - tab "🤖 AI & Workflow 3" [ref=e163] [cursor=pointer]:
+                - generic [ref=e164]: 🤖
+                - generic [ref=e165]: AI & Workflow
+                - generic [ref=e166]: "3"
+              - tab "📁 Projects" [ref=e167] [cursor=pointer]:
+                - generic [ref=e168]: 📁
+                - generic [ref=e169]: Projects
+              - tab "⚙️ Advanced" [ref=e170] [cursor=pointer]:
+                - generic [ref=e171]: ⚙️
+                - generic [ref=e172]: Advanced
+          - tabpanel [ref=e173]:
+            - generic [ref=e174]:
+              - heading "✏️ Editor" [level=3] [ref=e176]:
+                - generic [ref=e177]: ✏️
+                - text: Editor
+              - generic [ref=e178]:
+                - generic [ref=e179]:
+                  - generic [ref=e180]:
+                    - heading "Font & Spacing" [level=4] [ref=e181]
+                    - paragraph [ref=e182]: Customize editor typography
+                  - generic [ref=e183]:
+                    - generic [ref=e184]:
+                      - generic [ref=e186]: Font Family
+                      - paragraph [ref=e187]: ADHD-friendly fonts with excellent readability
+                      - generic [ref=e188]:
+                        - combobox [ref=e189]:
+                          - option "Inter (Recommended)" [selected]
+                          - option "Atkinson Hyperlegible"
+                          - option "Comic Neue"
+                          - option "OpenDyslexic"
+                          - option "Lexend"
+                          - option "System Default"
+                        - img
+                    - generic [ref=e190]:
+                      - generic [ref=e192]: Font Size (px)
+                      - paragraph [ref=e193]: Larger fonts reduce eye strain
+                      - generic [ref=e194]:
+                        - spinbutton [ref=e195]: "16"
+                        - generic [ref=e196]:
+                          - button "−" [ref=e197] [cursor=pointer]
+                          - button "+" [ref=e198] [cursor=pointer]
+                    - generic [ref=e199]:
+                      - generic [ref=e201]: Line Height
+                      - paragraph [ref=e202]: Spacing between lines (1.5-2.0 recommended)
+                      - generic [ref=e203]:
+                        - spinbutton [ref=e204]: "1.6"
+                        - generic [ref=e205]:
+                          - button "−" [ref=e206] [cursor=pointer]
+                          - button "+" [ref=e207] [cursor=pointer]
+                    - generic [ref=e208]:
+                      - generic [ref=e209]:
+                        - generic [ref=e211]: Enable Ligatures
+                        - paragraph [ref=e212]: Combine characters like -> into arrows
+                      - switch "Enable Ligatures" [checked] [ref=e213] [cursor=pointer]
+                - generic [ref=e215]:
+                  - generic [ref=e216]:
+                    - heading "Focus Mode" [level=4] [ref=e217]
+                    - paragraph [ref=e218]: Minimize distractions while writing
+                  - generic [ref=e219]:
+                    - generic [ref=e220]:
+                      - generic [ref=e221]:
+                        - generic [ref=e223]: Dim Other Panes
+                        - paragraph [ref=e224]: Reduce opacity of sidebars during focus
+                      - switch "Dim Other Panes" [checked] [ref=e225] [cursor=pointer]
+                    - generic [ref=e227]:
+                      - generic [ref=e229]: Dimming Percentage
+                      - paragraph [ref=e230]: How much to dim (0-100%)
+                      - generic [ref=e231]:
+                        - spinbutton [ref=e232]: "40"
+                        - generic [ref=e233]:
+                          - button "−" [ref=e234] [cursor=pointer]
+                          - button "+" [ref=e235] [cursor=pointer]
+                    - generic [ref=e236]:
+                      - generic [ref=e237]:
+                        - generic [ref=e239]: Hide UI Elements
+                        - paragraph [ref=e240]: Hide toolbars and status bar
+                      - switch "Hide UI Elements" [ref=e241] [cursor=pointer]
+                - generic [ref=e243]:
+                  - generic [ref=e244]:
+                    - heading "Advanced Editor Settings" [level=4] [ref=e245]
+                    - paragraph [ref=e246]: Fine-tune editor behavior
+                  - generic [ref=e247]:
+                    - generic [ref=e248]:
+                      - generic [ref=e249]:
+                        - generic [ref=e251]: Spell Check
+                        - paragraph [ref=e252]: Enable browser spell checking
+                      - switch "Spell Check" [checked] [ref=e253] [cursor=pointer]
+                    - generic [ref=e255]:
+                      - generic [ref=e257]: Auto-save Delay (ms)
+                      - paragraph [ref=e258]: Time before auto-saving changes
+                      - generic [ref=e259]:
+                        - spinbutton [ref=e260]: "1000"
+                        - generic [ref=e261]:
+                          - button "−" [ref=e262] [cursor=pointer]
+                          - button "+" [ref=e263] [cursor=pointer]
+        - generic [ref=e264]:
+          - generic [ref=e265]:
+            - button "Reset all settings to default values" [ref=e266] [cursor=pointer]:
+              - img [ref=e267]
+              - text: Reset to Defaults
+            - button "Export settings to clipboard" [ref=e270] [cursor=pointer]:
+              - img [ref=e271]
+              - text: Export Settings
+          - button "Save and close settings" [ref=e274] [cursor=pointer]:
+            - img [ref=e275]
+            - text: Done
+  - alert [ref=e280] [cursor=pointer]:
+    - generic [ref=e281]: ✓
+    - generic [ref=e282]: Project created
+    - button "Dismiss" [ref=e284]: ×
+```

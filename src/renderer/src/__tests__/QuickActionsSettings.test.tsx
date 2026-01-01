@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import QuickActionsSettings from '../components/Settings/QuickActionsSettings'
@@ -40,13 +40,6 @@ vi.mock('@dnd-kit/utilities', () => ({
 vi.mock('../store/useSettingsStore', () => ({
   useSettingsStore: vi.fn(),
   QuickAction: {} as any
-}))
-
-// Mock the Toast component
-vi.mock('../components/Toast', () => ({
-  useToast: () => ({
-    showToast: vi.fn()
-  })
 }))
 
 const mockQuickActions: QuickAction[] = [
