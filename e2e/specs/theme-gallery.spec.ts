@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { ScribePage } from '../page-objects/ScribePage'
+import { BasePage } from '../pages/BasePage'
 
 /**
  * E2E tests for Theme Gallery
@@ -12,12 +12,11 @@ import { ScribePage } from '../page-objects/ScribePage'
  */
 
 test.describe('Theme Gallery', () => {
-  let scribePage: ScribePage
+  let basePage: BasePage
 
   test.beforeEach(async ({ page }) => {
-    scribePage = new ScribePage(page)
-    await scribePage.goto()
-    await scribePage.waitForReady()
+    basePage = new BasePage(page)
+    await basePage.goto()
 
     // Open settings modal with keyboard shortcut
     await page.keyboard.press('Meta+Comma')
