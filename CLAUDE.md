@@ -211,110 +211,60 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.7.0 Released ✅
+## 🎯 Current Status: v1.10.0 Released ✅
 
-**Branch:** `main` (v1.7.0 tagged and released)
-**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.7.0
-**Documentation:** https://data-wise.github.io/scribe
+**Version:** 1.10.0 (2026-01-01)  
+**Branch:** `main` (tagged and released)  
+**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.10.0  
+**Documentation:** https://data-wise.github.io/scribe  
+**Install:** `brew install --cask data-wise/tap/scribe`
 
-**Sprint 27 P1: Backend Foundation - Complete (2025-12-31)**
-- ✅ Chat History Persistence (Migration 009)
-  - `chat_sessions` and `chat_messages` tables with CASCADE
-  - Auto-save/load conversations per note
-  - Session switching on note navigation
-- ✅ Quick Actions (5 one-click AI prompts)
-  - ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research
-  - Auto-includes full note context
-- ✅ @ References (autocomplete note inclusion)
-- ✅ Comprehensive Testing (911 tests total)
-  - 829 unit tests (Vitest)
-  - 82 E2E tests (Playwright)
-  - Full test coverage for new features
-- ✅ Complete Documentation
-  - Chat persistence guide (523 lines)
-  - Quick Actions reference card (390 lines)
-  - 7 comprehensive tutorials (3,256 lines)
-  - Tutorial index with learning paths
-- ✅ CI/CD Fixed
-  - Release workflow bug fix (rust-toolchain)
-  - Automated site deployment working
-  - Automated builds for future releases
+### Latest Release: Sprint 28 (v1.10.0)
 
-**Sprint 26 - Complete (2025-12-30)**
+**Live Editor Enhancements - Complete ✅**
+
+**Features:**
+- ✅ **CodeMirror 6 Live Preview** - Obsidian-style syntax hiding
+- ✅ **KaTeX Math Rendering** - Inline `$...$` and display `$$...$$`
+- ✅ **Three Editor Modes** - Source (⌘1), Live (⌘2), Reading (⌘3), cycle with ⌘E
+- ✅ **Bug Fixes** - Race condition fixed, tab opening fixed, PWA build fixed
+
+**Dependencies:**
+- Added: CodeMirror 6 (@codemirror/lang-markdown, state, view, language-data)
+- Added: @uiw/react-codemirror, katex + @types/katex
+- Removed: 8 unused Milkdown packages (-64 packages)
+
+**Testing:**
+- ✅ 930 unit tests + 12 E2E tests = 942 total
+- ✅ TypeScript: 0 errors
+- ✅ Build: Successful
+
+**Artifacts:**
+- DMG: Scribe_1.10.0_aarch64.dmg (Apple Silicon)
+- DMG: Scribe_1.10.0_x64.dmg (Intel)
+- Homebrew: data-wise/tap/scribe v1.10.0
+
+---
+
+### Previous Releases
+
+**Sprint 27: Backend Foundation + Settings (v1.7.0 → v1.9.0)**
+
+**v1.9.0 Features (2025-12-31):**
+- ✅ Settings Enhancement - ⌘, fuzzy search, theme gallery, project templates
+- ✅ Quick Actions Customization - Drag-to-reorder, edit prompts, shortcuts
+- ✅ 1033 tests passing (930 unit + 103 E2E)
+
+**v1.7.0 Features (2025-12-31):**
+- ✅ Chat History Persistence - Migration 009, auto-save/load per note
+- ✅ Quick Actions - 5 one-click AI prompts (Improve, Expand, Summarize, Explain, Research)
+- ✅ @ References - Autocomplete note inclusion
+- ✅ 911 tests passing (829 unit + 82 E2E)
+
+**Sprint 26 Features (2025-12-30):**
 - ✅ Terminal PTY shell (portable-pty + xterm.js)
-- ✅ Smart terminal working directory (project type inference)
-- ✅ Mission Control sidebar with Icon/Compact/Card modes
-- ✅ Browser mode with full IndexedDB persistence
-
-**Sprint 27 P2: Settings Enhancement - In Progress (2025-12-31)**
-
-**Phase 1: Foundation - Complete ✅ (Merged to dev)**
-- **Feature Branch:** `feat/settings-enhancement`
-- **Worktree:** `/Users/dt/.git-worktrees/scribe/settings` (for Phase 2 work)
-- **Merged:** 2025-12-31 (commit 5f504a5)
-
-**Phase 1 Deliverables:**
-- ✅ Zustand store for settings state (useSettingsStore.ts)
-- ✅ Settings schema with 5 categories (settingsSchema.ts)
-- ✅ SettingsModal with tabs + search UI
-- ✅ Fuzzy search with fuse.js (search all settings)
-- ✅ ⌘, keyboard shortcut to open settings
-- ✅ Badge system for new features (AI category: 3)
-- ✅ Quick Actions management (5 default + 5 custom max)
-- ✅ Export/import functionality
-
-**Phase 2: Quick Wins - Next**
-- [ ] Individual setting controls (toggle, select, color, gallery)
-- [ ] Quick Actions customization UI (drag-to-reorder, prompts, shortcuts)
-- [ ] Theme gallery view with previews
-- [ ] Project template picker (5 presets)
-- [ ] Contextual settings hints (gear icons)
-  - [ ] Drag-to-reorder + visibility toggles
-  - [ ] Edit prompts (5 default + 5 custom)
-  - [ ] Keyboard shortcuts (⌘⌥1-9)
-  - [ ] Model selection per action (Claude/Gemini)
-- [ ] Project template picker (5 presets)
-- [ ] Hybrid architecture (Obsidian-style tabs + search)
-- [ ] Theme gallery view (visual previews)
-- [ ] Contextual hints (inline gear icons)
-
-**Spec:** `docs/specs/SPEC-settings-enhancement-2025-12-31.md` (23 KB, comprehensive)
-**Research:** Obsidian, Typora, ADHD accessibility patterns (2025)
-
-**Priority 2: Additional Frontend Polish**
-- [ ] Browser mode indicator in UI
-- [ ] Wiki link backlink tracking in browser
-- [ ] Chat session management UI
-
-**Sprint 28: Live Editor Enhancements - Complete ✅ (2025-01-01)**
-
-**Phase 1: Live Preview with CodeMirror 6 - Merged to dev**
-- **Feature Branch:** `feat/live-editor-enhancements` (merged, deleted)
-- **PR:** #21 - https://github.com/Data-Wise/scribe/pull/21
-- **Merged Commit:** `b8848f0`
-
-**Deliverables:**
-- ✅ CodeMirror 6 integration for Live Preview mode
-- ✅ Obsidian-style live preview (hide syntax when cursor elsewhere)
-- ✅ KaTeX math rendering (inline `$...$` and display `$$...$$`)
-- ✅ Three editor modes with keyboard shortcuts
-  - Source mode (⌘1): Plain textarea
-  - Live Preview mode (⌘2): CodeMirror with hidden syntax
-  - Reading mode (⌘3): Fully rendered ReactMarkdown
-  - ⌘E cycles between modes
-- ✅ Bug fixes: Controlled component race condition, new note tabs
-
-**New Dependencies (Approved):**
-- `@codemirror/lang-markdown`, `@codemirror/state`, `@codemirror/view`, `@codemirror/language-data`
-- `@uiw/react-codemirror` (React wrapper for CodeMirror 6)
-- `katex` + `@types/katex` (LaTeX math rendering)
-
-**Test Results (2025-01-01):**
-- ✅ TypeScript: Clean compilation (0 errors)
-- ✅ Unit Tests: 930/930 passed (34 test files)
-- ✅ E2E Tests: 12/12 editor tests passed (mode switching, wiki links, tags)
-- ✅ Build: Successful (Vite build 5.48s)
-- ⚠️ PWA Cache: 2.38 MB bundle exceeds limit (known issue, does not affect functionality)
+- ✅ Mission Control sidebar (Icon/Compact/Card modes)
+- ✅ Browser mode with IndexedDB persistence
 
 ---
 
