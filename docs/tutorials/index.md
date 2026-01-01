@@ -42,6 +42,12 @@ Master the essential workflows:
 | [Terminal Integration](terminal.md) | PTY shell, smart working directory | 5 min |
 | [Browser Mode](browser-mode.md) | IndexedDB, development workflow | 7 min |
 
+### Customization (v1.9.0+)
+
+| Tutorial | What You'll Learn | Time |
+|----------|-------------------|------|
+| [Settings Enhancement](settings.md) | Fuzzy search, themes, Quick Actions, templates | 12 min |
+
 ---
 
 ## Learning Paths
@@ -107,6 +113,7 @@ All tutorials include:
 | Quick actions | [Command Palette](command-palette.md) | ⌘K to search |
 | Terminal | [Terminal Integration](terminal.md) | ⌘⌥T to toggle |
 | Dev mode | [Browser Mode](browser-mode.md) | `npm run dev:vite` |
+| Settings | [Settings Enhancement](settings.md) | ⌘, to open |
 
 ### By Keyboard Shortcut
 
@@ -117,6 +124,7 @@ All tutorials include:
 | ⌘0 | Mission Control | [Mission Control](mission-control.md) |
 | ⌘⌥T | Terminal | [Terminal Integration](terminal.md) |
 | ⌘⇧P | Create Project | [Project System](projects.md) |
+| ⌘, | Settings | [Settings Enhancement](settings.md) |
 | [[ | Wiki Link | [Backlinks](backlinks.md) |
 
 ---

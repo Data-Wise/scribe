@@ -1,10 +1,10 @@
 # Quick Actions Reference Card
 
-> **One-click AI prompts for faster writing workflows**
+> **One-click AI prompts for faster writing workflows (v1.9.0+)**
 
 ---
 
-## The 5 Quick Actions
+## The 5 Default Quick Actions
 
 | Button | Label | Prompt | Use Case |
 |--------|-------|--------|----------|
@@ -13,6 +13,8 @@
 | 📋 | **Summarize** | "Summarize in 2-3 sentences" | Create executive summaries, TL;DR |
 | 💡 | **Explain** | "Explain this simply" | Simplify complex topics, ELI5 |
 | 🔍 | **Research** | "What does research say about this?" | Find citations, evidence, supporting data |
+
+**Limits:** 5 default + 5 custom = **10 Quick Actions maximum**
 
 ---
 
@@ -25,7 +27,7 @@
 4. AI responds with context from your note
 ```
 
-**Keyboard shortcuts:** None (mouse/touch only)
+**Keyboard shortcuts (v1.9.0+):** ⌘⌥1 through ⌘⌥9 (assignable in Settings)
 
 ---
 
@@ -320,33 +322,61 @@ npm test ClaudeChatPanel.quickactions
 
 ---
 
-## Customization
+## Customization (v1.9.0+)
 
-### Adding New Quick Actions
+### Via Settings UI
+
+**Access:** Settings (⌘,) → **AI & Workflow** tab
+
+| Feature | How To |
+|---------|--------|
+| **Drag-to-reorder** | Click ⋮⋮ drag handle, drag row |
+| **Toggle visibility** | Click checkbox (hide/show in sidebar) |
+| **Edit prompt** | Click ✏️ pencil icon |
+| **Assign shortcut** | Click ⌨️ keyboard icon (⌘⌥1-9) |
+| **Choose model** | Click dropdown (Claude/Gemini) |
+| **Add custom** | Click "+ Add Custom" button (max 5) |
+| **Remove custom** | Click 🗑️ trash icon |
+
+### Adding Custom Quick Actions
+
+1. Settings → AI & Workflow → "+ Add Custom"
+2. Fill form:
+   - **Emoji:** 🚀 (icon for UI)
+   - **Label:** "Proofread" (display name)
+   - **Prompt:** "Check for spelling and grammar errors"
+3. Click "Add Action"
+4. New action appears (can be reordered/assigned shortcut)
+
+**Limits:**
+- Default actions: 5 (cannot be removed, only hidden)
+- Custom actions: 5 maximum
+- **Total:** 10 Quick Actions max (ADHD-friendly = less choice paralysis)
+
+### Programmatic Customization
+
+For developers who want to add actions via code (not recommended - use Settings UI instead):
 
 ```typescript
-// 1. Add to prompt map
-const quickActions = {
-  improve: 'Improve clarity and flow',
-  expand: 'Expand on this idea',
-  summarize: 'Summarize in 2-3 sentences',
-  explain: 'Explain this simply',
-  research: 'What does research say about this?',
-  critique: 'Provide constructive criticism'  // NEW
+// In useSettingsStore.ts
+const addCustomQuickAction = (action: CustomQuickAction) => {
+  if (customActions.length >= 5) {
+    throw new Error('Maximum 5 custom actions allowed')
+  }
+  set(state => ({
+    settings: {
+      ...state.settings,
+      aiWorkflow: {
+        ...state.settings.aiWorkflow,
+        quickActions: {
+          ...state.settings.aiWorkflow.quickActions,
+          custom: [...state.settings.aiWorkflow.quickActions.custom, action]
+        }
+      }
+    }
+  }))
 }
-
-// 2. Add button to UI
-const actions = [
-  { id: 'improve', label: 'Improve', icon: '✨' },
-  { id: 'expand', label: 'Expand', icon: '📝' },
-  { id: 'summarize', label: 'Summarize', icon: '📋' },
-  { id: 'explain', label: 'Explain', icon: '💡' },
-  { id: 'research', label: 'Research', icon: '🔍' },
-  { id: 'critique', label: 'Critique', icon: '🎯' }  // NEW
-]
 ```
-
-**Note:** Stick to 5-6 actions max (ADHD-friendly = less choice paralysis).
 
 ---
 
