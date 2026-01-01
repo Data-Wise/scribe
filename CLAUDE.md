@@ -43,17 +43,52 @@ main (protected) ← PR from dev only
 ```bash
 # Worktree location: ~/.git-worktrees/scribe/
 
-# Create feature branch with worktree
-git worktree add ~/.git-worktrees/scribe/feat-name -b feat/feature-name dev
+# Create feature branch with worktree (descriptive name)
+git worktree add ~/.git-worktrees/scribe/feature-name -b feat/feature-name dev
+
+# Example: Settings Enhancement
+git worktree add ~/.git-worktrees/scribe/settings -b feat/settings-enhancement dev
 
 # Work in the worktree directory
-cd ~/.git-worktrees/scribe/feat-name
+cd ~/.git-worktrees/scribe/settings
 
-# When done, create PR to dev
-gh pr create --base dev --head feat/feature-name
+# Commit work as you go
+git add -A && git commit -m "feat: description"
 
-# After PR merged, clean up worktree
-git worktree remove ~/.git-worktrees/scribe/feat-name
+# When phase/feature complete, merge to dev
+git checkout dev
+git merge feat/settings-enhancement --no-ff -m "Merge feat/settings-enhancement: Phase 1"
+git push origin dev
+
+# Continue in same worktree for next phase (optional)
+cd ~/.git-worktrees/scribe/settings
+# OR clean up worktree if done
+git worktree remove ~/.git-worktrees/scribe/settings
+```
+
+**Naming Convention:**
+- **Worktree directory:** Descriptive feature name (e.g., `settings`, `terminal`, `ai-chat`)
+- **Git branch:** Prefixed with `feat/` (e.g., `feat/settings-enhancement`)
+
+**Example: Settings Enhancement Workflow**
+```bash
+# Phase 1: Create worktree
+git worktree add ~/.git-worktrees/scribe/settings -b feat/settings-enhancement dev
+cd ~/.git-worktrees/scribe/settings
+
+# Phase 1: Implement foundation
+# ... work, commit, work, commit ...
+git commit -m "feat: Settings Enhancement Phase 1 - Foundation"
+
+# Phase 1: Merge to dev
+git checkout dev
+git merge feat/settings-enhancement --no-ff
+git push origin dev
+
+# Phase 2: Continue in same worktree
+cd ~/.git-worktrees/scribe/settings
+# Branch still exists, worktree still active
+# ... continue Phase 2 work ...
 ```
 
 ### PR Flow
@@ -174,11 +209,13 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Work: Sprint 27 P1 Complete
+## 🎯 Current Status: v1.7.0 Released ✅
 
-**Branch:** `dev` (PR #15 created for merge to main)
+**Branch:** `main` (v1.7.0 tagged and released)
+**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.7.0
+**Documentation:** https://data-wise.github.io/scribe
 
-**Sprint 27 P1 Completed (2025-12-31):**
+**Sprint 27 P1: Backend Foundation - Complete (2025-12-31)**
 - ✅ Chat History Persistence (Migration 009)
   - `chat_sessions` and `chat_messages` tables with CASCADE
   - Auto-save/load conversations per note
@@ -187,25 +224,65 @@ scribe help --all      # Full reference
   - ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research
   - Auto-includes full note context
 - ✅ @ References (autocomplete note inclusion)
-- ✅ Comprehensive Testing
-  - 12 backend tests (Rust)
-  - 38 frontend tests (Vitest)
-  - 67 E2E tests (Playwright)
+- ✅ Comprehensive Testing (911 tests total)
+  - 829 unit tests (Vitest)
+  - 82 E2E tests (Playwright)
+  - Full test coverage for new features
 - ✅ Complete Documentation
-  - Chat persistence guide
-  - Quick Actions reference card
+  - Chat persistence guide (523 lines)
+  - Quick Actions reference card (390 lines)
+  - 7 comprehensive tutorials (3,256 lines)
+  - Tutorial index with learning paths
+- ✅ CI/CD Fixed
+  - Release workflow bug fix (rust-toolchain)
+  - Automated site deployment working
+  - Automated builds for future releases
 
-**Sprint 26 Completed:**
+**Sprint 26 - Complete (2025-12-30)**
 - ✅ Terminal PTY shell (portable-pty + xterm.js)
 - ✅ Smart terminal working directory (project type inference)
 - ✅ Mission Control sidebar with Icon/Compact/Card modes
 - ✅ Browser mode with full IndexedDB persistence
 
-**Ready for Next Sprint (Sprint 27 P2):**
+**Sprint 27 P2: Settings Enhancement - In Progress (2025-12-31)**
+
+**Phase 1: Foundation - Complete ✅ (Merged to dev)**
+- **Feature Branch:** `feat/settings-enhancement`
+- **Worktree:** `/Users/dt/.git-worktrees/scribe/settings` (for Phase 2 work)
+- **Merged:** 2025-12-31 (commit 5f504a5)
+
+**Phase 1 Deliverables:**
+- ✅ Zustand store for settings state (useSettingsStore.ts)
+- ✅ Settings schema with 5 categories (settingsSchema.ts)
+- ✅ SettingsModal with tabs + search UI
+- ✅ Fuzzy search with fuse.js (search all settings)
+- ✅ ⌘, keyboard shortcut to open settings
+- ✅ Badge system for new features (AI category: 3)
+- ✅ Quick Actions management (5 default + 5 custom max)
+- ✅ Export/import functionality
+
+**Phase 2: Quick Wins - Next**
+- [ ] Individual setting controls (toggle, select, color, gallery)
+- [ ] Quick Actions customization UI (drag-to-reorder, prompts, shortcuts)
+- [ ] Theme gallery view with previews
+- [ ] Project template picker (5 presets)
+- [ ] Contextual settings hints (gear icons)
+  - [ ] Drag-to-reorder + visibility toggles
+  - [ ] Edit prompts (5 default + 5 custom)
+  - [ ] Keyboard shortcuts (⌘⌥1-9)
+  - [ ] Model selection per action (Claude/Gemini)
+- [ ] Project template picker (5 presets)
+- [ ] Hybrid architecture (Obsidian-style tabs + search)
+- [ ] Theme gallery view (visual previews)
+- [ ] Contextual hints (inline gear icons)
+
+**Spec:** `docs/specs/SPEC-settings-enhancement-2025-12-31.md` (23 KB, comprehensive)
+**Research:** Obsidian, Typora, ADHD accessibility patterns (2025)
+
+**Priority 2: Additional Frontend Polish**
 - [ ] Browser mode indicator in UI
 - [ ] Wiki link backlink tracking in browser
-- [ ] Ambient AI (⌘K) - inline suggestions
-- [ ] Graph View Enhancements
+- [ ] Chat session management UI
 
 ---
 

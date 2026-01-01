@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
 import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
+import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
 import { HybridEditor } from './components/HybridEditor'
@@ -10,7 +11,7 @@ import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { StatsPanel } from './components/StatsPanel'
-import { SettingsModal } from './components/SettingsModal'
+import SettingsModal from './components/Settings/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { MissionControl } from './components/MissionControl'
 import { ExportDialog } from './components/ExportDialog'
@@ -95,6 +96,8 @@ function App() {
     setCurrentProject,
     createProject
   } = useProjectStore()
+
+  const { openSettings } = useSettingsStore()
 
   // Apply Forest Night theme
   useForestTheme()
@@ -263,7 +266,6 @@ function App() {
   
   // Command Palette & Settings state
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false)
   const [isGraphViewOpen, setIsGraphViewOpen] = useState(false)
   const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false)
@@ -327,31 +329,8 @@ function App() {
     return () => clearInterval(interval)
   }, [autoThemeSettings, allThemes])
   
-  // Handle auto-theme settings change
-  const handleAutoThemeChange = (settings: AutoThemeSettings) => {
-    setAutoThemeSettings(settings)
-    saveAutoThemeSettings(settings)
-  }
-  
-  // Handle custom theme save
-  const handleSaveCustomTheme = (newTheme: Theme) => {
-    const customs = loadCustomThemes()
-    customs[newTheme.id] = newTheme
-    saveCustomThemes(customs)
-    setAllThemes(getAllThemes())
-  }
-  
-  // Handle custom theme delete
-  const handleDeleteCustomTheme = (themeId: string) => {
-    const customs = loadCustomThemes()
-    delete customs[themeId]
-    saveCustomThemes(customs)
-    setAllThemes(getAllThemes())
-    // If deleted theme was selected, switch to default
-    if (theme === themeId) {
-      setTheme('sage-garden')
-    }
-  }
+  // NOTE: Theme customization handlers moved to Settings Enhancement UI
+  // These functions are now handled by the SettingsStore in useSettingsStore.ts
 
   // Font settings state
   const [fontSettings, setFontSettings] = useState<FontSettings>(() => loadFontSettings())
@@ -382,16 +361,7 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [themeShortcuts, allThemes])
   
-  // Handle font settings change
-  const handleFontSettingsChange = (settings: FontSettings) => {
-    setFontSettings(settings)
-  }
-  
-  // Handle theme shortcuts change
-  const handleThemeShortcutsChange = (shortcuts: ThemeShortcut[]) => {
-    setThemeShortcuts(shortcuts)
-    saveThemeShortcuts(shortcuts)
-  }
+  // NOTE: Font and theme shortcut handlers moved to Settings Enhancement UI
 
 
   // Diagnostic: Test Tauri commands on startup
@@ -746,12 +716,6 @@ function App() {
         setIsCreateProjectModalOpen(true)
       }
 
-      // Settings (⌘,) - standard preferences shortcut
-      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
-        e.preventDefault()
-        setIsSettingsOpen(true)
-      }
-
       // Tab switching (⌘1-9) - switch to tab by index
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && /^[1-9]$/.test(e.key)) {
         e.preventDefault()
@@ -833,11 +797,17 @@ function App() {
         e.preventDefault()
         toggleSidebarCollapsed()
       }
+
+      // Settings shortcut (⌘,) - open settings modal
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key === ',') {
+        e.preventDefault()
+        openSettings()
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings, openSettings])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -920,7 +890,7 @@ function App() {
 
           // Scribe menu
           case 'preferences':
-            setIsSettingsOpen(true)
+            openSettings()
             break
           case 'shortcuts':
             setIsKeyboardShortcutsOpen(true)
@@ -1392,7 +1362,7 @@ function App() {
             await loadNotes()
           }
         }}
-        onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenSettings={() => openSettings()}
       />
 
       {/* Main content area */}
@@ -1466,7 +1436,7 @@ function App() {
               onCreateNote={handleCreateNote}
               onDailyNote={handleDailyNote}
               onQuickCapture={() => setIsQuickCaptureOpen(true)}
-              onSettings={() => setIsSettingsOpen(true)}
+              onSettings={() => openSettings()}
               onCreateProject={() => setIsCreateProjectModalOpen(true)}
             />
           ) : selectedNote ? (
@@ -1527,7 +1497,7 @@ function App() {
               onCreateNote={handleCreateNote}
               onDailyNote={handleDailyNote}
               onQuickCapture={() => setIsQuickCaptureOpen(true)}
-              onSettings={() => setIsSettingsOpen(true)}
+              onSettings={() => openSettings()}
               onCreateProject={() => setIsCreateProjectModalOpen(true)}
             />
           )}
@@ -1747,21 +1717,8 @@ function App() {
         hasSelectedNote={!!selectedNote}
       />
 
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        themes={allThemes}
-        currentTheme={theme}
-        onThemeChange={setTheme}
-        autoThemeSettings={autoThemeSettings}
-        onAutoThemeChange={handleAutoThemeChange}
-        onSaveCustomTheme={handleSaveCustomTheme}
-        onDeleteCustomTheme={handleDeleteCustomTheme}
-        fontSettings={fontSettings}
-        onFontSettingsChange={handleFontSettingsChange}
-        themeShortcuts={themeShortcuts}
-        onThemeShortcutsChange={handleThemeShortcutsChange}
-      />
+      {/* Settings Modal - New Settings Enhancement UI */}
+      <SettingsModal />
 
       {/* Export Dialog */}
       {selectedNote && (
