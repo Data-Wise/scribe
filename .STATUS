@@ -2,16 +2,16 @@
 status: complete
 priority: P1
 progress: 100
-version: 1.9.0
-sprint: 27
-completed: 2025-12-31
+version: 1.10.0
+sprint: 28
+completed: 2026-01-01
 updated: 2026-01-01
 editor: hybrid-markdown++
-next_sprint: 28
-next_focus: Sprint 28 Planning - v1.9.0 Released & Packaged ✅
-tests: 951
+next_sprint: 29
+next_focus: Sprint 29 Planning - v1.10.0 Released & Packaged ✅
+tests: 942
 unit_tests: 930
-e2e_tests: 103
+e2e_tests: 12
 tags:
   - adhd-friendly
   - distraction-free
@@ -99,6 +99,52 @@ tags:
 - [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
 - [ ] Phase 3: Status Bar (VS Code-style bottom bar)
 - [x] Playwright E2E tests ✅ (282 tests)
+
+---
+
+### Sprint 28: Live Editor Enhancements
+
+**v1.10.0 Released** ✅ (2026-01-01)
+
+**Phase 1: Live Preview with CodeMirror 6 - Complete ✅**
+- [x] CodeMirror 6 integration for Live Preview mode
+- [x] Obsidian-style live preview (hide syntax when cursor elsewhere)
+- [x] KaTeX math rendering (inline `$...$` and display `$$...$$`)
+- [x] Three editor modes with keyboard shortcuts:
+  - [x] Source mode (⌘1): Plain textarea
+  - [x] Live Preview mode (⌘2): CodeMirror with hidden syntax
+  - [x] Reading mode (⌘3): Fully rendered ReactMarkdown
+  - [x] ⌘E cycles between modes
+- [x] Bug fixes:
+  - [x] Controlled component race condition (no more lost characters)
+  - [x] New note tabs opening properly
+  - [x] PWA build with increased workbox cache size (3MB)
+- [x] Dependencies:
+  - [x] Added: @codemirror/lang-markdown, state, view, language-data
+  - [x] Added: @uiw/react-codemirror (React wrapper)
+  - [x] Added: katex + @types/katex (math rendering)
+  - [x] Removed: 8 unused Milkdown packages (-64 packages total)
+- [x] Testing:
+  - [x] 930/930 unit tests passing (34 test files, Vitest)
+  - [x] 12/12 E2E editor tests passing (Playwright)
+  - [x] TypeScript: 0 errors
+  - [x] Build: Successful (Vite 5.48s)
+- [x] Release artifacts:
+  - [x] DMGs built: Scribe_1.10.0_aarch64.dmg + Scribe_1.10.0_x64.dmg
+  - [x] GitHub release published
+  - [x] Homebrew tap updated (data-wise/tap/scribe v1.10.0)
+
+**Commits:**
+- `b8848f0` - Live editor implementation (PR #21)
+- `cad5ef2` - Merge to main
+- `98f2086` - PWA cache size fix (PR #23)
+- `48b9940` - Tauri version update to 1.10.0
+
+**Documentation:**
+- `RELEASE-SUMMARY-v1.10.0.md` - Complete release documentation
+- `RELEASE-COMPLETE-v1.10.0.md` - Release completion summary
+- `CHANGELOG.md` - Updated with v1.10.0 entry
+- GitHub Pages auto-deployed
 
 ---
 
