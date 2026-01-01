@@ -1,14 +1,14 @@
 ---
-status: complete
+status: active
 priority: P1
-progress: 100
+progress: 5
 version: 1.10.0
-sprint: 28
-completed: 2026-01-01
+sprint: 29
+started: 2026-01-01
 updated: 2026-01-01
 editor: hybrid-markdown++
-next_sprint: 29
-next_focus: Sprint 29 Planning - v1.10.0 Released & Packaged ✅
+next_sprint: 30
+next_focus: TBD
 tests: 942
 unit_tests: 930
 e2e_tests: 12
@@ -99,6 +99,29 @@ tags:
 - [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
 - [ ] Phase 3: Status Bar (VS Code-style bottom bar)
 - [x] Playwright E2E tests ✅ (282 tests)
+
+---
+
+### Sprint 29: Polish & Browser Mode (Active)
+
+**Focus:** Stabilize v1.10.0 + Make browser mode production-ready
+
+**Phase 1: Polish & Stability** 🔧
+- [ ] Clean up working directory (archive explorations)
+- [ ] Increase E2E test coverage (12 → 50+ tests)
+- [ ] Add comprehensive editor mode tests (Source/Live/Reading)
+- [ ] Fix any v1.10.0 user-reported bugs
+
+**Phase 2: Browser Mode Polish** 🔧
+- [ ] Browser mode indicator in UI (status bar badge)
+- [ ] Wiki link backlink tracking in browser (currently stubbed)
+- [ ] Verify chat history persistence in IndexedDB
+- [ ] PWA improvements (offline capability)
+
+**Phase 3: Documentation** 📚
+- [ ] Update documentation site with v1.10.0 features
+- [ ] Add editor modes tutorial
+- [ ] Update feature screenshots
 
 ---
 

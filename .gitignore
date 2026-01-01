@@ -8,3 +8,4 @@ out
 .env.local
 .env.*.local
 site/
+test-results/
