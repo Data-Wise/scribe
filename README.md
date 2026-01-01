@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.2.1-blue)]()
-[![Progress](https://img.shields.io/badge/progress-55%25-yellow)]()
-[![Tests](https://img.shields.io/badge/tests-1041%20passing-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.9.0-blue)]()
+[![Progress](https://img.shields.io/badge/progress-85%25-yellow)]()
+[![Tests](https://img.shields.io/badge/tests-1033%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -21,15 +21,17 @@ Scribe is a **distraction-free writing app** designed for academics and research
 |---------|-------------|
 | **HybridEditor++** | Markdown write mode + rich preview |
 | **Focus Mode** | Distraction-free, one note at a time |
-| **10 Themes** | 5 dark + 5 light ADHD-friendly themes |
+| **Settings** | ⌘, fuzzy search, theme gallery, Quick Actions customization |
+| **8 Themes** | Visual theme gallery with favorites, dark, and light themes |
 | **14 Fonts** | Recommended fonts + one-click Homebrew install |
+| **Quick Actions** | ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research (customizable) |
+| **Project Templates** | Research+, Teaching+, Dev+, Writing+, Minimal presets |
 | **Wiki Links** | `[[link]]` with autocomplete |
 | **Tags** | `#tag` inline with autocomplete |
 | **Citations** | `@cite` with BibTeX/Zotero integration |
 | **Math** | KaTeX for LaTeX ($...$ and $$...$$) |
 | **Export** | PDF, Word, LaTeX, HTML via Pandoc |
 | **AI Chat** | Claude + Gemini CLI (no API keys) |
-| **Quick Actions** | ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research |
 | **Chat Persistence** | Conversations saved per note |
 | **@ References** | Include other notes in AI prompts |
 | **CLI** | Terminal access via `scribe` command |
@@ -82,6 +84,7 @@ npm run build
 | Shortcut | Action |
 |----------|--------|
 | **⌘⇧N** | Open Scribe (global) |
+| **⌘,** | Settings (v1.9.0+) |
 | **⌘K** | Command palette |
 | **⌘N** | New note |
 | **⌘D** | Daily note |
@@ -89,6 +92,7 @@ npm run build
 | **⌘⇧F** | Focus mode |
 | **⌘B** | Toggle file list |
 | **⌘⇧B** | Toggle tags panel |
+| **⌘⌥1-9** | Quick Actions (v1.9.0+) |
 | **⌘Alt+0-9** | Switch themes |
 
 ---

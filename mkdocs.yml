@@ -97,6 +97,7 @@ nav:
     - Keyboard Shortcuts: guide/shortcuts.md
   - Tutorials:
     - Overview: tutorials/index.md
+    - Settings Enhancement: tutorials/settings.md
     - Terminal Integration: tutorials/terminal.md
     - Project System: tutorials/projects.md
     - Daily Notes: tutorials/daily-notes.md
@@ -105,6 +106,7 @@ nav:
     - Backlinks: tutorials/backlinks.md
     - Browser Mode: tutorials/browser-mode.md
   - Reference:
+    - Settings: reference/REFCARD-SETTINGS.md
     - Quick Actions: reference/REFCARD-QUICK-ACTIONS.md
     - API Reference: API.md
     - Architecture: ARCHITECTURE.md

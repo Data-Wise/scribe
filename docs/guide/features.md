@@ -131,6 +131,83 @@ Configure in Settings → Writing → Daily Note Template.
 
 ---
 
+## Settings (v1.9.0+)
+
+!!! tip "Quick Access"
+    Press `⌘,` (Command-Comma) to open Settings.
+
+**ADHD-optimized settings system** with fuzzy search, visual theme gallery, and Quick Actions customization.
+
+### 5 Settings Categories
+
+| Category | Contents |
+|----------|----------|
+| **Editor** | Font, spacing, line height, ligatures, focus mode |
+| **Themes** | Visual theme gallery (8 themes with previews) |
+| **AI & Workflow** | Quick Actions, chat history, @ references |
+| **Projects** | Project templates, defaults, daily notes |
+| **Advanced** | Performance, data management, export/import |
+
+### Fuzzy Search
+
+Search all settings instantly:
+
+- Type to search (300ms debounce for smooth typing)
+- Results show breadcrumb navigation (e.g., "Editor › Font & Spacing › Font Size")
+- Click result to jump to that setting
+
+### Theme Gallery
+
+**8 built-in themes** with visual previews:
+
+**Favorites:** Slate, Nord, Dracula
+**Dark:** Monokai, GitHub Dark
+**Light:** Linen, Paper, Cream
+
+- **3-column grid** with hover effects
+- **Instant preview** - click to apply
+- **Visual indicator** - blue border + checkmark on selected theme
+
+### Quick Actions Customization
+
+Customize your AI Quick Actions:
+
+| Feature | How |
+|---------|-----|
+| **Drag-to-reorder** | Click ⋮⋮ handle, drag row |
+| **Toggle visibility** | Checkbox to show/hide |
+| **Edit prompts** | Click ✏️ pencil icon |
+| **Assign shortcuts** | Click ⌨️ for ⌘⌥1-9 |
+| **Choose AI model** | Claude or Gemini per action |
+| **Add custom** | Up to 5 custom actions |
+| **Remove custom** | Click 🗑️ trash icon |
+
+**Limits:** 5 default + 5 custom = 10 Quick Actions max (prevents choice paralysis)
+
+### Project Templates
+
+**5 preconfigured templates:**
+
+| Template | Icon | Quick Actions | Use Case |
+|----------|------|---------------|----------|
+| **Research+** | 🔬 | Summarize, Explain, Research | Papers, lit reviews |
+| **Teaching+** | 📚 | Explain, Expand, Summarize | Lesson plans |
+| **Dev+** | 💻 | Explain, Improve, Research | Code docs |
+| **Writing+** | ✍️ | Improve, Expand, Summarize | Creative writing |
+| **Minimal** | ⚪ | None | Clean slate |
+
+Templates apply preconfigured settings for Quick Actions, daily note templates, and default properties.
+
+### Export/Import
+
+- **Export:** Copy all settings as JSON to clipboard
+- **Import:** Paste JSON to restore settings
+- **Reset:** Revert all settings to defaults (cannot be undone)
+
+**Full tutorial:** [Settings Enhancement Guide](../tutorials/settings.md)
+
+---
+
 ## Terminal
 
 Embedded terminal in the right sidebar with smart working directory:

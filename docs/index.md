@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.7.0--dev-blue)
-![Progress](https://img.shields.io/badge/progress-80%25-yellow)
-![Tests](https://img.shields.io/badge/tests-911%20passing-brightgreen)
+![Version](https://img.shields.io/badge/version-1.9.0-blue)
+![Progress](https://img.shields.io/badge/progress-85%25-yellow)
+![Tests](https://img.shields.io/badge/tests-1033%20passing-brightgreen)
 
 ---
 
@@ -67,11 +67,11 @@ cd scribe && npm install && npm run dev
 
     HybridEditor with write/preview mode, focus mode, and live wiki-link highlighting
 
--   :material-palette:{ .lg .middle } **ADHD-Friendly Themes**
+-   :material-palette:{ .lg .middle } **ADHD-Optimized Settings**
 
     ---
 
-    10 built-in themes (5 dark, 5 light) with auto-switching by time of day
+    Fuzzy search settings (⌘,), visual theme gallery (8 themes), Quick Actions customization, project templates
 
 -   :material-folder-multiple:{ .lg .middle } **Project System**
 
@@ -101,8 +101,10 @@ cd scribe && npm install && npm run dev
 |---------|-------------|
 | **HybridEditor** | Markdown write mode + rich preview |
 | **Focus Mode** | Distraction-free, one note at a time |
-| **Themes** | 10 ADHD-friendly themes + custom creator |
+| **Settings** | Fuzzy search (⌘,), theme gallery, Quick Actions customization |
+| **Themes** | 8 built-in themes with visual previews |
 | **Fonts** | 14 recommended fonts + Homebrew install |
+| **Quick Actions** | 5 default + 5 custom AI actions with drag-to-reorder |
 | **Wiki Links** | `[[link]]` to connect notes |
 | **Tags** | `#tag` with colored badges and autocomplete |
 | **Daily Notes** | Auto-created with templates |
@@ -136,6 +138,7 @@ cd scribe && npm install && npm run dev
 | Action | Shortcut |
 |--------|----------|
 | **Global: Open Scribe** | ⌘⇧N |
+| **Settings** | ⌘, |
 | **Command Palette** | ⌘K |
 | **New Note** | ⌘N |
 | **Daily Note** | ⌘D |

@@ -5,10 +5,10 @@ progress: 100
 version: 1.9.0
 sprint: 27
 completed: 2025-12-31
-updated: 2025-12-31
+updated: 2026-01-01
 editor: hybrid-markdown++
 next_sprint: 28
-next_focus: Sprint 28 Planning - Settings Enhancement COMPLETE ✅
+next_focus: Sprint 28 Planning - v1.9.0 Released & Packaged ✅
 tests: 951
 unit_tests: 930
 e2e_tests: 103
@@ -149,9 +149,11 @@ tags:
   - [x] Automated site deployment working
   - [x] Automated builds enabled for future releases
 
-**Phase 2: Frontend Polish (P2 - In Progress)** 🚀
+**Phase 2: Frontend Polish (P2 - COMPLETE)** ✅
 
-**Priority 1: Settings Enhancement (ADHD-Optimized UI)** 🎯
+**v1.9.0 Released** ✅ (2026-01-01)
+
+**Priority 1: Settings Enhancement (ADHD-Optimized UI)** ✅ SHIPPED
 
 **Branch:** `feat/settings-enhancement`
 **Worktree:** `/Users/dt/.git-worktrees/scribe/settings`
@@ -234,7 +236,18 @@ tags:
 - `7158f0b` - feat(settings): Add search debounce and ARIA labels
 - `c240b71` - test(settings): Add E2E tests for Phase 2 components
 
-**Priority 2: Additional P2 Items**
+**Post-Release (2026-01-01):**
+- [x] **v1.9.0 GitHub Release Debugging** ✅
+  - [x] Fixed release workflow (tauri-action → manual build)
+  - [x] Built DMG artifacts for both architectures (x64 + aarch64)
+  - [x] Uploaded to GitHub release v1.9.0
+  - [x] Updated Homebrew formulas with correct SHA256
+  - [x] Tested installation via `brew install scribe-dev` ✅
+  - [x] Updated README.md (version badges, feature list)
+  - [x] Updated mkdocs.yml (Settings tutorial navigation)
+  - [x] **Release fully working - users can install v1.9.0!**
+
+**Priority 2: Additional P2 Items (Backlog)**
 - [ ] Browser mode indicator in UI
 - [ ] Wiki link backlink tracking in browser
 - [ ] Chat session management UI

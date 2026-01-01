@@ -11,6 +11,97 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.10.0] - 2026-01-01
+
+### Sprint 28: Live Editor Enhancements - Complete
+
+**Major editor upgrade with Obsidian-style Live Preview mode, professional LaTeX math rendering, and critical bug fixes.**
+
+### Added
+
+**Live Preview Mode (CodeMirror 6):**
+- Three editor modes: Source (⌘1), Live Preview (⌘2), Reading (⌘3)
+- ⌘E to cycle between modes
+- Obsidian-style syntax hiding (hides when cursor elsewhere, reveals on click)
+- Real-time markdown rendering with CodeMirror 6
+- Custom ViewPlugin for rich markdown editing
+- Headers, emphasis, code, links, lists all render live
+- Bullet points replace `-` and `*` list markers
+
+**LaTeX Math Rendering (KaTeX):**
+- Inline math support: `$E=mc^2$` renders inline
+- Display math support: `$$\int_0^1 x^2 dx$$` renders centered
+- Click-to-edit functionality for rendered math
+- Professional typesetting quality
+- Error handling for invalid LaTeX
+
+**Keyboard Shortcuts:**
+- ⌘1 - Switch to Source mode
+- ⌘2 - Switch to Live Preview mode
+- ⌘3 - Switch to Reading mode
+- ⌘E - Cycle through modes
+- Escape in Reading mode - Return to Source
+
+**New Dependencies (6 packages):**
+- `@codemirror/lang-markdown` ^6.5.0
+- `@codemirror/language-data` ^6.5.2
+- `@codemirror/state` ^6.5.3
+- `@codemirror/view` ^6.39.8
+- `@uiw/react-codemirror` ^4.25.4
+- `katex` ^0.16.27 + `@types/katex` ^0.16.7
+
+### Fixed
+
+**CRITICAL: Controlled Component Race Condition:**
+- Fixed character loss during rapid typing
+- Implemented local state with controlled sync patterns
+- Location: `HybridEditor.tsx:66-74`
+- Impact: No more lost characters during fast typing
+
+**New Notes Not Opening in Tabs:**
+- Fixed: Creating new notes (⌘N) now opens editor tabs correctly
+- Added `openNoteTab()` call alongside `selectNote()`
+- Impact: Consistent tab behavior across all note creation methods
+
+### Changed
+
+**Editor Architecture:**
+- Updated editor stack from BlockNote to HybridEditor (CodeMirror 6 + ReactMarkdown)
+- Three-mode architecture for flexible editing experience
+- Mode switching preserves content across transitions
+
+### Removed
+
+**Dependency Cleanup (8 packages):**
+- All 7 `@milkdown/*` packages (unused experiment)
+- `codemirror-rich-markdoc` (unused)
+- Net change: -64 packages in node_modules
+
+### Documentation
+
+- Added `RELEASE-SUMMARY-v1.10.0.md` (337 lines)
+- Added `docs/LIVE-LATEX-RENDERING-RESEARCH.md` (616 lines)
+- Added `e2e/README.md` (456 lines)
+- Added `e2e/specs/comprehensive-bug-fixes.spec.ts` (630 lines)
+- Updated `CLAUDE.md` with Sprint 28 completion status and test results
+
+### Testing
+
+- ✅ TypeScript: Clean compilation (0 errors)
+- ✅ Unit Tests: 930/930 passed (34 test files)
+- ✅ E2E Tests: 12/12 editor tests passed
+- ✅ Build: Successful (5.48s)
+
+### Technical Details
+
+- **PR Merged:** #21 - Live Editor Enhancements with Obsidian-style Preview
+- **Files Changed:** 12
+- **Lines Added:** 3,807
+- **Lines Removed:** 28
+- **Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.10.0
+
+---
+
 ## [v1.9.0] - 2025-12-31
 
 ### Sprint 27 P2: Settings Enhancement - Complete

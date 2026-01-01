@@ -41,48 +41,41 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build frontend
+        run: npm run build:vite
+
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run build -- --target ${{ matrix.target }}
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
         with:
-          tagName: v__VERSION__
-          releaseName: 'Scribe v__VERSION__'
-          releaseBody: |
-            ## Scribe v__VERSION__
-            
+          tag_name: ${{ github.ref_name }}
+          name: Scribe ${{ github.ref_name }}
+          body: |
+            ## Scribe ${{ github.ref_name }}
+
             ADHD-friendly distraction-free writer for academics and researchers.
-            
+
             ### Installation
-            
+
             **Homebrew (recommended):**
             ```bash
             brew tap data-wise/tap
-            brew install --cask data-wise/tap/scribe
+            brew install --cask data-wise/tap/scribe-dev
             ```
-            
+
             **Direct Download:**
-            - macOS Intel: `Scribe___VERSION___x64.dmg`
-            - macOS Apple Silicon: `Scribe___VERSION___aarch64.dmg`
-            
+            - macOS Intel: `Scribe_${{ github.ref_name }}_x64.dmg`
+            - macOS Apple Silicon: `Scribe_${{ github.ref_name }}_aarch64.dmg`
+
             ### What's New
-            
+
             See [CHANGELOG.md](https://github.com/Data-Wise/scribe/blob/main/CHANGELOG.md) for details.
-            
-            ### Keyboard Shortcuts
-            
-            | Shortcut | Action |
-            |----------|--------|
-            | ⌘⇧N | Open Scribe from anywhere |
-            | ⌘K | Command palette |
-            | ⌘⇧F | Toggle focus mode |
-            
-            ---
-            
-            ⚠️ **Alpha Release**: This is a pre-release version. Please report issues at https://github.com/Data-Wise/scribe/issues
-          releaseDraft: true
-          prerelease: true
-          args: --target ${{ matrix.target }}
+          draft: false
+          prerelease: false
+          files: |
+            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
 
   update-homebrew:
     needs: build
