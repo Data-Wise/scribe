@@ -4486,3 +4486,200 @@ mark {
     transform: translateY(0);
   }
 }
+
+/* ============================================================
+   MILKDOWN EDITOR STYLES
+   WYSIWYG Markdown editing with live preview
+   ============================================================ */
+
+.milkdown-editor-wrapper {
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 200px);
+}
+
+.milkdown-editor-wrapper .milkdown {
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+.milkdown-editor-wrapper .editor {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  padding: 0;
+}
+
+/* ProseMirror editor styles */
+.milkdown-editor-wrapper .ProseMirror {
+  width: 100%;
+  min-height: calc(100vh - 200px);
+  outline: none;
+  caret-color: var(--nexus-accent);
+}
+
+.milkdown-editor-wrapper .ProseMirror:focus {
+  outline: none;
+}
+
+/* Headings */
+.milkdown-editor-wrapper h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: var(--nexus-text-primary);
+  border-bottom: 1px solid var(--nexus-bg-tertiary);
+  padding-bottom: 0.3em;
+}
+
+.milkdown-editor-wrapper h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: var(--nexus-text-primary);
+}
+
+.milkdown-editor-wrapper h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: var(--nexus-text-primary);
+}
+
+.milkdown-editor-wrapper h4,
+.milkdown-editor-wrapper h5,
+.milkdown-editor-wrapper h6 {
+  font-size: 1em;
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: var(--nexus-text-primary);
+}
+
+/* Paragraphs */
+.milkdown-editor-wrapper p {
+  margin-bottom: 1em;
+  color: var(--nexus-text-primary);
+}
+
+/* Links */
+.milkdown-editor-wrapper a {
+  color: var(--nexus-accent);
+  text-decoration: none;
+}
+
+.milkdown-editor-wrapper a:hover {
+  text-decoration: underline;
+}
+
+/* Bold and italic */
+.milkdown-editor-wrapper strong {
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+}
+
+.milkdown-editor-wrapper em {
+  font-style: italic;
+}
+
+/* Code */
+.milkdown-editor-wrapper code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  background: var(--nexus-bg-tertiary);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.milkdown-editor-wrapper pre {
+  background: var(--nexus-bg-tertiary);
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.milkdown-editor-wrapper pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Lists */
+.milkdown-editor-wrapper ul,
+.milkdown-editor-wrapper ol {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+.milkdown-editor-wrapper li {
+  margin-bottom: 0.25em;
+}
+
+.milkdown-editor-wrapper ul {
+  list-style-type: disc;
+}
+
+.milkdown-editor-wrapper ol {
+  list-style-type: decimal;
+}
+
+/* Blockquotes */
+.milkdown-editor-wrapper blockquote {
+  border-left: 4px solid var(--nexus-accent);
+  padding-left: 1em;
+  margin: 1em 0;
+  color: var(--nexus-text-muted);
+  font-style: italic;
+}
+
+/* Horizontal rules */
+.milkdown-editor-wrapper hr {
+  border: none;
+  border-top: 1px solid var(--nexus-bg-tertiary);
+  margin: 2em 0;
+}
+
+/* Tables */
+.milkdown-editor-wrapper table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.milkdown-editor-wrapper th,
+.milkdown-editor-wrapper td {
+  border: 1px solid var(--nexus-bg-tertiary);
+  padding: 0.5em 1em;
+  text-align: left;
+}
+
+.milkdown-editor-wrapper th {
+  background: var(--nexus-bg-secondary);
+  font-weight: 600;
+}
+
+/* Placeholder */
+.milkdown-editor-wrapper .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--nexus-text-muted);
+  pointer-events: none;
+  position: absolute;
+}
+
+/* Images */
+.milkdown-editor-wrapper img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1em 0;
+}
+
+/* Task lists */
+.milkdown-editor-wrapper input[type="checkbox"] {
+  margin-right: 0.5em;
+  accent-color: var(--nexus-accent);
+}

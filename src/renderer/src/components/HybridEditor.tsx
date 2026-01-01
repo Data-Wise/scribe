@@ -8,6 +8,7 @@ import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
 import { WritingProgress } from './WritingProgress'
 import { QuickChatPopover } from './QuickChatPopover'
+import { MilkdownEditor } from './MilkdownEditor'
 import { processMathInContent } from '../lib/mathjax'
 import { isBrowser } from '../lib/platform'
 import { Note, Tag } from '../types'
@@ -452,8 +453,8 @@ export function HybridEditor({
         className={`flex-1 overflow-auto p-8 pt-16 ${focusMode ? 'typewriter-mode' : ''}`}
         style={{ backgroundColor: 'var(--nexus-bg-primary)' }}
       >
-        {/* Source and Live Preview modes use textarea (Live Preview cursor tracking deferred to v1.4) */}
-        {(mode === 'source' || mode === 'live-preview') ? (
+        {/* Source mode: plain textarea for raw markdown editing */}
+        {mode === 'source' && (
           <textarea
             ref={textareaRef}
             value={localContent}
@@ -469,8 +470,24 @@ export function HybridEditor({
             }}
             spellCheck={false}
           />
-        ) : (
-          /* Reading mode: fully rendered, read-only */
+        )}
+
+        {/* Live Preview mode: WYSIWYG editing with Milkdown */}
+        {mode === 'live-preview' && (
+          <MilkdownEditor
+            content={localContent}
+            onChange={(newContent) => {
+              setLocalContent(newContent)
+              onChange(newContent)
+            }}
+            onWikiLinkClick={onWikiLinkClick}
+            onTagClick={onTagClick}
+            placeholder="Start writing..."
+          />
+        )}
+
+        {/* Reading mode: fully rendered, read-only */}
+        {mode === 'reading' && (
           <div
             className="prose max-w-none"
             style={{
