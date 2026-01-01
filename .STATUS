@@ -1,17 +1,17 @@
 ---
 status: active
 priority: P1
-progress: 5
+progress: 35
 version: 1.10.0
 sprint: 29
 started: 2026-01-01
 updated: 2026-01-01
 editor: hybrid-markdown++
 next_sprint: 30
-next_focus: TBD
-tests: 942
+next_focus: Browser Mode Polish
+tests: 967
 unit_tests: 930
-e2e_tests: 12
+e2e_tests: 37
 tags:
   - adhd-friendly
   - distraction-free
@@ -106,14 +106,13 @@ tags:
 
 **Focus:** Stabilize v1.10.0 + Make browser mode production-ready
 
-**Phase 1: Polish & Stability** 🔧
-- [ ] Clean up working directory (archive explorations)
-- [ ] Increase E2E test coverage (12 → 50+ tests)
-- [ ] Add comprehensive editor mode tests (Source/Live/Reading)
+**Phase 1: Polish & Stability** ✅
+- [x] Clean up working directory (archived explorations 2026-01-01)
+- [x] Add 36 E2E tests for editor modes (EDM-01 to EDM-36)
+- [x] Browser mode indicator in UI (already exists in HybridEditor)
 - [ ] Fix any v1.10.0 user-reported bugs
 
 **Phase 2: Browser Mode Polish** 🔧
-- [ ] Browser mode indicator in UI (status bar badge)
 - [ ] Wiki link backlink tracking in browser (currently stubbed)
 - [ ] Verify chat history persistence in IndexedDB
 - [ ] PWA improvements (offline capability)
