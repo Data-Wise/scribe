@@ -31,6 +31,8 @@ export default defineConfig({
         ]
       },
       workbox: {
+        // Increase cache size limit for CodeMirror language bundle
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB (was 2 MB default)
         // Cache all static assets
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
         // Runtime caching for API requests (if any)
