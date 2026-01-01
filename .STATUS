@@ -7,7 +7,7 @@ sprint: 27
 updated: 2025-12-31
 editor: hybrid-markdown++
 next_sprint: 28
-next_focus: Ship v1.8.0 - Settings Enhancement Complete
+next_focus: v1.8.0 Shipped ✅ - Settings Enhancement Complete (Ready for Sprint 28)
 tests: 951
 unit_tests: 930
 e2e_tests: 103
