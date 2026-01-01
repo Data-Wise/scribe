@@ -199,13 +199,17 @@ test.describe('Project Templates', () => {
     const applyButtons = page.getByRole('button', { name: 'Apply' })
     await applyButtons.first().click()
 
-    // Should show Applied
+    // Should show Applied immediately
     await expect(page.getByText('Applied')).toBeVisible()
 
-    // Wait 2.5 seconds
-    await page.waitForTimeout(2500)
+    // Verify Applied state is still visible BEFORE 2 seconds
+    await page.waitForTimeout(1500)
+    await expect(page.getByText('Applied')).toBeVisible()
 
-    // Applied state should be gone
+    // Wait for the 2-second timeout to complete
+    await page.waitForTimeout(1000)
+
+    // Applied state should be gone AFTER 2 seconds
     await expect(page.getByText('Applied')).not.toBeVisible()
 
     // Button should be back to "Apply"

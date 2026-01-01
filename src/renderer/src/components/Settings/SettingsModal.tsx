@@ -8,6 +8,9 @@ import QuickActionsSettings from './QuickActionsSettings'
 import ThemeGallery from './ThemeGallery'
 import ProjectTemplates from './ProjectTemplates'
 
+// Search debounce delay (ms) - wait for user to stop typing
+const SEARCH_DEBOUNCE_MS = 300
+
 /**
  * SettingsModal - Main settings modal with tabbed navigation
  *
@@ -38,7 +41,7 @@ export default function SettingsModal() {
   const [exportSuccess, setExportSuccess] = useState(false)
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
 
-  // Debounced search - wait 300ms after user stops typing
+  // Debounced search - wait for user to stop typing
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchQuery.trim()) {
@@ -47,7 +50,7 @@ export default function SettingsModal() {
       } else {
         setSearchResults([])
       }
-    }, 300)
+    }, SEARCH_DEBOUNCE_MS)
 
     // Cleanup: cancel timer if user types again
     return () => clearTimeout(timer)
