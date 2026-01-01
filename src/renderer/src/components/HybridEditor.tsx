@@ -59,6 +59,19 @@ export function HybridEditor({
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>(editorMode)
 
+  // LOCAL STATE FIX: Use local state for immediate UI response to prevent race conditions
+  // During rapid typing, React may not re-render fast enough with prop updates,
+  // causing characters to be lost. Local state ensures immediate feedback.
+  const [localContent, setLocalContent] = useState(content)
+  const isTypingRef = useRef(false)
+
+  // Sync from props only when NOT typing (e.g., note switch, external AI edit)
+  useEffect(() => {
+    if (!isTypingRef.current) {
+      setLocalContent(content)
+    }
+  }, [content])
+
   // Update mode when editorMode prop changes
   useEffect(() => {
     setMode(editorMode)
@@ -145,7 +158,7 @@ export function HybridEditor({
     const cursorPos = textarea.selectionStart
 
     // Create a temporary element to measure cursor position
-    const textBeforeCursor = content.substring(0, cursorPos)
+    const textBeforeCursor = localContent.substring(0, cursorPos)
     const lines = textBeforeCursor.split('\n')
     const currentLineIndex = lines.length - 1
 
@@ -162,16 +175,23 @@ export function HybridEditor({
       top: Math.max(0, targetScroll),
       behavior: 'smooth'
     })
-  }, [focusMode, mode, content])
+  }, [focusMode, mode, localContent])
 
   // Handle textarea input and check for autocomplete triggers
   const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target
     const text = textarea.value
     const cursorPos = textarea.selectionStart ?? text.length
-    
-    // Update content first
+
+    // LOCAL STATE FIX: Update local state immediately for instant UI feedback
+    isTypingRef.current = true
+    setLocalContent(text)
     onChange(text)
+
+    // Reset typing flag after brief delay to allow prop sync when done typing
+    setTimeout(() => {
+      isTypingRef.current = false
+    }, 150)
 
     // Get text before cursor for trigger detection
     const textBeforeCursor = text.substring(0, cursorPos)
@@ -254,8 +274,8 @@ export function HybridEditor({
       return
     }
 
-    const text = content
-    
+    const text = localContent  // Use localContent for current state
+
     // Find the last [[ position in the entire text (since cursor might have moved)
     const triggerPos = text.lastIndexOf('[[')
     console.log('[HybridEditor] Trigger position:', triggerPos, 'in text:', text)
@@ -269,9 +289,10 @@ export function HybridEditor({
           break
         }
       }
-      
+
       const newText = text.substring(0, triggerPos) + `[[${title}]]` + text.substring(endPos)
       console.log('[HybridEditor] New text:', newText)
+      setLocalContent(newText)  // Update local state
       onChange(newText)
 
       // Set cursor position after the inserted link
@@ -283,12 +304,13 @@ export function HybridEditor({
     } else {
       console.log('[HybridEditor] No [[ found, appending')
       // Fallback: just append
-      const newText = content + `[[${title}]]`
+      const newText = localContent + `[[${title}]]`
+      setLocalContent(newText)  // Update local state
       onChange(newText)
     }
 
     setWikiLinkTrigger(null)
-  }, [content, onChange])
+  }, [localContent, onChange])
 
   // Handle tag selection from autocomplete
   const handleTagSelect = useCallback((name: string) => {
@@ -296,7 +318,7 @@ export function HybridEditor({
     if (!textarea) return
 
     const cursorPos = textarea.selectionStart
-    const text = content
+    const text = localContent  // Use localContent for current state
 
     // Find the last # position before cursor (that's part of a tag)
     const textBeforeCursor = text.substring(0, cursorPos)
@@ -306,6 +328,7 @@ export function HybridEditor({
       // Find the position of the # that triggered this
       const triggerPos = textBeforeCursor.length - tagMatch[0].length + (tagMatch[0].startsWith('#') ? 0 : 1)
       const newText = text.substring(0, triggerPos) + `#${name} ` + text.substring(cursorPos)
+      setLocalContent(newText)  // Update local state
       onChange(newText)
 
       // Set cursor position after the inserted tag
@@ -317,7 +340,7 @@ export function HybridEditor({
     }
 
     setTagTrigger(null)
-  }, [content, onChange])
+  }, [localContent, onChange])
 
   // Handle citation selection from autocomplete
   const handleCitationSelect = useCallback((key: string) => {
@@ -326,7 +349,7 @@ export function HybridEditor({
     const textarea = textareaRef.current
     if (!textarea) return
 
-    const text = content
+    const text = localContent  // Use localContent for current state
     const cursorPos = textarea.selectionStart
 
     // Find the @ position before cursor
@@ -336,6 +359,7 @@ export function HybridEditor({
     if (atPos !== -1) {
       // Replace @query with [@key] (Pandoc citation format)
       const newText = text.substring(0, atPos) + `[@${key}]` + text.substring(cursorPos)
+      setLocalContent(newText)  // Update local state
       onChange(newText)
 
       // Set cursor position after the inserted citation
@@ -347,7 +371,7 @@ export function HybridEditor({
     }
 
     setCitationTrigger(null)
-  }, [content, onChange])
+  }, [localContent, onChange])
 
   // Handle keyboard navigation in autocomplete
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -362,8 +386,8 @@ export function HybridEditor({
     }
   }, [wikiLinkTrigger, tagTrigger, citationTrigger])
 
-  // Word count
-  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0
+  // Word count - use localContent for immediate feedback during typing
+  const wordCount = localContent.trim() ? localContent.trim().split(/\s+/).length : 0
 
   // Handle quick chat submit
   const handleQuickChatSubmit = useCallback(async (message: string): Promise<string> => {
@@ -432,7 +456,7 @@ export function HybridEditor({
         {(mode === 'source' || mode === 'live-preview') ? (
           <textarea
             ref={textareaRef}
-            value={content}
+            value={localContent}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
             placeholder="Start writing... [[ wiki-links, # tags, @ citations, $math$"
@@ -457,7 +481,7 @@ export function HybridEditor({
             }}
           >
             <MarkdownPreview
-              content={content}
+              content={localContent}
               onWikiLinkClick={onWikiLinkClick}
               onTagClick={onTagClick}
             />
