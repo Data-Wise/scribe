@@ -168,11 +168,34 @@ class RichMarkdownPlugin {
         }
       })
 
-      // Process inline math ($...$) using regex
-      // We do this separately because the markdown parser doesn't recognize math
+      // Process math using regex (markdown parser doesn't recognize $...$ syntax)
       const text = doc.sliceString(from, to)
-      const inlineMathRegex = /(?<!\$)\$([^$\n]+)\$(?!\$)/g
+
+      // First, find display math ($$...$$) on single lines
+      // Must process before inline math to avoid partial matches
+      const displayMathRegex = /\$\$([^$]+)\$\$/g
       let match
+      while ((match = displayMathRegex.exec(text)) !== null) {
+        const matchFrom = from + match.index
+        const matchTo = matchFrom + match[0].length
+        const formula = match[1].trim()
+
+        // Skip if contains newlines (multi-line needs StateField)
+        if (formula.includes('\n')) continue
+
+        // Skip if cursor is inside this math expression
+        if (cursor.from >= matchFrom && cursor.to <= matchTo) continue
+
+        widgets.push(
+          Decoration.replace({
+            widget: new MathWidget(formula, true) // displayMode = true
+          }).range(matchFrom, matchTo)
+        )
+      }
+
+      // Then process inline math ($...$)
+      // Negative lookbehind/ahead to avoid matching $$
+      const inlineMathRegex = /(?<!\$)\$([^$\n]+)\$(?!\$)/g
       while ((match = inlineMathRegex.exec(text)) !== null) {
         const matchFrom = from + match.index
         const matchTo = matchFrom + match[0].length
@@ -183,7 +206,7 @@ class RichMarkdownPlugin {
 
         widgets.push(
           Decoration.replace({
-            widget: new MathWidget(formula, false)
+            widget: new MathWidget(formula, false) // displayMode = false
           }).range(matchFrom, matchTo)
         )
       }
