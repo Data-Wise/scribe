@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useEffect } from 'react'
+import { useCallback, useRef, useEffect } from 'react'
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
@@ -547,9 +547,10 @@ export function CodeMirrorEditor({
   const editorRef = useRef<ReactCodeMirrorRef>(null)
   const isInternalChange = useRef(false)
 
-  // Memoize extensions to prevent recreation on every render
-  // Create theme at runtime to read actual CSS variable values
-  const extensions = useMemo(() => [
+  // Create extensions fresh on each render to pick up theme changes
+  // Note: We DON'T use useMemo here because we WANT to recreate the theme
+  // when CSS variables change (which happens when user switches themes)
+  const extensions = [
     markdown({
       codeLanguages: languages,
       extensions: [Strikethrough]  // Enable GFM strikethrough (~~text~~)
@@ -559,7 +560,7 @@ export function CodeMirrorEditor({
     createEditorTheme(),  // Call function to read theme colors at runtime
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
-  ], [placeholder])
+  ]
 
   const handleChange = useCallback((value: string) => {
     isInternalChange.current = true
