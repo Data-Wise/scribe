@@ -309,15 +309,18 @@ const richMarkdownPlugin = ViewPlugin.fromClass(RichMarkdownPlugin, {
 /**
  * Custom theme for the rich markdown editor
  * Matches the Reading mode styling for consistency
+ * Respects app theme (dark/light) via CSS variables
  */
 const editorTheme = EditorView.theme({
   '&': {
-    backgroundColor: 'transparent',
+    backgroundColor: 'var(--nexus-bg-primary, #ffffff)',
+    color: 'var(--nexus-text-primary, #1a1a1a)',
     fontSize: 'var(--editor-font-size, 16px)',
     fontFamily: 'var(--editor-font-family, system-ui)',
   },
   '.cm-content': {
     caretColor: 'var(--nexus-text-primary, #1a1a1a)',
+    color: 'var(--nexus-text-primary, #1a1a1a)',
     lineHeight: 'var(--editor-line-height, 1.6)',
     padding: '0',
   },
