@@ -27,7 +27,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
 
   test('BBL-01: Create note with wiki link - target exists', async ({ page }) => {
     // Step 1: Create target note
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("New Page")')
     await page.waitForTimeout(500)
 
     // Find and fill the editor
@@ -36,7 +36,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(1000) // Let it save
 
     // Step 2: Create source note with wiki link
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
 
     await editor.fill('# Source Note\n\nThis links to [[Target Note]] in the middle of text.')
@@ -47,7 +47,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(500)
 
     // Step 4: Open backlinks panel
-    await page.click('[data-testid="right-sidebar-backlinks"]')
+    await page.click('button:has-text("Backlinks")')
     await page.waitForTimeout(500)
 
     // Step 5: Verify backlink appears
@@ -58,7 +58,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
 
   test('BBL-02: Update note to add wiki link - backlink appears', async ({ page }) => {
     // Step 1: Create target note
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("New Page")')
     await page.waitForTimeout(500)
 
     const editor = page.locator('.cm-content, textarea, [contenteditable="true"]').first()
@@ -66,7 +66,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(1000)
 
     // Step 2: Create source note WITHOUT link initially
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
 
     await editor.fill('# Source Note\n\nNo links yet')
@@ -81,7 +81,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(500)
 
     // Step 5: Open backlinks panel
-    await page.click('[data-testid="right-sidebar-backlinks"]')
+    await page.click('button:has-text("Backlinks")')
 
     // Step 6: Verify backlink appears after update
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
@@ -92,13 +92,13 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     const editor = page.locator('.cm-content, textarea, [contenteditable="true"]').first()
 
     // Step 1: Create target note
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("New Page")')
     await page.waitForTimeout(500)
     await editor.fill('# Target Note\n\nTarget content')
     await page.waitForTimeout(1000)
 
     // Step 2: Create source note WITH link
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
     await editor.fill('# Source Note\n\nHas [[Target Note]] link')
     await page.waitForTimeout(1000)
@@ -106,7 +106,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     // Step 3: Verify backlink exists
     await page.click('text=Target Note')
     await page.waitForTimeout(500)
-    await page.click('[data-testid="right-sidebar-backlinks"]')
+    await page.click('button:has-text("Backlinks")')
     let backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
     await expect(backlinksPanel.locator('text=Source Note')).toBeVisible()
 
@@ -129,25 +129,25 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     const editor = page.locator('.cm-content, textarea, [contenteditable="true"]').first()
 
     // Step 1: Create target note
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("New Page")')
     await page.waitForTimeout(500)
     await editor.fill('# Target Note\n\nPopular target')
     await page.waitForTimeout(1000)
 
     // Step 2: Create source note 1
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
     await editor.fill('# Source 1\n\nLinks to [[Target Note]]')
     await page.waitForTimeout(1000)
 
     // Step 3: Create source note 2
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
     await editor.fill('# Source 2\n\nAlso links to [[Target Note]]')
     await page.waitForTimeout(1000)
 
     // Step 4: Create source note 3
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
     await editor.fill('# Source 3\n\nReferences [[Target Note]] multiple times [[Target Note]]')
     await page.waitForTimeout(1000)
@@ -157,7 +157,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(500)
 
     // Step 6: Open backlinks panel
-    await page.click('[data-testid="right-sidebar-backlinks"]')
+    await page.click('button:has-text("Backlinks")')
 
     // Step 7: Verify all backlinks appear
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
@@ -170,7 +170,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     const editor = page.locator('.cm-content, textarea, [contenteditable="true"]').first()
 
     // Step 1: Create source note with link to non-existent note
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("New Page")')
     await page.waitForTimeout(500)
     await editor.fill('# Source Note\n\nLinks to [[Non Existent Note]]')
     await page.waitForTimeout(1000)
@@ -180,7 +180,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await expect(errorToast).not.toBeVisible()
 
     // Step 3: Create the target note NOW
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
     await editor.fill('# Non Existent Note\n\nNow exists')
     await page.waitForTimeout(1000)
@@ -196,7 +196,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(500)
 
     // Step 6: Verify backlink now appears
-    await page.click('[data-testid="right-sidebar-backlinks"]')
+    await page.click('button:has-text("Backlinks")')
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
     await expect(backlinksPanel.locator('text=Source Note')).toBeVisible()
   })
@@ -244,7 +244,7 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(500)
 
     // Step 4: Open backlinks panel
-    await page.click('[data-testid="right-sidebar-backlinks"]')
+    await page.click('button:has-text("Backlinks")')
 
     // Step 5: Verify backlink appears after reindexing
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
@@ -269,13 +269,13 @@ test.describe('Browser Mode: Tag Indexing', () => {
     const editor = page.locator('.cm-content, textarea, [contenteditable="true"]').first()
 
     // Step 1: Create note with tag
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("New Page")')
     await page.waitForTimeout(500)
     await editor.fill('# Tagged Note\n\nThis has #research and #important tags')
     await page.waitForTimeout(1000)
 
     // Step 2: Open tags panel
-    await page.click('[data-testid="right-sidebar-tags"]')
+    await page.click('button:has-text("Tags")')
 
     // Step 3: Verify tags appear
     const tagsPanel = page.locator('[data-testid="tags-panel"]')
@@ -287,19 +287,19 @@ test.describe('Browser Mode: Tag Indexing', () => {
     const editor = page.locator('.cm-content, textarea, [contenteditable="true"]').first()
 
     // Step 1: Create note with #research tag
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("New Page")')
     await page.waitForTimeout(500)
     await editor.fill('# Research Note\n\nContent with #research tag')
     await page.waitForTimeout(1000)
 
     // Step 2: Create note without tag
-    await page.click('button:has-text("New Note"), [aria-label*="New Note"]')
+    await page.click('button:has-text("+ New Note")')
     await page.waitForTimeout(500)
     await editor.fill('# Plain Note\n\nNo tags here')
     await page.waitForTimeout(1000)
 
     // Step 3: Open tags panel and click #research
-    await page.click('[data-testid="right-sidebar-tags"]')
+    await page.click('button:has-text("Tags")')
     await page.click('text=research')
     await page.waitForTimeout(500)
 
