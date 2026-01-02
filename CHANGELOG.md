@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Sprint 30: Browser Mode Polish - Phase 1
+
+**Fixed critical bug where wiki links and tags were not being indexed in browser mode.**
+
+### Fixed
+
+**Browser Mode Indexing:**
+- Fixed wiki links not being indexed when notes created/updated in browser mode
+- Fixed tags not being indexed when notes created/updated in browser mode
+- Backlinks panel now functional in browser mode
+- Tag filtering now functional in browser mode
+
+**Technical Details:**
+- Added `updateNoteLinks()` and `updateNoteTags()` calls to `createNote()` and `updateNote()` in browser-api.ts
+- Batch reindexing utility automatically runs on app initialization
+- Comprehensive unit tests (23/23 passing) verify all indexing operations
+
+**Important:** Existing browser mode notes will be automatically reindexed for backlinks on next app launch.
+
 ---
 
 ## [v1.11.0] - 2026-01-01
