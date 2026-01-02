@@ -2,7 +2,7 @@
 
 > **Consolidated planning document for Scribe development**
 
-**Last Updated:** 2026-01-01
+**Last Updated:** 2026-01-01 (verified)
 **Version:** 1.10.0
 **Sprint:** 29 (Active)
 
@@ -30,21 +30,52 @@
 
 **Focus:** Stabilize v1.10.0 + Make browser mode production-ready
 
-### Phase 1: Polish & Stability
+### Phase 1: Polish & Stability ✅
 - [x] Clean up working directory (archived explorations)
 - [x] Add 36 E2E tests for editor modes (EDM-01 to EDM-36)
 - [x] Browser mode indicator (already exists in HybridEditor)
 - [ ] Fix any v1.10.0 user-reported bugs
 
-### Phase 2: Browser Mode Improvements
+### Phase 2: Live Edit Mode Polish
+- [ ] **Blockquotes** - Render `>` as styled quote blocks
+- [ ] **Horizontal rules** - Render `---` / `***` as divider lines
+- [ ] **Checkboxes** - Render `- [ ]` / `- [x]` as interactive checkboxes
+- [ ] **Tables** - Render markdown tables with borders
+- [ ] **Footnotes** - Render `[^1]` with hover preview
+- [ ] **Strikethrough** - Render `~~text~~` with line-through
+- [ ] **Syntax highlighting** - Code blocks with language-specific colors
+
+### Phase 3: Browser Mode Improvements
 - [ ] Wiki link backlink tracking in browser (currently stubbed)
 - [ ] Verify chat history persistence in IndexedDB
 - [ ] PWA improvements (offline capability)
 
-### Phase 3: Documentation
+### Phase 4: Documentation
 - [ ] Update documentation site with v1.10.0 features
 - [ ] Add editor modes tutorial
 - [ ] Update feature screenshots
+
+---
+
+## Implemented Features ✅
+
+### v1.8.0 - v1.10.0 (Sprint 27-28)
+
+| Feature | Version | Status |
+|---------|---------|--------|
+| **@ References** | v1.8.0 | ✅ Type `@` to autocomplete note titles |
+| **Chat History Persistence** | v1.8.0 | ✅ SQLite + IndexedDB, per-note sessions |
+| **Quick Actions** | v1.8.0 | ✅ 5 one-click AI prompts (Improve, Expand, Summarize, Explain, Research) |
+| **Quick Actions Customization** | v1.9.0 | ✅ Drag-to-reorder, custom actions, keyboard shortcuts |
+| **Settings Modal** | v1.9.0 | ✅ ⌘, fuzzy search, 5 categories, export/import |
+| **Theme Gallery** | v1.9.0 | ✅ 8 themes with visual previews |
+| **Project Templates** | v1.9.0 | ✅ 5 templates (Research+, Teaching+, Dev+, Writing+, Minimal) |
+| **Live Preview (CodeMirror 6)** | v1.10.0 | ✅ Obsidian-style syntax hiding |
+| **KaTeX Math Rendering** | v1.10.0 | ✅ Inline `$...$` + display `$$...$$` |
+| **Three Editor Modes** | v1.10.0 | ✅ Source (⌘1), Live (⌘2), Reading (⌘3), cycle ⌘E |
+| **Terminal PTY** | v1.6.0 | ✅ xterm.js + Rust PTY (Tauri mode) |
+| **Obsidian Sync** | v1.5.0 | ✅ Sync to Obsidian vault (⌘K → Sync) |
+| **Status Bar** | v1.4.0 | ✅ Word count, session timer, streak, milestones |
 
 ---
 
@@ -54,10 +85,8 @@
 
 | Feature | Description | Effort |
 |---------|-------------|--------|
-| **Backend Foundation** | Property validation, search index, AI wiring | Medium |
-| **@ References** | `@note-name` syntax in Claude chat | Medium |
-| **Chat History Persistence** | Save messages to localStorage | Quick |
-| **Quick Actions in Chat** | Summarize, Improve, Explain buttons | Quick |
+| **Backend Search Index** | Full-text search optimization | Medium |
+| **Property Validation** | Schema-based note property validation | Medium |
 
 ### P2 - Medium Priority
 
@@ -66,15 +95,14 @@
 | **Ambient AI (⌘K)** | Inline AI suggestions everywhere | Large |
 | **Vault Sidebar** | Obsidian-style file tree | Large |
 | **Tab Aesthetics** | Modern rounded tab styling | Medium |
-| **Terminal PTY v2** | Full shell with Rust backend | Large |
 
 ### P3 - Nice to Have
 
 | Feature | Description | Status |
 |---------|-------------|--------|
-| Database backup/restore | Export/import JSON | Planned |
-| Cross-platform Obsidian sync | Enhanced integration | Planned |
-| Status bar enhancements | VS Code-style bottom bar | Planned |
+| Full database backup/restore | Export/import all data as JSON | Planned |
+| Enhanced Obsidian sync | Bidirectional sync, conflict resolution | Planned |
+| Status bar extensions | Custom widgets, integrations | Planned |
 
 ---
 
@@ -82,7 +110,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| **Terminal PTY Shell** | UI ✅, Backend ⏳ | Rust PTY requires more work |
+| **Terminal PTY Shell** | ✅ Complete | xterm.js + Rust PTY working |
 | **Graph View Enhancements** | Planned | 3D visualization, clustering |
 | **Multi-tab Editing** | Rejected | Conflicts with ADHD "one thing" |
 | **Plugin System** | Rejected | Scope creep risk |
