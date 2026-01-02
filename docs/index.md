@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.9.0-blue)
-![Progress](https://img.shields.io/badge/progress-85%25-yellow)
-![Tests](https://img.shields.io/badge/tests-1033%20passing-brightgreen)
+![Version](https://img.shields.io/badge/version-1.11.0-blue)
+![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)
+![Tests](https://img.shields.io/badge/tests-978%20passing-brightgreen)
 
 ---
 
@@ -65,7 +65,7 @@ cd scribe && npm install && npm run dev
 
     ---
 
-    HybridEditor with write/preview mode, focus mode, and live wiki-link highlighting
+    Three-mode editor (Source/Live/Reading), Obsidian-style callouts, focus mode, and live wiki-link highlighting
 
 -   :material-palette:{ .lg .middle } **ADHD-Optimized Settings**
 
@@ -99,7 +99,8 @@ cd scribe && npm install && npm run dev
 
 | Feature | Description |
 |---------|-------------|
-| **HybridEditor** | Markdown write mode + rich preview |
+| **HybridEditor++** | Three modes: Source, Live Preview, Reading |
+| **Callouts** | 11 Obsidian-style callout types with color coding |
 | **Focus Mode** | Distraction-free, one note at a time |
 | **Settings** | Fuzzy search (⌘,), theme gallery, Quick Actions customization |
 | **Themes** | 8 built-in themes with visual previews |

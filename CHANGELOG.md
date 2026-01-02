@@ -11,6 +11,90 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.11.0] - 2026-01-01
+
+### Sprint 29: Callout Support & Editor Polish - Complete
+
+**Obsidian-style callouts with 11 types, full color customization, and multi-line support.**
+
+### Added
+
+**Callout Syntax:**
+- Obsidian-style callout syntax: `> [!type]` and `> [!type] Title`
+- 11 callout types with type-specific colors:
+  - **note** (Blue) - General information and helpful tips
+  - **tip/hint** (Green) - Suggestions and best practices
+  - **important** (Cyan) - Key points requiring attention
+  - **warning/caution/attention** (Orange) - Warnings about potential issues
+  - **danger** (Red) - Critical warnings about serious risks
+  - **info** (Light blue) - Neutral informational content
+  - **success** (Bright green) - Success messages and achievements
+  - **question/help/faq** (Purple) - Questions and help requests
+  - **quote/cite** (Gray) - Quotations and citations
+  - **abstract/summary/tldr** (Teal) - Brief summaries
+  - **example** (Indigo) - Code examples and demonstrations
+
+**Live Mode Rendering (CodeMirror 6):**
+- Real-time callout rendering with type-specific background colors
+- Blockquote handler detects `[!type]` pattern and applies CSS classes
+- Multi-line callout support with proper line-level decoration
+- Custom color scheme for each callout type
+- Smooth hover effects and visual polish
+
+**Reading Mode Rendering:**
+- Full HTML generation with title, body, and icon support
+- Callout title extraction from first line
+- Body content cleaning (strips `>` markers)
+- Multi-paragraph support with proper HTML formatting
+- Regex-based callout detection with robust title parsing
+- Type-specific styling with background colors and borders
+
+**Demo Content:**
+- Comprehensive "Callout Types" demo note with all 11 types
+- Syntax reference table in demo content
+- Examples showing both titled and untitled callouts
+- Multi-line callout demonstrations
+
+### Fixed
+
+**Critical Regex Fix:**
+- Changed callout title regex from `\s+` to `[ \t]+` (space/tab only)
+- **Problem:** `\s+` was matching newlines, causing body content to be captured as title
+- **Impact:** Multi-line callouts now render correctly in Reading mode
+- **Location:** `HybridEditor.tsx:427`
+
+**Body Content Cleaning:**
+- More aggressive `>` stripping from callout body lines
+- Improved paragraph generation with `<br>` tag handling
+- Proper empty line filtering
+
+### Changed
+
+**Editor Modes:**
+- Source mode shows raw callout syntax
+- Live mode shows colored callout blocks with real-time rendering
+- Reading mode shows fully formatted callouts with titles and body content
+
+### Testing
+
+- ✅ TypeScript: Clean compilation (0 errors)
+- ✅ Unit Tests: 930/930 passed (34 test files)
+- ✅ E2E Tests: 48/48 passed
+- ✅ Total: 978 tests passing
+- ✅ Build: Successful
+
+### Technical Details
+
+- **Files Modified:** 3
+  - `src/renderer/src/components/CodeMirrorEditor.tsx` - Live mode callout rendering
+  - `src/renderer/src/components/HybridEditor.tsx` - Reading mode callout rendering
+  - `src/renderer/src/lib/seed-data.ts` - Callout demo note
+- **Lines Added:** ~150
+- **Regex Pattern:** `/^>\s*\[!(\w+)\](?:[ \t]+([^\n]*))?\n((?:>.*\n?)*)/gm`
+- **CSS Classes:** `.cm-callout-line`, `.cm-callout-{type}`, `.callout`, `.callout-{type}`
+
+---
+
 ## [v1.10.0] - 2026-01-01
 
 ### Sprint 28: Live Editor Enhancements - Complete
