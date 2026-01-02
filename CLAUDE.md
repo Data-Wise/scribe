@@ -211,42 +211,56 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.10.0 Released ✅
+## 🎯 Current Status: v1.11.0 Released ✅
 
-**Version:** 1.10.0 (2026-01-01)  
-**Branch:** `main` (tagged and released)  
-**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.10.0  
-**Documentation:** https://data-wise.github.io/scribe  
+**Version:** 1.11.0 (2026-01-01)
+**Branch:** `main` (tagged and released)
+**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.11.0
+**Documentation:** https://data-wise.github.io/scribe
 **Install:** `brew install --cask data-wise/tap/scribe`
 
-### Latest Release: Sprint 28 (v1.10.0)
+### Latest Release: Sprint 29 (v1.11.0)
 
-**Live Editor Enhancements - Complete ✅**
+**Callout Support & Editor Polish - Complete ✅**
 
 **Features:**
-- ✅ **CodeMirror 6 Live Preview** - Obsidian-style syntax hiding
-- ✅ **KaTeX Math Rendering** - Inline `$...$` and display `$$...$$`
-- ✅ **Three Editor Modes** - Source (⌘1), Live (⌘2), Reading (⌘3), cycle with ⌘E
-- ✅ **Bug Fixes** - Race condition fixed, tab opening fixed, PWA build fixed
+- ✅ **Obsidian-style Callouts** - 11 callout types with icons and colors in all modes
+- ✅ **Strikethrough Rendering** - `~~text~~` renders correctly in Live mode
+- ✅ **36 New E2E Tests** - Comprehensive editor mode coverage (EDM-01 to EDM-36)
 
-**Dependencies:**
-- Added: CodeMirror 6 (@codemirror/lang-markdown, state, view, language-data)
-- Added: @uiw/react-codemirror, katex + @types/katex
-- Removed: 8 unused Milkdown packages (-64 packages)
+**Supported Callout Types:**
+| Type | Aliases | Color |
+|------|---------|-------|
+| note, info | - | Blue |
+| tip | hint, important | Green |
+| success | check, done | Green |
+| warning | caution, attention | Orange |
+| danger | error | Red |
+| bug | - | Red |
+| question | help, faq | Purple |
+| example | - | Gray |
+| quote | cite | Gray |
+| abstract | summary, tldr | Cyan |
 
 **Testing:**
-- ✅ 930 unit tests + 12 E2E tests = 942 total
+- ✅ 930 unit tests + 48 E2E tests = 978 total
 - ✅ TypeScript: 0 errors
 - ✅ Build: Successful
 
 **Artifacts:**
-- DMG: Scribe_1.10.0_aarch64.dmg (Apple Silicon)
-- DMG: Scribe_1.10.0_x64.dmg (Intel)
-- Homebrew: data-wise/tap/scribe v1.10.0
+- DMG: Scribe_1.11.0_aarch64.dmg (Apple Silicon)
+- DMG: Scribe_1.11.0_x64.dmg (Intel)
+- Homebrew: data-wise/tap/scribe v1.11.0
 
 ---
 
 ### Previous Releases
+
+**Sprint 28: Live Editor Enhancements (v1.10.0)**
+
+- ✅ CodeMirror 6 Live Preview - Obsidian-style syntax hiding
+- ✅ KaTeX Math Rendering - Inline `$...$` and display `$$...$$`
+- ✅ Three Editor Modes - Source (⌘1), Live (⌘2), Reading (⌘3), cycle with ⌘E
 
 **Sprint 27: Backend Foundation + Settings (v1.7.0 → v1.9.0)**
 
