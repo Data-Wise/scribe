@@ -8,7 +8,8 @@
       "Bash(# Check for right sidebar keyboard shortcut echo \"\"=== 4. Right Sidebar Toggle \\(⌘]\\) ===\"\" grep -r \"\"rightSidebar.*Collapsed\\\\|⌘]\\\\|Cmd.*\\\\]\"\" src/renderer/src/App.tsx)",
       "Bash(# Check for tab persistence echo \"\"=== 5. Tab Persistence ===\"\" grep -r \"\"openTabs.*localStorage\\\\|persistTabs\\\\|saveTabs\"\" src/renderer/src/)",
       "Bash(# Check for reopen closed tab echo \"\"=== 6. Reopen Closed Tab \\(⌘⇧T\\) ===\"\" grep -r \"\"reopenLastClosedTab\\\\|closedTabs\\\\|⌘⇧T\"\" src/renderer/src/)",
-      "Bash(cargo check:*)"
+      "Bash(cargo check:*)",
+      "Bash(screencapture:*)"
     ]
   }
 }
