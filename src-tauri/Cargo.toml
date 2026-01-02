@@ -1,6 +1,6 @@
 [package]
 name = "scribe"
-version = "1.9.0"
+version = "1.11.0"
 description = "Scribe - ADHD-friendly distraction-free writer"
 authors = ["Stat-Wise"]
 license = "MIT"

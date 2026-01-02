@@ -1,17 +1,17 @@
 ---
-status: complete
+status: active
 priority: P1
 progress: 100
-version: 1.10.0
-sprint: 28
-completed: 2026-01-01
+version: 1.11.0
+sprint: 29
+started: 2026-01-01
 updated: 2026-01-01
 editor: hybrid-markdown++
-next_sprint: 29
-next_focus: Sprint 29 Planning - v1.10.0 Released & Packaged ✅
-tests: 942
+next_sprint: 30
+next_focus: Browser Mode Polish
+tests: 978
 unit_tests: 930
-e2e_tests: 12
+e2e_tests: 48
 tags:
   - adhd-friendly
   - distraction-free
@@ -99,6 +99,34 @@ tags:
 - [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
 - [ ] Phase 3: Status Bar (VS Code-style bottom bar)
 - [x] Playwright E2E tests ✅ (282 tests)
+
+---
+
+### Sprint 29: Callouts & Editor Polish - COMPLETE ✅
+
+**v1.11.0 Released** ✅ (2026-01-01)
+
+**Phase 1: Callout Support** ✅
+- [x] Obsidian-style callouts in all editor modes
+- [x] 11 callout types with icons and colors (note, info, tip, warning, danger, etc.)
+- [x] Live mode: Type-specific colored backgrounds/borders
+- [x] Reading mode: Full callout boxes with icons and titles
+- [x] Demo note "Callout Types" added to seed data
+
+**Phase 2: Editor Polish** ✅
+- [x] Strikethrough rendering in Live mode (`~~text~~`)
+- [x] 36 new E2E tests for editor modes (EDM-01 to EDM-36)
+- [x] Clean up working directory (archived explorations)
+
+**Testing:**
+- [x] 930 unit tests passing
+- [x] 48 E2E tests passing
+- [x] TypeScript: 0 errors
+
+**Future (Sprint 30):** Browser Mode Polish
+- [ ] Wiki link backlink tracking in browser
+- [ ] PWA improvements
+- [ ] Documentation updates
 
 ---
 

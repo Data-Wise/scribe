@@ -101,6 +101,14 @@ Press **⌘⇧F** to enter distraction-free focus mode.
 
 Organize your notes into projects. Each project can have its own daily notes template.
 
+## Callouts
+
+Use callouts to highlight important information with colors and icons.
+
+See the [[Callout Types]] for all supported callout types.
+
+---
+
 See the [[Daily Note Example]] for a sample daily note.`
   },
 
@@ -126,6 +134,90 @@ This is what a daily note might look like:
 ---
 
 💡 **Tip:** Press ⌘D any time to open today's daily note!`
+  },
+
+  callouts: {
+    title: 'Callout Types',
+    folder: 'inbox',
+    tags: ['tutorial', 'tips'],
+    content: `# Callout Types
+
+Scribe supports Obsidian-style callouts for highlighting important information. Use the syntax \`> [!type]\` to create callouts.
+
+## Informational Callouts
+
+> [!note]
+> This is a **note** callout. Use it for general information or side notes.
+
+> [!info]
+> This is an **info** callout. Perfect for additional context or explanations.
+
+> [!abstract] Summary
+> This is an **abstract** callout (also: summary, tldr). Great for executive summaries.
+
+## Positive Callouts
+
+> [!tip] Pro Tip
+> This is a **tip** callout (also: hint, important). Share helpful suggestions!
+
+> [!success] Well Done!
+> This is a **success** callout (also: check, done). Celebrate achievements!
+
+## Warning Callouts
+
+> [!warning]
+> This is a **warning** callout (also: caution, attention). Highlight potential issues.
+
+> [!danger] Critical
+> This is a **danger** callout (also: error). For critical warnings or errors.
+
+> [!bug]
+> This is a **bug** callout. Document known issues or bugs.
+
+## Other Callouts
+
+> [!question] FAQ
+> This is a **question** callout (also: help, faq). Perfect for Q&A sections.
+
+> [!example]
+> This is an **example** callout. Show code examples or demonstrations.
+
+> [!quote] Albert Einstein
+> This is a **quote** callout (also: cite). Attribute quotes elegantly.
+
+---
+
+## Syntax Reference
+
+\`\`\`markdown
+> [!note]
+> Basic callout with default title
+
+> [!tip] Custom Title
+> Callout with a custom title
+
+> [!warning]
+> Multi-line callouts work too.
+> Just keep using > on each line.
+\`\`\`
+
+## Supported Types
+
+| Type | Aliases | Color |
+|------|---------|-------|
+| note | - | Blue |
+| info | - | Blue |
+| tip | hint, important | Green |
+| success | check, done | Green |
+| warning | caution, attention | Orange |
+| danger | error | Red |
+| bug | - | Red |
+| question | help, faq | Purple |
+| example | - | Gray |
+| quote | cite | Gray |
+| abstract | summary, tldr | Cyan |
+
+See also: [[Features Overview]]`
   }
 } as const
 
@@ -136,7 +228,9 @@ This is what a daily note might look like:
 export const DEMO_WIKI_LINKS = [
   { from: 'Welcome to Scribe', to: 'Features Overview' },
   { from: 'Features Overview', to: 'Welcome to Scribe' },
-  { from: 'Features Overview', to: 'Daily Note Example' }
+  { from: 'Features Overview', to: 'Daily Note Example' },
+  { from: 'Features Overview', to: 'Callout Types' },
+  { from: 'Callout Types', to: 'Features Overview' }
 ] as const
 
 // ============================================================================

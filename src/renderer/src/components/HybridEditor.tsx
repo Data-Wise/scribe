@@ -757,6 +757,10 @@ function MarkdownPreview({
         ),
         em: ({ children }) => (
           <em className="italic">{children}</em>
+        ),
+        // Strikethrough (~~text~~)
+        del: ({ children }) => (
+          <del className="line-through" style={{ color: 'var(--nexus-text-muted)' }}>{children}</del>
         )
       }}
     >
@@ -766,7 +770,46 @@ function MarkdownPreview({
 }
 
 /**
- * Process [[wiki-links]] and #tags into markdown-compatible format
+ * Callout type definitions with colors and icons
+ */
+const CALLOUT_TYPES: Record<string, { color: string; bgColor: string; icon: string; aliases?: string[] }> = {
+  note: { color: '#3B82F6', bgColor: 'rgba(59, 130, 246, 0.1)', icon: '📝' },
+  info: { color: '#3B82F6', bgColor: 'rgba(59, 130, 246, 0.1)', icon: 'ℹ️' },
+  tip: { color: '#10B981', bgColor: 'rgba(16, 185, 129, 0.1)', icon: '💡', aliases: ['hint', 'important'] },
+  success: { color: '#10B981', bgColor: 'rgba(16, 185, 129, 0.1)', icon: '✅', aliases: ['check', 'done'] },
+  warning: { color: '#F59E0B', bgColor: 'rgba(245, 158, 11, 0.1)', icon: '⚠️', aliases: ['caution', 'attention'] },
+  danger: { color: '#EF4444', bgColor: 'rgba(239, 68, 68, 0.1)', icon: '🔴', aliases: ['error'] },
+  bug: { color: '#EF4444', bgColor: 'rgba(239, 68, 68, 0.1)', icon: '🐛' },
+  question: { color: '#8B5CF6', bgColor: 'rgba(139, 92, 246, 0.1)', icon: '❓', aliases: ['help', 'faq'] },
+  example: { color: '#6B7280', bgColor: 'rgba(107, 114, 128, 0.1)', icon: '📋' },
+  quote: { color: '#6B7280', bgColor: 'rgba(107, 114, 128, 0.1)', icon: '💬', aliases: ['cite'] },
+  abstract: { color: '#06B6D4', bgColor: 'rgba(6, 182, 212, 0.1)', icon: '📄', aliases: ['summary', 'tldr'] },
+}
+
+/**
+ * Get callout config by type (including aliases)
+ */
+function getCalloutConfig(type: string): { color: string; bgColor: string; icon: string } {
+  const normalizedType = type.toLowerCase()
+
+  // Direct match
+  if (CALLOUT_TYPES[normalizedType]) {
+    return CALLOUT_TYPES[normalizedType]
+  }
+
+  // Check aliases
+  for (const [, config] of Object.entries(CALLOUT_TYPES)) {
+    if (config.aliases?.includes(normalizedType)) {
+      return config
+    }
+  }
+
+  // Default to note
+  return CALLOUT_TYPES.note
+}
+
+/**
+ * Process [[wiki-links]], #tags, and callouts into markdown-compatible format
  * Using https scheme with special host to avoid URL sanitization
  */
 function processWikiLinksAndTags(content: string): string {
@@ -781,6 +824,42 @@ function processWikiLinksAndTags(content: string): string {
   processed = processed.replace(
     /(?<![#\w])#([a-zA-Z][a-zA-Z0-9_-]*)/g,
     '`#$1`'
+  )
+
+  // Process callouts: > [!type] optional title
+  // Convert to HTML div with data attributes for styling
+  // This regex matches complete callout blocks (header + any continuation lines)
+  // IMPORTANT: Use [ \t]+ (space/tab only) not \s+ to avoid matching newlines as title
+  const calloutRegex = /^>\s*\[!(\w+)\](?:[ \t]+([^\n]*))?\n((?:>.*\n?)*)/gm
+  processed = processed.replace(
+    calloutRegex,
+    (_match, type, title, body) => {
+      const config = getCalloutConfig(type)
+      const calloutTitle = (title && title.trim()) || type.charAt(0).toUpperCase() + type.slice(1)
+      // Clean up the body - remove leading > and space from each line
+      const cleanBody = (body || '')
+        .split('\n')
+        .map((line: string) => line.replace(/^>\s*/, '')) // Remove > and ALL following spaces
+        .filter((line: string) => line.trim() !== '') // Remove empty lines
+        .join('\n')
+        .trim()
+
+      // Build body paragraphs - convert newlines to <br> to preserve structure
+      const bodyHtml = cleanBody
+        .split('\n\n')
+        .map((para: string) => `<p style="margin: 0.5em 0;">${para.replace(/\n/g, '<br>')}</p>`)
+        .join('')
+
+      return `<div class="callout callout-${type.toLowerCase()}" data-callout-type="${type.toLowerCase()}" style="border-left: 4px solid ${config.color}; background: ${config.bgColor}; padding: 12px 16px; border-radius: 4px; margin: 16px 0;">
+<div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: ${config.color}; margin-bottom: 8px;">
+<span>${config.icon}</span>
+<span>${calloutTitle}</span>
+</div>
+<div style="color: var(--nexus-text-primary);">${bodyHtml}</div>
+</div>
+
+`
+    }
   )
 
   return processed
