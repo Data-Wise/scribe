@@ -474,14 +474,21 @@ export function HybridEditor({
 
         {/* Live Preview mode: Obsidian-style editing with CodeMirror */}
         {mode === 'live-preview' && (
-          <CodeMirrorEditor
-            content={localContent}
-            onChange={(newContent) => {
-              setLocalContent(newContent)
-              onChange(newContent)
+          <div
+            style={{
+              backgroundColor: 'var(--nexus-bg-primary)',
+              color: 'var(--nexus-text-primary)',
             }}
-            placeholder="Start writing..."
-          />
+          >
+            <CodeMirrorEditor
+              content={localContent}
+              onChange={(newContent) => {
+                setLocalContent(newContent)
+                onChange(newContent)
+              }}
+              placeholder="Start writing..."
+            />
+          </div>
         )}
 
         {/* Reading mode: fully rendered, read-only */}
