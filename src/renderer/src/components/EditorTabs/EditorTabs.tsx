@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Home, X, Pin, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useAppViewStore, EditorTab, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
+import { useSettingsStore } from '../../store/useSettingsStore'
 import { loadPreferences, TabBarStyle, BorderStyle, ActiveTabStyle } from '../../lib/preferences'
 import { TabContextMenu } from './TabContextMenu'
 import './EditorTabs.css'
@@ -37,41 +38,20 @@ export function EditorTabs({
 }: EditorTabsProps) {
   const { openTabs, activeTabId, setActiveTab, closeTab, reorderTabs, updateTabTitle } = useAppViewStore()
 
-  // UI style state - reload on storage change for reactivity
-  const [uiStyles, setUiStyles] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      tabBarStyle: prefs.tabBarStyle,
-      borderStyle: prefs.borderStyle,
-      activeTabStyle: prefs.activeTabStyle
-    }
-  })
+  // Read appearance settings from Settings store
+  const settings = useSettingsStore((state) => state.settings)
 
-  // Listen for localStorage changes (from settings modal)
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const prefs = loadPreferences()
-      setUiStyles({
-        tabBarStyle: prefs.tabBarStyle,
-        borderStyle: prefs.borderStyle,
-        activeTabStyle: prefs.activeTabStyle
-      })
-    }
+  // Get appearance settings with fallbacks to defaults
+  const tabBarStyleFromSettings = (settings['appearance.tabBarStyle'] || 'subtle') as TabBarStyle
+  const activeTabStyleFromSettings = (settings['appearance.activeTabStyle'] || 'accent-bar') as ActiveTabStyle
 
-    // Listen for storage events (cross-tab) and custom event (same-tab)
-    window.addEventListener('storage', handleStorageChange)
-    window.addEventListener('preferences-changed', handleStorageChange)
+  // For border style, still use preferences as it's not in Settings store yet
+  const borderStyleFromPrefs = loadPreferences().borderStyle
 
-    return () => {
-      window.removeEventListener('storage', handleStorageChange)
-      window.removeEventListener('preferences-changed', handleStorageChange)
-    }
-  }, [])
-
-  // Use props if provided (for preview), otherwise use state
-  const tabBarStyle = tabBarStyleProp ?? uiStyles.tabBarStyle
-  const borderStyle = borderStyleProp ?? uiStyles.borderStyle
-  const activeTabStyle = activeTabStyleProp ?? uiStyles.activeTabStyle
+  // Use props if provided (for preview), otherwise use settings store
+  const tabBarStyle = tabBarStyleProp ?? tabBarStyleFromSettings
+  const borderStyle = borderStyleProp ?? borderStyleFromPrefs
+  const activeTabStyle = activeTabStyleProp ?? activeTabStyleFromSettings
 
   const tabsRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)

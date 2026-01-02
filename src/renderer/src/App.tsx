@@ -234,13 +234,17 @@ function App() {
     return saved === 'true'
   })
 
-  // Right sidebar tab settings (v1.8 - from preferences)
+  // Right sidebar tab settings (v1.8 - from preferences and Settings store)
+  const settings = useSettingsStore((state) => state.settings)
+  const sidebarTabSize = (settings['appearance.sidebarTabSize'] || 'compact') as 'compact' | 'full'
+  // const showSidebarIcons = settings['appearance.showSidebarIcons'] ?? true // TODO: Implement icon visibility
+
   const [sidebarTabSettings, setSidebarTabSettings] = useState(() => {
     const prefs = loadPreferences()
     return {
-      tabSize: prefs.sidebarTabSize,
-      tabOrder: prefs.sidebarTabOrder,
-      hiddenTabs: prefs.sidebarHiddenTabs
+      tabSize: sidebarTabSize, // Now from Settings store
+      tabOrder: prefs.sidebarTabOrder, // Still from preferences (not in Settings store yet)
+      hiddenTabs: prefs.sidebarHiddenTabs // Still from preferences (not in Settings store yet)
     }
   })
 
@@ -1569,7 +1573,7 @@ function App() {
                 <>
                   <div
                     className="sidebar-tabs"
-                    data-sidebar-tab-size={sidebarTabSettings.tabSize}
+                    data-sidebar-tab-size={sidebarTabSize}
                   >
                     {/* Scrollable tabs area */}
                     <div className="sidebar-tabs-scroll">
