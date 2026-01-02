@@ -3,7 +3,7 @@ import Fuse from 'fuse.js'
 
 // Types
 export type SettingType = 'toggle' | 'select' | 'text' | 'number' | 'color' | 'keymap' | 'gallery'
-export type SettingsCategory = 'editor' | 'themes' | 'ai' | 'projects' | 'advanced'
+export type SettingsCategory = 'editor' | 'themes' | 'appearance' | 'ai' | 'projects' | 'advanced'
 
 export interface SelectOption {
   label: string
