@@ -34,6 +34,13 @@ export const browserApi = {
     }
 
     await db.notes.add(noteToRecord(newNote) as any)
+
+    // Index wiki links and tags
+    if (newNote.content) {
+      await browserApi.updateNoteLinks(id, newNote.content)
+      await browserApi.updateNoteTags(id, newNote.content)
+    }
+
     return newNote
   },
 
@@ -52,6 +59,13 @@ export const browserApi = {
     }
 
     await db.notes.put(updatedRecord)
+
+    // Reindex wiki links and tags if content changed
+    if (updates.content !== undefined) {
+      await browserApi.updateNoteLinks(id, updates.content)
+      await browserApi.updateNoteTags(id, updates.content)
+    }
+
     return parseNoteRecord(updatedRecord)
   },
 
@@ -623,6 +637,30 @@ export const browserApi = {
 }
 
 // ============================================================================
+// Utility Functions
+// ============================================================================
+
+/**
+ * Reindex all notes for wiki links and tags
+ * Call this on app initialization to ensure existing notes are indexed
+ */
+export const reindexAllNotes = async (): Promise<number> => {
+  const notes = await db.notes.filter(n => !n.deleted_at).toArray()
+  let count = 0
+
+  for (const record of notes) {
+    if (record.content) {
+      await browserApi.updateNoteLinks(record.id, record.content)
+      await browserApi.updateNoteTags(record.id, record.content)
+      count++
+    }
+  }
+
+  console.log(`[Scribe] Reindexed ${count} notes for wiki links and tags`)
+  return count
+}
+
+// ============================================================================
 // Browser API Initialization
 // ============================================================================
 
@@ -632,6 +670,9 @@ export const browserApi = {
 export const initializeBrowserApi = async (): Promise<void> => {
   console.log('[Scribe] Using IndexedDB for persistence')
   await seedDemoData()
+
+  // Reindex existing notes for wiki links and tags
+  await reindexAllNotes()
 }
 
 // Auto-initialize on import (browser mode only)

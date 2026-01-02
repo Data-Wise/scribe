@@ -1,6 +1,6 @@
 {
   "name": "scribe",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "Scribe - ADHD-friendly distraction-free writer",
   "main": "dist-electron/main/index.js",
   "author": "Stat-Wise",

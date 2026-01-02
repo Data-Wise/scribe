@@ -9,3 +9,9 @@ out
 .env.*.local
 site/
 test-results/
+coverage/
+playwright-report/
+*-TESTS-*.md
+TESTING-GUIDE.md
+TEST-SUMMARY-*.md
+DELIVERY-SUMMARY.md

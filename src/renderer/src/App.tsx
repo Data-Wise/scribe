@@ -394,37 +394,6 @@ function App() {
     localStorage.setItem('scribe-theme-shortcuts', JSON.stringify(shortcuts))
   }
 
-  // Diagnostic: Test Tauri commands on startup
-  useEffect(() => {
-    const runDiagnostics = async () => {
-      const { isTauri } = await import('./lib/platform')
-      console.log('[Scribe Diagnostics] Platform:', isTauri() ? 'TAURI' : 'BROWSER')
-      console.log('[Scribe Diagnostics] window.__TAURI__:', !!(window as unknown as { __TAURI__: unknown }).__TAURI__)
-
-      try {
-        console.log('[Scribe Diagnostics] Testing listNotes...')
-        const notes = await api.listNotes()
-        console.log('[Scribe Diagnostics] listNotes returned:', notes.length, 'notes')
-        if (notes.length > 0) {
-          console.log('[Scribe Diagnostics] First note:', notes[0].title)
-        }
-
-        console.log('[Scribe Diagnostics] Testing listProjects...')
-        const projects = await api.listProjects()
-        console.log('[Scribe Diagnostics] listProjects returned:', projects.length, 'projects')
-        if (projects.length > 0) {
-          console.log('[Scribe Diagnostics] First project:', projects[0].name)
-        }
-
-        console.log('[Scribe Diagnostics] All commands working!')
-      } catch (error) {
-        console.error('[Scribe Diagnostics] FAILED:', error)
-        console.error('[Scribe Diagnostics] Error details:', (error as Error).message, (error as Error).stack)
-      }
-    }
-    runDiagnostics()
-  }, [])
-
   useEffect(() => {
     loadNotes(currentFolder)
   }, [loadNotes, currentFolder])
@@ -558,7 +527,6 @@ function App() {
 
   // Wiki link handlers - preserves preview mode when navigating
   const handleLinkClick = async (title: string) => {
-    console.log('[App] handleLinkClick called with title:', title)
     try {
       let targetNote = notes.find((n) => n.title === title)
 
@@ -568,12 +536,10 @@ function App() {
       }
 
       if (targetNote) {
-        console.log('[App] Found target note:', targetNote.id)
         // Keep preview mode when navigating via wiki-link click
         setEditorMode('reading')
         selectNote(targetNote.id)
       } else {
-        console.log('[App] Creating new note for:', title)
         const newNote = await api.createNote({
           title,
           content: '',  // Empty markdown
@@ -595,13 +561,10 @@ function App() {
   }
 
   const handleDailyNote = async () => {
-    console.log('[Scribe] handleDailyNote called')
     const today = new Date()
     const dateStr = today.toISOString().split('T')[0]
-    console.log('[Scribe] Creating/opening daily note for:', dateStr)
     try {
       const dailyNote = await api.getOrCreateDailyNote(dateStr)
-      console.log('[Scribe] Daily note received:', dailyNote)
 
       // If note is empty (newly created), apply template
       if (isContentEmpty(dailyNote.content)) {
@@ -613,7 +576,6 @@ function App() {
       // Open the note in a tab and select it
       openNoteTab(dailyNote.id, dailyNote.title)
       selectNote(dailyNote.id)
-      console.log('[Scribe] Note selected:', dailyNote.id)
       loadNotes(currentFolder)
     } catch (error) {
       console.error('[Scribe] Failed to open daily note:', error)
@@ -673,11 +635,6 @@ function App() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Debug: Log all Alt key combos
-      if ((e.metaKey || e.ctrlKey) && e.altKey) {
-        console.log('[DEBUG] Alt combo detected:', { metaKey: e.metaKey, ctrlKey: e.ctrlKey, altKey: e.altKey, shiftKey: e.shiftKey, key: e.key, code: e.code })
-      }
-
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'F') {
         e.preventDefault()
         handleFocusModeChange(!focusMode)
@@ -808,7 +765,6 @@ function App() {
       // Terminal tab shortcut (⌘⌥T) - toggle or switch to Terminal
       // Use e.code instead of e.key because Option modifier changes key value on macOS (Option+T = '†')
       if ((e.metaKey || e.ctrlKey) && e.altKey && !e.shiftKey && e.code === 'KeyT') {
-        console.log('[DEBUG] Terminal shortcut triggered:', { metaKey: e.metaKey, ctrlKey: e.ctrlKey, altKey: e.altKey, shiftKey: e.shiftKey, key: e.key, code: e.code })
         e.preventDefault()
         // If already on Terminal and sidebar is open, close it
         if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
