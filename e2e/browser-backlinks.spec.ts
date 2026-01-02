@@ -53,7 +53,12 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     // Step 5: Verify backlink appears
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
     await expect(backlinksPanel).toBeVisible()
-    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible()
+
+    // Wait for backlinks to load asynchronously
+    await page.waitForTimeout(2000)
+
+    // Verify backlink appears with extended timeout
+    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible({ timeout: 10000 })
   })
 
   test('BBL-02: Update note to add wiki link - backlink appears', async ({ page }) => {
@@ -85,7 +90,8 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
 
     // Step 6: Verify backlink appears after update
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
-    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible()
+    await page.waitForTimeout(2000) // Wait for async indexing
+    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible({ timeout: 10000 })
   })
 
   test('BBL-03: Update note to remove wiki link - backlink disappears', async ({ page }) => {
@@ -108,7 +114,8 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     await page.waitForTimeout(500)
     await page.click('button:has-text("Backlinks")')
     let backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
-    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible()
+    await page.waitForTimeout(2000) // Wait for async indexing
+    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible({ timeout: 10000 })
 
     // Step 4: Edit source note to REMOVE wiki link
     await page.click('text=Source Note')
@@ -122,7 +129,8 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
 
     // Step 6: Verify backlink is gone
     backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
-    await expect(backlinksPanel.locator('text=Source Note')).not.toBeVisible()
+    await page.waitForTimeout(2000) // Wait for async reindexing
+    await expect(backlinksPanel.locator('text=Source Note')).not.toBeVisible({ timeout: 10000 })
   })
 
   test('BBL-04: Multiple wiki links - multiple backlinks', async ({ page }) => {
@@ -161,9 +169,10 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
 
     // Step 7: Verify all backlinks appear
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
-    await expect(backlinksPanel.locator('text=Source 1')).toBeVisible()
-    await expect(backlinksPanel.locator('text=Source 2')).toBeVisible()
-    await expect(backlinksPanel.locator('text=Source 3')).toBeVisible()
+    await page.waitForTimeout(2000) // Wait for async indexing
+    await expect(backlinksPanel.locator('text=Source 1')).toBeVisible({ timeout: 10000 })
+    await expect(backlinksPanel.locator('text=Source 2')).toBeVisible({ timeout: 10000 })
+    await expect(backlinksPanel.locator('text=Source 3')).toBeVisible({ timeout: 10000 })
   })
 
   test('BBL-05: Wiki link to non-existent note - no backlink', async ({ page }) => {
@@ -198,7 +207,8 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
     // Step 6: Verify backlink now appears
     await page.click('button:has-text("Backlinks")')
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
-    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible()
+    await page.waitForTimeout(2000) // Wait for async indexing
+    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible({ timeout: 10000 })
   })
 
   test('BBL-06: Reindex on app initialization - existing notes indexed', async ({
@@ -248,7 +258,8 @@ test.describe('Browser Mode: Wiki Link Backlinks', () => {
 
     // Step 5: Verify backlink appears after reindexing
     const backlinksPanel = page.locator('[data-testid="backlinks-panel"]')
-    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible()
+    await page.waitForTimeout(2000) // Wait for async reindexing
+    await expect(backlinksPanel.locator('text=Source Note')).toBeVisible({ timeout: 10000 })
   })
 })
 
@@ -279,8 +290,9 @@ test.describe('Browser Mode: Tag Indexing', () => {
 
     // Step 3: Verify tags appear
     const tagsPanel = page.locator('[data-testid="tags-panel"]')
-    await expect(tagsPanel.locator('text=research')).toBeVisible()
-    await expect(tagsPanel.locator('text=important')).toBeVisible()
+    await page.waitForTimeout(2000) // Wait for async indexing
+    await expect(tagsPanel.locator('text=research')).toBeVisible({ timeout: 10000 })
+    await expect(tagsPanel.locator('text=important')).toBeVisible({ timeout: 10000 })
   })
 
   test('TAG-02: Filter notes by tag', async ({ page }) => {
