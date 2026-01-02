@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useEffect } from 'react'
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
+import { Strikethrough } from '@lezer/markdown'
 import { EditorView, Decoration, ViewPlugin, ViewUpdate, WidgetType } from '@codemirror/view'
 import { syntaxTree } from '@codemirror/language'
 import type { DecorationSet } from '@codemirror/view'
@@ -97,6 +98,7 @@ class RichMarkdownPlugin {
       'InlineCode',
       'Link',
       'Image',
+      'Strikethrough',
     ]
 
     for (const { from, to } of view.visibleRanges) {
@@ -161,6 +163,13 @@ class RichMarkdownPlugin {
 
           // Hide link marks and URLs
           if (node.name === 'LinkMark' || node.name === 'URL') {
+            widgets.push(
+              Decoration.replace({ widget: hiddenWidget }).range(node.from, node.to)
+            )
+          }
+
+          // Hide strikethrough marks (~~)
+          if (node.name === 'StrikethroughMark') {
             widgets.push(
               Decoration.replace({ widget: hiddenWidget }).range(node.from, node.to)
             )
@@ -291,6 +300,11 @@ const editorTheme = EditorView.theme({
     fontWeight: '600',
     color: 'var(--nexus-text-primary, #1a1a1a)',
   },
+  // Strikethrough styles
+  '.tok-strikethrough': {
+    textDecoration: 'line-through',
+    color: 'var(--nexus-text-muted, #666)',
+  },
   // Code styles - match Reading mode
   '.tok-monospace': {
     fontFamily: '"JetBrains Mono", "Fira Code", ui-monospace, monospace',
@@ -377,7 +391,10 @@ export function CodeMirrorEditor({
 
   // Memoize extensions to prevent recreation on every render
   const extensions = useMemo(() => [
-    markdown({ codeLanguages: languages }),
+    markdown({
+      codeLanguages: languages,
+      extensions: [Strikethrough]  // Enable GFM strikethrough (~~text~~)
+    }),
     richMarkdownPlugin,
     editorTheme,
     EditorView.lineWrapping,

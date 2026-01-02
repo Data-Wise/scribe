@@ -37,12 +37,12 @@
 - [ ] Fix any v1.10.0 user-reported bugs
 
 ### Phase 2: Live Edit Mode Polish
+- [x] **Strikethrough** - Render `~~text~~` with line-through ✅
 - [ ] **Blockquotes** - Render `>` as styled quote blocks
 - [ ] **Horizontal rules** - Render `---` / `***` as divider lines
 - [ ] **Checkboxes** - Render `- [ ]` / `- [x]` as interactive checkboxes
 - [ ] **Tables** - Render markdown tables with borders
 - [ ] **Footnotes** - Render `[^1]` with hover preview
-- [ ] **Strikethrough** - Render `~~text~~` with line-through
 - [ ] **Syntax highlighting** - Code blocks with language-specific colors
 
 ### Phase 3: Browser Mode Improvements

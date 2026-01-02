@@ -446,8 +446,54 @@ test.describe('Editor Modes', () => {
     })
   })
 
+  test.describe('Strikethrough Rendering', () => {
+    test('EDM-37: Reading mode renders strikethrough (~~text~~)', async ({ basePage }) => {
+      const sourceBtn = basePage.page.locator('button:has-text("Source")')
+      const readingBtn = basePage.page.locator('button:has-text("Reading")')
+
+      await sourceBtn.click()
+      await basePage.page.waitForTimeout(300)
+
+      // Use fill() for reliable content insertion
+      const textarea = basePage.page.locator('textarea')
+      await textarea.click()
+      const currentContent = await textarea.inputValue()
+      await textarea.fill(currentContent + '\n\nThis is ~~strikethroughmarker~~ text')
+      await basePage.page.waitForTimeout(300)
+
+      await readingBtn.click()
+      await basePage.page.waitForTimeout(300)
+
+      // Verify strikethrough is rendered as <del> element
+      const strikethrough = basePage.page.locator('.prose del:has-text("strikethroughmarker")')
+      await expect(strikethrough).toBeVisible()
+    })
+
+    test('EDM-38: Live Preview mode renders strikethrough', async ({ basePage }) => {
+      const sourceBtn = basePage.page.locator('button:has-text("Source")')
+      const liveBtn = basePage.page.locator('button:has-text("Live")')
+
+      await sourceBtn.click()
+      await basePage.page.waitForTimeout(300)
+
+      // Use fill() for reliable content insertion
+      const textarea = basePage.page.locator('textarea')
+      await textarea.click()
+      const currentContent = await textarea.inputValue()
+      await textarea.fill(currentContent + '\n\nLive ~~strikethroughlive~~ preview')
+      await basePage.page.waitForTimeout(300)
+
+      await liveBtn.click()
+      await basePage.page.waitForTimeout(300)
+
+      // In live preview, strikethrough text should be visible (with ~~ hidden when not editing)
+      const cmContent = basePage.page.locator('.cm-editor .cm-content')
+      await expect(cmContent).toContainText('strikethroughlive')
+    })
+  })
+
   test.describe('KaTeX Math Rendering', () => {
-    test('EDM-28: Reading mode renders inline math ($...$)', async ({ basePage }) => {
+    test('EDM-39: Reading mode renders inline math ($...$)', async ({ basePage }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -470,7 +516,7 @@ test.describe('Editor Modes', () => {
       await expect(prose).toContainText('InlineMathMarker')
     })
 
-    test('EDM-29: Reading mode renders display math ($$...$$)', async ({ basePage }) => {
+    test('EDM-40: Reading mode renders display math ($$...$$)', async ({ basePage }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -494,7 +540,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Rapid Mode Switching', () => {
-    test('EDM-30: Handle rapid mode switching without data loss', async ({ basePage }) => {
+    test('EDM-41: Handle rapid mode switching without data loss', async ({ basePage }) => {
       const testContent = `RAPID_SWITCH_${Date.now()}`
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
@@ -527,7 +573,7 @@ test.describe('Editor Modes', () => {
       expect(content).toContain(testContent)
     })
 
-    test('EDM-31: Mode buttons remain responsive during rapid clicking', async ({ basePage }) => {
+    test('EDM-42: Mode buttons remain responsive during rapid clicking', async ({ basePage }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
@@ -547,7 +593,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Focus Behavior', () => {
-    test('EDM-32: Source mode allows immediate typing after switch', async ({ basePage }) => {
+    test('EDM-43: Source mode allows immediate typing after switch', async ({ basePage }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -571,7 +617,7 @@ test.describe('Editor Modes', () => {
       expect(content).toContain(testMarker)
     })
 
-    test('EDM-33: Live Preview mode shows CodeMirror on switch', async ({ basePage }) => {
+    test('EDM-44: Live Preview mode shows CodeMirror on switch', async ({ basePage }) => {
       const liveBtn = basePage.page.locator('button:has-text("Live")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -590,7 +636,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Status Bar Mode Display', () => {
-    test('EDM-34: Status bar shows "Source" in Source mode', async ({ basePage }) => {
+    test('EDM-45: Status bar shows "Source" in Source mode', async ({ basePage }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
@@ -600,7 +646,7 @@ test.describe('Editor Modes', () => {
       await expect(statusBar).toContainText('Source')
     })
 
-    test('EDM-35: Status bar shows "Live Preview" in Live mode', async ({ basePage }) => {
+    test('EDM-46: Status bar shows "Live Preview" in Live mode', async ({ basePage }) => {
       const liveBtn = basePage.page.locator('button:has-text("Live")')
       await liveBtn.click()
       await basePage.page.waitForTimeout(300)
@@ -609,7 +655,7 @@ test.describe('Editor Modes', () => {
       await expect(statusBar).toContainText('Live Preview')
     })
 
-    test('EDM-36: Status bar shows "Reading" in Reading mode', async ({ basePage }) => {
+    test('EDM-47: Status bar shows "Reading" in Reading mode', async ({ basePage }) => {
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
       await readingBtn.click()
       await basePage.page.waitForTimeout(300)

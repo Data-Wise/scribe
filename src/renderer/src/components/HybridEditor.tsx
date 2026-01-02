@@ -757,6 +757,10 @@ function MarkdownPreview({
         ),
         em: ({ children }) => (
           <em className="italic">{children}</em>
+        ),
+        // Strikethrough (~~text~~)
+        del: ({ children }) => (
+          <del className="line-through" style={{ color: 'var(--nexus-text-muted)' }}>{children}</del>
         )
       }}
     >
