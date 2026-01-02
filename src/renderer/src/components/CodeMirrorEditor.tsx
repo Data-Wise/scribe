@@ -314,24 +314,11 @@ function getThemeColors() {
   const root = document.documentElement
   const styles = getComputedStyle(root)
 
-  const bgPrimary = styles.getPropertyValue('--nexus-bg-primary').trim()
-  const textPrimary = styles.getPropertyValue('--nexus-text-primary').trim()
-
-  console.log('[CodeMirror Theme] Reading CSS variables:', {
-    bgPrimary: bgPrimary || 'EMPTY',
-    textPrimary: textPrimary || 'EMPTY',
-    rootClassName: root.className,
-    allStyles: {
-      bgPrimary: styles.getPropertyValue('--nexus-bg-primary'),
-      textPrimary: styles.getPropertyValue('--nexus-text-primary')
-    }
-  })
-
   return {
-    bgPrimary: bgPrimary || '#0d1210',
+    bgPrimary: styles.getPropertyValue('--nexus-bg-primary').trim() || '#0d1210',
     bgSecondary: styles.getPropertyValue('--nexus-bg-secondary').trim() || '#141e1a',
     bgTertiary: styles.getPropertyValue('--nexus-bg-tertiary').trim() || '#1c2922',
-    textPrimary: textPrimary || '#d4e4dc',
+    textPrimary: styles.getPropertyValue('--nexus-text-primary').trim() || '#d4e4dc',
     textSecondary: styles.getPropertyValue('--nexus-text-secondary').trim() || '#94a3b8',
     textMuted: styles.getPropertyValue('--nexus-text-muted').trim() || '#8fa89b',
     accent: styles.getPropertyValue('--nexus-accent').trim() || '#4ade80',
@@ -547,9 +534,10 @@ export function CodeMirrorEditor({
   const editorRef = useRef<ReactCodeMirrorRef>(null)
   const isInternalChange = useRef(false)
 
-  // Create extensions fresh on each render to pick up theme changes
-  // Note: We DON'T use useMemo here because we WANT to recreate the theme
-  // when CSS variables change (which happens when user switches themes)
+  // Create theme fresh - @uiw/react-codemirror uses the theme prop for styling
+  const editorTheme = createEditorTheme()
+
+  // Extensions for markdown features (not theme)
   const extensions = [
     markdown({
       codeLanguages: languages,
@@ -557,7 +545,6 @@ export function CodeMirrorEditor({
     }),
     syntaxHighlighting(markdownHighlighting),  // Apply formatting styles (bold, italic, strikethrough)
     richMarkdownPlugin,
-    createEditorTheme(),  // Call function to read theme colors at runtime
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
   ]
@@ -593,6 +580,7 @@ export function CodeMirrorEditor({
         ref={editorRef}
         value={content}
         onChange={handleChange}
+        theme={editorTheme}
         extensions={extensions}
         basicSetup={{
           lineNumbers: false,
