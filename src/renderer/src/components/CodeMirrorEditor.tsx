@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useEffect } from 'react'
+import { useCallback, useRef, useEffect } from 'react'
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
@@ -307,17 +307,42 @@ const richMarkdownPlugin = ViewPlugin.fromClass(RichMarkdownPlugin, {
 })
 
 /**
- * Custom theme for the rich markdown editor
- * Matches the Reading mode styling for consistency
+ * Get runtime theme colors from CSS variables
+ * This function reads the ACTUAL computed values at runtime
  */
-const editorTheme = EditorView.theme({
+function getThemeColors() {
+  const root = document.documentElement
+  const styles = getComputedStyle(root)
+
+  return {
+    bgPrimary: styles.getPropertyValue('--nexus-bg-primary').trim() || '#0d1210',
+    bgSecondary: styles.getPropertyValue('--nexus-bg-secondary').trim() || '#141e1a',
+    bgTertiary: styles.getPropertyValue('--nexus-bg-tertiary').trim() || '#1c2922',
+    textPrimary: styles.getPropertyValue('--nexus-text-primary').trim() || '#d4e4dc',
+    textSecondary: styles.getPropertyValue('--nexus-text-secondary').trim() || '#94a3b8',
+    textMuted: styles.getPropertyValue('--nexus-text-muted').trim() || '#8fa89b',
+    accent: styles.getPropertyValue('--nexus-accent').trim() || '#4ade80',
+    error: styles.getPropertyValue('--nexus-error').trim() || '#ef4444',
+  }
+}
+
+/**
+ * Create custom theme for the rich markdown editor
+ * Reads actual theme colors at runtime (called inside component)
+ */
+function createEditorTheme() {
+  const colors = getThemeColors()
+
+  return EditorView.theme({
   '&': {
-    backgroundColor: 'transparent',
+    backgroundColor: colors.bgPrimary,
+    color: colors.textPrimary,
     fontSize: 'var(--editor-font-size, 16px)',
     fontFamily: 'var(--editor-font-family, system-ui)',
   },
   '.cm-content': {
-    caretColor: 'var(--nexus-text-primary, #1a1a1a)',
+    caretColor: colors.textPrimary,
+    color: colors.textPrimary,
     lineHeight: 'var(--editor-line-height, 1.6)',
     padding: '0',
   },
@@ -337,14 +362,14 @@ const editorTheme = EditorView.theme({
   },
   // Bullet style
   '.cm-bullet': {
-    color: 'var(--nexus-accent, #22c55e)',
+    color: colors.accent,
     marginRight: '0.5em',
     fontSize: '1.2em',
   },
   // Heading styles - match Reading mode
   '.cm-heading': {
     fontWeight: '600',
-    color: 'var(--nexus-text-primary, #1a1a1a)',
+    color: colors.textPrimary,
   },
   '.cm-heading1': {
     fontSize: '2em',
@@ -368,49 +393,49 @@ const editorTheme = EditorView.theme({
   },
   '.cm-strong': {
     fontWeight: '700',
-    color: 'var(--nexus-text-primary, #1a1a1a)',
+    color: colors.textPrimary,
   },
   // Strikethrough styles - ALWAYS applied regardless of cursor position
   '.cm-strikethrough': {
     textDecoration: 'line-through',
-    color: 'var(--nexus-text-muted, #666)',
+    color: colors.textMuted,
   },
   // Code styles - match Reading mode
   '.cm-monospace': {
     fontFamily: '"JetBrains Mono", "Fira Code", ui-monospace, monospace',
-    backgroundColor: 'var(--nexus-bg-tertiary, rgba(0, 0, 0, 0.06))',
+    backgroundColor: colors.bgTertiary,
     padding: '0.2em 0.4em',
     borderRadius: '4px',
     fontSize: '0.9em',
   },
   // Link styles
   '.cm-link': {
-    color: 'var(--nexus-accent, #22c55e)',
+    color: colors.accent,
     textDecoration: 'none',
   },
   '.cm-link:hover': {
     textDecoration: 'underline',
   },
   '.cm-url': {
-    color: 'var(--nexus-accent, #22c55e)',
+    color: colors.accent,
     opacity: '0.6',
     fontSize: '0.9em',
   },
   // Meta (like ### marks when visible)
   '.cm-meta': {
-    color: 'var(--nexus-text-muted, #999)',
+    color: colors.textMuted,
     fontWeight: '400',
   },
   // Quote styles (inline text styling from syntax highlighting)
   '.cm-quote': {
-    color: 'var(--nexus-text-secondary, #666)',
+    color: colors.textSecondary,
     fontStyle: 'italic',
   },
   // Blockquote line decoration (applies to entire line)
   '.cm-blockquote-line': {
-    borderLeft: '3px solid var(--nexus-accent, #22c55e)',
+    borderLeft: `3px solid ${colors.accent}`,
     paddingLeft: '1em',
-    backgroundColor: 'var(--nexus-bg-secondary, rgba(0, 0, 0, 0.02))',
+    backgroundColor: colors.bgSecondary,
     marginLeft: '0',
   },
   // Callout line decorations (per-type colors)
@@ -476,13 +501,14 @@ const editorTheme = EditorView.theme({
   },
   // Math error state
   '.cm-math-error': {
-    color: 'var(--nexus-error, #ef4444)',
+    color: colors.error,
     fontFamily: 'monospace',
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
     padding: '2px 4px',
     borderRadius: '2px',
   },
-})
+  })
+}
 
 interface CodeMirrorEditorProps {
   content: string
@@ -508,18 +534,20 @@ export function CodeMirrorEditor({
   const editorRef = useRef<ReactCodeMirrorRef>(null)
   const isInternalChange = useRef(false)
 
-  // Memoize extensions to prevent recreation on every render
-  const extensions = useMemo(() => [
+  // Create theme fresh - @uiw/react-codemirror uses the theme prop for styling
+  const editorTheme = createEditorTheme()
+
+  // Extensions for markdown features (not theme)
+  const extensions = [
     markdown({
       codeLanguages: languages,
       extensions: [Strikethrough]  // Enable GFM strikethrough (~~text~~)
     }),
     syntaxHighlighting(markdownHighlighting),  // Apply formatting styles (bold, italic, strikethrough)
     richMarkdownPlugin,
-    editorTheme,
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
-  ], [placeholder])
+  ]
 
   const handleChange = useCallback((value: string) => {
     isInternalChange.current = true
@@ -552,6 +580,7 @@ export function CodeMirrorEditor({
         ref={editorRef}
         value={content}
         onChange={handleChange}
+        theme={editorTheme}
         extensions={extensions}
         basicSetup={{
           lineNumbers: false,

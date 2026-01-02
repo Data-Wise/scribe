@@ -6,6 +6,7 @@ import { WebLinksAddon } from '@xterm/addon-web-links'
 import { isBrowser, isTauri } from '../lib/platform'
 import { api } from '../lib/api'
 import { useProjectStore } from '../store/useProjectStore'
+import { useSettingsStore } from '../store/useSettingsStore'
 import { inferTerminalCwd, getDefaultTerminalFolder } from '../lib/terminal-utils'
 import '@xterm/xterm/css/xterm.css'
 
@@ -38,6 +39,11 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
   // Get current project from store
   const getCurrentProject = useProjectStore((state) => state.getCurrentProject)
 
+  // Get terminal font settings from Settings store
+  const settings = useSettingsStore((state) => state.settings)
+  const terminalFontFamily = (settings['appearance.terminalFontFamily'] || 'Menlo') as string
+  const terminalFontSize = (settings['appearance.terminalFontSize'] || 13) as number
+
   // Scribe-themed terminal colors
   const theme = {
     background: '#1a1f2e',
@@ -69,8 +75,8 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
 
     const terminal = new Terminal({
       theme,
-      fontFamily: '"SF Mono", "Menlo", "Monaco", "Consolas", monospace',
-      fontSize: 12,
+      fontFamily: `"${terminalFontFamily}", monospace`,
+      fontSize: terminalFontSize,
       lineHeight: 1.2,
       cursorBlink: true,
       cursorStyle: 'block',
@@ -119,7 +125,7 @@ export function TerminalPanel({ onShellSpawned }: TerminalPanelProps) {
       }
       terminal.dispose()
     }
-  }, [])
+  }, [terminalFontFamily, terminalFontSize])
 
   // Handle resize
   useEffect(() => {

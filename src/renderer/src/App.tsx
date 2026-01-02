@@ -11,7 +11,7 @@ import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { StatsPanel } from './components/StatsPanel'
-import SettingsModal from './components/Settings/SettingsModal'
+import { SettingsModal } from './components/SettingsModal'
 import { EmptyState } from './components/EmptyState'
 import { MissionControl } from './components/MissionControl'
 import { ExportDialog } from './components/ExportDialog'
@@ -92,8 +92,6 @@ function App() {
     setCurrentProject,
     createProject
   } = useProjectStore()
-
-  const { openSettings } = useSettingsStore()
 
   // Apply Forest Night theme
   useForestTheme()
@@ -234,13 +232,17 @@ function App() {
     return saved === 'true'
   })
 
-  // Right sidebar tab settings (v1.8 - from preferences)
+  // Right sidebar tab settings (v1.8 - from preferences and Settings store)
+  const settings = useSettingsStore((state) => state.settings)
+  const sidebarTabSize = (settings['appearance.sidebarTabSize'] || 'compact') as 'compact' | 'full'
+  // const showSidebarIcons = settings['appearance.showSidebarIcons'] ?? true // TODO: Implement icon visibility
+
   const [sidebarTabSettings, setSidebarTabSettings] = useState(() => {
     const prefs = loadPreferences()
     return {
-      tabSize: prefs.sidebarTabSize,
-      tabOrder: prefs.sidebarTabOrder,
-      hiddenTabs: prefs.sidebarHiddenTabs
+      tabSize: sidebarTabSize, // Now from Settings store
+      tabOrder: prefs.sidebarTabOrder, // Still from preferences (not in Settings store yet)
+      hiddenTabs: prefs.sidebarHiddenTabs // Still from preferences (not in Settings store yet)
     }
   })
 
@@ -288,9 +290,10 @@ function App() {
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
 
   // Theme state
-  const [allThemes] = useState<Record<string, Theme>>(() => getAllThemes())
+  const [allThemes, setAllThemes] = useState<Record<string, Theme>>(() => getAllThemes())
   const [theme, setTheme] = useState<string>(() => loadSelectedTheme())
-  const [autoThemeSettings] = useState<AutoThemeSettings>(() => loadAutoThemeSettings())
+  const [autoThemeSettings, setAutoThemeSettings] = useState<AutoThemeSettings>(() => loadAutoThemeSettings())
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   
   // Apply theme to document root
   useEffect(() => {
@@ -329,7 +332,7 @@ function App() {
   // These functions are now handled by the SettingsStore in useSettingsStore.ts
 
   // Font settings state
-  const [fontSettings] = useState<FontSettings>(() => loadFontSettings())
+  const [fontSettings, setFontSettings] = useState<FontSettings>(() => loadFontSettings())
   
   // Apply font settings on load and change
   useEffect(() => {
@@ -338,7 +341,7 @@ function App() {
   }, [fontSettings])
   
   // Theme shortcuts state
-  const [themeShortcuts] = useState<ThemeShortcut[]>(() => loadThemeShortcuts())
+  const [themeShortcuts, setThemeShortcuts] = useState<ThemeShortcut[]>(() => loadThemeShortcuts())
   
   // Theme keyboard shortcuts: Cmd/Ctrl + Alt + [1-0]
   useEffect(() => {
@@ -357,8 +360,39 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [themeShortcuts, allThemes])
   
-  // NOTE: Font and theme shortcut handlers moved to Settings Enhancement UI
+  // Theme customization handlers
+  const handleSaveCustomTheme = (newTheme: Theme) => {
+    setAllThemes(prev => ({ ...prev, [newTheme.id]: newTheme }))
+  }
 
+  const handleDeleteCustomTheme = (themeId: string) => {
+    setAllThemes(prev => {
+      const { [themeId]: _, ...rest } = prev
+      return rest
+    })
+    // If deleted theme was active, switch to default
+    if (theme === themeId) {
+      setTheme('sage-garden')
+    }
+  }
+
+  const handleAutoThemeChange = (settings: AutoThemeSettings) => {
+    setAutoThemeSettings(settings)
+    // Save to localStorage
+    localStorage.setItem('scribe-auto-theme-settings', JSON.stringify(settings))
+  }
+
+  const handleFontSettingsChange = (settings: FontSettings) => {
+    setFontSettings(settings)
+    saveFontSettings(settings)
+    applyFontSettings(settings)
+  }
+
+  const handleThemeShortcutsChange = (shortcuts: ThemeShortcut[]) => {
+    setThemeShortcuts(shortcuts)
+    // Save to localStorage
+    localStorage.setItem('scribe-theme-shortcuts', JSON.stringify(shortcuts))
+  }
 
   // Diagnostic: Test Tauri commands on startup
   useEffect(() => {
@@ -803,13 +837,13 @@ function App() {
       // Settings shortcut (⌘,) - open settings modal
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key === ',') {
         e.preventDefault()
-        openSettings()
+        setIsSettingsOpen(true)
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings, openSettings])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
 
   // Track selected note for smart startup (session context)
   useEffect(() => {
@@ -892,7 +926,7 @@ function App() {
 
           // Scribe menu
           case 'preferences':
-            openSettings()
+            setIsSettingsOpen(true)
             break
           case 'shortcuts':
             setIsKeyboardShortcutsOpen(true)
@@ -1365,7 +1399,7 @@ function App() {
             await loadNotes()
           }
         }}
-        onOpenSettings={() => openSettings()}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Main content area */}
@@ -1439,7 +1473,7 @@ function App() {
               onCreateNote={handleCreateNote}
               onDailyNote={handleDailyNote}
               onQuickCapture={() => setIsQuickCaptureOpen(true)}
-              onSettings={() => openSettings()}
+              onSettings={() => setIsSettingsOpen(true)}
               onCreateProject={() => setIsCreateProjectModalOpen(true)}
             />
           ) : selectedNote ? (
@@ -1500,7 +1534,7 @@ function App() {
               onCreateNote={handleCreateNote}
               onDailyNote={handleDailyNote}
               onQuickCapture={() => setIsQuickCaptureOpen(true)}
-              onSettings={() => openSettings()}
+              onSettings={() => setIsSettingsOpen(true)}
               onCreateProject={() => setIsCreateProjectModalOpen(true)}
             />
           )}
@@ -1569,7 +1603,7 @@ function App() {
                 <>
                   <div
                     className="sidebar-tabs"
-                    data-sidebar-tab-size={sidebarTabSettings.tabSize}
+                    data-sidebar-tab-size={sidebarTabSize}
                   >
                     {/* Scrollable tabs area */}
                     <div className="sidebar-tabs-scroll">
@@ -1720,8 +1754,22 @@ function App() {
         hasSelectedNote={!!selectedNote}
       />
 
-      {/* Settings Modal - New Settings Enhancement UI */}
-      <SettingsModal />
+      {/* Settings Modal - Comprehensive Settings UI */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        themes={allThemes}
+        currentTheme={theme}
+        onThemeChange={setTheme}
+        autoThemeSettings={autoThemeSettings}
+        onAutoThemeChange={handleAutoThemeChange}
+        onSaveCustomTheme={handleSaveCustomTheme}
+        onDeleteCustomTheme={handleDeleteCustomTheme}
+        fontSettings={fontSettings}
+        onFontSettingsChange={handleFontSettingsChange}
+        themeShortcuts={themeShortcuts}
+        onThemeShortcutsChange={handleThemeShortcutsChange}
+      />
 
       {/* Export Dialog */}
       {selectedNote && (

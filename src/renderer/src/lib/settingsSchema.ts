@@ -348,6 +348,111 @@ const projectsCategory: SettingsCategoryData = {
   badge: undefined
 }
 
+// Appearance Category
+const appearanceCategory: SettingsCategoryData = {
+  id: 'appearance',
+  label: 'Appearance',
+  icon: '🎨',
+  sections: [
+    {
+      id: 'tab-bar',
+      title: 'Tab Bar Style',
+      description: 'Customize editor tab appearance',
+      collapsed: false,
+      settings: [
+        {
+          id: 'appearance.tabBarStyle',
+          type: 'select',
+          label: 'Tab Bar Style',
+          description: 'Visual style of the tab bar',
+          defaultValue: 'subtle',
+          options: [
+            { label: 'Subtle - Minimal background', value: 'subtle' },
+            { label: 'Elevated - Modern shadow effect', value: 'elevated' },
+            { label: 'Glass - Frosted blur (macOS Sonoma)', value: 'glass' },
+            { label: 'Borderless - Same as editor background', value: 'borderless' }
+          ],
+          addedInVersion: '1.12.0'
+        },
+        {
+          id: 'appearance.activeTabStyle',
+          type: 'select',
+          label: 'Active Tab Style',
+          description: 'How the active tab is highlighted',
+          defaultValue: 'accent-bar',
+          options: [
+            { label: 'Elevated - Shadow + lift effect', value: 'elevated' },
+            { label: 'Accent Bar - Gradient accent indicator', value: 'accent-bar' },
+            { label: 'Background - Accent-colored fill', value: 'background' },
+            { label: 'Bold - Bold text only (minimal)', value: 'bold' },
+            { label: 'Full - All effects combined', value: 'full' }
+          ],
+          addedInVersion: '1.12.0'
+        }
+      ]
+    },
+    {
+      id: 'sidebar',
+      title: 'Sidebar Settings',
+      description: 'Customize sidebar appearance and behavior',
+      collapsed: false,
+      settings: [
+        {
+          id: 'appearance.sidebarTabSize',
+          type: 'select',
+          label: 'Sidebar Tab Size',
+          description: 'Size of sidebar panel tabs',
+          defaultValue: 'compact',
+          options: [
+            { label: 'Compact - Smaller tabs, minimal padding', value: 'compact' },
+            { label: 'Full - Larger tabs with more spacing', value: 'full' }
+          ],
+          addedInVersion: '1.12.0'
+        },
+        {
+          id: 'appearance.showSidebarIcons',
+          type: 'toggle',
+          label: 'Show Sidebar Icons',
+          description: 'Display icons in sidebar tabs',
+          defaultValue: true,
+          addedInVersion: '1.12.0'
+        }
+      ]
+    },
+    {
+      id: 'terminal',
+      title: 'Terminal Appearance',
+      description: 'Customize terminal styling',
+      collapsed: true,
+      settings: [
+        {
+          id: 'appearance.terminalFontFamily',
+          type: 'select',
+          label: 'Terminal Font',
+          description: 'Monospace font for terminal',
+          defaultValue: 'Menlo',
+          options: [
+            { label: 'Menlo (System)', value: 'Menlo' },
+            { label: 'Monaco', value: 'Monaco' },
+            { label: 'Courier New', value: 'Courier New' },
+            { label: 'SF Mono', value: 'SF Mono' }
+          ],
+          addedInVersion: '1.12.0'
+        },
+        {
+          id: 'appearance.terminalFontSize',
+          type: 'number',
+          label: 'Terminal Font Size (px)',
+          description: 'Font size for terminal text',
+          defaultValue: 13,
+          addedInVersion: '1.12.0'
+        }
+      ]
+    }
+  ],
+  badge: 8
+}
+
 // Advanced Category
 const advancedCategory: SettingsCategoryData = {
   id: 'advanced',
@@ -399,6 +504,7 @@ const advancedCategory: SettingsCategoryData = {
 export const settingsCategories: SettingsCategoryData[] = [
   editorCategory,
   themesCategory,
+  appearanceCategory,
   aiCategory,
   projectsCategory,
   advancedCategory

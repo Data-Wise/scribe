@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.9.0-blue)]()
-[![Progress](https://img.shields.io/badge/progress-85%25-yellow)]()
-[![Tests](https://img.shields.io/badge/tests-1033%20passing-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.11.0-blue)]()
+[![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-978%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -19,7 +19,8 @@ Scribe is a **distraction-free writing app** designed for academics and research
 
 | Feature | Description |
 |---------|-------------|
-| **HybridEditor++** | Markdown write mode + rich preview |
+| **HybridEditor++** | Three modes: Source, Live Preview, Reading |
+| **Callouts** | 11 Obsidian-style callout types with color coding |
 | **Focus Mode** | Distraction-free, one note at a time |
 | **Settings** | ⌘, fuzzy search, theme gallery, Quick Actions customization |
 | **8 Themes** | Visual theme gallery with favorites, dark, and light themes |
@@ -233,13 +234,13 @@ scribe/
 | **4** | 15-16 | Tags Panel Redesign | ✅ Complete |
 | **5** | 17-20 | CLI + Polish | ✅ Complete |
 
-**Progress: 100% complete — v1.1.0 Released**
+**Progress: 100% complete — v1.11.0 Released**
 
 ---
 
 ## Test Coverage
 
-**483 tests passing** across 14 test files:
+**978 tests passing** (930 unit + 48 E2E) across 37 test files:
 
 | Test File | Tests |
 |-----------|-------|
