@@ -2,7 +2,7 @@
 
 > Active planning documents for Scribe development
 
-**Last Updated:** 2025-12-30 | **Milestone:** PR #5 Merged (Phase 1 & 2 Complete)
+**Last Updated:** 2026-01-02 | **Milestone:** Sprint 30 Phase 1 (Browser Mode Polish)
 
 ---
 
@@ -27,7 +27,17 @@
 
 ---
 
-## Current Sprint (Tab Aesthetics)
+## Current Sprint (Browser Mode Polish - Sprint 30)
+
+| File | Purpose |
+|------|---------|
+| [SPRINT-30-browser-mode-polish](SPRINT-30-browser-mode-polish.md) | Sprint 30 master plan (3 phases) |
+| [SPRINT-30-PHASE-1-SUMMARY](SPRINT-30-PHASE-1-SUMMARY.md) | Phase 1 completion summary |
+| [BUG-REPORT-E2E-TITLE-MISMATCH](BUG-REPORT-E2E-TITLE-MISMATCH.md) | E2E test bug investigation & fix documentation |
+
+---
+
+## Previous Sprint (Tab Aesthetics)
 
 | File | Purpose |
 |------|---------|
