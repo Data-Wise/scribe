@@ -313,11 +313,25 @@ const richMarkdownPlugin = ViewPlugin.fromClass(RichMarkdownPlugin, {
 function getThemeColors() {
   const root = document.documentElement
   const styles = getComputedStyle(root)
+
+  const bgPrimary = styles.getPropertyValue('--nexus-bg-primary').trim()
+  const textPrimary = styles.getPropertyValue('--nexus-text-primary').trim()
+
+  console.log('[CodeMirror Theme] Reading CSS variables:', {
+    bgPrimary: bgPrimary || 'EMPTY',
+    textPrimary: textPrimary || 'EMPTY',
+    rootClassName: root.className,
+    allStyles: {
+      bgPrimary: styles.getPropertyValue('--nexus-bg-primary'),
+      textPrimary: styles.getPropertyValue('--nexus-text-primary')
+    }
+  })
+
   return {
-    bgPrimary: styles.getPropertyValue('--nexus-bg-primary').trim() || '#0d1210',
+    bgPrimary: bgPrimary || '#0d1210',
     bgSecondary: styles.getPropertyValue('--nexus-bg-secondary').trim() || '#141e1a',
     bgTertiary: styles.getPropertyValue('--nexus-bg-tertiary').trim() || '#1c2922',
-    textPrimary: styles.getPropertyValue('--nexus-text-primary').trim() || '#d4e4dc',
+    textPrimary: textPrimary || '#d4e4dc',
     textSecondary: styles.getPropertyValue('--nexus-text-secondary').trim() || '#94a3b8',
     textMuted: styles.getPropertyValue('--nexus-text-muted').trim() || '#8fa89b',
     accent: styles.getPropertyValue('--nexus-accent').trim() || '#4ade80',
