@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect, useState } from 'react'
+import { useCallback, useRef, useEffect, useState, useMemo } from 'react'
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
@@ -312,24 +312,59 @@ class CalloutHeaderWidget extends WidgetType {
 /**
  * WikiLink widget that renders [[Page Name]] or [[Page Name|Display Text]]
  * Hides brackets and shows only the display text in live-preview mode
+ * Handles clicks for navigation: single click selects, double click navigates
  */
 class WikiLinkWidget extends WidgetType {
-  constructor(readonly displayText: string) {
+  constructor(
+    readonly displayText: string,
+    readonly pageName: string,
+    readonly onClick?: (pageName: string, isDoubleClick: boolean) => void
+  ) {
     super()
   }
 
   eq(other: WikiLinkWidget) {
-    return other.displayText === this.displayText
+    return other.displayText === this.displayText && other.pageName === this.pageName
   }
 
   toDOM() {
     const span = document.createElement('span')
     span.className = 'cm-wikilink'
     span.textContent = this.displayText
+    span.style.cursor = 'pointer'
+    span.setAttribute('data-wikilink', this.pageName)
+    span.setAttribute('role', 'link')
+    span.setAttribute('tabindex', '0')
+
+    // Handle double-click for navigation
+    span.addEventListener('dblclick', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      this.onClick?.(this.pageName, true)
+    })
+
+    // Handle single click (prevent cursor movement, keep widget visible)
+    span.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      // Don't call onClick for single click - just prevent default cursor behavior
+    })
+
+    // Handle Enter key for accessibility
+    span.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        this.onClick?.(this.pageName, true)
+      }
+    })
+
     return span
   }
 
-  ignoreEvent() { return false }
+  ignoreEvent(event: Event) {
+    // Ignore click and dblclick events to prevent cursor movement
+    return event.type === 'click' || event.type === 'dblclick' || event.type === 'mousedown'
+  }
 }
 
 const hiddenWidget = new HiddenWidget()
@@ -398,8 +433,10 @@ function buildDisplayMathDecorations(state: EditorState): DecorationSet {
  */
 class RichMarkdownPlugin {
   decorations: DecorationSet
+  onWikiLinkClick?: (pageName: string) => void
 
-  constructor(view: EditorView) {
+  constructor(view: EditorView, onWikiLinkClick?: (pageName: string) => void) {
+    this.onWikiLinkClick = onWikiLinkClick
     this.decorations = this.computeDecorations(view)
   }
 
@@ -595,9 +632,14 @@ class RichMarkdownPlugin {
         if (cursor.from >= matchFrom && cursor.to <= matchTo) continue
 
         // Replace entire wikilink with just the display text
+        // Pass onClick callback to enable navigation
         widgets.push(
           Decoration.replace({
-            widget: new WikiLinkWidget(displayText)
+            widget: new WikiLinkWidget(displayText, pageName, (name, isDoubleClick) => {
+              if (isDoubleClick) {
+                this.onWikiLinkClick?.(name)
+              }
+            })
           }).range(matchFrom, matchTo)
         )
       }
@@ -614,9 +656,21 @@ class RichMarkdownPlugin {
   }
 }
 
-const richMarkdownPlugin = ViewPlugin.fromClass(RichMarkdownPlugin, {
-  decorations: v => v.decorations
-})
+/**
+ * Factory function to create RichMarkdownPlugin with WikiLink click callback
+ */
+function createRichMarkdownPlugin(onWikiLinkClick?: (pageName: string) => void) {
+  return ViewPlugin.fromClass(
+    class extends RichMarkdownPlugin {
+      constructor(view: EditorView) {
+        super(view, onWikiLinkClick)
+      }
+    },
+    {
+      decorations: v => v.decorations
+    }
+  )
+}
 
 /**
  * LaTeX Command Autocompletion
@@ -1372,6 +1426,7 @@ interface CodeMirrorEditorProps {
   placeholder?: string
   className?: string
   editorMode?: 'source' | 'live-preview' | 'reading'  // Controls syntax hiding behavior
+  onWikiLinkClick?: (pageName: string) => void  // Callback for WikiLink navigation
 }
 
 /**
@@ -1388,12 +1443,20 @@ export function CodeMirrorEditor({
   placeholder,
   className,
   editorMode = 'source',  // Default to source mode
+  onWikiLinkClick,  // WikiLink navigation callback
 }: CodeMirrorEditorProps) {
   const editorRef = useRef<ReactCodeMirrorRef>(null)
   const isInternalChange = useRef(false)
 
   // Create theme fresh - @uiw/react-codemirror uses the theme prop for styling
   const editorTheme = createEditorTheme()
+
+  // Create RichMarkdownPlugin with WikiLink click callback
+  // useMemo to recreate plugin when callback changes
+  const richMarkdownPluginWithCallback = useMemo(
+    () => createRichMarkdownPlugin(onWikiLinkClick),
+    [onWikiLinkClick]
+  )
 
   // Extensions for markdown features (not theme)
   const extensions = [
@@ -1404,7 +1467,7 @@ export function CodeMirrorEditor({
     syntaxHighlighting(markdownHighlighting),  // Apply formatting styles (bold, italic, strikethrough)
     displayMathField,  // StateField for multi-line display math blocks
     // Only hide syntax in live-preview mode; show all syntax in source mode
-    ...(editorMode === 'live-preview' ? [richMarkdownPlugin] : []),
+    ...(editorMode === 'live-preview' ? [richMarkdownPluginWithCallback] : []),
     latexSyntaxPlugin,  // LaTeX syntax highlighting for math blocks
     autocompletion({ override: [latexCompletions, latexSnippetCompletions] }),  // LaTeX commands & snippets
     EditorView.lineWrapping,

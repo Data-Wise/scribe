@@ -469,6 +469,7 @@ export function HybridEditor({
               }}
               placeholder="Start writing... [[ wiki-links, # tags, @ citations, $math$"
               editorMode="source"  // Source mode shows syntax markers
+              onWikiLinkClick={onWikiLinkClick}  // Pass WikiLink navigation callback
             />
           </div>
         )}
@@ -489,6 +490,7 @@ export function HybridEditor({
               }}
               placeholder="Start writing..."
               editorMode={mode}  // Pass mode to control syntax hiding
+              onWikiLinkClick={onWikiLinkClick}  // Pass WikiLink navigation callback
             />
           </div>
         )}
