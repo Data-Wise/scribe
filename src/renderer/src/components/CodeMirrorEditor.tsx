@@ -933,6 +933,7 @@ function getThemeColors() {
     textMuted: styles.getPropertyValue('--nexus-text-muted').trim() || '#8fa89b',
     accent: styles.getPropertyValue('--nexus-accent').trim() || '#4ade80',
     error: styles.getPropertyValue('--nexus-error').trim() || '#ef4444',
+    border: styles.getPropertyValue('--nexus-border').trim() || 'rgba(255, 255, 255, 0.1)',
   }
 }
 
@@ -1183,6 +1184,63 @@ function createEditorTheme() {
   '.cm-latex-number': {
     color: '#10B981',  // Green for numbers
     fontWeight: '400',
+  },
+
+  // Autocomplete/Tooltip Styling - Theme Integration
+  '.cm-tooltip': {
+    backgroundColor: colors.bgSecondary,
+    border: `1px solid ${colors.border}`,
+    borderRadius: '8px',
+    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)',
+    backdropFilter: 'blur(20px)',
+  },
+  '.cm-tooltip-autocomplete': {
+    backgroundColor: colors.bgSecondary,
+    border: `1px solid ${colors.border}`,
+    fontFamily: 'inherit',
+  },
+  '.cm-tooltip-autocomplete > ul': {
+    maxHeight: '20em',
+    fontFamily: 'inherit',
+  },
+  '.cm-tooltip-autocomplete > ul > li': {
+    padding: '6px 12px',
+    color: colors.textPrimary,
+    cursor: 'pointer',
+    borderLeft: '2px solid transparent',
+    transition: 'all 150ms ease',
+  },
+  '.cm-tooltip-autocomplete > ul > li:hover': {
+    backgroundColor: `${colors.accent}15`,  // 8% opacity
+  },
+  '.cm-tooltip-autocomplete > ul > li[aria-selected]': {
+    backgroundColor: `${colors.accent}20`,  // 12% opacity
+    borderLeftColor: colors.accent,
+    color: colors.textPrimary,
+  },
+  '.cm-completionIcon': {
+    fontSize: '16px',
+    padding: '0 8px 0 0',
+    opacity: '0.8',
+  },
+  '.cm-completionLabel': {
+    fontFamily: 'monospace',
+    color: colors.textPrimary,
+  },
+  '.cm-completionDetail': {
+    marginLeft: 'auto',
+    paddingLeft: '1em',
+    color: colors.textMuted,
+    fontSize: '0.85em',
+    fontStyle: 'italic',
+  },
+  '.cm-completionInfo': {
+    padding: '8px 12px',
+    backgroundColor: colors.bgTertiary,
+    color: colors.textSecondary,
+    borderLeft: `3px solid ${colors.accent}`,
+    fontSize: '0.9em',
+    maxWidth: '30em',
   },
   })
 }
