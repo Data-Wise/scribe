@@ -309,6 +309,29 @@ class CalloutHeaderWidget extends WidgetType {
   ignoreEvent() { return false }
 }
 
+/**
+ * WikiLink widget that renders [[Page Name]] or [[Page Name|Display Text]]
+ * Hides brackets and shows only the display text in live-preview mode
+ */
+class WikiLinkWidget extends WidgetType {
+  constructor(readonly displayText: string) {
+    super()
+  }
+
+  eq(other: WikiLinkWidget) {
+    return other.displayText === this.displayText
+  }
+
+  toDOM() {
+    const span = document.createElement('span')
+    span.className = 'cm-wikilink'
+    span.textContent = this.displayText
+    return span
+  }
+
+  ignoreEvent() { return false }
+}
+
 const hiddenWidget = new HiddenWidget()
 const bulletWidget = new BulletWidget()
 
@@ -536,7 +559,7 @@ class RichMarkdownPlugin {
         }
       })
 
-      // Process inline math ($...$) using regex
+      // Process inline math ($...$) and wikilinks using regex
       // Note: Display math ($$...$$) is handled by displayMathField StateField
       const text = doc.sliceString(from, to)
 
@@ -555,6 +578,26 @@ class RichMarkdownPlugin {
         widgets.push(
           Decoration.replace({
             widget: new MathWidget(formula, false) // displayMode = false
+          }).range(matchFrom, matchTo)
+        )
+      }
+
+      // Process wikilinks [[Page Name]] or [[Page Name|Display Text]]
+      // Hide brackets in live-preview mode, show only the display text
+      const wikilinkRegex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      while ((match = wikilinkRegex.exec(text)) !== null) {
+        const matchFrom = from + match.index
+        const matchTo = matchFrom + match[0].length
+        const pageName = match[1]
+        const displayText = match[2] || pageName
+
+        // Skip if cursor is inside this wikilink
+        if (cursor.from >= matchFrom && cursor.to <= matchTo) continue
+
+        // Replace entire wikilink with just the display text
+        widgets.push(
+          Decoration.replace({
+            widget: new WikiLinkWidget(displayText)
           }).range(matchFrom, matchTo)
         )
       }
@@ -1062,6 +1105,16 @@ function createEditorTheme() {
     color: colors.accent,
     opacity: '0.6',
     fontSize: '0.9em',
+  },
+  // WikiLink styles (Obsidian-style [[Page Name]])
+  '.cm-wikilink': {
+    color: colors.accent,
+    textDecoration: 'none',
+    fontWeight: '500',
+    cursor: 'pointer',
+  },
+  '.cm-wikilink:hover': {
+    textDecoration: 'underline',
   },
   // Meta (like ### marks when visible)
   '.cm-meta': {
