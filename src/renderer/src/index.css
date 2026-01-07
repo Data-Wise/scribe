@@ -331,6 +331,8 @@ body {
   flex-shrink: 0;
   -webkit-app-region: drag;
   cursor: grab;
+  position: relative;
+  z-index: 10; /* Ensure editor header is above sidebar to prevent drag region overlap */
 }
 
 /* Breadcrumb navigation */
