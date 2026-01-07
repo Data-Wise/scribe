@@ -230,6 +230,8 @@ function buildDisplayMathDecorations(state: EditorState): DecorationSet {
     }
   }
 
+  // Sort by position before creating RangeSet
+  widgets.sort((a, b) => a.from - b.from)
   return RangeSet.of(widgets)
 }
 
