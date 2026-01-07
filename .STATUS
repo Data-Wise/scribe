@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 100
+progress: 0
 version: 1.13.0
-sprint: 31
+sprint: 32
 started: 2026-01-06
 updated: 2026-01-06
 editor: hybrid-markdown++
-next_sprint: 32
-next_focus: TBD
+next_sprint: 33
+next_focus: Live Editing Enhancement - Advanced LaTeX
 tests: 955
 unit_tests: 930
 e2e_tests: 25
