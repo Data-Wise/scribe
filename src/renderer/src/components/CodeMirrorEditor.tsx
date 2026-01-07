@@ -338,20 +338,23 @@ class RichMarkdownPlugin {
       // Process math using regex (markdown parser doesn't recognize $...$ syntax)
       const text = doc.sliceString(from, to)
 
-      // First, find display math ($$...$$) on single lines
+      // First, find display math ($$...$$) including multi-line blocks
       // Must process before inline math to avoid partial matches
-      const displayMathRegex = /\$\$([^$]+)\$\$/g
+      // [\s\S]+? matches any character including newlines (non-greedy)
+      const displayMathRegex = /\$\$([\s\S]+?)\$\$/g
       let match
       while ((match = displayMathRegex.exec(text)) !== null) {
         const matchFrom = from + match.index
         const matchTo = matchFrom + match[0].length
         const formula = match[1].trim()
 
-        // Skip if contains newlines (multi-line needs StateField)
-        if (formula.includes('\n')) continue
+        // For multi-line blocks, check if cursor is on ANY line within the block
+        const startLine = doc.lineAt(matchFrom).number
+        const endLine = doc.lineAt(matchTo).number
+        const cursorLine = doc.lineAt(cursor.head).number
 
-        // Skip if cursor is inside this math expression
-        if (cursor.from >= matchFrom && cursor.to <= matchTo) continue
+        // Skip if cursor is on any line within this math block
+        if (cursorLine >= startLine && cursorLine <= endLine) continue
 
         widgets.push(
           Decoration.replace({
