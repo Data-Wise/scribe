@@ -338,30 +338,58 @@ class RichMarkdownPlugin {
       // Process math using regex (markdown parser doesn't recognize $...$ syntax)
       const text = doc.sliceString(from, to)
 
+      // DEBUG: Log text content to verify newlines are captured
+      console.log('[DEBUG] Sliced text length:', text.length, 'Has newlines:', text.includes('\n'))
+
       // First, find display math ($$...$$) including multi-line blocks
       // Must process before inline math to avoid partial matches
       // [\s\S]+? matches any character including newlines (non-greedy)
       const displayMathRegex = /\$\$([\s\S]+?)\$\$/g
       let match
+      let matchCount = 0
       while ((match = displayMathRegex.exec(text)) !== null) {
+        matchCount++
         const matchFrom = from + match.index
         const matchTo = matchFrom + match[0].length
         const formula = match[1].trim()
+
+        // DEBUG: Log each match found
+        console.log(`[DEBUG] Display math match ${matchCount}:`, {
+          formula: formula.substring(0, 50),
+          hasNewlines: formula.includes('\n'),
+          matchFrom,
+          matchTo,
+          fullMatch: match[0]
+        })
 
         // For multi-line blocks, check if cursor is on ANY line within the block
         const startLine = doc.lineAt(matchFrom).number
         const endLine = doc.lineAt(matchTo).number
         const cursorLine = doc.lineAt(cursor.head).number
 
-        // Skip if cursor is on any line within this math block
-        if (cursorLine >= startLine && cursorLine <= endLine) continue
+        // DEBUG: Log cursor position check
+        console.log(`[DEBUG] Cursor check:`, {
+          startLine,
+          endLine,
+          cursorLine,
+          willSkip: cursorLine >= startLine && cursorLine <= endLine
+        })
 
+        // Skip if cursor is on any line within this math block
+        if (cursorLine >= startLine && cursorLine <= endLine) {
+          console.log(`[DEBUG] Skipping match ${matchCount} - cursor inside block`)
+          continue
+        }
+
+        console.log(`[DEBUG] Creating widget for match ${matchCount}`)
         widgets.push(
           Decoration.replace({
             widget: new MathWidget(formula, true) // displayMode = true
           }).range(matchFrom, matchTo)
         )
       }
+
+      console.log(`[DEBUG] Total display math matches found: ${matchCount}`)
 
       // Then process inline math ($...$)
       // Negative lookbehind/ahead to avoid matching $$
