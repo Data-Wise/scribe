@@ -39,8 +39,18 @@ async function switchToReadingMode(page: any) {
 /**
  * Helper function to set editor content and wait for WikiLink widgets
  * Uses condition-based waiting instead of fixed timeouts for reliability
+ *
+ * @param page - Playwright page object
+ * @param text - Text to type into editor
+ * @param options - Optional configuration
+ *   - expectWidgets: Whether to wait for WikiLink widgets (default: auto-detect from text)
+ *   - skipWidgetWait: Force skip widget waiting (for Source mode, etc.)
  */
-async function typeInEditor(page: any, text: string) {
+async function typeInEditor(
+  page: any,
+  text: string,
+  options: { expectWidgets?: boolean; skipWidgetWait?: boolean } = {}
+) {
   // Wait for editor to be present
   const editor = page.locator('.cm-content[contenteditable="true"]')
   await editor.waitFor({ state: 'visible', timeout: 5000 })
@@ -55,18 +65,27 @@ async function typeInEditor(page: any, text: string) {
   // Type the new content (no delay to avoid partial WikiLink creation)
   await page.keyboard.type(text)
 
-  // Smart waiting: wait for WikiLink widgets if text contains [[...]]
-  if (text.includes('[[')) {
+  // Determine if we should wait for widgets
+  const shouldWaitForWidgets = options.skipWidgetWait
+    ? false
+    : options.expectWidgets !== undefined
+    ? options.expectWidgets
+    : text.includes('[[') // Auto-detect from text
+
+  if (shouldWaitForWidgets) {
+    // Move cursor away from WikiLinks to trigger widget rendering
+    await page.keyboard.press('Home')
+    await page.waitForTimeout(300)
+
     // Wait for WikiLink widgets to appear in DOM
     await page.waitForFunction(
-      () => {
-        const widgets = document.querySelectorAll('.cm-wikilink')
-        return widgets.length > 0
-      },
+      () => document.querySelectorAll('.cm-wikilink').length > 0,
       { timeout: 10000 }
     )
-    // Additional wait for event handlers to attach
-    await page.waitForTimeout(300)
+
+    // Additional wait for decorations to fully stabilize
+    // CodeMirror updates widgets incrementally, need time for final state
+    await page.waitForTimeout(800)
   } else {
     // No WikiLinks expected, shorter wait for content to settle
     await page.waitForTimeout(500)
@@ -140,7 +159,7 @@ test.describe('WikiLink Navigation E2E', () => {
     test('WLN-E2E-05: WikiLink not rendered in Source mode', async ({ basePage }) => {
       await switchToSourceMode(basePage.page)
 
-      await typeInEditor(basePage.page, 'Link [[Source Mode]] here.')
+      await typeInEditor(basePage.page, 'Link [[Source Mode]] here.', { skipWidgetWait: true })
 
       // No WikiLink widget in source mode
       const wikilinks = basePage.page.locator('.cm-wikilink')
@@ -282,7 +301,7 @@ test.describe('WikiLink Navigation E2E', () => {
     test('WLN-E2E-12: WikiLink widget appears when switching to Live mode', async ({ basePage }) => {
       await switchToSourceMode(basePage.page)
 
-      await typeInEditor(basePage.page, 'Link [[Appear Test]] here.')
+      await typeInEditor(basePage.page, 'Link [[Appear Test]] here.', { skipWidgetWait: true })
 
       // No widget in Source mode
       let wikilinks = basePage.page.locator('.cm-wikilink')
