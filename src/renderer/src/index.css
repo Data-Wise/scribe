@@ -329,6 +329,8 @@ body {
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  -webkit-app-region: drag;
+  cursor: grab;
 }
 
 /* Breadcrumb navigation */
@@ -343,6 +345,7 @@ body {
 .breadcrumb-item {
   cursor: pointer;
   transition: color 150ms ease;
+  -webkit-app-region: no-drag;
 }
 
 .breadcrumb-item:hover {
@@ -406,6 +409,7 @@ body {
   font-size: 10px;
   transition: all 150ms ease;
   opacity: 0.6;
+  -webkit-app-region: no-drag;
 }
 
 .timer-btn:hover {
