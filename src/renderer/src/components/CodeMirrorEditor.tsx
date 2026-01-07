@@ -343,8 +343,8 @@ class RichMarkdownPlugin {
 
       // First, find display math ($$...$$) including multi-line blocks
       // Must process before inline math to avoid partial matches
-      // [\s\S]+? matches any character including newlines (non-greedy)
-      const displayMathRegex = /\$\$([\s\S]+?)\$\$/g
+      // Using 's' flag (dotall) to make . match newlines
+      const displayMathRegex = /\$\$(.+?)\$\$/gs
       let match
       let matchCount = 0
       while ((match = displayMathRegex.exec(text)) !== null) {
@@ -362,13 +362,26 @@ class RichMarkdownPlugin {
           fullMatch: match[0]
         })
 
-        // TEMPORARY: Disable cursor detection to test if widgets are created
-        // const startLine = doc.lineAt(matchFrom).number
-        // const endLine = doc.lineAt(matchTo).number
-        // const cursorLine = doc.lineAt(cursor.head).number
-        // if (cursorLine >= startLine && cursorLine <= endLine) continue
+        // For multi-line blocks, check if cursor is on ANY line within the block
+        const startLine = doc.lineAt(matchFrom).number
+        const endLine = doc.lineAt(matchTo).number
+        const cursorLine = doc.lineAt(cursor.head).number
 
-        console.log(`[DEBUG] Creating widget for match ${matchCount} (cursor detection DISABLED)`)
+        // DEBUG: Log cursor position check
+        console.log(`[DEBUG] Cursor check:`, {
+          startLine,
+          endLine,
+          cursorLine,
+          willSkip: cursorLine >= startLine && cursorLine <= endLine
+        })
+
+        // Skip if cursor is on any line within this math block
+        if (cursorLine >= startLine && cursorLine <= endLine) {
+          console.log(`[DEBUG] Skipping match ${matchCount} - cursor inside block`)
+          continue
+        }
+
+        console.log(`[DEBUG] Creating widget for match ${matchCount}`)
         widgets.push(
           Decoration.replace({
             widget: new MathWidget(formula, true) // displayMode = true
