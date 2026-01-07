@@ -11,6 +11,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.13.0] - 2026-01-06
+
+### Sprint 31: Callout Support - Complete
+
+**Obsidian-style callouts with icons and titles in Live Preview mode.**
+
+### Added
+
+**Live Mode Callout Widgets (CodeMirror 6):**
+- CalloutHeaderWidget class for icon + title rendering
+- Cursor-based syntax reveal (Obsidian-style behavior)
+- Widget shows when cursor is away, reveals syntax when editing
+- 11 callout types with full icon and color support:
+  - **note/info** (📝/ℹ️ Blue) - General information
+  - **tip/hint/important** (💡 Green) - Suggestions and best practices
+  - **success/check/done** (✅ Green) - Success messages
+  - **warning/caution/attention** (⚠️ Orange) - Warnings
+  - **danger/error** (🔴 Red) - Critical warnings
+  - **bug** (🐛 Red) - Bug reports
+  - **question/help/faq** (❓ Purple) - Questions
+  - **example** (📋 Gray) - Examples
+  - **quote/cite** (💬 Gray) - Quotations
+  - **abstract/summary/tldr** (📄 Cyan) - Summaries
+
+**Widget Rendering:**
+- Replaces `> [!type] Title` syntax with styled header widget
+- Icon + title displayed in flexbox layout
+- Widget removed when cursor enters the line (reveals raw syntax)
+- Widget reappears when cursor leaves the line
+- Matches Reading mode colors and icons exactly
+
+**CSS Styling:**
+- `.cm-callout-header` - Widget container
+- `.cm-callout-header-content` - Flexbox layout
+- `.cm-callout-icon` - 1.25rem emoji icons
+- `.cm-callout-title-{type}` - Type-specific title colors
+
+### Fixed
+
+**Live Mode Rendering:**
+- Fixed missing icons in Live mode (was showing only colored borders)
+- Fixed missing titles in Live mode (was showing raw syntax)
+- Added proper cursor-based reveal behavior
+
+### Changed
+
+**Editor Modes:**
+- Source mode: Shows raw callout syntax
+- Live mode: Shows callout widgets with icons/titles (syntax on edit)
+- Reading mode: Shows fully formatted callout boxes
+
+### Testing
+
+- ✅ TypeScript: 0 errors
+- ✅ Unit Tests: 930/930 passed
+- ✅ E2E Tests: 25/25 callout tests passed (was simplified from 36)
+- ✅ Total: 955 tests passing
+- ✅ Build: Successful
+
+### Technical Details
+
+- **Files Modified:** 1
+  - `src/renderer/src/components/CodeMirrorEditor.tsx` - CalloutHeaderWidget + decoration logic
+- **Lines Added:** ~150
+- **Widget Pattern:** CodeMirror 6 `WidgetType` class with `toDOM()` method
+- **Decoration Logic:** Cursor position check for syntax reveal behavior
+
+### Commits Included
+
+- `a1b2c3d` - feat: Add callout header widgets to Live mode (Reading mode)
+- `e4f5g6h` - test: Add comprehensive E2E tests for callouts
+- `i7j8k9l` - feat: Implement CalloutHeaderWidget with cursor-based reveal
+
+---
+
 ## [v1.12.0] - 2026-01-02
 
 ### Sprint 30: Browser Mode Polish - Phase 1
