@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures'
+import type { Page } from '@playwright/test'
 
 /**
  * WikiLink Rendering E2E Tests
@@ -9,6 +10,19 @@ import { test, expect } from '../fixtures'
  *
  * Tests: WL-01 to WL-20
  */
+
+/**
+ * Helper function to clear editor content and type new text
+ */
+async function typeInEditor(page: Page, text: string) {
+  const editor = page.locator('.cm-content')
+  await editor.click()
+  await page.keyboard.press('Meta+a') // Select all
+  await page.keyboard.press('Backspace') // Delete
+  await page.waitForTimeout(200)
+  await page.keyboard.type(text)
+  await page.waitForTimeout(300)
+}
 
 test.describe('WikiLink Rendering', () => {
   test.beforeEach(async ({ basePage }) => {
