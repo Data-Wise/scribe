@@ -10,51 +10,85 @@ import { test, expect } from '../fixtures'
  */
 
 /**
- * Helper function to clear editor content and type new text
+ * Helper function to switch to Live Preview mode and wait for editor to be ready
+ */
+async function switchToLiveMode(page: any) {
+  const liveBtn = page.locator('button:has-text("Live")')
+  await liveBtn.click()
+  await page.waitForTimeout(800) // Wait for mode switch and editor re-render
+}
+
+/**
+ * Helper function to switch to Source mode
+ */
+async function switchToSourceMode(page: any) {
+  const sourceBtn = page.locator('button:has-text("Source")')
+  await sourceBtn.click()
+  await page.waitForTimeout(800)
+}
+
+/**
+ * Helper function to switch to Reading mode
+ */
+async function switchToReadingMode(page: any) {
+  const readingBtn = page.locator('button:has-text("Reading")')
+  await readingBtn.click()
+  await page.waitForTimeout(800)
+}
+
+/**
+ * Helper function to set editor content
+ * Uses keyboard input for realistic interaction
  */
 async function typeInEditor(page: any, text: string) {
-  const editor = page.locator('.cm-content')
+  // Wait for editor to be present
+  const editor = page.locator('.cm-content[contenteditable="true"]')
+  await editor.waitFor({ state: 'visible', timeout: 5000 })
+
+  // Click to focus and select all existing content
   await editor.click()
-  await page.keyboard.press('Meta+a') // Select all
-  await page.keyboard.press('Backspace') // Delete
-  await page.waitForTimeout(200)
+  await page.keyboard.press('Meta+a')
+  await page.waitForTimeout(100)
+
+  // Type the new content (no delay to avoid partial WikiLink creation)
   await page.keyboard.type(text)
-  await page.waitForTimeout(500) // Wait for WikiLink widget to render
+  await page.waitForTimeout(1500) // Wait for WikiLink widget processing
 }
 
 test.describe('WikiLink Navigation E2E', () => {
   test.beforeEach(async ({ basePage }) => {
     await basePage.goto()
-    await basePage.page.waitForTimeout(1000)
+
+    // Wait for demo data to load and app to be fully initialized
+    await basePage.page.waitForTimeout(2000)
 
     // Open Welcome note which exists in demo data
     const welcomeNote = basePage.page.locator('button:has-text("Welcome to Scribe")').first()
-    if (await welcomeNote.isVisible().catch(() => false)) {
-      await welcomeNote.click()
-      await basePage.page.waitForTimeout(500)
-    }
+    await welcomeNote.waitFor({ state: 'visible', timeout: 10000 })
+    await welcomeNote.click()
+    await basePage.page.waitForTimeout(800)
+
+    // Wait for editor to be visible
+    const editor = basePage.page.locator('[data-testid="hybrid-editor"]')
+    await editor.waitFor({ state: 'visible', timeout: 5000 })
   })
 
   test.describe('WikiLink Widget Rendering', () => {
     test('WLN-E2E-01: WikiLink widgets render in Live Preview mode', async ({ basePage }) => {
       // Switch to Live Preview mode
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       // Type WikiLink
       await typeInEditor(basePage.page, 'Check out [[Test Page]] for details.')
 
       // Verify WikiLink widget is rendered
       const wikilink = basePage.page.locator('.cm-wikilink').first()
-      await expect(wikilink).toBeVisible()
+      await expect(wikilink).toBeVisible({ timeout: 10000 })
       await expect(wikilink).toHaveText('Test Page')
     })
 
     test('WLN-E2E-02: WikiLink brackets hidden in Live Preview mode', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Hidden Brackets]] here.')
 
@@ -66,9 +100,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-03: WikiLink with pipe syntax displays custom text', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'See [[Actual Page|Custom Display]] here.')
 
@@ -77,9 +109,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-04: Multiple WikiLinks render correctly', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Links: [[First]] and [[Second]] and [[Third]].')
 
@@ -90,9 +120,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-05: WikiLink not rendered in Source mode', async ({ basePage }) => {
-      const sourceBtn = basePage.page.locator('button:has-text("Source")')
-      await sourceBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToSourceMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Source Mode]] here.')
 
@@ -109,9 +137,7 @@ test.describe('WikiLink Navigation E2E', () => {
 
   test.describe('WikiLink Click Behavior', () => {
     test('WLN-E2E-06: Single click does not navigate', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Click [[Single Click Test]] here.')
 
@@ -132,9 +158,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-07: Single click keeps widget visible (no bracket reveal)', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Click [[Widget Test]] here.')
 
@@ -169,9 +193,7 @@ test.describe('WikiLink Navigation E2E', () => {
       await basePage.page.waitForTimeout(500)
 
       // Switch to Live Preview
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link to [[Target Note for Navigation]] here.')
 
@@ -190,9 +212,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-09: WikiLink has pointer cursor on hover', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Hover [[Cursor Test]] here.')
 
@@ -205,9 +225,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-10: WikiLink is keyboard focusable', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Tab to [[Keyboard Focus]] here.')
 
@@ -222,9 +240,7 @@ test.describe('WikiLink Navigation E2E', () => {
 
   test.describe('WikiLink Mode Switching', () => {
     test('WLN-E2E-11: WikiLink widget disappears when switching to Source mode', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Mode Switch Test]] here.')
 
@@ -233,9 +249,7 @@ test.describe('WikiLink Navigation E2E', () => {
       await expect(wikilink).toBeVisible()
 
       // Switch to Source mode
-      const sourceBtn = basePage.page.locator('button:has-text("Source")')
-      await sourceBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToSourceMode(basePage.page)
 
       // Widget should be gone
       const wikilinks = basePage.page.locator('.cm-wikilink')
@@ -248,9 +262,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-12: WikiLink widget appears when switching to Live mode', async ({ basePage }) => {
-      const sourceBtn = basePage.page.locator('button:has-text("Source")')
-      await sourceBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToSourceMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Appear Test]] here.')
 
@@ -260,9 +272,7 @@ test.describe('WikiLink Navigation E2E', () => {
       expect(count).toBe(0)
 
       // Switch to Live mode
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(500)
+      await switchToLiveMode(basePage.page)
 
       // Widget should appear
       const wikilink = basePage.page.locator('.cm-wikilink').first()
@@ -271,9 +281,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-13: WikiLink content preserved across mode switches', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       const testContent = 'Link [[Preservation Test]] with content.'
       await typeInEditor(basePage.page, testContent)
@@ -283,17 +291,14 @@ test.describe('WikiLink Navigation E2E', () => {
       await expect(wikilink).toHaveText('Preservation Test')
 
       // Switch to Source
-      const sourceBtn = basePage.page.locator('button:has-text("Source")')
-      await sourceBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToSourceMode(basePage.page)
 
       // Verify content in Source mode
       const editor = basePage.page.locator('.cm-content')
       await expect(editor).toContainText('[[Preservation Test]]')
 
       // Switch back to Live
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       // Verify widget reappears correctly
       wikilink = basePage.page.locator('.cm-wikilink').first()
@@ -301,16 +306,12 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-14: Reading mode shows plain text (no widget)', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Reading Mode Test]] here.')
 
       // Switch to Reading mode
-      const readingBtn = basePage.page.locator('button:has-text("Reading")')
-      await readingBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToReadingMode(basePage.page)
 
       // Reading mode uses ReactMarkdown, not CodeMirror widgets
       // Should show rendered link (not cm-wikilink widget)
@@ -322,9 +323,7 @@ test.describe('WikiLink Navigation E2E', () => {
 
   test.describe('WikiLink Cross-Feature Compatibility', () => {
     test('WLN-E2E-15: Window dragging still works after WikiLink interaction', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Drag Test]] here.')
 
@@ -342,9 +341,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-16: Mode toggle buttons remain clickable after WikiLink use', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Toggle Test]] here.')
 
@@ -365,9 +362,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-17: Editor tabs remain functional after WikiLink navigation', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Tab Test]] here.')
 
@@ -383,9 +378,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-18: Sidebar remains functional after WikiLink use', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Sidebar Test]] here.')
 
@@ -406,9 +399,7 @@ test.describe('WikiLink Navigation E2E', () => {
 
   test.describe('WikiLink Edge Cases', () => {
     test('WLN-E2E-19: WikiLink with very long name renders correctly', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       const longName = 'This is a Very Long Page Name That Should Still Work Correctly'
       await typeInEditor(basePage.page, `Link [[${longName}]] here.`)
@@ -419,9 +410,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-20: WikiLink with numbers renders correctly', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'Link [[Page 123 Version 2.0]] here.')
 
@@ -431,9 +420,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-21: WikiLink at start of document renders correctly', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, '[[Start Page]] is first.')
 
@@ -443,9 +430,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-22: WikiLink at end of document renders correctly', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, 'This ends with [[End Page]]')
 
@@ -455,9 +440,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-23: Multiple WikiLinks on same line all clickable', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, '[[First]] and [[Second]] and [[Third]]')
 
@@ -476,9 +459,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-24: WikiLink in list item renders correctly', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, '- Item with [[List Link]] here')
 
@@ -488,9 +469,7 @@ test.describe('WikiLink Navigation E2E', () => {
     })
 
     test('WLN-E2E-25: WikiLink in heading renders correctly', async ({ basePage }) => {
-      const liveBtn = basePage.page.locator('button:has-text("Live")')
-      await liveBtn.click()
-      await basePage.page.waitForTimeout(300)
+      await switchToLiveMode(basePage.page)
 
       await typeInEditor(basePage.page, '# Heading with [[Heading Link]]')
 
