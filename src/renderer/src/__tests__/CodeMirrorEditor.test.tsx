@@ -104,7 +104,13 @@ vi.mock('@lezer/highlight', () => ({
     link: 'link',
     url: 'url',
     quote: 'quote',
+    list: 'list',
+    meta: 'meta',
     processingInstruction: 'processingInstruction'
+  },
+  styleTags: vi.fn((tagMap) => tagMap),  // Mock styleTags - just returns the input
+  Tag: {
+    define: vi.fn(() => 'custom-tag')  // Mock Tag.define() - returns a mock tag
   }
 }))
 

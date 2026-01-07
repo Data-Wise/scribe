@@ -6,7 +6,7 @@ import { Strikethrough } from '@lezer/markdown'
 import { EditorView, Decoration, ViewPlugin, ViewUpdate, WidgetType } from '@codemirror/view'
 import { syntaxTree } from '@codemirror/language'
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
-import { tags } from '@lezer/highlight'
+import { tags, styleTags, Tag } from '@lezer/highlight'
 import type { DecorationSet } from '@codemirror/view'
 import { StateField, StateEffect, RangeSet } from '@codemirror/state'
 import type { Range, EditorState } from '@codemirror/state'
@@ -16,32 +16,63 @@ import katex from 'katex'
 import 'katex/dist/katex.min.css'
 
 /**
- * Custom syntax highlighting that includes strikethrough
- * This ensures formatting styles are maintained even when syntax is visible
+ * Define custom tags for markdown syntax markers
+ * This allows us to style each marker type (# ** ` etc.) independently
+ */
+const customMarkdownTags = {
+  headerMark: Tag.define(),       // For # ## ### etc.
+  emphasisMark: Tag.define(),     // For ** __ * _
+  codeMark: Tag.define(),         // For `
+  quoteMark: Tag.define(),        // For >
+  listMark: Tag.define(),         // For - * +
+  linkMark: Tag.define(),         // For [] ()
+}
+
+/**
+ * Markdown extension that overrides default syntax marker highlighting
+ * Maps marker node types to our custom tags for independent styling
+ */
+const markdownSyntaxTags = {
+  props: [
+    styleTags({
+      "HeaderMark": customMarkdownTags.headerMark,       // # markers
+      "EmphasisMark": customMarkdownTags.emphasisMark,   // ** __ * _ markers
+      "CodeMark": customMarkdownTags.codeMark,           // ` markers
+      "QuoteMark": customMarkdownTags.quoteMark,         // > markers
+      "ListMark": customMarkdownTags.listMark,           // - * + markers
+      "LinkMark": customMarkdownTags.linkMark,           // [] () markers
+    }),
+  ],
+}
+
+/**
+ * Custom syntax highlighting for markdown
+ * Styles both content (bold text, italic text) AND syntax markers (#, **, etc.)
  */
 const markdownHighlighting = HighlightStyle.define([
-  // Strikethrough - the key addition
+  // === Content styling (formatted text) ===
   { tag: tags.strikethrough, class: 'cm-strikethrough' },
-  // Strong/bold
   { tag: tags.strong, class: 'cm-strong' },
-  // Emphasis/italic
   { tag: tags.emphasis, class: 'cm-emphasis' },
-  // Headings
   { tag: tags.heading1, class: 'cm-heading cm-heading1' },
   { tag: tags.heading2, class: 'cm-heading cm-heading2' },
   { tag: tags.heading3, class: 'cm-heading cm-heading3' },
   { tag: tags.heading4, class: 'cm-heading cm-heading4' },
   { tag: tags.heading5, class: 'cm-heading cm-heading5' },
   { tag: tags.heading6, class: 'cm-heading cm-heading6' },
-  // Code
   { tag: tags.monospace, class: 'cm-monospace' },
-  // Links
   { tag: tags.link, class: 'cm-link' },
   { tag: tags.url, class: 'cm-url' },
-  // Quote
   { tag: tags.quote, class: 'cm-quote' },
-  // Meta (markdown syntax characters when visible)
-  { tag: tags.processingInstruction, class: 'cm-meta' },
+  { tag: tags.list, class: 'cm-list' },
+
+  // === Syntax markers (# ** ` > - etc.) using CUSTOM tags ===
+  { tag: customMarkdownTags.headerMark, class: 'cm-heading-marker' },
+  { tag: customMarkdownTags.emphasisMark, class: 'cm-emphasis-marker' },
+  { tag: customMarkdownTags.codeMark, class: 'cm-code-marker' },
+  { tag: customMarkdownTags.quoteMark, class: 'cm-quote-marker' },
+  { tag: customMarkdownTags.listMark, class: 'cm-list-marker' },
+  { tag: customMarkdownTags.linkMark, class: 'cm-link-marker' },
 ])
 
 /**
@@ -1036,7 +1067,44 @@ function createEditorTheme() {
   '.cm-meta': {
     color: colors.textMuted,
     fontWeight: '400',
+    opacity: '0.7',
   },
+
+  // Markdown Syntax Markers - Visible in Source mode
+  '.cm-heading-marker': {
+    color: colors.accent,
+    fontWeight: '600',
+    opacity: '0.6',
+  },
+  '.cm-strong-marker': {
+    color: colors.textMuted,
+    fontWeight: '700',
+    opacity: '0.5',
+  },
+  '.cm-emphasis-marker': {
+    color: colors.textMuted,
+    fontStyle: 'italic',
+    opacity: '0.5',
+  },
+  '.cm-code-marker': {
+    color: colors.textMuted,
+    fontFamily: 'monospace',
+    opacity: '0.5',
+  },
+  '.cm-link-marker': {
+    color: colors.accent,
+    opacity: '0.6',
+  },
+  '.cm-quote-marker': {
+    color: colors.textSecondary,
+    fontWeight: '600',
+    opacity: '0.6',
+  },
+  '.cm-list-marker': {
+    color: colors.accent,
+    fontWeight: '600',
+  },
+
   // Quote styles (inline text styling from syntax highlighting)
   '.cm-quote': {
     color: colors.textSecondary,
@@ -1278,7 +1346,7 @@ export function CodeMirrorEditor({
   const extensions = [
     markdown({
       codeLanguages: languages,
-      extensions: [Strikethrough]  // Enable GFM strikethrough (~~text~~)
+      extensions: [Strikethrough, markdownSyntaxTags]  // Enable GFM strikethrough + syntax marker highlighting
     }),
     syntaxHighlighting(markdownHighlighting),  // Apply formatting styles (bold, italic, strikethrough)
     displayMathField,  // StateField for multi-line display math blocks

@@ -5,6 +5,23 @@ import { HybridEditor } from '../components/HybridEditor'
 import { Note, Tag } from '../types'
 import { createMockNote } from './testUtils'
 
+// Mock CodeMirrorEditor to provide a textarea for tests
+vi.mock('../components/CodeMirrorEditor', () => ({
+  CodeMirrorEditor: ({ content, onChange, placeholder }: {
+    content: string
+    onChange: (value: string) => void
+    placeholder?: string
+  }) => (
+    <textarea
+      data-testid="codemirror-textarea"
+      className="focus:outline-none"
+      value={content}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+    />
+  )
+}))
+
 // Test utilities
 const mockNote: Note = createMockNote({
   id: '1',
@@ -240,7 +257,9 @@ three`
   })
 
   describe('Autocomplete Triggers', () => {
-    it('triggers wiki-link autocomplete on [[ input', async () => {
+    // Note: Autocomplete is now handled by CodeMirrorEditor's built-in autocompletion system
+    // These tests are skipped as the functionality is tested in CodeMirrorEditor.test.tsx
+    it.skip('triggers wiki-link autocomplete on [[ input', async () => {
       const onSearchNotes = vi.fn().mockResolvedValue([mockNote])
       render(<HybridEditor {...defaultProps} content="" onSearchNotes={onSearchNotes} />)
 
@@ -260,7 +279,7 @@ three`
       })
     })
 
-    it('triggers tag autocomplete on # input', async () => {
+    it.skip('triggers tag autocomplete on # input', async () => {
       const onSearchTags = vi.fn().mockResolvedValue([mockTag])
       render(<HybridEditor {...defaultProps} content="" onSearchTags={onSearchTags} />)
 
