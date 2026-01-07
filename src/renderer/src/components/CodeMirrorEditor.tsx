@@ -97,6 +97,74 @@ class MathWidget extends WidgetType {
   ignoreEvent() { return false }
 }
 
+/**
+ * Callout header widget that renders icon + title
+ * Replaces > [!type] Title syntax with a styled header
+ */
+class CalloutHeaderWidget extends WidgetType {
+  constructor(readonly type: string, readonly title: string) {
+    super()
+  }
+
+  eq(other: CalloutHeaderWidget) {
+    return other.type === this.type && other.title === this.title
+  }
+
+  toDOM() {
+    const container = document.createElement('div')
+    container.className = 'cm-callout-header'
+
+    // Icon + Title
+    const header = document.createElement('div')
+    header.className = 'cm-callout-header-content'
+
+    const icon = document.createElement('span')
+    icon.className = 'cm-callout-icon'
+    icon.textContent = this.getIcon(this.type)
+
+    const titleSpan = document.createElement('span')
+    titleSpan.className = `cm-callout-title cm-callout-title-${this.type}`
+    titleSpan.textContent = this.title
+
+    header.appendChild(icon)
+    header.appendChild(titleSpan)
+    container.appendChild(header)
+
+    return container
+  }
+
+  getIcon(type: string): string {
+    const icons: Record<string, string> = {
+      note: '📝',
+      info: 'ℹ️',
+      tip: '💡',
+      hint: '💡',
+      important: '💡',
+      success: '✅',
+      check: '✅',
+      done: '✅',
+      warning: '⚠️',
+      caution: '⚠️',
+      attention: '⚠️',
+      danger: '🔴',
+      error: '🔴',
+      bug: '🐛',
+      question: '❓',
+      help: '❓',
+      faq: '❓',
+      example: '📋',
+      quote: '💬',
+      cite: '💬',
+      abstract: '📄',
+      summary: '📄',
+      tldr: '📄',
+    }
+    return icons[type.toLowerCase()] || '📝'
+  }
+
+  ignoreEvent() { return false }
+}
+
 const hiddenWidget = new HiddenWidget()
 const bulletWidget = new BulletWidget()
 
@@ -225,11 +293,12 @@ class RichMarkdownPlugin {
             const startLine = doc.lineAt(node.from).number
             const endLine = doc.lineAt(node.to).number
 
-            // Check first line for callout pattern [!type]
+            // Check first line for callout pattern [!type] Optional Title
             const firstLine = doc.line(startLine)
             const firstLineText = firstLine.text
-            const calloutMatch = firstLineText.match(/>\s*\[!(\w+)\]/)
+            const calloutMatch = firstLineText.match(/>\s*\[!(\w+)\](?:\s+(.*))?/)
             const calloutType = calloutMatch ? calloutMatch[1].toLowerCase() : null
+            const calloutTitle = calloutMatch ? (calloutMatch[2] || calloutMatch[1].charAt(0).toUpperCase() + calloutMatch[1].slice(1)) : null
 
             // Determine the CSS class based on callout type
             let lineClass = 'cm-blockquote-line'
@@ -242,6 +311,25 @@ class RichMarkdownPlugin {
               widgets.push(
                 Decoration.line({ class: lineClass }).range(line.from)
               )
+            }
+
+            // For callouts, replace the first line's [!type] Title with a widget
+            if (calloutType && calloutTitle) {
+              const cursorLine = doc.lineAt(cursor.head).number
+              // Only show widget if cursor is NOT on the first line
+              if (cursorLine !== startLine) {
+                // Find the range of "> [!type] Title" on the first line
+                const match = firstLineText.match(/(>\s*\[!\w+\](?:\s+.*)?)/)
+                if (match) {
+                  const matchStart = firstLine.from + (match.index || 0)
+                  const matchEnd = matchStart + match[0].length
+                  widgets.push(
+                    Decoration.replace({
+                      widget: new CalloutHeaderWidget(calloutType, calloutTitle)
+                    }).range(matchStart, matchEnd)
+                  )
+                }
+              }
             }
           }
         }
@@ -481,6 +569,56 @@ function createEditorTheme() {
   '.cm-callout-abstract, .cm-callout-summary, .cm-callout-tldr': {
     borderLeft: '4px solid #06B6D4',
     backgroundColor: 'rgba(6, 182, 212, 0.1)',
+  },
+  // Callout header widget styles
+  '.cm-callout-header': {
+    display: 'inline-block',
+    marginBottom: '0.5em',
+  },
+  '.cm-callout-header-content': {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontWeight: '600',
+    fontSize: '0.95rem',
+  },
+  '.cm-callout-icon': {
+    fontSize: '1.25rem',
+    lineHeight: '1',
+    flexShrink: '0',
+  },
+  '.cm-callout-title': {
+    textTransform: 'capitalize',
+  },
+  '.cm-callout-title-note, .cm-callout-title-info': {
+    color: '#3B82F6',
+  },
+  '.cm-callout-title-tip, .cm-callout-title-hint, .cm-callout-title-important': {
+    color: '#10B981',
+  },
+  '.cm-callout-title-success, .cm-callout-title-check, .cm-callout-title-done': {
+    color: '#10B981',
+  },
+  '.cm-callout-title-warning, .cm-callout-title-caution, .cm-callout-title-attention': {
+    color: '#F59E0B',
+  },
+  '.cm-callout-title-danger, .cm-callout-title-error': {
+    color: '#EF4444',
+  },
+  '.cm-callout-title-bug': {
+    color: '#EF4444',
+  },
+  '.cm-callout-title-question, .cm-callout-title-help, .cm-callout-title-faq': {
+    color: '#8B5CF6',
+  },
+  '.cm-callout-title-example': {
+    color: '#6B7280',
+  },
+  '.cm-callout-title-quote, .cm-callout-title-cite': {
+    color: '#6B7280',
+  },
+  '.cm-callout-title-abstract, .cm-callout-title-summary, .cm-callout-title-tldr': {
+    color: '#06B6D4',
   },
   // Math styles - inline
   '.cm-math-inline': {
