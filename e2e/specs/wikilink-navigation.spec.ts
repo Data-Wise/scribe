@@ -37,25 +37,40 @@ async function switchToReadingMode(page: any) {
 }
 
 /**
- * Helper function to set editor content
- * Uses keyboard input for realistic interaction
+ * Helper function to set editor content and wait for WikiLink widgets
+ * Uses condition-based waiting instead of fixed timeouts for reliability
  */
 async function typeInEditor(page: any, text: string) {
   // Wait for editor to be present
   const editor = page.locator('.cm-content[contenteditable="true"]')
   await editor.waitFor({ state: 'visible', timeout: 5000 })
 
-  // Click to focus and select all existing content
+  // Clear existing content completely
   await editor.click()
+  await page.waitForTimeout(200) // Let cursor settle
   await page.keyboard.press('Meta+a')
-  await page.waitForTimeout(100)
+  await page.keyboard.press('Backspace')
+  await page.waitForTimeout(300) // Let deletion complete
 
   // Type the new content (no delay to avoid partial WikiLink creation)
   await page.keyboard.type(text)
 
-  // Wait longer for WikiLink widget processing
-  // Different content may take different amounts of time to render
-  await page.waitForTimeout(2000)
+  // Smart waiting: wait for WikiLink widgets if text contains [[...]]
+  if (text.includes('[[')) {
+    // Wait for WikiLink widgets to appear in DOM
+    await page.waitForFunction(
+      () => {
+        const widgets = document.querySelectorAll('.cm-wikilink')
+        return widgets.length > 0
+      },
+      { timeout: 10000 }
+    )
+    // Additional wait for event handlers to attach
+    await page.waitForTimeout(300)
+  } else {
+    // No WikiLinks expected, shorter wait for content to settle
+    await page.waitForTimeout(500)
+  }
 }
 
 test.describe('WikiLink Navigation E2E', () => {
