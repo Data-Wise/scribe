@@ -102,7 +102,7 @@ $$`
       const to = from + match[0].length
 
       expect(from).toBe(12) // Position of first $
-      expect(to).toBe(25)   // Position after last $
+      expect(to).toBe(24)   // Position after last $ (12 + '$$E = mc^2$$'.length)
       expect(text.substring(from, to)).toBe('$$E = mc^2$$')
     })
 
