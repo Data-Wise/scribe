@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LaTeX Regex Test</title>
+</head>
+<body>
+    <h1>LaTeX Regex Test</h1>
+    <pre id="output"></pre>
+
+    <script>
+        const testText = `# Multi-line LaTeX Test
+
+Here's a multi-line equation:
+
+$$
+\\begin{aligned}
+f(x) &= x^2 + 2x + 1 \\\\
+     &= (x + 1)^2
+\\end{aligned}
+$$
+
+And here's a single-line equation: $$E = mc^2$$
+
+And inline math: $a^2 + b^2 = c^2$`;
+
+        const output = document.getElementById('output');
+
+        // Test the display math regex
+        output.textContent = 'Testing display math regex: /\\$\\$([\\s\\S]+?)\\$\\$/g\n\n';
+        output.textContent += 'Input text:\n' + testText + '\n\n';
+        output.textContent += '─'.repeat(60) + '\n\n';
+
+        const displayMathRegex = /\$\$([\s\S]+?)\$\$/g;
+        let match;
+        let matchCount = 0;
+
+        while ((match = displayMathRegex.exec(testText)) !== null) {
+            matchCount++;
+            output.textContent += `Match ${matchCount}:\n`;
+            output.textContent += `  Index: ${match.index}\n`;
+            output.textContent += `  Full match: "${match[0]}"\n`;
+            output.textContent += `  Formula (match[1]): "${match[1]}"\n`;
+            output.textContent += `  Has newlines: ${match[1].includes('\\n')}\n`;
+            output.textContent += `  Trimmed: "${match[1].trim()}"\n\n`;
+        }
+
+        output.textContent += `Total matches: ${matchCount}\n\n`;
+
+        if (matchCount === 0) {
+            output.textContent += '❌ NO MATCHES FOUND!\n';
+        } else {
+            output.textContent += '✅ Regex is working!\n';
+        }
+    </script>
+</body>
+</html>
