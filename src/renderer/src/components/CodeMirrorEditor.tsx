@@ -8,7 +8,8 @@ import { syntaxTree } from '@codemirror/language'
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
 import { tags } from '@lezer/highlight'
 import type { DecorationSet } from '@codemirror/view'
-import type { Range } from '@codemirror/state'
+import { StateField, StateEffect, RangeSet } from '@codemirror/state'
+import type { Range, EditorState } from '@codemirror/state'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
 
@@ -167,6 +168,70 @@ class CalloutHeaderWidget extends WidgetType {
 
 const hiddenWidget = new HiddenWidget()
 const bulletWidget = new BulletWidget()
+
+/**
+ * StateField for multi-line display math ($$...$$) blocks
+ * Must use StateField (not ViewPlugin) because block widgets affect vertical layout
+ */
+const displayMathField = StateField.define<DecorationSet>({
+  create(state: EditorState): DecorationSet {
+    return buildDisplayMathDecorations(state)
+  },
+  update(decorations: DecorationSet, tr): DecorationSet {
+    if (tr.docChanged || tr.selection) {
+      return buildDisplayMathDecorations(tr.state)
+    }
+    return decorations.map(tr.changes)
+  },
+  provide: f => EditorView.decorations.from(f)
+})
+
+function buildDisplayMathDecorations(state: EditorState): DecorationSet {
+  const widgets: Range<Decoration>[] = []
+  const doc = state.doc
+  const cursor = state.selection.main
+  const text = doc.toString()
+
+  // Find all display math blocks ($$...$$) including multi-line
+  const displayMathRegex = /\$\$(.+?)\$\$/gs
+  let match: RegExpExecArray | null
+
+  while ((match = displayMathRegex.exec(text)) !== null) {
+    const from = match.index
+    const to = from + match[0].length
+    const formula = match[1].trim()
+
+    // Check if cursor is within this block
+    const startLine = doc.lineAt(from).number
+    const endLine = doc.lineAt(to).number
+    const cursorLine = doc.lineAt(cursor.head).number
+
+    // Skip if cursor is inside this block
+    if (cursorLine >= startLine && cursorLine <= endLine) {
+      continue
+    }
+
+    // Create a block widget at the start of the block
+    const lineStart = doc.lineAt(from).from
+    widgets.push(
+      Decoration.widget({
+        widget: new MathWidget(formula, true), // displayMode = true
+        block: true,
+        side: 1 // Position after the line start
+      }).range(lineStart)
+    )
+
+    // Hide each line of the raw LaTeX using line decorations
+    for (let lineNum = startLine; lineNum <= endLine; lineNum++) {
+      const line = doc.line(lineNum)
+      widgets.push(
+        Decoration.line({ class: 'cm-hidden-latex-line' }).range(line.from)
+      )
+    }
+  }
+
+  return RangeSet.of(widgets)
+}
 
 /**
  * Plugin that hides markdown syntax when cursor is outside formatted elements
@@ -335,65 +400,14 @@ class RichMarkdownPlugin {
         }
       })
 
-      // Process math using regex (markdown parser doesn't recognize $...$ syntax)
+      // Process inline math ($...$) using regex
+      // Note: Display math ($$...$$) is handled by displayMathField StateField
       const text = doc.sliceString(from, to)
 
-      // DEBUG: Log text content to verify newlines are captured
-      console.log('[DEBUG] Sliced text length:', text.length, 'Has newlines:', text.includes('\n'))
-
-      // First, find display math ($$...$$) including multi-line blocks
-      // Must process before inline math to avoid partial matches
-      // Using 's' flag (dotall) to make . match newlines
-      const displayMathRegex = /\$\$(.+?)\$\$/gs
-      let match
-      let matchCount = 0
-      while ((match = displayMathRegex.exec(text)) !== null) {
-        matchCount++
-        const matchFrom = from + match.index
-        const matchTo = matchFrom + match[0].length
-        const formula = match[1].trim()
-
-        // DEBUG: Log each match found
-        console.log(`[DEBUG] Display math match ${matchCount}:`, {
-          formula: formula.substring(0, 50),
-          hasNewlines: formula.includes('\n'),
-          matchFrom,
-          matchTo,
-          fullMatch: match[0]
-        })
-
-        // For multi-line blocks, check if cursor is on ANY line within the block
-        const startLine = doc.lineAt(matchFrom).number
-        const endLine = doc.lineAt(matchTo).number
-        const cursorLine = doc.lineAt(cursor.head).number
-
-        // DEBUG: Log cursor position check
-        console.log(`[DEBUG] Cursor check:`, {
-          startLine,
-          endLine,
-          cursorLine,
-          willSkip: cursorLine >= startLine && cursorLine <= endLine
-        })
-
-        // Skip if cursor is on any line within this math block
-        if (cursorLine >= startLine && cursorLine <= endLine) {
-          console.log(`[DEBUG] Skipping match ${matchCount} - cursor inside block`)
-          continue
-        }
-
-        console.log(`[DEBUG] Creating widget for match ${matchCount}`)
-        widgets.push(
-          Decoration.replace({
-            widget: new MathWidget(formula, true) // displayMode = true
-          }).range(matchFrom, matchTo)
-        )
-      }
-
-      console.log(`[DEBUG] Total display math matches found: ${matchCount}`)
-
-      // Then process inline math ($...$)
+      // Process inline math ($...$)
       // Negative lookbehind/ahead to avoid matching $$
       const inlineMathRegex = /(?<!\$)\$([^$\n]+)\$(?!\$)/g
+      let match
       while ((match = inlineMathRegex.exec(text)) !== null) {
         const matchFrom = from + match.index
         const matchTo = matchFrom + match[0].length
@@ -477,6 +491,10 @@ function createEditorTheme() {
   },
   // Hidden syntax placeholder (empty)
   '.cm-hidden-syntax': {
+    display: 'none',
+  },
+  // Hide raw LaTeX lines when widget is displayed
+  '.cm-hidden-latex-line': {
     display: 'none',
   },
   // Bullet style
@@ -713,6 +731,7 @@ export function CodeMirrorEditor({
       extensions: [Strikethrough]  // Enable GFM strikethrough (~~text~~)
     }),
     syntaxHighlighting(markdownHighlighting),  // Apply formatting styles (bold, italic, strikethrough)
+    displayMathField,  // StateField for multi-line display math blocks
     richMarkdownPlugin,
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
