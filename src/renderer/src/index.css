@@ -389,6 +389,8 @@ body {
   min-width: 40px;
   text-align: center;
   font-weight: 500;
+  -webkit-app-region: no-drag; /* Ensure timer display doesn't interfere with dragging */
+  cursor: default; /* Don't inherit grab cursor from parent */
 }
 
 .timer-value.paused {
