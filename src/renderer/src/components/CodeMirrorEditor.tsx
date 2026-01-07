@@ -211,22 +211,24 @@ function buildDisplayMathDecorations(state: EditorState): DecorationSet {
       continue
     }
 
-    // Create a block widget at the start of the block
-    const lineStart = doc.lineAt(from).from
+    // Create a block widget BEFORE the block
     widgets.push(
       Decoration.widget({
         widget: new MathWidget(formula, true), // displayMode = true
         block: true,
-        side: 1 // Position after the line start
-      }).range(lineStart)
+        side: -1 // Position before the block
+      }).range(from)
     )
 
-    // Hide each line of the raw LaTeX using line decorations
+    // Hide each line's content individually (doesn't cross line breaks, so it's allowed)
     for (let lineNum = startLine; lineNum <= endLine; lineNum++) {
       const line = doc.line(lineNum)
-      widgets.push(
-        Decoration.line({ class: 'cm-hidden-latex-line' }).range(line.from)
-      )
+      // Replace the entire line content with nothing
+      if (line.from < line.to) {
+        widgets.push(
+          Decoration.replace({}).range(line.from, line.to)
+        )
+      }
     }
   }
 
@@ -493,10 +495,6 @@ function createEditorTheme() {
   },
   // Hidden syntax placeholder (empty)
   '.cm-hidden-syntax': {
-    display: 'none',
-  },
-  // Hide raw LaTeX lines when widget is displayed
-  '.cm-hidden-latex-line': {
     display: 'none',
   },
   // Bullet style
