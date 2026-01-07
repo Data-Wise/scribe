@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -746,18 +746,60 @@ function MarkdownPreview({
             </code>
           )
         },
-        // Blockquotes
-        blockquote: ({ children }) => (
-          <blockquote 
-            className="border-l-4 pl-4 italic my-4"
-            style={{ 
-              borderColor: 'var(--nexus-bg-tertiary)',
-              color: 'var(--nexus-text-muted)'
-            }}
-          >
-            {children}
-          </blockquote>
-        ),
+        // Blockquotes (with callout detection)
+        blockquote: ({ children }) => {
+          // Extract text from first child to detect callout syntax
+          const firstChild = React.Children.toArray(children)[0]
+          const text = extractTextFromReactNode(firstChild)
+
+          // Check for callout pattern: [!type] optional title
+          const calloutMatch = text?.match(/^\[!(\w+)\](?:\s+(.*))?/)
+
+          if (calloutMatch) {
+            const type = calloutMatch[1].toLowerCase()
+            const title = calloutMatch[2]?.trim() || capitalizeFirst(type)
+            const config = getCalloutConfig(type)
+
+            // Filter out the callout header from children
+            const contentChildren = filterCalloutHeader(children)
+
+            return (
+              <div
+                className="callout-box rounded-lg p-4 my-4"
+                style={{
+                  borderLeft: `4px solid ${config.color}`,
+                  backgroundColor: config.bgColor
+                }}
+              >
+                <div className="callout-header flex items-center gap-2 mb-2">
+                  <span className="callout-icon text-xl">{config.icon}</span>
+                  <span
+                    className="callout-title font-semibold"
+                    style={{ color: config.color }}
+                  >
+                    {title}
+                  </span>
+                </div>
+                <div className="callout-content" style={{ fontStyle: 'normal', color: 'var(--nexus-text-primary)' }}>
+                  {contentChildren}
+                </div>
+              </div>
+            )
+          }
+
+          // Regular blockquote
+          return (
+            <blockquote
+              className="border-l-4 pl-4 italic my-4"
+              style={{
+                borderColor: 'var(--nexus-bg-tertiary)',
+                color: 'var(--nexus-text-muted)'
+              }}
+            >
+              {children}
+            </blockquote>
+          )
+        },
         // Bold and italic
         strong: ({ children }) => (
           <strong className="font-bold" style={{ color: 'var(--nexus-text-primary)' }}>{children}</strong>
@@ -774,6 +816,56 @@ function MarkdownPreview({
       {contentWithMath}
     </ReactMarkdown>
   )
+}
+
+/**
+ * Helper: Extract text content from a React node
+ */
+function extractTextFromReactNode(node: React.ReactNode): string | null {
+  if (typeof node === 'string') {
+    return node
+  }
+  if (typeof node === 'number') {
+    return String(node)
+  }
+  if (React.isValidElement(node)) {
+    return extractTextFromReactNode(node.props.children)
+  }
+  if (Array.isArray(node)) {
+    return node.map(extractTextFromReactNode).filter(Boolean).join('')
+  }
+  return null
+}
+
+/**
+ * Helper: Filter out callout header ([!type] Title) from children
+ */
+function filterCalloutHeader(children: React.ReactNode): React.ReactNode {
+  const childArray = React.Children.toArray(children)
+  if (childArray.length === 0) return children
+
+  // Check if first child contains [!type]
+  const firstChild = childArray[0]
+  const text = extractTextFromReactNode(firstChild)
+
+  if (text?.match(/^\[!\w+\]/)) {
+    // If it's a paragraph containing ONLY the [!type] line, remove it entirely
+    if (React.isValidElement(firstChild) && firstChild.props?.children) {
+      const childText = extractTextFromReactNode(firstChild.props.children)
+      if (childText?.match(/^\[!\w+\](?:\s+.*)?$/)) {
+        return childArray.slice(1)
+      }
+    }
+  }
+
+  return children
+}
+
+/**
+ * Helper: Capitalize first letter of a string
+ */
+function capitalizeFirst(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 /**
@@ -833,41 +925,8 @@ function processWikiLinksAndTags(content: string): string {
     '`#$1`'
   )
 
-  // Process callouts: > [!type] optional title
-  // Convert to HTML div with data attributes for styling
-  // This regex matches complete callout blocks (header + any continuation lines)
-  // IMPORTANT: Use [ \t]+ (space/tab only) not \s+ to avoid matching newlines as title
-  const calloutRegex = /^>\s*\[!(\w+)\](?:[ \t]+([^\n]*))?\n((?:>.*\n?)*)/gm
-  processed = processed.replace(
-    calloutRegex,
-    (_match, type, title, body) => {
-      const config = getCalloutConfig(type)
-      const calloutTitle = (title && title.trim()) || type.charAt(0).toUpperCase() + type.slice(1)
-      // Clean up the body - remove leading > and space from each line
-      const cleanBody = (body || '')
-        .split('\n')
-        .map((line: string) => line.replace(/^>\s*/, '')) // Remove > and ALL following spaces
-        .filter((line: string) => line.trim() !== '') // Remove empty lines
-        .join('\n')
-        .trim()
-
-      // Build body paragraphs - convert newlines to <br> to preserve structure
-      const bodyHtml = cleanBody
-        .split('\n\n')
-        .map((para: string) => `<p style="margin: 0.5em 0;">${para.replace(/\n/g, '<br>')}</p>`)
-        .join('')
-
-      return `<div class="callout callout-${type.toLowerCase()}" data-callout-type="${type.toLowerCase()}" style="border-left: 4px solid ${config.color}; background: ${config.bgColor}; padding: 12px 16px; border-radius: 4px; margin: 16px 0;">
-<div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: ${config.color}; margin-bottom: 8px;">
-<span>${config.icon}</span>
-<span>${calloutTitle}</span>
-</div>
-<div style="color: var(--nexus-text-primary);">${bodyHtml}</div>
-</div>
-
-`
-    }
-  )
+  // NOTE: Callouts are now handled by the blockquote renderer in ReactMarkdown
+  // No preprocessing needed - let ReactMarkdown parse > blockquotes naturally
 
   return processed
 }

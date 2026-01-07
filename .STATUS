@@ -2,16 +2,16 @@
 status: active
 priority: P1
 progress: 100
-version: 1.11.0
-sprint: 29
-started: 2026-01-01
-updated: 2026-01-01
+version: 1.13.0
+sprint: 31
+started: 2026-01-06
+updated: 2026-01-06
 editor: hybrid-markdown++
-next_sprint: 30
-next_focus: Browser Mode Polish
-tests: 978
+next_sprint: 32
+next_focus: TBD
+tests: 955
 unit_tests: 930
-e2e_tests: 48
+e2e_tests: 25
 tags:
   - adhd-friendly
   - distraction-free
@@ -27,6 +27,45 @@ tags:
 > **ADHD-friendly distraction-free writer** with projects, academic features, and CLI-based AI.
 
 ## Current Sprint
+
+### Sprint 30: Browser Mode Polish - Phase 1 COMPLETE ✅
+
+**v1.12.0 Released** ✅ (2026-01-02)
+
+**Phase 1: Browser Mode Indexing Fix** ✅
+- [x] Fixed critical wiki link indexing bug in browser mode
+- [x] Fixed tag indexing bug in browser mode
+- [x] Backlinks panel fully functional in browser mode
+- [x] Tag filtering fully functional in browser mode
+- [x] Added batch reindexing utility for existing notes
+- [x] 23 comprehensive unit tests (all passing)
+- [x] Universal binary support (Apple Silicon + Intel)
+
+**Testing:**
+- [x] 930 unit tests passing (21 new component tests from Sprint 29)
+- [x] 48 E2E tests (1/8 browser backlinks passing, 7 skipped with TODO)
+- [x] TypeScript: 0 errors
+- [x] Production code verified working
+
+**Release Process:**
+- [x] PR #25 merged (feat/browser-mode-polish → dev)
+- [x] PR #26 merged (dev → main)
+- [x] Git tag v1.12.0 created and pushed
+- [x] GitHub release published with DMG artifacts
+- [x] Homebrew formula updated manually (scribe v1.12.0)
+- [x] Installation tested via `brew install data-wise/tap/scribe`
+
+**Documentation:**
+- [x] Complete git workflow guide (docs/GIT-WORKFLOW.md)
+- [x] Sprint 30 phase 1 summary (docs/planning/)
+- [x] E2E test bug report documented (BUG-REPORT-E2E-TITLE-MISMATCH.md)
+- [x] CHANGELOG.md updated
+- [x] Planning INDEX.md updated
+
+**Next Steps (Deferred):**
+- [ ] Phase 1.5: Fix remaining 7 E2E tests (~30 min)
+- [ ] Phase 2: PWA improvements (service worker, offline indicators)
+- [ ] Phase 3: Documentation updates (browser mode guide, README)
 
 **Sprint 25: Plan B UI Redesign + v1.2.1 Release** ✅ Complete (2025-12-30)
 
