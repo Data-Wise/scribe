@@ -487,6 +487,7 @@ export function HybridEditor({
                 onChange(newContent)
               }}
               placeholder="Start writing..."
+              editorMode={mode}  // Pass mode to control syntax hiding
             />
           </div>
         )}

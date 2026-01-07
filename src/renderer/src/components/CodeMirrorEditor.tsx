@@ -1250,6 +1250,7 @@ interface CodeMirrorEditorProps {
   onChange: (content: string) => void
   placeholder?: string
   className?: string
+  editorMode?: 'source' | 'live-preview' | 'reading'  // Controls syntax hiding behavior
 }
 
 /**
@@ -1265,6 +1266,7 @@ export function CodeMirrorEditor({
   onChange,
   placeholder,
   className,
+  editorMode = 'source',  // Default to source mode
 }: CodeMirrorEditorProps) {
   const editorRef = useRef<ReactCodeMirrorRef>(null)
   const isInternalChange = useRef(false)
@@ -1280,7 +1282,8 @@ export function CodeMirrorEditor({
     }),
     syntaxHighlighting(markdownHighlighting),  // Apply formatting styles (bold, italic, strikethrough)
     displayMathField,  // StateField for multi-line display math blocks
-    richMarkdownPlugin,
+    // Only hide syntax in live-preview mode; show all syntax in source mode
+    ...(editorMode === 'live-preview' ? [richMarkdownPlugin] : []),
     latexSyntaxPlugin,  // LaTeX syntax highlighting for math blocks
     autocompletion({ override: [latexCompletions, latexSnippetCompletions] }),  // LaTeX commands & snippets
     EditorView.lineWrapping,
