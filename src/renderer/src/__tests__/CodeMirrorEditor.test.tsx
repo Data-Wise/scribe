@@ -59,6 +59,9 @@ vi.mock('@codemirror/view', () => ({
     lineWrapping: { extension: 'line-wrapping-mock' },
     contentAttributes: {
       of: vi.fn(() => ({ extension: 'content-attrs-mock' }))
+    },
+    decorations: {
+      from: vi.fn((f) => ({ extension: 'decorations-mock', field: f }))
     }
   },
   Decoration: {
