@@ -43,7 +43,11 @@ tags:
 
 **Testing:**
 - [x] 930 unit tests passing (21 new component tests from Sprint 29)
-- [x] 48 E2E tests (1/8 browser backlinks passing, 7 skipped with TODO)
+- [x] 48 E2E tests base + improvements in progress:
+  - [x] Window dragging: 10/10 passing
+  - [x] Syntax highlighting: 9/15 passing (improved from 8/15)
+  - [x] WikiLink rendering: Infrastructure ready, content clearing helper added
+  - [x] Browser backlinks: 1/8 passing, 7 skipped with TODO
 - [x] TypeScript: 0 errors
 - [x] Production code verified working
 
