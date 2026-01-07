@@ -20,8 +20,8 @@ describe('ExportDialog Component', () => {
     noteTitle: 'Test Note Title',
     noteContent: 'Test note content with $math$ and [@citation]',
     noteProperties: {
-      status: { key: 'status', value: 'draft', type: 'list' as const },
-      priority: { key: 'priority', value: 'high', type: 'list' as const },
+      status: { key: 'status', value: ['draft'], type: 'list' as const },  // List type must be array
+      priority: { key: 'priority', value: ['high'], type: 'list' as const },  // List type must be array
     } as Record<string, Property>,
     noteTags: ['important', 'research'],
   }
@@ -512,8 +512,11 @@ describe('ExportDialog Component', () => {
 
       const content = await capturedBlob!.text()
 
-      expect(content).toContain('status: "draft"')
-      expect(content).toContain('priority: "high"')
+      // List properties are now arrays, so they appear as YAML arrays
+      expect(content).toContain('status:')
+      expect(content).toContain('- "draft"')
+      expect(content).toContain('priority:')
+      expect(content).toContain('- "high"')
     })
 
     it('includes tags in frontmatter', async () => {

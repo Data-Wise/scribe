@@ -38,7 +38,7 @@ export const STANDARD_PROPERTIES = {
 
 // Default properties for new notes
 export const DEFAULT_NOTE_PROPERTIES: Record<string, Property> = {
-  status: { key: 'status', value: 'draft', type: 'list' },
+  status: { key: 'status', value: ['draft'], type: 'list' },  // List type must be array
   tags: { key: 'tags', value: [], type: 'tags' },
   created: { key: 'created', value: '', type: 'date', readonly: true },
   modified: { key: 'modified', value: '', type: 'date', readonly: true },

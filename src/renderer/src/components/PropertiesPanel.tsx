@@ -151,11 +151,13 @@ export function PropertiesPanel({
       case 'list':
         // Check if we have predefined options for this property
         const options = LIST_OPTIONS[prop.key]
+        // List values are stored as arrays, extract first element for display
+        const listValue = Array.isArray(prop.value) ? (prop.value[0] || '') : String(prop.value)
         if (options) {
           return (
             <select
-              value={String(prop.value)}
-              onChange={(e) => handleValueChange(prop.key, e.target.value)}
+              value={listValue}
+              onChange={(e) => handleValueChange(prop.key, [e.target.value])}  // Wrap in array
               className="bg-transparent border-b border-transparent hover:border-nexus-text-muted focus:border-nexus-accent outline-none text-nexus-text-primary cursor-pointer"
             >
               <option value="" className="bg-neutral-800">Select...</option>
@@ -169,8 +171,8 @@ export function PropertiesPanel({
         return (
           <input
             type="text"
-            value={String(prop.value)}
-            onChange={(e) => handleValueChange(prop.key, e.target.value)}
+            value={listValue}
+            onChange={(e) => handleValueChange(prop.key, [e.target.value])}  // Wrap in array
             placeholder="Empty"
             className="bg-transparent border-b border-transparent hover:border-nexus-text-muted focus:border-nexus-accent outline-none w-full text-nexus-text-primary placeholder:text-nexus-text-muted/50"
           />

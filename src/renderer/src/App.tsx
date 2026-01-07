@@ -431,8 +431,8 @@ function App() {
   const handleCreateNote = async () => {
     // Default properties for new notes
     const defaultProperties: Record<string, Property> = {
-      status: { key: 'status', value: 'draft', type: 'list' },
-      type: { key: 'type', value: 'note', type: 'list' },
+      status: { key: 'status', value: ['draft'], type: 'list' },  // List type must be array
+      type: { key: 'type', value: ['note'], type: 'list' },  // List type must be array
     }
 
     const newNote = await createNote({
@@ -1045,8 +1045,8 @@ function App() {
   // Quick capture handler - creates a new note with the captured content
   const handleQuickCapture = async (content: string, title?: string) => {
     const defaultProperties: Record<string, Property> = {
-      status: { key: 'status', value: 'draft', type: 'list' },
-      type: { key: 'type', value: 'note', type: 'list' },
+      status: { key: 'status', value: ['draft'], type: 'list' },  // List type must be array
+      type: { key: 'type', value: ['note'], type: 'list' },  // List type must be array
     }
 
     await createNote({
