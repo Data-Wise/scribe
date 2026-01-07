@@ -52,7 +52,10 @@ async function typeInEditor(page: any, text: string) {
 
   // Type the new content (no delay to avoid partial WikiLink creation)
   await page.keyboard.type(text)
-  await page.waitForTimeout(1500) // Wait for WikiLink widget processing
+
+  // Wait longer for WikiLink widget processing
+  // Different content may take different amounts of time to render
+  await page.waitForTimeout(2000)
 }
 
 test.describe('WikiLink Navigation E2E', () => {
