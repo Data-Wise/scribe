@@ -1539,7 +1539,10 @@ export function CodeMirrorEditor({
     // Cmd+Click navigation works in all modes (especially useful in Source mode)
     cmdClickHandler,
     latexSyntaxPlugin,  // LaTeX syntax highlighting for math blocks
-    autocompletion({ override: [quartoCompletions, latexCompletions, latexSnippetCompletions] }),  // Quarto + LaTeX completions
+    autocompletion({
+      override: [quartoCompletions, latexCompletions, latexSnippetCompletions],
+      activateOnTyping: true  // Enable auto-trigger while typing
+    }),  // Quarto + LaTeX completions
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
   ]

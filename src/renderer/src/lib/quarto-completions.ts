@@ -487,7 +487,7 @@ export function yamlCompletions(context: CompletionContext): CompletionResult | 
 
   // At start of line or after whitespace: suggest keys
   const word = context.matchBefore(/[a-zA-Z-]*:?/)
-  if (!word || (word.from === word.to && !context.explicit)) {
+  if (!word) {
     return null
   }
 
@@ -681,7 +681,7 @@ export function crossRefCompletions(context: CompletionContext): CompletionResul
 
   // Match @type- or @type-partial
   const word = context.matchBefore(/@[a-zA-Z]*-?[a-zA-Z0-9_-]*/)
-  if (!word || (word.from === word.to && !context.explicit)) {
+  if (!word) {
     return null
   }
 
