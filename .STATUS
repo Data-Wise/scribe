@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 30
+progress: 35
 version: 1.14.0
 sprint: 34
 started: 2026-01-08
 updated: 2026-01-08
 editor: hybrid-markdown++
 next_sprint: 35
-next_focus: Left Sidebar Redesign (Phase 1)
+next_focus: Left Sidebar Redesign (Phase 3 - Vault Pinning)
 tests: 2015
 unit_tests: 2015
 e2e_tests: 30
@@ -75,9 +75,39 @@ tags:
 - Sequential integration
 - Total time: ~15 minutes
 
+#### Sprint 34: Phase 2 - Inbox Pinning ✅ COMPLETE
+
+**Completed:** 2026-01-08
+**Commit:** `9aa6b2f` feat(sidebar): Phase 2 - Inbox Pinning with amber accent
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| InboxButton component (amber themed) | 2h | P1 | ✅ Done |
+| Unread count logic (project_id = null) | 1h | P1 | ✅ Done |
+| CSS styling (amber accent #f59e0b) | 1h | P1 | ✅ Done |
+| Quick capture shortcut (⌘⇧C) | - | P1 | ✅ Already wired |
+
+**Features:**
+- Dedicated Inbox button at top of Icon Mode (permanent position)
+- Amber accent color (#f59e0b) to differentiate from projects
+- Unread badge showing count of unassigned notes
+- Smart tooltip showing count and status
+- Active indicator when Inbox view is selected
+
+**Files Created:**
+- `src/renderer/src/components/sidebar/InboxButton.tsx` (42 lines)
+
+**Files Modified:**
+- `src/renderer/src/components/sidebar/IconBarMode.tsx` (integrated InboxButton)
+- `src/renderer/src/index.css` (+76 lines amber-themed CSS)
+
+**Implementation Method:**
+- Direct implementation (no agents needed)
+- Total time: ~10 minutes
+
 **Implementation Plan (4 Phases, 28 hours total):**
-- Phase 1: Icon Mode Enhancements (6h)
-- Phase 2: Inbox Pinning (8h)
+- Phase 1: Icon Mode Enhancements (6h) ✅ Complete
+- Phase 2: Inbox Pinning (8h) ✅ Complete
 - Phase 3: Vault Pinning System (8h)
 - Phase 4: Visual Polish (6h)
 
