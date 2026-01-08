@@ -23,7 +23,7 @@ import { ClaudeChatPanel } from './components/ClaudeChatPanel'
 import { TerminalPanel } from './components/TerminalPanel'
 import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
-import { DragRegion } from './components/DragRegion'
+import { DragRegion, useDragRegion } from './components/DragRegion'
 import { ToastProvider, useToast, setGlobalToast } from './components/Toast'
 import { Note, Tag, Property } from './types'
 import { Settings2, Link2, Tags, PanelRightOpen, PanelRightClose, BarChart3, Sparkles, Terminal } from 'lucide-react'
@@ -95,6 +95,9 @@ function App() {
 
   // Apply Forest Night theme
   useForestTheme()
+
+  // Window dragging hook for editor header
+  const dragRegion = useDragRegion()
 
   // Sidebar mode and tabs from app view store
   const {
@@ -431,8 +434,8 @@ function App() {
   const handleCreateNote = async () => {
     // Default properties for new notes
     const defaultProperties: Record<string, Property> = {
-      status: { key: 'status', value: 'draft', type: 'list' },
-      type: { key: 'type', value: 'note', type: 'list' },
+      status: { key: 'status', value: ['draft'], type: 'list' },  // List type must be array
+      type: { key: 'type', value: ['note'], type: 'list' },  // List type must be array
     }
 
     const newNote = await createNote({
@@ -536,9 +539,9 @@ function App() {
       }
 
       if (targetNote) {
-        // Keep preview mode when navigating via wiki-link click
-        setEditorMode('reading')
+        // Preserve user's current editor mode when navigating
         selectNote(targetNote.id)
+        openNoteTab(targetNote.id, targetNote.title)
       } else {
         const newNote = await api.createNote({
           title,
@@ -550,9 +553,9 @@ function App() {
           await api.updateNoteLinks(selectedNote.id, selectedNote.content)
         }
 
-        // New note opens in write mode
-        setEditorMode('source')
+        // Preserve user's current editor mode when creating new notes
         selectNote(newNote.id)
+        openNoteTab(newNote.id, newNote.title)
         loadNotes(currentFolder)
       }
     } catch (error) {
@@ -1045,8 +1048,8 @@ function App() {
   // Quick capture handler - creates a new note with the captured content
   const handleQuickCapture = async (content: string, title?: string) => {
     const defaultProperties: Record<string, Property> = {
-      status: { key: 'status', value: 'draft', type: 'list' },
-      type: { key: 'type', value: 'note', type: 'list' },
+      status: { key: 'status', value: ['draft'], type: 'list' },  // List type must be array
+      type: { key: 'type', value: ['note'], type: 'list' },  // List type must be array
     }
 
     await createNote({
@@ -1363,7 +1366,7 @@ function App() {
         {/* Main editor area */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Editor header for visual alignment with sidebar */}
-          <div className="editor-header">
+          <div className="editor-header" {...dragRegion}>
             {/* Breadcrumb navigation */}
             <div className="editor-breadcrumb">
               {currentProjectId && projects.find(p => p.id === currentProjectId) && (
@@ -1622,7 +1625,7 @@ function App() {
                           const note = notes.find(n => n.id === noteId)
                           if (note) {
                             openNoteTab(noteId, note.title)
-                            setEditorMode('reading')
+                            // Preserve current editor mode when navigating via backlinks
                             selectNote(noteId)
                           }
                         }}

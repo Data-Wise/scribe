@@ -453,23 +453,25 @@ export function HybridEditor({
         className={`flex-1 overflow-auto p-8 pt-16 ${focusMode ? 'typewriter-mode' : ''}`}
         style={{ backgroundColor: 'var(--nexus-bg-primary)' }}
       >
-        {/* Source mode: plain textarea for raw markdown editing */}
+        {/* Source mode: CodeMirror with visible syntax markers */}
         {mode === 'source' && (
-          <textarea
-            ref={textareaRef}
-            value={localContent}
-            onChange={handleInput}
-            onKeyDown={handleKeyDown}
-            placeholder="Start writing... [[ wiki-links, # tags, @ citations, $math$"
-            className="hybrid-editor-textarea w-full h-full min-h-[calc(100vh-200px)] bg-transparent focus:outline-none resize-none"
+          <div
             style={{
-              fontFamily: 'var(--editor-font-family)',
-              fontSize: 'var(--editor-font-size)',
-              lineHeight: 'var(--editor-line-height)',
+              backgroundColor: 'var(--nexus-bg-primary)',
               color: 'var(--nexus-text-primary)',
             }}
-            spellCheck={false}
-          />
+          >
+            <CodeMirrorEditor
+              content={localContent}
+              onChange={(newContent) => {
+                setLocalContent(newContent)
+                onChange(newContent)
+              }}
+              placeholder="Start writing... [[ wiki-links, # tags, @ citations, $math$"
+              editorMode="source"  // Source mode shows syntax markers
+              onWikiLinkClick={onWikiLinkClick}  // Pass WikiLink navigation callback
+            />
+          </div>
         )}
 
         {/* Live Preview mode: Obsidian-style editing with CodeMirror */}
@@ -487,6 +489,8 @@ export function HybridEditor({
                 onChange(newContent)
               }}
               placeholder="Start writing..."
+              editorMode={mode}  // Pass mode to control syntax hiding
+              onWikiLinkClick={onWikiLinkClick}  // Pass WikiLink navigation callback
             />
           </div>
         )}

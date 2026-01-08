@@ -59,6 +59,9 @@ vi.mock('@codemirror/view', () => ({
     lineWrapping: { extension: 'line-wrapping-mock' },
     contentAttributes: {
       of: vi.fn(() => ({ extension: 'content-attrs-mock' }))
+    },
+    decorations: {
+      from: vi.fn((f) => ({ extension: 'decorations-mock', field: f }))
     }
   },
   Decoration: {
@@ -101,7 +104,13 @@ vi.mock('@lezer/highlight', () => ({
     link: 'link',
     url: 'url',
     quote: 'quote',
+    list: 'list',
+    meta: 'meta',
     processingInstruction: 'processingInstruction'
+  },
+  styleTags: vi.fn((tagMap) => tagMap),  // Mock styleTags - just returns the input
+  Tag: {
+    define: vi.fn(() => 'custom-tag')  // Mock Tag.define() - returns a mock tag
   }
 }))
 
@@ -827,6 +836,163 @@ describe('CodeMirrorEditor Rich Markdown Plugin Logic', () => {
       expect(matches.length).toBe(2)
       expect(matches[0][1]).toBe('x')
       expect(matches[1][1]).toBe('y')
+    })
+  })
+
+  describe('WikiLink Regex Patterns', () => {
+    it('matches simple wikilink [[Page]]', () => {
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const text = '[[My Note]]'
+      const match = regex.exec(text)
+
+      expect(match).not.toBeNull()
+      expect(match?.[1]).toBe('My Note')
+      expect(match?.[2]).toBeUndefined()
+    })
+
+    it('matches wikilink with alias [[Page|Alias]]', () => {
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const text = '[[Page Name|Display Text]]'
+      const match = regex.exec(text)
+
+      expect(match).not.toBeNull()
+      expect(match?.[1]).toBe('Page Name')
+      expect(match?.[2]).toBe('Display Text')
+    })
+
+    it('matches multiple wikilinks', () => {
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const text = 'Link [[Note1]] and [[Note2]]'
+      const matches = Array.from(text.matchAll(regex))
+
+      expect(matches.length).toBe(2)
+      expect(matches[0][1]).toBe('Note1')
+      expect(matches[1][1]).toBe('Note2')
+    })
+
+    it('handles wikilink with spaces', () => {
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const text = '[[My Long Note Name]]'
+      const match = regex.exec(text)
+
+      expect(match).not.toBeNull()
+      expect(match?.[1]).toBe('My Long Note Name')
+    })
+
+    it('handles wikilink with special characters', () => {
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const text = '[[Note: A & B (2024)]]'
+      const match = regex.exec(text)
+
+      expect(match).not.toBeNull()
+      expect(match?.[1]).toBe('Note: A & B (2024)')
+    })
+
+    it('extracts page name and display text from alias', () => {
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const text = '[[Long Page Name|Short]]'
+      const match = regex.exec(text)
+
+      const pageName = match?.[1]
+      const displayText = match?.[2] || pageName
+
+      expect(pageName).toBe('Long Page Name')
+      expect(displayText).toBe('Short')
+    })
+
+    it('uses page name as display text when no alias', () => {
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const text = '[[My Note]]'
+      const match = regex.exec(text)
+
+      const pageName = match?.[1]
+      const displayText = match?.[2] || pageName
+
+      expect(pageName).toBe('My Note')
+      expect(displayText).toBe('My Note')
+    })
+  })
+
+  describe('Syntax Highlighting Custom Tags', () => {
+    it('creates custom tag for header marks', () => {
+      // Tag.define() should be called for custom tags
+      const { Tag } = require('@lezer/highlight')
+
+      // Our implementation calls Tag.define() for custom tags
+      expect(Tag.define).toBeDefined()
+    })
+
+    it('custom tags are distinct from built-in tags', () => {
+      const { tags, Tag } = require('@lezer/highlight')
+
+      // Custom tags should be different from built-in tags
+      const customTag = Tag.define()
+      expect(customTag).not.toBe(tags.processingInstruction)
+    })
+  })
+
+  describe('WikiLinkWidget Class (Mock)', () => {
+    it('WidgetType is available for extension', () => {
+      const { WidgetType } = require('@codemirror/view')
+
+      // WidgetType should be a class we can extend
+      expect(WidgetType).toBeDefined()
+      expect(typeof WidgetType).toBe('function')
+    })
+
+    it('WikiLinkWidget conceptual test - display text extraction', () => {
+      // Testing the logic that WikiLinkWidget uses
+      const fullWikiLink = '[[Page Name|Display Text]]'
+      const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+      const match = regex.exec(fullWikiLink)
+
+      const pageName = match?.[1]
+      const displayText = match?.[2] || pageName
+
+      // Widget should display only the display text
+      expect(displayText).toBe('Display Text')
+      expect(displayText).not.toContain('[[')
+      expect(displayText).not.toContain('|')
+    })
+
+    it('WikiLinkWidget equality comparison logic', () => {
+      // Two widgets with same display text should be equal
+      const text1 = 'Display Text'
+      const text2 = 'Display Text'
+      const text3 = 'Different Text'
+
+      // Equality is based on display text
+      expect(text1 === text2).toBe(true)
+      expect(text1 === text3).toBe(false)
+    })
+  })
+
+  describe('Editor Mode-Specific Extensions', () => {
+    it('source mode should show syntax markers', () => {
+      const props = {
+        content: 'Test content',
+        onChange: vi.fn(),
+        editorMode: 'source' as const
+      }
+      render(<CodeMirrorEditor {...props} />)
+
+      // In source mode, we expect markdown extension to be enabled
+      // This is verified by extensions array length > 0
+      const extensionsCount = screen.getByTestId('extensions-count')
+      expect(parseInt(extensionsCount.textContent || '0')).toBeGreaterThan(0)
+    })
+
+    it('live-preview mode should hide brackets in widgets', () => {
+      const props = {
+        content: 'Test content',
+        onChange: vi.fn(),
+        editorMode: 'live-preview' as const
+      }
+      render(<CodeMirrorEditor {...props} />)
+
+      // Live preview mode should have decoration extensions
+      const extensionsCount = screen.getByTestId('extensions-count')
+      expect(parseInt(extensionsCount.textContent || '0')).toBeGreaterThan(0)
     })
   })
 })

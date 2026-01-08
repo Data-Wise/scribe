@@ -6,6 +6,23 @@ import { CommandPalette } from '../components/CommandPalette'
 import { Note, Tag } from '../types'
 import { createMockNote } from './testUtils'
 
+// Mock CodeMirrorEditor to provide a textarea for tests
+vi.mock('../components/CodeMirrorEditor', () => ({
+  CodeMirrorEditor: ({ content, onChange, placeholder }: {
+    content: string
+    onChange: (value: string) => void
+    placeholder?: string
+  }) => (
+    <textarea
+      data-testid="codemirror-textarea"
+      className="focus:outline-none"
+      value={content}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+    />
+  )
+}))
+
 // Mock the platform module to simulate Tauri mode (features enabled)
 vi.mock('../lib/platform', () => ({
   isTauri: () => true,

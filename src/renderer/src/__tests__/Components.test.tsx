@@ -222,8 +222,8 @@ describe('PropertiesPanel Component', () => {
 
   it('displays existing properties', () => {
     const properties = {
-      status: { key: 'status', value: 'draft', type: 'list' as const },
-      priority: { key: 'priority', value: 'high', type: 'list' as const },
+      status: { key: 'status', value: ['draft'], type: 'list' as const },  // List type must be array
+      priority: { key: 'priority', value: ['high'], type: 'list' as const },  // List type must be array
     }
 
     render(
