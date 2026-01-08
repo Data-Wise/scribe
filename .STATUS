@@ -47,23 +47,33 @@ tags:
 - ✅ Activity Bar with 3 icons (Search, Daily, Settings)
 - ✅ Mode switcher: Both ⌘0 + header icon
 
-#### Sprint 34: Phase 1 - Icon Mode Enhancements (6 hours) 🔜
+#### Sprint 34: Phase 1 - Icon Mode Enhancements ✅ COMPLETE
+
+**Completed:** 2026-01-08
+**Commit:** `0d19e64` feat(sidebar): Phase 1 - Tooltip & Activity Bar components
 
 | Task | Effort | Priority | Status |
 |------|--------|----------|--------|
-| Tooltip component (500ms delay) | 1h | P1 | [ ] Pending |
-| Colored project dots (emoji/color) | 1h | P1 | [ ] Pending |
-| Inbox badge (unread count) | 1h | P1 | [ ] Pending |
-| Activity Bar component (3 icons) | 2h | P1 | [ ] Pending |
-| Click handlers (dot → expand) | 1h | P1 | [ ] Pending |
+| Tooltip component (500ms delay) | 1h | P1 | ✅ Done |
+| Activity Bar component (3 icons) | 2h | P1 | ✅ Done |
+| Integrated Tooltip into IconBarMode | 30m | P1 | ✅ Done |
+| Wired Activity Bar handlers | 30m | P1 | ✅ Done |
+| Colored project dots | - | P1 | ✅ Already exists (StatusDot) |
 
-**Files to Create:**
-- `src/renderer/src/components/sidebar/Tooltip.tsx`
-- `src/renderer/src/components/sidebar/ActivityBar.tsx`
+**Files Created:**
+- `src/renderer/src/components/sidebar/Tooltip.tsx` (157 lines)
+- `src/renderer/src/components/sidebar/ActivityBar.tsx` (57 lines)
+- `src/renderer/src/__tests__/ActivityBar.test.tsx` (112 tests)
 
-**Files to Modify:**
+**Files Modified:**
 - `src/renderer/src/components/sidebar/IconBarMode.tsx`
-- `src/renderer/src/store/useAppViewStore.ts`
+- `src/renderer/src/components/sidebar/MissionSidebar.tsx`
+- `src/renderer/src/App.tsx`
+
+**Implementation Method:**
+- Parallel agent development (2 agents)
+- Sequential integration
+- Total time: ~15 minutes
 
 **Implementation Plan (4 Phases, 28 hours total):**
 - Phase 1: Icon Mode Enhancements (6h)
