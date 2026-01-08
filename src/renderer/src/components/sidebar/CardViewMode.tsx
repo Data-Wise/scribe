@@ -4,6 +4,7 @@ import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { ProjectContextMenu } from './ProjectContextMenu'
 import { NoteContextMenu } from './NoteContextMenu'
+import { useAppViewStore } from '../../store/useAppViewStore'
 
 interface CardViewModeProps {
   projects: Project[]
@@ -19,6 +20,8 @@ interface CardViewModeProps {
   onEditProject?: (projectId: string) => void
   onArchiveProject?: (projectId: string) => void
   onDeleteProject?: (projectId: string) => void
+  onPinProject?: (projectId: string) => void
+  onUnpinProject?: (projectId: string) => void
   onRenameNote?: (noteId: string) => void
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
@@ -39,6 +42,8 @@ export function CardViewMode({
   onEditProject,
   onArchiveProject,
   onDeleteProject,
+  onPinProject,
+  onUnpinProject,
   onRenameNote,
   onMoveNoteToProject,
   onDuplicateNote,
@@ -47,6 +52,7 @@ export function CardViewMode({
 }: CardViewModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null)
+  const isPinned = useAppViewStore(state => state.isPinned)
 
   // Context menu state
   const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
@@ -214,6 +220,9 @@ export function CardViewMode({
           onEditProject={onEditProject}
           onArchiveProject={onArchiveProject}
           onDeleteProject={onDeleteProject}
+          onPinProject={onPinProject}
+          onUnpinProject={onUnpinProject}
+          isPinned={isPinned(projectContextMenu.project.id)}
         />
       )}
 
