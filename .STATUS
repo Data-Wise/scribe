@@ -1,16 +1,16 @@
 ---
 status: active
 priority: P1
-progress: 0
+progress: 25
 version: 1.14.0
-sprint: 32
+sprint: 33
 started: 2026-01-06
-updated: 2026-01-07
+updated: 2026-01-08
 editor: hybrid-markdown++
-next_sprint: 33
-next_focus: Live Editing Enhancement - Advanced LaTeX
-tests: 1984
-unit_tests: 1984
+next_sprint: 34
+next_focus: Project-wide Cross-References
+tests: 2015
+unit_tests: 2015
 e2e_tests: 30
 tags:
   - adhd-friendly
@@ -27,6 +27,161 @@ tags:
 > **ADHD-friendly distraction-free writer** with projects, academic features, and CLI-based AI.
 
 ## Current Sprint
+
+### v1.15 Quarto Enhancements (Sprint 33-36) - IN PROGRESS 🚧
+
+**Status:** 🚧 Sprint 33 COMPLETE, Sprint 34 Next
+**Spec:** `docs/specs/SPEC-v115-quarto-enhancements-2026-01-07.md`
+**Brainstorm:** `docs/specs/BRAINSTORM-editor-polish-quarto-2026-01-07.md`
+**UI/UX Design:** `docs/specs/UXUI-quarto-support-2026-01-07.md`
+**Branch:** `feat/quarto-v115`
+**Worktree:** `~/.git-worktrees/scribe/quarto-v115`
+
+**Goal:** First-class Quarto support for academic users
+
+#### Sprint 33: Core Autocomplete Foundation - COMPLETE ✅
+
+| Feature | Effort | Priority | Status |
+|---------|--------|----------|--------|
+| YAML frontmatter autocomplete | 2-3h | P1 | ✅ Done |
+| Chunk options autocomplete (#\|) | 2h | P1 | ✅ Done |
+| Cross-reference autocomplete (@fig-, @tbl-) | 3-4h | P1 | ✅ Done |
+| Quarto demo document | 30m | P2 | ✅ Done |
+
+**Implementation (2026-01-08):**
+- `quarto-completions.ts` (729 lines) - Full autocomplete implementation
+- 40+ YAML keys with nested value completions
+- 25+ chunk options with value suggestions
+- Cross-reference scanning with caption extraction
+- 32 new tests (all passing)
+
+**Commits:**
+- `0d863f7` feat(quarto): Add autocomplete for YAML, chunk options, and cross-refs
+- `7b9fb13` feat(demo): Add Quarto document example to seed data
+- `bdcc3bd` chore: Update package-lock.json
+
+**New Files:**
+- `src/renderer/src/lib/quarto-completions.ts`
+- `src/renderer/src/__tests__/QuartoCompletions.test.ts`
+
+**Modified Files:**
+- `src/renderer/src/components/CodeMirrorEditor.tsx`
+- `src/renderer/src/lib/seed-data.ts`
+- `src/renderer/src/lib/browser-db.ts`
+
+#### Sprint 34: Quarto Integration (~10-12 hours)
+
+| Feature | Effort | Priority | Status |
+|---------|--------|----------|--------|
+| Quarto callout syntax (:::) | 1-2h | P2 | [ ] Pending |
+| Quarto render integration | 4-5h | P2 | [ ] Pending |
+| Project-wide cross-references 🆕 | 4-5h | P1 | [ ] Pending |
+
+**Backend:**
+- New: `src-tauri/src/quarto/mod.rs` (module structure)
+- New: `src-tauri/src/quarto/cli.rs` (CLI detection + render)
+- New: `src-tauri/src/quarto/crossref.rs` (label scanning)
+- Modified: `src-tauri/src/commands.rs`
+
+#### Sprint 35: Execution & Errors (~15-18 hours) 🆕
+
+| Feature | Effort | Priority | Status |
+|---------|--------|----------|--------|
+| Single chunk execution (R/Python/Bash) | 6-8h | P2 | [ ] Pending |
+| Error panel (bottom drawer) | 5-6h | P2 | [ ] Pending |
+| Zotero + BibTeX integration | 4-5h | P2 | [ ] Pending |
+
+**New Files:**
+- `src-tauri/src/quarto/chunk.rs` (execution with timeout)
+- `src-tauri/src/quarto/error.rs` (error parsing)
+- `src/renderer/src/components/ErrorPanel.tsx`
+
+**Backend Tauri Commands (7 new):**
+1. `is_quarto_available` - Check Quarto installation
+2. `quarto_render` - Render document (async)
+3. `execute_chunk` - Run single code chunk (async)
+4. `kill_chunk_execution` - Cancel running chunk
+5. `get_crossref_index` - Get labels for autocomplete
+6. `update_crossref_index` - Update on note save
+7. `build_crossref_index` - Full rebuild for project
+
+#### Sprint 36: Preview & Polish (~8-10 hours) 🆕
+
+| Feature | Effort | Priority | Status |
+|---------|--------|----------|--------|
+| Live slide preview | 6-8h | P3 | [ ] Pending |
+| Bug fixes & polish | 2-4h | P1 | [ ] Pending |
+
+**Tests:** ~170 new tests planned (across 10 phases)
+**Total Effort:** ~40-45 hours across 4 sprints
+
+---
+
+### v2.0 Markdown Polish (Bundled with LaTeX Editor) - PLANNED 📋
+
+**Status:** 📋 Planning Complete
+**Bundled With:** v2.0 LaTeX Editor Mode
+**Spec:** `docs/planning/PLAN-v2-latex-editor.md`
+
+**Goal:** Enhanced markdown editing experience
+
+| Feature | Effort | Category |
+|---------|--------|----------|
+| Language picker dropdown | 3-4h | Code Blocks |
+| Source mode syntax highlighting | 4-5h | Code Blocks |
+| Copy button for code blocks | 1-2h | Code Blocks |
+| Line numbers | 2h | Code Blocks |
+| Visual table editor | 8-10h | Tables |
+| Tab navigation in tables | 2-3h | Tables |
+| Auto-alignment | 3-4h | Tables |
+| CSV paste to table | 2-3h | Tables |
+| Link preview tooltip | 2h | Links/Images |
+| Image preview inline | 3-4h | Links/Images |
+| Drag-drop images | 4-5h | Links/Images |
+| Link autocomplete | 2-3h | Links/Images |
+
+**Total Effort:** ~40 hours (bundled with v2.0)
+
+---
+
+### v2.0 LaTeX Editor Mode (Major Feature) - PLANNED 📋
+
+**Status:** 📋 Planning Complete
+**Branch:** `feat/latex-editor-v2`
+**Worktree:** `~/.git-worktrees/scribe/latex-v2`
+**Spec:** `docs/planning/PLAN-v2-latex-editor.md`
+
+**Goal:** Full Overleaf-like LaTeX editing experience
+
+| Phase | Duration | Deliverable |
+|-------|----------|-------------|
+| 1. Foundation | 2 weeks | Multi-format architecture (database + API) |
+| 2. Editor | 1 week | LaTeXEditor component |
+| 3. Compile | 1 week | TeX Live integration |
+| 4. PDF | 1 week | PDF.js preview pane |
+| 5. Templates | 1 week | Template library (6+ templates) |
+| 6. Inline | 1 week | Enhanced markdown+LaTeX |
+| **Total** | **7 weeks** | Scribe v2.0 |
+
+**Key Features:**
+- Full `.tex` file editing with syntax highlighting
+- Live PDF preview via PDF.js (~2MB)
+- TeX Live compilation (pdflatex/xelatex)
+- SyncTeX support (click PDF → jump to source)
+- Template library (article, beamer, thesis, etc.)
+- EditorFactory pattern for format-based routing
+
+**Architecture Changes:**
+- Database: `file_format` column (md/tex/qmd)
+- New Components: LaTeXEditor, PDFViewer, TemplateGallery
+- New Backend: `src-tauri/src/latex.rs`
+
+**ADHD Considerations:**
+- Clear mode separation (markdown stays simple)
+- Progressive disclosure (LaTeX mode only when chosen)
+- No forced decisions (existing notes unaffected)
+
+---
 
 ### Sprint 30 Phase 2: WikiLink Navigation & Editor Polish - COMPLETE ✅
 
@@ -564,10 +719,57 @@ tags:
 | 27 | Sidebar Consolidation + AI | P1 | 📋 Planned |
 | TBD | SwiftUI Native Port | P3 | 📋 Researched |
 
+---
+
+### v2.0 LaTeX Editor Mode (Major Feature)
+
+**Status:** 📋 Planning Complete
+**Branch:** `feat/latex-editor-v2`
+**Worktree:** `~/.git-worktrees/scribe/latex-v2`
+**Spec:** `docs/planning/PLAN-v2-latex-editor.md`
+
+**Goal:** Full Overleaf-like LaTeX editing experience
+
+| Phase | Duration | Deliverable |
+|-------|----------|-------------|
+| 1. Foundation | 2 weeks | Multi-format architecture (database + API) |
+| 2. Editor | 1 week | LaTeXEditor component |
+| 3. Compile | 1 week | TeX Live integration |
+| 4. PDF | 1 week | PDF.js preview pane |
+| 5. Templates | 1 week | Template library (6+ templates) |
+| 6. Inline | 1 week | Enhanced markdown+LaTeX |
+| **Total** | **7 weeks** | Scribe v2.0 |
+
+**Key Features:**
+- Full `.tex` document editing with syntax highlighting
+- Live PDF preview (split view)
+- TeX Live compilation (pdflatex/xelatex)
+- Templates library (article, thesis, beamer, CV)
+- Symbol palette (⌘⌥S)
+- SyncTeX support (click PDF → jump to source)
+
+**Architecture Changes:**
+- Database: Add `file_format` column to notes table
+- EditorFactory pattern for format-based routing
+- New components: LaTeXEditor, PDFViewer, TemplateGallery, SymbolPalette
+- Rust: `latex.rs` for TeX Live detection and compilation
+
+**Dependencies:**
+- `pdfjs-dist` (~2MB) for PDF rendering
+- `@codemirror/legacy-modes` for LaTeX syntax
+
+**ADHD Considerations:**
+- Clear mode separation (markdown default, LaTeX opt-in)
+- Progressive disclosure (no forced decisions)
+- Visual distinction between file types
+
+---
+
 ### v2 Deferred Features
 
 | Feature | Status | Notes |
 |---------|--------|-------|
+| **LaTeX Editor Mode** | 📋 Planned | See v2.0 section above |
 | Terminal PTY Shell | UI ✅, Backend ⏳ | Rust `terminal.rs` with PTY support |
 | Actual AI Calls | Planned | Claude/Gemini CLI integration via Tauri |
 | Ambient AI (⌘K) | Planned | Inline suggestions, ghost text |
