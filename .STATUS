@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 35
+progress: 45
 version: 1.14.0
 sprint: 34
 started: 2026-01-08
 updated: 2026-01-08
 editor: hybrid-markdown++
 next_sprint: 35
-next_focus: Left Sidebar Redesign (Phase 3 - Vault Pinning)
+next_focus: Left Sidebar Redesign (Phase 4 - Visual Polish)
 tests: 2015
 unit_tests: 2015
 e2e_tests: 30
