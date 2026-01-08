@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 25
+progress: 30
 version: 1.14.0
-sprint: 33
-started: 2026-01-06
+sprint: 34
+started: 2026-01-08
 updated: 2026-01-08
 editor: hybrid-markdown++
-next_sprint: 34
-next_focus: Project-wide Cross-References
+next_sprint: 35
+next_focus: Left Sidebar Redesign (Phase 1)
 tests: 2015
 unit_tests: 2015
 e2e_tests: 30
@@ -27,6 +27,51 @@ tags:
 > **ADHD-friendly distraction-free writer** with projects, academic features, and CLI-based AI.
 
 ## Current Sprint
+
+### v1.16 Left Sidebar Redesign (Sprint 34) - SPEC APPROVED ✅
+
+**Status:** ✅ Spec approved, ready for Phase 1 implementation
+**Spec:** `docs/specs/SPEC-left-sidebar-redesign-2026-01-08.md` (v1.1)
+**Brainstorm:** `docs/BRAINSTORM-left-sidebar-layouts-2026-01-08.md`
+**UX Analysis:** `docs/specs/UX-ANALYSIS-LEFT-SIDEBAR-2026-01-08.md`
+**Architecture:** `docs/mission-sidebar-state-flow.md`
+**Branch:** `feat/sidebar-v2`
+**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+
+**Goal:** ADHD-friendly "Focus First" sidebar with progressive disclosure
+
+**Design Decisions (All Approved):**
+- ✅ Icon mode (48px) default - minimal clutter
+- ✅ 5 pinned vaults max (Inbox + 4 custom)
+- ✅ Inbox shows recent 5 notes only
+- ✅ Activity Bar with 3 icons (Search, Daily, Settings)
+- ✅ Mode switcher: Both ⌘0 + header icon
+
+#### Sprint 34: Phase 1 - Icon Mode Enhancements (6 hours) 🔜
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Tooltip component (500ms delay) | 1h | P1 | [ ] Pending |
+| Colored project dots (emoji/color) | 1h | P1 | [ ] Pending |
+| Inbox badge (unread count) | 1h | P1 | [ ] Pending |
+| Activity Bar component (3 icons) | 2h | P1 | [ ] Pending |
+| Click handlers (dot → expand) | 1h | P1 | [ ] Pending |
+
+**Files to Create:**
+- `src/renderer/src/components/sidebar/Tooltip.tsx`
+- `src/renderer/src/components/sidebar/ActivityBar.tsx`
+
+**Files to Modify:**
+- `src/renderer/src/components/sidebar/IconBarMode.tsx`
+- `src/renderer/src/store/useAppViewStore.ts`
+
+**Implementation Plan (4 Phases, 28 hours total):**
+- Phase 1: Icon Mode Enhancements (6h)
+- Phase 2: Inbox Pinning (8h)
+- Phase 3: Vault Pinning System (8h)
+- Phase 4: Visual Polish (6h)
+
+---
 
 ### v1.15 Quarto Enhancements (Sprint 33-36) - IN PROGRESS 🚧
 
