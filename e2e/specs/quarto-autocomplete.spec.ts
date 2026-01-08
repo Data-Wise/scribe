@@ -15,16 +15,28 @@ test.describe('Quarto Autocomplete E2E', () => {
     await page.goto('http://localhost:5173')
     await page.waitForLoadState('networkidle')
 
+    // Create a new note
+    await page.keyboard.press('Meta+n')
+    await page.waitForTimeout(500)
+
     // Switch to Source mode (CodeMirror) for autocomplete testing
     await page.keyboard.press('Meta+1')
     await page.waitForTimeout(300)
   })
 
   test('QAC-01: YAML frontmatter autocomplete - format key', async () => {
+    // Click in the editor to ensure focus
+    const editor = page.locator('.cm-content')
+    await editor.click()
+    await page.waitForTimeout(100)
+
     // Type YAML frontmatter
     await page.keyboard.type('---')
     await page.keyboard.press('Enter')
     await page.keyboard.type('for')
+
+    // Give CodeMirror time to trigger autocomplete
+    await page.waitForTimeout(200)
 
     // Wait for autocomplete menu
     const autocomplete = page.locator('.cm-tooltip-autocomplete')
@@ -38,7 +50,6 @@ test.describe('Quarto Autocomplete E2E', () => {
     await page.keyboard.press('Enter')
 
     // Verify insertion
-    const editor = page.locator('.cm-content')
     const content = await editor.textContent()
     expect(content).toContain('format:')
   })

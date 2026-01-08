@@ -468,7 +468,9 @@ export function yamlCompletions(context: CompletionContext): CompletionResult | 
     const keyConfig = YAML_KEYS.find(k => k.label.startsWith(yamlContext.key + ':'))
     if (keyConfig?.children) {
       const word = context.matchBefore(/[a-zA-Z0-9-]*/)
-      if (!word) return null
+
+      // CRITICAL FIX: Return completions from context.pos if no word match
+      const from = word ? word.from : context.pos
 
       const options: Completion[] = keyConfig.children.map(child => ({
         label: child.label,
@@ -477,7 +479,7 @@ export function yamlCompletions(context: CompletionContext): CompletionResult | 
       }))
 
       return {
-        from: word.from,
+        from,
         options,
         validFor: /^[a-zA-Z0-9-]*$/,
       }
@@ -487,9 +489,10 @@ export function yamlCompletions(context: CompletionContext): CompletionResult | 
 
   // At start of line or after whitespace: suggest keys
   const word = context.matchBefore(/[a-zA-Z-]*:?/)
-  if (!word) {
-    return null
-  }
+
+  // CRITICAL FIX: Return completions even with no word match
+  // This enables auto-trigger - CodeMirror needs results for non-explicit queries
+  const from = word ? word.from : context.pos
 
   const options: Completion[] = YAML_KEYS.map(key => ({
     label: key.label,
@@ -499,7 +502,7 @@ export function yamlCompletions(context: CompletionContext): CompletionResult | 
   }))
 
   return {
-    from: word.from,
+    from,
     options,
     validFor: /^[a-zA-Z-]*:?$/,
   }
@@ -527,7 +530,9 @@ export function chunkOptionCompletions(context: CompletionContext): CompletionRe
 
     if (optionConfig && optionConfig.values.length > 0) {
       const valueWord = context.matchBefore(/[a-zA-Z0-9-]*/)
-      if (!valueWord) return null
+
+      // CRITICAL FIX: Return completions from context.pos if no word match
+      const from = valueWord ? valueWord.from : context.pos
 
       const options: Completion[] = optionConfig.values.map(value => ({
         label: value,
@@ -536,7 +541,7 @@ export function chunkOptionCompletions(context: CompletionContext): CompletionRe
       }))
 
       return {
-        from: valueWord.from,
+        from,
         options,
         validFor: /^[a-zA-Z0-9-]*$/,
       }
@@ -545,7 +550,15 @@ export function chunkOptionCompletions(context: CompletionContext): CompletionRe
 
   // Match #| followed by option name (for option key completions)
   const word = context.matchBefore(/#\|\s*[a-zA-Z-]*:?/)
-  if (!word) return null
+
+  // Only show chunk options if #| pattern is present
+  // Check if the text before cursor contains #|
+  if (!word && !beforeCursor.match(/#\|\s*$/)) {
+    return null
+  }
+
+  // CRITICAL FIX: Return completions from context.pos if no word match
+  const from = word ? word.from : context.pos
 
   // Suggest option names
   const options: Completion[] = CHUNK_OPTIONS.map(opt => ({
@@ -556,7 +569,7 @@ export function chunkOptionCompletions(context: CompletionContext): CompletionRe
   }))
 
   return {
-    from: word.from,
+    from,
     options,
     validFor: /^#\|\s*[a-zA-Z-]*:?$/,
   }
@@ -681,9 +694,16 @@ export function crossRefCompletions(context: CompletionContext): CompletionResul
 
   // Match @type- or @type-partial
   const word = context.matchBefore(/@[a-zA-Z]*-?[a-zA-Z0-9_-]*/)
-  if (!word) {
+
+  // Only show cross-ref completions if @ is present
+  // Check the character before cursor
+  const charBefore = context.state.doc.sliceString(context.pos - 1, context.pos)
+  if (!word && charBefore !== '@') {
     return null
   }
+
+  // CRITICAL FIX: Return completions from context.pos if no word match
+  const from = word ? word.from : context.pos
 
   // Scan document for labels
   const labels = scanForLabels(context.state.doc)
@@ -691,7 +711,7 @@ export function crossRefCompletions(context: CompletionContext): CompletionResul
   if (labels.length === 0) {
     // No labels found, show hint
     return {
-      from: word.from,
+      from,
       options: [{
         label: '@fig-',
         detail: 'No labels found. Use #| label: or {#type-id}',
@@ -710,7 +730,7 @@ export function crossRefCompletions(context: CompletionContext): CompletionResul
   }))
 
   return {
-    from: word.from,
+    from,
     options,
     validFor: /^@[a-zA-Z]*-?[a-zA-Z0-9_-]*$/,
   }
