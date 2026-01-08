@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
-import { Menu, Plus, Settings } from 'lucide-react'
+import { Menu, Plus } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
+import { Tooltip } from './Tooltip'
+import { ActivityBar } from './ActivityBar'
 
 interface IconBarModeProps {
   projects: Project[]
@@ -10,7 +12,11 @@ interface IconBarModeProps {
   onSelectProject: (id: string | null) => void
   onCreateProject: () => void
   onExpand: () => void
-  onOpenSettings?: () => void
+  // Activity Bar handlers
+  onSearch: () => void
+  onDaily: () => void
+  onSettings: () => void
+  activeActivityItem?: 'search' | 'daily' | 'settings' | null
 }
 
 const MAX_VISIBLE_PROJECTS = 8
@@ -22,7 +28,10 @@ export function IconBarMode({
   onSelectProject,
   onCreateProject,
   onExpand,
-  onOpenSettings
+  onSearch,
+  onDaily,
+  onSettings,
+  activeActivityItem = null
 }: IconBarModeProps) {
   // Show active projects first, then by updated_at (treat undefined status as 'active')
   const sortedProjects = [...projects]
@@ -63,14 +72,18 @@ export function IconBarMode({
       <div className="project-icons">
         {sortedProjects.map(project => {
           const isActive = project.id === currentProjectId
+          const noteCount = noteCounts[project.id] || 0
+          const tooltipContent = `${project.name}\n${formatStatus(project.status || 'active')} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
+
           return (
-            <ProjectIconButton
-              key={project.id}
-              project={project}
-              isActive={isActive}
-              noteCount={noteCounts[project.id] || 0}
-              onClick={() => onSelectProject(isActive ? null : project.id)}
-            />
+            <Tooltip key={project.id} content={tooltipContent}>
+              <ProjectIconButton
+                project={project}
+                isActive={isActive}
+                noteCount={noteCount}
+                onClick={() => onSelectProject(isActive ? null : project.id)}
+              />
+            </Tooltip>
           )
         })}
       </div>
@@ -86,17 +99,13 @@ export function IconBarMode({
         <Plus size={16} />
       </button>
 
-      {/* Settings button */}
-      {onOpenSettings && (
-        <button
-          className="icon-btn settings-icon-btn"
-          onClick={onOpenSettings}
-          title="Settings (⌘,)"
-          data-testid="sidebar-settings-button"
-        >
-          <Settings size={16} />
-        </button>
-      )}
+      {/* Activity Bar - Search, Daily, Settings */}
+      <ActivityBar
+        onSearch={onSearch}
+        onDaily={onDaily}
+        onSettings={onSettings}
+        activeItem={activeActivityItem}
+      />
     </div>
   )
 }
@@ -110,14 +119,11 @@ interface ProjectIconButtonProps {
 
 function ProjectIconButton({ project, isActive, noteCount, onClick }: ProjectIconButtonProps) {
   const status = project.status || 'active'
-  const statusLabel = formatStatus(status)
-  const tooltip = `${project.name}\n${statusLabel} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
 
   return (
     <button
       className={`project-icon-btn ${isActive ? 'active' : ''}`}
       onClick={onClick}
-      title={tooltip}
       data-status={status}
       data-testid={`project-icon-${project.id}`}
     >

@@ -1358,6 +1358,8 @@ function App() {
             await loadNotes()
           }
         }}
+        onSearch={() => setIsSearchPanelOpen(true)}
+        onDaily={handleDailyNote}
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
 

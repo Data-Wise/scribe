@@ -22,7 +22,10 @@ interface MissionSidebarProps {
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
   onDeleteNote?: (noteId: string) => void
-  onOpenSettings?: () => void
+  // Activity Bar handlers
+  onSearch: () => void
+  onDaily: () => void
+  onOpenSettings: () => void
 }
 
 export function MissionSidebar({
@@ -40,6 +43,8 @@ export function MissionSidebar({
   onMoveNoteToProject,
   onDuplicateNote,
   onDeleteNote,
+  onSearch,
+  onDaily,
   onOpenSettings
 }: MissionSidebarProps) {
   const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
@@ -90,7 +95,9 @@ export function MissionSidebar({
           onSelectProject={onSelectProject}
           onCreateProject={onCreateProject}
           onExpand={handleExpand}
-          onOpenSettings={onOpenSettings}
+          onSearch={onSearch}
+          onDaily={onDaily}
+          onSettings={onOpenSettings}
         />
       )}
 
