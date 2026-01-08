@@ -13,7 +13,9 @@
 main (protected) ← PR from dev only
   └── dev (planning/merging) ← PR from feature branches
        ├── feat/quarto-v115 (worktree: ~/.git-worktrees/scribe/quarto-v115) ✅ ACTIVE
-       └── feat/latex-editor-v2 (worktree: ~/.git-worktrees/scribe/latex-v2) 📋 PLANNED
+       ├── feat/latex-editor-v2 (worktree: ~/.git-worktrees/scribe/latex-v2) 📋 PLANNED
+       ├── feat/sidebar-v2 (worktree: ~/.git-worktrees/scribe/sidebar-v2) 🆕 NEW
+       └── feat/ai-integration (worktree: ~/.git-worktrees/scribe/ai-integration) 🆕 NEW
 ```
 
 **Principles:**
@@ -22,6 +24,12 @@ main (protected) ← PR from dev only
 - Feature branches work in dedicated worktrees
 - Merge to dev when phases/sprints complete
 - Merge to main for releases only
+
+**Active Worktrees:**
+1. `feat/quarto-v115` - v1.15 Quarto Enhancements (Sprint 33-36)
+2. `feat/latex-editor-v2` - v2.0 LaTeX Editor Mode (Phases 1-6)
+3. `feat/sidebar-v2` - Sidebar Enhancement (Phases 2-4) 🆕
+4. `feat/ai-integration` - AI Backend Integration (Tauri wiring) 🆕
 
 ---
 
@@ -589,6 +597,162 @@ async fn compile_latex(tex_path: &Path) -> Result<PdfPath> {
 | Link autocomplete | 2-3h | Links/Images |
 
 **Total Effort:** ~40 hours
+
+---
+
+## Active Development: Sidebar v2 Enhancement
+
+**Branch:** `feat/sidebar-v2`
+**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+**Duration:** 9-13 hours (3 phases)
+**Status:** Ready to start
+
+**Spec:** `docs/planning/PLAN-sidebar-v2-enhancement.md`
+
+### Phase 2: Vault Sidebar (4-6 hours) 📋 NEXT
+
+**Goal:** Obsidian-style file tree navigation
+
+| Feature | Effort | Status |
+|---------|--------|--------|
+| Permanent Inbox vault | 1h | [ ] Pending |
+| Collapsible vault sections | 1-2h | [ ] Pending |
+| Folder tree (nested) | 1-2h | [ ] Pending |
+| Vault actions (rename, delete) | 30m | [ ] Pending |
+| Note management (drag-drop) | 30m | [ ] Pending |
+| Search & filter | 30m | [ ] Pending |
+
+**Database:** Migration 010 - Add `folders` table and `note.folder_id`
+
+**UI Modes:**
+- Icon (48px): Vault icons with badges
+- Compact (240px): Expandable tree
+- Card (320px+): Full tree with details
+
+**Tests:** 30-40 unit + 15-20 E2E
+
+---
+
+### Phase 3: Status Bar (2-3 hours) 📋 PLANNED
+
+**Goal:** VS Code-style bottom bar
+
+| Feature | Effort | Status |
+|---------|--------|--------|
+| Sync status indicator | 30m | [ ] Pending |
+| Streak display | 30m | [ ] Pending |
+| Words today counter | 30m | [ ] Pending |
+| Session timer (move) | 15m | [ ] Pending |
+| Editor mode indicator | 15m | [ ] Pending |
+| Zoom level control | 15m | [ ] Pending |
+
+**Layout:** Horizontal 30px bar at bottom with draggable resize handle
+
+**Tests:** 20-25 unit + 5-10 E2E
+
+---
+
+### Phase 4: Mission Control Updates (3-4 hours) 📋 PLANNED
+
+**Goal:** Adapt dashboard for vault-based navigation
+
+| Feature | Effort | Status |
+|---------|--------|--------|
+| Quick actions row (updated) | 1h | [ ] Pending |
+| Inbox preview section | 1-2h | [ ] Pending |
+| Active vaults section | 1h | [ ] Pending |
+| Writing stats panel | 30m | [ ] Pending |
+
+**Changes:**
+- Replace "New Project" with "New Vault"
+- Add Inbox preview (first 3-5 unprocessed notes)
+- Show active vaults with recent activity
+- Enhanced writing statistics
+
+**Tests:** 20-25 unit + 10-15 E2E
+
+---
+
+## Active Development: AI Integration
+
+**Branch:** `feat/ai-integration`
+**Worktree:** `~/.git-worktrees/scribe/ai-integration`
+**Duration:** 5-7 hours (5 phases)
+**Status:** Ready to start
+
+**Spec:** `docs/planning/PLAN-ai-integration.md`
+
+### Phase 1: Claude CLI Integration (2-3 hours) 🎯 HIGHEST PRIORITY
+
+**Goal:** Wire existing Claude UI to Claude CLI
+
+**Backend (NEW):**
+- `src-tauri/src/ai/mod.rs` - AI module root
+- `src-tauri/src/ai/claude.rs` - Claude CLI wrapper
+- 4 new Tauri commands: `ai_run_claude`, `ai_is_claude_available`, etc.
+
+**Implementation:**
+```rust
+async fn run_claude(prompt: &str, context: &str, model: Option<&str>) -> Result<String>
+// Executes: echo "$context" | claude --print "$prompt"
+```
+
+**Frontend:** Update `api.ts` to invoke Tauri commands instead of returning stub
+
+**Tests:** 20 Rust unit + 38 frontend updates
+
+**Outcome:** Claude Tab and Quick Chat fully functional in desktop app
+
+---
+
+### Phase 2: Gemini CLI Integration (1-2 hours)
+
+**Goal:** Add Gemini provider support
+
+**Backend:** `src-tauri/src/ai/gemini.rs` (similar to Claude)
+
+**Tests:** 15 Rust unit tests
+
+---
+
+### Phase 3: Quick Actions Enhancement (1 hour)
+
+**Goal:** Wire Quick Actions to AI backend
+
+**Current:** 5 default actions (Improve, Expand, Summarize, Explain, Research)
+
+**Enhancement:**
+- Execute via Claude/Gemini CLI
+- Display responses inline or in Claude tab
+- Model selection per action
+
+**Tests:** Update 20 existing tests
+
+---
+
+### Phase 4: Chat History Backend (30 minutes)
+
+**Goal:** Persist AI responses to database
+
+**Already Complete:** Database schema (Migration 009), session management
+
+**New:** Connect ClaudeChatPanel to actual AI responses instead of stub
+
+**Tests:** Update 38 existing tests
+
+---
+
+### Phase 5: Error Handling & UX (1 hour)
+
+**Goal:** Production-ready error handling
+
+**Features:**
+- CLI availability check on startup
+- Settings UI for AI configuration
+- User-friendly error messages
+- Install guides
+
+**Tests:** 15-20 E2E tests
 
 ---
 
