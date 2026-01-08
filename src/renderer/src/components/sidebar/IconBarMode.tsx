@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Menu, Plus } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
@@ -35,6 +35,11 @@ export function IconBarMode({
 }: IconBarModeProps) {
   // Get pinned vaults from store
   const pinnedVaults = useAppViewStore(state => state.pinnedVaults)
+  const reorderPinnedVaults = useAppViewStore(state => state.reorderPinnedVaults)
+
+  // Drag state
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
   // Filter projects to show only pinned ones, sorted by vault order
   const sortedProjects = useMemo(() => {
@@ -74,6 +79,36 @@ export function IconBarMode({
   // Check if Inbox is the "active" view (no project selected)
   const isInboxActive = currentProjectId === null
 
+  // Drag handlers
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index)
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault() // Necessary to allow drop
+    if (draggedIndex !== null && draggedIndex !== index) {
+      setDragOverIndex(index)
+    }
+  }
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault()
+
+    if (draggedIndex !== null && draggedIndex !== dropIndex) {
+      // Reorder in store (this handles Inbox exclusion)
+      reorderPinnedVaults(draggedIndex + 1, dropIndex + 1) // +1 because Inbox is at index 0
+    }
+
+    // Reset drag state
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
   return (
     <div className="mission-sidebar-icon">
       {/* Expand button */}
@@ -98,10 +133,12 @@ export function IconBarMode({
 
       {/* Project icons */}
       <div className="project-icons">
-        {sortedProjects.map(project => {
+        {sortedProjects.map((project, index) => {
           const isActive = project.id === currentProjectId
           const noteCount = noteCounts[project.id] || 0
           const tooltipContent = `${project.name}\n${formatStatus(project.status || 'active')} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
+          const isDragging = draggedIndex === index
+          const isDragOver = dragOverIndex === index
 
           return (
             <Tooltip key={project.id} content={tooltipContent}>
@@ -110,6 +147,12 @@ export function IconBarMode({
                 isActive={isActive}
                 noteCount={noteCount}
                 onClick={() => onSelectProject(isActive ? null : project.id)}
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+                onDragEnd={handleDragEnd}
+                isDragging={isDragging}
+                isDragOver={isDragOver}
               />
             </Tooltip>
           )
@@ -143,17 +186,39 @@ interface ProjectIconButtonProps {
   isActive: boolean
   noteCount: number
   onClick: () => void
+  onDragStart?: () => void
+  onDragOver?: (e: React.DragEvent) => void
+  onDrop?: (e: React.DragEvent) => void
+  onDragEnd?: () => void
+  isDragging?: boolean
+  isDragOver?: boolean
 }
 
-function ProjectIconButton({ project, isActive, noteCount, onClick }: ProjectIconButtonProps) {
+function ProjectIconButton({
+  project,
+  isActive,
+  noteCount,
+  onClick,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
+  isDragging = false,
+  isDragOver = false
+}: ProjectIconButtonProps) {
   const status = project.status || 'active'
 
   return (
     <button
-      className={`project-icon-btn ${isActive ? 'active' : ''}`}
+      className={`project-icon-btn ${isActive ? 'active' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
       onClick={onClick}
       data-status={status}
       data-testid={`project-icon-${project.id}`}
+      draggable={true}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      onDragEnd={onDragEnd}
     >
       {/* Status dot */}
       <StatusDot status={status} size="md" />

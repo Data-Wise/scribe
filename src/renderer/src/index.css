@@ -2495,6 +2495,26 @@ mark {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* Drag and Drop States */
+.project-icon-btn.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.project-icon-btn.drag-over {
+  background: rgba(59, 130, 246, 0.2);
+  border: 2px dashed rgba(59, 130, 246, 0.5);
+}
+
+.project-icon-btn[draggable="true"] {
+  cursor: grab;
+}
+
+.project-icon-btn[draggable="true"]:active {
+  cursor: grabbing;
+}
+
 /* Add Project Icon Button */
 .icon-btn.add-project-icon {
   width: 32px;
