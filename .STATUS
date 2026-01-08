@@ -1,14 +1,16 @@
 ---
 status: active
-priority: P1
-progress: 0
-version: 1.14.0
-sprint: 32
-started: 2026-01-06
-updated: 2026-01-07
-editor: hybrid-markdown++
-next_sprint: 33
-next_focus: Live Editing Enhancement - Advanced LaTeX
+priority: P0
+progress: 5
+version: 2.0.0-dev
+sprint: v2.0
+branch: feat/latex-editor-v2
+worktree: ~/.git-worktrees/scribe/latex-v2
+started: 2026-01-07
+updated: 2026-01-08
+editor: hybrid-markdown++ (v1.14) → LaTeX Editor (v2.0)
+next_sprint: v2.0 Phase 1
+next_focus: Full LaTeX Editor Mode - Overleaf-like Features
 tests: 1984
 unit_tests: 1984
 e2e_tests: 30
@@ -20,13 +22,186 @@ tags:
   - academic
   - projects
   - cli
+  - latex-v2
+  - overleaf-competitor
 ---
 
-# Scribe
+# Scribe v2.0 - LaTeX Editor Mode
 
-> **ADHD-friendly distraction-free writer** with projects, academic features, and CLI-based AI.
+> **ADHD-friendly distraction-free writer** with **full LaTeX editing capabilities**.
 
-## Current Sprint
+## 🎯 v2.0 Vision: Full LaTeX Editor
+
+**Branch Purpose:** Transform Scribe into a first-class LaTeX editing environment rivaling Overleaf while maintaining ADHD-friendly design.
+
+**Target Features:**
+- Full `.tex` document editing with syntax highlighting
+- Live PDF preview (PDF.js integration)
+- TeX Live compilation (local, fast, offline)
+- Templates library (article, thesis, beamer, CV)
+- SyncTeX bidirectional navigation (PDF ↔ source)
+- Multi-file LaTeX projects (`\input`, `\include`)
+
+**Roadmap:** 6 phases, ~7 weeks total (see `docs/planning/PLAN-v2-latex-editor.md`)
+
+---
+
+## 🚀 Current Sprint: v2.0 Phase 1 - Architecture Foundation
+
+**Status:** Planning → Implementation
+**Duration:** Week 1-2 of v2.0 development
+**Branch:** `feat/latex-editor-v2` (worktree at `~/.git-worktrees/scribe/latex-v2`)
+
+### Phase 1 Goals
+
+Enable multi-format support (Markdown, LaTeX, Quarto) without breaking existing functionality.
+
+**Tasks:**
+- [ ] **1.1 Database Schema** - Add `file_format` column to notes table (Migration 010)
+- [ ] **1.2 Type System** - Add `file_format: 'md' | 'tex' | 'qmd'` to Note type
+- [ ] **1.3 API Layer** - Format-aware CRUD operations (Tauri + Browser)
+- [ ] **1.4 EditorFactory** - Route notes to correct editor based on format
+- [ ] **1.5 Testing** - 30+ unit tests for multi-format support
+- [ ] **1.6 Documentation** - Update CLAUDE.md with v2.0 architecture
+
+### Next Action
+
+**Immediate:** Implement Migration 010 - Add `file_format` column to notes table
+- Location: `src-tauri/src/database.rs`
+- SQL: `ALTER TABLE notes ADD COLUMN file_format TEXT DEFAULT 'md';`
+- Rust: Update Note struct, CRUD operations
+- Browser: Update IndexedDB schema (browser-db.ts)
+
+---
+
+## 📊 Sprint 32 Status: LaTeX Foundations - 90% Complete ✅
+
+**Completed (7/9 features):**
+- [x] Multi-line LaTeX support (StateField with regex)
+- [x] Error highlighting (LaTeXErrorWidget with tooltips)
+- [x] Hover preview (source tooltip on MathWidget)
+- [x] Syntax highlighting (LaTeXSyntaxHighlighter class)
+- [x] LaTeX autocomplete (87 commands: Greek, operators, symbols)
+- [x] LaTeX snippets (42 templates: fractions, integrals, matrices)
+- [x] E2E tests (20+ tests in latex-multiline.spec.ts)
+
+**Deferred to v2.0+ (2/9 features):**
+- [ ] Symbol Palette modal (⌘⌥S) - Low priority, autocomplete works well
+- [ ] Command Palette integration - Snippets accessible via autocomplete
+
+**Result:** Excellent LaTeX foundation for markdown notes. v2.0 will add full `.tex` editing.
+
+**Tests:** 443 lines unit tests + 20 E2E tests, all passing ✅
+
+---
+
+## 🗺️ v2.0 Roadmap (7 Weeks)
+
+| Phase | Duration | Focus | Status |
+|-------|----------|-------|--------|
+| **1** | Week 1-2 | Architecture Foundation | 🔄 Planning |
+| **2** | Week 2-3 | LaTeX Editor Component | ⏳ Not started |
+| **3** | Week 3-4 | TeX Live Compilation | ⏳ Not started |
+| **4** | Week 4-5 | PDF Preview Pane | ⏳ Not started |
+| **5** | Week 5-6 | Templates Library | ⏳ Not started |
+| **6** | Week 6-7 | Enhanced Inline LaTeX | ⏳ Not started |
+
+**Total:** ~40-50 hours of focused development work
+
+### Phase Details
+
+**Phase 1: Architecture Foundation** (Current)
+- Database: `file_format` column, migration 010
+- API: Format-aware CRUD operations
+- EditorFactory: Route to HybridEditor vs LaTeXEditor
+- Testing: Multi-format support tests
+
+**Phase 2: LaTeX Editor Component**
+- New: `src/renderer/src/components/LaTeXEditor.tsx`
+- CodeMirror with `@codemirror/legacy-modes` for LaTeX grammar
+- Full LaTeX syntax highlighting (commands, environments, math)
+- Document structure outline (sections, subsections)
+- Two modes: Source (editing) + PDF Preview (compiled)
+
+**Phase 3: TeX Live Compilation**
+- Rust: `src-tauri/src/latex.rs` module
+- TeX Live detection (`/Library/TeX/texbin/pdflatex`)
+- Compilation: `pdflatex -interaction=nonstopmode`
+- Log parser: Extract errors, warnings, line numbers
+- Inline error markers in editor
+
+**Phase 4: PDF Preview Pane**
+- PDF.js integration (~2MB dependency)
+- Split view: Source (left) | PDF (right)
+- Page navigation, zoom, search
+- SyncTeX: Click PDF → jump to source line
+- Auto-compile: Debounced 500ms after last keystroke
+
+**Phase 5: Templates Library**
+- 6+ built-in templates: article, thesis, beamer, letter, CV, APA paper
+- Template picker modal with previews
+- "Use Template" creates new `.tex` note with content
+- Custom templates in `.scribe/templates/`
+
+**Phase 6: Enhanced Inline LaTeX**
+- Symbol palette modal (⌘⌥S) - deferred from Sprint 32
+- Snippet templates in command palette
+- BibTeX autocomplete from Zotero library
+- LaTeX syntax highlighting in markdown code blocks
+
+---
+
+## 🎯 Success Criteria for v2.0
+
+### Must Have (P0)
+- [x] Multi-line LaTeX in markdown (Sprint 32) ✅
+- [ ] Full `.tex` file editing with syntax highlighting
+- [ ] TeX Live compilation (local, offline)
+- [ ] PDF preview pane (split view)
+- [ ] 6+ templates (article, thesis, beamer, etc.)
+- [ ] 100+ new tests (unit + E2E)
+
+### Should Have (P1)
+- [ ] SyncTeX bidirectional navigation
+- [ ] Auto-compile on save (debounced)
+- [ ] Error log parsing with inline markers
+- [ ] Document outline sidebar
+
+### Nice to Have (P2)
+- [ ] Multi-file projects (`\input`, `\include`)
+- [ ] Symbol palette modal
+- [ ] BibTeX integration with Zotero
+- [ ] Live collaboration (v3.0)
+
+---
+
+## 📁 New Files for v2.0
+
+### Components
+- `src/renderer/src/components/LaTeXEditor.tsx` - Dedicated `.tex` editor
+- `src/renderer/src/components/PDFViewer.tsx` - PDF.js wrapper
+- `src/renderer/src/components/TemplateGallery.tsx` - Template picker
+- `src/renderer/src/components/EditorFactory.tsx` - Format router
+
+### Rust Modules
+- `src-tauri/src/latex.rs` - TeX Live integration
+- `src-tauri/src/database.rs` - Migration 010 (file_format column)
+
+### Templates
+- `templates/article.tex` - Basic article
+- `templates/apa-paper.tex` - APA formatted paper
+- `templates/beamer.tex` - Presentation slides
+- `templates/thesis.tex` - Thesis/dissertation
+- `templates/letter.tex` - Formal letter
+- `templates/cv.tex` - Curriculum vitae
+
+### Dependencies
+- `pdfjs-dist` (~2MB) - PDF rendering
+- `@codemirror/legacy-modes` - LaTeX syntax highlighting
+
+---
+
+## ✅ v1.14.0 Release - Complete (Foundation)
 
 ### Sprint 30 Phase 2: WikiLink Navigation & Editor Polish - COMPLETE ✅
 
