@@ -211,46 +211,39 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.11.0 Released ✅
+## 🎯 Current Status: v1.14.0 Released ✅
 
-**Version:** 1.11.0 (2026-01-01)
+**Version:** 1.14.0 (2026-01-07)
 **Branch:** `main` (tagged and released)
-**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.11.0
+**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.14.0
 **Documentation:** https://data-wise.github.io/scribe
 **Install:** `brew install --cask data-wise/tap/scribe`
 
-### Latest Release: Sprint 29 (v1.11.0)
+### Latest Release: Sprint 30 Phase 2 (v1.14.0)
 
-**Callout Support & Editor Polish - Complete ✅**
+**WikiLink Navigation & Editor Polish - Complete ✅**
 
 **Features:**
-- ✅ **Obsidian-style Callouts** - 11 callout types with icons and colors in all modes
-- ✅ **Strikethrough Rendering** - `~~text~~` renders correctly in Live mode
-- ✅ **36 New E2E Tests** - Comprehensive editor mode coverage (EDM-01 to EDM-36)
+- ✅ **Single-click WikiLink Navigation** - Click to navigate in Live/Reading modes
+- ✅ **Cmd+Click in Source Mode** - Navigate WikiLinks with ⌘+Click
+- ✅ **Mode Preservation** - Backlinks panel preserves editor mode
+- ✅ **Cursor Indicator** - Pointer cursor when Cmd is held
 
-**Supported Callout Types:**
-| Type | Aliases | Color |
-|------|---------|-------|
-| note, info | - | Blue |
-| tip | hint, important | Green |
-| success | check, done | Green |
-| warning | caution, attention | Orange |
-| danger | error | Red |
-| bug | - | Red |
-| question | help, faq | Purple |
-| example | - | Gray |
-| quote | cite | Gray |
-| abstract | summary, tldr | Cyan |
+**WikiLink Navigation by Mode:**
+| Mode | Navigation | Cursor |
+|------|------------|--------|
+| Source | ⌘+Click | Pointer when Cmd held |
+| Live | Single-click | Always pointer on hover |
+| Reading | Single-click | Always pointer on hover |
 
 **Testing:**
-- ✅ 930 unit tests + 48 E2E tests = 978 total
+- ✅ 1984 tests passing (30 WikiLink E2E tests)
 - ✅ TypeScript: 0 errors
 - ✅ Build: Successful
 
 **Artifacts:**
-- DMG: Scribe_1.11.0_aarch64.dmg (Apple Silicon)
-- DMG: Scribe_1.11.0_x64.dmg (Intel)
-- Homebrew: data-wise/tap/scribe v1.11.0
+- DMG: Scribe_1.14.0_aarch64.dmg (Apple Silicon)
+- Homebrew: data-wise/tap/scribe v1.14.0
 
 ---
 

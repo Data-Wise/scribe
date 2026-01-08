@@ -11,6 +11,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.14.0] - 2026-01-07
+
+### Sprint 30 Phase 2: WikiLink Navigation & Editor Polish
+
+**Single-click WikiLink navigation and Cmd+Click support in Source mode.**
+
+### Added
+
+**WikiLink Navigation Improvements:**
+- Single-click navigation in Live/Reading modes (was double-click)
+- Cmd+Click (⌘+Click) navigation in Source mode for WikiLinks
+- Mode preservation when navigating via backlinks panel
+- Cursor indicator shows pointer when Cmd is held
+
+**WikiLink E2E Tests (30 tests):**
+- WLN-01 to WLN-24: Core WikiLink behavior
+- WLN-25 to WLN-30: Cmd+Click and cursor indicator tests
+
+### Fixed
+
+**Editor Polish:**
+- Fixed `ignoreEvent()` to prevent cursor from moving into WikiLink widget
+- Fixed window dragging functionality
+- Fixed sidebar overlaying editor header drag region
+- Fixed list type properties now correctly use arrays
+- Fixed timer value no longer draggable
+
+**Live Preview:**
+- Display math spacing fixes
+- Theme-aware autocomplete styling
+- Syntax highlighting improvements for Source mode
+- Hidden WikiLink brackets in Live Preview mode
+
+### Changed
+
+**WikiLink Behavior:**
+- Source mode: Cmd+Click to navigate (cursor changes to pointer)
+- Live mode: Single-click to navigate (was double-click)
+- Reading mode: Single-click to navigate
+
+### Testing
+
+- ✅ TypeScript: 0 errors
+- ✅ Unit Tests: 1984 passed
+- ✅ E2E Tests: 30 WikiLink navigation tests
+- ✅ Total: 1984 tests passing
+- ✅ Build: Successful
+
+### Technical Details
+
+- **Files Modified:** 4
+  - `src/renderer/src/components/CodeMirrorEditor.tsx` - WikiLink navigation + Cmd+Click
+  - `src/renderer/src/App.tsx` - Backlinks mode preservation
+  - `src/renderer/src/index.css` - Cursor styling for Cmd+Click
+  - `src/renderer/src/__tests__/WikiLinkNavigation.test.tsx` - 30 E2E tests
+
+---
+
 ## [v1.13.0] - 2026-01-06
 
 ### Sprint 31: Callout Support - Complete

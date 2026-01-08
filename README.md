@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.11.0-blue)]()
+[![Version](https://img.shields.io/badge/version-1.14.0-blue)]()
 [![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-978%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-1984%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -27,7 +27,7 @@ Scribe is a **distraction-free writing app** designed for academics and research
 | **14 Fonts** | Recommended fonts + one-click Homebrew install |
 | **Quick Actions** | ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research (customizable) |
 | **Project Templates** | Research+, Teaching+, Dev+, Writing+, Minimal presets |
-| **Wiki Links** | `[[link]]` with autocomplete |
+| **Wiki Links** | `[[link]]` with autocomplete + single-click navigation |
 | **Tags** | `#tag` inline with autocomplete |
 | **Citations** | `@cite` with BibTeX/Zotero integration |
 | **Math** | KaTeX for LaTeX ($...$ and $$...$$) |
@@ -95,6 +95,7 @@ npm run build
 | **⌘⇧B** | Toggle tags panel |
 | **⌘⌥1-9** | Quick Actions (v1.9.0+) |
 | **⌘Alt+0-9** | Switch themes |
+| **⌘+Click** | Navigate WikiLink (Source mode) |
 
 ---
 
