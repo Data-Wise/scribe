@@ -159,4 +159,15 @@ declare global {
   }
 }
 
+// Sidebar types
+export interface PinnedVault {
+  id: 'inbox' | string  // 'inbox' reserved, others are project IDs
+  label: string
+  color?: string  // Project color (if applicable)
+  order: number  // 0-4
+  isPermanent: boolean  // true for Inbox only
+}
+
+export type SidebarMode = 'icon' | 'compact' | 'card'
+
 export {}

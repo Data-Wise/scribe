@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import type { PinnedVault, SidebarMode } from '../types'
 
 /**
  * App View Store - Manages sidebar state, tabs, and session tracking
@@ -9,7 +10,7 @@ import { create } from 'zustand'
  * - card: 320px+, full project cards
  */
 
-export type SidebarMode = 'icon' | 'compact' | 'card'
+export type { SidebarMode } from '../types'
 
 /** Editor tab types */
 export type TabType = 'mission-control' | 'note'
@@ -26,6 +27,7 @@ interface AppViewState {
   // Sidebar state
   sidebarMode: SidebarMode
   sidebarWidth: number
+  pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom)
 
   // Editor tabs state
   openTabs: EditorTab[]
@@ -40,6 +42,12 @@ interface AppViewState {
   cycleSidebarMode: () => void
   toggleSidebarCollapsed: () => void
   setSidebarWidth: (width: number) => void
+
+  // Pinned vaults actions
+  addPinnedVault: (projectId: string, label: string, color?: string) => boolean
+  removePinnedVault: (vaultId: string) => void
+  reorderPinnedVaults: (fromIndex: number, toIndex: number) => void
+  isPinned: (projectId: string) => boolean
 
   // Tab actions
   openTab: (tab: Omit<EditorTab, 'id'>) => string
@@ -64,6 +72,7 @@ const SIDEBAR_MODE_KEY = 'scribe:sidebarMode'
 const SIDEBAR_WIDTH_KEY = 'scribe:sidebarWidth'
 const OPEN_TABS_KEY = 'scribe:openTabs'
 const ACTIVE_TAB_KEY = 'scribe:activeTabId'
+const PINNED_VAULTS_KEY = 'scribe:pinnedVaults'
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -215,6 +224,41 @@ const saveActiveTabId = (tabId: string | null): void => {
   }
 }
 
+// Default Inbox vault (always pinned, always first)
+const INBOX_VAULT: PinnedVault = {
+  id: 'inbox',
+  label: 'Inbox',
+  order: 0,
+  isPermanent: true
+}
+
+const getSavedPinnedVaults = (): PinnedVault[] => {
+  try {
+    const saved = localStorage.getItem(PINNED_VAULTS_KEY)
+    if (saved) {
+      const vaults = JSON.parse(saved) as PinnedVault[]
+      // Ensure Inbox is always first and present
+      const hasInbox = vaults.some(v => v.id === 'inbox')
+      if (!hasInbox) {
+        return [INBOX_VAULT, ...vaults.filter(v => v.id !== 'inbox')]
+      }
+      // Sort by order
+      return vaults.sort((a, b) => a.order - b.order)
+    }
+    return [INBOX_VAULT]
+  } catch {
+    return [INBOX_VAULT]
+  }
+}
+
+const savePinnedVaults = (vaults: PinnedVault[]): void => {
+  try {
+    localStorage.setItem(PINNED_VAULTS_KEY, JSON.stringify(vaults))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
 /**
  * Determine initial sidebar mode based on session context
  * - Fresh start or > 4 hours → compact (get bearings)
@@ -244,6 +288,7 @@ const determineInitialSidebarMode = (): SidebarMode => {
 export const useAppViewStore = create<AppViewState>((set, get) => ({
   sidebarMode: determineInitialSidebarMode(),
   sidebarWidth: getSavedSidebarWidth(),
+  pinnedVaults: getSavedPinnedVaults(),
   lastActiveNoteId: getLastActiveNoteId(),
   openTabs: getSavedTabs(),
   activeTabId: getSavedActiveTabId(),
@@ -284,6 +329,76 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
 
     set({ sidebarWidth: constrainedWidth })
     saveSidebarWidth(constrainedWidth)
+  },
+
+  // Pinned vaults actions
+  addPinnedVault: (projectId, label, color) => {
+    const { pinnedVaults } = get()
+
+    // Check if already pinned
+    if (pinnedVaults.some(v => v.id === projectId)) {
+      return false
+    }
+
+    // Max 5 vaults (Inbox + 4 custom)
+    const customVaults = pinnedVaults.filter(v => v.id !== 'inbox')
+    if (customVaults.length >= 4) {
+      return false
+    }
+
+    // Find next available order number
+    const maxOrder = pinnedVaults.reduce((max, v) => Math.max(max, v.order), 0)
+
+    const newVault: PinnedVault = {
+      id: projectId,
+      label,
+      color,
+      order: maxOrder + 1,
+      isPermanent: false
+    }
+
+    const newVaults = [...pinnedVaults, newVault].sort((a, b) => a.order - b.order)
+    set({ pinnedVaults: newVaults })
+    savePinnedVaults(newVaults)
+    return true
+  },
+
+  removePinnedVault: (vaultId) => {
+    const { pinnedVaults } = get()
+
+    // Cannot remove Inbox
+    if (vaultId === 'inbox') {
+      return
+    }
+
+    const newVaults = pinnedVaults.filter(v => v.id !== vaultId)
+    // Reorder remaining vaults
+    const reordered = newVaults.map((v, index) => ({ ...v, order: index }))
+    set({ pinnedVaults: reordered })
+    savePinnedVaults(reordered)
+  },
+
+  reorderPinnedVaults: (fromIndex, toIndex) => {
+    const { pinnedVaults } = get()
+
+    // Cannot move Inbox (always order 0)
+    if (fromIndex === 0 || toIndex === 0) {
+      return
+    }
+
+    const newVaults = [...pinnedVaults]
+    const [moved] = newVaults.splice(fromIndex, 1)
+    newVaults.splice(toIndex, 0, moved)
+
+    // Update order numbers
+    const reordered = newVaults.map((v, index) => ({ ...v, order: index }))
+    set({ pinnedVaults: reordered })
+    savePinnedVaults(reordered)
+  },
+
+  isPinned: (projectId) => {
+    const { pinnedVaults } = get()
+    return pinnedVaults.some(v => v.id === projectId)
   },
 
   // Tab actions
