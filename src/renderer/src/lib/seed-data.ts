@@ -29,7 +29,8 @@ export const DEMO_PROJECT = {
 export const DEMO_TAGS = [
   { name: 'welcome', color: '#10B981' },
   { name: 'tutorial', color: '#8B5CF6' },
-  { name: 'tips', color: '#F59E0B' }
+  { name: 'tips', color: '#F59E0B' },
+  { name: 'quarto', color: '#2563EB' }
 ] as const
 
 // ============================================================================
@@ -218,6 +219,77 @@ Scribe supports Obsidian-style callouts for highlighting important information. 
 | abstract | summary, tldr | Cyan |
 
 See also: [[Features Overview]]`
+  },
+
+  quarto: {
+    title: 'Quarto Document Example',
+    folder: 'inbox',
+    tags: ['tutorial', 'quarto'],
+    content: `---
+title: "Analysis Report"
+author: "Your Name"
+format: html
+execute:
+  echo: true
+  warning: false
+bibliography: references.bib
+---
+
+# Introduction {#sec-intro}
+
+This document demonstrates **Quarto features** with autocomplete support.
+
+## Methodology {#sec-methods}
+
+We analyze the data using regression methods as described in @sec-intro.
+
+\`\`\`{r}
+#| label: fig-scatter
+#| fig-cap: "Scatter plot of the data"
+#| fig-width: 6
+#| fig-height: 4
+#| echo: true
+
+# Generate sample data
+x <- rnorm(100)
+y <- 2*x + rnorm(100, sd = 0.5)
+plot(x, y, main = "Sample Data")
+\`\`\`
+
+See @fig-scatter for the visualization.
+
+## Results {#sec-results}
+
+| Model | R² | RMSE |
+|-------|-----|------|
+| Linear | 0.94 | 0.52 |
+| Quadratic | 0.96 | 0.41 |
+
+: Summary of model performance {#tbl-results}
+
+The results in @tbl-results show strong model fit.
+
+## Equations
+
+The regression equation is:
+
+$$
+y = \\beta_0 + \\beta_1 x + \\epsilon
+$$ {#eq-regression}
+
+See @eq-regression for the model specification.
+
+---
+
+## Autocomplete Tips
+
+Try these autocomplete features:
+
+1. **YAML**: Type in the frontmatter area (between \`---\`) to see YAML key completions
+2. **Chunk Options**: Type \`#|\` inside a code block to see chunk option completions
+3. **Cross-References**: Type \`@fig\`, \`@tbl\`, \`@eq\`, or \`@sec\` to see cross-reference completions
+
+See [[Features Overview]] for more tips.`
   }
 } as const
 
@@ -230,7 +302,8 @@ export const DEMO_WIKI_LINKS = [
   { from: 'Features Overview', to: 'Welcome to Scribe' },
   { from: 'Features Overview', to: 'Daily Note Example' },
   { from: 'Features Overview', to: 'Callout Types' },
-  { from: 'Callout Types', to: 'Features Overview' }
+  { from: 'Callout Types', to: 'Features Overview' },
+  { from: 'Quarto Document Example', to: 'Features Overview' }
 ] as const
 
 // ============================================================================
