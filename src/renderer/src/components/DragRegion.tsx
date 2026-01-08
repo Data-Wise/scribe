@@ -33,7 +33,12 @@ export function DragRegion({ children, className = '', style }: DragRegionProps)
       target.closest('button') ||
       target.closest('a') ||
       target.closest('input') ||
-      target.closest('textarea')
+      target.closest('textarea') ||
+      // Exclude CodeMirror WikiLink widgets
+      target.classList.contains('cm-wikilink') ||
+      target.closest('.cm-wikilink') ||
+      target.hasAttribute('data-wikilink') ||
+      target.closest('[data-wikilink]')
     ) {
       return
     }
@@ -77,7 +82,12 @@ export function useDragRegion() {
       target.closest('button') ||
       target.closest('a') ||
       target.closest('input') ||
-      target.closest('textarea')
+      target.closest('textarea') ||
+      // Exclude CodeMirror WikiLink widgets
+      target.classList.contains('cm-wikilink') ||
+      target.closest('.cm-wikilink') ||
+      target.hasAttribute('data-wikilink') ||
+      target.closest('[data-wikilink]')
     ) {
       return
     }

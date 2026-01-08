@@ -336,18 +336,18 @@ class WikiLinkWidget extends WidgetType {
     span.setAttribute('role', 'link')
     span.setAttribute('tabindex', '0')
 
-    // Handle double-click for navigation
+    // Handle single-click for navigation
+    span.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      this.onClick?.(this.pageName, false) // Navigate on single-click
+    })
+
+    // Handle double-click for navigation (redundant but kept for compatibility)
     span.addEventListener('dblclick', (e) => {
       e.preventDefault()
       e.stopPropagation()
       this.onClick?.(this.pageName, true)
-    })
-
-    // Handle single click (prevent cursor movement, keep widget visible)
-    span.addEventListener('click', (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      // Don't call onClick for single click - just prevent default cursor behavior
     })
 
     // Handle Enter key for accessibility
@@ -361,9 +361,10 @@ class WikiLinkWidget extends WidgetType {
     return span
   }
 
-  ignoreEvent(event: Event) {
-    // Ignore click and dblclick events to prevent cursor movement
-    return event.type === 'click' || event.type === 'dblclick' || event.type === 'mousedown'
+  ignoreEvent() {
+    // Return true to prevent CodeMirror from processing clicks (which would position cursor)
+    // Our addEventListener handlers still fire because they're attached to the DOM element directly
+    return true
   }
 }
 
@@ -635,10 +636,9 @@ class RichMarkdownPlugin {
         // Pass onClick callback to enable navigation
         widgets.push(
           Decoration.replace({
-            widget: new WikiLinkWidget(displayText, pageName, (name, isDoubleClick) => {
-              if (isDoubleClick) {
-                this.onWikiLinkClick?.(name)
-              }
+            widget: new WikiLinkWidget(displayText, pageName, (name, _isDoubleClick) => {
+              // Navigate on both single-click and double-click
+              this.onWikiLinkClick?.(name)
             })
           }).range(matchFrom, matchTo)
         )
@@ -1447,6 +1447,33 @@ export function CodeMirrorEditor({
 }: CodeMirrorEditorProps) {
   const editorRef = useRef<ReactCodeMirrorRef>(null)
   const isInternalChange = useRef(false)
+  const [cmdPressed, setCmdPressed] = useState(false)
+
+  // Track Cmd/Ctrl key for cursor change on WikiLinks
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey) {
+        setCmdPressed(true)
+      }
+    }
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (!e.metaKey && !e.ctrlKey) {
+        setCmdPressed(false)
+      }
+    }
+    // Also reset when window loses focus
+    const handleBlur = () => setCmdPressed(false)
+
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+    window.addEventListener('blur', handleBlur)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+      window.removeEventListener('blur', handleBlur)
+    }
+  }, [])
 
   // Create theme fresh - @uiw/react-codemirror uses the theme prop for styling
   const editorTheme = createEditorTheme()
@@ -1458,6 +1485,46 @@ export function CodeMirrorEditor({
     [onWikiLinkClick]
   )
 
+  // Cmd+Click handler for Source mode WikiLink navigation
+  // Allows clicking [[WikiLinks]] in Source mode while holding Cmd (Mac) or Ctrl (Win/Linux)
+  const cmdClickHandler = useMemo(() => {
+    if (!onWikiLinkClick) return []
+
+    return EditorView.domEventHandlers({
+      mousedown: (event, view) => {
+        // Check for Cmd (Mac) or Ctrl (Windows/Linux)
+        if (!event.metaKey && !event.ctrlKey) return false
+
+        // Get click position in document
+        const pos = view.posAtCoords({ x: event.clientX, y: event.clientY })
+        if (pos === null) return false
+
+        // Get the line at click position
+        const line = view.state.doc.lineAt(pos)
+        const lineText = line.text
+        const posInLine = pos - line.from
+
+        // Find WikiLink pattern [[...]] that contains the click position
+        const wikiLinkRegex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+        let match
+        while ((match = wikiLinkRegex.exec(lineText)) !== null) {
+          const matchStart = match.index
+          const matchEnd = match.index + match[0].length
+
+          // Check if click is within this WikiLink
+          if (posInLine >= matchStart && posInLine <= matchEnd) {
+            const pageName = match[1].trim()
+            event.preventDefault()
+            onWikiLinkClick(pageName)
+            return true
+          }
+        }
+
+        return false
+      }
+    })
+  }, [onWikiLinkClick])
+
   // Extensions for markdown features (not theme)
   const extensions = [
     markdown({
@@ -1468,6 +1535,8 @@ export function CodeMirrorEditor({
     displayMathField,  // StateField for multi-line display math blocks
     // Only hide syntax in live-preview mode; show all syntax in source mode
     ...(editorMode === 'live-preview' ? [richMarkdownPluginWithCallback] : []),
+    // Cmd+Click navigation works in all modes (especially useful in Source mode)
+    cmdClickHandler,
     latexSyntaxPlugin,  // LaTeX syntax highlighting for math blocks
     autocompletion({ override: [latexCompletions, latexSnippetCompletions] }),  // LaTeX commands & snippets
     EditorView.lineWrapping,
@@ -1500,7 +1569,7 @@ export function CodeMirrorEditor({
   }, [content])
 
   return (
-    <div className={`codemirror-editor-wrapper ${className || ''}`}>
+    <div className={`codemirror-editor-wrapper ${className || ''} ${cmdPressed ? 'cmd-pressed' : ''}`}>
       <CodeMirror
         ref={editorRef}
         value={content}
