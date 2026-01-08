@@ -111,7 +111,11 @@ function App() {
     setActiveTab,
     openNoteTab,
     closeTab,
-    reopenLastClosedTab
+    reopenLastClosedTab,
+    // Pinned vaults
+    addPinnedVault,
+    removePinnedVault,
+    isPinned
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
@@ -1315,6 +1319,17 @@ function App() {
             }
             await loadProjects()
           }
+        }}
+        onPinProject={(projectId) => {
+          const project = projects.find(p => p.id === projectId)
+          if (!project) return
+          const success = addPinnedVault(projectId, project.name, project.color)
+          if (!success) {
+            showToast('Maximum 4 projects can be pinned to the sidebar', 'error')
+          }
+        }}
+        onUnpinProject={(projectId) => {
+          removePinnedVault(projectId)
         }}
         onRenameNote={async (noteId) => {
           // Select the note and focus for rename

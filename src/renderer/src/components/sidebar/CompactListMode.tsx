@@ -5,6 +5,7 @@ import { ActivityDots } from './ActivityDots'
 import { ProjectContextCard } from './ProjectContextCard'
 import { ProjectContextMenu } from './ProjectContextMenu'
 import { NoteContextMenu } from './NoteContextMenu'
+import { useAppViewStore } from '../../store/useAppViewStore'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -20,6 +21,8 @@ interface CompactListModeProps {
   onEditProject?: (projectId: string) => void
   onArchiveProject?: (projectId: string) => void
   onDeleteProject?: (projectId: string) => void
+  onPinProject?: (projectId: string) => void
+  onUnpinProject?: (projectId: string) => void
   onRenameNote?: (noteId: string) => void
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
@@ -40,6 +43,8 @@ export function CompactListMode({
   onEditProject,
   onArchiveProject,
   onDeleteProject,
+  onPinProject,
+  onUnpinProject,
   onRenameNote,
   onMoveNoteToProject,
   onDuplicateNote,
@@ -47,6 +52,7 @@ export function CompactListMode({
   onOpenSettings
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const isPinned = useAppViewStore(state => state.isPinned)
 
   // Context menu state
   const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
@@ -189,6 +195,9 @@ export function CompactListMode({
           onEditProject={onEditProject}
           onArchiveProject={onArchiveProject}
           onDeleteProject={onDeleteProject}
+          onPinProject={onPinProject}
+          onUnpinProject={onUnpinProject}
+          isPinned={isPinned(projectContextMenu.project.id)}
         />
       )}
 

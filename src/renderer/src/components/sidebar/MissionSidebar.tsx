@@ -18,6 +18,8 @@ interface MissionSidebarProps {
   onEditProject?: (projectId: string) => void
   onArchiveProject?: (projectId: string) => void
   onDeleteProject?: (projectId: string) => void
+  onPinProject?: (projectId: string) => void
+  onUnpinProject?: (projectId: string) => void
   onRenameNote?: (noteId: string) => void
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
@@ -39,6 +41,8 @@ export function MissionSidebar({
   onEditProject,
   onArchiveProject,
   onDeleteProject,
+  onPinProject,
+  onUnpinProject,
   onRenameNote,
   onMoveNoteToProject,
   onDuplicateNote,
@@ -115,6 +119,8 @@ export function MissionSidebar({
           onEditProject={onEditProject}
           onArchiveProject={onArchiveProject}
           onDeleteProject={onDeleteProject}
+          onPinProject={onPinProject}
+          onUnpinProject={onUnpinProject}
           onRenameNote={onRenameNote}
           onMoveNoteToProject={onMoveNoteToProject}
           onDuplicateNote={onDuplicateNote}
@@ -137,6 +143,8 @@ export function MissionSidebar({
           onEditProject={onEditProject}
           onArchiveProject={onArchiveProject}
           onDeleteProject={onDeleteProject}
+          onPinProject={onPinProject}
+          onUnpinProject={onUnpinProject}
           onRenameNote={onRenameNote}
           onMoveNoteToProject={onMoveNoteToProject}
           onDuplicateNote={onDuplicateNote}
