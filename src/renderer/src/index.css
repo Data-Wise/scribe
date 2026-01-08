@@ -5119,3 +5119,145 @@ mark {
 .cm-math-display:hover .cm-math-preview-tooltip {
   opacity: 1;
 }
+
+/* ========================================
+   Pinned Vaults Settings
+   ======================================== */
+
+.settings-section {
+  margin-bottom: 32px;
+}
+
+.settings-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.settings-section-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  margin: 0;
+}
+
+.settings-count {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nexus-text-secondary);
+  background: var(--nexus-bg-tertiary);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.settings-description {
+  font-size: 13px;
+  color: var(--nexus-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  padding: 32px 16px;
+  text-align: center;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.empty-state p {
+  margin: 0 0 8px 0;
+}
+
+.text-muted {
+  color: var(--nexus-text-tertiary);
+}
+
+.text-sm {
+  font-size: 12px;
+}
+
+.text-xs {
+  font-size: 11px;
+}
+
+.pinned-vaults-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pinned-vault-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--nexus-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  transition: all 150ms ease;
+}
+
+.pinned-vault-item:hover {
+  background: var(--nexus-bg-tertiary);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pinned-vault-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.drag-handle {
+  color: var(--nexus-text-tertiary);
+  cursor: grab;
+  opacity: 0.5;
+  transition: opacity 150ms ease;
+}
+
+.pinned-vault-item:hover .drag-handle {
+  opacity: 1;
+}
+
+.pinned-vault-item .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pinned-vault-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+}
+
+.icon-btn.danger {
+  color: #ef4444;
+  opacity: 0.7;
+  transition: opacity 150ms ease;
+}
+
+.icon-btn.danger:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.settings-hint {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 8px;
+}
+
+.settings-hint p {
+  margin: 0;
+}
+
+.settings-hint strong {
+  color: var(--nexus-accent);
+}
