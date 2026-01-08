@@ -4,6 +4,7 @@ import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { Tooltip } from './Tooltip'
 import { ActivityBar } from './ActivityBar'
+import { InboxButton } from './InboxButton'
 
 interface IconBarModeProps {
   projects: Project[]
@@ -55,6 +56,14 @@ export function IconBarMode({
     return counts
   }, [projects, notes])
 
+  // Count unassigned notes (inbox)
+  const inboxCount = useMemo(() => {
+    return notes.filter(n => !n.deleted_at && !n.project_id).length
+  }, [notes])
+
+  // Check if Inbox is the "active" view (no project selected)
+  const isInboxActive = currentProjectId === null
+
   return (
     <div className="mission-sidebar-icon">
       {/* Expand button */}
@@ -65,6 +74,15 @@ export function IconBarMode({
       >
         <Menu size={18} />
       </button>
+
+      <div className="sidebar-divider" />
+
+      {/* Inbox button (always at top) */}
+      <InboxButton
+        unreadCount={inboxCount}
+        isActive={isInboxActive}
+        onClick={() => onSelectProject(null)}
+      />
 
       <div className="sidebar-divider" />
 

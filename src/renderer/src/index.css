@@ -2516,6 +2516,83 @@ mark {
   color: var(--nexus-accent);
 }
 
+/* Inbox Icon Button (amber accent) */
+.inbox-icon-btn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: all 150ms ease;
+}
+
+.inbox-icon-btn:hover {
+  background: rgba(245, 158, 11, 0.1); /* Amber tint */
+}
+
+.inbox-icon-btn.active {
+  background: rgba(245, 158, 11, 0.15); /* Stronger amber for active */
+}
+
+.inbox-icon-btn .inbox-icon {
+  color: #f59e0b; /* Amber-500 */
+  flex-shrink: 0;
+}
+
+.inbox-icon-btn .active-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: #f59e0b; /* Amber accent */
+  border-radius: 0 2px 2px 0;
+}
+
+/* Inbox Badge (unread count) */
+.inbox-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  color: #000;
+  background: #f59e0b; /* Amber-500 */
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* Inbox badge in active state */
+.inbox-icon-btn.active .inbox-badge {
+  background: #f59e0b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme adjustments for Inbox */
+:root[data-theme-type="light"] .inbox-icon-btn:hover {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+:root[data-theme-type="light"] .inbox-icon-btn.active {
+  background: rgba(245, 158, 11, 0.12);
+}
+
+:root[data-theme-type="light"] .inbox-badge {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
 /* Compact List Mode (240px) */
 .mission-sidebar-compact {
   height: 100%;
