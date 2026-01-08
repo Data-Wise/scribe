@@ -222,74 +222,264 @@ See also: [[Features Overview]]`
   },
 
   quarto: {
-    title: 'Quarto Document Example',
+    title: '🧪 Quarto Autocomplete Test Page',
     folder: 'inbox',
     tags: ['tutorial', 'quarto'],
-    content: `---
-title: "Analysis Report"
+    content: `# 🧪 Quarto Autocomplete Test Page
+
+**Welcome!** This page helps you test and explore Quarto's powerful autocomplete features.
+
+> [!tip] Getting Started
+> 1. Press **⌘1** to enter Source mode (required for autocomplete)
+> 2. Try the examples below - autocomplete will appear as you type!
+> 3. Press **Ctrl+Space** to manually trigger autocomplete anytime
+
+---
+
+## 📝 Test 1: YAML Frontmatter Autocomplete
+
+**Instructions:** Place your cursor in the YAML section below (between the \`---\` lines) and start typing.
+
+\`\`\`yaml
+---
+# Type "for" here to see format: completion
+# Try: format, title, author, execute, bibliography, theme
+
+# Example: Type "for" then accept "format:"
+format:
+
+# Try typing "tit" for title:
+title:
+
+# Try "exec" for execute options:
+execute:
+  echo:
+  warning:
+
+# More to try: cite-method, toc, code-fold, highlight-style
+---
+\`\`\`
+
+**What to expect:**
+- Type partial keys (e.g., "for") → Menu shows matching options ("format:")
+- After colon, type partial values (e.g., "ht") → Menu shows "html", "pdf", etc.
+
+---
+
+## 💻 Test 2: Chunk Options Autocomplete
+
+**Instructions:** Inside code blocks below, type \`#|\` followed by a space to see chunk options.
+
+### Example 1: Figure with Multiple Options
+
+\`\`\`{r}
+#| label: fig-test-plot
+#| fig-cap: "My test plot"
+#| fig-width: 8
+#| fig-height: 6
+#| echo: false
+#| warning: false
+
+# Try adding more options here!
+# Type "#| " (hash-pipe-space) below and explore:
+
+plot(1:10)
+\`\`\`
+
+### Example 2: Try It Yourself!
+
+\`\`\`python
+# Add chunk options here:
+# Type "#| " and try:
+#   - echo (true/false)
+#   - eval (true/false)
+#   - output (true/false/asis)
+#   - code-fold (true/false/show)
+
+import matplotlib.pyplot as plt
+plt.plot([1,2,3], [1,4,9])
+\`\`\`
+
+**What to expect:**
+- \`#| \` (with space) → Menu shows all chunk options
+- After option name, type value → Menu shows valid values (true/false, numbers, etc.)
+
+---
+
+## 🔗 Test 3: Cross-Reference Autocomplete
+
+**Instructions:** Type \`@\` followed by a label prefix to see all matching references.
+
+### Figures for Testing
+
+![Test Figure 1](image1.png){#fig-example1}
+![Test Figure 2](image2.png){#fig-example2}
+
+\`\`\`{r}
+#| label: fig-scatter
+#| fig-cap: "Scatter plot example"
+plot(rnorm(100), rnorm(100))
+\`\`\`
+
+### Tables for Testing
+
+| Item | Value |
+|------|-------|
+| A    | 10    |
+| B    | 20    |
+{#tbl-data}
+
+| Metric | Score |
+|--------|-------|
+| Speed  | 95%   |
+{#tbl-performance}
+
+### Sections for Testing
+
+## Introduction {#sec-intro}
+
+## Methods {#sec-methods}
+
+## Results {#sec-results}
+
+### Equations for Testing
+
+$$
+E = mc^2
+$$ {#eq-einstein}
+
+$$
+y = mx + b
+$$ {#eq-linear}
+
+---
+
+## 🎯 Now Try Cross-References!
+
+Type \`@\` followed by a prefix below to see autocomplete:
+
+- Figures: Type \`@fig\` to see all figures (@fig-example1, @fig-example2, @fig-scatter)
+- Tables: Type \`@tbl\` to see all tables (@tbl-data, @tbl-performance)
+- Sections: Type \`@sec\` to see all sections (@sec-intro, @sec-methods, @sec-results)
+- Equations: Type \`@eq\` to see all equations (@eq-einstein, @eq-linear)
+
+**Try it here:**
+
+
+
+**What to expect:**
+- \`@fig\` → Menu shows all figure labels with their captions
+- \`@tbl\` → Menu shows all table labels
+- \`@sec\` → Menu shows all section headers
+- \`@eq\` → Menu shows all equation labels
+
+---
+
+## 📚 Complete Example Document
+
+Here's a complete Quarto document showing all features together:
+
+---
+title: "My Analysis Report"
 author: "Your Name"
 format: html
 execute:
   echo: true
   warning: false
-bibliography: references.bib
+toc: true
+number-sections: true
 ---
 
 # Introduction {#sec-intro}
 
-This document demonstrates **Quarto features** with autocomplete support.
+This document demonstrates Quarto autocomplete features.
 
-## Methodology {#sec-methods}
+## Background
 
-We analyze the data using regression methods as described in @sec-intro.
+For methodology details, see @sec-methods.
 
-\`\`\`{r}
-#| label: fig-scatter
-#| fig-cap: "Scatter plot of the data"
-#| fig-width: 6
-#| fig-height: 4
-#| echo: true
+# Methods {#sec-methods}
 
-# Generate sample data
-x <- rnorm(100)
-y <- 2*x + rnorm(100, sd = 0.5)
-plot(x, y, main = "Sample Data")
-\`\`\`
-
-See @fig-scatter for the visualization.
-
-## Results {#sec-results}
-
-| Model | R² | RMSE |
-|-------|-----|------|
-| Linear | 0.94 | 0.52 |
-| Quadratic | 0.96 | 0.41 |
-
-: Summary of model performance {#tbl-results}
-
-The results in @tbl-results show strong model fit.
-
-## Equations
-
-The regression equation is:
+We use linear regression as shown in @eq-model.
 
 $$
 y = \\beta_0 + \\beta_1 x + \\epsilon
-$$ {#eq-regression}
+$$ {#eq-model}
 
-See @eq-regression for the model specification.
+\`\`\`{r}
+#| label: fig-data-viz
+#| fig-cap: "Data visualization"
+#| fig-width: 7
+#| echo: false
+
+x <- 1:100
+y <- 2*x + rnorm(100, sd=10)
+plot(x, y, main="Sample Data")
+\`\`\`
+
+# Results {#sec-results}
+
+The visualization in @fig-data-viz shows the relationship.
+
+| Model | R² | P-value |
+|-------|-----|---------|
+| Linear | 0.92 | <0.001 |
+{#tbl-stats}
+
+Statistical results are in @tbl-stats.
 
 ---
 
-## Autocomplete Tips
+## 🎓 Learning Tips
 
-Try these autocomplete features:
+### YAML Frontmatter
+- **40+ keys supported**: format, title, author, date, execute, bibliography, toc, theme, etc.
+- **Smart value completion**: After typing key and colon, get relevant value suggestions
+- **Nested options**: Works with nested YAML like \`execute: echo: false\`
 
-1. **YAML**: Type in the frontmatter area (between \`---\`) to see YAML key completions
-2. **Chunk Options**: Type \`#|\` inside a code block to see chunk option completions
-3. **Cross-References**: Type \`@fig\`, \`@tbl\`, \`@eq\`, or \`@sec\` to see cross-reference completions
+### Chunk Options
+- **30+ options**: echo, eval, warning, message, fig-width, fig-cap, label, etc.
+- **Type-aware values**: Boolean options suggest true/false, numeric options suggest common sizes
+- **Language agnostic**: Works in R, Python, Julia, JavaScript code blocks
 
-See [[Features Overview]] for more tips.`
+### Cross-References
+- **6 label types**: fig, tbl, eq, sec, lst, thm
+- **Auto-detection**: Scans document for \`{#type-label}\` and \`#| label: type-label\`
+- **Context hints**: Shows captions/titles in autocomplete detail panel
+- **Fast scanning**: Handles 100+ labels instantly
+
+---
+
+## 🚀 Keyboard Shortcuts
+
+| Action | Shortcut |
+|--------|----------|
+| Trigger autocomplete | **Ctrl+Space** |
+| Accept suggestion | **Enter** or **Tab** |
+| Navigate options | **↑** / **↓** |
+| Dismiss menu | **Escape** |
+| Source mode | **⌘1** |
+| Live Preview mode | **⌘2** |
+
+---
+
+## 🐛 Troubleshooting
+
+**Autocomplete not appearing?**
+1. Make sure you're in Source mode (**⌘1**)
+2. Try **Ctrl+Space** to force trigger
+3. Check you're in the right context (YAML block, code block, or typing \`@\`)
+
+**Wrong suggestions?**
+1. Verify cursor position (before/after special characters)
+2. Check for proper spacing (e.g., \`#| \` needs space after pipe)
+
+---
+
+> [!success] All Set!
+> You now know how to use Quarto autocomplete in Scribe. Happy writing! 📝
+
+See [[Features Overview]] for more Scribe tips.`
   }
 } as const
 
