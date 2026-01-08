@@ -25,6 +25,7 @@ import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion, useDragRegion } from './components/DragRegion'
 import { ToastProvider, useToast, setGlobalToast } from './components/Toast'
+import { FeaturesShowcase } from './components/FeaturesShowcase'
 import { Note, Tag, Property } from './types'
 import { Settings2, Link2, Tags, PanelRightOpen, PanelRightClose, BarChart3, Sparkles, Terminal } from 'lucide-react'
 import { api, runApiDiagnostics } from './lib/api'
@@ -274,6 +275,7 @@ function App() {
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null)
   const [isSearchPanelOpen, setIsSearchPanelOpen] = useState(false)
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false)
+  const [isFeaturesShowcaseOpen, setIsFeaturesShowcaseOpen] = useState(false)
 
   // Tag filtering - filteredNotes now handled by MissionSidebar
 
@@ -798,6 +800,12 @@ function App() {
         e.preventDefault()
         setIsSettingsOpen(true)
       }
+
+      // Features showcase (⌘⇧H)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'H') {
+        e.preventDefault()
+        setIsFeaturesShowcaseOpen(true)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -1231,8 +1239,18 @@ function App() {
           onRunGemini={handleRunGemini}
           onExport={() => setIsExportDialogOpen(true)}
           onOpenGraph={() => setIsGraphViewOpen(true)}
+          onOpenFeatures={() => setIsFeaturesShowcaseOpen(true)}
           hasSelectedNote={!!selectedNote}
         />
+        {isFeaturesShowcaseOpen && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+            <div className="w-full h-full max-w-7xl mx-auto">
+              <FeaturesShowcase
+                onClose={() => setIsFeaturesShowcaseOpen(false)}
+              />
+            </div>
+          </div>
+        )}
         <QuickCaptureOverlay
           isOpen={isQuickCaptureOpen}
           onClose={() => setIsQuickCaptureOpen(false)}
@@ -1710,6 +1728,7 @@ function App() {
         onRunGemini={handleRunGemini}
         onExport={() => setIsExportDialogOpen(true)}
         onOpenGraph={() => setIsGraphViewOpen(true)}
+        onOpenFeatures={() => setIsFeaturesShowcaseOpen(true)}
         hasSelectedNote={!!selectedNote}
       />
 
@@ -1834,6 +1853,17 @@ function App() {
             }
           }}
         />
+      )}
+
+      {/* Features Showcase (⌘⇧H) */}
+      {isFeaturesShowcaseOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+          <div className="w-full h-full max-w-7xl mx-auto">
+            <FeaturesShowcase
+              onClose={() => setIsFeaturesShowcaseOpen(false)}
+            />
+          </div>
+        </div>
       )}
     </div>
   )

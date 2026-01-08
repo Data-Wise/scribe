@@ -14,7 +14,8 @@ import {
   Folder,
   Download,
   Network,
-  Monitor
+  Monitor,
+  BookOpen
 } from 'lucide-react'
 import { isBrowser } from '../lib/platform'
 
@@ -57,6 +58,7 @@ interface CommandPaletteProps {
   onRunGemini: () => void
   onExport?: () => void
   onOpenGraph?: () => void
+  onOpenFeatures?: () => void
   hasSelectedNote?: boolean
 }
 
@@ -73,6 +75,7 @@ export function CommandPalette({
   onRunGemini,
   onExport,
   onOpenGraph,
+  onOpenFeatures,
   hasSelectedNote = false
 }: CommandPaletteProps) {
 
@@ -240,12 +243,23 @@ export function CommandPalette({
                 <kbd className="command-palette-shortcut">⌘⇧G</kbd>
               </Command.Item>
             )}
+            {onOpenFeatures && (
+              <Command.Item
+                onSelect={() => { onOpenFeatures(); setOpen(false); }}
+                className="command-palette-item"
+              >
+                <kbd className="command-palette-number">{onOpenGraph ? '8' : '7'}</kbd>
+                <BookOpen className="mr-3 h-4 w-4 text-indigo-400" />
+                <span>Features Showcase</span>
+                <kbd className="command-palette-shortcut">⌘⇧H</kbd>
+              </Command.Item>
+            )}
             {hasSelectedNote && onExport && (
               <Command.Item
                 onSelect={() => { onExport(); setOpen(false); }}
                 className="command-palette-item"
               >
-                <kbd className="command-palette-number">8</kbd>
+                <kbd className="command-palette-number">{(onOpenGraph && onOpenFeatures) ? '9' : (onOpenGraph || onOpenFeatures) ? '8' : '7'}</kbd>
                 <Download className="mr-3 h-4 w-4 text-emerald-400" />
                 <span>Export Page (PDF/Word/LaTeX)</span>
                 <kbd className="command-palette-shortcut">⌘⇧E</kbd>
