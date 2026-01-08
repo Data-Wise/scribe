@@ -5,6 +5,7 @@ import { StatusDot } from './StatusDot'
 import { Tooltip } from './Tooltip'
 import { ActivityBar } from './ActivityBar'
 import { InboxButton } from './InboxButton'
+import { useAppViewStore } from '../../store/useAppViewStore'
 
 interface IconBarModeProps {
   projects: Project[]
@@ -20,8 +21,6 @@ interface IconBarModeProps {
   activeActivityItem?: 'search' | 'daily' | 'settings' | null
 }
 
-const MAX_VISIBLE_PROJECTS = 8
-
 export function IconBarMode({
   projects,
   notes,
@@ -34,15 +33,26 @@ export function IconBarMode({
   onSettings,
   activeActivityItem = null
 }: IconBarModeProps) {
-  // Show active projects first, then by updated_at (treat undefined status as 'active')
-  const sortedProjects = [...projects]
-    .filter(p => (p.status || 'active') !== 'archive')
-    .sort((a, b) => {
-      if (a.id === currentProjectId) return -1
-      if (b.id === currentProjectId) return 1
-      return b.updated_at - a.updated_at
+  // Get pinned vaults from store
+  const pinnedVaults = useAppViewStore(state => state.pinnedVaults)
+
+  // Filter projects to show only pinned ones, sorted by vault order
+  const sortedProjects = useMemo(() => {
+    // Get pinned project IDs (excluding Inbox)
+    const pinnedProjectIds = pinnedVaults
+      .filter(v => v.id !== 'inbox')
+      .map(v => v.id)
+
+    // Filter projects to only pinned ones
+    const pinned = projects.filter(p => pinnedProjectIds.includes(p.id))
+
+    // Sort by vault order
+    return pinned.sort((a, b) => {
+      const aVault = pinnedVaults.find(v => v.id === a.id)
+      const bVault = pinnedVaults.find(v => v.id === b.id)
+      return (aVault?.order || 0) - (bVault?.order || 0)
     })
-    .slice(0, MAX_VISIBLE_PROJECTS)
+  }, [projects, pinnedVaults])
 
   // Compute note counts per project for tooltips
   const noteCounts = useMemo(() => {
