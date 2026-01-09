@@ -2374,7 +2374,7 @@ mark {
   z-index: 10;
 }
 
-/* Icon Bar Mode (48px) */
+/* Icon Bar Mode (48px, expands to 240px when smart icon opens) */
 .mission-sidebar-icon {
   width: 48px;
   height: 100%;
@@ -2383,6 +2383,7 @@ mark {
   align-items: center;
   padding: 40px 8px 12px; /* Extra top for traffic lights */
   gap: 4px;
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1); /* Smooth expansion */
 }
 
 .mission-sidebar-icon .sidebar-toggle-btn {
@@ -2611,6 +2612,254 @@ mark {
 
 :root[data-theme-type="light"] .inbox-badge {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Smart Icon Buttons (Permanent Folders)
+   ============================================ */
+
+.smart-icon-btn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: all 150ms ease;
+}
+
+.smart-icon-btn:hover {
+  background: color-mix(in srgb, var(--smart-icon-color) 10%, transparent);
+}
+
+.smart-icon-btn.expanded {
+  background: color-mix(in srgb, var(--smart-icon-color) 15%, transparent);
+}
+
+.smart-icon-btn .smart-icon-emoji {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.smart-icon-btn .expanded-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: var(--smart-icon-color);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Smart Icon Count Badge */
+.smart-icon-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  color: #000;
+  background: var(--smart-icon-color);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.smart-icon-btn.expanded .smart-icon-count {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme adjustments for Smart Icons */
+:root[data-theme-type="light"] .smart-icon-btn:hover {
+  background: color-mix(in srgb, var(--smart-icon-color) 8%, transparent);
+}
+
+:root[data-theme-type="light"] .smart-icon-btn.expanded {
+  background: color-mix(in srgb, var(--smart-icon-color) 12%, transparent);
+}
+
+:root[data-theme-type="light"] .smart-icon-count {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Expanded Child Projects (Smart Icon Children)
+   ============================================ */
+
+.expanded-child-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.expanded-child-projects.empty {
+  padding: 8px;
+  opacity: 0.5;
+}
+
+.expanded-child-projects .empty-message {
+  font-size: 11px;
+  color: var(--nexus-text-secondary);
+  text-align: center;
+}
+
+.child-project-btn {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: all 150ms ease;
+  margin-left: 4px; /* Indent from smart icon */
+}
+
+.child-project-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.child-project-btn.active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Expanded state (when sidebar is 240px) */
+.child-project-btn.expanded {
+  width: 210px; /* Fits within 240px sidebar with padding */
+  height: 44px; /* Taller for 2-line layout */
+  gap: 8px;
+  padding: 6px 8px;
+  justify-content: flex-start; /* Left-align content */
+}
+
+.child-project-btn.expanded .active-indicator {
+  left: -8px; /* Adjust for wider button */
+  height: 24px; /* Taller for 2-line button */
+}
+
+/* Project info container (2-line layout) */
+.child-project-btn.expanded .project-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0; /* Allow text truncation */
+}
+
+.child-project-btn.expanded .project-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.child-project-btn.expanded .project-meta {
+  font-size: 11px;
+  color: var(--nexus-text-tertiary);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums; /* Consistent width for timestamps */
+}
+
+.child-project-btn .active-indicator {
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 12px;
+  background: var(--nexus-text-primary);
+  border-radius: 0 1px 1px 0;
+}
+
+/* Child Project Badge */
+.child-project-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 14px;
+  text-align: center;
+  color: #000;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 7px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.child-project-btn.active .child-project-badge {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Project Avatar (First Letter Icon) */
+.project-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.project-avatar.sm {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.project-avatar.md {
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
+}
+
+/* Light theme adjustments for Child Projects */
+:root[data-theme-type="light"] .child-project-btn:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+:root[data-theme-type="light"] .child-project-btn.active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme-type="light"] .child-project-badge {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme-type="light"] .child-project-btn.expanded .project-name {
+  color: var(--nexus-text-primary);
+}
+
+:root[data-theme-type="light"] .child-project-btn.expanded .project-meta {
+  color: var(--nexus-text-tertiary);
 }
 
 /* Compact List Mode (240px) */

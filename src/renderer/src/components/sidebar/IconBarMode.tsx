@@ -5,6 +5,8 @@ import { StatusDot } from './StatusDot'
 import { Tooltip } from './Tooltip'
 import { ActivityBar } from './ActivityBar'
 import { InboxButton } from './InboxButton'
+import { SmartIconButton } from './SmartIconButton'
+import { ExpandedChildProjects } from './ExpandedChildProjects'
 import { useAppViewStore } from '../../store/useAppViewStore'
 
 interface IconBarModeProps {
@@ -33,9 +35,12 @@ export function IconBarMode({
   onSettings,
   activeActivityItem = null
 }: IconBarModeProps) {
-  // Get pinned vaults from store
+  // Get pinned vaults and smart icons from store
   const pinnedVaults = useAppViewStore(state => state.pinnedVaults)
   const reorderPinnedVaults = useAppViewStore(state => state.reorderPinnedVaults)
+  const smartIcons = useAppViewStore(state => state.smartIcons)
+  const expandedSmartIconId = useAppViewStore(state => state.expandedSmartIconId)
+  const toggleSmartIcon = useAppViewStore(state => state.toggleSmartIcon)
 
   // Drag state
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
@@ -79,6 +84,30 @@ export function IconBarMode({
   // Check if Inbox is the "active" view (no project selected)
   const isInboxActive = currentProjectId === null
 
+  // Compute project counts per smart icon
+  const smartIconProjectCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    smartIcons.forEach(icon => {
+      counts[icon.id] = projects.filter(p => p.type === icon.projectType).length
+    })
+    return counts
+  }, [projects, smartIcons])
+
+  // Get child projects for expanded smart icon
+  const expandedChildProjects = useMemo(() => {
+    if (!expandedSmartIconId) return []
+    const icon = smartIcons.find(i => i.id === expandedSmartIconId)
+    if (!icon) return []
+    return projects
+      .filter(p => p.type === icon.projectType)
+      .sort((a, b) => a.name.localeCompare(b.name))
+  }, [expandedSmartIconId, smartIcons, projects])
+
+  // Calculate sidebar width based on expanded state
+  const sidebarWidth = useMemo(() => {
+    return expandedSmartIconId ? 240 : 48
+  }, [expandedSmartIconId])
+
   // Drag handlers
   const handleDragStart = (index: number) => {
     setDraggedIndex(index)
@@ -110,7 +139,10 @@ export function IconBarMode({
   }
 
   return (
-    <div className="mission-sidebar-icon">
+    <div
+      className="mission-sidebar-icon"
+      style={{ width: `${sidebarWidth}px` }}
+    >
       {/* Expand button */}
       <button
         className="sidebar-toggle-btn"
@@ -131,7 +163,34 @@ export function IconBarMode({
 
       <div className="sidebar-divider" />
 
-      {/* Project icons */}
+      {/* Smart Icons - Permanent folders */}
+      {smartIcons
+        .filter(icon => icon.isVisible)
+        .sort((a, b) => a.order - b.order)
+        .map((icon) => (
+          <div key={icon.id}>
+            <SmartIconButton
+              icon={icon}
+              projectCount={smartIconProjectCounts[icon.id] || 0}
+              isExpanded={icon.isExpanded}
+              onClick={() => toggleSmartIcon(icon.id)}
+            />
+            {/* Show child projects when expanded */}
+            {icon.isExpanded && (
+              <ExpandedChildProjects
+                projects={expandedChildProjects}
+                currentProjectId={currentProjectId}
+                onSelectProject={onSelectProject}
+                noteCounts={noteCounts}
+                smartIconColor={icon.color}
+              />
+            )}
+          </div>
+        ))}
+
+      <div className="sidebar-divider" />
+
+      {/* Pinned Project icons */}
       <div className="project-icons">
         {sortedProjects.map((project, index) => {
           const isActive = project.id === currentProjectId
