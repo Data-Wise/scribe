@@ -895,6 +895,9 @@ function App() {
           case 'preferences':
             setIsSettingsOpen(true)
             break
+          case 'features':
+            setIsFeaturesShowcaseOpen(true)
+            break
           case 'shortcuts':
             setIsKeyboardShortcutsOpen(true)
             break

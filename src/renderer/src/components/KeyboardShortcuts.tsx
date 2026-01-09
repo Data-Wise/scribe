@@ -26,6 +26,7 @@ const SHORTCUTS = {
     { keys: '⌘⇧B', description: 'Toggle Right Sidebar' },
     { keys: '⌘]', description: 'Next Right Panel' },
     { keys: '⌘[', description: 'Previous Right Panel' },
+    { keys: '⌘⇧H', description: 'Features Showcase' },
     { keys: '⌘?', description: 'Keyboard Shortcuts' },
   ],
   'Writing': [

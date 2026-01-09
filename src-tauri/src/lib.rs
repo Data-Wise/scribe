@@ -255,6 +255,9 @@ fn build_menu(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         .build()?;
 
     // === Help Menu ===
+    let features = MenuItemBuilder::with_id("features", "Features Showcase")
+        .accelerator("CmdOrCtrl+Shift+H")
+        .build(app)?;
     let shortcuts = MenuItemBuilder::with_id("shortcuts", "Keyboard Shortcuts")
         .accelerator("CmdOrCtrl+?")
         .build(app)?;
@@ -264,6 +267,7 @@ fn build_menu(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         .build(app)?;
 
     let help_menu = SubmenuBuilder::new(app, "Help")
+        .item(&features)
         .item(&shortcuts)
         .separator()
         .item(&documentation)
