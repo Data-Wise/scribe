@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 55
+progress: 58
 version: 1.14.0
-sprint: 34
+sprint: 35
 started: 2026-01-08
 updated: 2026-01-09
 editor: hybrid-markdown++
-next_sprint: 35
-next_focus: Left Sidebar Redesign (Phase 3.2 - Status Grouping)
+next_sprint: 36
+next_focus: UI Design Enhancements (Phase 1 - Quick Wins)
 tests: 2107
 unit_tests: 2075
 e2e_tests: 32
@@ -191,6 +191,123 @@ After:  [M] Mediation Planning    📝 12 • 2h ago
 - Phase 2: Inbox Pinning (8h) ✅ Complete
 - Phase 3: Child Project Identification (29h total, 2h Phase 1) 🔄 In Progress
 - Phase 4: Visual Polish (6h)
+
+---
+
+### v1.15 UI Design Enhancements (Sprint 35) - PLANNED 📋
+
+**Status:** 📋 Comprehensive review complete, ready for implementation
+**Review Document:** `docs/UI-DESIGN-REVIEW-2026-01-09.md` (22KB)
+**Grade:** B+ (83/100) - Good foundation, needs refinement
+**Research:** Obsidian plugins, VS Code, Zed, Notion design patterns
+
+**Goal:** Improve sidebar discoverability, customization, and polish
+
+**Key Findings:**
+- ✅ Strong: Progressive disclosure, fast transitions, ADHD-friendly
+- ⚠️ Gaps: Icon discoverability, keyboard nav, customization vs Obsidian
+
+**Roadmap (38 hours total across 3 sprints):**
+
+#### Sprint 35 (v1.15): Quick Wins - 10 hours
+**Focus:** Discoverability & Accessibility
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| ① Icon Legend on first launch | 1h | P1 | [ ] Pending |
+| ② Improve resize handle (5px hit area) | 1h | P1 | [ ] Pending |
+| ③ Theme-aware status dots | 2h | P1 | [ ] Pending |
+| ④ Keyboard navigation (arrow keys) | 2h | P1 | [ ] Pending |
+| ⑤ Empty state illustrations | 1h | P1 | [ ] Pending |
+| ⑥ Drag-and-drop feedback | 1h | P2 | [ ] Pending |
+| ⑦ Recent Notes quick access | 2h | P2 | [ ] Pending |
+| ⑧ Inline search in compact mode | 2h | P2 | [ ] Pending |
+
+**Deliverables:**
+- Icon legend overlay (dismissible tooltip)
+- Wider resize handle with hover effects
+- CSS variables for status colors
+- Arrow key navigation in compact mode
+- Empty state components
+- Visual drop zones for drag
+- Recent files in Activity Bar
+- Search bar in compact mode
+
+**Files to Create/Modify:**
+- `IconLegend.tsx` (new) - First launch guide
+- `ResizeHandle.tsx` - Wider hit area + double-click reset
+- `StatusDot.tsx` - Theme-aware colors
+- `CompactListMode.tsx` - Keyboard nav + inline search
+- `EmptyState.tsx` (new) - Friendly prompts
+- `ActivityBar.tsx` - Recent files icon
+- `index.css` - Drag feedback styles
+
+**Testing:**
+- Unit: 40+ new tests
+- E2E: 15+ new tests
+- Accessibility: axe DevTools audit
+
+#### Sprint 36 (v1.16): Customization - 12 hours
+**Focus:** Match Obsidian's Personalization
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| ⑨ Custom icons (Lucide 1,300+) | 4h | P1 | [ ] Pending |
+| ⑩ Auto-collapse sidebar option | 3h | P2 | [ ] Pending |
+| ⑪ Contextual actions in tooltips | 5h | P2 | [ ] Pending |
+
+**Deliverables:**
+- IconPicker component (emoji + Lucide icons)
+- Auto-collapse setting
+- Enhanced tooltips with [Open] [Pin] [More] buttons
+
+**Inspiration:**
+- Obsidian's Iconic plugin (1,300+ icons)
+- Obsidian's Auto Hide plugin
+- VS Code's hover tooltips
+
+#### Sprint 37 (v1.17): Polish - 16 hours
+**Focus:** Power User Features
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| ⑫ Sidebar width presets | 2h | P2 | [ ] Pending |
+| ⑬ Project color customization | 6h | P2 | [ ] Pending |
+| Visual polish pass | 4h | P1 | [ ] Pending |
+| Accessibility audit | 4h | P1 | [ ] Pending |
+
+**Deliverables:**
+- Width preset buttons (Narrow/Medium/Wide)
+- ColorPicker component
+- Animation polish
+- WCAG 2.1 AA compliance
+
+**Deferred to v2.0 (120+ hours):**
+- ⑭ Workspaces (save/restore sidebar configs)
+- ⑮ Alternative views (Kanban, Calendar)
+- ⑯ Graph view in sidebar
+
+**Research Sources:**
+- [Obsidian Sidebar Plugins](https://www.obsidianstats.com/tags/sidebar)
+- [Iconic Plugin](https://www.obsidianstats.com/plugins/iconic)
+- [VS Code UX Guidelines](https://code.visualstudio.com/api/ux-guidelines/overview)
+- [VS Code Sidebars](https://code.visualstudio.com/api/ux-guidelines/sidebars)
+- [Zed Settings UI](https://zed.dev/blog/settings-ui)
+
+**Competitive Gap Analysis:**
+| Feature | Scribe | Obsidian | VS Code | Winner |
+|---------|--------|----------|---------|--------|
+| Icon Mode | ✅ Unique | ❌ | ❌ | **Scribe** |
+| Custom Icons | ❌ | ✅ 1,300+ | ✅ | Others |
+| Keyboard Nav | ⚠️ Partial | ✅ | ✅ | Others |
+| Recent Files | ❌ | ✅ | ✅ | Others |
+| Inline Search | ❌ | ✅ | ✅ | Others |
+
+**Next Steps:**
+1. Review UI-DESIGN-REVIEW-2026-01-09.md
+2. Approve Quick Wins for Sprint 35
+3. Decide on customization vs minimalism trade-offs
+4. Begin Phase 1 implementation (Icon Legend)
 
 ---
 
