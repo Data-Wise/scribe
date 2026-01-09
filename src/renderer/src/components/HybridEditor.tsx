@@ -334,7 +334,7 @@ export function HybridEditor({
 
     // Find the last [[ position in the entire text (since cursor might have moved)
     const triggerPos = text.lastIndexOf('[[')
-    logger.debug('[HybridEditor] Trigger position:', triggerPos, 'in text:', text)
+    logger.debug('[HybridEditor] Trigger position:', { triggerPos, text })
 
     if (triggerPos !== -1) {
       // Find where the partial query ends (could be at end of text or before next space/bracket)

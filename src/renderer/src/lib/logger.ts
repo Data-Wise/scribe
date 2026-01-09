@@ -24,7 +24,6 @@
  */
 
 const isDev = import.meta.env.DEV
-const isProd = import.meta.env.PROD
 
 // Color codes for console output (dev only)
 const colors = {

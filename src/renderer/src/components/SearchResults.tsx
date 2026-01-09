@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+// @ts-expect-error - FixedSizeList exists as class export, tsc vs bundler difference
 import { FixedSizeList } from 'react-window'
 import { Note } from '../types'
 import { HighlightedText } from './HighlightedText'
