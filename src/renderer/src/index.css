@@ -2703,6 +2703,28 @@ mark {
   gap: 4px;
   padding: 0 8px;
   margin-bottom: 8px;
+  max-height: calc(100vh - 300px); /* Allow scrolling when many projects */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.expanded-child-projects::-webkit-scrollbar {
+  width: 4px;
+}
+
+.expanded-child-projects::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.expanded-child-projects::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.expanded-child-projects::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .expanded-child-projects.empty {

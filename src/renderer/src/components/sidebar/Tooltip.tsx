@@ -17,7 +17,7 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
   const tooltipId = useRef(`tooltip-${Math.random().toString(36).substr(2, 9)}`)
 
   const calculatePosition = (): Position => {
-    if (!triggerRef.current || !tooltipRef.current) return 'top'
+    if (!triggerRef.current || !tooltipRef.current) return 'right'
 
     const triggerRect = triggerRef.current.getBoundingClientRect()
     const tooltipRect = tooltipRef.current.getBoundingClientRect()
@@ -34,6 +34,26 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
     const spaceLeft = triggerRect.left
     const spaceRight = viewport.width - triggerRect.right
 
+    // Special handling for left sidebar (narrow width < 100px from left edge)
+    const isInLeftSidebar = triggerRect.left < 100
+
+    if (isInLeftSidebar) {
+      // Strongly prefer right position for left sidebar items
+      if (spaceRight >= tooltipRect.width + spacing) {
+        return 'right'
+      }
+      // Fallback to vertical if absolutely necessary
+      if (spaceBelow >= tooltipRect.height + spacing) {
+        return 'bottom'
+      }
+      if (spaceAbove >= tooltipRect.height + spacing) {
+        return 'top'
+      }
+      // Last resort: right even if cramped
+      return 'right'
+    }
+
+    // Normal positioning for other elements
     // Prefer top/bottom over left/right
     if (spaceAbove >= tooltipRect.height + spacing) {
       return 'top'
@@ -158,7 +178,7 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
           ref={tooltipRef}
           id={tooltipId.current}
           role="tooltip"
-          className="absolute z-50 px-2 py-1.5 text-xs text-white bg-gray-900/95 rounded shadow-lg pointer-events-none whitespace-normal max-w-[200px] animate-in fade-in duration-150"
+          className="absolute z-50 px-2 py-1.5 text-xs text-white bg-gray-900/95 rounded shadow-lg pointer-events-none whitespace-pre-line max-w-[280px] animate-in fade-in duration-150"
           style={getPositionStyles()}
         >
           {content}
