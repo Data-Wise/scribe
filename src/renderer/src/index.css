@@ -3064,6 +3064,112 @@ mark {
   color: var(--nexus-text-muted);
 }
 
+/* Sidebar Search Toggle Button */
+.mission-sidebar-compact .sidebar-search-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--nexus-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+  margin-left: auto;
+}
+
+.mission-sidebar-compact .sidebar-search-toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-primary);
+}
+
+.mission-sidebar-compact .sidebar-search-toggle[aria-expanded="true"] {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--nexus-accent);
+}
+
+/* Collapsible Inline Search */
+.mission-sidebar-compact .sidebar-search-inline {
+  padding: 0 12px 12px 12px;
+  animation: slideDown 200ms ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mission-sidebar-compact .search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--nexus-border);
+  border-radius: 6px;
+  transition: all 150ms ease;
+}
+
+.mission-sidebar-compact .search-input-wrapper:focus-within {
+  border-color: var(--nexus-accent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.mission-sidebar-compact .search-input-wrapper .search-icon {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
+.mission-sidebar-compact .search-input-wrapper .search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--nexus-text-primary);
+  font-size: 13px;
+  outline: none;
+  min-width: 0;
+}
+
+.mission-sidebar-compact .search-input-wrapper .search-input::placeholder {
+  color: var(--nexus-text-muted);
+}
+
+.mission-sidebar-compact .search-clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  color: var(--nexus-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+
+.mission-sidebar-compact .search-clear-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--nexus-text-primary);
+}
+
+.mission-sidebar-compact .search-results-count {
+  margin-top: 6px;
+  padding: 0 12px;
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  font-weight: 500;
+}
+
 /* Project List */
 .mission-sidebar-compact .project-list-compact {
   flex: 1;

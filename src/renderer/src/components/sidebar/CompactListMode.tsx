@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
-import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings, FolderPlus } from 'lucide-react'
+import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings, FolderPlus, X } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { ActivityDots } from './ActivityDots'
 import { ProjectContextCard } from './ProjectContextCard'
@@ -53,6 +53,8 @@ export function CompactListMode({
   onOpenSettings
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const isPinned = useAppViewStore(state => state.isPinned)
 
   // Context menu state
@@ -175,6 +177,36 @@ export function CompactListMode({
     setFocusedIndex(-1)
   }, [searchQuery, projects.length])
 
+  // ⌘F keyboard shortcut to toggle search
+  useEffect(() => {
+    const handleSearchShortcut = (e: KeyboardEvent) => {
+      if (e.metaKey && e.key === 'f') {
+        e.preventDefault()
+        setIsSearchExpanded((prev) => {
+          const newState = !prev
+          if (newState) {
+            // Focus search input when expanding
+            setTimeout(() => searchInputRef.current?.focus(), 50)
+          } else {
+            // Clear search when collapsing
+            setSearchQuery('')
+          }
+          return newState
+        })
+      }
+    }
+
+    window.addEventListener('keydown', handleSearchShortcut)
+    return () => window.removeEventListener('keydown', handleSearchShortcut)
+  }, [])
+
+  // Auto-focus search input when expanded
+  useEffect(() => {
+    if (isSearchExpanded && searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }, [isSearchExpanded])
+
   return (
     <div
       className="mission-sidebar-compact"
@@ -196,19 +228,50 @@ export function CompactListMode({
         <h3 className="sidebar-title">
           Projects <span className="count">({projects.filter(p => (p.status || 'active') !== 'archive').length})</span>
         </h3>
+        <button
+          className="sidebar-search-toggle"
+          onClick={() => setIsSearchExpanded(!isSearchExpanded)}
+          title={isSearchExpanded ? 'Hide search (⌘F)' : 'Search projects (⌘F)'}
+          aria-label={isSearchExpanded ? 'Hide search' : 'Search projects'}
+          aria-expanded={isSearchExpanded}
+        >
+          <Search size={14} />
+        </button>
       </div>
 
-      {/* Search (if >5 projects) */}
-      {projects.length > 5 && (
-        <div className="sidebar-search">
-          <Search size={14} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Find project..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
+      {/* Collapsible inline search */}
+      {isSearchExpanded && (
+        <div className="sidebar-search-inline">
+          <div className="search-input-wrapper">
+            <Search size={14} className="search-icon" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+              aria-label="Search projects"
+            />
+            {searchQuery && (
+              <button
+                className="search-clear-btn"
+                onClick={() => {
+                  setSearchQuery('')
+                  searchInputRef.current?.focus()
+                }}
+                title="Clear search"
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <div className="search-results-count">
+              {sortedProjects.length} result{sortedProjects.length !== 1 ? 's' : ''}
+            </div>
+          )}
         </div>
       )}
 

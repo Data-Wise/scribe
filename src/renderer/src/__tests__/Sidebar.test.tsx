@@ -337,15 +337,173 @@ describe('CompactListMode Component', () => {
     expect(mockHandlers.onSelectProject).toHaveBeenCalledWith('1')
   })
 
-  it('shows search when more than 5 projects', () => {
-    const manyProjects: Project[] = Array.from({ length: 6 }, (_, i) => ({
-      id: `${i}`,
-      name: `Project ${i}`,
-      type: 'generic' as const,
-      status: 'active' as const,
-      created_at: Date.now(),
-      updated_at: Date.now(),
-    }))
+  it('renders search toggle button', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+    expect(searchToggle).toBeInTheDocument()
+    expect(searchToggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('expands search on toggle button click', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+    fireEvent.click(searchToggle)
+
+    expect(searchToggle).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByPlaceholderText(/Search projects/i)).toBeInTheDocument()
+  })
+
+  it('collapses search on toggle button click when expanded', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+
+    // Expand
+    fireEvent.click(searchToggle)
+    expect(screen.getByPlaceholderText(/Search projects/i)).toBeInTheDocument()
+
+    // Collapse
+    fireEvent.click(searchToggle)
+    expect(screen.queryByPlaceholderText(/Search projects/i)).not.toBeInTheDocument()
+  })
+
+  it('toggles search on ⌘F keyboard shortcut', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Initially hidden
+    expect(screen.queryByPlaceholderText(/Search projects/i)).not.toBeInTheDocument()
+
+    // Press ⌘F to expand
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    expect(screen.getByPlaceholderText(/Search projects/i)).toBeInTheDocument()
+
+    // Press ⌘F again to collapse
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    expect(screen.queryByPlaceholderText(/Search projects/i)).not.toBeInTheDocument()
+  })
+
+  it('clears search query when collapsing via ⌘F', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Type a query
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+    expect(searchInput).toHaveValue('Research')
+
+    // Collapse with ⌘F (should clear query)
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+
+    // Expand again to check value
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    expect(screen.getByPlaceholderText(/Search projects/i)).toHaveValue('')
+  })
+
+  it('shows clear button when search has text', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Expand search
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+    fireEvent.click(searchToggle)
+
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Initially no clear button
+    expect(screen.queryByLabelText(/Clear search/i)).not.toBeInTheDocument()
+
+    // Type text
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+
+    // Clear button should appear
+    expect(screen.getByLabelText(/Clear search/i)).toBeInTheDocument()
+  })
+
+  it('clears search text and refocuses input when clear button clicked', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i) as HTMLInputElement
+
+    // Type text
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+    expect(searchInput.value).toBe('Research')
+
+    // Click clear button
+    const clearButton = screen.getByLabelText(/Clear search/i)
+    fireEvent.click(clearButton)
+
+    // Should clear and maintain focus
+    expect(searchInput.value).toBe('')
+    expect(document.activeElement).toBe(searchInput)
+  })
+
+  it('displays search results count when searching', () => {
+    const manyProjects: Project[] = [
+      { id: '1', name: 'Research Paper', type: 'research', created_at: Date.now(), updated_at: Date.now() },
+      { id: '2', name: 'Blog Post', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
+      { id: '3', name: 'Another Research', type: 'research', created_at: Date.now(), updated_at: Date.now() },
+    ]
 
     render(
       <CompactListMode
@@ -357,13 +515,26 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    expect(screen.getByPlaceholderText(/Find project/i)).toBeInTheDocument()
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Search for "Research"
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+
+    // Should show 2 results
+    expect(screen.getByText(/2 results/i)).toBeInTheDocument()
   })
 
-  it('hides search when 5 or fewer projects', () => {
+  it('shows singular "result" when only one match', () => {
+    const projects: Project[] = [
+      { id: '1', name: 'Research Paper', type: 'research', created_at: Date.now(), updated_at: Date.now() },
+      { id: '2', name: 'Blog Post', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
+    ]
+
     render(
       <CompactListMode
-        projects={mockProjects}
+        projects={projects}
         notes={[]}
         currentProjectId={null}
         width={240}
@@ -371,7 +542,15 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    expect(screen.queryByPlaceholderText(/Find project/i)).not.toBeInTheDocument()
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Search for "Blog"
+    fireEvent.change(searchInput, { target: { value: 'Blog' } })
+
+    // Should show "1 result" (singular)
+    expect(screen.getByText(/1 result$/i)).toBeInTheDocument()
   })
 
   it('filters projects by search query', () => {
@@ -394,7 +573,9 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    const searchInput = screen.getByPlaceholderText(/Find project/i)
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
     fireEvent.change(searchInput, { target: { value: 'Research' } })
 
     expect(screen.getByText('Research Paper')).toBeInTheDocument()
@@ -421,7 +602,9 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    const searchInput = screen.getByPlaceholderText(/Find project/i)
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
     fireEvent.change(searchInput, { target: { value: 'xyz123' } })
 
     expect(screen.getByText(/No projects match/i)).toBeInTheDocument()
