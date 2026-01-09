@@ -217,7 +217,7 @@ export const seedDemoData = async (): Promise<boolean> => {
   const featuresId = noteMap['Features Overview']
   const dailyId = noteMap['Daily Note Example']
   const calloutsId = noteMap['Callout Types']
-  const quartoId = noteMap['Quarto Document Example']
+  const quartoId = noteMap['🧪 Quarto Autocomplete Test Page']
 
   if (welcomeId && featuresId) {
     await db.noteLinks.add({ source_id: welcomeId, target_id: featuresId })

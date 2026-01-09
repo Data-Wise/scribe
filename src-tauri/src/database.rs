@@ -442,6 +442,18 @@ impl Database {
             |row| row.get(0),
         )?;
 
+        let note4_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+
+        let note5_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
+
         // Create demo project
         self.conn.execute(
             "INSERT INTO projects (id, name, description, type, color) VALUES (?, ?, ?, ?, ?)",
@@ -525,6 +537,286 @@ Press ⌘D anytime to open today's daily note.
 ## End of Day Review
 What did you accomplish today?"#);
 
+        let callouts_content = r#"# Callout Types
+
+Scribe supports Obsidian-style callouts for highlighting important information. Use the syntax `> [!type]` to create callouts.
+
+## Informational Callouts
+
+> [!note]
+> This is a **note** callout. Use it for general information or side notes.
+
+> [!info]
+> This is an **info** callout. Perfect for additional context or explanations.
+
+> [!abstract] Summary
+> This is an **abstract** callout (also: summary, tldr). Great for executive summaries.
+
+## Positive Callouts
+
+> [!tip] Pro Tip
+> This is a **tip** callout (also: hint, important). Share helpful suggestions!
+
+> [!success] Well Done!
+> This is a **success** callout (also: check, done). Celebrate achievements!
+
+## Warning Callouts
+
+> [!warning]
+> This is a **warning** callout (also: caution, attention). Highlight potential issues.
+
+> [!danger] Critical
+> This is a **danger** callout (also: error). For critical warnings or errors.
+
+> [!bug]
+> This is a **bug** callout. Document known issues or bugs.
+
+## Other Callouts
+
+> [!question] FAQ
+> This is a **question** callout (also: help, faq). Perfect for Q&A sections.
+
+> [!example]
+> This is an **example** callout. Show code examples or demonstrations.
+
+> [!quote] Albert Einstein
+> This is a **quote** callout (also: cite). Attribute quotes elegantly.
+
+---
+
+## Syntax Reference
+
+```markdown
+> [!note]
+> Basic callout with default title
+
+> [!tip] Custom Title
+> Callout with a custom title
+
+> [!warning]
+> Multi-line callouts work too.
+> Just keep using > on each line.
+```
+
+## Supported Types
+
+| Type | Aliases | Color |
+|------|---------|-------|
+| note | - | Blue |
+| info | - | Blue |
+| tip | hint, important | Green |
+| success | check, done | Green |
+| warning | caution, attention | Orange |
+| danger | error | Red |
+| bug | - | Red |
+| question | help, faq | Purple |
+| example | - | Gray |
+| quote | cite | Gray |
+| abstract | summary, tldr | Cyan |
+
+See also: [[Features Overview]]"#;
+
+        let quarto_content = r####"# 🧪 Quarto Autocomplete Test Page
+
+**Welcome!** This page helps you test and explore Quarto's powerful autocomplete features.
+
+> [!tip] Getting Started
+> 1. Press **⌘1** to enter Source mode (required for autocomplete)
+> 2. Try the examples below - autocomplete will appear as you type!
+> 3. Press **Ctrl+Space** to manually trigger autocomplete anytime
+
+---
+
+## 📝 Test 1: YAML Frontmatter Autocomplete
+
+**Instructions:** Place your cursor in the YAML section below (between the `---` lines) and start typing.
+
+```yaml
+---
+# Type "for" here to see format: completion
+# Try: format, title, author, execute, bibliography, theme
+
+# Example: Type "for" then accept "format:"
+format:
+
+# Try typing "tit" for title:
+title:
+
+# Try "exec" for execute options:
+execute:
+  echo:
+  warning:
+
+# More to try: cite-method, toc, code-fold, highlight-style
+---
+```
+
+**What to expect:**
+- Type partial keys (e.g., "for") → Menu shows matching options ("format:")
+- After colon, type partial values (e.g., "ht") → Menu shows "html", "pdf", etc.
+
+---
+
+## 💻 Test 2: Chunk Options Autocomplete
+
+**Instructions:** Inside code blocks below, type `#|` followed by a space to see chunk options.
+
+### Example 1: Figure with Multiple Options
+
+```{r}
+#| label: fig-test-plot
+#| fig-cap: "My test plot"
+#| fig-width: 8
+#| fig-height: 6
+#| echo: false
+#| warning: false
+
+# Try adding more options here!
+# Type "#| " (hash-pipe-space) below and explore:
+
+plot(1:10)
+```
+
+### Example 2: Try It Yourself!
+
+```python
+# Add chunk options here:
+# Type "#| " and try:
+#   - echo (true/false)
+#   - eval (true/false)
+#   - output (true/false/asis)
+#   - code-fold (true/false/show)
+
+import matplotlib.pyplot as plt
+plt.plot([1,2,3], [1,4,9])
+```
+
+**What to expect:**
+- `#| ` (with space) → Menu shows all chunk options
+- After option name, type value → Menu shows valid values (true/false, numbers, etc.)
+
+---
+
+## 🔗 Test 3: Cross-Reference Autocomplete
+
+**Instructions:** Type `@` followed by a label prefix to see all matching references.
+
+### Figures for Testing
+
+![Test Figure 1](image1.png){#fig-example1}
+![Test Figure 2](image2.png){#fig-example2}
+
+```{r}
+#| label: fig-scatter
+#| fig-cap: "Scatter plot example"
+plot(rnorm(100), rnorm(100))
+```
+
+### Tables for Testing
+
+| Item | Value |
+|------|-------|
+| A    | 10    |
+| B    | 20    |
+{#tbl-data}
+
+| Metric | Score |
+|--------|-------|
+| Speed  | 95%   |
+{#tbl-performance}
+
+### Sections for Testing
+
+## Introduction {#sec-intro}
+
+## Methods {#sec-methods}
+
+## Results {#sec-results}
+
+### Equations for Testing
+
+$$
+E = mc^2
+$$ {#eq-einstein}
+
+$$
+y = mx + b
+$$ {#eq-linear}
+
+---
+
+## 🎯 Now Try Cross-References!
+
+Type `@` followed by a prefix below to see autocomplete:
+
+- Figures: Type `@fig` to see all figures (@fig-example1, @fig-example2, @fig-scatter)
+- Tables: Type `@tbl` to see all tables (@tbl-data, @tbl-performance)
+- Sections: Type `@sec` to see all sections (@sec-intro, @sec-methods, @sec-results)
+- Equations: Type `@eq` to see all equations (@eq-einstein, @eq-linear)
+
+**Try it here:**
+
+
+
+**What to expect:**
+- `@fig` → Menu shows all figure labels with their captions
+- `@tbl` → Menu shows all table labels
+- `@sec` → Menu shows all section headers
+- `@eq` → Menu shows all equation labels
+
+---
+
+## 🎓 Learning Tips
+
+### YAML Frontmatter
+- **40+ keys supported**: format, title, author, date, execute, bibliography, toc, theme, etc.
+- **Smart value completion**: After typing key and colon, get relevant value suggestions
+- **Nested options**: Works with nested YAML like `execute: echo: false`
+
+### Chunk Options
+- **30+ options**: echo, eval, warning, message, fig-width, fig-cap, label, etc.
+- **Type-aware values**: Boolean options suggest true/false, numeric options suggest common sizes
+- **Language agnostic**: Works in R, Python, Julia, JavaScript code blocks
+
+### Cross-References
+- **6 label types**: fig, tbl, eq, sec, lst, thm
+- **Auto-detection**: Scans document for `{#type-label}` and `#| label: type-label`
+- **Context hints**: Shows captions/titles in autocomplete detail panel
+- **Fast scanning**: Handles 100+ labels instantly
+
+---
+
+## 🚀 Keyboard Shortcuts
+
+| Action | Shortcut |
+|--------|----------|
+| Trigger autocomplete | **Ctrl+Space** |
+| Accept suggestion | **Enter** or **Tab** |
+| Navigate options | **↑** / **↓** |
+| Dismiss menu | **Escape** |
+| Source mode | **⌘1** |
+| Live Preview mode | **⌘2** |
+
+---
+
+## 🐛 Troubleshooting
+
+**Autocomplete not appearing?**
+1. Make sure you're in Source mode (**⌘1**)
+2. Try **Ctrl+Space** to force trigger
+3. Check you're in the right context (YAML block, code block, or typing `@`)
+
+**Wrong suggestions?**
+1. Verify cursor position (before/after special characters)
+2. Check for proper spacing (e.g., `#| ` needs space after pipe)
+
+---
+
+> [!success] All Set!
+> You now know how to use Quarto autocomplete in Scribe. Happy writing! 📝
+
+See [[Features Overview]] for more Scribe tips."####;
+
         // Insert notes
         self.conn.execute(
             "INSERT INTO notes (id, title, content, folder, project_id) VALUES (?, ?, ?, ?, ?)",
@@ -541,6 +833,16 @@ What did you accomplish today?"#);
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content, "notes", rusqlite::types::Null],
         )?;
 
+        self.conn.execute(
+            "INSERT INTO notes (id, title, content, folder, project_id) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![&note4_id, "Callout Types", callouts_content, "inbox", &project_id],
+        )?;
+
+        self.conn.execute(
+            "INSERT INTO notes (id, title, content, folder, project_id) VALUES (?, ?, ?, ?, ?)",
+            rusqlite::params![&note5_id, "🧪 Quarto Autocomplete Test Page", quarto_content, "inbox", &project_id],
+        )?;
+
         // Update FTS index (properties column added in migration 008, use empty string for demo notes)
         self.conn.execute(
             "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
@@ -553,6 +855,14 @@ What did you accomplish today?"#);
         self.conn.execute(
             "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content],
+        )?;
+        self.conn.execute(
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
+            rusqlite::params![&note4_id, "Callout Types", callouts_content],
+        )?;
+        self.conn.execute(
+            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
+            rusqlite::params![&note5_id, "🧪 Quarto Autocomplete Test Page", quarto_content],
         )?;
 
         // Create demo tags
@@ -571,6 +881,11 @@ What did you accomplish today?"#);
             [],
             |row| row.get(0),
         )?;
+        let tag_quarto_id: String = self.conn.query_row(
+            "SELECT lower(hex(randomblob(16)))",
+            [],
+            |row| row.get(0),
+        )?;
 
         self.conn.execute(
             "INSERT INTO tags (id, name, color) VALUES (?, ?, ?)",
@@ -583,6 +898,10 @@ What did you accomplish today?"#);
         self.conn.execute(
             "INSERT INTO tags (id, name, color) VALUES (?, ?, ?)",
             rusqlite::params![&tag_tips_id, "tips", "#F59E0B"],
+        )?;
+        self.conn.execute(
+            "INSERT INTO tags (id, name, color) VALUES (?, ?, ?)",
+            rusqlite::params![&tag_quarto_id, "quarto", "#2563EB"],
         )?;
 
         // Associate tags with notes
@@ -602,17 +921,49 @@ What did you accomplish today?"#);
             "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
             rusqlite::params![&note2_id, &tag_tips_id],
         )?;
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note4_id, &tag_tutorial_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note4_id, &tag_tips_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note5_id, &tag_tutorial_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)",
+            rusqlite::params![&note5_id, &tag_quarto_id],
+        )?;
 
-        // Create wiki link from Welcome to Features Overview
+        // Create wiki links
         self.conn.execute(
             "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
             rusqlite::params![&note1_id, &note2_id],
         )?;
+        self.conn.execute(
+            "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
+            rusqlite::params![&note2_id, &note1_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
+            rusqlite::params![&note2_id, &note4_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
+            rusqlite::params![&note4_id, &note2_id],
+        )?;
+        self.conn.execute(
+            "INSERT INTO links (source_note_id, target_note_id) VALUES (?, ?)",
+            rusqlite::params![&note5_id, &note2_id],
+        )?;
 
         println!("  ✅ Demo data seeded successfully:");
         println!("     - 1 project: 'Getting Started'");
-        println!("     - 3 notes: Welcome, Features, Daily Example");
-        println!("     - 3 tags: #welcome, #tutorial, #tips");
+        println!("     - 5 notes: Welcome, Features, Daily Example, Callouts, Quarto Test");
+        println!("     - 4 tags: #welcome, #tutorial, #tips, #quarto");
 
         Ok(())
     }

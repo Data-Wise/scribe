@@ -493,7 +493,7 @@ export const DEMO_WIKI_LINKS = [
   { from: 'Features Overview', to: 'Daily Note Example' },
   { from: 'Features Overview', to: 'Callout Types' },
   { from: 'Callout Types', to: 'Features Overview' },
-  { from: 'Quarto Document Example', to: 'Features Overview' }
+  { from: '🧪 Quarto Autocomplete Test Page', to: 'Features Overview' }
 ] as const
 
 // ============================================================================
