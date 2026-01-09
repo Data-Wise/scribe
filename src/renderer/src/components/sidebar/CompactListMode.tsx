@@ -8,6 +8,7 @@ import { NoteContextMenu } from './NoteContextMenu'
 import { EmptyState } from './EmptyState'
 import { useAppViewStore } from '../../store/useAppViewStore'
 import { getIconByName } from '../IconPicker'
+import { ProjectTooltip } from './ContextualTooltip'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -314,6 +315,8 @@ export function CompactListMode({
               onQuickAdd={() => onNewNote(project.id)}
               onContextMenu={(e) => handleProjectContextMenu(e, project)}
               onNoteContextMenu={handleNoteContextMenu}
+              onPin={isPinned(project.id) ? () => onUnpinProject?.(project.id) : () => onPinProject?.(project.id)}
+              isPinned={isPinned(project.id)}
             />
           )
         })
@@ -392,6 +395,8 @@ interface CompactProjectItemProps {
   onQuickAdd: () => void
   onContextMenu: (e: React.MouseEvent) => void
   onNoteContextMenu: (e: React.MouseEvent, note: Note) => void
+  onPin?: () => void
+  isPinned?: boolean
 }
 
 const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemProps>(
@@ -407,7 +412,9 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
     onSelectNote,
     onQuickAdd,
     onContextMenu,
-    onNoteContextMenu
+    onNoteContextMenu,
+    onPin,
+    isPinned = false
   }, ref) => {
   const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
   // Use custom icon if set, otherwise default to Folder/FolderOpen
@@ -468,7 +475,10 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
     )
   }
 
-  // Collapsed view with activity dots
+  // Collapsed view with activity dots and contextual tooltip
+  const status = project.status || 'active'
+  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1)
+
   return (
     <div
       ref={ref}
@@ -477,18 +487,28 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
       aria-selected={false}
       tabIndex={isFocused ? 0 : -1}
     >
-      <button
-        className="compact-project-item"
-        onClick={onClick}
-        onContextMenu={onContextMenu}
+      <ProjectTooltip
+        projectName={project.name}
+        status={statusLabel}
+        noteCount={noteCount}
+        onOpen={onClick}
+        onPin={onPin}
+        onMore={onContextMenu}
+        isPinned={isPinned}
       >
-        <div className="item-row">
-          <ChevronIcon size={14} className="chevron" />
-          <ProjectIcon size={14} className="folder-icon" />
-          <span className="project-name">{project.name}</span>
-          <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
-        </div>
-      </button>
+        <button
+          className="compact-project-item"
+          onClick={onClick}
+          onContextMenu={onContextMenu}
+        >
+          <div className="item-row">
+            <ChevronIcon size={14} className="chevron" />
+            <ProjectIcon size={14} className="folder-icon" />
+            <span className="project-name">{project.name}</span>
+            <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
+          </div>
+        </button>
+      </ProjectTooltip>
     </div>
   )
 })

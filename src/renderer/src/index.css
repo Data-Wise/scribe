@@ -1483,6 +1483,136 @@ mark {
 }
 
 /* ============================================================
+   Contextual Tooltip System (VS Code-style)
+
+   Rich tooltips with action buttons for projects, notes, etc.
+   Inspired by VS Code's hover tooltips with inline actions.
+   ============================================================ */
+
+.contextual-tooltip {
+  position: fixed;
+  z-index: 10000;
+  padding: 0;
+  background: #2d2d2d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  min-width: 180px;
+  max-width: 280px;
+  pointer-events: auto;
+  animation: fadeIn 150ms ease;
+}
+
+.contextual-tooltip-content {
+  padding: 10px 12px;
+}
+
+.contextual-tooltip-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.contextual-tooltip-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+.contextual-tooltip-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.contextual-tooltip-actions {
+  display: flex;
+  gap: 0;
+  padding: 4px;
+}
+
+.contextual-tooltip-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 120ms ease;
+  flex: 1;
+  min-width: 0;
+}
+
+.contextual-tooltip-action:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.contextual-tooltip-action.primary {
+  color: #3b82f6;
+}
+
+.contextual-tooltip-action.primary:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.contextual-tooltip-action .action-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.contextual-tooltip-action .action-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Light theme overrides */
+:root[data-theme-type="light"] .contextual-tooltip {
+  background: #f5f5f5;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-title {
+  color: #1a1a1a;
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-divider {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #000000;
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action.primary {
+  color: #2563eb;
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action.primary:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: #1d4ed8;
+}
+
+/* ============================================================
    Tooltip System for Sidebar Icons
 
    Provides context without cluttering the UI
