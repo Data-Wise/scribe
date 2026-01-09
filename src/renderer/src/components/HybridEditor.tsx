@@ -11,6 +11,7 @@ import { QuickChatPopover } from './QuickChatPopover'
 import { CodeMirrorEditor } from './CodeMirrorEditor'
 import { processMathInContent } from '../lib/mathjax'
 import { isBrowser } from '../lib/platform'
+import { logger } from '../lib/logger'
 import { Note, Tag } from '../types'
 import { EditorMode } from '../lib/preferences'
 
@@ -199,13 +200,13 @@ export function HybridEditor({
     const textBeforeCursor = text.substring(0, cursorPos)
     
     // Debug log
-    console.log('[HybridEditor] Input:', { cursorPos, textBeforeCursor: textBeforeCursor.slice(-10) })
+    logger.debug('[HybridEditor] Input:', { cursorPos, textBeforeCursor: textBeforeCursor.slice(-10) })
 
     // Check for wiki-link trigger [[
     const wikiMatch = textBeforeCursor.match(/\[\[([^\]]*)$/)
     if (wikiMatch) {
       const query = wikiMatch[1]
-      console.log('[HybridEditor] Wiki-link trigger detected:', query)
+      logger.debug('[HybridEditor] Wiki-link trigger detected:', query)
       
       // Calculate position near cursor
       const rect = textarea.getBoundingClientRect()
@@ -223,7 +224,7 @@ export function HybridEditor({
     const tagMatch = textBeforeCursor.match(/(?:^|[^#\w])#([a-zA-Z][a-zA-Z0-9_-]*)$/)
     if (tagMatch) {
       const query = tagMatch[1]
-      console.log('[HybridEditor] Tag trigger detected:', query)
+      logger.debug('[HybridEditor] Tag trigger detected:', query)
 
       const rect = textarea.getBoundingClientRect()
       const position = {
@@ -241,7 +242,7 @@ export function HybridEditor({
     const citeMatch = textBeforeCursor.match(/@([a-zA-Z0-9_:-]*)$/)
     if (citeMatch) {
       const query = citeMatch[1]
-      console.log('[HybridEditor] Citation trigger detected:', query)
+      logger.debug('[HybridEditor] Citation trigger detected:', query)
 
       const rect = textarea.getBoundingClientRect()
       const position = {
@@ -268,11 +269,11 @@ export function HybridEditor({
 
   // Handle wiki-link selection from autocomplete
   const handleWikiLinkSelect = useCallback((title: string) => {
-    console.log('[HybridEditor] Wiki-link selected:', title)
+    logger.debug('[HybridEditor] Wiki-link selected:', title)
     
     const textarea = textareaRef.current
     if (!textarea) {
-      console.log('[HybridEditor] No textarea ref')
+      logger.debug('[HybridEditor] No textarea ref')
       return
     }
 
@@ -280,7 +281,7 @@ export function HybridEditor({
 
     // Find the last [[ position in the entire text (since cursor might have moved)
     const triggerPos = text.lastIndexOf('[[')
-    console.log('[HybridEditor] Trigger position:', triggerPos, 'in text:', text)
+    logger.debug('[HybridEditor] Trigger position:', triggerPos, 'in text:', text)
 
     if (triggerPos !== -1) {
       // Find where the partial query ends (could be at end of text or before next space/bracket)
@@ -293,7 +294,7 @@ export function HybridEditor({
       }
 
       const newText = text.substring(0, triggerPos) + `[[${title}]]` + text.substring(endPos)
-      console.log('[HybridEditor] New text:', newText)
+      logger.debug('[HybridEditor] New text:', newText)
       setLocalContent(newText)  // Update local state
       onChange(newText)
 
@@ -304,7 +305,7 @@ export function HybridEditor({
         textarea.setSelectionRange(newCursorPos, newCursorPos)
       }, 10)
     } else {
-      console.log('[HybridEditor] No [[ found, appending')
+      logger.debug('[HybridEditor] No [[ found, appending')
       // Fallback: just append
       const newText = localContent + `[[${title}]]`
       setLocalContent(newText)  // Update local state
@@ -346,7 +347,7 @@ export function HybridEditor({
 
   // Handle citation selection from autocomplete
   const handleCitationSelect = useCallback((key: string) => {
-    console.log('[HybridEditor] Citation selected:', key)
+    logger.debug('[HybridEditor] Citation selected:', key)
 
     const textarea = textareaRef.current
     if (!textarea) return

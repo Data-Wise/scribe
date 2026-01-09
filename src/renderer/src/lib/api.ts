@@ -9,6 +9,7 @@ import { invoke as tauriInvoke } from '@tauri-apps/api/core'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { isTauri, logPlatformInfo } from './platform'
 import { browserApi } from './browser-api'
+import { logger } from './logger'
 import { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types'
 
 // Log platform on first import
@@ -26,10 +27,10 @@ async function invoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T
   const startTime = performance.now()
 
   try {
-    console.debug(`[Tauri] → ${cmd}`, args ? JSON.stringify(args).slice(0, 200) : '(no args)')
+    logger.debug(`[Tauri] → ${cmd}`, args ? JSON.stringify(args).slice(0, 200) : '(no args)')
     const result = await tauriInvoke<T>(cmd, args)
     const duration = (performance.now() - startTime).toFixed(1)
-    console.debug(`[Tauri] ✓ ${cmd} (${duration}ms)`)
+    logger.debug(`[Tauri] ✓ ${cmd} (${duration}ms)`)
     return result
   } catch (error) {
     const duration = (performance.now() - startTime).toFixed(1)
@@ -550,11 +551,11 @@ export const api = {
  */
 export async function runApiDiagnostics(): Promise<void> {
   if (!isTauri()) {
-    console.log('[Diagnostics] Running in Browser mode - skipping Tauri checks')
+    logger.info('[Diagnostics] Running in Browser mode - skipping Tauri checks')
     return
   }
 
-  console.group('[Scribe Diagnostics] Testing Tauri API endpoints...')
+  logger.info('[Scribe Diagnostics] Testing Tauri API endpoints...')
   const results: { endpoint: string; status: 'ok' | 'error'; error?: string }[] = []
 
   // Test critical read operations
@@ -569,7 +570,7 @@ export async function runApiDiagnostics(): Promise<void> {
     try {
       await test.fn()
       results.push({ endpoint: test.name, status: 'ok' })
-      console.log(`  ✓ ${test.name}`)
+      logger.debug(`  ✓ ${test.name}`)
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error)
       results.push({ endpoint: test.name, status: 'error', error: errorMsg })
@@ -580,10 +581,8 @@ export async function runApiDiagnostics(): Promise<void> {
   const failed = results.filter(r => r.status === 'error')
   if (failed.length > 0) {
     console.error(`[Diagnostics] ${failed.length} endpoint(s) failed!`)
-    console.table(failed)
+    logger.table(failed)
   } else {
-    console.log('[Diagnostics] All endpoints healthy ✓')
+    logger.info('[Diagnostics] All endpoints healthy ✓')
   }
-
-  console.groupEnd()
 }

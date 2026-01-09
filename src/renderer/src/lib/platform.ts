@@ -5,6 +5,8 @@
  * Used to switch between native Tauri APIs and browser IndexedDB fallbacks.
  */
 
+import { logger } from './logger'
+
 /**
  * Check if running inside Tauri native shell
  */
@@ -29,11 +31,11 @@ export const getPlatform = (): 'tauri' | 'browser' => {
  */
 export const logPlatformInfo = (): void => {
   if (import.meta.env.DEV) {
-    console.log(`[Scribe] Running in ${getPlatform()} mode`)
+    logger.info(`[Scribe] Running in ${getPlatform()} mode`)
     if (isBrowser()) {
-      console.log('[Scribe] Using IndexedDB for persistence')
+      logger.info('[Scribe] Using IndexedDB for persistence')
     } else {
-      console.log('[Scribe] Using Tauri SQLite backend')
+      logger.info('[Scribe] Using Tauri SQLite backend')
     }
   }
 }

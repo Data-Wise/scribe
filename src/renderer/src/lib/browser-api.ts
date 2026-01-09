@@ -7,6 +7,7 @@
  */
 
 import { db, generateId, createSearchText, parseNoteRecord, noteToRecord, seedDemoData } from './browser-db'
+import { logger } from './logger'
 import type { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types'
 import type { Citation, ExportOptions, ExportResult } from './api'
 
@@ -656,7 +657,7 @@ export const reindexAllNotes = async (): Promise<number> => {
     }
   }
 
-  console.log(`[Scribe] Reindexed ${count} notes for wiki links and tags`)
+  logger.info(`[Scribe] Reindexed ${count} notes for wiki links and tags`)
   return count
 }
 
@@ -668,7 +669,7 @@ export const reindexAllNotes = async (): Promise<number> => {
  * Initialize browser API with demo data if needed
  */
 export const initializeBrowserApi = async (): Promise<void> => {
-  console.log('[Scribe] Using IndexedDB for persistence')
+  logger.info('[Scribe] Using IndexedDB for persistence')
   await seedDemoData()
 
   // Reindex existing notes for wiki links and tags

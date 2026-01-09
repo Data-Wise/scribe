@@ -6,6 +6,7 @@
  */
 
 import Dexie, { type Table } from 'dexie'
+import { logger } from './logger'
 import type { Note, Tag, Folder, Project } from '../types'
 
 // Extended Note type for IndexedDB (includes searchable text)
@@ -143,11 +144,11 @@ export const seedDemoData = async (): Promise<boolean> => {
   // Check if already seeded (any projects exist)
   const projectCount = await db.projects.count()
   if (projectCount > 0) {
-    console.log('[Scribe] Demo data already exists, skipping seed')
+    logger.info('[Scribe] Demo data already exists, skipping seed')
     return false
   }
 
-  console.log('[Scribe] Seeding demo data for new user...')
+  logger.info('[Scribe] Seeding demo data for new user...')
 
   const now = Math.floor(Date.now() / 1000)
 
@@ -238,7 +239,7 @@ export const seedDemoData = async (): Promise<boolean> => {
     await db.noteLinks.add({ source_id: quartoId, target_id: featuresId })
   }
 
-  console.log('[Scribe] Demo data seeded successfully')
+  logger.info('[Scribe] Demo data seeded successfully')
   console.log(`  - ${SEED_DATA_SUMMARY.description}`)
 
   return true

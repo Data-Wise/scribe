@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, ChevronDown, ChevronRight, FileText, Clock } from 'lucide-react'
 import { Note } from '../types'
 import { api } from '../lib/api'
+import { logger } from '../lib/logger'
 
 export interface BacklinksPanelProps {
   noteId: string | null
@@ -88,7 +89,7 @@ export function BacklinksPanel({ noteId, noteTitle, onSelectNote, refreshKey = 0
   const loadLinks = async () => {
     if (!noteId) return
 
-    console.log('[BacklinksPanel] Loading links for noteId:', noteId)
+    logger.debug('[BacklinksPanel] Loading links for noteId:', noteId)
     setLoading(true)
     try {
       const [backlinksData, outgoingData] = await Promise.all([
@@ -96,7 +97,7 @@ export function BacklinksPanel({ noteId, noteTitle, onSelectNote, refreshKey = 0
         api.getOutgoingLinks(noteId)
       ])
 
-      console.log('[BacklinksPanel] Loaded:', { backlinks: backlinksData, outgoing: outgoingData })
+      logger.debug('[BacklinksPanel] Loaded:', { backlinks: backlinksData, outgoing: outgoingData })
 
       // Add context to backlinks (show where they mention this note)
       const backlinksWithContext: LinkWithContext[] = backlinksData.map(note => ({
