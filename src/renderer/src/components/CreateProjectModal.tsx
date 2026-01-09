@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X, FolderPlus, Check } from 'lucide-react'
 import { Project, ProjectType, PROJECT_COLORS } from './ProjectSwitcher'
+import { IconPicker, getIconByName } from './IconPicker'
 
 // Project type options with descriptions
 const PROJECT_TYPES: { value: ProjectType; label: string; description: string }[] = [
@@ -42,6 +43,8 @@ export function CreateProjectModal({
   const [type, setType] = useState<ProjectType>('generic')
   const [description, setDescription] = useState('')
   const [color, setColor] = useState(PROJECT_COLORS[0])
+  const [icon, setIcon] = useState<string | undefined>(undefined)
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // Reset form when modal opens
@@ -51,6 +54,7 @@ export function CreateProjectModal({
       setType('generic')
       setDescription('')
       setColor(PROJECT_COLORS[0])
+      setIcon(undefined)
       setError(null)
     }
   }, [isOpen])
@@ -83,6 +87,7 @@ export function CreateProjectModal({
       type,
       description: description.trim() || undefined,
       color,
+      icon,
     })
 
     onClose()
@@ -246,6 +251,52 @@ export function CreateProjectModal({
               />
             </div>
 
+            {/* Icon Picker */}
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: 'var(--nexus-text-muted)' }}
+              >
+                Icon <span style={{ color: 'var(--nexus-text-muted)' }}>(optional)</span>
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsIconPickerOpen(true)}
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-white/5"
+                style={{
+                  backgroundColor: 'var(--nexus-bg-tertiary)',
+                  color: 'var(--nexus-text-primary)',
+                  border: '1px solid transparent',
+                }}
+              >
+                {icon ? (
+                  <>
+                    {(() => {
+                      const IconComponent = getIconByName(icon)
+                      return <IconComponent size={20} style={{ color }} />
+                    })()}
+                    <span>{icon}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIcon(undefined)
+                      }}
+                      className="ml-auto p-1 rounded hover:bg-white/10"
+                      aria-label="Remove icon"
+                    >
+                      <X size={14} />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <FolderPlus size={20} style={{ color: 'var(--nexus-text-muted)' }} />
+                    <span style={{ color: 'var(--nexus-text-muted)' }}>Choose an icon...</span>
+                  </>
+                )}
+              </button>
+            </div>
+
             {/* Color Picker */}
             <div>
               <label
@@ -312,6 +363,15 @@ export function CreateProjectModal({
           </form>
         </Dialog.Content>
       </Dialog.Portal>
+
+      {/* Icon Picker Modal */}
+      {isIconPickerOpen && (
+        <IconPicker
+          selectedIcon={icon}
+          onSelectIcon={setIcon}
+          onClose={() => setIsIconPickerOpen(false)}
+        />
+      )}
     </Dialog.Root>
   )
 }
