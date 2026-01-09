@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
-import { Menu, Plus } from 'lucide-react'
+import { Menu, Plus, FolderPlus } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { Tooltip } from './Tooltip'
 import { ActivityBar } from './ActivityBar'
 import { InboxButton } from './InboxButton'
 import { SmartIconButton } from './SmartIconButton'
+import { EmptyState } from './EmptyState'
 import { useAppViewStore, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
 
 interface IconBarModeProps {
@@ -172,7 +173,16 @@ export function IconBarMode({
 
       {/* Pinned Project icons */}
       <div className="project-icons">
-        {sortedProjects.map((project, index) => {
+        {sortedProjects.length === 0 ? (
+          <EmptyState
+            icon={<FolderPlus className="w-12 h-12" />}
+            title="No projects yet"
+            description="Create your first project to organize your notes"
+            actionLabel="Create Project"
+            onAction={onCreateProject}
+          />
+        ) : (
+          sortedProjects.map((project, index) => {
           const isActive = project.id === currentProjectId
           const noteCount = noteCounts[project.id] || 0
           const tooltipContent = `${project.name}\n${formatStatus(project.status || 'active')} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
@@ -195,7 +205,8 @@ export function IconBarMode({
               />
             </Tooltip>
           )
-        })}
+        })
+        )}
       </div>
 
       <div className="sidebar-spacer" />

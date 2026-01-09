@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings } from 'lucide-react'
+import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings, FolderPlus } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { ActivityDots } from './ActivityDots'
 import { ProjectContextCard } from './ProjectContextCard'
 import { ProjectContextMenu } from './ProjectContextMenu'
 import { NoteContextMenu } from './NoteContextMenu'
+import { EmptyState } from './EmptyState'
 import { useAppViewStore } from '../../store/useAppViewStore'
 
 interface CompactListModeProps {
@@ -101,6 +102,11 @@ export function CompactListMode({
     return stats
   }, [projects, notes])
 
+  // Count inbox notes
+  const inboxCount = useMemo(() => {
+    return notes.filter(n => !n.deleted_at && !n.project_id).length
+  }, [notes])
+
   return (
     <div className="mission-sidebar-compact" style={{ width }}>
       {/* Header */}
@@ -133,7 +139,16 @@ export function CompactListMode({
 
       {/* Project list */}
       <div className="project-list-compact">
-        {sortedProjects.map(project => {
+        {sortedProjects.length === 0 && inboxCount === 0 && !searchQuery ? (
+          <EmptyState
+            icon={<FolderPlus className="w-12 h-12" />}
+            title="No projects yet"
+            description="Create your first project to organize your notes"
+            actionLabel="Create Project"
+            onAction={onCreateProject}
+          />
+        ) : (
+          sortedProjects.map(project => {
           const stats = projectStats[project.id]
           const isExpanded = project.id === currentProjectId
           const projectNotes = notes
@@ -156,7 +171,8 @@ export function CompactListMode({
               onNoteContextMenu={handleNoteContextMenu}
             />
           )
-        })}
+        })
+        )}
 
         {sortedProjects.length === 0 && searchQuery && (
           <div className="no-results">No projects match "{searchQuery}"</div>

@@ -8,6 +8,31 @@ import { ResizeHandle } from '../components/sidebar/ResizeHandle'
 import { Project, Note, ProjectStatus } from '../types'
 // Note: createMockNote available in ./testUtils for future use
 
+// Mock the Zustand store
+vi.mock('../store/useAppViewStore', () => ({
+  useAppViewStore: (selector: any) => {
+    const state = {
+      pinnedVaults: [
+        { id: 'inbox', label: 'Inbox', color: '#6b7280', order: 0, isPermanent: true },
+        { id: '1', label: 'Project A', color: '#22c55e', order: 1, isPermanent: false },
+        { id: '2', label: 'Project B', color: '#3b82f6', order: 2, isPermanent: false }
+      ],
+      smartIcons: [
+        { id: 'research', icon: 'flask', label: 'Research', projectType: 'research', isVisible: true, order: 0 },
+        { id: 'teaching', icon: 'graduation-cap', label: 'Teaching', projectType: 'teaching', isVisible: true, order: 1 },
+        { id: 'writing', icon: 'pen-tool', label: 'Writing', projectType: 'manuscript', isVisible: true, order: 2 },
+        { id: 'notes', icon: 'sticky-note', label: 'Notes', projectType: 'notes', isVisible: true, order: 3 }
+      ],
+      reorderPinnedVaults: vi.fn(),
+      setProjectTypeFilter: vi.fn(),
+      setActiveTab: vi.fn(),
+      isPinned: (id: string) => ['1', '2'].includes(id)
+    }
+    return selector ? selector(state) : state
+  },
+  MISSION_CONTROL_TAB_ID: 'mission-control'
+}))
+
 // ============================================================
 // StatusDot Component Tests
 // ============================================================
@@ -81,6 +106,9 @@ describe('IconBarMode Component', () => {
     onSelectProject: vi.fn(),
     onCreateProject: vi.fn(),
     onExpand: vi.fn(),
+    onSearch: vi.fn(),
+    onDaily: vi.fn(),
+    onSettings: vi.fn(),
   }
 
   beforeEach(() => {
@@ -154,10 +182,10 @@ describe('IconBarMode Component', () => {
     )
 
     // Should render Project A and B (active, planning) but not C (archive)
-    // Tooltips now show: "Name\nStatus • N notes"
-    expect(screen.getByTitle(/Project A/)).toBeInTheDocument()
-    expect(screen.getByTitle(/Project B/)).toBeInTheDocument()
-    expect(screen.queryByTitle(/Project C/)).not.toBeInTheDocument()
+    // Projects 1 and 2 are in pinnedVaults mock
+    expect(screen.getByTestId('project-icon-1')).toBeInTheDocument()
+    expect(screen.getByTestId('project-icon-2')).toBeInTheDocument()
+    expect(screen.queryByTestId('project-icon-3')).not.toBeInTheDocument()
   })
 
   it('calls onSelectProject when project icon clicked', () => {
@@ -170,7 +198,7 @@ describe('IconBarMode Component', () => {
       />
     )
 
-    fireEvent.click(screen.getByTitle(/Project A/))
+    fireEvent.click(screen.getByTestId('project-icon-1'))
     expect(mockHandlers.onSelectProject).toHaveBeenCalledWith('1')
   })
 
@@ -508,6 +536,7 @@ describe('ResizeHandle Component', () => {
   const mockHandlers = {
     onResize: vi.fn(),
     onResizeEnd: vi.fn(),
+    onReset: vi.fn(),
   }
 
   beforeEach(() => {
@@ -566,6 +595,38 @@ describe('ResizeHandle Component', () => {
 
     fireEvent.mouseUp(document)
     expect(handle).not.toHaveClass('dragging')
+  })
+
+  it('calls onReset and onResizeEnd on double-click', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} />)
+    const handle = container.querySelector('.resize-handle')!
+
+    fireEvent.doubleClick(handle)
+
+    expect(mockHandlers.onReset).toHaveBeenCalled()
+    expect(mockHandlers.onResizeEnd).toHaveBeenCalled()
+  })
+
+  it('does not call onReset on double-click when disabled', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} disabled />)
+    const handle = container.querySelector('.resize-handle')
+
+    // Handle is not rendered when disabled
+    expect(handle).not.toBeInTheDocument()
+  })
+
+  it('has correct aria-label with reset hint', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} />)
+    const handle = container.querySelector('.resize-handle')!
+
+    expect(handle).toHaveAttribute('aria-label', 'Resize sidebar (double-click to reset)')
+  })
+
+  it('has tooltip with reset hint', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} />)
+    const handle = container.querySelector('.resize-handle')!
+
+    expect(handle).toHaveAttribute('title', 'Double-click to reset width')
   })
 })
 

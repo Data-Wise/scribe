@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, FileText, MoreHorizontal, ChevronDown, Settings } from 'lucide-react'
+import { Menu, Plus, Search, FileText, MoreHorizontal, ChevronDown, Settings, Lightbulb } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
 import { ProjectContextMenu } from './ProjectContextMenu'
 import { NoteContextMenu } from './NoteContextMenu'
+import { EmptyState } from './EmptyState'
 import { useAppViewStore } from '../../store/useAppViewStore'
 
 interface CardViewModeProps {
@@ -179,12 +180,13 @@ export function CardViewMode({
         )}
 
         {sortedProjects.length === 0 && !searchQuery && (
-          <div className="empty-projects">
-            <p>No projects yet</p>
-            <button onClick={onCreateProject} className="create-first-btn">
-              Create your first project
-            </button>
-          </div>
+          <EmptyState
+            icon={<Lightbulb className="w-12 h-12" />}
+            title="Start your knowledge base"
+            description="Projects help organize your notes by topic or area"
+            actionLabel="Create Project"
+            onAction={onCreateProject}
+          />
         )}
       </div>
 
