@@ -416,6 +416,14 @@ const appearanceCategory: SettingsCategoryData = {
           description: 'Display icons in sidebar tabs',
           defaultValue: true,
           addedInVersion: '1.12.0'
+        },
+        {
+          id: 'appearance.autoCollapseSidebar',
+          type: 'toggle',
+          label: 'Auto-collapse when writing',
+          description: 'Collapse sidebar when editor is focused, expand on hover',
+          defaultValue: false,
+          addedInVersion: 'v1.14.0'
         }
       ]
     },

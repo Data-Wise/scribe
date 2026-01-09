@@ -93,6 +93,7 @@ export interface ProjectSettings {
 // Global app settings (stored in localStorage)
 export interface AppSettings {
   defaultTerminalFolder: string  // Default: $HOME
+  autoCollapseSidebar?: boolean  // Auto-collapse sidebar when writing (default: false)
   // Future: theme, font preferences, etc.
 }
 

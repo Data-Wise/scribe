@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
 import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
@@ -123,6 +123,9 @@ function App() {
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
+
+  // Editor container ref for auto-collapse functionality
+  const editorContainerRef = useRef<HTMLDivElement>(null)
 
   // User preferences with persistence
   const [preferences, setPreferences] = useState<UserPreferences>(() => loadPreferences())
@@ -989,6 +992,52 @@ function App() {
     return () => window.removeEventListener('preferences-changed', handlePrefsChanged)
   }, [rightActiveTab])
 
+  // Auto-collapse sidebar when editor is focused
+  useEffect(() => {
+    const autoCollapseEnabled = settings['appearance.autoCollapseSidebar']
+    if (!autoCollapseEnabled || !editorContainerRef.current) return
+
+    const editorContainer = editorContainerRef.current
+
+    const handleFocusIn = () => {
+      // Collapse sidebar when editor gains focus
+      toggleSidebarCollapsed('icon')
+    }
+
+    const handleMouseEnter = () => {
+      // Expand sidebar on hover when collapsed
+      const currentMode = localStorage.getItem('sidebarMode')
+      if (currentMode === 'icon') {
+        toggleSidebarCollapsed('compact')
+      }
+    }
+
+    const handleMouseLeave = () => {
+      // Collapse sidebar when mouse leaves (if editor still has focus)
+      if (editorContainer.contains(document.activeElement)) {
+        toggleSidebarCollapsed('icon')
+      }
+    }
+
+    // Add focus listener to editor container
+    editorContainer.addEventListener('focusin', handleFocusIn)
+
+    // Add hover listeners to sidebar for expand/collapse
+    const sidebar = document.querySelector('.mission-sidebar')
+    if (sidebar) {
+      sidebar.addEventListener('mouseenter', handleMouseEnter)
+      sidebar.addEventListener('mouseleave', handleMouseLeave)
+    }
+
+    return () => {
+      editorContainer.removeEventListener('focusin', handleFocusIn)
+      if (sidebar) {
+        sidebar.removeEventListener('mouseenter', handleMouseEnter)
+        sidebar.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
+  }, [settings, toggleSidebarCollapsed])
+
   const handleTagClick = async (tagId: string) => {
     const newSelectedIds = selectedTagIds.includes(tagId)
       ? selectedTagIds.filter(id => id !== tagId)
@@ -1492,7 +1541,7 @@ function App() {
                   <h2 onClick={() => setEditingTitle(true)} className="text-2xl font-bold cursor-pointer">{selectedNote.title}</h2>
                 )}
               </div>
-              <div className="flex-1 overflow-hidden relative">
+              <div ref={editorContainerRef} className="flex-1 overflow-hidden relative">
                 <HybridEditor
                   key={selectedNote.id}
                   content={selectedNote.content}
