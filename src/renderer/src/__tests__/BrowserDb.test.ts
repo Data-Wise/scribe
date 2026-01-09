@@ -125,16 +125,17 @@ describe('Browser Database (IndexedDB)', () => {
       expect(projects.length).toBe(1)
       expect(projects[0].name).toBe('Getting Started')
 
-      // Verify notes were created
+      // Verify notes were created (5 total: Welcome, Features, Daily, Quarto, Callout Types)
       const notes = await db.notes.toArray()
-      expect(notes.length).toBe(3)
+      expect(notes.length).toBe(5)
 
-      // Verify tags were created
+      // Verify tags were created (4 total: #welcome, #tutorial, #tips, #quarto)
       const tags = await db.tags.toArray()
-      expect(tags.length).toBe(3)
+      expect(tags.length).toBe(4)
       expect(tags.map(t => t.name)).toContain('welcome')
       expect(tags.map(t => t.name)).toContain('tutorial')
       expect(tags.map(t => t.name)).toContain('tips')
+      expect(tags.map(t => t.name)).toContain('quarto')
     })
 
     it('does not re-seed when data exists', async () => {

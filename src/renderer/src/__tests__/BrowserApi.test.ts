@@ -41,12 +41,16 @@ describe('Browser API', () => {
     })
 
     it('lists all notes', async () => {
+      // Get initial count (may include seed data if auto-initialization ran)
+      const initialNotes = await browserApi.listNotes()
+      const initialCount = initialNotes.length
+
       await browserApi.createNote({ title: 'Note 1', content: '', folder: 'inbox' })
       await browserApi.createNote({ title: 'Note 2', content: '', folder: 'inbox' })
 
       const notes = await browserApi.listNotes()
 
-      expect(notes.length).toBe(2)
+      expect(notes.length).toBe(initialCount + 2)
     })
 
     it('gets a specific note by ID', async () => {
