@@ -14,6 +14,7 @@ import { isBrowser } from '../lib/platform'
 import { logger } from '../lib/logger'
 import { Note, Tag } from '../types'
 import { EditorMode } from '../lib/preferences'
+import { useHistoryStore } from '../store/useHistoryStore'
 
 interface HybridEditorProps {
   content: string
@@ -61,6 +62,10 @@ export function HybridEditor({
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>(editorMode)
 
+  // Phase 3 Task 10: Undo/Redo History
+  const { push: pushHistory, undo, redo, clear: clearHistory, canUndo, canRedo } = useHistoryStore()
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+
   // LOCAL STATE FIX: Use local state for immediate UI response to prevent race conditions
   // During rapid typing, React may not re-render fast enough with prop updates,
   // causing characters to be lost. Local state ensures immediate feedback.
@@ -71,8 +76,32 @@ export function HybridEditor({
   useEffect(() => {
     if (!isTypingRef.current) {
       setLocalContent(content)
+      // Clear history when switching notes (Phase 3 Task 10)
+      clearHistory()
     }
-  }, [content])
+  }, [content, clearHistory])
+
+  // Push to history (debounced) - Phase 3 Task 10
+  useEffect(() => {
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    // Debounce for 1 second to avoid recording every keystroke
+    debounceTimerRef.current = setTimeout(() => {
+      if (localContent.trim()) {
+        pushHistory(localContent)
+        logger.debug('[HybridEditor] Content pushed to history')
+      }
+    }, 1000)
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [localContent, pushHistory])
 
   // Update mode when editorMode prop changes
   useEffect(() => {
@@ -104,9 +133,33 @@ export function HybridEditor({
     handleModeChange(nextMode)
   }, [mode, handleModeChange])
 
-  // Keyboard shortcuts for editor modes
+  // Keyboard shortcuts for editor modes + undo/redo (Phase 3 Task 10)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd+Z or Ctrl+Z to undo (Phase 3 Task 10)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        if (canUndo()) {
+          e.preventDefault()
+          const restoredContent = undo()
+          if (restoredContent !== null) {
+            setLocalContent(restoredContent)
+            onChange(restoredContent)
+            logger.debug('[HybridEditor] Undo applied')
+          }
+        }
+      }
+      // Cmd+Shift+Z or Ctrl+Shift+Z to redo (Phase 3 Task 10)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
+        if (canRedo()) {
+          e.preventDefault()
+          const restoredContent = redo()
+          if (restoredContent !== null) {
+            setLocalContent(restoredContent)
+            onChange(restoredContent)
+            logger.debug('[HybridEditor] Redo applied')
+          }
+        }
+      }
       // Cmd+E or Ctrl+E to cycle modes
       if ((e.metaKey || e.ctrlKey) && e.key === 'e') {
         e.preventDefault()
@@ -139,7 +192,7 @@ export function HybridEditor({
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [mode, cycleMode, handleModeChange])
+  }, [mode, cycleMode, handleModeChange, undo, redo, canUndo, canRedo, onChange])
 
   // Focus editor when entering source or live-preview mode
   useEffect(() => {
