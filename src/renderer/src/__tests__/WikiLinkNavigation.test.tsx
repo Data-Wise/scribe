@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { CodeMirrorEditor } from '../components/CodeMirrorEditor'
 
 /**
@@ -14,12 +14,12 @@ import { CodeMirrorEditor } from '../components/CodeMirrorEditor'
  */
 
 describe('WikiLink Navigation', () => {
-  let onChangeMock: ReturnType<typeof vi.fn>
-  let onWikiLinkClickMock: ReturnType<typeof vi.fn>
+  let onChangeMock: (content: string) => void
+  let onWikiLinkClickMock: ((pageName: string) => void) | undefined
 
   beforeEach(() => {
-    onChangeMock = vi.fn()
-    onWikiLinkClickMock = vi.fn()
+    onChangeMock = vi.fn() as (content: string) => void
+    onWikiLinkClickMock = vi.fn() as ((pageName: string) => void) | undefined
   })
 
   describe('WikiLink Widget Rendering', () => {

@@ -963,7 +963,7 @@ describe('CodeMirrorEditor Rich Markdown Plugin Logic', () => {
 
       // Equality is based on display text
       expect(text1 === text2).toBe(true)
-      expect(text1 === text3).toBe(false)
+      expect(text1 === text3 as string).toBe(false)
     })
   })
 

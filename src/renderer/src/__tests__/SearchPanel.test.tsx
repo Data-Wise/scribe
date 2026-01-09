@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { SearchPanel } from '../components/SearchPanel'
 import { Note, Project } from '../types'
@@ -32,33 +32,39 @@ const mockNotes: Note[] = [
     title: 'Project Plan',
     content: 'This is the project plan content',
     folder: 'projects',
+    project_id: null,
     created_at: Date.now(),
-    updated_at: Date.now()
+    updated_at: Date.now(),
+    deleted_at: null
   },
   {
     id: '2',
     title: 'Meeting Notes',
     content: 'Notes from the team meeting',
     folder: 'inbox',
+    project_id: null,
     created_at: Date.now(),
-    updated_at: Date.now()
+    updated_at: Date.now(),
+    deleted_at: null
   },
   {
     id: '3',
     title: 'Research Paper',
     content: 'Research findings and analysis',
     folder: 'resources',
+    project_id: null,
     created_at: Date.now(),
-    updated_at: Date.now()
+    updated_at: Date.now(),
+    deleted_at: null
   }
 ]
 
 const mockProject: Project = {
   id: 'proj-1',
   name: 'Test Project',
-  type: 'academic',
+  type: 'research',
   color: '#4A90D9',
-  icon: 'book',
+  status: 'active',
   created_at: Date.now(),
   updated_at: Date.now()
 }
@@ -874,8 +880,10 @@ describe('SearchPanel Component', () => {
           title: '',
           content: 'Some content',
           folder: 'inbox',
+          project_id: null,
           created_at: Date.now(),
-          updated_at: Date.now()
+          updated_at: Date.now(),
+          deleted_at: null
         }
       ]
       vi.mocked(api.searchNotes).mockResolvedValue(notesWithUntitled)

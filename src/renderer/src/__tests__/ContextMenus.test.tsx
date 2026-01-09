@@ -1,11 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import { NoteContextMenu } from '../components/sidebar/NoteContextMenu'
 import { ProjectContextMenu } from '../components/sidebar/ProjectContextMenu'
 import { Note, Project } from '../types'
-import { SidebarTabId, DEFAULT_SIDEBAR_TAB_ORDER } from '../lib/preferences'
 
 // Mock preferences module
 vi.mock('../lib/preferences', async () => {
@@ -21,24 +20,28 @@ const mockNote: Note = {
   id: 'note-1',
   title: 'Test Note',
   content: 'Test content',
+  folder: 'inbox',
   project_id: 'project-1',
   created_at: Date.now(),
-  updated_at: Date.now()
+  updated_at: Date.now(),
+  deleted_at: null
 }
 
 const mockNoteWithoutProject: Note = {
   id: 'note-2',
   title: 'Orphan Note',
   content: 'No project',
+  folder: 'inbox',
   project_id: null,
   created_at: Date.now(),
-  updated_at: Date.now()
+  updated_at: Date.now(),
+  deleted_at: null
 }
 
 const mockProjects: Project[] = [
-  { id: 'project-1', name: 'Project Alpha', color: '#3b82f6', status: 'active', created_at: Date.now(), updated_at: Date.now() },
-  { id: 'project-2', name: 'Project Beta', color: '#10b981', status: 'active', created_at: Date.now(), updated_at: Date.now() },
-  { id: 'project-3', name: 'Archived Project', color: '#f59e0b', status: 'archive', created_at: Date.now(), updated_at: Date.now() }
+  { id: 'project-1', name: 'Project Alpha', type: 'generic', color: '#3b82f6', status: 'active', created_at: Date.now(), updated_at: Date.now() },
+  { id: 'project-2', name: 'Project Beta', type: 'generic', color: '#10b981', status: 'active', created_at: Date.now(), updated_at: Date.now() },
+  { id: 'project-3', name: 'Archived Project', type: 'generic', color: '#f59e0b', status: 'archive', created_at: Date.now(), updated_at: Date.now() }
 ]
 
 const mockProject: Project = mockProjects[0]

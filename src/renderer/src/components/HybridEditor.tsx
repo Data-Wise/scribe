@@ -179,6 +179,7 @@ export function HybridEditor({
   }, [focusMode, mode, localContent])
 
   // Handle textarea input and check for autocomplete triggers
+  // @ts-expect-error - Unused function kept for potential future use
   const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target
     const text = textarea.value
@@ -375,6 +376,7 @@ export function HybridEditor({
   }, [localContent, onChange])
 
   // Handle keyboard navigation in autocomplete
+  // @ts-expect-error - Unused function kept for potential future use
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Close autocomplete on Escape
     if (e.key === 'Escape') {

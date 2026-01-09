@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, within, act } from '@testing-library/react'
 import { SettingsModal } from '../components/SettingsModal'
 import { Theme, AutoThemeSettings, FontSettings, ThemeShortcut } from '../lib/themes'
-import { updatePreferences, loadPreferences } from '../lib/preferences'
+import { updatePreferences } from '../lib/preferences'
 
 // Mock dependencies
 vi.mock('../lib/api', () => ({
@@ -97,10 +97,9 @@ vi.mock('../lib/themes', async () => {
         bgSecondary: scheme.base01,
         bgTertiary: scheme.base02,
         textPrimary: scheme.base05,
-        textSecondary: scheme.base04,
         textMuted: scheme.base03,
         accent: scheme.base0D,
-        border: scheme.base02,
+        accentHover: scheme.base0E,
       },
     })),
   }
@@ -118,10 +117,9 @@ const mockThemes: Record<string, Theme> = {
       bgSecondary: '#e8f0e8',
       bgTertiary: '#d8e8d8',
       textPrimary: '#1a2e1a',
-      textSecondary: '#2d4a2d',
       textMuted: '#8fa89b',
       accent: '#4ade80',
-      border: '#e8f0e8',
+      accentHover: '#22c55e',
     },
   },
   'ocean': {
@@ -134,10 +132,9 @@ const mockThemes: Record<string, Theme> = {
       bgSecondary: '#161b22',
       bgTertiary: '#21262d',
       textPrimary: '#c9d1d9',
-      textSecondary: '#8b949e',
       textMuted: '#6e7681',
       accent: '#58a6ff',
-      border: '#30363d',
+      accentHover: '#79c0ff',
     },
   },
   'midnight': {
@@ -150,26 +147,25 @@ const mockThemes: Record<string, Theme> = {
       bgSecondary: '#111111',
       bgTertiary: '#222222',
       textPrimary: '#ffffff',
-      textSecondary: '#cccccc',
       textMuted: '#888888',
       accent: '#ff6b6b',
-      border: '#333333',
+      accentHover: '#ff8787',
     },
   },
   'custom-test': {
     id: 'custom-test',
     name: 'Custom Test',
     type: 'dark',
+    description: 'Custom test theme',
     isCustom: true,
     colors: {
       bgPrimary: '#1a1a1a',
       bgSecondary: '#2a2a2a',
       bgTertiary: '#3a3a3a',
       textPrimary: '#ffffff',
-      textSecondary: '#cccccc',
       textMuted: '#888888',
       accent: '#00ff00',
-      border: '#444444',
+      accentHover: '#33ff33',
     },
   },
 }
@@ -957,6 +953,7 @@ describe('SettingsModal', () => {
           id: 'test-theme-unique',
           name: 'UniqueTestThemeName',
           type: 'dark' as const,
+          description: 'Test theme',
           colors: mockThemes['ocean'].colors,
         }
       }

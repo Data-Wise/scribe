@@ -396,8 +396,8 @@ describe('ExportDialog Component', () => {
       })
       mockRevokeObjectURL = vi.fn()
 
-      URL.createObjectURL = mockCreateObjectURL
-      URL.revokeObjectURL = mockRevokeObjectURL
+      URL.createObjectURL = mockCreateObjectURL as (obj: Blob | MediaSource) => string
+      URL.revokeObjectURL = mockRevokeObjectURL as (url: string) => void
     })
 
     afterEach(() => {
