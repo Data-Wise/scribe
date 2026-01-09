@@ -8,7 +8,7 @@
  * If any test fails, the user experience will differ between modes.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import {
   DEMO_PROJECT,
   DEMO_TAGS,
@@ -395,9 +395,12 @@ describe('Browser-Tauri Parity Checks', () => {
     })
 
     it('should not reference old "Quarto Document Example" title', () => {
+      // This test ensures the bug fix stays fixed
+      // TypeScript correctly identifies this comparison as impossible (which is good!)
+      // We cast to string to check the runtime values anyway
       const hasOldTitle = DEMO_WIKI_LINKS.some(
-        link => link.from === 'Quarto Document Example' ||
-                link.to === 'Quarto Document Example'
+        link => (link.from as string) === 'Quarto Document Example' ||
+                (link.to as string) === 'Quarto Document Example'
       )
       expect(hasOldTitle).toBe(false)
     })
