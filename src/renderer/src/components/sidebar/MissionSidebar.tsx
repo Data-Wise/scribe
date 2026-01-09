@@ -63,6 +63,14 @@ export function MissionSidebar({
     // Width is already saved in setSidebarWidth
   }, [])
 
+  // Handle double-click reset to default width
+  const handleReset = useCallback(() => {
+    const defaultWidth = sidebarMode === 'compact'
+      ? SIDEBAR_WIDTHS.compact.default
+      : SIDEBAR_WIDTHS.card.default
+    setSidebarWidth(defaultWidth)
+  }, [sidebarMode, setSidebarWidth])
+
   // Expand from icon to compact
   const handleExpand = useCallback(() => {
     setSidebarMode('compact')
@@ -102,6 +110,7 @@ export function MissionSidebar({
           onSearch={onSearch}
           onDaily={onDaily}
           onSettings={onOpenSettings}
+          onSelectNote={onSelectNote}
         />
       )}
 
@@ -157,6 +166,7 @@ export function MissionSidebar({
         <ResizeHandle
           onResize={handleResize}
           onResizeEnd={handleResizeEnd}
+          onReset={handleReset}
         />
       )}
     </aside>

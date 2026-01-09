@@ -1,10 +1,11 @@
-import { Search, Calendar, Settings } from 'lucide-react'
+import { Search, Calendar, Settings, Clock } from 'lucide-react'
 
 interface ActivityBarProps {
   onSearch: () => void
   onDaily: () => void
   onSettings: () => void
-  activeItem?: 'search' | 'daily' | 'settings' | null
+  onRecent: () => void
+  activeItem?: 'search' | 'daily' | 'recent' | 'settings' | null
 }
 
 /**
@@ -15,6 +16,7 @@ export function ActivityBar({
   onSearch,
   onDaily,
   onSettings,
+  onRecent,
   activeItem = null
 }: ActivityBarProps) {
   return (
@@ -28,6 +30,17 @@ export function ActivityBar({
         aria-label="Search"
       >
         <Search size={16} />
+      </button>
+
+      {/* Recent Notes Button */}
+      <button
+        className={`activity-bar-btn ${activeItem === 'recent' ? 'active' : ''}`}
+        onClick={onRecent}
+        title="Recent Notes (⌘R)"
+        data-testid="activity-bar-recent"
+        aria-label="Recent Notes"
+      >
+        <Clock size={16} />
       </button>
 
       {/* Daily Note Button */}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Menu, Plus, FolderPlus } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { StatusDot } from './StatusDot'
@@ -53,6 +53,19 @@ export function IconBarMode({
 
   // Recent notes dropdown state
   const [showRecentNotes, setShowRecentNotes] = useState(false)
+
+  // Keyboard shortcut for Recent Notes (⌘R)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'r') {
+        e.preventDefault()
+        setShowRecentNotes(prev => !prev)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   // Filter projects to show only pinned ones, sorted by vault order
   const sortedProjects = useMemo(() => {

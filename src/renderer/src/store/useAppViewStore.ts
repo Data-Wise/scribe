@@ -23,6 +23,13 @@ export interface EditorTab {
   isPinned: boolean
 }
 
+export interface RecentNote {
+  id: string
+  title: string
+  projectId: string | null
+  openedAt: number  // timestamp
+}
+
 interface AppViewState {
   // Sidebar state
   sidebarMode: SidebarMode
@@ -36,6 +43,9 @@ interface AppViewState {
   openTabs: EditorTab[]
   activeTabId: string | null
   closedTabsHistory: EditorTab[]
+
+  // Recent notes tracking
+  recentNotes: RecentNote[]  // Last 10 opened notes
 
   // Session tracking
   lastActiveNoteId: string | null
@@ -70,6 +80,10 @@ interface AppViewState {
   updateTabTitle: (tabId: string, title: string) => void
   reopenLastClosedTab: () => void
 
+  // Recent notes actions
+  addRecentNote: (noteId: string, noteTitle: string, projectId: string | null) => void
+  clearRecentNotes: () => void
+
   // Session actions
   setLastActiveNote: (noteId: string | null) => void
   updateSessionTimestamp: () => void
@@ -85,6 +99,7 @@ const ACTIVE_TAB_KEY = 'scribe:activeTabId'
 const PINNED_VAULTS_KEY = 'scribe:pinnedVaults'
 const SMART_ICONS_KEY = 'scribe:smartIcons'
 const EXPANDED_SMART_ICON_KEY = 'scribe:expandedSmartIconId'
+const RECENT_NOTES_KEY = 'scribe:recentNotes'
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -364,6 +379,26 @@ const saveExpandedSmartIconId = (iconId: SmartIconId | null): void => {
   }
 }
 
+const getSavedRecentNotes = (): RecentNote[] => {
+  try {
+    const saved = localStorage.getItem(RECENT_NOTES_KEY)
+    if (saved) {
+      return JSON.parse(saved) as RecentNote[]
+    }
+    return []
+  } catch {
+    return []
+  }
+}
+
+const saveRecentNotes = (notes: RecentNote[]): void => {
+  try {
+    localStorage.setItem(RECENT_NOTES_KEY, JSON.stringify(notes))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
 /**
  * Determine initial sidebar mode based on session context
  * - Fresh start or > 4 hours → compact (get bearings)
@@ -401,6 +436,7 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   openTabs: getSavedTabs(),
   activeTabId: getSavedActiveTabId(),
   closedTabsHistory: [],
+  recentNotes: getSavedRecentNotes(),
 
   setSidebarMode: (mode: SidebarMode) => {
     set({ sidebarMode: mode })
@@ -747,6 +783,34 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
 
   updateSessionTimestamp: () => {
     saveSessionTimestamp()
+  },
+
+  // Recent notes actions
+  addRecentNote: (noteId: string, noteTitle: string, projectId: string | null) => {
+    const { recentNotes } = get()
+    const existingIndex = recentNotes.findIndex(n => n.id === noteId)
+
+    let updated: RecentNote[]
+    if (existingIndex >= 0) {
+      // Move to front
+      updated = [...recentNotes]
+      updated.splice(existingIndex, 1)
+      updated.unshift({ id: noteId, title: noteTitle, projectId, openedAt: Date.now() })
+    } else {
+      // Add to front, keep max 10
+      updated = [
+        { id: noteId, title: noteTitle, projectId, openedAt: Date.now() },
+        ...recentNotes
+      ].slice(0, 10)
+    }
+
+    set({ recentNotes: updated })
+    saveRecentNotes(updated)
+  },
+
+  clearRecentNotes: () => {
+    set({ recentNotes: [] })
+    saveRecentNotes([])
   }
 }))
 

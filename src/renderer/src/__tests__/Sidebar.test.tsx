@@ -46,12 +46,12 @@ describe('StatusDot Component', () => {
 
   it('renders correct color for each status', () => {
     const statuses: ProjectStatus[] = ['active', 'planning', 'complete', 'archive']
-    // Updated to match actual STATUS_COLORS in StatusDot.tsx
+    // Updated to match CSS variables in StatusDot.tsx
     const expectedColors: Record<ProjectStatus, string> = {
-      active: '#22c55e',    // Green
-      planning: '#3b82f6',  // Blue
-      complete: '#8b5cf6',  // Purple
-      archive: '#6b7280',   // Gray
+      active: 'var(--status-active)',
+      planning: 'var(--status-planning)',
+      complete: 'var(--status-complete)',
+      archive: 'var(--status-archive)'
     }
 
     statuses.forEach(status => {
@@ -62,26 +62,26 @@ describe('StatusDot Component', () => {
   })
 
   it('renders different sizes', () => {
-    // Sizes are applied via CSS classes, not inline styles
+    // Sizes are applied via Tailwind classes (w-2/3/4 h-2/3/4), not custom classes
     const { rerender, container } = render(<StatusDot size="sm" />)
     let dot = container.querySelector('span')
-    expect(dot).toHaveClass('status-dot', 'sm')
+    expect(dot).toHaveClass('w-2', 'h-2')  // sm = w-2 h-2
 
     rerender(<StatusDot size="md" />)
     dot = container.querySelector('span')
-    expect(dot).toHaveClass('status-dot', 'md')
+    expect(dot).toHaveClass('w-3', 'h-3')  // md = w-3 h-3
 
     rerender(<StatusDot size="lg" />)
     dot = container.querySelector('span')
-    expect(dot).toHaveClass('status-dot', 'lg')
+    expect(dot).toHaveClass('w-4', 'h-4')  // lg = w-4 h-4
   })
 
   it('getStatusColor returns correct colors', () => {
-    // Updated to match actual STATUS_COLORS in StatusDot.tsx
-    expect(getStatusColor('active')).toBe('#22c55e')    // Green
-    expect(getStatusColor('planning')).toBe('#3b82f6')  // Blue
-    expect(getStatusColor('complete')).toBe('#8b5cf6')  // Purple
-    expect(getStatusColor('archive')).toBe('#6b7280')   // Gray
+    // Updated to match CSS variables in StatusDot.tsx
+    expect(getStatusColor('active')).toBe('var(--status-active)')
+    expect(getStatusColor('planning')).toBe('var(--status-planning)')
+    expect(getStatusColor('complete')).toBe('var(--status-complete)')
+    expect(getStatusColor('archive')).toBe('var(--status-archive)')
   })
 
   it('applies custom className', () => {

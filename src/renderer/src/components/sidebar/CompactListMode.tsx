@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings, FolderPlus } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { ActivityDots } from './ActivityDots'
@@ -59,6 +59,11 @@ export function CompactListMode({
   const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
   const [noteContextMenu, setNoteContextMenu] = useState<{ note: Note; position: { x: number; y: number } } | null>(null)
 
+  // Keyboard navigation state
+  const [focusedIndex, setFocusedIndex] = useState(-1)
+  const projectRefs = useRef<(HTMLDivElement | null)[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
+
   // Context menu handlers
   const handleProjectContextMenu = (e: React.MouseEvent, project: Project) => {
     e.preventDefault()
@@ -107,8 +112,78 @@ export function CompactListMode({
     return notes.filter(n => !n.deleted_at && !n.project_id).length
   }, [notes])
 
+  // Keyboard navigation handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const projectCount = sortedProjects.length
+
+      // Don't handle keyboard navigation if there are no projects
+      if (projectCount === 0) return
+
+      // Don't handle keyboard navigation if user is typing in search
+      if (document.activeElement?.tagName === 'INPUT') return
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault()
+          setFocusedIndex((prev) => (prev + 1) % projectCount)
+          break
+
+        case 'ArrowUp':
+          e.preventDefault()
+          setFocusedIndex((prev) =>
+            prev <= 0 ? projectCount - 1 : prev - 1
+          )
+          break
+
+        case 'Enter':
+          if (focusedIndex >= 0 && focusedIndex < projectCount) {
+            e.preventDefault()
+            const project = sortedProjects[focusedIndex]
+            const isExpanded = project.id === currentProjectId
+            onSelectProject(isExpanded ? null : project.id)
+          }
+          break
+
+        case 'Escape':
+          e.preventDefault()
+          setFocusedIndex(-1)
+          break
+      }
+    }
+
+    // Add event listener to the container
+    const container = containerRef.current
+    if (container) {
+      container.addEventListener('keydown', handleKeyDown)
+      return () => container.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [sortedProjects, focusedIndex, currentProjectId, onSelectProject])
+
+  // Auto-scroll focused item into view
+  useEffect(() => {
+    if (focusedIndex >= 0 && projectRefs.current[focusedIndex]) {
+      projectRefs.current[focusedIndex]?.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth'
+      })
+    }
+  }, [focusedIndex])
+
+  // Reset focus when search changes or projects change
+  useEffect(() => {
+    setFocusedIndex(-1)
+  }, [searchQuery, projects.length])
+
   return (
-    <div className="mission-sidebar-compact" style={{ width }}>
+    <div
+      className="mission-sidebar-compact"
+      style={{ width }}
+      ref={containerRef}
+      tabIndex={0}
+      role="navigation"
+      aria-label="Projects navigation"
+    >
       {/* Header */}
       <div className="sidebar-header">
         <button
@@ -138,7 +213,7 @@ export function CompactListMode({
       )}
 
       {/* Project list */}
-      <div className="project-list-compact">
+      <div className="project-list-compact" role="listbox" aria-label="Projects">
         {sortedProjects.length === 0 && inboxCount === 0 && !searchQuery ? (
           <EmptyState
             icon={<FolderPlus className="w-12 h-12" />}
@@ -148,9 +223,10 @@ export function CompactListMode({
             onAction={onCreateProject}
           />
         ) : (
-          sortedProjects.map(project => {
+          sortedProjects.map((project, index) => {
           const stats = projectStats[project.id]
           const isExpanded = project.id === currentProjectId
+          const isFocused = focusedIndex === index
           const projectNotes = notes
             .filter(n => !n.deleted_at && n.project_id === project.id)
             .sort((a, b) => b.updated_at - a.updated_at)
@@ -158,13 +234,18 @@ export function CompactListMode({
           return (
             <CompactProjectItem
               key={project.id}
+              ref={(el) => (projectRefs.current[index] = el)}
               project={project}
               allNotes={notes}
               allProjects={projects}
               isExpanded={isExpanded}
+              isFocused={isFocused}
               noteCount={stats?.noteCount || 0}
               projectNotes={projectNotes}
-              onClick={() => onSelectProject(isExpanded ? null : project.id)}
+              onClick={() => {
+                setFocusedIndex(index)
+                onSelectProject(isExpanded ? null : project.id)
+              }}
               onSelectNote={onSelectNote}
               onQuickAdd={() => onNewNote(project.id)}
               onContextMenu={(e) => handleProjectContextMenu(e, project)}
@@ -239,6 +320,7 @@ interface CompactProjectItemProps {
   allNotes: Note[]
   allProjects: Project[]
   isExpanded: boolean
+  isFocused: boolean
   noteCount: number
   projectNotes: Note[]
   onClick: () => void
@@ -248,26 +330,34 @@ interface CompactProjectItemProps {
   onNoteContextMenu: (e: React.MouseEvent, note: Note) => void
 }
 
-function CompactProjectItem({
-  project,
-  allNotes,
-  allProjects: _allProjects,
-  isExpanded,
-  noteCount,
-  projectNotes,
-  onClick,
-  onSelectNote,
-  onQuickAdd,
-  onContextMenu,
-  onNoteContextMenu
-}: CompactProjectItemProps) {
+const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemProps>(
+  ({
+    project,
+    allNotes,
+    allProjects: _allProjects,
+    isExpanded,
+    isFocused,
+    noteCount,
+    projectNotes,
+    onClick,
+    onSelectNote,
+    onQuickAdd,
+    onContextMenu,
+    onNoteContextMenu
+  }, ref) => {
   const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
   const FolderIcon = isExpanded ? FolderOpen : Folder
 
   // When expanded, show context card + notes list
   if (isExpanded) {
     return (
-      <div className="compact-project-wrapper expanded">
+      <div
+        ref={ref}
+        className={`compact-project-wrapper expanded ${isFocused ? 'keyboard-focus' : ''}`}
+        role="option"
+        aria-selected={isExpanded}
+        tabIndex={isFocused ? 0 : -1}
+      >
         {/* Collapsed header to close */}
         <button
           className="compact-project-item expanded"
@@ -313,7 +403,13 @@ function CompactProjectItem({
 
   // Collapsed view with activity dots
   return (
-    <div className="compact-project-wrapper">
+    <div
+      ref={ref}
+      className={`compact-project-wrapper ${isFocused ? 'keyboard-focus' : ''}`}
+      role="option"
+      aria-selected={false}
+      tabIndex={isFocused ? 0 : -1}
+    >
       <button
         className="compact-project-item"
         onClick={onClick}
@@ -328,7 +424,9 @@ function CompactProjectItem({
       </button>
     </div>
   )
-}
+})
+
+CompactProjectItem.displayName = 'CompactProjectItem'
 
 // Helper functions
 function countWords(content: string): number {

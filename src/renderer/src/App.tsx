@@ -18,7 +18,7 @@ import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { EditProjectModal } from './components/EditProjectModal'
-import { MissionSidebar } from './components/sidebar'
+import { MissionSidebar, IconLegend } from './components/sidebar'
 import { ClaudeChatPanel } from './components/ClaudeChatPanel'
 import { TerminalPanel } from './components/TerminalPanel'
 import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
@@ -117,7 +117,9 @@ function App() {
     addPinnedVault,
     removePinnedVault,
     // Smart icons
-    setSmartIconExpanded
+    setSmartIconExpanded,
+    // Recent notes
+    addRecentNote
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
@@ -826,13 +828,18 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
 
-  // Track selected note for smart startup (session context)
+  // Track selected note for smart startup (session context) and recent notes
   useEffect(() => {
     if (selectedNoteId) {
-      setLastActiveNote(selectedNoteId)
-      updateSessionTimestamp()
+      const note = notes.find(n => n.id === selectedNoteId)
+      if (note) {
+        setLastActiveNote(selectedNoteId)
+        updateSessionTimestamp()
+        // Add to recent notes
+        addRecentNote(selectedNoteId, note.title, note.project_id)
+      }
     }
-  }, [selectedNoteId, setLastActiveNote, updateSessionTimestamp])
+  }, [selectedNoteId, notes, setLastActiveNote, updateSessionTimestamp, addRecentNote])
 
   // Sync selected note when active tab changes (for tab clicks)
   useEffect(() => {
@@ -1870,6 +1877,9 @@ function App() {
           }}
         />
       )}
+
+      {/* Icon Legend - First launch guide */}
+      <IconLegend />
     </div>
   )
 }

@@ -15,7 +15,8 @@ describe('ActivityBar Component', () => {
   const mockHandlers = {
     onSearch: vi.fn(),
     onDaily: vi.fn(),
-    onSettings: vi.fn()
+    onSettings: vi.fn(),
+    onRecent: vi.fn()
   }
 
   beforeEach(() => {
@@ -23,10 +24,11 @@ describe('ActivityBar Component', () => {
   })
 
   describe('Rendering', () => {
-    it('renders all three buttons', () => {
+    it('renders all four buttons', () => {
       render(<ActivityBar {...mockHandlers} />)
 
       expect(screen.getByTestId('activity-bar-search')).toBeInTheDocument()
+      expect(screen.getByTestId('activity-bar-recent')).toBeInTheDocument()
       expect(screen.getByTestId('activity-bar-daily')).toBeInTheDocument()
       expect(screen.getByTestId('activity-bar-settings')).toBeInTheDocument()
     })
@@ -35,6 +37,7 @@ describe('ActivityBar Component', () => {
       render(<ActivityBar {...mockHandlers} />)
 
       expect(screen.getByTitle('Search (⌘K)')).toBeInTheDocument()
+      expect(screen.getByTitle('Recent Notes (⌘R)')).toBeInTheDocument()
       expect(screen.getByTitle('Daily Note (⌘D)')).toBeInTheDocument()
       expect(screen.getByTitle('Settings (⌘,)')).toBeInTheDocument()
     })
@@ -165,7 +168,11 @@ const mockNotes: Note[] = [
 const mockHandlers = {
   onSelectProject: vi.fn(),
   onCreateProject: vi.fn(),
-  onExpand: vi.fn()
+  onExpand: vi.fn(),
+  onSearch: vi.fn(),
+  onDaily: vi.fn(),
+  onSettings: vi.fn(),
+  onSelectNote: vi.fn()
 }
 
 describe('IconBarMode Component', () => {

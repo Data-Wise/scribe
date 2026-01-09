@@ -151,7 +151,8 @@ describe('Child Project Identification (Phase 1)', () => {
     onExpand: vi.fn(),
     onSearch: vi.fn(),
     onDaily: vi.fn(),
-    onSettings: vi.fn()
+    onSettings: vi.fn(),
+    onSelectNote: vi.fn()
   }
 
   beforeEach(() => {
