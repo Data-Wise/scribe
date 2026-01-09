@@ -1,3 +1,5 @@
+import { useRef, useEffect } from 'react'
+import { FixedSizeList } from 'react-window'
 import { Note } from '../types'
 import { HighlightedText } from './HighlightedText'
 import { extractSearchSnippet } from '../utils/search'
@@ -26,6 +28,19 @@ export function SearchResults({
   selectedNoteId,
   isLoading = false
 }: SearchResultsProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<FixedSizeList>(null)
+
+  // Scroll to selected note when it changes
+  useEffect(() => {
+    if (selectedNoteId && listRef.current) {
+      const index = results.findIndex(n => n.id === selectedNoteId)
+      if (index !== -1) {
+        listRef.current.scrollToItem(index, 'smart')
+      }
+    }
+  }, [selectedNoteId, results])
+
   // Loading state - Phase 3 Task 8: Skeleton loaders for better perceived performance
   if (isLoading) {
     return (
@@ -57,25 +72,49 @@ export function SearchResults({
     )
   }
 
-  // Results list
-  return (
-    <div className="flex-1 overflow-y-auto">
-      {/* Results count header */}
-      <div className="px-4 py-2 text-xs text-gray-400 border-b border-gray-700 sticky top-0 bg-nexus-bg-secondary">
-        {results.length} result{results.length !== 1 ? 's' : ''} for{' '}
-        <span className="text-white font-medium">"{query}"</span>
-      </div>
+  // Phase 3 Task 9: Virtual scrolling for large result sets (500+ notes)
+  // Item height estimation: title (24px) + snippet (40px) + metadata (24px) + padding (32px) = 120px
+  const ITEM_HEIGHT = 120
+  const HEADER_HEIGHT = 36
 
-      {/* Results list */}
-      {results.map((note) => (
+  // Calculate available height (use parent container height)
+  const containerHeight = containerRef.current?.clientHeight || 600
+
+  // Row renderer for react-window
+  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+    const note = results[index]
+    return (
+      <div style={style}>
         <SearchResultItem
-          key={note.id}
           note={note}
           query={query}
           isSelected={note.id === selectedNoteId}
           onClick={() => onSelectNote(note.id)}
         />
-      ))}
+      </div>
+    )
+  }
+
+  // Results list with virtual scrolling
+  return (
+    <div ref={containerRef} className="flex-1 overflow-hidden flex flex-col">
+      {/* Results count header */}
+      <div className="px-4 py-2 text-xs text-gray-400 border-b border-gray-700 bg-nexus-bg-secondary" style={{ height: HEADER_HEIGHT }}>
+        {results.length} result{results.length !== 1 ? 's' : ''} for{' '}
+        <span className="text-white font-medium">"{query}"</span>
+      </div>
+
+      {/* Virtualized results list */}
+      <FixedSizeList
+        ref={listRef}
+        height={containerHeight - HEADER_HEIGHT}
+        itemCount={results.length}
+        itemSize={ITEM_HEIGHT}
+        width="100%"
+        overscanCount={3}
+      >
+        {Row}
+      </FixedSizeList>
     </div>
   )
 }
