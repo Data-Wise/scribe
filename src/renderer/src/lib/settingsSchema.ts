@@ -424,6 +424,19 @@ const appearanceCategory: SettingsCategoryData = {
           description: 'Collapse sidebar when editor is focused, expand on hover',
           defaultValue: false,
           addedInVersion: 'v1.14.0'
+        },
+        {
+          id: 'appearance.sidebarWidth',
+          type: 'select',
+          label: 'Sidebar Width',
+          description: 'Quick width presets for sidebar (respects mode constraints)',
+          defaultValue: 'medium',
+          options: [
+            { label: 'Narrow - 200px (Minimal)', value: 'narrow' },
+            { label: 'Medium - 280px (Balanced)', value: 'medium' },
+            { label: 'Wide - 360px (Spacious)', value: 'wide' }
+          ],
+          addedInVersion: 'v1.15.0'
         }
       ]
     },
@@ -458,7 +471,7 @@ const appearanceCategory: SettingsCategoryData = {
       ]
     }
   ],
-  badge: 8
+  badge: 9
 }
 
 // Advanced Category

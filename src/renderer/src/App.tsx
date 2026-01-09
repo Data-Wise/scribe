@@ -104,6 +104,8 @@ function App() {
     cycleSidebarMode,
     toggleSidebarCollapsed,
     setSidebarMode,
+    sidebarWidth,
+    setSidebarWidth,
     setLastActiveNote,
     updateSessionTimestamp,
     // Tab state
@@ -1001,21 +1003,21 @@ function App() {
 
     const handleFocusIn = () => {
       // Collapse sidebar when editor gains focus
-      toggleSidebarCollapsed('icon')
+      setSidebarMode('icon')
     }
 
     const handleMouseEnter = () => {
       // Expand sidebar on hover when collapsed
       const currentMode = localStorage.getItem('sidebarMode')
       if (currentMode === 'icon') {
-        toggleSidebarCollapsed('compact')
+        setSidebarMode('compact')
       }
     }
 
     const handleMouseLeave = () => {
       // Collapse sidebar when mouse leaves (if editor still has focus)
       if (editorContainer.contains(document.activeElement)) {
-        toggleSidebarCollapsed('icon')
+        setSidebarMode('icon')
       }
     }
 
@@ -1036,7 +1038,26 @@ function App() {
         sidebar.removeEventListener('mouseleave', handleMouseLeave)
       }
     }
-  }, [settings, toggleSidebarCollapsed])
+  }, [settings, setSidebarMode])
+
+  // Apply sidebar width preset from settings
+  useEffect(() => {
+    const widthPreset = settings['appearance.sidebarWidth'] || 'medium'
+
+    // Map preset values to pixel widths
+    const widthMap: Record<string, number> = {
+      'narrow': 200,
+      'medium': 280,
+      'wide': 360
+    }
+
+    const targetWidth = widthMap[widthPreset as string] || 280 // Default to medium
+
+    // Only update if different from current width (avoid loops)
+    if (sidebarWidth !== targetWidth) {
+      setSidebarWidth(targetWidth)
+    }
+  }, [settings, sidebarWidth, setSidebarWidth])
 
   const handleTagClick = async (tagId: string) => {
     const newSelectedIds = selectedTagIds.includes(tagId)
