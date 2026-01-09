@@ -81,26 +81,26 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
     switch (position) {
       case 'top':
         return {
-          bottom: `calc(100% + ${spacing}px)`,
-          left: '50%',
-          transform: 'translateX(-50%)'
+          left: `${triggerRect.left + triggerRect.width / 2}px`,
+          top: `${triggerRect.top - spacing}px`,
+          transform: 'translate(-50%, -100%)'
         }
       case 'bottom':
         return {
-          top: `calc(100% + ${spacing}px)`,
-          left: '50%',
+          left: `${triggerRect.left + triggerRect.width / 2}px`,
+          top: `${triggerRect.bottom + spacing}px`,
           transform: 'translateX(-50%)'
         }
       case 'left':
         return {
-          right: `calc(100% + ${spacing}px)`,
-          top: '50%',
-          transform: 'translateY(-50%)'
+          left: `${triggerRect.left - spacing}px`,
+          top: `${triggerRect.top + triggerRect.height / 2}px`,
+          transform: 'translate(-100%, -50%)'
         }
       case 'right':
         return {
-          left: `calc(100% + ${spacing}px)`,
-          top: '50%',
+          left: `${triggerRect.right + spacing}px`,
+          top: `${triggerRect.top + triggerRect.height / 2}px`,
           transform: 'translateY(-50%)'
         }
     }
@@ -178,7 +178,7 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
           ref={tooltipRef}
           id={tooltipId.current}
           role="tooltip"
-          className="absolute z-[9999] px-2 py-1.5 text-xs text-white bg-gray-900/95 rounded shadow-lg pointer-events-none whitespace-pre-line max-w-[280px] animate-in fade-in duration-150"
+          className="fixed z-[9999] px-2 py-1.5 text-xs text-white bg-gray-900/95 rounded shadow-lg pointer-events-none whitespace-pre-line max-w-[280px] animate-in fade-in duration-150"
           style={getPositionStyles()}
         >
           {content}

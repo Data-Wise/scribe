@@ -2370,8 +2370,8 @@ mark {
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   flex-shrink: 0;
   transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  z-index: 10;
+  overflow: visible; /* Changed from hidden to allow tooltips to appear outside sidebar bounds */
+  z-index: 10000; /* High z-index so tooltips inside can appear above editor */
 }
 
 /* Icon Bar Mode (48px, expands to 240px when smart icon opens) */
@@ -2705,7 +2705,7 @@ mark {
   margin-bottom: 8px;
   max-height: calc(100vh - 300px); /* Allow scrolling when many projects */
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Keep content clipped */
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
