@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { PinnedVault, SidebarMode } from '../types'
+import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId } from '../types'
 
 /**
  * App View Store - Manages sidebar state, tabs, and session tracking
@@ -28,6 +28,8 @@ interface AppViewState {
   sidebarMode: SidebarMode
   sidebarWidth: number
   pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom)
+  smartIcons: SmartIcon[]  // 4 permanent smart folders
+  expandedSmartIconId: SmartIconId | null  // Accordion: only one expanded at a time
 
   // Editor tabs state
   openTabs: EditorTab[]
@@ -48,6 +50,12 @@ interface AppViewState {
   removePinnedVault: (vaultId: string) => void
   reorderPinnedVaults: (fromIndex: number, toIndex: number) => void
   isPinned: (projectId: string) => boolean
+
+  // Smart icon actions
+  toggleSmartIcon: (iconId: SmartIconId) => void
+  setSmartIconExpanded: (iconId: SmartIconId, expanded: boolean) => void
+  setSmartIconVisibility: (iconId: SmartIconId, visible: boolean) => void
+  reorderSmartIcons: (fromIndex: number, toIndex: number) => void
 
   // Tab actions
   openTab: (tab: Omit<EditorTab, 'id'>) => string
@@ -73,6 +81,8 @@ const SIDEBAR_WIDTH_KEY = 'scribe:sidebarWidth'
 const OPEN_TABS_KEY = 'scribe:openTabs'
 const ACTIVE_TAB_KEY = 'scribe:activeTabId'
 const PINNED_VAULTS_KEY = 'scribe:pinnedVaults'
+const SMART_ICONS_KEY = 'scribe:smartIcons'
+const EXPANDED_SMART_ICON_KEY = 'scribe:expandedSmartIconId'
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -232,6 +242,50 @@ const INBOX_VAULT: PinnedVault = {
   isPermanent: true
 }
 
+// Default Smart Icons configuration
+const DEFAULT_SMART_ICONS: SmartIcon[] = [
+  {
+    id: 'research',
+    label: 'Research',
+    icon: '📖',
+    color: '#8B5CF6',  // purple-500
+    projectType: 'research',
+    isVisible: true,
+    isExpanded: false,
+    order: 0
+  },
+  {
+    id: 'teaching',
+    label: 'Teaching',
+    icon: '🎓',
+    color: '#10B981',  // green-500
+    projectType: 'teaching',
+    isVisible: true,
+    isExpanded: false,
+    order: 1
+  },
+  {
+    id: 'r-package',
+    label: 'R Packages',
+    icon: '📦',
+    color: '#3B82F6',  // blue-500
+    projectType: 'r-package',
+    isVisible: true,
+    isExpanded: false,
+    order: 2
+  },
+  {
+    id: 'dev-tools',
+    label: 'Dev Tools',
+    icon: '⚙️',
+    color: '#F59E0B',  // amber-500
+    projectType: 'r-dev',  // Maps to r-dev project type
+    isVisible: true,
+    isExpanded: false,
+    order: 3
+  }
+]
+
 const getSavedPinnedVaults = (): PinnedVault[] => {
   try {
     const saved = localStorage.getItem(PINNED_VAULTS_KEY)
@@ -254,6 +308,55 @@ const getSavedPinnedVaults = (): PinnedVault[] => {
 const savePinnedVaults = (vaults: PinnedVault[]): void => {
   try {
     localStorage.setItem(PINNED_VAULTS_KEY, JSON.stringify(vaults))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getSavedSmartIcons = (): SmartIcon[] => {
+  try {
+    const saved = localStorage.getItem(SMART_ICONS_KEY)
+    if (saved) {
+      const icons = JSON.parse(saved) as SmartIcon[]
+      // Merge with defaults to ensure all icons exist with correct schema
+      return DEFAULT_SMART_ICONS.map(defaultIcon => {
+        const savedIcon = icons.find(i => i.id === defaultIcon.id)
+        return savedIcon ? { ...defaultIcon, ...savedIcon } : defaultIcon
+      }).sort((a, b) => a.order - b.order)
+    }
+    return DEFAULT_SMART_ICONS
+  } catch {
+    return DEFAULT_SMART_ICONS
+  }
+}
+
+const saveSmartIcons = (icons: SmartIcon[]): void => {
+  try {
+    localStorage.setItem(SMART_ICONS_KEY, JSON.stringify(icons))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getSavedExpandedSmartIconId = (): SmartIconId | null => {
+  try {
+    const saved = localStorage.getItem(EXPANDED_SMART_ICON_KEY)
+    if (saved && ['research', 'teaching', 'r-package', 'dev-tools'].includes(saved)) {
+      return saved as SmartIconId
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
+const saveExpandedSmartIconId = (iconId: SmartIconId | null): void => {
+  try {
+    if (iconId) {
+      localStorage.setItem(EXPANDED_SMART_ICON_KEY, iconId)
+    } else {
+      localStorage.removeItem(EXPANDED_SMART_ICON_KEY)
+    }
   } catch {
     // Ignore localStorage errors
   }
@@ -289,6 +392,8 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   sidebarMode: determineInitialSidebarMode(),
   sidebarWidth: getSavedSidebarWidth(),
   pinnedVaults: getSavedPinnedVaults(),
+  smartIcons: getSavedSmartIcons(),
+  expandedSmartIconId: getSavedExpandedSmartIconId(),
   lastActiveNoteId: getLastActiveNoteId(),
   openTabs: getSavedTabs(),
   activeTabId: getSavedActiveTabId(),
@@ -399,6 +504,71 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   isPinned: (projectId) => {
     const { pinnedVaults } = get()
     return pinnedVaults.some(v => v.id === projectId)
+  },
+
+  // Smart icon actions
+  toggleSmartIcon: (iconId) => {
+    const { expandedSmartIconId, smartIcons } = get()
+
+    // Toggle: if already expanded, collapse it; otherwise expand it
+    const newExpandedId = expandedSmartIconId === iconId ? null : iconId
+
+    // Update expansion state in smartIcons array
+    const newIcons = smartIcons.map(icon => ({
+      ...icon,
+      isExpanded: icon.id === newExpandedId
+    }))
+
+    set({
+      expandedSmartIconId: newExpandedId,
+      smartIcons: newIcons
+    })
+    saveExpandedSmartIconId(newExpandedId)
+    saveSmartIcons(newIcons)
+  },
+
+  setSmartIconExpanded: (iconId, expanded) => {
+    const { smartIcons } = get()
+
+    // Accordion mode: only one expanded at a time
+    const newExpandedId = expanded ? iconId : null
+
+    const newIcons = smartIcons.map(icon => ({
+      ...icon,
+      isExpanded: icon.id === newExpandedId
+    }))
+
+    set({
+      expandedSmartIconId: newExpandedId,
+      smartIcons: newIcons
+    })
+    saveExpandedSmartIconId(newExpandedId)
+    saveSmartIcons(newIcons)
+  },
+
+  setSmartIconVisibility: (iconId, visible) => {
+    const { smartIcons } = get()
+
+    const newIcons = smartIcons.map(icon =>
+      icon.id === iconId ? { ...icon, isVisible: visible } : icon
+    )
+
+    set({ smartIcons: newIcons })
+    saveSmartIcons(newIcons)
+  },
+
+  reorderSmartIcons: (fromIndex, toIndex) => {
+    const { smartIcons } = get()
+
+    const newIcons = [...smartIcons]
+    const [moved] = newIcons.splice(fromIndex, 1)
+    newIcons.splice(toIndex, 0, moved)
+
+    // Update order numbers
+    const reordered = newIcons.map((icon, index) => ({ ...icon, order: index }))
+
+    set({ smartIcons: reordered })
+    saveSmartIcons(reordered)
   },
 
   // Tab actions

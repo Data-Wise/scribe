@@ -170,4 +170,18 @@ export interface PinnedVault {
 
 export type SidebarMode = 'icon' | 'compact' | 'card'
 
+// Smart Icons - Permanent folder shortcuts for project types
+export type SmartIconId = 'research' | 'teaching' | 'r-package' | 'dev-tools'
+
+export interface SmartIcon {
+  id: SmartIconId
+  label: string
+  icon: string  // emoji
+  color: string  // hex color for hover/expanded states
+  projectType: ProjectType  // maps to Project['type']
+  isVisible: boolean  // for customization in Settings
+  isExpanded: boolean  // expansion state
+  order: number  // display order (0-3)
+}
+
 export {}

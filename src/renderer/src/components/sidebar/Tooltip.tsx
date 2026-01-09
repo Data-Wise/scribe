@@ -178,7 +178,7 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
           ref={tooltipRef}
           id={tooltipId.current}
           role="tooltip"
-          className="absolute z-50 px-2 py-1.5 text-xs text-white bg-gray-900/95 rounded shadow-lg pointer-events-none whitespace-pre-line max-w-[280px] animate-in fade-in duration-150"
+          className="absolute z-[9999] px-2 py-1.5 text-xs text-white bg-gray-900/95 rounded shadow-lg pointer-events-none whitespace-pre-line max-w-[280px] animate-in fade-in duration-150"
           style={getPositionStyles()}
         >
           {content}

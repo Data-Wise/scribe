@@ -103,6 +103,7 @@ function App() {
   const {
     cycleSidebarMode,
     toggleSidebarCollapsed,
+    setSidebarMode,
     setLastActiveNote,
     updateSessionTimestamp,
     // Tab state
@@ -115,7 +116,8 @@ function App() {
     // Pinned vaults
     addPinnedVault,
     removePinnedVault,
-    isPinned
+    // Smart icons
+    setSmartIconExpanded
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
@@ -714,6 +716,22 @@ function App() {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'P') {
         e.preventDefault()
         setIsCreateProjectModalOpen(true)
+      }
+
+      // Smart Icon shortcuts (⌘⇧1-4) - expand/collapse smart icons
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && !e.altKey && /^[1-4]$/.test(e.key)) {
+        e.preventDefault()
+        const shortcuts: Record<string, string> = {
+          '1': 'research',
+          '2': 'teaching',
+          '3': 'r-package',
+          '4': 'dev-tools'
+        }
+        const iconId = shortcuts[e.key]
+        if (iconId) {
+          setSmartIconExpanded(iconId as any, true)
+          setSidebarMode('icon') // Ensure icon mode is active
+        }
       }
 
       // Tab switching (⌘1-9) - switch to tab by index
