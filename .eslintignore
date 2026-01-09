@@ -1,0 +1,22 @@
+# Build outputs
+dist
+dist-electron
+node_modules
+
+# Tauri backend
+src-tauri
+
+# Config files
+*.config.js
+*.config.ts
+vite.config.ts
+tailwind.config.js
+postcss.config.js
+
+# Test artifacts
+coverage
+playwright-report
+test-results
+
+# Generated files
+.tauri
