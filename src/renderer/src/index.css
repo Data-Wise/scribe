@@ -1736,6 +1736,37 @@ mark {
   border-radius: 4px;
 }
 
+/* Wave animation for skeleton loaders (Phase 3 Task 8) */
+@keyframes skeleton-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-wave {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-wave::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  animation: skeleton-wave 1.5s ease-in-out infinite;
+}
+
 /* Skeleton variants */
 .skeleton-text {
   height: 1rem;
