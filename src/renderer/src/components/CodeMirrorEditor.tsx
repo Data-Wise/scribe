@@ -1527,7 +1527,8 @@ export function CodeMirrorEditor({
   }, [onWikiLinkClick])
 
   // Extensions for markdown features (not theme)
-  const extensions = [
+  // Memoize to prevent recreation on every render (Phase 2 Task 1)
+  const extensions = useMemo(() => [
     markdown({
       codeLanguages: languages,
       extensions: [Strikethrough, markdownSyntaxTags]  // Enable GFM strikethrough + syntax marker highlighting
@@ -1545,7 +1546,7 @@ export function CodeMirrorEditor({
     }),  // Quarto + LaTeX completions
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
-  ]
+  ], [editorMode, richMarkdownPluginWithCallback, placeholder])
 
   const handleChange = useCallback((value: string) => {
     isInternalChange.current = true

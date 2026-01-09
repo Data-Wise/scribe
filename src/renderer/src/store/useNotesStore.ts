@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 import { Note } from '../types'
 import { api } from '../lib/api'
 
@@ -17,7 +18,8 @@ interface NotesState {
   searchNotes: (query: string) => Promise<void>
 }
 
-export const useNotesStore = create<NotesState>((set) => ({
+export const useNotesStore = create<NotesState>()(
+  immer((set) => ({
   notes: [],
   selectedNoteId: null,
   isLoading: false,
@@ -39,11 +41,12 @@ export const useNotesStore = create<NotesState>((set) => ({
       // For markdown content, skip HTML sanitization
       // react-markdown handles escaping during render
       const newNote = await api.createNote(note)
-      set((state) => ({
-        notes: [newNote, ...state.notes],
-        selectedNoteId: newNote.id,
-        isLoading: false
-      }))
+      set((state) => {
+        // Immer allows direct mutations
+        state.notes.unshift(newNote)
+        state.selectedNoteId = newNote.id
+        state.isLoading = false
+      })
       return newNote
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
@@ -58,12 +61,14 @@ export const useNotesStore = create<NotesState>((set) => ({
       // react-markdown handles escaping during render
       const updatedNote = await api.updateNote(id, updates)
       if (updatedNote) {
-        set((state) => ({
-          notes: state.notes.map((note) =>
-            note.id === id ? updatedNote : note
-          ),
-          isLoading: false
-        }))
+        set((state) => {
+          // Immer allows direct mutations
+          const index = state.notes.findIndex((note) => note.id === id)
+          if (index !== -1) {
+            state.notes[index] = updatedNote
+          }
+          state.isLoading = false
+        })
       }
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
@@ -74,11 +79,17 @@ export const useNotesStore = create<NotesState>((set) => ({
     set({ isLoading: true, error: null })
     try {
       await api.deleteNote(id)
-      set((state) => ({
-        notes: state.notes.filter((note) => note.id !== id),
-        selectedNoteId: state.selectedNoteId === id ? null : state.selectedNoteId,
-        isLoading: false
-      }))
+      set((state) => {
+        // Immer allows direct mutations
+        const index = state.notes.findIndex((note) => note.id === id)
+        if (index !== -1) {
+          state.notes.splice(index, 1)
+        }
+        if (state.selectedNoteId === id) {
+          state.selectedNoteId = null
+        }
+        state.isLoading = false
+      })
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
     }
@@ -97,5 +108,6 @@ export const useNotesStore = create<NotesState>((set) => ({
       set({ error: (error as Error).message, isLoading: false })
     }
   }
-}))
+  }))
+)
 

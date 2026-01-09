@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 import { api } from '../lib/api'
 import { Project, ProjectType, ProjectSettings } from '../types'
 
@@ -54,7 +55,8 @@ const persistProjectId = (id: string | null): void => {
   }
 }
 
-export const useProjectStore = create<ProjectState>((set, get) => ({
+export const useProjectStore = create<ProjectState>()(
+  immer((set, get) => ({
   projects: [],
   currentProjectId: getPersistedProjectId(),
   isLoading: false,
@@ -103,11 +105,12 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     set({ isLoading: true, error: null })
     try {
       const newProject = await api.createProject({ name, type, description, color })
-      set((state) => ({
-        projects: [newProject, ...state.projects],
-        currentProjectId: newProject.id,
-        isLoading: false
-      }))
+      set((state) => {
+        // Immer allows direct mutations
+        state.projects.unshift(newProject)
+        state.currentProjectId = newProject.id
+        state.isLoading = false
+      })
       persistProjectId(newProject.id)
       return newProject
     } catch (error) {
@@ -121,12 +124,14 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     try {
       const updatedProject = await api.updateProject(id, updates)
       if (updatedProject) {
-        set((state) => ({
-          projects: state.projects.map((project) =>
-            project.id === id ? updatedProject : project
-          ),
-          isLoading: false
-        }))
+        set((state) => {
+          // Immer allows direct mutations
+          const index = state.projects.findIndex((project) => project.id === id)
+          if (index !== -1) {
+            state.projects[index] = updatedProject
+          }
+          state.isLoading = false
+        })
       }
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false })
@@ -139,11 +144,17 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       await api.deleteProject(id)
       const wasCurrentProject = get().currentProjectId === id
 
-      set((state) => ({
-        projects: state.projects.filter((project) => project.id !== id),
-        currentProjectId: wasCurrentProject ? null : state.currentProjectId,
-        isLoading: false
-      }))
+      set((state) => {
+        // Immer allows direct mutations
+        const index = state.projects.findIndex((project) => project.id === id)
+        if (index !== -1) {
+          state.projects.splice(index, 1)
+        }
+        if (wasCurrentProject) {
+          state.currentProjectId = null
+        }
+        state.isLoading = false
+      })
 
       if (wasCurrentProject) {
         persistProjectId(null)
@@ -175,4 +186,5 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
 
     await get().updateProject(id, { settings: mergedSettings })
   }
-}))
+  }))
+)

@@ -93,10 +93,11 @@ export const browserApi = {
 
   listNotes: async (folder?: string): Promise<Note[]> => {
     if (folder) {
+      // Use compound index [folder+deleted_at] for optimal performance
+      // Query for notes where folder matches AND deleted_at is null
       const records = await db.notes
-        .where('folder')
-        .equals(folder)
-        .filter(n => !n.deleted_at)
+        .where('[folder+deleted_at]')
+        .equals([folder, null as any]) // null for non-deleted notes
         .toArray()
       return records.map(parseNoteRecord)
     }

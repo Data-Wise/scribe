@@ -72,7 +72,7 @@ tags:
    - [x] Environment-aware logging (dev vs prod)
    - [x] Type-safe log levels (debug, info, success, warn, error)
    - [x] Performance timing utility
-   - [ ] Replace 43 console statements in components (Phase 1.5)
+   - [x] Replace 37 console statements across 8 files (Phase 1.5) ✅
    - **Impact:** Performance, security (no info leakage)
 
 **Quick Wins:** ⚡
@@ -83,6 +83,7 @@ tags:
 - [ ] Add CONTRIBUTING.md (Phase 2)
 
 **Commits:**
+- 18a9ada: feat(quality): Phase 1.5 - Replace console statements with logger utility
 - cd33c91: feat(quality): Phase 1 - Critical fixes for stability and code quality
 
 ---

@@ -64,6 +64,18 @@ class ScribeBrowserDB extends Dexie {
       // Project settings (1:1 with projects)
       projectSettings: 'project_id'
     })
+
+    // Phase 2 Task 4: Add compound index for common query pattern
+    // Optimizes: listNotes(folder) which filters by folder AND deleted_at
+    this.version(2).stores({
+      notes: 'id, title, folder, project_id, created_at, updated_at, deleted_at, [folder+deleted_at], search_text',
+      tags: 'id, name, created_at',
+      noteTags: '[note_id+tag_id], note_id, tag_id',
+      noteLinks: '[source_id+target_id], source_id, target_id',
+      folders: 'path, sort_order',
+      projects: 'id, name, type, status, created_at, updated_at',
+      projectSettings: 'project_id'
+    })
   }
 
   /**
