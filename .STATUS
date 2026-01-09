@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 45
+progress: 50
 version: 1.14.0
 sprint: 34
 started: 2026-01-08
-updated: 2026-01-08
+updated: 2026-01-09
 editor: hybrid-markdown++
 next_sprint: 35
-next_focus: Left Sidebar Redesign (Phase 4 - Visual Polish)
+next_focus: Left Sidebar Redesign (Phase 3 - Child Project ID)
 tests: 2015
 unit_tests: 2015
 e2e_tests: 30
@@ -105,10 +105,67 @@ tags:
 - Direct implementation (no agents needed)
 - Total time: ~10 minutes
 
+#### Sprint 34: Phase 3 - Child Project Identification 🔄 IN PROGRESS
+
+**Status:** 📋 Spec Complete, Ready for Phase 1 Implementation
+**Started:** 2026-01-09
+**Brainstorm:** `docs/BRAINSTORM-child-project-identification-2026-01-09.md`
+**UX Analysis:** Completed by UX agent (aa014e6)
+
+**Goal:** Make child projects visually identifiable under expanded smart icons
+
+**Design Approved:**
+- ✅ Expand sidebar to 240px when smart icon opens (vs 48px collapsed)
+- ✅ First-letter icons auto-generated for all child projects
+- ✅ Project names visible (truncated if needed)
+- ✅ Rich metadata: note count + last edited time
+- ✅ Status grouping at 10+ projects (ACTIVE/PAUSED/COMPLETE)
+- ✅ Hover preview with recent notes
+- ✅ 200ms ADHD-friendly animations
+
+**Phase 1: Foundation (2h) - READY FOR IMPLEMENTATION**
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Expand sidebar width logic (48px → 240px) | 20m | P1 | [ ] Pending |
+| Create ProjectAvatar component (first letter icon) | 30m | P1 | [ ] Pending |
+| Update ExpandedChildProjects (2-line layout) | 40m | P1 | [ ] Pending |
+| Add CSS styling (expanded child project cards) | 30m | P1 | [ ] Pending |
+
+**Expected Outcome:**
+```
+Before: [●] ← Just a dot
+After:  [M] Mediation • 12 notes • 2h ago
+```
+
+**Phase 2: Rich Interactions (9h) - PLANNED**
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Status grouping (10+ projects) | 3h | P2 | [ ] Pending |
+| Hover preview tooltip | 2.5h | P2 | [ ] Pending |
+| Smooth animations (stagger, expand/collapse) | 1.5h | P2 | [ ] Pending |
+| Keyboard navigation (↑↓ Enter Esc) | 2h | P2 | [ ] Pending |
+
+**Phase 3: Advanced Features (18h) - OPTIONAL**
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Mini-search for 20+ projects | 4h | P3 | [ ] Pending |
+| Custom emoji icons | 6h | P3 | [ ] Pending |
+| Progress ring visualization | 3h | P3 | [ ] Pending |
+| Drag-to-reorder | 5h | P3 | [ ] Pending |
+
+**New Components to Create:**
+- `ProjectAvatar.tsx` - First letter icon component
+- `ExpandedSmartIcon.tsx` - Replaces ExpandedChildProjects (Phase 2)
+- `ProjectTooltip.tsx` - Hover preview component (Phase 2)
+- `ProjectGroup.tsx` - Status grouping (Phase 2)
+
 **Implementation Plan (4 Phases, 28 hours total):**
 - Phase 1: Icon Mode Enhancements (6h) ✅ Complete
 - Phase 2: Inbox Pinning (8h) ✅ Complete
-- Phase 3: Vault Pinning System (8h)
+- Phase 3: Child Project Identification (29h total, 2h Phase 1) 🔄 In Progress
 - Phase 4: Visual Polish (6h)
 
 ---

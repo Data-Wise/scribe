@@ -416,14 +416,36 @@ sequenceDiagram
 
 ---
 
+## Related Work
+
+### Child Project Identification Enhancement (2026-01-09)
+
+**Design:** `DESIGN-child-project-identification-2026-01-09.md`
+**Brainstorm:** `../BRAINSTORM-child-project-identification-2026-01-09.md`
+
+Comprehensive design for improving visual identification of child projects under expanded smart icons:
+
+- **Phase 1 (2h):** Expand sidebar to 240px, add first-letter icons + names + metadata
+- **Phase 2 (9h):** Status grouping, hover previews, animations, keyboard nav
+- **Phase 3 (18h):** Search, custom icons, progress visualization (optional)
+
+**Status:** ✅ Design approved, dual analysis convergence (brainstorm + UX expert)
+**Next:** Phase 1 implementation (ProjectAvatar component + sidebar expansion)
+
+This enhancement addresses the pain point where child projects currently show only status dots, making them indistinguishable without clicking. The approved design delivers 80% of user value in Phase 1 (2 hours) with a non-breaking, additive approach.
+
+---
+
 ## History
 
 | Date | Version | Changes |
 |------|---------|---------|
 | 2026-01-08 | 1.0 | Initial spec from comprehensive brainstorm (Option A: Focus First) |
 | 2026-01-08 | 1.1 | All design decisions approved - ready for Phase 1 implementation |
+| 2026-01-09 | 1.2 | Added reference to Child Project Identification design |
 
 ---
 
 **Spec Status:** ✅ Approved - Ready for Implementation
 **Next:** Begin Phase 1 (Icon Mode Enhancements) - 6 hours estimated
+**Next (Sprint 34 Phase 3):** Child Project Identification Phase 1 - 2 hours
