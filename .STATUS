@@ -1,16 +1,16 @@
 ---
 status: active
 priority: P0
-progress: 15
+progress: 20
 version: 1.14.0
-sprint: 33
-started: 2026-01-08
-updated: 2026-01-08
+sprint: 34
+started: 2026-01-09
+updated: 2026-01-09
 editor: hybrid-markdown++
-next_sprint: 34
-next_focus: Quarto v1.15 Integration (HIGHEST PRIORITY)
-tests: 1984
-unit_tests: 1984
+next_sprint: 35
+next_focus: Code Quality & Architecture Enhancement
+tests: 2240
+unit_tests: 2240
 e2e_tests: 30
 tags:
   - adhd-friendly
@@ -21,6 +21,7 @@ tags:
   - projects
   - cli
   - quarto
+  - code-quality
 ---
 
 # Scribe
@@ -29,286 +30,219 @@ tags:
 
 ## Current Sprint
 
-### 🎯 Sprint 33: Quarto v1.15 Integration - PHASE 1 COMPLETE ✅ (P0 - HIGHEST PRIORITY)
+### 🎯 Sprint 34: Code Quality & Architecture Enhancement (P0 - HIGHEST PRIORITY)
 
 **Branch:** `feat/quarto-v115`
 **Worktree:** `/Users/dt/.git-worktrees/scribe/quarto-v115`
-**Focus:** Quarto document authoring with v1.15 features
+**Focus:** Production hardening and architecture improvements
+**Review Score:** 8.5/10 → Target 9.5/10
+
+**Code Review Summary:**
+- ✅ Exceptional architecture (dual-runtime, clean separation)
+- ✅ ADHD-optimized UX (local state fix, debouncing)
+- ✅ Comprehensive Quarto support (40+ YAML keys, 30+ chunk options)
+- ✅ 2,240/2,241 tests passing (99.96%)
+- ⚠️ Missing error boundaries, ESLint, 43 console statements
+- ⚠️ Large components need refactoring (2,269 lines max)
+- ⚠️ Performance optimizations needed (useMemo/useCallback)
+
+---
+
+### **Phase 1: Critical Fixes (Week 1) - COMPLETE** ✅
+
+**Priority 1 - Fix Now (Stability & Code Quality):**
+
+1. **Error Boundaries** ✅ COMPLETE
+   - [x] Create ErrorBoundary.tsx component
+   - [x] Add fallback UI for crashes
+   - [x] Wrap App.tsx root
+   - [x] Handle unhandled promise rejections
+   - **Impact:** Prevents single component error from crashing entire app
+
+2. **ESLint Setup** ✅ COMPLETE
+   - [x] Install ESLint + TypeScript plugin
+   - [x] Configure .eslintrc.json
+   - [x] Add react-hooks/exhaustive-deps rule
+   - [x] Add `npm run lint` and `lint:fix` scripts
+   - [x] Create .eslintignore
+   - **Impact:** Code quality enforcement, catch bugs early
+
+3. **Logger Utility** ✅ COMPLETE
+   - [x] Create lib/logger.ts
+   - [x] Environment-aware logging (dev vs prod)
+   - [x] Type-safe log levels (debug, info, success, warn, error)
+   - [x] Performance timing utility
+   - [ ] Replace 43 console statements in components (Phase 1.5)
+   - **Impact:** Performance, security (no info leakage)
+
+**Quick Wins:** ⚡
+- [x] Add .nvmrc (Node 18)
+- [x] Add .editorconfig (code formatting)
+- [ ] Add GitHub Actions CI (Phase 2)
+- [ ] Add Dependabot (Phase 2)
+- [ ] Add CONTRIBUTING.md (Phase 2)
+
+**Commits:**
+- cd33c91: feat(quality): Phase 1 - Critical fixes for stability and code quality
+
+---
+
+### **Phase 2: Performance (Week 2-3) - PLANNED** 📋
+
+**Priority 2 - Fix Soon:**
+
+4. **Refactor Large Components**
+   - [ ] SettingsModal.tsx (2,269 lines → 200 lines + subcomponents)
+   - [ ] App.tsx (1,902 lines → modular architecture)
+   - [ ] CodeMirrorEditor.tsx (1,595 lines → extract view plugins)
+   - **Benefits:** Easier testing, better code reuse, smaller bundles
+
+5. **Add Memoization**
+   - [ ] useMemo/useCallback in HybridEditor (20 hooks)
+   - [ ] Memoize editor extensions (CodeMirrorEditor)
+   - [ ] Profile render performance
+   - **Impact:** Faster typing, reduced re-renders
+
+6. **Zustand Immer Middleware**
+   - [ ] Add immer middleware to stores
+   - [ ] Fix immutability violations in useNotesStore
+   - [ ] Simplify state updates
+   - **Impact:** Safer state management, prevent mutation bugs
+
+7. **IndexedDB Optimization**
+   - [ ] Add compound indexes for common queries
+   - [ ] Index [folder+deleted_at], [note_id+tag_id]
+   - [ ] Test with 1000+ notes
+   - **Impact:** Faster search, better browser mode performance
+
+---
+
+### **Phase 3: UX Polish (Week 4-5) - PLANNED** 📋
+
+**Priority 3 - Nice to Have:**
+
+8. **Skeleton Loaders**
+   - [ ] Create SkeletonNote component
+   - [ ] Add to all loading states
+   - [ ] Animate pulse effect
+   - **Impact:** Better perceived performance
+
+9. **Virtual Scrolling**
+   - [ ] Install react-window
+   - [ ] Implement in sidebar note lists
+   - [ ] Test with 500+ notes
+   - **Impact:** Handle large note libraries
+
+10. **Undo/Redo History**
+    - [ ] Create useHistoryStore
+    - [ ] Track content changes
+    - [ ] Keyboard shortcuts (⌘Z, ⌘⇧Z)
+    - **Impact:** Better editing experience
+
+11. **PWA Enhancements**
+    - [ ] Configure vite-plugin-pwa
+    - [ ] Add offline support
+    - [ ] Service worker caching
+    - **Impact:** Full offline capability
+
+---
+
+### **Phase 4: Robustness (Week 6) - PLANNED** 📋
+
+12. **Accessibility**
+    - [ ] Add eslint-plugin-jsx-a11y
+    - [ ] ARIA labels on all interactive elements
+    - [ ] Keyboard navigation improvements
+    - [ ] Color contrast verification
+
+13. **System Theme Detection**
+    - [ ] useSystemTheme hook
+    - [ ] Auto-detect dark/light preference
+    - [ ] Add "System (Auto)" theme option
+
+14. **Optimistic UI Updates**
+    - [ ] Optimistic note creation
+    - [ ] Rollback on error
+    - [ ] Loading states
+
+15. **Request Deduplication**
+    - [ ] Create requestCache utility
+    - [ ] Deduplicate parallel API calls
+    - [ ] Cache recent requests
+
+16. **Background Sync**
+    - [ ] Service worker sync
+    - [ ] Offline change queue
+    - [ ] Auto-sync on reconnect
+
+---
+
+### **Phase 5: Quality (Week 7) - PLANNED** 📋
+
+17. **Coverage Reporting**
+    - [ ] Install @vitest/coverage-v8
+    - [ ] Set coverage thresholds (80%+)
+    - [ ] Generate HTML reports
+    - [ ] Add to CI/CD
+
+18. **Visual Regression Tests**
+    - [ ] Playwright screenshot tests
+    - [ ] Homepage, settings, editor
+    - [ ] CI integration
+
+19. **Content Security Policy**
+    - [ ] Add CSP meta tag
+    - [ ] Restrict script/style sources
+    - [ ] Test in production
+
+20. **Enhanced Sanitization**
+    - [ ] Add DOMPurify
+    - [ ] Sanitize user content
+    - [ ] Allowlist safe HTML tags
+
+---
+
+### **Quick Wins (< 1 Hour Each)** ⚡
+
+- [ ] Add .nvmrc (Node version lock)
+- [ ] Add .editorconfig (code formatting)
+- [ ] Add GitHub Actions CI
+- [ ] Add Dependabot
+- [ ] Add CONTRIBUTING.md
+- [ ] Update LICENSE file
+
+---
+
+## Sprint 33: Quarto v1.15 Integration - COMPLETE ✅
 
 **Phase 1: Autocomplete Foundation - COMPLETE** ✅
 - [x] Quarto completions library (730 lines)
-  - [x] YAML frontmatter (40+ keys, nested values)
-  - [x] Chunk options (30+ options, value completion)
-  - [x] Cross-reference detection and autocomplete
-  - [x] Context detection (YAML blocks, code blocks)
-  - [x] Label scanning (fig, tbl, eq, sec, lst, thm)
-- [x] CodeMirror integration (line 1542)
-- [x] Interactive demo page ("🧪 Quarto Autocomplete Test Page")
-  - [x] Test section 1: YAML frontmatter
-  - [x] Test section 2: Chunk options
-  - [x] Test section 3: Cross-references
-  - [x] Complete example document
-  - [x] Learning tips and keyboard shortcuts
-
-**Testing - COMPREHENSIVE** ✅
-- [x] Unit tests: 98/98 passing (100%)
-  - [x] Basic functionality: 32 tests
-  - [x] Edge cases: 66 tests
-  - [x] Performance: 1000+ labels in <100ms
-- [x] E2E tests: 20 tests created (1 passing, 19 need trigger adjustment)
-- [x] Visual testing guide: 10 manual scenarios
-- [x] Browser mode: Running on localhost:5173
-
-**Test Coverage:**
-- isInYamlBlock: 95%
-- isInCodeBlock: 95%
-- yamlCompletions: 90%
-- chunkOptionCompletions: 90%
-- scanForLabels: 100%
-- crossRefCompletions: 85%
-
-**Phase 2: Advanced Features** (Deferred)
-- [ ] Quarto callout syntax (:::) in Live Preview
-- [ ] Quarto-specific syntax highlighting
-- [ ] Chunk option validation
-- [ ] Live preview for chunk outputs
+- [x] YAML frontmatter (40+ keys, nested values)
+- [x] Chunk options (30+ options, value completion)
+- [x] Cross-reference detection and autocomplete
+- [x] Interactive demo page
+- [x] 98 unit tests passing (100%)
+- [x] 103 TypeScript errors fixed (down to 0)
 
 **Commits:**
-- c7c0beb: test(quarto): Add comprehensive edge case tests (66 tests)
-- 9d1e439: test(quarto): Add E2E tests and visual testing guide
-- 951441d: feat(quarto): Add comprehensive interactive test page
-
-**Next Actions:**
-1. Manual testing in browser (Chrome open at localhost:5173)
-2. Fix E2E autocomplete triggering (Ctrl+Space explicit trigger)
-3. Consider PR to merge feat/quarto-v115 → dev
+- 651a2a3: fix(typecheck): Fix 103 TypeScript errors in tests and components
+- 1b838fe: test: Add comprehensive unit tests for UI components (110 tests)
+- 8c02cb0: docs: Add comprehensive test verification summary
 
 ---
+
+## Previous Sprints
 
 ### Sprint 30 Phase 2: WikiLink Navigation & Editor Polish - COMPLETE ✅
 
 **v1.14.0 Released** ✅ (2026-01-07)
 
 **WikiLink Navigation Improvements:**
-- [x] Single-click navigation in Live/Reading modes (was double-click)
-- [x] Cmd+Click navigation in Source mode for WikiLinks
-- [x] Mode preservation when navigating via backlinks panel
-- [x] Cursor indicator shows pointer when Cmd is held
-- [x] Fixed `ignoreEvent()` to prevent cursor from moving into widget
-
-**Live Preview Polish (Sprint 32):**
-- [x] Display math spacing fixes
-- [x] Theme-aware autocomplete styling
-- [x] Syntax highlighting improvements for Source mode
-- [x] Hidden WikiLink brackets in Live Preview mode
-
-**Testing:**
-- [x] 30 WikiLink navigation E2E tests (WLN-01 to WLN-30)
+- [x] Single-click navigation in Live/Reading modes
+- [x] Cmd+Click navigation in Source mode
+- [x] Mode preservation in backlinks panel
 - [x] 1984 total tests passing
 - [x] TypeScript: 0 errors
-- [x] Build: Successful
-
-**Bug Fixes:**
-- [x] Window dragging functionality restored
-- [x] Sidebar no longer overlays editor header drag region
-- [x] List type properties now correctly use arrays
-- [x] Timer value no longer draggable
-
-**Release:**
-- [x] PR #30 merged (dev → main)
-- [x] Git tag v1.14.0 created
-- [x] GitHub release with DMG artifacts
-
----
-
-### Sprint 30: Browser Mode Polish - Phase 1 COMPLETE ✅
-
-**v1.12.0 Released** ✅ (2026-01-02)
-
-**Phase 1: Browser Mode Indexing Fix** ✅
-- [x] Fixed critical wiki link indexing bug in browser mode
-- [x] Fixed tag indexing bug in browser mode
-- [x] Backlinks panel fully functional in browser mode
-- [x] Tag filtering fully functional in browser mode
-- [x] Added batch reindexing utility for existing notes
-- [x] 23 comprehensive unit tests (all passing)
-- [x] Universal binary support (Apple Silicon + Intel)
-
-**Testing:**
-- [x] 930 unit tests passing (21 new component tests from Sprint 29)
-- [x] 48 E2E tests base + improvements in progress:
-  - [x] Window dragging: 10/10 passing
-  - [x] Syntax highlighting: 9/15 passing (improved from 8/15)
-  - [x] WikiLink rendering: Infrastructure ready, content clearing helper added
-  - [x] Browser backlinks: 1/8 passing, 7 skipped with TODO
-- [x] TypeScript: 0 errors
-- [x] Production code verified working
-
-**Release Process:**
-- [x] PR #25 merged (feat/browser-mode-polish → dev)
-- [x] PR #26 merged (dev → main)
-- [x] Git tag v1.12.0 created and pushed
-- [x] GitHub release published with DMG artifacts
-- [x] Homebrew formula updated manually (scribe v1.12.0)
-- [x] Installation tested via `brew install data-wise/tap/scribe`
-
-**Documentation:**
-- [x] Complete git workflow guide (docs/GIT-WORKFLOW.md)
-- [x] Sprint 30 phase 1 summary (docs/planning/)
-- [x] E2E test bug report documented (BUG-REPORT-E2E-TITLE-MISMATCH.md)
-- [x] CHANGELOG.md updated
-- [x] Planning INDEX.md updated
-
-**Next Steps (Deferred):**
-- [ ] Phase 1.5: Fix remaining 7 E2E tests (~30 min)
-- [ ] Phase 2: PWA improvements (service worker, offline indicators)
-- [ ] Phase 3: Documentation updates (browser mode guide, README)
-
-**Sprint 25: Plan B UI Redesign + v1.2.1 Release** ✅ Complete (2025-12-30)
-
-### Sprint 25: Plan B UI - Obsidian Style + Gradient Tabs
-- [x] **Phase 1: Editor Tabs** ✅ Complete
-  - [x] EditorTabs component with gradient accent (Style 5)
-  - [x] Tab state management in useAppViewStore
-  - [x] localStorage persistence for tabs
-  - [x] Mission Control pinned as first tab
-  - [x] Keyboard shortcuts (⌘1-9 switch, ⌘W close)
-  - [x] Middle-click to close tabs
-- [x] **Phase 1.5: Project Note Display** ✅ Complete
-  - [x] Remove redundant Recent Notes from sidebar
-  - [x] Add expandable note tiles to Card Mode (Option B)
-  - [x] Accordion-style expansion (one project at a time)
-  - [x] Up to 6 recent notes per project
-  - [x] Empty state with "Create first note" CTA
-- [x] **Phase 5: Right Sidebar + Test Cleanup** ✅ Complete
-  - [x] Icon-only collapsed mode for right sidebar
-  - [x] Keyboard shortcuts for right sidebar tabs (⌘[ / ⌘])
-  - [x] Fix source file TypeScript errors (8 files)
-  - [x] Fix test file TypeScript errors (59→0, 13 files)
-  - [x] Create testUtils.ts mock factories
-  - [x] **666 tests passing, 0 TypeScript errors**
-- [x] **Phase 6: Playwright E2E Test Suite** ✅ Complete
-  - [x] Playwright infrastructure (config, fixtures, page objects)
-  - [x] 14 spec files covering all UI features
-  - [x] 129 E2E tests passing across:
-    - Smoke tests (4), Navigation (8), Tabs (13)
-    - Editor (12), Left Sidebar (14), Right Sidebar (10)
-    - Keyboard Shortcuts (15), Modals (10), Mission Control (8)
-    - Projects (8), Notes (10), Focus Mode (5), Themes (6)
-    - Mission Sidebar (6)
-    - Tab Drag Reorder (3 new tests)
-  - [x] data-testid attributes added to key components
-  - [x] IndexedDB isolation per test context
-  - [x] **795 total tests (666 unit + 129 E2E)**
-- [x] **v1.2.1 Release** ✅ Complete (2025-12-30)
-  - [x] Toast notifications (success/error feedback)
-  - [x] Demo data seeding for Tauri (Migration 007)
-  - [x] Unified seed data between browser/Tauri
-  - [x] 47 new E2E tests (25 feature + 22 edge case/stress)
-  - [x] WebDriver research documented
-  - [x] Git workflow documented (protected main + worktrees)
-  - [x] **1,041 total tests (759 unit + 282 E2E)**
-
-**Design Document:** `SCHEMATIC-LEFT-SIDEBAR-REDESIGN.md`
-
----
-
-### Sprint 26: Activity Bar Polish + Bug Fixes (Complete ✅)
-
-**High Priority (P1):**
-- [x] Activity Bar badges ✅ - IconBarMode shows note count per project
-- [x] Browser mode indicator ✅ - HybridEditor shows "Browser Mode" badge
-- [x] Wiki link backlink tracking in browser mode ✅ - browser-api.ts getBacklinks
-
-**Medium Priority (P2):**
-- [x] Keyboard shortcut for right sidebar collapse (⌘⇧]) ✅
-- [x] Editor tabs persistence across restarts ✅ - useAppViewStore saveTabs
-- [x] ⌘⇧T reopen closed tab ✅ - reopenLastClosedTab + closedTabsHistory
-
-**Bug Fixes (P1):**
-- [x] Tauri API serialization ✅ - prepareNoteForTauri/parseNoteFromTauri for properties field
-- [x] Daily note Today button ✅ - Added openNoteTab() call to display note in editor
-- [x] Error toast persistence ✅ - Errors persist until dismissed with Copy/OK buttons
-- [x] create_note project_id ✅ - Added missing field to CreateNoteInput struct
-
-**Lower Priority (P3):**
-- [ ] Phase 2: Vault Sidebar (Obsidian-style file tree)
-- [ ] Phase 3: Status Bar (VS Code-style bottom bar)
-- [x] Playwright E2E tests ✅ (282 tests)
-
----
-
-### Sprint 29: Callouts & Editor Polish - COMPLETE ✅
-
-**v1.11.0 Released** ✅ (2026-01-01)
-
-**Phase 1: Callout Support** ✅
-- [x] Obsidian-style callouts in all editor modes
-- [x] 11 callout types with icons and colors (note, info, tip, warning, danger, etc.)
-- [x] Live mode: Type-specific colored backgrounds/borders
-- [x] Reading mode: Full callout boxes with icons and titles
-- [x] Demo note "Callout Types" added to seed data
-
-**Phase 2: Editor Polish** ✅
-- [x] Strikethrough rendering in Live mode (`~~text~~`)
-- [x] 36 new E2E tests for editor modes (EDM-01 to EDM-36)
-- [x] Clean up working directory (archived explorations)
-
-**Testing:**
-- [x] 930 unit tests passing
-- [x] 48 E2E tests passing
-- [x] TypeScript: 0 errors
-
-**Future (Sprint 30):** Browser Mode Polish
-- [ ] Wiki link backlink tracking in browser
-- [ ] PWA improvements
-- [ ] Documentation updates
-
----
-
-### Sprint 28: Live Editor Enhancements
-
-**v1.10.0 Released** ✅ (2026-01-01)
-
-**Phase 1: Live Preview with CodeMirror 6 - Complete ✅**
-- [x] CodeMirror 6 integration for Live Preview mode
-- [x] Obsidian-style live preview (hide syntax when cursor elsewhere)
-- [x] KaTeX math rendering (inline `$...$` and display `$$...$$`)
-- [x] Three editor modes with keyboard shortcuts:
-  - [x] Source mode (⌘1): Plain textarea
-  - [x] Live Preview mode (⌘2): CodeMirror with hidden syntax
-  - [x] Reading mode (⌘3): Fully rendered ReactMarkdown
-  - [x] ⌘E cycles between modes
-- [x] Bug fixes:
-  - [x] Controlled component race condition (no more lost characters)
-  - [x] New note tabs opening properly
-  - [x] PWA build with increased workbox cache size (3MB)
-- [x] Dependencies:
-  - [x] Added: @codemirror/lang-markdown, state, view, language-data
-  - [x] Added: @uiw/react-codemirror (React wrapper)
-  - [x] Added: katex + @types/katex (math rendering)
-  - [x] Removed: 8 unused Milkdown packages (-64 packages total)
-- [x] Testing:
-  - [x] 930/930 unit tests passing (34 test files, Vitest)
-  - [x] 12/12 E2E editor tests passing (Playwright)
-  - [x] TypeScript: 0 errors
-  - [x] Build: Successful (Vite 5.48s)
-- [x] Release artifacts:
-  - [x] DMGs built: Scribe_1.10.0_aarch64.dmg + Scribe_1.10.0_x64.dmg
-  - [x] GitHub release published
-  - [x] Homebrew tap updated (data-wise/tap/scribe v1.10.0)
-
-**Commits:**
-- `b8848f0` - Live editor implementation (PR #21)
-- `cad5ef2` - Merge to main
-- `98f2086` - PWA cache size fix (PR #23)
-- `48b9940` - Tauri version update to 1.10.0
-
-**Documentation:**
-- `RELEASE-SUMMARY-v1.10.0.md` - Complete release documentation
-- `RELEASE-COMPLETE-v1.10.0.md` - Release completion summary
-- `CHANGELOG.md` - Updated with v1.10.0 entry
-- GitHub Pages auto-deployed
 
 ---
 
@@ -316,446 +250,52 @@ tags:
 
 **v1.7.0 Released** ✅ (2025-12-31)
 
-**Phase 1: Backend Foundation - Complete ✅**
+**Features:**
 - [x] Chat History Persistence (Migration 009)
-  - [x] `chat_sessions` and `chat_messages` tables
-  - [x] CASCADE foreign keys for automatic cleanup
-  - [x] Auto-save/load conversations per note
-  - [x] Session switching on note navigation
-  - [x] Browser mode support (IndexedDB)
 - [x] Quick Actions (5 one-click AI prompts)
-  - [x] ✨ Improve - Polish clarity and flow
-  - [x] 📝 Expand - Add depth and examples
-  - [x] 📋 Summarize - Create concise summaries
-  - [x] 💡 Explain - Clarify complex concepts
-  - [x] 🔍 Research - Generate research questions
-  - [x] Auto-includes full note context
 - [x] @ References (autocomplete note inclusion)
-  - [x] Fuzzy search menu with `@` trigger
-  - [x] Badge display for included notes
-  - [x] Remove references functionality
-- [x] Comprehensive Testing (911 tests)
-  - [x] 12 backend tests (Rust: chat sessions CRUD)
-  - [x] 38 frontend tests (Vitest: Quick Actions, @ References)
-  - [x] 67 E2E tests (Playwright: Claude features, Quick Chat)
-  - [x] 794 existing tests maintained
-- [x] Complete Documentation (5,169 lines)
-  - [x] Chat persistence guide (523 lines)
-  - [x] Quick Actions reference card (390 lines)
-  - [x] 7 comprehensive tutorials (3,256 lines)
-    - [x] Terminal Integration (362 lines)
-    - [x] Project System (507 lines)
-    - [x] Daily Notes (463 lines)
-    - [x] Mission Control (428 lines)
-    - [x] Command Palette (431 lines)
-    - [x] Backlinks (532 lines)
-    - [x] Browser Mode (533 lines)
-  - [x] Tutorial index with learning paths (148 lines)
-  - [x] CHANGELOG updated
-  - [x] README updated
-  - [x] mkdocs.yml navigation updated
-- [x] CI/CD Fixed
-  - [x] Release workflow bug fix (dtolnay/rust-toolchain)
-  - [x] Automated site deployment working
-  - [x] Automated builds enabled for future releases
-
-**Phase 2: Frontend Polish (P2 - COMPLETE)** ✅
-
-**v1.9.0 Released** ✅ (2026-01-01)
-
-**Priority 1: Settings Enhancement (ADHD-Optimized UI)** ✅ SHIPPED
-
-**Branch:** `feat/settings-enhancement`
-**Worktree:** `/Users/dt/.git-worktrees/scribe/settings`
-**Spec:** `docs/specs/SPEC-settings-enhancement-2025-12-31.md`
-**Brainstorm:** `BRAINSTORM-settings-enhancement-2025-12-31.md`
-
-**Phase 1: Foundation - COMPLETE ✅ (2025-12-31)**
-- [x] Zustand store for settings state (useSettingsStore.ts - 427 lines)
-- [x] Settings schema with 5 categories (settingsSchema.ts - 426 lines)
-- [x] SettingsModal with tabs + search UI (200 lines)
-- [x] SearchResults component (58 lines)
-- [x] Fuzzy search with fuse.js (search across labels, descriptions, breadcrumbs)
-- [x] ⌘, keyboard shortcut to open settings
-- [x] Badge system for new features (AI category shows "3" for v1.7.0)
-- [x] Quick Actions management (5 default + up to 5 custom)
-- [x] Export/import functionality
-- [x] Dependencies installed (@dnd-kit/core, @dnd-kit/sortable, fuse.js)
-**Commit:** `187ecb7` - feat: Settings Enhancement Phase 1 - Foundation
-
-**Phase 2: Quick Wins - COMPLETE ✅ (2025-12-31)**
-- [x] Individual setting controls (7 types: toggle, select, text, number, color, gallery, keymap)
-  - [x] SettingControl.tsx (418 lines) - Universal control component
-  - [x] 31 unit tests (100% passing)
-- [x] Quick Actions customization UI
-  - [x] QuickActionsSettings.tsx (486 lines)
-  - [x] Drag-to-reorder Quick Actions (@dnd-kit)
-  - [x] Visibility toggles per action
-  - [x] Edit prompts (5 default + 5 custom max)
-  - [x] Keyboard shortcuts displayed (⌘⌥1-9)
-  - [x] Model selection (Claude vs Gemini per action)
-  - [x] Add Custom modal with validation
-  - [x] Delete custom actions
-  - [x] Display options (sidebar/context menu)
-  - [x] 20 unit tests (100% passing)
-- [x] Project template picker (5 presets: Research+, Teaching+, Dev+, Writing+, Minimal)
-  - [x] ProjectTemplates.tsx (269 lines)
-  - [x] Template cards with icon, description, preview
-  - [x] Apply with confirmation
-  - [x] Expandable details section
-  - [x] 25 unit tests (100% passing)
-- [x] Theme gallery view (3-column grid with visual previews)
-  - [x] ThemeGallery.tsx (251 lines)
-  - [x] 8 themes (3 favorites, 2 dark, 3 light)
-  - [x] Visual color previews with mini editor lines
-  - [x] Star icons for favorites
-  - [x] Selected state (blue border + checkmark)
-  - [x] 15 unit tests (100% passing)
-- [x] Contextual settings hints (ContextualHint.tsx - 90 lines)
-- [x] Test suite (91 unit tests, all passing)
-- [x] Visual testing in Chrome browser (all components verified)
-**Commits:**
-- `187ecb7` - feat: Settings Enhancement Phase 1 - Foundation
-- `1e5e085` - test: Fix all failing unit tests - 930/930 passing
-
-**Phase 3: Polish & Production Ready - COMPLETE ✅ (2025-12-31)**
-- [x] UI Animations & Transitions
-  - [x] Tailwind config: 7 new animations (fade-out, slide-down, scale-in, shimmer, pulse-soft, success-bounce)
-  - [x] Tab switching: Smooth fade-in transitions between categories
-  - [x] Theme cards: Scale + shadow hover effects (hover:scale-105)
-  - [x] Template apply: Success bounce animation (animate-success-bounce)
-  - [x] Search results: Fade-in animation
-  - [x] Apply buttons: Scale hover effect
-- [x] Performance Optimizations
-  - [x] Search debounce (300ms delay after typing stops)
-  - [x] Prevents search from running on every keystroke
-- [x] Accessibility (WCAG 2.1 AA)
-  - [x] Modal: role=dialog, aria-modal, aria-labelledby
-  - [x] Search: role=searchbox, aria-label
-  - [x] Tabs: role=tab, aria-selected, aria-controls
-  - [x] Tab panel: role=tabpanel with matching id
-  - [x] Buttons: Descriptive aria-label attributes
-  - [x] Icons: aria-hidden=true (decorative)
-  - [x] Screen reader improvements
-- [x] E2E Test Coverage
-  - [x] Theme gallery tests (9 tests): rendering, selection, persistence, hover, favorites, keyboard nav
-  - [x] Project templates tests (12 tests): rendering, apply workflow, confirmation, details, keyboard nav
-  - [x] 21 new E2E tests (103 total, was 82)
-**Commits:**
-- `a0bbec1` - feat(settings): Add UI animations and hover effects
-- `7158f0b` - feat(settings): Add search debounce and ARIA labels
-- `c240b71` - test(settings): Add E2E tests for Phase 2 components
-
-**Post-Release (2026-01-01):**
-- [x] **v1.9.0 GitHub Release Debugging** ✅
-  - [x] Fixed release workflow (tauri-action → manual build)
-  - [x] Built DMG artifacts for both architectures (x64 + aarch64)
-  - [x] Uploaded to GitHub release v1.9.0
-  - [x] Updated Homebrew formulas with correct SHA256
-  - [x] Tested installation via `brew install scribe-dev` ✅
-  - [x] Updated README.md (version badges, feature list)
-  - [x] Updated mkdocs.yml (Settings tutorial navigation)
-  - [x] **Release fully working - users can install v1.9.0!**
-
-**Priority 2: Additional P2 Items (Backlog)**
-- [ ] Browser mode indicator in UI
-- [ ] Wiki link backlink tracking in browser
-- [ ] Chat session management UI
-
-**Phase 3: Advanced Features (P3 - Backlog)**
-- [ ] Ambient AI (⌘K everywhere, inline suggestions)
-- [ ] Vault sidebar (Obsidian file tree)
-- [ ] Status bar enhancements
-- [ ] Property type validation in Rust
-- [ ] Add properties to search index
-
----
-
-### Sprint 24: Three-State Collapsible Sidebar ✅ (2025-12-27)
-- [x] Icon mode (48px) - status dots only
-- [x] Compact mode (240px) - project list with stats
-- [x] Card mode (320px+) - full project cards
-- [x] Resize handle with snap points
-- [x] ⌘0 keyboard shortcut to cycle modes
-- [x] State persistence (localStorage + Zustand)
-- [x] Project switching with toggle behavior
-- [x] Active project indicator (all modes)
-- [x] Progress bars in sidebar
-- [x] Rich tooltips on icon hover (name, status, note count)
-- [x] Recent Notes filtered by selected project
-
-### Sprint 23: Mission Control & Native Menu ✅
-- [x] New Project button in QuickActions (⌘⇧P)
-- [x] Improved empty state with Create Project CTA
-- [x] Native macOS menu bar (File/Edit/View/Window/Help)
-- [x] Menu events wired to frontend actions
-- [x] RecentNotes component (5 most recent)
-- [x] Project stats (note count, word count)
-- [x] Total stats in Mission Control header
-- [x] Mission Control button in Ribbon (navigation fix)
-
-### Sprint 22: Editor Modes & Custom CSS ✅
-- [x] Three-mode editor toggle (Source / Live Preview / Reading)
-- [x] Keyboard shortcuts: ⌘1, ⌘2, ⌘3, ⌘E (cycle)
-- [x] Custom CSS support in Settings > Appearance
-- [x] EditorMode type in preferences.ts
-- [x] CSS injection in App.tsx
-- [x] Escape exits Reading mode
-
-### Sprint 20: Scribe CLI ✅
-- [x] `scribe.zsh` CLI script (607 lines)
-- [x] Commands: new, daily, search, capture, list, open, edit, tags, folders, stats
-- [x] FTS5 full-text search integration
-- [x] Aliases: sd, sc, ss, sl, sn
-- [x] Tab completion for commands/folders
-- [x] Auto-sourced in `.zshrc`
-
-### Sprint 19: Note Search ✅
-- [x] SearchPanel.tsx component
-- [x] ⌘F keyboard shortcut
-- [x] Scope selector (All Notes / Current Project)
-- [x] Debounced 150ms real-time search
-- [x] Keyboard navigation (↑↓ Navigate, ↵ Open, Esc Close)
-- [x] Highlighted search matches with snippets
-
-### Sprint 18: Project System ✅
-- [x] Database schema (migration_004: projects table, note.project_id)
-- [x] Rust CRUD commands (create/get/list/update/delete/assign)
-- [x] Zustand store with localStorage persistence
-- [x] ProjectSwitcher dropdown component
-- [x] CreateProjectModal component
-- [x] Project-scoped note loading in App.tsx
-- [x] 5 project types: research, teaching, r-package, r-dev, generic
-
-### Sprint 17: UI Polish + ADHD Enhancements ✅
-- [x] Celebration micro-interactions (pulse at milestones)
-- [x] Enhanced status bar (session timer, word delta, streak)
-- [x] Keyboard shortcut cheatsheet (⌘?)
-- [x] CSS animations for celebrations (respects reduced-motion)
-- [x] Session tracking (time since first keystroke)
-- [x] Better mode toggle (pill-style)
-
-**Sprint 16: Tags Panel Core Features** ✅ Complete
-- [x] Orphan tag detection (scans notes for unregistered `#tags`)
-- [x] Unregistered Tags section with warning styling
-- [x] Register single/all tags buttons
-- [x] Right-click context menu (Rename/Delete)
-- [x] `tags` added to DEFAULT_NOTE_PROPERTIES (YAML key)
-
-**Sprint 15: Tags Panel Quick Wins** ✅ Complete
-- [x] Search/filter bar with real-time filtering
-- [x] Recent tags section (tracks last 8, shows top 5)
-- [x] Compact mode toggle (reduces padding/fonts)
-
-**Sprint 14: Knowledge Graph & Templates** ✅ Complete
-- [x] Knowledge Graph visualization (D3 force-directed)
-- [x] Daily Notes templates (5 built-in + custom)
-- [x] Markdown export with frontmatter
-- [x] Tag hierarchy (path notation: `research/statistics`)
-- [x] Backlinks panel improvements
-
-**Sprint 11: Academic Features** ✅ Complete
-- [x] 10 built-in themes (5 dark, 5 light)
-- [x] Auto-theme by time of day
-- [x] Theme colors apply to editor area
-- [x] 14 ADHD-friendly font recommendations
-
-**Sprint 10: Global Hotkey + Commands** ✅ Complete (2024-12-25)
-- [x] Global hotkey ⌘⇧N opens app from anywhere
-- [x] Command palette ⌘K with 6 quick actions
-- [x] Autocomplete positioning follows cursor (fixed)
-- [x] Accessibility improvements (DialogTitle, aria-labels)
-- [x] Comprehensive test suite: **300 tests passing**
-- [x] Integration tests added (31 new tests)
-
-**Test Coverage:**
-| Test File | Tests |
-|-----------|-------|
-| Themes.test.ts | 101 |
-| Academic.test.ts | 67 |
-| Validation.test.ts | 54 |
-| Tags.test.tsx | 52 |
-| HybridEditor.test.tsx | 37 |
-| BlockNoteEditor.test.tsx | 35 |
-| Autocomplete.test.tsx | 34 |
-| Integration.test.tsx | 32 |
-| AcademicComponents.test.tsx | 25 |
-| CommandPalette.test.tsx | 24 |
-| Components.test.tsx | 16 |
-| WikiLinks.test.tsx | 16 (7 skipped) |
-| Debug.test.ts | 16 |
-| NotesStore.test.tsx | 13 |
+- [x] 911 tests passing
 
 ---
 
 ## Sprint Progress
 
-| Phase | Sprint | Focus | Status |
-|-------|--------|-------|--------|
-| **1** | 8 | Editor Foundation | ✅ 100% |
-| 1 | 9 | Editor Enhancement | ✅ 100% |
-| 1 | 10 | Hotkey + Commands | ✅ 100% |
-| 1 | 10.5 | Theme & Font System | ✅ 100% |
-| **2** | 11 | Academic Features | ✅ 100% |
-| 2 | 12 | UI Polish & Micro-interactions | ✅ 100% |
-| **3** | 14 | Knowledge Graph & Templates | ✅ 100% |
-| **4** | 15 | Tags Panel Quick Wins | ✅ 100% |
-| 4 | 16 | Tags Panel Core Features | ✅ 100% |
-| **5** | 17 | UI Polish + ADHD Enhancements | ✅ 100% |
-| **v1.1** | 18 | Project System | ✅ 100% |
-| v1.1 | 19 | Note Search (⌘F) | ✅ 100% |
-| v1.1 | 20 | Scribe CLI | ✅ 100% |
-| **v1.3** | 22 | Editor Modes + Custom CSS | ✅ 100% |
-| **v1.4** | 23 | Mission Control + Native Menu | ✅ 100% |
-| **v1.5** | 24 | Three-State Sidebar | ✅ 100% |
-| **v1.6** | 25 | Plan B UI Redesign | ✅ 50% |
-
-**Total: v1.2.1 released (1,041 tests: 759 unit + 282 E2E)**
-
----
-
-## Future Plans (Backlog)
-
-| Sprint | Focus | Priority | Status |
-|--------|-------|----------|--------|
-| 27 | Sidebar Consolidation + AI | P1 | 📋 Planned |
-| TBD | SwiftUI Native Port | P3 | 📋 Researched |
-
-### v2 Deferred Features
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Terminal PTY Shell | UI ✅, Backend ⏳ | Rust `terminal.rs` with PTY support |
-| Actual AI Calls | Planned | Claude/Gemini CLI integration via Tauri |
-| Ambient AI (⌘K) | Planned | Inline suggestions, ghost text |
-| Graph View Enhancements | Planned | Advanced filtering, clustering |
-
-**Terminal v2:** Full PTY shell requires `spawn_shell`, `write_to_shell`, `kill_shell` Rust commands.
-Currently shows demo mode with basic commands (help, echo, clear, date, whoami).
-
-**SwiftUI Port:** Parallel development branch for native macOS experience.
-See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swiftui-native`
-
----
-
-## Completed Sprints
-
-| Sprint | Focus | Tests |
-|--------|-------|-------|
-| 1-5 | Foundation (Tauri, SQLite, Editor, PARA, Search) | ✅ |
-| 6 | Wiki Links & Backlinks | ✅ |
-| 7 | Tags System | 52 |
-| 8 | Editor Foundation | ✅ |
-| 9 | Editor Enhancement | 125 |
-| 10 | Hotkey + Commands + Tests | 300 |
-| 10.5 | Theme & Font System | 407 |
-| 11 | Academic Features | 487 |
-| 12 | UI Polish & Micro-interactions | 483 |
-| 14 | Knowledge Graph & Templates | 483 |
-| 15 | Tags Panel Quick Wins | 483 |
-| 16 | Tags Panel Core Features | 483 |
-| 17 | UI Polish + ADHD Enhancements | 483 |
-| 18 | Project System | 483 |
-| 19 | Note Search (⌘F) | 483 |
-| 20 | Scribe CLI | 483 |
-| 22 | Editor Modes + Custom CSS | 483 |
-| 23 | Mission Control + Native Menu | 483 |
-| 24 | Three-State Collapsible Sidebar | 518 |
-| 25 | Plan B UI (Phase 1+5+6) | 795 (666 unit + 129 E2E) |
+| Sprint | Focus | Status | Tests |
+|--------|-------|--------|-------|
+| 34 | Code Quality Enhancement | 🔄 20% | 2240/2241 |
+| 33 | Quarto v1.15 | ✅ 100% | 2240/2241 |
+| 30 | WikiLink Navigation | ✅ 100% | 1984 |
+| 29 | Callouts & Polish | ✅ 100% | 930 |
+| 28 | Live Editor | ✅ 100% | 930 |
+| 27 | Backend + AI | ✅ 100% | 911 |
 
 ---
 
 ## Key Features
 
-**Three-State Sidebar (v1.5):**
-- Icon mode (48px) - minimal, status dots only
-- Compact mode (240px) - project list with stats
-- Card mode (320px+) - full project cards with details
-- ⌘0 cycles through modes
-- Resize handle with snap points
-- Project switching with toggle behavior
-- Recent Notes filtered by selected project
-
-**Mission Control (v1.4):**
-- Dashboard with project cards and stats
-- Recent Notes section (5 most recent)
-- New Project button (⌘⇧P)
-- Project stats (note count, word count)
-- Total stats in header
-
-**Native macOS Menu (v1.4):**
-- Complete menu bar: File, Edit, View, Window, Help
-- All keyboard shortcuts visible in menus
-- Menu events trigger frontend actions
-- Documentation and GitHub links
-
-**Editor Modes (v1.3):**
-- Three-mode toggle: Source / Live Preview / Reading
-- Keyboard shortcuts: ⌘1, ⌘2, ⌘3, ⌘E (cycle)
-- Escape exits Reading mode
-
-**Custom CSS (v1.3):**
-- Settings > Appearance > Custom CSS
-- Enable/disable toggle
-- Live CSS injection
-- Reset to default option
-
 **Editor:**
-- HybridEditor++ (contenteditable + markdown preview)
-- Live wiki-link `[[...]]` highlighting with cursor-following autocomplete
-- Live tag `#tag` highlighting with autocomplete
-- Word count, mode toggle (⌘E)
+- HybridEditor++ with 3 modes (Source, Live, Reading)
+- Quarto autocomplete (YAML, chunk options, cross-refs)
+- Live wiki-link highlighting with autocomplete
+- KaTeX math rendering
 - Focus mode (⌘⇧F)
 
 **Project System (v1.1):**
 - 5 project types: research, teaching, r-package, r-dev, generic
-- Project switcher dropdown in sidebar
 - Project-scoped note filtering
-- Zustand store with localStorage persistence
-- Database migration for projects table
-
-**Note Search (v1.1):**
-- SearchPanel with ⌘F shortcut
-- Scope selector (All Notes / Current Project)
-- Debounced 150ms real-time search
-- Keyboard navigation (↑↓/↵/Esc)
-- Highlighted matches with snippets
-
-**Scribe CLI (v1.1):**
-- Terminal-based note access via `scribe` command
-- Commands: new, daily, search, capture, list, open, edit, tags, folders, stats
-- Aliases: sd, sc, ss, sl, sn
-- FTS5 full-text search
-- Tab completion
-
-**Themes & Fonts:**
-- 10 built-in ADHD-friendly themes (5 dark, 5 light)
-- Theme colors apply to entire editor (including editor area)
-- Auto-theme by time of day (light 6am-6pm)
-- Custom theme creator with live preview
-- Import/export themes (JSON, Base16 YAML, URL)
-- Theme keyboard shortcuts (Cmd+Alt+0-9)
-- 14 recommended ADHD-friendly fonts
-- One-click Homebrew font installation
-- Font settings (family, size, line height)
-
-**Commands:**
-- Global hotkey ⌘⇧N
-- Command palette ⌘K
-- Quick actions: Create, Daily, Focus, Sync, Claude, Gemini
-- Keyboard shortcuts: ⌘N, ⌘D, ⌘B, ⌘⇧B, ⌘F, ⌘?
+- Mission Control dashboard
 
 **Academic:**
-- MathJax 3 for LaTeX rendering ($...$ inline, $$...$$ display)
+- MathJax 3 for LaTeX rendering
 - Citation autocomplete (@trigger)
 - BibTeX/Zotero integration
-- Export to PDF, Word, LaTeX, HTML, Markdown (via Pandoc)
-- 5 citation styles (APA, Chicago, MLA, IEEE, Harvard)
+- Export to PDF, Word, LaTeX, HTML
 
-**Accessibility:**
-- Screen reader support (DialogTitle, DialogDescription)
-- Aria labels on interactive elements
-- Keyboard navigation
+**Themes & Fonts:**
+- 10 built-in ADHD-friendly themes
+- Auto-theme by time of day
+- Custom theme creator
+- 14 recommended fonts
 
 ---
 
@@ -765,13 +305,12 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 |-------|------|
 | Shell | Tauri 2 |
 | UI | React 18 |
-| Editor | HybridEditor++ |
-| Styling | Tailwind |
+| Editor | HybridEditor++ (CodeMirror 6) |
+| Styling | Tailwind CSS |
 | State | Zustand |
-| Database | SQLite (rusqlite) |
+| Database | SQLite (Tauri) / IndexedDB (Browser) |
 | AI | Claude/Gemini CLI |
-| Unit Testing | Vitest + Testing Library |
-| E2E Testing | Playwright |
+| Testing | Vitest + Playwright |
 
 ---
 
@@ -779,8 +318,8 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 
 - [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) - Scope & roadmap
 - [CHANGELOG.md](CHANGELOG.md) - Version history
-- [TESTS_SUMMARY.md](TESTS_SUMMARY.md) - Test coverage
 - [CLAUDE.md](CLAUDE.md) - AI guidance
 - [docs/planning/](docs/planning/) - Sprint plans
-## last_active: 2025-12-30
-## streak: 3
+
+## last_active: 2026-01-09
+## streak: 4
