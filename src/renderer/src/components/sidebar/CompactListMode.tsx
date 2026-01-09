@@ -7,6 +7,7 @@ import { ProjectContextMenu } from './ProjectContextMenu'
 import { NoteContextMenu } from './NoteContextMenu'
 import { EmptyState } from './EmptyState'
 import { useAppViewStore } from '../../store/useAppViewStore'
+import { getIconByName } from '../IconPicker'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -409,7 +410,10 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
     onNoteContextMenu
   }, ref) => {
   const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
-  const FolderIcon = isExpanded ? FolderOpen : Folder
+  // Use custom icon if set, otherwise default to Folder/FolderOpen
+  const ProjectIcon = project.icon
+    ? getIconByName(project.icon)
+    : (isExpanded ? FolderOpen : Folder)
 
   // When expanded, show context card + notes list
   if (isExpanded) {
@@ -429,7 +433,7 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
         >
           <div className="item-row">
             <ChevronIcon size={14} className="chevron open" />
-            <FolderIcon size={14} className="folder-icon" />
+            <ProjectIcon size={14} className="folder-icon" />
             <span className="project-name">{project.name}</span>
           </div>
         </button>
@@ -480,7 +484,7 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
       >
         <div className="item-row">
           <ChevronIcon size={14} className="chevron" />
-          <FolderIcon size={14} className="folder-icon" />
+          <ProjectIcon size={14} className="folder-icon" />
           <span className="project-name">{project.name}</span>
           <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
         </div>

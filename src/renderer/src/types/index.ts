@@ -104,6 +104,7 @@ export interface Project {
   status?: ProjectStatus // Optional - defaults to 'active' in UI
   progress?: number // 0-100 percentage
   color?: string
+  icon?: string // Lucide icon name (e.g., 'Folder', 'Code2', 'Beaker')
   settings?: ProjectSettings
   created_at: number
   updated_at: number
