@@ -6,8 +6,7 @@ import { Tooltip } from './Tooltip'
 import { ActivityBar } from './ActivityBar'
 import { InboxButton } from './InboxButton'
 import { SmartIconButton } from './SmartIconButton'
-import { ExpandedChildProjects } from './ExpandedChildProjects'
-import { useAppViewStore } from '../../store/useAppViewStore'
+import { useAppViewStore, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
 
 interface IconBarModeProps {
   projects: Project[]
@@ -39,8 +38,8 @@ export function IconBarMode({
   const pinnedVaults = useAppViewStore(state => state.pinnedVaults)
   const reorderPinnedVaults = useAppViewStore(state => state.reorderPinnedVaults)
   const smartIcons = useAppViewStore(state => state.smartIcons)
-  const expandedSmartIconId = useAppViewStore(state => state.expandedSmartIconId)
-  const toggleSmartIcon = useAppViewStore(state => state.toggleSmartIcon)
+  const setProjectTypeFilter = useAppViewStore(state => state.setProjectTypeFilter)
+  const setActiveTab = useAppViewStore(state => state.setActiveTab)
 
   // Drag state
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
@@ -93,20 +92,8 @@ export function IconBarMode({
     return counts
   }, [projects, smartIcons])
 
-  // Get child projects for expanded smart icon
-  const expandedChildProjects = useMemo(() => {
-    if (!expandedSmartIconId) return []
-    const icon = smartIcons.find(i => i.id === expandedSmartIconId)
-    if (!icon) return []
-    return projects
-      .filter(p => p.type === icon.projectType)
-      .sort((a, b) => a.name.localeCompare(b.name))
-  }, [expandedSmartIconId, smartIcons, projects])
-
-  // Calculate sidebar width based on expanded state
-  const sidebarWidth = useMemo(() => {
-    return expandedSmartIconId ? 240 : 48
-  }, [expandedSmartIconId])
+  // Icon mode is always 48px (no inline expansion)
+  const sidebarWidth = 48
 
   // Drag handlers
   const handleDragStart = (index: number) => {
@@ -168,24 +155,17 @@ export function IconBarMode({
         .filter(icon => icon.isVisible)
         .sort((a, b) => a.order - b.order)
         .map((icon) => (
-          <div key={icon.id}>
-            <SmartIconButton
-              icon={icon}
-              projectCount={smartIconProjectCounts[icon.id] || 0}
-              isExpanded={icon.isExpanded}
-              onClick={() => toggleSmartIcon(icon.id)}
-            />
-            {/* Show child projects when expanded */}
-            {icon.isExpanded && (
-              <ExpandedChildProjects
-                projects={expandedChildProjects}
-                currentProjectId={currentProjectId}
-                onSelectProject={onSelectProject}
-                noteCounts={noteCounts}
-                smartIconColor={icon.color}
-              />
-            )}
-          </div>
+          <SmartIconButton
+            key={icon.id}
+            icon={icon}
+            projectCount={smartIconProjectCounts[icon.id] || 0}
+            isExpanded={false}
+            onClick={() => {
+              // Set project type filter and activate Mission Control
+              setProjectTypeFilter(icon.projectType)
+              setActiveTab(MISSION_CONTROL_TAB_ID)
+            }}
+          />
         ))}
 
       <div className="sidebar-divider" />

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId } from '../types'
+import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId, ProjectType } from '../types'
 
 /**
  * App View Store - Manages sidebar state, tabs, and session tracking
@@ -30,6 +30,7 @@ interface AppViewState {
   pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom)
   smartIcons: SmartIcon[]  // 4 permanent smart folders
   expandedSmartIconId: SmartIconId | null  // Accordion: only one expanded at a time
+  projectTypeFilter: ProjectType | null  // Active project type filter for Mission Control
 
   // Editor tabs state
   openTabs: EditorTab[]
@@ -56,6 +57,7 @@ interface AppViewState {
   setSmartIconExpanded: (iconId: SmartIconId, expanded: boolean) => void
   setSmartIconVisibility: (iconId: SmartIconId, visible: boolean) => void
   reorderSmartIcons: (fromIndex: number, toIndex: number) => void
+  setProjectTypeFilter: (projectType: ProjectType | null) => void
 
   // Tab actions
   openTab: (tab: Omit<EditorTab, 'id'>) => string
@@ -394,6 +396,7 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   pinnedVaults: getSavedPinnedVaults(),
   smartIcons: getSavedSmartIcons(),
   expandedSmartIconId: getSavedExpandedSmartIconId(),
+  projectTypeFilter: null,
   lastActiveNoteId: getLastActiveNoteId(),
   openTabs: getSavedTabs(),
   activeTabId: getSavedActiveTabId(),
@@ -569,6 +572,10 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
 
     set({ smartIcons: reordered })
     saveSmartIcons(reordered)
+  },
+
+  setProjectTypeFilter: (projectType) => {
+    set({ projectTypeFilter: projectType })
   },
 
   // Tab actions
