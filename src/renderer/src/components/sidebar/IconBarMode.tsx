@@ -7,6 +7,7 @@ import { ActivityBar } from './ActivityBar'
 import { InboxButton } from './InboxButton'
 import { SmartIconButton } from './SmartIconButton'
 import { EmptyState } from './EmptyState'
+import { RecentNotesDropdown } from './RecentNotesDropdown'
 import { useAppViewStore, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
 
 interface IconBarModeProps {
@@ -20,7 +21,8 @@ interface IconBarModeProps {
   onSearch: () => void
   onDaily: () => void
   onSettings: () => void
-  activeActivityItem?: 'search' | 'daily' | 'settings' | null
+  onSelectNote: (noteId: string) => void
+  activeActivityItem?: 'search' | 'daily' | 'recent' | 'settings' | null
 }
 
 export function IconBarMode({
@@ -33,6 +35,7 @@ export function IconBarMode({
   onSearch,
   onDaily,
   onSettings,
+  onSelectNote,
   activeActivityItem = null
 }: IconBarModeProps) {
   // Get pinned vaults and smart icons from store
@@ -41,10 +44,15 @@ export function IconBarMode({
   const smartIcons = useAppViewStore(state => state.smartIcons)
   const setProjectTypeFilter = useAppViewStore(state => state.setProjectTypeFilter)
   const setActiveTab = useAppViewStore(state => state.setActiveTab)
+  const recentNotes = useAppViewStore(state => state.recentNotes)
+  const clearRecentNotes = useAppViewStore(state => state.clearRecentNotes)
 
   // Drag state
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+
+  // Recent notes dropdown state
+  const [showRecentNotes, setShowRecentNotes] = useState(false)
 
   // Filter projects to show only pinned ones, sorted by vault order
   const sortedProjects = useMemo(() => {
@@ -114,6 +122,13 @@ export function IconBarMode({
     if (draggedIndex !== null && draggedIndex !== dropIndex) {
       // Reorder in store (this handles Inbox exclusion)
       reorderPinnedVaults(draggedIndex + 1, dropIndex + 1) // +1 because Inbox is at index 0
+
+      // Add success animation to the drop target
+      const target = e.currentTarget as HTMLElement
+      target.classList.add('drop-success')
+      setTimeout(() => {
+        target.classList.remove('drop-success')
+      }, 300)
     }
 
     // Reset drag state
@@ -220,12 +235,22 @@ export function IconBarMode({
         <Plus size={16} />
       </button>
 
-      {/* Activity Bar - Search, Daily, Settings */}
+      {/* Activity Bar - Search, Recent, Daily, Settings */}
       <ActivityBar
         onSearch={onSearch}
+        onRecent={() => setShowRecentNotes(!showRecentNotes)}
         onDaily={onDaily}
         onSettings={onSettings}
         activeItem={activeActivityItem}
+      />
+
+      {/* Recent Notes Dropdown */}
+      <RecentNotesDropdown
+        isOpen={showRecentNotes}
+        onClose={() => setShowRecentNotes(false)}
+        recentNotes={recentNotes}
+        onSelectNote={onSelectNote}
+        onClearAll={clearRecentNotes}
       />
     </div>
   )
