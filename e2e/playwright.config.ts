@@ -49,8 +49,11 @@ export default defineConfig({
     // Viewport size
     viewport: { width: 1440, height: 900 },
 
-    // Timeout for each action
-    actionTimeout: 10000,
+    // Timeout for each action (increased for Tauri app startup)
+    actionTimeout: 30000,
+
+    // Navigation timeout (for page loads)
+    navigationTimeout: 30000,
   },
 
   // Configure projects for major browsers
@@ -71,12 +74,12 @@ export default defineConfig({
     // },
   ],
 
-  // Global timeout for tests
-  timeout: 30000,
+  // Global timeout for tests (increased for Tauri app)
+  timeout: 60000,
 
-  // Expect timeout
+  // Expect timeout (increased for slower assertions)
   expect: {
-    timeout: 5000,
+    timeout: 10000,
   },
 
   // Run your local dev server before starting the tests
