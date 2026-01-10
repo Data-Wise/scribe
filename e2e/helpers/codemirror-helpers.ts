@@ -43,10 +43,21 @@ export class CodeMirrorHelper {
 
   /**
    * Wait for CodeMirror editor to be ready
+   * @param timeout - Timeout in milliseconds (default: 10000)
    */
-  async waitForEditor(): Promise<void> {
-    await this.getEditor().waitFor({ state: 'visible' })
-    await this.getContent().waitFor({ state: 'visible' })
+  async waitForEditor(timeout: number = 10000): Promise<void> {
+    try {
+      await this.getEditor().waitFor({ state: 'visible', timeout })
+      await this.getContent().waitFor({ state: 'visible', timeout })
+      // Extra wait for editor to be fully interactive
+      await this.page.waitForTimeout(200)
+    } catch (error) {
+      throw new Error(
+        `CodeMirror editor not ready after ${timeout}ms. ` +
+        `Make sure the editor is visible before calling editor methods. ` +
+        `Original error: ${error}`
+      )
+    }
   }
 
   /**

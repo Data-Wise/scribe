@@ -21,7 +21,9 @@ test.describe('Callouts', () => {
 
     // Create a new note with callout test content
     await basePage.page.keyboard.press('Meta+n')  // ⌘N for new note
-    await basePage.page.waitForTimeout(500)
+
+    // Wait for note to be created and editor to be ready
+    await basePage.page.waitForTimeout(1000)
 
     // Type callout test content
     const calloutContent = `# Callout Test
