@@ -312,21 +312,63 @@ tags:
 - **Commit:** 2b9e247
 
 **Results:**
-- Foundation complete for 674 E2E tests
-- Pattern successfully migrated from textarea → CodeMirror 6
-- 3 spec files validated with new helpers
-- Ready for full E2E test suite expansion
+- ✅ CodeMirror helper infrastructure complete (280 lines, 20+ methods)
+- ✅ Fixtures integration working
+- ✅ 3 spec files updated (callouts, editor-modes, latex-multiline)
+- ✅ Critical bug fixed: CommandPalette array mutation crash
+- ⚠️ Known Issue: callouts tests failing due to CodeMirror integration complexity
+
+**Known Issues:**
+- EditorView API not accessible from E2E tests in standard way
+- `@uiw/react-codemirror` doesn't expose view on DOM elements
+- keyboard.type() hangs with long content (500+ chars)
+- **Decision:** Infrastructure ready; revisit after gaining more CodeMirror knowledge
+
+**Sprint 35 Phase 0 Commits (2026-01-10):**
+- `3119723` - fix(e2e): Change callouts test from seededPage to basePage
+- `650f739` - fix(e2e): Add robust fallback for CodeMirror fill() method
+- `426b4f7` - perf(e2e): Optimize CodeMirror fill() to use direct API
+- `9c0b14a` - fix(e2e): Fix CommandPalette array mutation causing test crashes ⭐ CRITICAL
+
+---
+
+### Sprint 35 - Phase 1: Store Coverage Improvements - IN PROGRESS 🔄
+
+**Status:** Started 2026-01-10
+**Priority:** P0 (Critical for production quality)
+**Duration:** 4-6 hours estimated
+
+**Goal:** Achieve 80%+ coverage for critical Zustand stores (0% → 80%)
+
+**Store Analysis:**
+| Store | Lines | Coverage | Priority | Status |
+|-------|-------|----------|----------|--------|
+| useAppViewStore | 462 | 0% | P0 | 🔄 Next |
+| useSettingsStore | 474 | 0% | P0 | Pending |
+| useHistoryStore | 200 | 0% | P1 | Pending |
+| useProjectStore | 203 | 0% | P1 | Pending |
+| useNotesStore | 200 | 0% | P1 | Pending |
+| **Total** | **1,539** | **0%** | | |
+
+**Phase 1 Tasks:**
+- [ ] Create useAppViewStore.test.ts (80%+ coverage target)
+- [ ] Create useSettingsStore.test.ts (80%+ coverage target)
+- [ ] Test state mutations, side effects, edge cases
+- [ ] Verify Zustand + Immer integration works correctly
+- [ ] Document patterns for future store tests
+
+---
 
 ### Remaining Sprint 35 Tasks
 
-1. **E2E Test Suite Validation** (2-3 hours) - NEXT
-   - Run full E2E suite with CodeMirror helpers
-   - Fix any compatibility issues
-   - Target: >90% pass rate
-
-2. **Store Coverage Improvements** (4-6 hours)
+1. **Store Coverage Improvements** (4-6 hours) - IN PROGRESS 🔄
    - Test Zustand stores in isolation
    - Add missing edge case coverage
+   - Target: 80%+ for critical stores
+
+2. **E2E Test Suite** (Deferred)
+   - Revisit callouts tests after CodeMirror knowledge gained
+   - Infrastructure complete, integration needs investigation
 
 3. **Accessibility P1** (6-8 hours)
    - Fix 39 violations (keyboard nav, ARIA, contrast)
@@ -334,6 +376,10 @@ tags:
 4. **System Theme Detection** (2-3 hours)
    - Auto-detect OS theme
    - "System (Auto)" option
+
+5. **CI/CD Setup** (2-3 hours)
+   - GitHub Actions workflow
+   - Automated test runs on PR
 
 ### Release Status
 
