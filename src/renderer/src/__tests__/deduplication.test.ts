@@ -347,7 +347,7 @@ describe('createTimeDeduplicated', () => {
       .mockResolvedValueOnce('second')
 
     const deduped = createTimeDeduplicated(
-      (id: string) => mockFn(),
+      (_id: string) => mockFn(),
       (id) => id,
       500
     )
@@ -375,7 +375,7 @@ describe('Real-world scenarios', () => {
     }))
 
     const saveNote = deduplicate(
-      (id: string) => `save-${id}`,
+      (id: string, _content: string) => `save-${id}`,
       mockSaveNote
     )
 

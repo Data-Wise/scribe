@@ -1,8 +1,12 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { enableMapSet } from 'immer'
 import { Note } from '../types'
 import { api } from '../lib/api'
 import { logger } from '../lib/logger'
+
+// Enable Map/Set support in Immer
+enableMapSet()
 
 interface NotesState {
   notes: Note[]
