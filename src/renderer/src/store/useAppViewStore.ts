@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId, ProjectType } from '../types'
+import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId, ProjectType, ExpandedIconType } from '../types'
 import { useSettingsStore } from './useSettingsStore'
 
 /**
@@ -32,19 +32,16 @@ export interface RecentNote {
 }
 
 interface AppViewState {
-  // Sidebar state
-  sidebarMode: SidebarMode
+  // Sidebar state (v1.16.0 - Icon-Centric Expansion)
+  expandedIcon: ExpandedIconType  // Which icon is expanded (vault/smart/null)
   sidebarWidth: number
-  pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom)
-  smartIcons: SmartIcon[]  // 4 permanent smart folders
-  expandedSmartIconId: SmartIconId | null  // Accordion: only one expanded at a time
+  pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom), each with preferredMode
+  smartIcons: SmartIcon[]  // 4 permanent smart folders, each with preferredMode
   projectTypeFilter: ProjectType | null  // Active project type filter for Mission Control
 
-  // Mode consolidation state (v1.15.0)
-  lastExpandedMode: 'compact' | 'card' | null  // Last expanded mode (for smart persistence)
-  lastModeChangeTimestamp: number  // Debounce timestamp for rapid clicking prevention
-  compactModeWidth: number  // Last manual width in Compact mode
-  cardModeWidth: number  // Last manual width in Card mode
+  // Width memory per mode (v1.16.0)
+  compactModeWidth: number  // Global width for all icons in compact mode
+  cardModeWidth: number  // Global width for all icons in card mode
 
   // Editor tabs state
   openTabs: EditorTab[]
@@ -57,15 +54,13 @@ interface AppViewState {
   // Session tracking
   lastActiveNoteId: string | null
 
-  // Sidebar actions
-  setSidebarMode: (mode: SidebarMode) => void
-  cycleSidebarMode: () => void
-  toggleSidebarCollapsed: () => void
+  // Sidebar actions (v1.16.0 - Icon-Centric)
+  expandVault: (vaultId: string) => void
+  expandSmartIcon: (iconId: SmartIconId) => void
+  collapseAll: () => void
+  toggleIcon: (type: 'vault' | 'smart', id: string) => void
+  setIconMode: (type: 'vault' | 'smart', id: string, mode: 'compact' | 'card') => void
   setSidebarWidth: (width: number) => void
-
-  // Mode consolidation actions (v1.15.0)
-  determineExpandMode: () => 'compact' | 'card'
-  getCyclePattern: (preset: string) => SidebarMode[]
 
   // Pinned vaults actions
   addPinnedVault: (projectId: string, label: string, color?: string) => boolean
@@ -74,8 +69,6 @@ interface AppViewState {
   isPinned: (projectId: string) => boolean
 
   // Smart icon actions
-  toggleSmartIcon: (iconId: SmartIconId) => void
-  setSmartIconExpanded: (iconId: SmartIconId, expanded: boolean) => void
   setSmartIconVisibility: (iconId: SmartIconId, visible: boolean) => void
   reorderSmartIcons: (fromIndex: number, toIndex: number) => void
   setProjectTypeFilter: (projectType: ProjectType | null) => void
@@ -103,22 +96,17 @@ interface AppViewState {
 // localStorage keys
 const SESSION_KEY = 'scribe:lastSessionTimestamp'
 const LAST_NOTE_KEY = 'scribe:lastActiveNoteId'
-const SIDEBAR_MODE_KEY = 'scribe:sidebarMode'
 const SIDEBAR_WIDTH_KEY = 'scribe:sidebarWidth'
 const OPEN_TABS_KEY = 'scribe:openTabs'
 const ACTIVE_TAB_KEY = 'scribe:activeTabId'
 const PINNED_VAULTS_KEY = 'scribe:pinnedVaults'
 const SMART_ICONS_KEY = 'scribe:smartIcons'
-const EXPANDED_SMART_ICON_KEY = 'scribe:expandedSmartIconId'
 const RECENT_NOTES_KEY = 'scribe:recentNotes'
 
-// Mode consolidation keys (v1.15.0)
-const LAST_EXPANDED_MODE_KEY = 'scribe:lastExpandedMode'
-const LAST_MODE_CHANGE_KEY = 'scribe:lastModeChangeTimestamp'
+// v1.16.0 Icon-Centric Expansion keys
+const EXPANDED_ICON_KEY = 'scribe:expandedIcon'
 const COMPACT_WIDTH_KEY = 'scribe:compactModeWidth'
 const CARD_WIDTH_KEY = 'scribe:cardModeWidth'
-// TODO: Phase 6 - Used for "Don't ask again" checkbox in preset update dialog
-// const AUTO_UPDATE_PRESET_KEY = 'scribe:autoUpdatePreset'
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -179,21 +167,27 @@ const saveLastActiveNoteId = (noteId: string | null): void => {
   }
 }
 
-const getSavedSidebarMode = (): SidebarMode => {
+// v1.16.0: Get saved expanded icon
+const getSavedExpandedIcon = (): ExpandedIconType => {
   try {
-    const saved = localStorage.getItem(SIDEBAR_MODE_KEY)
-    if (saved === 'icon' || saved === 'compact' || saved === 'card') {
-      return saved
+    const saved = localStorage.getItem(EXPANDED_ICON_KEY)
+    if (saved) {
+      return JSON.parse(saved) as ExpandedIconType
     }
-    return 'compact' // default
+    return null
   } catch {
-    return 'compact'
+    return null
   }
 }
 
-const saveSidebarMode = (mode: SidebarMode): void => {
+// v1.16.0: Save expanded icon
+const saveExpandedIcon = (icon: ExpandedIconType): void => {
   try {
-    localStorage.setItem(SIDEBAR_MODE_KEY, mode)
+    if (icon) {
+      localStorage.setItem(EXPANDED_ICON_KEY, JSON.stringify(icon))
+    } else {
+      localStorage.removeItem(EXPANDED_ICON_KEY)
+    }
   } catch {
     // Ignore localStorage errors
   }
@@ -374,29 +368,6 @@ const saveSmartIcons = (icons: SmartIcon[]): void => {
   }
 }
 
-const getSavedExpandedSmartIconId = (): SmartIconId | null => {
-  try {
-    const saved = localStorage.getItem(EXPANDED_SMART_ICON_KEY)
-    if (saved && ['research', 'teaching', 'r-package', 'dev-tools'].includes(saved)) {
-      return saved as SmartIconId
-    }
-    return null
-  } catch {
-    return null
-  }
-}
-
-const saveExpandedSmartIconId = (iconId: SmartIconId | null): void => {
-  try {
-    if (iconId) {
-      localStorage.setItem(EXPANDED_SMART_ICON_KEY, iconId)
-    } else {
-      localStorage.removeItem(EXPANDED_SMART_ICON_KEY)
-    }
-  } catch {
-    // Ignore localStorage errors
-  }
-}
 
 const getSavedRecentNotes = (): RecentNote[] => {
   try {
@@ -418,43 +389,6 @@ const saveRecentNotes = (notes: RecentNote[]): void => {
   }
 }
 
-// Mode consolidation helpers (v1.15.0)
-const getLastExpandedMode = (): 'compact' | 'card' | null => {
-  try {
-    const saved = localStorage.getItem(LAST_EXPANDED_MODE_KEY)
-    if (saved === 'compact' || saved === 'card') {
-      return saved
-    }
-    return null
-  } catch {
-    return null
-  }
-}
-
-const saveLastExpandedMode = (mode: 'compact' | 'card'): void => {
-  try {
-    localStorage.setItem(LAST_EXPANDED_MODE_KEY, mode)
-  } catch {
-    // Ignore localStorage errors
-  }
-}
-
-const getLastModeChangeTimestamp = (): number => {
-  try {
-    const saved = localStorage.getItem(LAST_MODE_CHANGE_KEY)
-    return saved ? parseInt(saved, 10) : 0
-  } catch {
-    return 0
-  }
-}
-
-const saveLastModeChangeTimestamp = (timestamp: number): void => {
-  try {
-    localStorage.setItem(LAST_MODE_CHANGE_KEY, timestamp.toString())
-  } catch {
-    // Ignore localStorage errors
-  }
-}
 
 const getCompactModeWidth = (): number => {
   try {
@@ -503,141 +437,189 @@ const saveCardModeWidth = (width: number): void => {
 }
 
 /**
- * Determine initial sidebar mode based on session context
- * - Fresh start or > 4 hours → compact (get bearings)
- * - Recent session → restore saved mode
+ * v1.16.0 Migration: Convert v1.15.0 localStorage to icon-centric format
+ * Automatically runs once on first load after upgrade
  */
-const determineInitialSidebarMode = (): SidebarMode => {
-  const lastTimestamp = getLastSessionTimestamp()
-  const now = Date.now()
-  const SESSION_TIMEOUT_MS = 4 * 60 * 60 * 1000 // 4 hours
+const migrateToIconCentric = (): void => {
+  try {
+    // Check if migration already complete
+    const hasNewFormat = localStorage.getItem(EXPANDED_ICON_KEY) !== null
+    if (hasNewFormat) return // Already migrated
 
-  // Fresh start - show compact to get oriented
-  if (!lastTimestamp) {
-    return 'compact'
+    // Read v1.15.0 keys
+    const oldMode = localStorage.getItem('scribe:sidebarMode') // v1.15.0
+    const oldExpandedSmartIconId = localStorage.getItem('scribe:expandedSmartIconId') // v1.15.0
+
+    // If sidebar was expanded (not icon mode) and a smart icon was expanded, restore it
+    if (oldMode && oldMode !== 'icon' && oldExpandedSmartIconId) {
+      const expandedIcon: ExpandedIconType = {
+        type: 'smart',
+        id: oldExpandedSmartIconId as SmartIconId
+      }
+      localStorage.setItem(EXPANDED_ICON_KEY, JSON.stringify(expandedIcon))
+    }
+
+    // Clean up deprecated keys
+    localStorage.removeItem('scribe:sidebarMode')
+    localStorage.removeItem('scribe:lastExpandedMode')
+    localStorage.removeItem('scribe:lastModeChangeTimestamp')
+    localStorage.removeItem('scribe:expandedSmartIconId')
+
+    console.log('[Migration] v1.15.0 → v1.16.0 icon-centric migration complete')
+  } catch (error) {
+    console.warn('[Migration] Failed to migrate localStorage:', error)
   }
-
-  const timeSinceLastSession = now - lastTimestamp
-
-  // Long break (> 4 hours) - show compact
-  if (timeSinceLastSession > SESSION_TIMEOUT_MS) {
-    return 'compact'
-  }
-
-  // Recent session - restore saved mode
-  return getSavedSidebarMode()
 }
 
-export const useAppViewStore = create<AppViewState>((set, get) => ({
-  sidebarMode: determineInitialSidebarMode(),
-  sidebarWidth: getSavedSidebarWidth(),
-  pinnedVaults: getSavedPinnedVaults(),
-  smartIcons: getSavedSmartIcons(),
-  expandedSmartIconId: getSavedExpandedSmartIconId(),
-  projectTypeFilter: null,
+// Run migration before initialization
+migrateToIconCentric()
 
-  // Mode consolidation state (v1.15.0)
-  lastExpandedMode: getLastExpandedMode(),
-  lastModeChangeTimestamp: getLastModeChangeTimestamp(),
-  compactModeWidth: getCompactModeWidth(),
-  cardModeWidth: getCardModeWidth(),
+export const useAppViewStore = create<AppViewState>((set, get) => {
+  // Initialize state
+  const expandedIcon = getSavedExpandedIcon()
+  const compactWidth = getCompactModeWidth()
+  const cardWidth = getCardModeWidth()
 
-  lastActiveNoteId: getLastActiveNoteId(),
-  openTabs: getSavedTabs(),
-  activeTabId: getSavedActiveTabId(),
-  closedTabsHistory: [],
-  recentNotes: getSavedRecentNotes(),
+  // Determine initial sidebar width based on expanded icon's mode
+  let initialWidth = SIDEBAR_WIDTHS.icon // Default to icon mode (collapsed)
+  if (expandedIcon) {
+    // Get the expanded icon's preferred mode
+    const pinnedVaults = getSavedPinnedVaults()
+    const smartIcons = getSavedSmartIcons()
 
-  setSidebarMode: (mode: SidebarMode) => {
-    const state = get()
-
-    // Save last expanded mode (if switching to expanded mode)
-    if (mode === 'compact' || mode === 'card') {
-      saveLastExpandedMode(mode)
-      set({ lastExpandedMode: mode })
-    }
-
-    // Update mode-specific width when switching modes
-    let newWidth = state.sidebarWidth
-    if (mode === 'compact') {
-      newWidth = state.compactModeWidth || SIDEBAR_WIDTHS.compact.default
-    } else if (mode === 'card') {
-      newWidth = state.cardModeWidth || SIDEBAR_WIDTHS.card.default
-    } else if (mode === 'icon') {
-      newWidth = SIDEBAR_WIDTHS.icon
-    }
-
-    set({ sidebarMode: mode, sidebarWidth: newWidth })
-    saveSidebarMode(mode)
-    saveSidebarWidth(newWidth)
-  },
-
-  cycleSidebarMode: () => {
-    const state = get()
-    const now = Date.now()
-
-    // Debounce: Prevent rapid clicking (200ms cooldown)
-    if (now - state.lastModeChangeTimestamp < 200) {
-      return // Too soon, ignore click
-    }
-
-    // Phase 5: Read width preset from Settings
-    const settings = useSettingsStore.getState().settings
-    const widthPreset = (settings['appearance.sidebarWidth'] as string) ?? 'medium'
-
-    // Get preset-aware cycle pattern
-    const cyclePattern = state.getCyclePattern(widthPreset)
-
-    // Find next mode in cycle
-    const currentIndex = cyclePattern.indexOf(state.sidebarMode)
-    const nextIndex = (currentIndex + 1) % cyclePattern.length
-    const nextMode = cyclePattern[nextIndex]
-
-    // Update mode using setSidebarMode (handles width restoration)
-    state.setSidebarMode(nextMode)
-
-    // Update debounce timestamp
-    set({ lastModeChangeTimestamp: now })
-    saveLastModeChangeTimestamp(now)
-  },
-
-  toggleSidebarCollapsed: () => {
-    const state = get()
-    const current = state.sidebarMode
-
-    // Toggle between 'icon' (collapsed) and expanded mode
-    if (current === 'icon') {
-      // Expanding: Use smart mode determination (Phase 1)
-      const expandMode = state.determineExpandMode()
-      state.setSidebarMode(expandMode)
+    if (expandedIcon.type === 'vault') {
+      const vault = pinnedVaults.find(v => v.id === expandedIcon.id)
+      const mode = vault?.preferredMode || 'compact'
+      initialWidth = mode === 'compact' ? compactWidth : cardWidth
     } else {
-      // Collapsing: Switch to icon mode
-      state.setSidebarMode('icon')
+      const icon = smartIcons.find(i => i.id === expandedIcon.id)
+      const mode = icon?.preferredMode || 'compact'
+      initialWidth = mode === 'compact' ? compactWidth : cardWidth
     }
-  },
+  }
 
-  setSidebarWidth: (width: number) => {
-    const mode = get().sidebarMode
-    let constrainedWidth = width
+  return {
+    expandedIcon,
+    sidebarWidth: initialWidth,
+    pinnedVaults: getSavedPinnedVaults(),
+    smartIcons: getSavedSmartIcons(),
+    projectTypeFilter: null,
 
-    if (mode === 'compact') {
-      constrainedWidth = Math.max(SIDEBAR_WIDTHS.compact.min, Math.min(SIDEBAR_WIDTHS.compact.max, width))
-      // Save mode-specific width
-      set({ sidebarWidth: constrainedWidth, compactModeWidth: constrainedWidth })
-      saveSidebarWidth(constrainedWidth)
-      saveCompactModeWidth(constrainedWidth)
-    } else if (mode === 'card') {
-      constrainedWidth = Math.max(SIDEBAR_WIDTHS.card.min, Math.min(SIDEBAR_WIDTHS.card.max, width))
-      // Save mode-specific width
-      set({ sidebarWidth: constrainedWidth, cardModeWidth: constrainedWidth })
-      saveSidebarWidth(constrainedWidth)
-      saveCardModeWidth(constrainedWidth)
-    } else {
-      // Icon mode - no custom width
-      set({ sidebarWidth: constrainedWidth })
-      saveSidebarWidth(constrainedWidth)
-    }
-  },
+    // Width memory per mode (v1.16.0)
+    compactModeWidth: compactWidth,
+    cardModeWidth: cardWidth,
+
+    lastActiveNoteId: getLastActiveNoteId(),
+    openTabs: getSavedTabs(),
+    activeTabId: getSavedActiveTabId(),
+    closedTabsHistory: [],
+    recentNotes: getSavedRecentNotes(),
+
+    // v1.16.0 Icon-Centric Sidebar Actions
+
+    expandVault: (vaultId) => {
+      const { pinnedVaults, compactModeWidth, cardModeWidth } = get()
+      const vault = pinnedVaults.find(v => v.id === vaultId)
+      const mode = vault?.preferredMode || 'compact'
+      const width = mode === 'compact' ? compactModeWidth : cardModeWidth
+
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: vaultId }
+      set({ expandedIcon, sidebarWidth: width })
+      saveExpandedIcon(expandedIcon)
+      saveSidebarWidth(width)
+    },
+
+    expandSmartIcon: (iconId) => {
+      const { smartIcons, compactModeWidth, cardModeWidth } = get()
+      const icon = smartIcons.find(i => i.id === iconId)
+      const mode = icon?.preferredMode || 'compact'
+      const width = mode === 'compact' ? compactModeWidth : cardModeWidth
+
+      const expandedIcon: ExpandedIconType = { type: 'smart', id: iconId }
+      set({ expandedIcon, sidebarWidth: width })
+      saveExpandedIcon(expandedIcon)
+      saveSidebarWidth(width)
+    },
+
+    collapseAll: () => {
+      set({ expandedIcon: null, sidebarWidth: SIDEBAR_WIDTHS.icon })
+      saveExpandedIcon(null)
+      saveSidebarWidth(SIDEBAR_WIDTHS.icon)
+    },
+
+    toggleIcon: (type, id) => {
+      const { expandedIcon, expandVault, expandSmartIcon, collapseAll } = get()
+
+      // If clicking already expanded icon, collapse it
+      if (expandedIcon?.type === type && expandedIcon?.id === id) {
+        collapseAll()
+        return
+      }
+
+      // Otherwise expand this icon (auto-collapses others)
+      if (type === 'vault') {
+        expandVault(id)
+      } else {
+        expandSmartIcon(id)
+      }
+    },
+
+    setIconMode: (type, id, mode) => {
+      const { pinnedVaults, smartIcons, expandedIcon, compactModeWidth, cardModeWidth } = get()
+
+      // Update icon's preferred mode
+      if (type === 'vault') {
+        const newVaults = pinnedVaults.map(v =>
+          v.id === id ? { ...v, preferredMode: mode } : v
+        )
+        set({ pinnedVaults: newVaults })
+        savePinnedVaults(newVaults)
+      } else {
+        const newIcons = smartIcons.map(i =>
+          i.id === id ? { ...i, preferredMode: mode } : i
+        )
+        set({ smartIcons: newIcons })
+        saveSmartIcons(newIcons)
+      }
+
+      // Update width if this icon is currently expanded
+      if (expandedIcon?.type === type && expandedIcon?.id === id) {
+        const width = mode === 'compact' ? compactModeWidth : cardModeWidth
+        set({ sidebarWidth: width })
+        saveSidebarWidth(width)
+      }
+    },
+
+    setSidebarWidth: (width: number) => {
+      const { expandedIcon, pinnedVaults, smartIcons } = get()
+
+      // If sidebar collapsed, do nothing
+      if (!expandedIcon) return
+
+      // Get current icon's mode
+      let mode: 'compact' | 'card' = 'compact'
+      if (expandedIcon.type === 'vault') {
+        const vault = pinnedVaults.find(v => v.id === expandedIcon.id)
+        mode = vault?.preferredMode || 'compact'
+      } else {
+        const icon = smartIcons.find(i => i.id === expandedIcon.id)
+        mode = icon?.preferredMode || 'compact'
+      }
+
+      // Constrain width based on mode
+      let constrainedWidth = width
+      if (mode === 'compact') {
+        constrainedWidth = Math.max(SIDEBAR_WIDTHS.compact.min, Math.min(SIDEBAR_WIDTHS.compact.max, width))
+        set({ sidebarWidth: constrainedWidth, compactModeWidth: constrainedWidth })
+        saveSidebarWidth(constrainedWidth)
+        saveCompactModeWidth(constrainedWidth)
+      } else {
+        constrainedWidth = Math.max(SIDEBAR_WIDTHS.card.min, Math.min(SIDEBAR_WIDTHS.card.max, width))
+        set({ sidebarWidth: constrainedWidth, cardModeWidth: constrainedWidth })
+        saveSidebarWidth(constrainedWidth)
+        saveCardModeWidth(constrainedWidth)
+      }
+    },
 
   // Pinned vaults actions
   addPinnedVault: (projectId, label, color) => {
@@ -709,325 +691,236 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
     return pinnedVaults.some(v => v.id === projectId)
   },
 
-  // Smart icon actions
-  toggleSmartIcon: (iconId) => {
-    const { expandedSmartIconId, smartIcons } = get()
+    // Smart icon actions
+    setSmartIconVisibility: (iconId, visible) => {
+      const { smartIcons } = get()
 
-    // Toggle: if already expanded, collapse it; otherwise expand it
-    const newExpandedId = expandedSmartIconId === iconId ? null : iconId
+      const newIcons = smartIcons.map(icon =>
+        icon.id === iconId ? { ...icon, isVisible: visible } : icon
+      )
 
-    // Update expansion state in smartIcons array
-    const newIcons = smartIcons.map(icon => ({
-      ...icon,
-      isExpanded: icon.id === newExpandedId
-    }))
+      set({ smartIcons: newIcons })
+      saveSmartIcons(newIcons)
+    },
 
-    set({
-      expandedSmartIconId: newExpandedId,
-      smartIcons: newIcons
-    })
-    saveExpandedSmartIconId(newExpandedId)
-    saveSmartIcons(newIcons)
-  },
+    reorderSmartIcons: (fromIndex, toIndex) => {
+      const { smartIcons } = get()
 
-  setSmartIconExpanded: (iconId, expanded) => {
-    const { smartIcons } = get()
+      const newIcons = [...smartIcons]
+      const [moved] = newIcons.splice(fromIndex, 1)
+      newIcons.splice(toIndex, 0, moved)
 
-    // Accordion mode: only one expanded at a time
-    const newExpandedId = expanded ? iconId : null
+      // Update order numbers
+      const reordered = newIcons.map((icon, index) => ({ ...icon, order: index }))
 
-    const newIcons = smartIcons.map(icon => ({
-      ...icon,
-      isExpanded: icon.id === newExpandedId
-    }))
+      set({ smartIcons: reordered })
+      saveSmartIcons(reordered)
+    },
 
-    set({
-      expandedSmartIconId: newExpandedId,
-      smartIcons: newIcons
-    })
-    saveExpandedSmartIconId(newExpandedId)
-    saveSmartIcons(newIcons)
-  },
+    setProjectTypeFilter: (projectType) => {
+      set({ projectTypeFilter: projectType })
+    },
 
-  setSmartIconVisibility: (iconId, visible) => {
-    const { smartIcons } = get()
+    // Tab actions
+    openTab: (tabData) => {
+      const id = generateTabId()
+      const newTab: EditorTab = { ...tabData, id }
+      const { openTabs } = get()
 
-    const newIcons = smartIcons.map(icon =>
-      icon.id === iconId ? { ...icon, isVisible: visible } : icon
-    )
+      // Add after pinned tabs
+      const pinnedCount = openTabs.filter(t => t.isPinned).length
+      const newTabs = [
+        ...openTabs.slice(0, pinnedCount),
+        newTab,
+        ...openTabs.slice(pinnedCount)
+      ]
 
-    set({ smartIcons: newIcons })
-    saveSmartIcons(newIcons)
-  },
+      set({ openTabs: newTabs, activeTabId: id })
+      saveTabs(newTabs)
+      saveActiveTabId(id)
+      return id
+    },
 
-  reorderSmartIcons: (fromIndex, toIndex) => {
-    const { smartIcons } = get()
+    openNoteTab: (noteId, title) => {
+      const { openTabs, openTab, setActiveTab } = get()
 
-    const newIcons = [...smartIcons]
-    const [moved] = newIcons.splice(fromIndex, 1)
-    newIcons.splice(toIndex, 0, moved)
-
-    // Update order numbers
-    const reordered = newIcons.map((icon, index) => ({ ...icon, order: index }))
-
-    set({ smartIcons: reordered })
-    saveSmartIcons(reordered)
-  },
-
-  setProjectTypeFilter: (projectType) => {
-    set({ projectTypeFilter: projectType })
-  },
-
-  // Tab actions
-  openTab: (tabData) => {
-    const id = generateTabId()
-    const newTab: EditorTab = { ...tabData, id }
-    const { openTabs } = get()
-
-    // Add after pinned tabs
-    const pinnedCount = openTabs.filter(t => t.isPinned).length
-    const newTabs = [
-      ...openTabs.slice(0, pinnedCount),
-      newTab,
-      ...openTabs.slice(pinnedCount)
-    ]
-
-    set({ openTabs: newTabs, activeTabId: id })
-    saveTabs(newTabs)
-    saveActiveTabId(id)
-    return id
-  },
-
-  openNoteTab: (noteId, title) => {
-    const { openTabs, openTab, setActiveTab } = get()
-
-    // Check if note is already open
-    const existingTab = openTabs.find(t => t.type === 'note' && t.noteId === noteId)
-    if (existingTab) {
-      setActiveTab(existingTab.id)
-      return
-    }
-
-    // Open new tab
-    openTab({
-      type: 'note',
-      noteId,
-      title: title || 'Untitled',
-      isPinned: false
-    })
-  },
-
-  closeTab: (tabId) => {
-    const { openTabs, activeTabId, closedTabsHistory } = get()
-    const tab = openTabs.find(t => t.id === tabId)
-
-    // Cannot close pinned tabs
-    if (!tab || tab.isPinned) return
-
-    // Save tab to history before removing (max 10)
-    const newHistory = [tab, ...closedTabsHistory].slice(0, 10)
-
-    const tabIndex = openTabs.findIndex(t => t.id === tabId)
-    const newTabs = openTabs.filter(t => t.id !== tabId)
-
-    // If closing active tab, select adjacent
-    let newActiveId = activeTabId
-    if (activeTabId === tabId) {
-      if (tabIndex > 0) {
-        newActiveId = newTabs[tabIndex - 1]?.id || MISSION_CONTROL_TAB_ID
-      } else {
-        newActiveId = newTabs[0]?.id || MISSION_CONTROL_TAB_ID
+      // Check if note is already open
+      const existingTab = openTabs.find(t => t.type === 'note' && t.noteId === noteId)
+      if (existingTab) {
+        setActiveTab(existingTab.id)
+        return
       }
+
+      // Open new tab
+      openTab({
+        type: 'note',
+        noteId,
+        title: title || 'Untitled',
+        isPinned: false
+      })
+    },
+
+    closeTab: (tabId) => {
+      const { openTabs, activeTabId, closedTabsHistory } = get()
+      const tab = openTabs.find(t => t.id === tabId)
+
+      // Cannot close pinned tabs
+      if (!tab || tab.isPinned) return
+
+      // Save tab to history before removing (max 10)
+      const newHistory = [tab, ...closedTabsHistory].slice(0, 10)
+
+      const tabIndex = openTabs.findIndex(t => t.id === tabId)
+      const newTabs = openTabs.filter(t => t.id !== tabId)
+
+      // If closing active tab, select adjacent
+      let newActiveId = activeTabId
+      if (activeTabId === tabId) {
+        if (tabIndex > 0) {
+          newActiveId = newTabs[tabIndex - 1]?.id || MISSION_CONTROL_TAB_ID
+        } else {
+          newActiveId = newTabs[0]?.id || MISSION_CONTROL_TAB_ID
+        }
+      }
+
+      set({ openTabs: newTabs, activeTabId: newActiveId, closedTabsHistory: newHistory })
+      saveTabs(newTabs)
+      saveActiveTabId(newActiveId)
+    },
+
+    setActiveTab: (tabId) => {
+      set({ activeTabId: tabId })
+      saveActiveTabId(tabId)
+    },
+
+    reorderTabs: (fromIndex, toIndex) => {
+      const { openTabs } = get()
+
+      // Don't allow moving pinned tabs or moving before pinned tabs
+      const pinnedCount = openTabs.filter(t => t.isPinned).length
+      if (fromIndex < pinnedCount || toIndex < pinnedCount) return
+
+      const newTabs = [...openTabs]
+      const [removed] = newTabs.splice(fromIndex, 1)
+      newTabs.splice(toIndex, 0, removed)
+
+      set({ openTabs: newTabs })
+      saveTabs(newTabs)
+    },
+
+    pinTab: (tabId) => {
+      const { openTabs } = get()
+      const tabIndex = openTabs.findIndex(t => t.id === tabId)
+      if (tabIndex === -1) return
+
+      const tab = openTabs[tabIndex]
+      if (tab.isPinned) return
+
+      // Pin and move to end of pinned section
+      const newTabs = openTabs.filter(t => t.id !== tabId)
+      const pinnedCount = newTabs.filter(t => t.isPinned).length
+      newTabs.splice(pinnedCount, 0, { ...tab, isPinned: true })
+
+      set({ openTabs: newTabs })
+      saveTabs(newTabs)
+    },
+
+    unpinTab: (tabId) => {
+      const { openTabs } = get()
+
+      // Cannot unpin Mission Control
+      if (tabId === MISSION_CONTROL_TAB_ID) return
+
+      const newTabs = openTabs.map(t =>
+        t.id === tabId ? { ...t, isPinned: false } : t
+      )
+
+      set({ openTabs: newTabs })
+      saveTabs(newTabs)
+    },
+
+    updateTabTitle: (tabId, title) => {
+      const { openTabs } = get()
+      const newTabs = openTabs.map(t =>
+        t.id === tabId ? { ...t, title } : t
+      )
+      set({ openTabs: newTabs })
+      saveTabs(newTabs)
+    },
+
+    reopenLastClosedTab: () => {
+      const { closedTabsHistory, openTabs } = get()
+      if (closedTabsHistory.length === 0) return
+
+      const [tabToReopen, ...remainingHistory] = closedTabsHistory
+
+      // Check if tab is already open (by noteId for note tabs)
+      const existingTab = tabToReopen.type === 'note' && tabToReopen.noteId
+        ? openTabs.find(t => t.type === 'note' && t.noteId === tabToReopen.noteId)
+        : openTabs.find(t => t.id === tabToReopen.id)
+
+      if (existingTab) {
+        // Just activate it and remove from history
+        set({ activeTabId: existingTab.id, closedTabsHistory: remainingHistory })
+        saveActiveTabId(existingTab.id)
+        return
+      }
+
+      // Add tab after pinned tabs
+      const pinnedCount = openTabs.filter(t => t.isPinned).length
+      const newTabs = [
+        ...openTabs.slice(0, pinnedCount),
+        tabToReopen,
+        ...openTabs.slice(pinnedCount)
+      ]
+
+      set({
+        openTabs: newTabs,
+        activeTabId: tabToReopen.id,
+        closedTabsHistory: remainingHistory
+      })
+      saveTabs(newTabs)
+      saveActiveTabId(tabToReopen.id)
+    },
+
+    setLastActiveNote: (noteId: string | null) => {
+      set({ lastActiveNoteId: noteId })
+      saveLastActiveNoteId(noteId)
+    },
+
+    updateSessionTimestamp: () => {
+      saveSessionTimestamp()
+    },
+
+    // Recent notes actions
+    addRecentNote: (noteId: string, noteTitle: string, projectId: string | null) => {
+      const { recentNotes } = get()
+      const existingIndex = recentNotes.findIndex(n => n.id === noteId)
+
+      let updated: RecentNote[]
+      if (existingIndex >= 0) {
+        // Move to front
+        updated = [...recentNotes]
+        updated.splice(existingIndex, 1)
+        updated.unshift({ id: noteId, title: noteTitle, projectId, openedAt: Date.now() })
+      } else {
+        // Add to front, keep max 10
+        updated = [
+          { id: noteId, title: noteTitle, projectId, openedAt: Date.now() },
+          ...recentNotes
+        ].slice(0, 10)
+      }
+
+      set({ recentNotes: updated })
+      saveRecentNotes(updated)
+    },
+
+    clearRecentNotes: () => {
+      set({ recentNotes: [] })
+      saveRecentNotes([])
     }
-
-    set({ openTabs: newTabs, activeTabId: newActiveId, closedTabsHistory: newHistory })
-    saveTabs(newTabs)
-    saveActiveTabId(newActiveId)
-  },
-
-  setActiveTab: (tabId) => {
-    set({ activeTabId: tabId })
-    saveActiveTabId(tabId)
-  },
-
-  reorderTabs: (fromIndex, toIndex) => {
-    const { openTabs } = get()
-
-    // Don't allow moving pinned tabs or moving before pinned tabs
-    const pinnedCount = openTabs.filter(t => t.isPinned).length
-    if (fromIndex < pinnedCount || toIndex < pinnedCount) return
-
-    const newTabs = [...openTabs]
-    const [removed] = newTabs.splice(fromIndex, 1)
-    newTabs.splice(toIndex, 0, removed)
-
-    set({ openTabs: newTabs })
-    saveTabs(newTabs)
-  },
-
-  pinTab: (tabId) => {
-    const { openTabs } = get()
-    const tabIndex = openTabs.findIndex(t => t.id === tabId)
-    if (tabIndex === -1) return
-
-    const tab = openTabs[tabIndex]
-    if (tab.isPinned) return
-
-    // Pin and move to end of pinned section
-    const newTabs = openTabs.filter(t => t.id !== tabId)
-    const pinnedCount = newTabs.filter(t => t.isPinned).length
-    newTabs.splice(pinnedCount, 0, { ...tab, isPinned: true })
-
-    set({ openTabs: newTabs })
-    saveTabs(newTabs)
-  },
-
-  unpinTab: (tabId) => {
-    const { openTabs } = get()
-
-    // Cannot unpin Mission Control
-    if (tabId === MISSION_CONTROL_TAB_ID) return
-
-    const newTabs = openTabs.map(t =>
-      t.id === tabId ? { ...t, isPinned: false } : t
-    )
-
-    set({ openTabs: newTabs })
-    saveTabs(newTabs)
-  },
-
-  updateTabTitle: (tabId, title) => {
-    const { openTabs } = get()
-    const newTabs = openTabs.map(t =>
-      t.id === tabId ? { ...t, title } : t
-    )
-    set({ openTabs: newTabs })
-    saveTabs(newTabs)
-  },
-
-  reopenLastClosedTab: () => {
-    const { closedTabsHistory, openTabs } = get()
-    if (closedTabsHistory.length === 0) return
-
-    const [tabToReopen, ...remainingHistory] = closedTabsHistory
-
-    // Check if tab is already open (by noteId for note tabs)
-    const existingTab = tabToReopen.type === 'note' && tabToReopen.noteId
-      ? openTabs.find(t => t.type === 'note' && t.noteId === tabToReopen.noteId)
-      : openTabs.find(t => t.id === tabToReopen.id)
-
-    if (existingTab) {
-      // Just activate it and remove from history
-      set({ activeTabId: existingTab.id, closedTabsHistory: remainingHistory })
-      saveActiveTabId(existingTab.id)
-      return
-    }
-
-    // Add tab after pinned tabs
-    const pinnedCount = openTabs.filter(t => t.isPinned).length
-    const newTabs = [
-      ...openTabs.slice(0, pinnedCount),
-      tabToReopen,
-      ...openTabs.slice(pinnedCount)
-    ]
-
-    set({
-      openTabs: newTabs,
-      activeTabId: tabToReopen.id,
-      closedTabsHistory: remainingHistory
-    })
-    saveTabs(newTabs)
-    saveActiveTabId(tabToReopen.id)
-  },
-
-  setLastActiveNote: (noteId: string | null) => {
-    set({ lastActiveNoteId: noteId })
-    saveLastActiveNoteId(noteId)
-  },
-
-  updateSessionTimestamp: () => {
-    saveSessionTimestamp()
-  },
-
-  // Recent notes actions
-  addRecentNote: (noteId: string, noteTitle: string, projectId: string | null) => {
-    const { recentNotes } = get()
-    const existingIndex = recentNotes.findIndex(n => n.id === noteId)
-
-    let updated: RecentNote[]
-    if (existingIndex >= 0) {
-      // Move to front
-      updated = [...recentNotes]
-      updated.splice(existingIndex, 1)
-      updated.unshift({ id: noteId, title: noteTitle, projectId, openedAt: Date.now() })
-    } else {
-      // Add to front, keep max 10
-      updated = [
-        { id: noteId, title: noteTitle, projectId, openedAt: Date.now() },
-        ...recentNotes
-      ].slice(0, 10)
-    }
-
-    set({ recentNotes: updated })
-    saveRecentNotes(updated)
-  },
-
-  clearRecentNotes: () => {
-    set({ recentNotes: [] })
-    saveRecentNotes([])
-  },
-
-  // Mode consolidation actions (v1.15.0)
-
-  /**
-   * Determine which mode to expand to based on priority logic:
-   * 1. If "remember mode" setting is ON and we have a last mode → use it
-   * 2. If "remember mode" setting is OFF or no last mode → use preset
-   * 3. Default fallback → compact
-   *
-   * Note: Settings integration will be added in Phase 5
-   */
-  determineExpandMode: (): 'compact' | 'card' => {
-    const { lastExpandedMode } = get()
-
-    // Phase 5: Read settings from Settings store
-    const settings = useSettingsStore.getState().settings
-    const rememberMode = settings['appearance.rememberSidebarMode'] ?? true
-    const widthPreset = (settings['appearance.sidebarWidth'] as string) ?? 'medium'
-
-    // Priority 1: Remember mode ON → use last mode if available
-    if (rememberMode && lastExpandedMode) {
-      return lastExpandedMode
-    }
-
-    // Priority 2: Use width preset to determine mode
-    const presetModes: Record<string, 'compact' | 'card'> = {
-      'narrow': 'compact',   // 200px
-      'medium': 'compact',   // 280px
-      'wide': 'card'         // 360px
-    }
-
-    return presetModes[widthPreset] || 'compact'
-  },
-
-  /**
-   * Get cycle pattern based on width preset
-   * - narrow/medium: Icon ↔ Compact (2 states)
-   * - wide: Icon → Compact → Card → Icon (3 states)
-   *
-   * Note: Settings integration will be added in Phase 5
-   */
-  getCyclePattern: (preset: string): SidebarMode[] => {
-    // TODO: Phase 5 - Read from Settings store if preset not provided
-    const cycleMap: Record<string, SidebarMode[]> = {
-      'narrow': ['icon', 'compact'],
-      'medium': ['icon', 'compact'],
-      'wide': ['icon', 'compact', 'card']
-    }
-
-    return cycleMap[preset] || cycleMap['medium']
   }
-}))
+})
 
 // Initialize session timestamp on first load
 saveSessionTimestamp()
