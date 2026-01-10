@@ -1,10 +1,12 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Project, Note } from '../../types'
 import { useAppViewStore, SIDEBAR_WIDTHS } from '../../store/useAppViewStore'
+import { useSettingsStore } from '../../store/useSettingsStore'
 import { IconBarMode } from './IconBarMode'
 import { CompactListMode } from './CompactListMode'
 import { CardViewMode } from './CardViewMode'
 import { ResizeHandle } from './ResizeHandle'
+import { PresetUpdateDialog } from '../PresetUpdateDialog'
 
 interface MissionSidebarProps {
   projects: Project[]
@@ -52,6 +54,29 @@ export function MissionSidebar({
   onOpenSettings
 }: MissionSidebarProps) {
   const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
+  const { settings, updateSetting } = useSettingsStore()
+  const [presetDialogState, setPresetDialogState] = useState<{
+    currentPreset: string
+    currentWidth: number
+    suggestedPreset: string
+    suggestedWidth: number
+  } | null>(null)
+
+  // Phase 6: Map width to closest preset
+  const getPresetFromWidth = useCallback((width: number): string => {
+    if (width < 240) return 'narrow'
+    if (width < 320) return 'medium'
+    return 'wide'
+  }, [])
+
+  const getPresetWidth = useCallback((preset: string): number => {
+    const widthMap: Record<string, number> = {
+      'narrow': 200,
+      'medium': 280,
+      'wide': 360
+    }
+    return widthMap[preset] || 280
+  }, [])
 
   // Handle resize drag
   const handleResize = useCallback((deltaX: number) => {
@@ -59,8 +84,51 @@ export function MissionSidebar({
     setSidebarWidth(newWidth)
   }, [sidebarWidth, setSidebarWidth])
 
+  // Phase 6: Handle resize end with preset update check
   const handleResizeEnd = useCallback(() => {
-    // Width is already saved in setSidebarWidth
+    const currentPreset = (settings['appearance.sidebarWidth'] as string) ?? 'medium'
+    const suggestedPreset = getPresetFromWidth(sidebarWidth)
+
+    // Check if preset should be updated
+    if (currentPreset !== suggestedPreset) {
+      // Check localStorage for auto-update preference
+      const autoUpdate = localStorage.getItem('scribe:autoUpdatePreset')
+
+      if (autoUpdate === 'true') {
+        // Auto-update preset without dialog
+        updateSetting('appearance.sidebarWidth', suggestedPreset)
+        // Could show a toast notification here (Phase 6 spec)
+      } else {
+        // Show dialog to prompt user
+        setPresetDialogState({
+          currentPreset,
+          currentWidth: sidebarWidth,
+          suggestedPreset,
+          suggestedWidth: getPresetWidth(suggestedPreset)
+        })
+      }
+    }
+  }, [sidebarWidth, settings, getPresetFromWidth, getPresetWidth, updateSetting])
+
+  // Phase 6: Handle preset update from dialog
+  const handlePresetUpdate = useCallback((dontAskAgain: boolean) => {
+    if (presetDialogState) {
+      // Update preset in Settings
+      updateSetting('appearance.sidebarWidth', presetDialogState.suggestedPreset)
+
+      // Save "don't ask again" preference to localStorage
+      if (dontAskAgain) {
+        localStorage.setItem('scribe:autoUpdatePreset', 'true')
+      }
+
+      // Close dialog
+      setPresetDialogState(null)
+    }
+  }, [presetDialogState, updateSetting])
+
+  // Phase 6: Handle skipping preset update
+  const handlePresetSkip = useCallback(() => {
+    setPresetDialogState(null)
   }, [])
 
   // Handle double-click reset to default width
@@ -167,6 +235,18 @@ export function MissionSidebar({
           onResize={handleResize}
           onResizeEnd={handleResizeEnd}
           onReset={handleReset}
+        />
+      )}
+
+      {/* Phase 6: Preset Update Dialog */}
+      {presetDialogState && (
+        <PresetUpdateDialog
+          currentPreset={presetDialogState.currentPreset}
+          currentWidth={presetDialogState.currentWidth}
+          suggestedPreset={presetDialogState.suggestedPreset}
+          suggestedWidth={presetDialogState.suggestedWidth}
+          onUpdate={handlePresetUpdate}
+          onSkip={handlePresetSkip}
         />
       )}
     </aside>
