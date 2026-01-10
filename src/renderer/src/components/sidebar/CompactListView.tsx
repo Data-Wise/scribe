@@ -382,7 +382,7 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
               <ChevronIcon size={14} className="chevron" />
               <ProjectIcon size={14} className="folder-icon" />
               <span className="project-name">{project.name}</span>
-              <ActivityDots noteCount={noteCount} size="compact" />
+              <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
             </div>
           </button>
         </ProjectTooltip>
