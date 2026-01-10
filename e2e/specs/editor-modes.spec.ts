@@ -59,7 +59,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Mode Switching - UI Buttons', () => {
-    test('EDM-06: Click Source button switches to Source mode', async ({ basePage }) => {
+    test('EDM-06: Click Source button switches to Source mode', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
       await basePage.page.waitForTimeout(200)
@@ -68,9 +68,9 @@ test.describe('Editor Modes', () => {
       const editor = basePage.page.locator('[data-testid="hybrid-editor"]')
       await expect(editor).toHaveAttribute('data-mode', 'source')
 
-      // Verify textarea is visible
-      const textarea = basePage.page.locator('textarea.hybrid-editor-textarea')
-      await expect(textarea).toBeVisible()
+      // Verify CodeMirror editor is visible in Source mode
+      await cmEditor.waitForEditor()
+      await expect(cmEditor.getEditor()).toBeVisible()
     })
 
     test('EDM-07: Click Live button switches to Live Preview mode', async ({ basePage }) => {

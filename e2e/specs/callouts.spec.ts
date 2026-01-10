@@ -14,7 +14,7 @@ import { test, expect } from '../fixtures'
  */
 
 test.describe('Callouts', () => {
-  test.beforeEach(async ({ basePage }) => {
+  test.beforeEach(async ({ basePage, cmEditor }) => {
     await basePage.goto()
     // Wait for app to fully load
     await basePage.page.waitForTimeout(1500)
@@ -59,10 +59,9 @@ test.describe('Callouts', () => {
 > [!abstract] Summary
 > This is an abstract callout.`
 
-    // Focus editor and type content
-    const textarea = basePage.page.locator('textarea.hybrid-editor-textarea')
-    await expect(textarea).toBeVisible({ timeout: 5000 })
-    await textarea.fill(calloutContent)
+    // Focus editor and type content using CodeMirror helper
+    await cmEditor.waitForEditor()
+    await cmEditor.fill(calloutContent)
     await basePage.page.waitForTimeout(500)
 
     // Switch to Reading mode to see rendered callouts
@@ -299,17 +298,15 @@ test.describe('Callouts', () => {
   })
 
   test.describe('Mode Switching Behavior', () => {
-    test('CAL-14: Callouts render as blockquotes in Source mode', async ({ basePage }) => {
+    test('CAL-14: Callouts render as blockquotes in Source mode', async ({ basePage, cmEditor }) => {
       // Switch to Source mode
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
       await basePage.page.waitForTimeout(200)
 
-      // In source mode, should see raw markdown syntax
-      const textarea = basePage.page.locator('textarea.hybrid-editor-textarea')
-      await expect(textarea).toBeVisible()
-
-      const content = await textarea.inputValue()
+      // In source mode, should see raw markdown syntax in CodeMirror
+      await cmEditor.waitForEditor()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain('> [!note]')
       expect(content).toContain('> [!tip]')
     })
@@ -326,7 +323,7 @@ test.describe('Callouts', () => {
       expect(count).toBeGreaterThan(10)
     })
 
-    test('CAL-16: Switching from Reading to Source preserves callout data', async ({ basePage }) => {
+    test('CAL-16: Switching from Reading to Source preserves callout data', async ({ basePage, cmEditor }) => {
       await basePage.page.waitForTimeout(500)
 
       // Verify callout is visible
@@ -338,21 +335,21 @@ test.describe('Callouts', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(200)
 
-      // Verify markdown syntax is preserved
-      const textarea = basePage.page.locator('textarea.hybrid-editor-textarea')
-      const content = await textarea.inputValue()
+      // Verify markdown syntax is preserved in CodeMirror
+      await cmEditor.waitForEditor()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain('> [!note] Note Callout')
     })
 
-    test('CAL-17: Switching from Source to Reading renders callouts correctly', async ({ basePage }) => {
+    test('CAL-17: Switching from Source to Reading renders callouts correctly', async ({ basePage, cmEditor }) => {
       // Start in Source mode
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
       await basePage.page.waitForTimeout(200)
 
-      // Verify raw markdown
-      const textarea = basePage.page.locator('textarea.hybrid-editor-textarea')
-      const content = await textarea.inputValue()
+      // Verify raw markdown in CodeMirror
+      await cmEditor.waitForEditor()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain('> [!note]')
 
       // Switch to Reading mode

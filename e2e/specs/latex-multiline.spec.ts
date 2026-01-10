@@ -408,7 +408,7 @@ $$`
   })
 
   test.describe('Mode Switching', () => {
-    test('LAT-E2E-16: Switch to Source mode shows raw LaTeX', async ({ basePage }) => {
+    test('LAT-E2E-16: Switch to Source mode shows raw LaTeX', async ({ basePage, cmEditor }) => {
       const editor = basePage.page.locator('.cm-content')
       await editor.click()
 
@@ -432,9 +432,9 @@ $$`
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Should show raw LaTeX in textarea
-      const textarea = basePage.page.locator('textarea.hybrid-editor-textarea')
-      const content = await textarea.inputValue()
+      // Should show raw LaTeX in CodeMirror
+      await cmEditor.waitForEditor()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain('$$')
       expect(content).toContain('E = mc^2')
     })
