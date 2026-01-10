@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import {
   // General
   Folder, FolderOpen, File, FileText, Files,

@@ -106,8 +106,8 @@ function truncateProjectName(name: string, maxLength: number): string {
   return truncated.slice(0, maxLength - 1) + '…'
 }
 
-function formatRelativeTime(dateString: string): string {
-  const date = new Date(dateString)
+function formatRelativeTime(timestamp: number): string {
+  const date = new Date(timestamp)
   const now = new Date()
   const diffMs = now.getTime() - date.getTime()
   const diffMins = Math.floor(diffMs / 60000)

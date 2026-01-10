@@ -28,7 +28,7 @@ const PROJECT_TYPES: { value: ProjectType; label: string; description: string }[
 interface CreateProjectModalProps {
   isOpen: boolean
   onClose: () => void
-  onCreateProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onCreateProject: (project: Omit<Project, 'id' | 'created_at' | 'updated_at'>) => void
   existingProjectNames?: string[] // For validation
 }
 

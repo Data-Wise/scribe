@@ -21,7 +21,7 @@ export function PresetUpdateDialog({
   currentPreset,
   currentWidth,
   suggestedPreset,
-  suggestedWidth,
+  suggestedWidth: _suggestedWidth,
   onUpdate,
   onSkip
 }: PresetUpdateDialogProps) {

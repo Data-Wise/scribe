@@ -4,7 +4,7 @@ import { MoreHorizontal, Pin, FolderOpen } from 'lucide-react'
 interface TooltipAction {
   label: string
   icon?: React.ReactNode
-  onClick: () => void
+  onClick: (e?: React.MouseEvent) => void
   variant?: 'default' | 'primary'
 }
 

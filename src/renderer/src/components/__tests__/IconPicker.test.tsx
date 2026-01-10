@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { IconPicker, getIconByName, getAvailableIcons } from '../IconPicker'
 import { Folder } from 'lucide-react'
@@ -73,7 +73,7 @@ describe('IconPicker Component', () => {
   })
 
   it('highlights selected icon', () => {
-    const { container } = render(
+    render(
       <IconPicker
         selectedIcon="Folder"
         onSelectIcon={mockOnSelectIcon}

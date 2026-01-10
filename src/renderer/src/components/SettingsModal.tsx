@@ -79,7 +79,7 @@ import { api } from '../lib/api'
 import { isBrowser, isTauri } from '../lib/platform'
 import { db, seedDemoData } from '../lib/browser-db'
 import { getDefaultTerminalFolder, setDefaultTerminalFolder } from '../lib/terminal-utils'
-import { PinnedVaultsSettings } from './settings/PinnedVaultsSettings'
+import { PinnedVaultsSettings } from './Settings/PinnedVaultsSettings'
 
 interface SettingsModalProps {
   isOpen: boolean

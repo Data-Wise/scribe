@@ -179,7 +179,8 @@ export function HybridEditor({
   }, [focusMode, mode, localContent])
 
   // Handle textarea input and check for autocomplete triggers
-  const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  // NOTE: Currently unused but kept for future textarea implementation
+  const _handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target
     const text = textarea.value
     const cursorPos = textarea.selectionStart ?? text.length
@@ -375,7 +376,8 @@ export function HybridEditor({
   }, [localContent, onChange])
 
   // Handle keyboard navigation in autocomplete
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  // NOTE: Currently unused but kept for future textarea implementation
+  const _handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Close autocomplete on Escape
     if (e.key === 'Escape') {
       if (wikiLinkTrigger || tagTrigger || citationTrigger) {

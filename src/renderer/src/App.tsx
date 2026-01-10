@@ -93,6 +93,9 @@ function App() {
     createProject
   } = useProjectStore()
 
+  // Toast notifications
+  const { showToast } = useToast()
+
   // Apply Forest Night theme
   useForestTheme()
 
