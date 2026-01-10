@@ -184,7 +184,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Content Persistence Across Modes', () => {
-    test('EDM-15: Content persists when switching from Source to Live', async ({ basePage }) => {
+    test('EDM-15: Content persists when switching from Source to Live', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
 
@@ -192,12 +192,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Get current content and append test content using fill (more reliable than keyboard.type)
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
+      // Get current content and append test content using CodeMirror helper
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
       const testContent = 'PERSISTENCE_TEST_MARKER'
-      await textarea.fill(currentContent + '\n\n' + testContent)
+      await cmEditor.fill(currentContent + '\n\n' + testContent)
       await basePage.page.waitForTimeout(300)
 
       // Switch to live mode
@@ -205,24 +204,22 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Verify content is present in CodeMirror
-      const cmEditor = basePage.page.locator('.cm-editor')
-      await expect(cmEditor).toContainText(testContent)
+      await expect(cmEditor.getEditor()).toContainText(testContent)
     })
 
-    test('EDM-16: Content persists when switching from Live to Reading', async ({ basePage }) => {
+    test('EDM-16: Content persists when switching from Live to Reading', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
-      // First add content in source mode using reliable fill()
+      // First add content in source mode using CodeMirror helper
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
       const testContent = 'LIVE_TO_READING_MARKER'
-      await textarea.fill(currentContent + '\n\n' + testContent)
+      await cmEditor.fill(currentContent + '\n\n' + testContent)
       await basePage.page.waitForTimeout(300)
 
       // Switch to live mode
@@ -238,7 +235,7 @@ test.describe('Editor Modes', () => {
       await expect(prose).toContainText(testContent)
     })
 
-    test('EDM-17: Content persists through full mode cycle', async ({ basePage }) => {
+    test('EDM-17: Content persists through full mode cycle', async ({ basePage, cmEditor }) => {
       const testContent = `CYCLE_TEST_${Date.now()}`
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
@@ -248,11 +245,10 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\n' + testContent)
+      // Use CodeMirror helper for reliable content insertion
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\n' + testContent)
       await basePage.page.waitForTimeout(300)
 
       // Cycle through all modes using buttons
@@ -263,39 +259,38 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Verify content still exists in source textarea
-      const sourceTextarea = basePage.page.locator('textarea')
-      const content = await sourceTextarea.inputValue()
+      // Verify content still exists in CodeMirror
+      await cmEditor.waitForEditor()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain(testContent)
     })
   })
 
   test.describe('Mode-Specific Behaviors', () => {
-    test('EDM-18: Source mode shows textarea element', async ({ basePage }) => {
+    test('EDM-18: Source mode shows CodeMirror editor', async ({ basePage, cmEditor }) => {
       // Switch to source mode using button click (more reliable than shortcut)
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Textarea should be visible in source mode
-      const textarea = basePage.page.locator('textarea')
-      await expect(textarea).toBeVisible()
+      // CodeMirror should be visible in source mode
+      await cmEditor.waitForEditor()
+      await expect(cmEditor.getEditor()).toBeVisible()
     })
 
-    test('EDM-19: Source mode textarea is focusable and editable', async ({ basePage }) => {
+    test('EDM-19: Source mode CodeMirror is focusable and editable', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
+      // Use CodeMirror helper for reliable content insertion
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
       const testMarker = 'EDITABLE_TEST_MARKER'
-      await textarea.fill(currentContent + '\n\n' + testMarker)
+      await cmEditor.fill(currentContent + '\n\n' + testMarker)
       await basePage.page.waitForTimeout(100)
 
-      const content = await textarea.inputValue()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain(testMarker)
     })
 
@@ -308,27 +303,25 @@ test.describe('Editor Modes', () => {
       await expect(cmEditor).toBeVisible()
     })
 
-    test('EDM-21: Live Preview mode CodeMirror is editable', async ({ basePage }) => {
+    test('EDM-21: Live Preview mode CodeMirror is editable', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
 
-      // First add content in source mode using reliable fill()
+      // First add content in source mode using CodeMirror helper
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
       const testMarker = 'CODEMIRROR_EDITABLE_MARKER'
-      await textarea.fill(currentContent + '\n\n' + testMarker)
+      await cmEditor.fill(currentContent + '\n\n' + testMarker)
       await basePage.page.waitForTimeout(300)
 
       // Switch to live mode and verify content is visible
       await liveBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      const cmContent = basePage.page.locator('.cm-editor .cm-content')
-      await expect(cmContent).toContainText(testMarker)
+      await expect(cmEditor.getEditor()).toContainText(testMarker)
     })
 
     test('EDM-22: Reading mode shows rendered markdown', async ({ basePage }) => {
@@ -363,11 +356,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\n## HeadingMarkerTest\n\nParagraph text')
+      // Use CodeMirror helper for reliable content insertion
+      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
+      await cmHelper.waitForEditor()
+      const currentContent = await cmHelper.getTextContent()
+      await cmHelper.fill(currentContent + '\n\n## HeadingMarkerTest\n\nParagraph text')
       await basePage.page.waitForTimeout(300)
 
       // Switch to reading mode
@@ -386,11 +379,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\n- ListItemAlpha\n- ListItemBeta\n- ListItemGamma')
+      // Use CodeMirror helper for reliable content insertion
+      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
+      await cmHelper.waitForEditor()
+      const currentContent = await cmHelper.getTextContent()
+      await cmHelper.fill(currentContent + '\n\n- ListItemAlpha\n- ListItemBeta\n- ListItemGamma')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -431,11 +424,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\n`inlinecodemarker`')
+      // Use CodeMirror helper for reliable content insertion
+      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
+      await cmHelper.waitForEditor()
+      const currentContent = await cmHelper.getTextContent()
+      await cmHelper.fill(currentContent + '\n\n`inlinecodemarker`')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -454,11 +447,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\nThis is ~~strikethroughmarker~~ text')
+      // Use CodeMirror helper for reliable content insertion
+      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
+      await cmHelper.waitForEditor()
+      const currentContent = await cmHelper.getTextContent()
+      await cmHelper.fill(currentContent + '\n\nThis is ~~strikethroughmarker~~ text')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -476,11 +469,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\nLive ~~strikethroughlive~~ preview')
+      // Use CodeMirror helper for reliable content insertion
+      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
+      await cmHelper.waitForEditor()
+      const currentContent = await cmHelper.getTextContent()
+      await cmHelper.fill(currentContent + '\n\nLive ~~strikethroughlive~~ preview')
       await basePage.page.waitForTimeout(300)
 
       await liveBtn.click()
@@ -500,11 +493,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\nInlineMathMarker: $E = mc^2$')
+      // Use CodeMirror helper for reliable content insertion
+      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
+      await cmHelper.waitForEditor()
+      const currentContent = await cmHelper.getTextContent()
+      await cmHelper.fill(currentContent + '\n\nInlineMathMarker: $E = mc^2$')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -523,11 +516,11 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\nDisplayMathMarker:\n$$x^2 + y^2 = z^2$$')
+      // Use CodeMirror helper for reliable content insertion
+      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
+      await cmHelper.waitForEditor()
+      const currentContent = await cmHelper.getTextContent()
+      await cmHelper.fill(currentContent + '\n\nDisplayMathMarker:\n$$x^2 + y^2 = z^2$$')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()

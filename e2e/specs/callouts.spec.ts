@@ -14,18 +14,16 @@ import { test, expect } from '../fixtures'
  */
 
 test.describe('Callouts', () => {
-  test.beforeEach(async ({ seededPage, cmEditor }) => {
-    // seededPage already has test notes loaded
-    // Wait for app to be ready
-    await seededPage.page.waitForTimeout(500)
+  test.beforeEach(async ({ basePage, cmEditor }) => {
+    await basePage.goto()
+    // Wait for app to fully load
+    await basePage.page.waitForTimeout(1500)
 
-    // Open an existing test note
-    const testNote = seededPage.page.locator('button:has-text("Test Note One")').first()
-    await expect(testNote).toBeVisible({ timeout: 5000 })
-    await testNote.click()
-    await seededPage.page.waitForTimeout(500)
+    // Create a new note with callout test content
+    await basePage.page.keyboard.press('Meta+n')  // ⌘N for new note
 
-    // Wait for editor to be ready
+    // Wait for note to be created and editor to be ready
+    await basePage.page.waitForTimeout(1000)
     await cmEditor.waitForEditor()
 
     // Type callout test content
@@ -66,25 +64,25 @@ test.describe('Callouts', () => {
 
     // Clear existing content and fill with callout test data
     await cmEditor.fill(calloutContent)
-    await seededPage.page.waitForTimeout(500)
+    await basePage.page.waitForTimeout(500)
 
     // Switch to Reading mode to see rendered callouts
-    const readingBtn = seededPage.page.locator('button:has-text("Reading")')
+    const readingBtn = basePage.page.locator('button:has-text("Reading")')
     await readingBtn.click()
-    await seededPage.page.waitForTimeout(1000)  // Wait for callouts to render
+    await basePage.page.waitForTimeout(1000)  // Wait for callouts to render
 
     // Verify at least one callout is visible before tests run
-    const firstCallout = seededPage.page.locator('.callout-box').first()
+    const firstCallout = basePage.page.locator('.callout-box').first()
     await expect(firstCallout).toBeVisible({ timeout: 5000 })
   })
 
   test.describe('Basic Callout Rendering', () => {
-    test('CAL-01: Note callout renders with blue theme and icon', async ({ seededPage }) => {
+    test('CAL-01: Note callout renders with blue theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
       // Find note callout by title text
-      const noteCallout = seededPage.page.locator('.callout-box').first()
+      const noteCallout = basePage.page.locator('.callout-box').first()
       await expect(noteCallout).toBeVisible()
 
       // Check title is present
@@ -100,12 +98,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText('note')
     })
 
-    test('CAL-02: Tip callout renders with cyan/green theme and icon', async ({ seededPage }) => {
+    test('CAL-02: Tip callout renders with cyan/green theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const tipCallout = seededPage.page.locator('.callout-box:has-text("Pro Tip")').first()
+      const tipCallout = basePage.page.locator('.callout-box:has-text("Pro Tip")').first()
       await expect(tipCallout).toBeVisible()
 
       const title = tipCallout.locator('.callout-title:has-text("Pro Tip")')
@@ -118,12 +116,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText('tip')
     })
 
-    test('CAL-03: Warning callout renders with orange/amber theme and icon', async ({ seededPage }) => {
+    test('CAL-03: Warning callout renders with orange/amber theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const warningCallout = seededPage.page.locator('.callout-box:has-text("Warning")').first()
+      const warningCallout = basePage.page.locator('.callout-box:has-text("Warning")').first()
       await expect(warningCallout).toBeVisible()
 
       const title = warningCallout.locator('.callout-title:has-text("Warning")')
@@ -136,12 +134,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText('warning')
     })
 
-    test('CAL-04: Danger callout renders with red theme and icon', async ({ seededPage }) => {
+    test('CAL-04: Danger callout renders with red theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const dangerCallout = seededPage.page.locator('.callout-box:has-text("Critical")').first()
+      const dangerCallout = basePage.page.locator('.callout-box:has-text("Critical")').first()
       await expect(dangerCallout).toBeVisible()
 
       const title = dangerCallout.locator('.callout-title:has-text("Critical")')
@@ -154,12 +152,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText('danger')
     })
 
-    test('CAL-05: Information callout renders with blue theme and icon', async ({ seededPage }) => {
+    test('CAL-05: Information callout renders with blue theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const infoCallout = seededPage.page.locator('.callout-box:has-text("Info")').first()
+      const infoCallout = basePage.page.locator('.callout-box:has-text("Info")').first()
       await expect(infoCallout).toBeVisible()
 
       const title = infoCallout.locator('.callout-title:has-text("Info")')
@@ -172,12 +170,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText('info')
     })
 
-    test('CAL-06: Success callout renders with green theme and icon', async ({ seededPage }) => {
+    test('CAL-06: Success callout renders with green theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const successCallout = seededPage.page.locator('.callout-box:has-text("Well Done!")').first()
+      const successCallout = basePage.page.locator('.callout-box:has-text("Well Done!")').first()
       await expect(successCallout).toBeVisible()
 
       const title = successCallout.locator('.callout-title:has-text("Well Done!")')
@@ -190,12 +188,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText("success")
     })
 
-    test('CAL-07: Question callout renders with purple theme and icon', async ({ seededPage }) => {
+    test('CAL-07: Question callout renders with purple theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const questionCallout = seededPage.page.locator('.callout-box:has-text("FAQ")').first()
+      const questionCallout = basePage.page.locator('.callout-box:has-text("FAQ")').first()
       await expect(questionCallout).toBeVisible()
 
       const title = questionCallout.locator('.callout-title:has-text("FAQ")')
@@ -208,12 +206,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText("question")
     })
 
-    test('CAL-08: Example callout renders with gray theme and icon', async ({ seededPage }) => {
+    test('CAL-08: Example callout renders with gray theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const exampleCallout = seededPage.page.locator('.callout-box:has-text("Example")').first()
+      const exampleCallout = basePage.page.locator('.callout-box:has-text("Example")').first()
       await expect(exampleCallout).toBeVisible()
 
       const title = exampleCallout.locator('.callout-title:has-text("Example")')
@@ -226,12 +224,12 @@ test.describe('Callouts', () => {
       await expect(content).toContainText('example')
     })
 
-    test('CAL-09: Quote callout renders with gray theme and icon', async ({ seededPage }) => {
+    test('CAL-09: Quote callout renders with gray theme and icon', async ({ basePage }) => {
       // Note is already in Reading mode from beforeEach
       // No need to switch modes
-      await seededPage.page.waitForTimeout(300)
+      await basePage.page.waitForTimeout(300)
 
-      const quoteCallout = seededPage.page.locator('.callout-box:has-text("Albert Einstein")').first()
+      const quoteCallout = basePage.page.locator('.callout-box:has-text("Albert Einstein")').first()
       await expect(quoteCallout).toBeVisible()
 
       const title = quoteCallout.locator('.callout-title:has-text("Albert Einstein")')
@@ -244,10 +242,10 @@ test.describe('Callouts', () => {
       await expect(content).toContainText("quote")
     })
 
-    test('CAL-10: Bug callout renders with red theme and icon', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-10: Bug callout renders with red theme and icon', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
-      const bugCallout = seededPage.page.locator('.callout-box:has-text("Bug")').first()
+      const bugCallout = basePage.page.locator('.callout-box:has-text("Bug")').first()
       await expect(bugCallout).toBeVisible()
 
       const title = bugCallout.locator('.callout-title:has-text("Bug")')
@@ -260,10 +258,10 @@ test.describe('Callouts', () => {
       await expect(content).toContainText("bug")
     })
 
-    test('CAL-11: Abstract/Summary callout renders with cyan theme and icon', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-11: Abstract/Summary callout renders with cyan theme and icon', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
-      const summaryCallout = seededPage.page.locator('.callout-box:has-text("Summary")').first()
+      const summaryCallout = basePage.page.locator('.callout-box:has-text("Summary")').first()
       await expect(summaryCallout).toBeVisible()
 
       const title = summaryCallout.locator('.callout-title:has-text("Summary")')
@@ -278,22 +276,22 @@ test.describe('Callouts', () => {
   })
 
   test.describe('Custom Titles', () => {
-    test('CAL-12: Callout with custom title renders correctly', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-12: Callout with custom title renders correctly', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // Look for custom titled callout (Pro Tip is a custom title)
-      const customCallout = seededPage.page.locator('.callout-box:has-text("Pro Tip")').first()
+      const customCallout = basePage.page.locator('.callout-box:has-text("Pro Tip")').first()
       await expect(customCallout).toBeVisible()
 
       const title = customCallout.locator('.callout-title:has-text("Pro Tip")')
       await expect(title).toBeVisible()
     })
 
-    test('CAL-13: Callout without title uses default capitalized type', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-13: Callout without title uses default capitalized type', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // Note callout should use default "Note" title if no custom title provided
-      const noteCallout = seededPage.page.locator('.callout-box').first()
+      const noteCallout = basePage.page.locator('.callout-box').first()
       const title = noteCallout.locator('.callout-title')
 
       // Title should be capitalized type name
@@ -302,11 +300,11 @@ test.describe('Callouts', () => {
   })
 
   test.describe('Mode Switching Behavior', () => {
-    test('CAL-14: Callouts render as blockquotes in Source mode', async ({ seededPage, cmEditor }) => {
+    test('CAL-14: Callouts render as blockquotes in Source mode', async ({ basePage, cmEditor }) => {
       // Switch to Source mode
-      const sourceBtn = seededPage.page.locator('button:has-text("Source")')
+      const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
-      await seededPage.page.waitForTimeout(200)
+      await basePage.page.waitForTimeout(200)
 
       // In source mode, should see raw markdown syntax in CodeMirror
       await cmEditor.waitForEditor()
@@ -315,11 +313,11 @@ test.describe('Callouts', () => {
       expect(content).toContain('> [!tip]')
     })
 
-    test('CAL-15: Callouts render as styled boxes in Reading mode', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-15: Callouts render as styled boxes in Reading mode', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // Should see styled callout boxes
-      const calloutBoxes = seededPage.page.locator('.callout-box')
+      const calloutBoxes = basePage.page.locator('.callout-box')
       await expect(calloutBoxes.first()).toBeVisible()
 
       // Count should be > 10 (we have 11+ callouts in demo)
@@ -327,17 +325,17 @@ test.describe('Callouts', () => {
       expect(count).toBeGreaterThan(10)
     })
 
-    test('CAL-16: Switching from Reading to Source preserves callout data', async ({ seededPage, cmEditor }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-16: Switching from Reading to Source preserves callout data', async ({ basePage, cmEditor }) => {
+      await basePage.page.waitForTimeout(500)
 
       // Verify callout is visible
-      const callout = seededPage.page.locator('.callout-box:has-text("Note Callout")').first()
+      const callout = basePage.page.locator('.callout-box:has-text("Note Callout")').first()
       await expect(callout).toBeVisible()
 
       // Switch to Source mode
-      const sourceBtn = seededPage.page.locator('button:has-text("Source")')
+      const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
-      await seededPage.page.waitForTimeout(200)
+      await basePage.page.waitForTimeout(200)
 
       // Verify markdown syntax is preserved in CodeMirror
       await cmEditor.waitForEditor()
@@ -345,11 +343,11 @@ test.describe('Callouts', () => {
       expect(content).toContain('> [!note] Note Callout')
     })
 
-    test('CAL-17: Switching from Source to Reading renders callouts correctly', async ({ seededPage, cmEditor }) => {
+    test('CAL-17: Switching from Source to Reading renders callouts correctly', async ({ basePage, cmEditor }) => {
       // Start in Source mode
-      const sourceBtn = seededPage.page.locator('button:has-text("Source")')
+      const sourceBtn = basePage.page.locator('button:has-text("Source")')
       await sourceBtn.click()
-      await seededPage.page.waitForTimeout(200)
+      await basePage.page.waitForTimeout(200)
 
       // Verify raw markdown in CodeMirror
       await cmEditor.waitForEditor()
@@ -357,31 +355,31 @@ test.describe('Callouts', () => {
       expect(content).toContain('> [!note]')
 
       // Switch to Reading mode
-      const readingBtn = seededPage.page.locator('button:has-text("Reading")')
+      const readingBtn = basePage.page.locator('button:has-text("Reading")')
       await readingBtn.click()
-      await seededPage.page.waitForTimeout(200)
+      await basePage.page.waitForTimeout(200)
 
       // Verify callouts render as styled boxes
-      const callout = seededPage.page.locator('.callout-box:has-text("Note Callout")').first()
+      const callout = basePage.page.locator('.callout-box:has-text("Note Callout")').first()
       await expect(callout).toBeVisible()
     })
   })
 
   test.describe('Callout Structure', () => {
-    test('CAL-18: Callout box has correct CSS classes', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-18: Callout box has correct CSS classes', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
-      const callout = seededPage.page.locator('.callout-box').first()
+      const callout = basePage.page.locator('.callout-box').first()
       await expect(callout).toHaveClass(/callout-box/)
       await expect(callout).toHaveClass(/rounded-lg/)
       await expect(callout).toHaveClass(/p-4/)
       await expect(callout).toHaveClass(/my-4/)
     })
 
-    test('CAL-19: Callout header contains icon and title', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-19: Callout header contains icon and title', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
-      const callout = seededPage.page.locator('.callout-box').first()
+      const callout = basePage.page.locator('.callout-box').first()
 
       // Check header exists
       const header = callout.locator('.callout-header')
@@ -396,10 +394,10 @@ test.describe('Callouts', () => {
       await expect(title).toBeVisible()
     })
 
-    test('CAL-20: Callout content area contains text', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-20: Callout content area contains text', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
-      const callout = seededPage.page.locator('.callout-box').first()
+      const callout = basePage.page.locator('.callout-box').first()
       const content = callout.locator('.callout-content')
 
       await expect(content).toBeVisible()
@@ -410,11 +408,11 @@ test.describe('Callouts', () => {
   })
 
   test.describe('Regular Blockquotes (Non-Callouts)', () => {
-    test('CAL-21: Regular blockquotes without [!type] render as italic quotes', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-21: Regular blockquotes without [!type] render as italic quotes', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // Look for callout boxes (should exist for callout examples)
-      const calloutBoxes = seededPage.page.locator('.callout-box')
+      const calloutBoxes = basePage.page.locator('.callout-box')
       const calloutCount = await calloutBoxes.count()
 
       // Should have callouts
@@ -423,11 +421,11 @@ test.describe('Callouts', () => {
   })
 
   test.describe('Edge Cases', () => {
-    test('CAL-22: Empty callout renders with default title', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-22: Empty callout renders with default title', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // All callouts should have titles (either custom or default)
-      const calloutTitles = seededPage.page.locator('.callout-title')
+      const calloutTitles = basePage.page.locator('.callout-title')
       const count = await calloutTitles.count()
 
       expect(count).toBeGreaterThan(0)
@@ -436,35 +434,35 @@ test.describe('Callouts', () => {
       await expect(calloutTitles.first()).toBeVisible()
     })
 
-    test('CAL-23: Multiple callouts on same page all render correctly', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-23: Multiple callouts on same page all render correctly', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // Should have 11+ callouts in the demo note
-      const calloutBoxes = seededPage.page.locator('.callout-box')
+      const calloutBoxes = basePage.page.locator('.callout-box')
       const count = await calloutBoxes.count()
 
       expect(count).toBeGreaterThanOrEqual(11)
     })
 
-    test('CAL-24: Callout rendering does not affect other markdown elements', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-24: Callout rendering does not affect other markdown elements', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // Headers should still render
-      const headers = seededPage.page.locator('h1, h2, h3')
+      const headers = basePage.page.locator('h1, h2, h3')
       const headerCount = await headers.count()
       expect(headerCount).toBeGreaterThan(0)
 
       // Callouts should also render
-      const callouts = seededPage.page.locator('.callout-box')
+      const callouts = basePage.page.locator('.callout-box')
       const calloutCount = await callouts.count()
       expect(calloutCount).toBeGreaterThan(0)
     })
 
-    test('CAL-25: Callout icons are visible and not broken', async ({ seededPage }) => {
-      await seededPage.page.waitForTimeout(500)
+    test('CAL-25: Callout icons are visible and not broken', async ({ basePage }) => {
+      await basePage.page.waitForTimeout(500)
 
       // All callouts should have visible icons
-      const icons = seededPage.page.locator('.callout-icon')
+      const icons = basePage.page.locator('.callout-icon')
       const count = await icons.count()
 
       expect(count).toBeGreaterThanOrEqual(11)
