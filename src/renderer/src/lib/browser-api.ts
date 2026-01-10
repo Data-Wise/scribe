@@ -675,5 +675,7 @@ export const initializeBrowserApi = async (): Promise<void> => {
   await reindexAllNotes()
 }
 
-// Auto-initialize on import (browser mode only)
-initializeBrowserApi().catch(console.error)
+// Auto-initialize on import (browser mode only, skip in tests)
+if (typeof import.meta.env?.VITEST === 'undefined') {
+  initializeBrowserApi().catch(console.error)
+}

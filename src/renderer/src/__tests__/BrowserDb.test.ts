@@ -120,21 +120,24 @@ describe('Browser Database (IndexedDB)', () => {
 
       expect(seeded).toBe(true)
 
-      // Verify project was created
+      // Verify projects were created (updated for v1.15.0 - 2 projects now)
       const projects = await db.projects.toArray()
-      expect(projects.length).toBe(1)
-      expect(projects[0].name).toBe('Getting Started')
+      expect(projects.length).toBe(2)
+      const projectNames = projects.map(p => p.name).sort()
+      expect(projectNames).toContain('Getting Started')
+      expect(projectNames).toContain('Research Notes')
 
-      // Verify notes were created
+      // Verify notes were created (updated for v1.15.0 - 7 notes now)
       const notes = await db.notes.toArray()
-      expect(notes.length).toBe(3)
+      expect(notes.length).toBe(7)
 
-      // Verify tags were created
+      // Verify tags were created (updated for v1.15.0 - 4 tags now)
       const tags = await db.tags.toArray()
-      expect(tags.length).toBe(3)
+      expect(tags.length).toBe(4)
       expect(tags.map(t => t.name)).toContain('welcome')
       expect(tags.map(t => t.name)).toContain('tutorial')
       expect(tags.map(t => t.name)).toContain('tips')
+      expect(tags.map(t => t.name)).toContain('phase3')
     })
 
     it('does not re-seed when data exists', async () => {
@@ -145,9 +148,9 @@ describe('Browser Database (IndexedDB)', () => {
       const seeded = await seedDemoData()
       expect(seeded).toBe(false)
 
-      // Should still have only 1 project
+      // Should still have only 2 projects (updated for v1.15.0)
       const projects = await db.projects.toArray()
-      expect(projects.length).toBe(1)
+      expect(projects.length).toBe(2)
     })
 
     it('creates note-tag relationships', async () => {
