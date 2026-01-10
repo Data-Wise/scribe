@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 65
+progress: 70
 version: 1.14.0
-sprint: 35
+sprint: 36
 started: 2026-01-08
-updated: 2026-01-09
+updated: 2026-01-10
 editor: hybrid-markdown++
-next_sprint: 36
-next_focus: UI Design Enhancements (Phase 2 - Customization)
+next_sprint: 37
+next_focus: Mode Consolidation → v1.15.0 Mega Release
 tests: 2146
 unit_tests: 2139
 e2e_tests: 32
@@ -130,27 +130,79 @@ tags:
 
 ---
 
-### v1.16 UI Design Enhancements (Sprint 36) - Phase 2 PLANNED 📋
+### v1.15 UI Design Enhancements (Sprint 36) - Phase 2 COMPLETE ✅
 
-**Status:** 📋 Ready for implementation
+**Status:** ✅ Phase 2 Complete (3/3 features, 100%)
 **Review Document:** `docs/UI-DESIGN-REVIEW-2026-01-09.md` (22KB)
 **Branch:** `feat/sidebar-v2` (continue)
 **Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+**Commits:**
+- `d065ce4` - Sidebar width presets (Task ⑫)
+- `a7e1aec` - Contextual tooltips (Task ⑪)
+- `53759e3` - Auto-collapse sidebar (Task ⑩)
+- `d2889c8` - Custom icons complete (Task ⑨)
 
 **Goal:** Match Obsidian's personalization & power user features
 
-**Duration Estimate:** 12 hours (can parallelize 2 tasks)
+**Completed:** 2026-01-09
+**Duration:** ~12 hours (Tasks ⑨⑩⑪⑫)
 **Inspiration:** Obsidian's Iconic plugin, Auto Hide, VS Code hover tooltips
 
-#### Sprint 36 Phase 2: Customization (12 hours)
+#### Sprint 36 Phase 2: Customization (100% Complete) ✅
 
 **Focus:** Personalization & Power User Features
 
 | # | Task | Effort | Priority | Status | Deliverable |
 |---|------|--------|----------|--------|-------------|
-| ⑨ | Custom icons (Lucide 1,300+) | 4h | P1 | [ ] Pending | IconPicker component |
-| ⑩ | Auto-collapse sidebar option | 3h | P2 | [ ] Pending | Settings toggle |
-| ⑪ | Contextual actions in tooltips | 5h | P2 | [ ] Pending | Enhanced Tooltip component |
+| ⑨ | Custom icons (Lucide 1,300+) | 4h | P1 | ✅ Done | IconPicker component |
+| ⑩ | Auto-collapse sidebar option | 3h | P2 | ✅ Done | Settings toggle |
+| ⑪ | Contextual actions in tooltips | 5h | P2 | ✅ Done | Enhanced Tooltip component |
+| ⑫ | Sidebar width presets | 2h | P2 | ✅ Done | Settings gallery |
+
+---
+
+### v1.15 Sidebar Mode Consolidation (Sprint 36 Late) - IN PROGRESS 🚧
+
+**Status:** 🚧 Phase 1 starting (State Management)
+**Spec:** `docs/specs/SPEC-sidebar-mode-consolidation-2026-01-09.md`
+**Brainstorm:** `BRAINSTORM-sidebar-mode-consolidation-2026-01-09.md`
+**Branch:** `feat/sidebar-v2` (continue)
+**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+**Approved:** 2026-01-10
+
+**Goal:** Universal expansion, smart persistence, preset-aware cycling
+
+**Duration Estimate:** ~10 hours (7h core + 3h testing)
+**Target Version:** v1.15.0 (Mega Release with Sprint 35/36)
+
+#### Mode Consolidation: Implementation Phases
+
+| Phase | Duration | Priority | Status | Deliverable |
+|-------|----------|----------|--------|-------------|
+| 1. State Management | 2h | P1 | 🔄 In Progress | Persistence layer + priority logic |
+| 2. Cycle Behavior | 2h | P1 | [ ] Pending | Preset-aware cycling with debounce |
+| 3. Universal Expand | 2h | P1 | [ ] Pending | Inbox + Smart Folders expansion |
+| ~~4. Preview Animation~~ | ~~2h~~ | P3 | ⏸️ Deferred v1.16.0 | Hover animation |
+| 5. Settings Integration | 1h | P1 | [ ] Pending | 2 new toggles in Appearance |
+| 6. Preset Update Dialog | 1h | P2 | [ ] Pending | "Don't ask again" checkbox |
+| 7. Mode Indicator | 30min | P2 | [ ] Pending | ActivityBar footer label |
+| 8. Migration & Polish | 30min | P1 | [ ] Pending | Defaults + CHANGELOG |
+
+**Testing:** 30-40 E2E tests (focused coverage)
+
+**Key Simplification (2026-01-10):**
+- ✅ Removed `appearance.alwaysUpdatePreset` toggle
+- ✅ Replaced with "Don't ask again" checkbox in dialog (localStorage)
+- ✅ Settings count: 11 (not 12)
+
+**Features Delivered:**
+- Universal expansion (all items: Projects, Inbox, Smart Folders)
+- Smart mode persistence (remember last mode)
+- Preset-aware cycling (narrow: C↔I, wide: C→W→I)
+- Mode-specific width memory
+- Preset update dialog
+- Mode indicator in ActivityBar
+- Empty states for Inbox/Smart Folders
 
 **Task ⑨: Custom Icons (4 hours)**
 
