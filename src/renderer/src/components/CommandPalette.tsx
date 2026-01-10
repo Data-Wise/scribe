@@ -269,7 +269,7 @@ export function CommandPalette({
 
           {notes.length > 0 && (
             <Command.Group heading="Recent Pages" className="command-palette-group">
-              {notes
+              {[...notes]
                 .sort((a, b) => b.updated_at - a.updated_at)
                 .slice(0, 10)
                 .map((note) => (
