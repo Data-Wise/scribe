@@ -1,14 +1,14 @@
 ---
 status: active
 priority: P1
-progress: 70
+progress: 75
 version: 1.14.0
 sprint: 36
 started: 2026-01-08
 updated: 2026-01-10
 editor: hybrid-markdown++
 next_sprint: 37
-next_focus: Mode Consolidation → v1.15.0 Mega Release
+next_focus: v1.15.0 Release Preparation (Mode Consolidation + Sprint 35/36)
 tests: 2291
 unit_tests: 2199
 e2e_tests: 92
@@ -161,20 +161,23 @@ tags:
 
 ---
 
-### v1.15 Sidebar Mode Consolidation (Sprint 36 Late) - COMPLETE ✅
+### v1.15 Sidebar Mode Consolidation (Sprint 36 Late) - MERGED TO DEV ✅
 
 **Status:** ✅ All 7 phases complete (Phase 4 deferred to v1.16.0)
 **Spec:** `docs/specs/SPEC-sidebar-mode-consolidation-2026-01-09.md`
 **Brainstorm:** `BRAINSTORM-sidebar-mode-consolidation-2026-01-09.md`
-**Branch:** `feat/sidebar-v2` (continue)
-**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+**Branch:** Merged to `dev` (commit: 7b7793c)
+**Feature Branch:** `feat/sidebar-v2` (deleted after merge)
+**Worktree:** Removed (cleanup complete)
 **Approved:** 2026-01-10
 **Completed:** 2026-01-10
+**Merged:** 2026-01-10
 
 **Goal:** Universal expansion, smart persistence, preset-aware cycling
 
 **Duration:** ~7 hours (actual implementation time)
 **Target Version:** v1.15.0 (Mega Release with Sprint 35/36)
+**Release Status:** Ready for dev → main PR when releasing v1.15.0
 
 #### Mode Consolidation: Implementation Phases
 
@@ -193,6 +196,16 @@ tags:
 - ✅ 60 E2E tests (comprehensive integration) - COMPLETE (commit: ff28882)
 - ✅ 22 unit tests (strategic component coverage) - COMPLETE (commit: ce92ac0)
 - Total: 82 Mode Consolidation tests (+50% coverage gain)
+
+**Final Delivery Stats:**
+- **79 files changed** (+28,623 insertions, -1,983 deletions)
+- **82 tests added** (60 E2E + 22 unit)
+- **Test suite:** 2,291 total passing (up from 2,225)
+- **Coverage gain:** Mode Consolidation ~40% → ~90% (+50%)
+- **Documentation:** 15+ specification and guide files
+- **Merge commit:** 7b7793c (feat/sidebar-v2 → dev)
+- **Branch cleanup:** Worktree removed, feature branch deleted
+- **Ready for release:** Awaiting v1.15.0 dev → main PR
 
 **Key Simplification (2026-01-10):**
 - ✅ Removed `appearance.alwaysUpdatePreset` toggle
