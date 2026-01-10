@@ -66,28 +66,57 @@ export class CodeMirrorHelper {
    */
   async fill(content: string): Promise<void> {
     await this.waitForEditor()
+    const editor = this.getContent()
+    await editor.click()
 
-    // Use JavaScript to set content directly - much faster than keyboard.type()
-    await this.page.evaluate((text) => {
-      const editorElement = document.querySelector('.cm-content')
-      if (!editorElement) throw new Error('CodeMirror content element not found')
+    // Try direct API access for speed, fall back to keyboard if needed
+    const apiSuccess = await this.page.evaluate((text) => {
+      try {
+        // Find the .cm-editor element (root CodeMirror container)
+        const editorElement = document.querySelector('.cm-editor')
+        if (!editorElement) return false
 
-      // Get the CodeMirror EditorView instance
-      const cmView = (editorElement as any).cmView?.view
-      if (!cmView) throw new Error('CodeMirror view not found')
+        // @uiw/react-codemirror stores the EditorView on the .cm-editor element
+        // Check multiple possible property names
+        const possibleViews = [
+          (editorElement as any).view,
+          (editorElement as any).cmView,
+          (editorElement as any).CodeMirror,
+          // Also check .cm-content as fallback
+          ...(editorElement.querySelector('.cm-content') ?
+            [(editorElement.querySelector('.cm-content') as any)?.cmView] : [])
+        ].filter(Boolean)
 
-      // Replace all content using CodeMirror's transaction API
-      cmView.dispatch({
-        changes: {
-          from: 0,
-          to: cmView.state.doc.length,
-          insert: text
+        for (const cmView of possibleViews) {
+          if (cmView && cmView.dispatch && cmView.state) {
+            // Found valid EditorView - use transaction API
+            cmView.dispatch({
+              changes: {
+                from: 0,
+                to: cmView.state.doc.length,
+                insert: text
+              }
+            })
+            return true
+          }
         }
-      })
+
+        return false
+      } catch {
+        return false
+      }
     }, content)
 
-    // Small wait for content to settle
-    await this.page.waitForTimeout(100)
+    if (!apiSuccess) {
+      // Fallback to keyboard typing (slower but reliable)
+      await this.page.keyboard.press('Meta+a')
+      await this.page.keyboard.press('Backspace')
+      // Type without delay for setup - we don't need realistic typing
+      await this.page.keyboard.type(content)
+    }
+
+    // Wait for content to settle
+    await this.page.waitForTimeout(150)
   }
 
   /**
