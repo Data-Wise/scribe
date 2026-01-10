@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useSystemTheme, useThemePreference, applyThemeToDocument, Theme } from '../hooks/useSystemTheme'
+import { useSystemTheme, useThemePreference, applyThemeToDocument } from '../hooks/useSystemTheme'
 
 describe('useSystemTheme', () => {
   let matchMediaMock: {
