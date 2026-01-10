@@ -211,43 +211,71 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.14.0 Released ✅
+## 🎯 Current Status: v1.16.0 In Development 🚧
 
-**Version:** 1.14.0 (2026-01-07)
-**Branch:** `main` (tagged and released)
-**Release:** https://github.com/Data-Wise/scribe/releases/tag/v1.14.0
-**Documentation:** https://data-wise.github.io/scribe
-**Install:** `brew install --cask data-wise/tap/scribe`
+**Version:** 1.16.0 (Icon-Centric Sidebar Expansion)
+**Branch:** `feat/icon-expansion` (in development)
+**Target:** v1.16.0 release
+**Install:** `brew install --cask data-wise/tap/scribe` (v1.14.0 stable)
 
-### Latest Release: Sprint 30 Phase 2 (v1.14.0)
+### Latest Work: Icon-Centric Sidebar Expansion (v1.16.0)
 
-**WikiLink Navigation & Editor Polish - Complete ✅**
+**Sidebar Architecture Refactor - Complete ✅**
 
-**Features:**
-- ✅ **Single-click WikiLink Navigation** - Click to navigate in Live/Reading modes
-- ✅ **Cmd+Click in Source Mode** - Navigate WikiLinks with ⌘+Click
-- ✅ **Mode Preservation** - Backlinks panel preserves editor mode
-- ✅ **Cursor Indicator** - Pointer cursor when Cmd is held
+Transition from global `sidebarMode` to per-icon expansion where each icon (Inbox, Smart Folders, Pinned Projects) independently expands with its own preferred view mode (compact or card).
 
-**WikiLink Navigation by Mode:**
-| Mode | Navigation | Cursor |
-|------|------------|--------|
-| Source | ⌘+Click | Pointer when Cmd held |
-| Live | Single-click | Always pointer on hover |
-| Reading | Single-click | Always pointer on hover |
+**Key Changes:**
+- ✅ **Icon-Centric Expansion** - Icon bar always visible (48px), icons control expansion
+- ✅ **Per-Icon Mode Preferences** - Each icon remembers compact/card preference
+- ✅ **Accordion Pattern** - Only one icon expanded at a time
+- ✅ **Global Width Management** - Shared compact/card widths across all icons
+- ✅ **No More Mode Cycling** - Removed ⌘0 shortcut, no global mode state
+
+**Architecture:**
+```
+┌────────────────────────────────────────┐
+│ IconBar (48px) │ ExpandedIconPanel     │
+│ - Always visible │ - Conditional         │
+│ - Inbox          │ - CompactListView    │
+│ - Smart Icons    │   OR                 │
+│ - Pinned Vaults  │ - CardGridView       │
+└────────────────────────────────────────┘
+```
+
+**State Changes:**
+- `sidebarMode` → `expandedIcon: { type: 'vault'|'smart', id: string } | null`
+- `lastExpandedMode` → Per-icon `preferredMode: 'compact' | 'card'`
+- New: `expandVault()`, `expandSmartIcon()`, `collapseAll()`, `toggleIcon()`, `setIconMode()`
+- Removed: `cycleSidebarMode()`, `setSidebarMode()`, `toggleSidebarCollapsed()`
+
+**Implementation:**
+- Phase 1: ✅ State refactor (types, store migration)
+- Phase 2A-D: ✅ Component extraction and refactor
+- Phase 3: ✅ Remove deprecated shortcuts
+- Phase 4: ✅ Test updates (2234 passing)
+- Phase 5: 🚧 Polish & documentation (in progress)
 
 **Testing:**
-- ✅ 1984 tests passing (30 WikiLink E2E tests)
+- ✅ 2234 tests passing
+- ✅ 25 new icon-centric expansion unit tests
 - ✅ TypeScript: 0 errors
-- ✅ Build: Successful
+- ✅ All production code compiles cleanly
 
-**Artifacts:**
-- DMG: Scribe_1.14.0_aarch64.dmg (Apple Silicon)
-- Homebrew: data-wise/tap/scribe v1.14.0
+**Migration:**
+- Automatic v1.15.0 → v1.16.0 localStorage migration
+- Old `sidebarMode`, `lastExpandedMode` keys cleaned up
+- Preserves user's last expanded smart icon
 
 ---
 
 ### Previous Releases
+
+**Sprint 30 Phase 2: WikiLink Navigation (v1.14.0)**
+- ✅ Single-click WikiLink Navigation - Click to navigate in Live/Reading modes
+- ✅ Cmd+Click in Source Mode - Navigate WikiLinks with ⌘+Click
+- ✅ Mode Preservation - Backlinks panel preserves editor mode
+- ✅ 1984 tests passing (30 WikiLink E2E tests)
+- Release: https://github.com/Data-Wise/scribe/releases/tag/v1.14.0
 
 **Sprint 28: Live Editor Enhancements (v1.10.0)**
 
