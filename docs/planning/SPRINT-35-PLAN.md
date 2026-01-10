@@ -1,17 +1,39 @@
-# Sprint 35: Quality Foundation - Store Coverage & Accessibility
+# Sprint 35: Quality Foundation - E2E Testing, Store Coverage & Accessibility
 
-> **Focus:** Increase test coverage and systematic accessibility improvements
+> **Focus:** E2E test infrastructure, increased store coverage, and systematic accessibility improvements
 
-**Status:** Planning
-**Duration:** 2 weeks
+**Status:** ✅ Ready to Start (Sprint 34 Complete)
+**Started:** 2026-01-10
+**Duration:** 2 weeks (10 working days)
 **Sprint Goals:**
-1. Increase store coverage from 23.58% to 60%+
-2. Fix all P1 accessibility violations (keyboard navigation)
-3. Establish quality metrics and monitoring
+1. Refactor E2E tests for CodeMirror 6 (4-6 hours) - **NEW PRIORITY**
+2. Increase store coverage from 23.58% to 70%+ (6-8 hours)
+3. Fix all P1 accessibility violations (6-8 hours)
+4. Establish quality metrics and monitoring (2-3 hours)
 
 ---
 
 ## Sprint Overview
+
+### Sprint 34 Completion ✅
+
+**Delivered:**
+- Optimistic UI updates (instant feedback with rollback)
+- Request deduplication (concurrent + time-based)
+- Coverage reporting (57.78% lines)
+- Content Security Policy hardening
+- DOMPurify XSS protection tests (60 tests)
+- E2E timeout configuration fix
+
+**Quality Metrics Achieved:**
+- Unit tests: 2,344/2,345 passing (99.96%)
+- TypeScript: 0 errors (100% type-safe)
+- Code coverage: 52% → 57.78% (+5.78%)
+- Build: 970 KB gzipped
+
+**Release:** v1.14.2-alpha tagged and pushed
+
+---
 
 ### Current State (v1.14.2-alpha)
 
@@ -31,26 +53,187 @@
 
 ### Sprint Goals
 
-**Goal 1: Store Coverage (Target: 60% → 80%)**
+**Goal 1: E2E Test Infrastructure (Target: 650+/674 passing) - NEW PRIORITY**
+- Refactor E2E tests for CodeMirror 6 editor
+- Create CodeMirrorHelper utility class
+- Update 40 spec files with new selectors
+- Restore E2E test coverage to validate user workflows
+- **Priority:** Critical for test infrastructure
+- **Estimated:** 4-6 hours
+
+**Goal 2: Store Coverage (Target: 23.58% → 70%+)**
 - Add comprehensive tests for all Zustand stores
-- Achieve 60%+ line coverage for store/
+- Achieve 70%+ line coverage for store/
 - Test state mutations, actions, selectors
 - Cover edge cases and error scenarios
+- **Estimated:** 6-8 hours
 
-**Goal 2: Accessibility P1 (Target: 39 → 0 violations)**
+**Goal 3: Accessibility P1 (Target: 39 → 0 violations)**
 - Fix all keyboard navigation issues
 - Add keyboard event handlers to clickable elements
 - Convert divs to buttons where appropriate
 - Test with keyboard-only navigation
+- **Estimated:** 6-8 hours
 
-**Goal 3: Quality Infrastructure**
+**Goal 4: Quality Infrastructure**
 - Add coverage gates to CI/CD
 - Create accessibility testing guidelines
 - Establish quality metrics dashboard
+- **Estimated:** 2-3 hours
 
 ---
 
-## Phase 1: Store Coverage (Week 1)
+## Phase 0: E2E Test Refactoring (Days 1-2) - NEW
+
+### Task 0.1: Create CodeMirror Test Utilities
+
+**File:** `e2e/utils/codemirror-helpers.ts` (new)
+**Estimated:** 1 hour
+
+**Implementation:**
+```typescript
+import { Page, Locator } from '@playwright/test'
+
+export class CodeMirrorHelper {
+  constructor(private page: Page) {}
+
+  getEditor(): Locator {
+    return this.page.locator('.cm-editor')
+  }
+
+  getContent(): Locator {
+    return this.page.locator('.cm-content')
+  }
+
+  async fill(content: string): Promise<void> {
+    const editor = this.getContent()
+    await editor.click()
+    await this.page.keyboard.press('Meta+a')
+    await this.page.keyboard.type(content)
+  }
+
+  async append(text: string): Promise<void> {
+    const editor = this.getContent()
+    await editor.click()
+    await this.page.keyboard.press('Meta+End')
+    await this.page.keyboard.type(text)
+  }
+
+  async getTextContent(): Promise<string> {
+    return await this.getContent().textContent() || ''
+  }
+
+  async clear(): Promise<void> {
+    const editor = this.getContent()
+    await editor.click()
+    await this.page.keyboard.press('Meta+a')
+    await this.page.keyboard.press('Backspace')
+  }
+}
+```
+
+**Tests to Create:**
+- `e2e/utils/__tests__/codemirror-helpers.test.ts`
+
+---
+
+### Task 0.2: Update E2E Fixtures
+
+**File:** `e2e/fixtures.ts`
+**Estimated:** 30 minutes
+
+**Add CodeMirror helper to fixtures:**
+```typescript
+type Fixtures = {
+  basePage: BasePage
+  editor: CodeMirrorHelper  // NEW
+}
+
+export const test = base.extend<Fixtures>({
+  basePage: async ({ page }, use) => {
+    const basePage = new BasePage(page)
+    await use(basePage)
+  },
+  editor: async ({ page }, use) => {
+    const editor = new CodeMirrorHelper(page)
+    await use(editor)
+  },
+})
+```
+
+---
+
+### Task 0.3: Update E2E Test Specs
+
+**Files:** 40 spec files in `e2e/specs/`
+**Estimated:** 2-3 hours
+
+**Migration Pattern:**
+
+**Before (Textarea-based):**
+```typescript
+const textarea = basePage.page.locator('textarea.hybrid-editor-textarea')
+await expect(textarea).toBeVisible()
+await textarea.fill(calloutContent)
+```
+
+**After (CodeMirror-based):**
+```typescript
+await expect(editor.getEditor()).toBeVisible()
+await editor.fill(calloutContent)
+```
+
+**Files to Update:**
+- Priority 1 (Core functionality - 10 files):
+  - `callouts.spec.ts` (25 tests)
+  - `editor.spec.ts` (18 tests)
+  - `editor-modes.spec.ts` (15 tests)
+  - `notes.spec.ts` (20 tests)
+  - `projects.spec.ts` (15 tests)
+  - `wikilink-navigation.spec.ts` (30 tests)
+  - `wikilink-rendering.spec.ts` (20 tests)
+  - `quarto-autocomplete.spec.ts` (25 tests)
+  - `latex-multiline.spec.ts` (12 tests)
+  - `syntax-highlighting.spec.ts` (15 tests)
+
+- Priority 2 (Features - 15 files):
+  - `claude-features.spec.ts`, `chat-history-persistence.spec.ts`, etc.
+
+- Priority 3 (UI/UX - 15 files):
+  - `themes.spec.ts`, `settings.spec.ts`, `sidebar-toggle.spec.ts`, etc.
+
+**Update Strategy:**
+1. Start with Priority 1 files (core functionality)
+2. Run tests after each file update
+3. Fix failures before moving to next file
+4. Move to Priority 2 and 3 once core tests pass
+
+---
+
+### Task 0.4: Verification & CI Integration
+
+**Estimated:** 30 minutes
+
+**Verification Checklist:**
+- [ ] Run full E2E suite: `npm run test:e2e`
+- [ ] Target: 650+/674 tests passing (96%+)
+- [ ] Fix remaining failures
+- [ ] Update CI/CD workflow to include E2E tests
+- [ ] Document E2E testing patterns
+
+**Success Criteria:**
+- 96%+ E2E tests passing
+- CodeMirrorHelper reusable across all tests
+- All critical user flows covered
+- CI/CD includes E2E test run
+
+**Documentation:**
+- See `E2E_TESTS_REFACTOR_PLAN.md` for full details
+- Update `TESTING.md` with CodeMirror patterns
+
+---
+
+## Phase 1: Store Coverage (Days 3-5)
 
 ### Task 1: useAppViewStore Tests
 
