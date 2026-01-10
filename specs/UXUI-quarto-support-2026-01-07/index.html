@@ -1,0 +1,3895 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ADHD-friendly distraction-free writer with projects, academic features, and CLI-based AI">
+      
+      
+        <meta name="author" content="Data-Wise">
+      
+      
+        <link rel="canonical" href="https://data-wise.github.io/scribe/specs/UXUI-quarto-support-2026-01-07/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>UX/UI Design: Quarto Support in Scribe - Scribe</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#uxui-design-quarto-support-in-scribe" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Scribe" class="md-header__button md-logo" aria-label="Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Scribe
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              UX/UI Design: Quarto Support in Scribe
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to high contrast"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to high contrast" for="__palette_3" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to auto mode"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to auto mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20c-2.21 0-4.21-.9-5.66-2.34L17.66 6.34A8.01 8.01 0 0 1 20 12a8 8 0 0 1-8 8M6 8h2V6h1.5v2h2v1.5h-2v2H8v-2H6M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 14h5v-1.5h-5z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Data-Wise/scribe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Data-Wise/scribe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../user/QUICKSTART/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../user/GETTING-STARTED/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../installation/install/" class="md-tabs__link">
+          
+  
+  
+  Installation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guide/features/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/" class="md-tabs__link">
+          
+  
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/REFCARD-SETTINGS/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../development/architecture/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../planning/INDEX/" class="md-tabs__link">
+          
+  
+  
+  Planning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../MISSION-CONTROL-WALKTHROUGH/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Scribe" class="md-nav__button md-logo" aria-label="Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Scribe
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Data-Wise/scribe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Data-Wise/scribe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/QUICKSTART/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/GETTING-STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../RELEASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/themes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Themes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/editor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/chat-persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/shortcuts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard Shortcuts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings Enhancement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/terminal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terminal Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/projects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/daily-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Daily Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/mission-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mission Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/command-palette/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Palette
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/backlinks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backlinks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/browser-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Browser Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/REFCARD-SETTINGS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/REFCARD-QUICK-ACTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DUAL-MODE-ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual-Mode Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../COMPONENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-BROWSER-FEATURE-REVIEW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri/Browser Feature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TAURI-WEBDRIVER-RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri WebDriver Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/PROJECT-DEFINITION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Definition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/TESTS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/sprints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../planning/INDEX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MISSION-CONTROL-WALKTHROUGH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mission Control Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#design-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Philosophy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Philosophy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adhd-principles-applied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADHD Principles Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-yaml-autocomplete-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. YAML Autocomplete UI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. YAML Autocomplete UI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trigger-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-yaml-key-autocomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: YAML Key Autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-nested-yaml-value-autocomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: Nested YAML Value Autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual States
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-chunk-options-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Chunk Options Bar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Chunk Options Bar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-inline-vs-floating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision: Inline vs. Floating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-behavior_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-chunk-options-autocomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: Chunk Options Autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-chunk-option-value-autocomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: Chunk Option Value Autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chunk-execution-indicator-future-enhancement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chunk Execution Indicator (Future Enhancement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility-checklist_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cross-reference-picker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Cross-Reference Picker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Cross-Reference Picker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trigger-behavior_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-cross-reference-dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: Cross-Reference Dropdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-icons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Icons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jump-to-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jump to Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-shortcuts_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility-checklist_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-error-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Error Panel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Error Panel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-bottom-drawer-not-sidebar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision: Bottom Drawer (Not Sidebar)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-behavior_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-collapsed-state-status-bar-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: Collapsed State (Status Bar Integration)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-expanded-error-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: Expanded Error Panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-specification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-badge-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Badge Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#action-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action Buttons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-shortcuts_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility-checklist_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-live-slide-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Live Slide Preview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Live Slide Preview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-optional-split-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision: Optional Split View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-behavior_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ascii-wireframe-split-view-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASCII Wireframe: Split View Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-specification_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sync-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sync Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#slide-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slide Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigation-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation Controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-shortcuts_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-external-preview-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: External Preview (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility-checklist_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-flow-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Flow Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Flow Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flow-1-writing-with-yaml-autocomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow 1: Writing with YAML Autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-2-handling-quarto-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow 2: Handling Quarto Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-3-cross-reference-insertion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow 3: Cross-Reference Insertion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyboard-shortcuts-proposal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts Proposal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Keyboard Shortcuts Proposal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-shortcuts-for-quarto-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Shortcuts for Quarto Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-shortcuts-reference-no-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing Shortcuts Reference (No Conflicts)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessibility-comprehensive-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility Comprehensive Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessibility Comprehensive Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#screen-reader-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screen Reader Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-accessibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Accessibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motion-animation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motion &amp; Animation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Priority
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Priority">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-core-autocomplete-sprint-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Core Autocomplete (Sprint 33)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-error-handling-sprint-34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Error Handling (Sprint 34)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-preview-sprint-35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Preview (Sprint 35+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-tokens-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Tokens Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Tokens Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#colors-from-existing-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colors (from existing theme)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spacing-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spacing Scale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typography" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typography
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="uxui-design-quarto-support-in-scribe">UX/UI Design: Quarto Support in Scribe</h1>
+<blockquote>
+<p><strong>ADHD-Friendly Design Specification</strong></p>
+</blockquote>
+<p><strong>Version:</strong> 1.0.0
+<strong>Created:</strong> 2026-01-07
+<strong>Designer:</strong> Claude (UX/UI Consultant)
+<strong>Target:</strong> Scribe v1.15.0</p>
+<hr />
+<h2 id="design-philosophy">Design Philosophy</h2>
+<h3 id="adhd-principles-applied">ADHD Principles Applied</h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Application to Quarto Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Zero Friction</strong></td>
+<td>Autocomplete appears instantly, no configuration required</td>
+</tr>
+<tr>
+<td><strong>One Thing at a Time</strong></td>
+<td>Dropdowns show focused results, not overwhelming lists</td>
+</tr>
+<tr>
+<td><strong>Escape Hatches</strong></td>
+<td>Esc dismisses any dropdown, clicking away closes panels</td>
+</tr>
+<tr>
+<td><strong>Visible Progress</strong></td>
+<td>Running indicators for chunks, error counts always visible</td>
+</tr>
+<tr>
+<td><strong>Sensory-Friendly</strong></td>
+<td>Muted colors, no jarring animations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="design-constraints">Design Constraints</h3>
+<ul>
+<li>Must work within existing Scribe dark theme (<code>--nexus-*</code> CSS variables)</li>
+<li>Must follow existing component patterns (CitationAutocomplete, CommandPalette)</li>
+<li>Must not add visual clutter to the editor</li>
+<li>Must be keyboard-first with mouse as fallback</li>
+<li>Must degrade gracefully in browser mode</li>
+</ul>
+<hr />
+<h2 id="1-yaml-autocomplete-ui">1. YAML Autocomplete UI</h2>
+<h3 id="trigger-behavior">Trigger Behavior</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Trigger: Typing within `---` frontmatter block
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Activation: Automatic after 150ms pause OR manual with Tab/Ctrl+Space
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Dismissal: Escape, click outside, or continue typing without match
+</code></pre></div>
+<h3 id="ascii-wireframe-yaml-key-autocomplete">ASCII Wireframe: YAML Key Autocomplete</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|  ---                                                              |
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>|  title: &quot;My Research Paper&quot;                                       |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|  author: &quot;DT&quot;                                                     |
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|  for|                                                             |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|     +----------------------------------------+                    |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|     | format:        Output format           | &lt;- highlighted    |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|     | format-links:  Include format links    |                    |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|     | footnotes:     Footnote handling       |                    |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|     +----------------------------------------+                    |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|     | Tab/Enter: select  |  Esc: dismiss      |                   |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|     +----------------------------------------+                    |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|  ---                                                              |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="ascii-wireframe-nested-yaml-value-autocomplete">ASCII Wireframe: Nested YAML Value Autocomplete</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|  ---                                                              |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>|  title: &quot;My Research Paper&quot;                                       |
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|  format: |                                                        |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>|          +----------------------------------------+               |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>|          | html         HTML document             | &lt;- highlighted|
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>|          | pdf          PDF via LaTeX             |               |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>|          | docx         Word document             |               |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>|          | revealjs     Reveal.js slides          |               |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>|          | beamer       LaTeX Beamer slides       |               |
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>|          | typst        Typst document            |               |
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>|          +----------------------------------------+               |
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>|  ---                                                              |
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="component-specification">Component Specification</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>+-----------------------------------------------+
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|  Dropdown Container                           |
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>|  - Width: 320px (fixed)                       |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>|  - Max height: 240px (scrollable)             |
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>|  - Position: Below cursor, inline with text   |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>|  - Z-index: 50 (same as CitationAutocomplete) |
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>+-----------------------------------------------+
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>+-----------------------------------------------+
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>|  [key icon]  format:       Output format      |
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>|  +---------+ +----------+ +------------------+|
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>|  | 16x16   | | Label    | | Description      ||
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>|  | muted   | | 14px     | | 12px, muted      ||
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>|  +---------+ +----------+ +------------------+|
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>+-----------------------------------------------+
+</code></pre></div>
+<h3 id="visual-states">Visual States</h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Background</th>
+<th>Border</th>
+<th>Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default</td>
+<td><code>--nexus-bg-tertiary</code></td>
+<td><code>rgba(255,255,255,0.1)</code></td>
+<td><code>--nexus-text-primary</code></td>
+</tr>
+<tr>
+<td>Hover/Selected</td>
+<td><code>rgba(255,255,255,0.08)</code></td>
+<td>-</td>
+<td><code>--nexus-accent</code> (label)</td>
+</tr>
+<tr>
+<td>Disabled</td>
+<td>Same as default</td>
+<td>-</td>
+<td>50% opacity</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arrow Down</td>
+<td>Next item</td>
+</tr>
+<tr>
+<td>Arrow Up</td>
+<td>Previous item</td>
+</tr>
+<tr>
+<td>Tab / Enter</td>
+<td>Select and insert</td>
+</tr>
+<tr>
+<td>Escape</td>
+<td>Dismiss dropdown</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>Filter list</td>
+</tr>
+</tbody>
+</table>
+<h3 id="accessibility-checklist">Accessibility Checklist</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>role="listbox"</code> on dropdown container</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>role="option"</code> on each item</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>aria-selected="true"</code> on highlighted item</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>aria-label</code> describing dropdown purpose</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Focus trap within dropdown when open</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Escape key always dismisses</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Screen reader announces: "YAML completions, X results"</li>
+</ul>
+<hr />
+<h2 id="2-chunk-options-bar">2. Chunk Options Bar</h2>
+<h3 id="design-decision-inline-vs-floating">Design Decision: Inline vs. Floating</h3>
+<p><strong>Chosen: Autocomplete-only (inline)</strong> - No floating bar.</p>
+<p>Rationale:
+- Floating bars add visual clutter
+- Disrupts "one thing at a time" principle
+- Autocomplete provides same functionality with less friction</p>
+<h3 id="trigger-behavior_1">Trigger Behavior</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Trigger: Typing `#|` at start of line inside code block
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Activation: Automatic, shows after `#| ` (space after pipe)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Context: Only active when cursor is between ``` delimiters
+</code></pre></div>
+<h3 id="ascii-wireframe-chunk-options-autocomplete">ASCII Wireframe: Chunk Options Autocomplete</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>|  ```{r}                                                           |
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>|  #| |                                                             |
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>|     +--------------------------------------------------+          |
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>|     | #| echo:       Show source code    [true/false]  | &lt;- sel  |
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>|     | #| eval:       Execute code        [true/false]  |          |
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>|     | #| warning:    Show warnings       [true/false]  |          |
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>|     | #| fig-cap:    Figure caption      [string]      |          |
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>|     | #| fig-width:  Figure width        [inches]      |          |
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>|     | #| label:      Chunk label         [string]      |          |
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>|     +--------------------------------------------------+          |
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>|     | Tab: select  |  Esc: dismiss  |  Type: filter    |          |
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>|     +--------------------------------------------------+          |
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>|  plot(x, y)                                                       |
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>|  ```                                                              |
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="ascii-wireframe-chunk-option-value-autocomplete">ASCII Wireframe: Chunk Option Value Autocomplete</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>|  ```{r}                                                           |
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>|  #| echo: |                                                       |
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>|           +--------------------------------+                      |
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>|           | true     Show code in output   | &lt;- highlighted      |
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>|           | false    Hide code in output   |                      |
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>|           | fenced   Show with fences      |                      |
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>|           +--------------------------------+                      |
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>|  plot(x, y)                                                       |
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>|  ```                                                              |
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="chunk-execution-indicator-future-enhancement">Chunk Execution Indicator (Future Enhancement)</h3>
+<p>When chunk execution is added (v2+), show minimal inline status:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>|  ```{r}                                                           |
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>|  #| label: fig-scatter                          [Running...]      |
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>|  #| fig-cap: &quot;Scatter plot&quot;                                       |
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>|  plot(x, y)                                                       |
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>|  ```                                                              |
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>|  +---------- Output Preview (collapsed) -------------------------+
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>|  | [&gt;] Click to expand output | 1 figure                         |
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>|  +---------------------------------------------------------------+
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="accessibility-checklist_1">Accessibility Checklist</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Same listbox pattern as YAML autocomplete</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Code block context detected via syntax tree</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Option descriptions read by screen reader</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Value type hints provided (boolean, string, number)</li>
+</ul>
+<hr />
+<h2 id="3-cross-reference-picker">3. Cross-Reference Picker</h2>
+<h3 id="trigger-behavior_2">Trigger Behavior</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Trigger: Typing `@` in document body (outside code blocks)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Activation: Automatic after `@` character
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Grouping: Results grouped by type (@fig-, @tbl-, @eq-, @sec-)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Preview: Caption/title shown in dropdown
+</code></pre></div>
+<h3 id="ascii-wireframe-cross-reference-dropdown">ASCII Wireframe: Cross-Reference Dropdown</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>|  As shown in @fig-|                                               |
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>|                   +----------------------------------------------+|
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>|                   | FIGURES                                      ||
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>|                   | @fig-scatter    Scatter plot of X vs Y    &lt;- ||
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>|                   | @fig-histogram  Distribution of residuals    ||
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>|                   |                                              ||
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>|                   | TABLES                                       ||
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>|                   | @tbl-summary    Summary statistics           ||
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>|                   | @tbl-regression Regression coefficients      ||
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>|                   |                                              ||
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>|                   | EQUATIONS                                    ||
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>|                   | @eq-model       The mediation model          ||
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>|                   +----------------------------------------------+|
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>|                   | Tab: select  |  Line 42  |  Type: filter     ||
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>|                   +----------------------------------------------+|
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="component-structure">Component Structure</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>+-----------------------------------------------+
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>|  GROUP HEADER                                 |
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>|  - Text: &quot;FIGURES&quot; (uppercase)                |
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>|  - Font: 10px, `--nexus-text-muted`           |
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>|  - Padding: 8px 12px                          |
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>|  - Background: `--nexus-bg-secondary`         |
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>+-----------------------------------------------+
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>+-----------------------------------------------+
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>|  [@] @fig-scatter      Scatter plot of X...   |
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>|  +--+ +-------------+ +----------------------+|
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>|  |  | | Reference   | | Caption preview      ||
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>|  |  | | 14px, mono  | | 12px, muted, 40 char ||
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>|  +--+ +-------------+ +----------------------+|
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>+-----------------------------------------------+
+</code></pre></div>
+<h3 id="type-icons">Type Icons</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Icon</th>
+<th>Color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@fig-</td>
+<td>Image icon (Lucide)</td>
+<td><code>#7c9c6b</code> (green)</td>
+</tr>
+<tr>
+<td>@tbl-</td>
+<td>Table icon (Lucide)</td>
+<td><code>#5b8dd9</code> (blue)</td>
+</tr>
+<tr>
+<td>@eq-</td>
+<td>Function icon (Lucide)</td>
+<td><code>#d9a347</code> (yellow)</td>
+</tr>
+<tr>
+<td>@sec-</td>
+<td>Hash icon (Lucide)</td>
+<td><code>#b577c2</code> (purple)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="jump-to-definition">Jump to Definition</h3>
+<p>When reference is selected:
+1. Insert <code>@fig-label</code> at cursor
+2. Show brief toast: "Jump to line 42?" with [Go] button (auto-dismiss 3s)
+3. Or: Cmd+Click on inserted reference to jump</p>
+<h3 id="keyboard-shortcuts_1">Keyboard Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arrow Down/Up</td>
+<td>Navigate items</td>
+</tr>
+<tr>
+<td>Tab / Enter</td>
+<td>Insert reference</td>
+</tr>
+<tr>
+<td>Cmd+Enter</td>
+<td>Insert and jump to definition</td>
+</tr>
+<tr>
+<td>Escape</td>
+<td>Dismiss</td>
+</tr>
+</tbody>
+</table>
+<h3 id="accessibility-checklist_2">Accessibility Checklist</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Groups announced: "Figures group, 2 items"</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Item announced: "@fig-scatter, Scatter plot of X vs Y, line 42"</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Live region updates as user types</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Color not sole indicator (icons + text labels)</li>
+</ul>
+<hr />
+<h2 id="4-error-panel">4. Error Panel</h2>
+<h3 id="design-decision-bottom-drawer-not-sidebar">Design Decision: Bottom Drawer (Not Sidebar)</h3>
+<p>Rationale:
+- Sidebar space is premium (Mission Control, Backlinks)
+- Errors are transient, don't need permanent visibility
+- Bottom drawer matches VS Code / RStudio pattern
+- Can be fully collapsed when not needed</p>
+<h3 id="trigger-behavior_3">Trigger Behavior</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Trigger: Quarto render failure OR live validation error
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Display: Badge on status bar + auto-expand on new error (configurable)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Dismissal: Click X, Escape, or successful render
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Persistence: Panel remembers collapsed state across notes
+</code></pre></div>
+<h3 id="ascii-wireframe-collapsed-state-status-bar-integration">ASCII Wireframe: Collapsed State (Status Bar Integration)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>|                          [Editor Content]                         |
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>+------------------------------------------------------------------+
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>| Words: 1,234 | Live | Ln 42, Col 8      [!] 3 errors    [^]      |
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>+------------------------------------------------------------------+
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>                                          ^              ^
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>                                          |              |
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>                              Error badge (click to expand)
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>                                              Expand/collapse toggle
+</code></pre></div>
+<h3 id="ascii-wireframe-expanded-error-panel">ASCII Wireframe: Expanded Error Panel</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>|                          [Editor Content]                         |
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>+------------------------------------------------------------------+
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>| QUARTO ERRORS                                           [_] [X]  |
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>+------------------------------------------------------------------+
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>| [!] Line 42: Undefined cross-reference &#39;@fig-missing&#39;            |
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>|     &gt; Click to jump | Copy | Ask AI to fix                       |
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>+------------------------------------------------------------------+
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>| [!] Line 78: Invalid YAML: expected key-value pair               |
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>|     format: html                                                  |
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>|       theme sakura    &lt;- missing colon                           |
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>|     &gt; Click to jump | Copy | Ask AI to fix                       |
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>+------------------------------------------------------------------+
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>| [!] Line 156: Code chunk error (R)                               |
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>|     Error in plot(x, y): object &#39;x&#39; not found                    |
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>|     &gt; Click to jump | Copy | Ask AI to fix                       |
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>+------------------------------------------------------------------+
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>| 3 errors | Last render: 2:34 PM                     [Re-render]  |
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>+------------------------------------------------------------------+
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>| Words: 1,234 | Live | Ln 42, Col 8                               |
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="component-specification_1">Component Specification</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>+-----------------------------------------------+
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>|  Error Panel Container                        |
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>|  - Height: 200px (default, resizable)         |
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>|  - Min height: 80px                           |
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>|  - Max height: 50% of editor                  |
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>|  - Background: `--nexus-bg-secondary`         |
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>|  - Border-top: 1px solid rgba(255,255,255,0.1)|
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>+-----------------------------------------------+
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>+-----------------------------------------------+
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>|  Error Item                                   |
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>|  - Padding: 12px 16px                         |
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>|  - Border-bottom: 1px solid rgba(...)         |
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>|  - Hover: `--nexus-bg-tertiary`               |
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>+-----------------------------------------------+
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>+-----------------------------------------------+
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>|  [!] Line 42: Error message                   |
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>|  +--+ +------------------------------------+  |
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>|  |  | | Line prefix (red)                  |  |
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>|  +--+ | Message (14px, primary text)       |  |
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>|       +------------------------------------+  |
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>|       | Context snippet (12px, mono, muted)|  |
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>|       +------------------------------------+  |
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>|       | &gt; Jump | Copy | AI Fix (links)     |  |
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>|       +------------------------------------+  |
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>+-----------------------------------------------+
+</code></pre></div>
+<h3 id="error-badge-specification">Error Badge Specification</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>+-------+
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>| [!] 3 |
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>+-------+
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>- Background: `#ef4444` (red-500)
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>- Text: white, 11px, bold
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>- Border-radius: 9999px (pill)
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>- Padding: 2px 8px
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>- Animation: Subtle pulse on new error (1 cycle only)
+</code></pre></div>
+<h3 id="action-buttons">Action Buttons</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Icon</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jump to line</td>
+<td>Arrow-right</td>
+<td>Scroll editor to error line, highlight</td>
+</tr>
+<tr>
+<td>Copy</td>
+<td>Copy icon</td>
+<td>Copy full error to clipboard</td>
+</tr>
+<tr>
+<td>Ask AI to fix</td>
+<td>Sparkles</td>
+<td>Open Claude panel with error context</td>
+</tr>
+<tr>
+<td>Re-render</td>
+<td>Play icon</td>
+<td>Run <code>quarto render</code> again</td>
+</tr>
+</tbody>
+</table>
+<h3 id="error-categories">Error Categories</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Icon Color</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Syntax</td>
+<td>Yellow (#d9a347)</td>
+<td>Invalid YAML</td>
+</tr>
+<tr>
+<td>Reference</td>
+<td>Orange (#f97316)</td>
+<td>Undefined @fig-*</td>
+</tr>
+<tr>
+<td>Code</td>
+<td>Red (#ef4444)</td>
+<td>R/Python error</td>
+</tr>
+<tr>
+<td>LaTeX</td>
+<td>Purple (#b577c2)</td>
+<td>Math compilation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-shortcuts_2">Keyboard Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cmd+Shift+E</td>
+<td>Toggle error panel</td>
+</tr>
+<tr>
+<td>Escape</td>
+<td>Collapse panel (when focused)</td>
+</tr>
+<tr>
+<td>Enter</td>
+<td>Jump to selected error</td>
+</tr>
+<tr>
+<td>Arrow Down/Up</td>
+<td>Navigate errors</td>
+</tr>
+</tbody>
+</table>
+<h3 id="accessibility-checklist_3">Accessibility Checklist</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>role="log"</code> for error list (live region)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>aria-live="polite"</code> announces new errors</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Error count announced: "3 errors"</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Each error is focusable and actionable</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Resize handle has aria-label</li>
+</ul>
+<hr />
+<h2 id="5-live-slide-preview">5. Live Slide Preview</h2>
+<h3 id="design-decision-optional-split-view">Design Decision: Optional Split View</h3>
+<p>Rationale:
+- Split view is powerful but complex
+- Only show for <code>.qmd</code> files with <code>format: revealjs/beamer</code>
+- Toggle via shortcut, not forced on user
+- Default: Preview in separate window (simpler)</p>
+<h3 id="trigger-behavior_4">Trigger Behavior</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Trigger: Manual toggle OR Cmd+Shift+P (Preview)
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Detection: Auto-detect `format: revealjs` or `format: beamer` in YAML
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Default: External browser preview (simpler)
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Optional: Split view for power users (Settings toggle)
+</code></pre></div>
+<h3 id="ascii-wireframe-split-view-layout">ASCII Wireframe: Split View Layout</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>| [Scribe] My Presentation.qmd                              [_][X] |
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>+------------------------------------------------------------------+
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>| [Source]          |      [Divider]      |       [Preview]        |
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>+-------------------+----+----------------+------------------------+
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>|  ---                   |                | +--------------------+ |
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>|  title: &quot;My Talk&quot;      |                | |                    | |
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>|  format: revealjs      |                | |    Slide Title     | |
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>|  ---                   |                | |                    | |
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>|                        |                | |  - Bullet point 1  | |
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>|  # Introduction|       |  &lt;- cursor     | |  - Bullet point 2  | |
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>|                        |    synced      | |                    | |
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>|  - Point one           |                | +--------------------+ |
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>|  - Point two           |                |                        |
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>|                        |                | [&lt;] Slide 1/12 [&gt;]     |
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>|  ---                   |                | [Sync: ON] [External]  |
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>+------------------------+----------------+------------------------+
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>| Words: 234 | Source | Ln 8, Col 15                   [Preview]  |
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>+------------------------------------------------------------------+
+</code></pre></div>
+<h3 id="component-specification_2">Component Specification</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>+-----------------------------------------------+
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>|  Split View Container                         |
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>|  - Layout: CSS Grid (resizable columns)       |
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>|  - Default split: 60% source, 40% preview     |
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>|  - Min source width: 400px                    |
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>|  - Min preview width: 300px                   |
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>+-----------------------------------------------+
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>+-----------------------------------------------+
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>|  Preview Panel                                |
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>|  - Background: #0d1117 (darker than editor)   |
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>|  - Padding: 16px                              |
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>|  - Overflow: hidden (scaled to fit)           |
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>+-----------------------------------------------+
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>+-----------------------------------------------+
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>|  Slide Frame                                  |
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>|  - Aspect ratio: 16:9 (revealjs default)      |
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>|  - Border: 1px solid rgba(255,255,255,0.1)    |
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>|  - Scale: fit-content with letterboxing       |
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>+-----------------------------------------------+
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>+-----------------------------------------------+
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>|  Navigation Bar                               |
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>|  - Height: 32px                               |
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>|  - Background: `--nexus-bg-tertiary`          |
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>|  - Items: [&lt;] [Slide X/Y] [&gt;] [Sync] [External]|
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>+-----------------------------------------------+
+</code></pre></div>
+<h3 id="sync-behavior">Sync Behavior</h3>
+<table>
+<thead>
+<tr>
+<th>User Action</th>
+<th>Preview Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cursor moves to new slide section</td>
+<td>Preview jumps to that slide</td>
+</tr>
+<tr>
+<td>Click slide in preview</td>
+<td>Cursor jumps to source section</td>
+</tr>
+<tr>
+<td>Edit slide content</td>
+<td>Preview updates after 500ms debounce</td>
+</tr>
+<tr>
+<td>Add new slide</td>
+<td>Preview shows new slide</td>
+</tr>
+</tbody>
+</table>
+<h3 id="slide-detection">Slide Detection</h3>
+<p>Slides are delimited by:
+- <code>---</code> (horizontal rule) in revealjs
+- <code># Heading</code> (level 1) starts new slide
+- <code>## Heading</code> (level 2) starts new sub-slide</p>
+<h3 id="navigation-controls">Navigation Controls</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[&lt;]</td>
+<td>Previous slide</td>
+</tr>
+<tr>
+<td>[&gt;]</td>
+<td>Next slide</td>
+</tr>
+<tr>
+<td>Slide X/Y</td>
+<td>Current position indicator</td>
+</tr>
+<tr>
+<td>[Sync: ON/OFF]</td>
+<td>Toggle auto-sync</td>
+</tr>
+<tr>
+<td>[External]</td>
+<td>Open in browser</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-shortcuts_3">Keyboard Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cmd+Shift+P</td>
+<td>Toggle preview panel</td>
+</tr>
+<tr>
+<td>Cmd+[</td>
+<td>Previous slide</td>
+</tr>
+<tr>
+<td>Cmd+]</td>
+<td>Next slide</td>
+</tr>
+<tr>
+<td>Cmd+Shift+B</td>
+<td>Open in browser</td>
+</tr>
+</tbody>
+</table>
+<h3 id="alternative-external-preview-default">Alternative: External Preview (Default)</h3>
+<p>For users who prefer simplicity:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>+------------------------------------------------------------------+
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>|                     [Full Editor View]                            |
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>+------------------------------------------------------------------+
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>| Words: 234 | Source | Ln 8, Col 15      [Preview] (Cmd+Shift+P)  |
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>+------------------------------------------------------------------+
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Clicking [Preview] or Cmd+Shift+P:
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>1. Renders document with `quarto preview`
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>2. Opens in default browser
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>3. Browser auto-refreshes on save (Quarto feature)
+</code></pre></div>
+<h3 id="accessibility-checklist_4">Accessibility Checklist</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Divider is keyboard-resizable (Arrow keys when focused)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Preview has <code>aria-label="Slide preview"</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Navigation buttons have aria-labels</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Slide number announced on change</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Sync state announced when toggled</li>
+</ul>
+<hr />
+<h2 id="user-flow-diagrams">User Flow Diagrams</h2>
+<h3 id="flow-1-writing-with-yaml-autocomplete">Flow 1: Writing with YAML Autocomplete</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>                    +------------------+
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>                    |   Open .qmd file |
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>                    +--------+---------+
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>                             |
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>                             v
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>                    +------------------+
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>                    | Cursor in YAML   |
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>                    | block (---)      |
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>                    +--------+---------+
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>                             |
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>                             v
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>                    +------------------+
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>                    | Type &quot;for&quot;       |
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>                    +--------+---------+
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>                             |
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>                             v
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>                +------------+------------+
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>                |                         |
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>                v                         v
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>     +------------------+       +------------------+
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>     | [150ms elapsed]  |       | [Tab/Ctrl+Space] |
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>     +--------+---------+       +--------+---------+
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>              |                          |
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>              +------------+-------------+
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>                           |
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>                           v
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>                  +------------------+
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>                  | Dropdown appears |
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>                  | &quot;format:&quot; first  |
+<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>                  +--------+---------+
+<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>                           |
+<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>           +---------------+---------------+
+<a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a>           |               |               |
+<a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a>           v               v               v
+<a id="__codelineno-20-35" name="__codelineno-20-35" href="#__codelineno-20-35"></a>    +----------+    +-----------+   +----------+
+<a id="__codelineno-20-36" name="__codelineno-20-36" href="#__codelineno-20-36"></a>    | Arrow    |    | Tab/Enter |   | Escape   |
+<a id="__codelineno-20-37" name="__codelineno-20-37" href="#__codelineno-20-37"></a>    | keys     |    | to select |   | dismiss  |
+<a id="__codelineno-20-38" name="__codelineno-20-38" href="#__codelineno-20-38"></a>    +----+-----+    +-----+-----+   +----+-----+
+<a id="__codelineno-20-39" name="__codelineno-20-39" href="#__codelineno-20-39"></a>         |                |              |
+<a id="__codelineno-20-40" name="__codelineno-20-40" href="#__codelineno-20-40"></a>         v                v              v
+<a id="__codelineno-20-41" name="__codelineno-20-41" href="#__codelineno-20-41"></a>    +----------+    +-----------+   +----------+
+<a id="__codelineno-20-42" name="__codelineno-20-42" href="#__codelineno-20-42"></a>    | Navigate |    | &quot;format:&quot; |   | Resume   |
+<a id="__codelineno-20-43" name="__codelineno-20-43" href="#__codelineno-20-43"></a>    | options  |    | inserted  |   | typing   |
+<a id="__codelineno-20-44" name="__codelineno-20-44" href="#__codelineno-20-44"></a>    +----------+    +-----------+   +----------+
+</code></pre></div>
+<h3 id="flow-2-handling-quarto-errors">Flow 2: Handling Quarto Errors</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>                    +-------------------+
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>                    | User saves file   |
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>                    | OR clicks Render  |
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>                    +---------+---------+
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>                              |
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>                              v
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>                    +-------------------+
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>                    | Quarto render     |
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>                    | executes          |
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>                    +---------+---------+
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>                              |
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>              +---------------+---------------+
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>              |                               |
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>              v                               v
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>     +------------------+           +------------------+
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>     | Render SUCCESS   |           | Render FAILED    |
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>     +--------+---------+           +--------+---------+
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>              |                              |
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>              v                              v
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>     +------------------+           +------------------+
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>     | Toast: &quot;Rendered |           | Error badge      |
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>     | successfully&quot;    |           | appears in       |
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>     | (auto-dismiss)   |           | status bar       |
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>     +------------------+           +--------+---------+
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>                                             |
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>                        +--------------------+--------------------+
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>                        |                    |                    |
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>                        v                    v                    v
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>               +----------------+   +----------------+   +----------------+
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>               | Click badge    |   | Cmd+Shift+E    |   | Auto-expand    |
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>               | in status bar  |   | shortcut       |   | (if enabled)   |
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>               +-------+--------+   +-------+--------+   +-------+--------+
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>                       |                    |                    |
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>                       +--------------------+--------------------+
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>                                            |
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>                                            v
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>                                  +-------------------+
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>                                  | Error panel       |
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a>                                  | expands           |
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>                                  +---------+---------+
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a>                                            |
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a>                        +-------------------+-------------------+
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a>                        |                   |                   |
+<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>                        v                   v                   v
+<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a>               +----------------+   +----------------+   +----------------+
+<a id="__codelineno-21-46" name="__codelineno-21-46" href="#__codelineno-21-46"></a>               | Jump to line   |   | Copy error     |   | Ask AI to fix  |
+<a id="__codelineno-21-47" name="__codelineno-21-47" href="#__codelineno-21-47"></a>               +-------+--------+   +----------------+   +-------+--------+
+<a id="__codelineno-21-48" name="__codelineno-21-48" href="#__codelineno-21-48"></a>                       |                                         |
+<a id="__codelineno-21-49" name="__codelineno-21-49" href="#__codelineno-21-49"></a>                       v                                         v
+<a id="__codelineno-21-50" name="__codelineno-21-50" href="#__codelineno-21-50"></a>               +----------------+                       +----------------+
+<a id="__codelineno-21-51" name="__codelineno-21-51" href="#__codelineno-21-51"></a>               | Editor scrolls |                       | Claude panel   |
+<a id="__codelineno-21-52" name="__codelineno-21-52" href="#__codelineno-21-52"></a>               | to error line  |                       | opens with     |
+<a id="__codelineno-21-53" name="__codelineno-21-53" href="#__codelineno-21-53"></a>               +----------------+                       | error context  |
+<a id="__codelineno-21-54" name="__codelineno-21-54" href="#__codelineno-21-54"></a>                                                        +----------------+
+</code></pre></div>
+<h3 id="flow-3-cross-reference-insertion">Flow 3: Cross-Reference Insertion</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>                    +-------------------+
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>                    | Writing paragraph |
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>                    | in document body  |
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>                    +---------+---------+
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>                              |
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>                              v
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>                    +-------------------+
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>                    | Type &quot;@fig-&quot;      |
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>                    +---------+---------+
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>                              |
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>                              v
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>                    +-------------------+
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>                    | Document scanned  |
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>                    | for #fig-* labels |
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>                    +---------+---------+
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>                              |
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>              +---------------+---------------+
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>              |                               |
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>              v                               v
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>     +------------------+           +------------------+
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>     | Labels found     |           | No labels found  |
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a>     +--------+---------+           +--------+---------+
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>              |                              |
+<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a>              v                              v
+<a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a>     +------------------+           +------------------+
+<a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a>     | Dropdown shows:  |           | Show hint:       |
+<a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a>     | - @fig-scatter   |           | &quot;No figures      |
+<a id="__codelineno-22-28" name="__codelineno-22-28" href="#__codelineno-22-28"></a>     | - @fig-histogram |           | defined yet.     |
+<a id="__codelineno-22-29" name="__codelineno-22-29" href="#__codelineno-22-29"></a>     +--------+---------+           | Use #| label:&quot;   |
+<a id="__codelineno-22-30" name="__codelineno-22-30" href="#__codelineno-22-30"></a>              |                     +------------------+
+<a id="__codelineno-22-31" name="__codelineno-22-31" href="#__codelineno-22-31"></a>              v
+<a id="__codelineno-22-32" name="__codelineno-22-32" href="#__codelineno-22-32"></a>     +------------------+
+<a id="__codelineno-22-33" name="__codelineno-22-33" href="#__codelineno-22-33"></a>     | Select with      |
+<a id="__codelineno-22-34" name="__codelineno-22-34" href="#__codelineno-22-34"></a>     | Tab/Enter        |
+<a id="__codelineno-22-35" name="__codelineno-22-35" href="#__codelineno-22-35"></a>     +--------+---------+
+<a id="__codelineno-22-36" name="__codelineno-22-36" href="#__codelineno-22-36"></a>              |
+<a id="__codelineno-22-37" name="__codelineno-22-37" href="#__codelineno-22-37"></a>              v
+<a id="__codelineno-22-38" name="__codelineno-22-38" href="#__codelineno-22-38"></a>     +------------------+
+<a id="__codelineno-22-39" name="__codelineno-22-39" href="#__codelineno-22-39"></a>     | &quot;@fig-scatter&quot;   |
+<a id="__codelineno-22-40" name="__codelineno-22-40" href="#__codelineno-22-40"></a>     | inserted at      |
+<a id="__codelineno-22-41" name="__codelineno-22-41" href="#__codelineno-22-41"></a>     | cursor           |
+<a id="__codelineno-22-42" name="__codelineno-22-42" href="#__codelineno-22-42"></a>     +------------------+
+</code></pre></div>
+<hr />
+<h2 id="keyboard-shortcuts-proposal">Keyboard Shortcuts Proposal</h2>
+<h3 id="new-shortcuts-for-quarto-features">New Shortcuts for Quarto Features</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cmd+Shift+E</strong></td>
+<td>Toggle error panel</td>
+<td>Global</td>
+</tr>
+<tr>
+<td><strong>Cmd+Shift+P</strong></td>
+<td>Toggle slide preview</td>
+<td>.qmd with revealjs</td>
+</tr>
+<tr>
+<td><strong>Cmd+Shift+R</strong></td>
+<td>Render with Quarto</td>
+<td>.qmd files</td>
+</tr>
+<tr>
+<td><strong>Cmd+[</strong></td>
+<td>Previous slide</td>
+<td>Preview active</td>
+</tr>
+<tr>
+<td><strong>Cmd+]</strong></td>
+<td>Next slide</td>
+<td>Preview active</td>
+</tr>
+<tr>
+<td><strong>Ctrl+Space</strong></td>
+<td>Trigger autocomplete</td>
+<td>In YAML or code block</td>
+</tr>
+<tr>
+<td><strong>Cmd+/</strong></td>
+<td>Comment/uncomment</td>
+<td>In code block</td>
+</tr>
+</tbody>
+</table>
+<h3 id="existing-shortcuts-reference-no-conflicts">Existing Shortcuts Reference (No Conflicts)</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Current Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cmd+K</td>
+<td>Command palette</td>
+</tr>
+<tr>
+<td>Cmd+E</td>
+<td>Cycle editor mode</td>
+</tr>
+<tr>
+<td>Cmd+1/2/3</td>
+<td>Source/Live/Reading mode</td>
+</tr>
+<tr>
+<td>Cmd+D</td>
+<td>Daily note</td>
+</tr>
+<tr>
+<td>Cmd+N</td>
+<td>New note</td>
+</tr>
+<tr>
+<td>Cmd+Shift+F</td>
+<td>Focus mode</td>
+</tr>
+<tr>
+<td>Cmd+,</td>
+<td>Settings</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="accessibility-comprehensive-checklist">Accessibility Comprehensive Checklist</h2>
+<h3 id="screen-reader-support">Screen Reader Support</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All dropdowns announce item count</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Selected item announced on change</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Error panel uses <code>aria-live="polite"</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Slide changes announced</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Keyboard shortcuts announced in tooltips</li>
+</ul>
+<h3 id="keyboard-navigation">Keyboard Navigation</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All features accessible via keyboard</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Focus visible on all interactive elements</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Tab order logical and predictable</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Escape always dismisses overlays</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Arrow keys navigate within components</li>
+</ul>
+<h3 id="visual-accessibility">Visual Accessibility</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Color contrast &gt;= 4.5:1 for text</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Error states use icon + color + text</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Focus ring visible (2px, high contrast)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No reliance on color alone</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Text resizable up to 200%</li>
+</ul>
+<h3 id="motion-animation">Motion &amp; Animation</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Respects <code>prefers-reduced-motion</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No auto-playing animations &gt; 5s</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Error pulse is single cycle only</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Transitions &lt; 200ms</li>
+</ul>
+<h3 id="testing-checklist">Testing Checklist</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test with VoiceOver (macOS)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test with keyboard only</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test with high contrast mode</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test at 200% zoom</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test with reduced motion enabled</li>
+</ul>
+<hr />
+<h2 id="implementation-priority">Implementation Priority</h2>
+<h3 id="phase-1-core-autocomplete-sprint-33">Phase 1: Core Autocomplete (Sprint 33)</h3>
+<ol>
+<li>YAML autocomplete (highest impact, lowest risk)</li>
+<li>Chunk options autocomplete (same pattern)</li>
+<li>Cross-reference picker (document scanning)</li>
+</ol>
+<h3 id="phase-2-error-handling-sprint-34">Phase 2: Error Handling (Sprint 34)</h3>
+<ol>
+<li>Error panel (bottom drawer)</li>
+<li>Error badges in status bar</li>
+<li>Jump to line functionality</li>
+</ol>
+<h3 id="phase-3-preview-sprint-35">Phase 3: Preview (Sprint 35+)</h3>
+<ol>
+<li>External preview (browser)</li>
+<li>Split view preview (optional, settings toggle)</li>
+<li>Slide sync</li>
+</ol>
+<hr />
+<h2 id="design-tokens-reference">Design Tokens Reference</h2>
+<h3 id="colors-from-existing-theme">Colors (from existing theme)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">--nexus-bg-primary</span><span class="o">:</span><span class="w"> </span><span class="p">#</span><span class="nn">1a1f2e</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nt">--nexus-bg-secondary</span><span class="o">:</span><span class="w"> </span><span class="p">#</span><span class="nn">232938</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nt">--nexus-bg-tertiary</span><span class="o">:</span><span class="w"> </span><span class="p">#</span><span class="nn">2a3142</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="nt">--nexus-text-primary</span><span class="o">:</span><span class="w"> </span><span class="p">#</span><span class="nn">e4e4e7</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nt">--nexus-text-muted</span><span class="o">:</span><span class="w"> </span><span class="p">#</span><span class="nn">71717a</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="nt">--nexus-accent</span><span class="o">:</span><span class="w"> </span><span class="p">#</span><span class="nn">7c9c6b</span>
+</code></pre></div>
+<h3 id="spacing-scale">Spacing Scale</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>4px  - xs (inline padding)
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>8px  - sm (item padding)
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>12px - md (section padding)
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>16px - lg (panel padding)
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>24px - xl (major sections)
+</code></pre></div>
+<h3 id="typography">Typography</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>10px - Badge text, hints
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>12px - Descriptions, secondary
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>14px - Body text, labels
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>16px - Headings, emphasis
+</code></pre></div>
+<hr />
+<h2 id="open-questions">Open Questions</h2>
+<ol>
+<li><strong>Error Panel Auto-Expand:</strong> Should new errors auto-expand the panel?</li>
+<li>
+<p>Proposed: Yes by default, with Settings toggle to disable</p>
+</li>
+<li>
+<p><strong>Preview Panel Default:</strong> Split view or external browser?</p>
+</li>
+<li>
+<p>Proposed: External browser (simpler), split view opt-in</p>
+</li>
+<li>
+<p><strong>Autocomplete Delay:</strong> 150ms or immediate?</p>
+</li>
+<li>Proposed: 150ms to avoid flickering on fast typers</li>
+</ol>
+<hr />
+<p><strong>Status:</strong> Ready for Review
+<strong>Next Steps:</strong> Implementation in Sprint 33, starting with YAML autocomplete</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Data-Wise" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/theme-toggle.js"></script>
+      
+    
+  </body>
+</html>
