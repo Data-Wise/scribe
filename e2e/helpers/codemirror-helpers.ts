@@ -66,12 +66,28 @@ export class CodeMirrorHelper {
    */
   async fill(content: string): Promise<void> {
     await this.waitForEditor()
-    const editor = this.getContent()
-    await editor.click()
 
-    // Select all and replace
-    await this.page.keyboard.press('Meta+a')
-    await this.page.keyboard.type(content, { delay: 10 })
+    // Use JavaScript to set content directly - much faster than keyboard.type()
+    await this.page.evaluate((text) => {
+      const editorElement = document.querySelector('.cm-content')
+      if (!editorElement) throw new Error('CodeMirror content element not found')
+
+      // Get the CodeMirror EditorView instance
+      const cmView = (editorElement as any).cmView?.view
+      if (!cmView) throw new Error('CodeMirror view not found')
+
+      // Replace all content using CodeMirror's transaction API
+      cmView.dispatch({
+        changes: {
+          from: 0,
+          to: cmView.state.doc.length,
+          insert: text
+        }
+      })
+    }, content)
+
+    // Small wait for content to settle
+    await this.page.waitForTimeout(100)
   }
 
   /**
