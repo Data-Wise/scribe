@@ -1,4 +1,4 @@
-export { MissionSidebar, cycleSidebarMode } from './MissionSidebar'
+export { MissionSidebar } from './MissionSidebar'
 export { IconBarMode } from './IconBarMode'
 export { CompactListMode } from './CompactListMode'
 export { CardViewMode } from './CardViewMode'
