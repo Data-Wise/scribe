@@ -174,7 +174,13 @@ export function IconBarMode({
       <InboxButton
         unreadCount={inboxCount}
         isActive={isInboxActive}
-        onClick={() => onSelectProject(null)}
+        onClick={() => {
+          // Phase 3: Universal expand - expand sidebar and show Inbox
+          onExpand()
+          onSelectProject(null)
+          setProjectTypeFilter(null) // Clear any active filter
+          setActiveTab(MISSION_CONTROL_TAB_ID)
+        }}
       />
 
       <div className="sidebar-divider" />
@@ -190,8 +196,10 @@ export function IconBarMode({
             projectCount={smartIconProjectCounts[icon.id] || 0}
             isExpanded={false}
             onClick={() => {
-              // Set project type filter and activate Mission Control
+              // Phase 3: Universal expand - expand sidebar and filter projects
+              onExpand()
               setProjectTypeFilter(icon.projectType)
+              onSelectProject(null) // Clear project selection
               setActiveTab(MISSION_CONTROL_TAB_ID)
             }}
           />
