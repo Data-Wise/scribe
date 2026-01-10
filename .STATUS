@@ -9,8 +9,8 @@ updated: 2026-01-10
 editor: hybrid-markdown++
 next_sprint: 37
 next_focus: Mode Consolidation → v1.15.0 Mega Release
-tests: 2225
-unit_tests: 2133
+tests: 2291
+unit_tests: 2199
 e2e_tests: 92
 tags:
   - adhd-friendly
@@ -189,7 +189,10 @@ tags:
 | 7. Mode Indicator | 30min | P2 | ✅ Complete | ActivityBar footer label | ad41c65 |
 | 8. Migration & Polish | 30min | P1 | ✅ Complete | CHANGELOG + docs | [current] |
 
-**Testing:** ✅ 60 E2E tests (comprehensive coverage) - COMPLETE (commit: ff28882)
+**Testing:**
+- ✅ 60 E2E tests (comprehensive integration) - COMPLETE (commit: ff28882)
+- ✅ 22 unit tests (strategic component coverage) - COMPLETE (commit: ce92ac0)
+- Total: 82 Mode Consolidation tests (+50% coverage gain)
 
 **Key Simplification (2026-01-10):**
 - ✅ Removed `appearance.alwaysUpdatePreset` toggle
