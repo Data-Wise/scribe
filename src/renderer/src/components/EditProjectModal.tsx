@@ -12,9 +12,10 @@
 
 import { useState, useEffect } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { X, FolderOpen, Check } from 'lucide-react'
+import { X, FolderOpen, Check, FolderPlus } from 'lucide-react'
 import { Project, ProjectType } from '../types'
 import { PROJECT_COLORS } from './ProjectSwitcher'
+import { IconPicker, getIconByName } from './IconPicker'
 
 // Project type options with descriptions
 const PROJECT_TYPES: { value: ProjectType; label: string; description: string }[] = [
@@ -29,7 +30,7 @@ interface EditProjectModalProps {
   isOpen: boolean
   project: Project | null
   onClose: () => void
-  onUpdateProject: (projectId: string, updates: Partial<Pick<Project, 'name' | 'type' | 'description' | 'color'>>) => void
+  onUpdateProject: (projectId: string, updates: Partial<Pick<Project, 'name' | 'type' | 'description' | 'color' | 'icon'>>) => void
   existingProjectNames?: string[] // For validation (excluding current project)
 }
 
@@ -45,6 +46,8 @@ export function EditProjectModal({
   const [type, setType] = useState<ProjectType>('generic')
   const [description, setDescription] = useState('')
   const [color, setColor] = useState(PROJECT_COLORS[0])
+  const [icon, setIcon] = useState<string | undefined>(undefined)
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // Initialize form when project changes
@@ -54,6 +57,7 @@ export function EditProjectModal({
       setType(project.type)
       setDescription(project.description || '')
       setColor(project.color || PROJECT_COLORS[0])
+      setIcon(project.icon)
       setError(null)
     }
   }, [isOpen, project])
@@ -90,6 +94,7 @@ export function EditProjectModal({
       type,
       description: description.trim() || undefined,
       color,
+      icon,
     })
 
     onClose()
@@ -255,6 +260,52 @@ export function EditProjectModal({
               />
             </div>
 
+            {/* Icon Picker */}
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: 'var(--nexus-text-muted)' }}
+              >
+                Icon <span style={{ color: 'var(--nexus-text-muted)' }}>(optional)</span>
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsIconPickerOpen(true)}
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-white/5"
+                style={{
+                  backgroundColor: 'var(--nexus-bg-tertiary)',
+                  color: 'var(--nexus-text-primary)',
+                  border: '1px solid transparent',
+                }}
+              >
+                {icon ? (
+                  <>
+                    {(() => {
+                      const IconComponent = getIconByName(icon)
+                      return <IconComponent size={20} style={{ color }} />
+                    })()}
+                    <span>{icon}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIcon(undefined)
+                      }}
+                      className="ml-auto p-1 rounded hover:bg-white/10"
+                      aria-label="Remove icon"
+                    >
+                      <X size={14} />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <FolderPlus size={20} style={{ color: 'var(--nexus-text-muted)' }} />
+                    <span style={{ color: 'var(--nexus-text-muted)' }}>Choose an icon...</span>
+                  </>
+                )}
+              </button>
+            </div>
+
             {/* Color Picker */}
             <div>
               <label
@@ -321,6 +372,15 @@ export function EditProjectModal({
           </form>
         </Dialog.Content>
       </Dialog.Portal>
+
+      {/* Icon Picker Modal */}
+      {isIconPickerOpen && (
+        <IconPicker
+          selectedIcon={icon}
+          onSelectIcon={setIcon}
+          onClose={() => setIsIconPickerOpen(false)}
+        />
+      )}
     </Dialog.Root>
   )
 }

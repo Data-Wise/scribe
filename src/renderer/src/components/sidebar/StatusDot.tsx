@@ -6,26 +6,45 @@ interface StatusDotProps {
   className?: string
 }
 
-const STATUS_COLORS: Record<ProjectStatus, string> = {
-  active: '#22c55e',    // Green
-  planning: '#3b82f6',  // Blue
-  complete: '#8b5cf6',  // Purple
-  archive: '#6b7280'    // Gray
+// Map project status to CSS variable names
+const STATUS_CSS_VARS: Record<ProjectStatus, string> = {
+  active: 'var(--status-active)',
+  planning: 'var(--status-planning)',
+  complete: 'var(--status-complete)',
+  archive: 'var(--status-archive)',
+}
+
+// Human-readable status labels
+const STATUS_LABELS: Record<ProjectStatus, string> = {
+  active: 'Active',
+  planning: 'Planning',
+  complete: 'Complete',
+  archive: 'Archive',
+}
+
+// Size map for consistent sizing
+const SIZE_CLASS: Record<string, string> = {
+  sm: 'w-2 h-2',
+  md: 'w-3 h-3',
+  lg: 'w-4 h-4',
 }
 
 export function StatusDot({ status = 'active', size = 'md', className = '' }: StatusDotProps) {
-  const color = STATUS_COLORS[status] || STATUS_COLORS.active
+  const color = STATUS_CSS_VARS[status] || STATUS_CSS_VARS.active
+  const label = STATUS_LABELS[status] || STATUS_LABELS.active
+  const sizeClass = SIZE_CLASS[size] || SIZE_CLASS.md
 
   return (
     <span
-      className={`status-dot ${size} ${className}`}
+      className={`inline-block rounded-full transition-colors duration-150 ${sizeClass} ${className}`}
       data-status={status}
       style={{ backgroundColor: color }}
-      aria-label={`Status: ${status}`}
+      aria-label={`Status: ${label}`}
+      title={label}
     />
   )
 }
 
 export function getStatusColor(status: ProjectStatus): string {
-  return STATUS_COLORS[status] || STATUS_COLORS.active
+  return STATUS_CSS_VARS[status] || STATUS_CSS_VARS.active
 }

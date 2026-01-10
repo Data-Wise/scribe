@@ -6,7 +6,8 @@ import { StreakDisplay } from './StreakDisplay'
 import { RecentNotes } from './RecentNotes'
 import { loadPreferences, getStreakInfo } from '../lib/preferences'
 import { useDragRegion } from './DragRegion'
-import { Settings, FolderPlus } from 'lucide-react'
+import { Settings, FolderPlus, X } from 'lucide-react'
+import { useAppViewStore } from '../store/useAppViewStore'
 
 // Helper to count words in markdown content
 function countWords(content: string): number {
@@ -51,12 +52,24 @@ export function MissionControl({
   const streakInfo = getStreakInfo()
   const dragRegion = useDragRegion()
 
-  // Sort projects: current first, then by updated_at
-  const sortedProjects = [...projects].sort((a, b) => {
-    if (a.id === currentProjectId) return -1
-    if (b.id === currentProjectId) return 1
-    return b.updated_at - a.updated_at
-  })
+  // Get project type filter from store
+  const projectTypeFilter = useAppViewStore(state => state.projectTypeFilter)
+  const setProjectTypeFilter = useAppViewStore(state => state.setProjectTypeFilter)
+
+  // Filter and sort projects
+  const sortedProjects = useMemo(() => {
+    // Filter by project type if filter is active
+    let filtered = projectTypeFilter
+      ? projects.filter(p => p.type === projectTypeFilter)
+      : projects
+
+    // Sort: current first, then by updated_at
+    return [...filtered].sort((a, b) => {
+      if (a.id === currentProjectId) return -1
+      if (b.id === currentProjectId) return 1
+      return b.updated_at - a.updated_at
+    })
+  }, [projects, projectTypeFilter, currentProjectId])
 
   // Compute project stats from notes
   const projectStats = useMemo(() => {
@@ -90,11 +103,23 @@ export function MissionControl({
         {...dragRegion}
       >
         <div>
-          <h1 className="text-2xl font-display font-bold text-nexus-text-primary">
-            Mission Control
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-display font-bold text-nexus-text-primary">
+              Mission Control
+            </h1>
+            {projectTypeFilter && (
+              <button
+                onClick={() => setProjectTypeFilter(null)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 text-sm transition-colors"
+                title="Clear filter"
+              >
+                <span className="capitalize">{projectTypeFilter}</span>
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
           <p className="text-sm text-nexus-text-muted mt-1">
-            {projects.length} {projects.length === 1 ? 'project' : 'projects'} • {totalNotes} {totalNotes === 1 ? 'page' : 'pages'} • {totalWords.toLocaleString()} words
+            {sortedProjects.length} {sortedProjects.length === 1 ? 'project' : 'projects'} • {totalNotes} {totalNotes === 1 ? 'page' : 'pages'} • {totalWords.toLocaleString()} words
           </p>
         </div>
         <div className="flex items-center gap-2">

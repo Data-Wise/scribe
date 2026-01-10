@@ -8,6 +8,31 @@ import { ResizeHandle } from '../components/sidebar/ResizeHandle'
 import { Project, Note, ProjectStatus } from '../types'
 // Note: createMockNote available in ./testUtils for future use
 
+// Mock the Zustand store
+vi.mock('../store/useAppViewStore', () => ({
+  useAppViewStore: (selector: any) => {
+    const state = {
+      pinnedVaults: [
+        { id: 'inbox', label: 'Inbox', color: '#6b7280', order: 0, isPermanent: true },
+        { id: '1', label: 'Project A', color: '#22c55e', order: 1, isPermanent: false },
+        { id: '2', label: 'Project B', color: '#3b82f6', order: 2, isPermanent: false }
+      ],
+      smartIcons: [
+        { id: 'research', icon: 'flask', label: 'Research', projectType: 'research', isVisible: true, order: 0 },
+        { id: 'teaching', icon: 'graduation-cap', label: 'Teaching', projectType: 'teaching', isVisible: true, order: 1 },
+        { id: 'writing', icon: 'pen-tool', label: 'Writing', projectType: 'manuscript', isVisible: true, order: 2 },
+        { id: 'notes', icon: 'sticky-note', label: 'Notes', projectType: 'notes', isVisible: true, order: 3 }
+      ],
+      reorderPinnedVaults: vi.fn(),
+      setProjectTypeFilter: vi.fn(),
+      setActiveTab: vi.fn(),
+      isPinned: (id: string) => ['1', '2'].includes(id)
+    }
+    return selector ? selector(state) : state
+  },
+  MISSION_CONTROL_TAB_ID: 'mission-control'
+}))
+
 // ============================================================
 // StatusDot Component Tests
 // ============================================================
@@ -21,12 +46,12 @@ describe('StatusDot Component', () => {
 
   it('renders correct color for each status', () => {
     const statuses: ProjectStatus[] = ['active', 'planning', 'complete', 'archive']
-    // Updated to match actual STATUS_COLORS in StatusDot.tsx
+    // Updated to match CSS variables in StatusDot.tsx
     const expectedColors: Record<ProjectStatus, string> = {
-      active: '#22c55e',    // Green
-      planning: '#3b82f6',  // Blue
-      complete: '#8b5cf6',  // Purple
-      archive: '#6b7280',   // Gray
+      active: 'var(--status-active)',
+      planning: 'var(--status-planning)',
+      complete: 'var(--status-complete)',
+      archive: 'var(--status-archive)'
     }
 
     statuses.forEach(status => {
@@ -37,26 +62,26 @@ describe('StatusDot Component', () => {
   })
 
   it('renders different sizes', () => {
-    // Sizes are applied via CSS classes, not inline styles
+    // Sizes are applied via Tailwind classes (w-2/3/4 h-2/3/4), not custom classes
     const { rerender, container } = render(<StatusDot size="sm" />)
     let dot = container.querySelector('span')
-    expect(dot).toHaveClass('status-dot', 'sm')
+    expect(dot).toHaveClass('w-2', 'h-2')  // sm = w-2 h-2
 
     rerender(<StatusDot size="md" />)
     dot = container.querySelector('span')
-    expect(dot).toHaveClass('status-dot', 'md')
+    expect(dot).toHaveClass('w-3', 'h-3')  // md = w-3 h-3
 
     rerender(<StatusDot size="lg" />)
     dot = container.querySelector('span')
-    expect(dot).toHaveClass('status-dot', 'lg')
+    expect(dot).toHaveClass('w-4', 'h-4')  // lg = w-4 h-4
   })
 
   it('getStatusColor returns correct colors', () => {
-    // Updated to match actual STATUS_COLORS in StatusDot.tsx
-    expect(getStatusColor('active')).toBe('#22c55e')    // Green
-    expect(getStatusColor('planning')).toBe('#3b82f6')  // Blue
-    expect(getStatusColor('complete')).toBe('#8b5cf6')  // Purple
-    expect(getStatusColor('archive')).toBe('#6b7280')   // Gray
+    // Updated to match CSS variables in StatusDot.tsx
+    expect(getStatusColor('active')).toBe('var(--status-active)')
+    expect(getStatusColor('planning')).toBe('var(--status-planning)')
+    expect(getStatusColor('complete')).toBe('var(--status-complete)')
+    expect(getStatusColor('archive')).toBe('var(--status-archive)')
   })
 
   it('applies custom className', () => {
@@ -81,6 +106,9 @@ describe('IconBarMode Component', () => {
     onSelectProject: vi.fn(),
     onCreateProject: vi.fn(),
     onExpand: vi.fn(),
+    onSearch: vi.fn(),
+    onDaily: vi.fn(),
+    onSettings: vi.fn(),
   }
 
   beforeEach(() => {
@@ -154,10 +182,10 @@ describe('IconBarMode Component', () => {
     )
 
     // Should render Project A and B (active, planning) but not C (archive)
-    // Tooltips now show: "Name\nStatus • N notes"
-    expect(screen.getByTitle(/Project A/)).toBeInTheDocument()
-    expect(screen.getByTitle(/Project B/)).toBeInTheDocument()
-    expect(screen.queryByTitle(/Project C/)).not.toBeInTheDocument()
+    // Projects 1 and 2 are in pinnedVaults mock
+    expect(screen.getByTestId('project-icon-1')).toBeInTheDocument()
+    expect(screen.getByTestId('project-icon-2')).toBeInTheDocument()
+    expect(screen.queryByTestId('project-icon-3')).not.toBeInTheDocument()
   })
 
   it('calls onSelectProject when project icon clicked', () => {
@@ -170,7 +198,7 @@ describe('IconBarMode Component', () => {
       />
     )
 
-    fireEvent.click(screen.getByTitle(/Project A/))
+    fireEvent.click(screen.getByTestId('project-icon-1'))
     expect(mockHandlers.onSelectProject).toHaveBeenCalledWith('1')
   })
 
@@ -309,15 +337,173 @@ describe('CompactListMode Component', () => {
     expect(mockHandlers.onSelectProject).toHaveBeenCalledWith('1')
   })
 
-  it('shows search when more than 5 projects', () => {
-    const manyProjects: Project[] = Array.from({ length: 6 }, (_, i) => ({
-      id: `${i}`,
-      name: `Project ${i}`,
-      type: 'generic' as const,
-      status: 'active' as const,
-      created_at: Date.now(),
-      updated_at: Date.now(),
-    }))
+  it('renders search toggle button', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+    expect(searchToggle).toBeInTheDocument()
+    expect(searchToggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('expands search on toggle button click', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+    fireEvent.click(searchToggle)
+
+    expect(searchToggle).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByPlaceholderText(/Search projects/i)).toBeInTheDocument()
+  })
+
+  it('collapses search on toggle button click when expanded', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+
+    // Expand
+    fireEvent.click(searchToggle)
+    expect(screen.getByPlaceholderText(/Search projects/i)).toBeInTheDocument()
+
+    // Collapse
+    fireEvent.click(searchToggle)
+    expect(screen.queryByPlaceholderText(/Search projects/i)).not.toBeInTheDocument()
+  })
+
+  it('toggles search on ⌘F keyboard shortcut', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Initially hidden
+    expect(screen.queryByPlaceholderText(/Search projects/i)).not.toBeInTheDocument()
+
+    // Press ⌘F to expand
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    expect(screen.getByPlaceholderText(/Search projects/i)).toBeInTheDocument()
+
+    // Press ⌘F again to collapse
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    expect(screen.queryByPlaceholderText(/Search projects/i)).not.toBeInTheDocument()
+  })
+
+  it('clears search query when collapsing via ⌘F', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Type a query
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+    expect(searchInput).toHaveValue('Research')
+
+    // Collapse with ⌘F (should clear query)
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+
+    // Expand again to check value
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    expect(screen.getByPlaceholderText(/Search projects/i)).toHaveValue('')
+  })
+
+  it('shows clear button when search has text', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Expand search
+    const searchToggle = screen.getByLabelText(/Search projects/i)
+    fireEvent.click(searchToggle)
+
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Initially no clear button
+    expect(screen.queryByLabelText(/Clear search/i)).not.toBeInTheDocument()
+
+    // Type text
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+
+    // Clear button should appear
+    expect(screen.getByLabelText(/Clear search/i)).toBeInTheDocument()
+  })
+
+  it('clears search text and refocuses input when clear button clicked', () => {
+    render(
+      <CompactListMode
+        projects={mockProjects}
+        notes={[]}
+        currentProjectId={null}
+        width={240}
+        {...mockHandlers}
+      />
+    )
+
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i) as HTMLInputElement
+
+    // Type text
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+    expect(searchInput.value).toBe('Research')
+
+    // Click clear button
+    const clearButton = screen.getByLabelText(/Clear search/i)
+    fireEvent.click(clearButton)
+
+    // Should clear and maintain focus
+    expect(searchInput.value).toBe('')
+    expect(document.activeElement).toBe(searchInput)
+  })
+
+  it('displays search results count when searching', () => {
+    const manyProjects: Project[] = [
+      { id: '1', name: 'Research Paper', type: 'research', created_at: Date.now(), updated_at: Date.now() },
+      { id: '2', name: 'Blog Post', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
+      { id: '3', name: 'Another Research', type: 'research', created_at: Date.now(), updated_at: Date.now() },
+    ]
 
     render(
       <CompactListMode
@@ -329,13 +515,26 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    expect(screen.getByPlaceholderText(/Find project/i)).toBeInTheDocument()
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Search for "Research"
+    fireEvent.change(searchInput, { target: { value: 'Research' } })
+
+    // Should show 2 results
+    expect(screen.getByText(/2 results/i)).toBeInTheDocument()
   })
 
-  it('hides search when 5 or fewer projects', () => {
+  it('shows singular "result" when only one match', () => {
+    const projects: Project[] = [
+      { id: '1', name: 'Research Paper', type: 'research', created_at: Date.now(), updated_at: Date.now() },
+      { id: '2', name: 'Blog Post', type: 'generic', created_at: Date.now(), updated_at: Date.now() },
+    ]
+
     render(
       <CompactListMode
-        projects={mockProjects}
+        projects={projects}
         notes={[]}
         currentProjectId={null}
         width={240}
@@ -343,7 +542,15 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    expect(screen.queryByPlaceholderText(/Find project/i)).not.toBeInTheDocument()
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
+
+    // Search for "Blog"
+    fireEvent.change(searchInput, { target: { value: 'Blog' } })
+
+    // Should show "1 result" (singular)
+    expect(screen.getByText(/1 result$/i)).toBeInTheDocument()
   })
 
   it('filters projects by search query', () => {
@@ -366,7 +573,9 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    const searchInput = screen.getByPlaceholderText(/Find project/i)
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
     fireEvent.change(searchInput, { target: { value: 'Research' } })
 
     expect(screen.getByText('Research Paper')).toBeInTheDocument()
@@ -393,7 +602,9 @@ describe('CompactListMode Component', () => {
       />
     )
 
-    const searchInput = screen.getByPlaceholderText(/Find project/i)
+    // Expand search
+    fireEvent.keyDown(window, { key: 'f', metaKey: true })
+    const searchInput = screen.getByPlaceholderText(/Search projects/i)
     fireEvent.change(searchInput, { target: { value: 'xyz123' } })
 
     expect(screen.getByText(/No projects match/i)).toBeInTheDocument()
@@ -508,6 +719,7 @@ describe('ResizeHandle Component', () => {
   const mockHandlers = {
     onResize: vi.fn(),
     onResizeEnd: vi.fn(),
+    onReset: vi.fn(),
   }
 
   beforeEach(() => {
@@ -566,6 +778,38 @@ describe('ResizeHandle Component', () => {
 
     fireEvent.mouseUp(document)
     expect(handle).not.toHaveClass('dragging')
+  })
+
+  it('calls onReset and onResizeEnd on double-click', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} />)
+    const handle = container.querySelector('.resize-handle')!
+
+    fireEvent.doubleClick(handle)
+
+    expect(mockHandlers.onReset).toHaveBeenCalled()
+    expect(mockHandlers.onResizeEnd).toHaveBeenCalled()
+  })
+
+  it('does not call onReset on double-click when disabled', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} disabled />)
+    const handle = container.querySelector('.resize-handle')
+
+    // Handle is not rendered when disabled
+    expect(handle).not.toBeInTheDocument()
+  })
+
+  it('has correct aria-label with reset hint', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} />)
+    const handle = container.querySelector('.resize-handle')!
+
+    expect(handle).toHaveAttribute('aria-label', 'Resize sidebar (double-click to reset)')
+  })
+
+  it('has tooltip with reset hint', () => {
+    const { container } = render(<ResizeHandle {...mockHandlers} />)
+    const handle = container.querySelector('.resize-handle')!
+
+    expect(handle).toHaveAttribute('title', 'Double-click to reset width')
   })
 })
 

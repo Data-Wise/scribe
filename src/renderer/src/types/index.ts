@@ -93,6 +93,7 @@ export interface ProjectSettings {
 // Global app settings (stored in localStorage)
 export interface AppSettings {
   defaultTerminalFolder: string  // Default: $HOME
+  autoCollapseSidebar?: boolean  // Auto-collapse sidebar when writing (default: false)
   // Future: theme, font preferences, etc.
 }
 
@@ -104,6 +105,7 @@ export interface Project {
   status?: ProjectStatus // Optional - defaults to 'active' in UI
   progress?: number // 0-100 percentage
   color?: string
+  icon?: string // Lucide icon name (e.g., 'Folder', 'Code2', 'Beaker')
   settings?: ProjectSettings
   created_at: number
   updated_at: number
@@ -157,6 +159,31 @@ declare global {
       setNoteProject: (noteId: string, projectId: string | null) => Promise<void>
     }
   }
+}
+
+// Sidebar types
+export interface PinnedVault {
+  id: 'inbox' | string  // 'inbox' reserved, others are project IDs
+  label: string
+  color?: string  // Project color (if applicable)
+  order: number  // 0-4
+  isPermanent: boolean  // true for Inbox only
+}
+
+export type SidebarMode = 'icon' | 'compact' | 'card'
+
+// Smart Icons - Permanent folder shortcuts for project types
+export type SmartIconId = 'research' | 'teaching' | 'r-package' | 'dev-tools'
+
+export interface SmartIcon {
+  id: SmartIconId
+  label: string
+  icon: string  // emoji
+  color: string  // hex color for hover/expanded states
+  projectType: ProjectType  // maps to Project['type']
+  isVisible: boolean  // for customization in Settings
+  isExpanded: boolean  // expansion state
+  order: number  // display order (0-3)
 }
 
 export {}

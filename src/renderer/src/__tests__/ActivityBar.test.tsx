@@ -1,9 +1,125 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { ActivityBar } from '../components/sidebar/ActivityBar'
 import { IconBarMode } from '../components/sidebar/IconBarMode'
 import { Project, Note } from '../types'
 import { createMockProject } from './testUtils'
+
+/**
+ * ActivityBar Component Test Suite
+ *
+ * Tests for the bottom activity bar with Search, Daily, and Settings buttons
+ */
+describe('ActivityBar Component', () => {
+  const mockHandlers = {
+    onSearch: vi.fn(),
+    onDaily: vi.fn(),
+    onSettings: vi.fn(),
+    onRecent: vi.fn()
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('Rendering', () => {
+    it('renders all four buttons', () => {
+      render(<ActivityBar {...mockHandlers} />)
+
+      expect(screen.getByTestId('activity-bar-search')).toBeInTheDocument()
+      expect(screen.getByTestId('activity-bar-recent')).toBeInTheDocument()
+      expect(screen.getByTestId('activity-bar-daily')).toBeInTheDocument()
+      expect(screen.getByTestId('activity-bar-settings')).toBeInTheDocument()
+    })
+
+    it('renders correct button titles', () => {
+      render(<ActivityBar {...mockHandlers} />)
+
+      expect(screen.getByTitle('Search (⌘K)')).toBeInTheDocument()
+      expect(screen.getByTitle('Recent Notes (⌘R)')).toBeInTheDocument()
+      expect(screen.getByTitle('Daily Note (⌘D)')).toBeInTheDocument()
+      expect(screen.getByTitle('Settings (⌘,)')).toBeInTheDocument()
+    })
+
+    it('renders correct aria-labels', () => {
+      render(<ActivityBar {...mockHandlers} />)
+
+      expect(screen.getByLabelText('Search')).toBeInTheDocument()
+      expect(screen.getByLabelText('Daily Note')).toBeInTheDocument()
+      expect(screen.getByLabelText('Settings')).toBeInTheDocument()
+    })
+  })
+
+  describe('User Interactions', () => {
+    it('calls onSearch when search button clicked', () => {
+      render(<ActivityBar {...mockHandlers} />)
+
+      fireEvent.click(screen.getByTestId('activity-bar-search'))
+      expect(mockHandlers.onSearch).toHaveBeenCalledTimes(1)
+    })
+
+    it('calls onDaily when daily button clicked', () => {
+      render(<ActivityBar {...mockHandlers} />)
+
+      fireEvent.click(screen.getByTestId('activity-bar-daily'))
+      expect(mockHandlers.onDaily).toHaveBeenCalledTimes(1)
+    })
+
+    it('calls onSettings when settings button clicked', () => {
+      render(<ActivityBar {...mockHandlers} />)
+
+      fireEvent.click(screen.getByTestId('activity-bar-settings'))
+      expect(mockHandlers.onSettings).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('Active State', () => {
+    it('applies active class to search button when activeItem is search', () => {
+      render(<ActivityBar {...mockHandlers} activeItem="search" />)
+
+      const searchButton = screen.getByTestId('activity-bar-search')
+      expect(searchButton).toHaveClass('active')
+    })
+
+    it('applies active class to daily button when activeItem is daily', () => {
+      render(<ActivityBar {...mockHandlers} activeItem="daily" />)
+
+      const dailyButton = screen.getByTestId('activity-bar-daily')
+      expect(dailyButton).toHaveClass('active')
+    })
+
+    it('applies active class to settings button when activeItem is settings', () => {
+      render(<ActivityBar {...mockHandlers} activeItem="settings" />)
+
+      const settingsButton = screen.getByTestId('activity-bar-settings')
+      expect(settingsButton).toHaveClass('active')
+    })
+
+    it('does not apply active class when activeItem is null', () => {
+      render(<ActivityBar {...mockHandlers} activeItem={null} />)
+
+      expect(screen.getByTestId('activity-bar-search')).not.toHaveClass('active')
+      expect(screen.getByTestId('activity-bar-daily')).not.toHaveClass('active')
+      expect(screen.getByTestId('activity-bar-settings')).not.toHaveClass('active')
+    })
+  })
+
+  describe('Keyboard Accessibility', () => {
+    it('buttons are keyboard accessible', () => {
+      render(<ActivityBar {...mockHandlers} />)
+
+      const searchButton = screen.getByTestId('activity-bar-search')
+      const dailyButton = screen.getByTestId('activity-bar-daily')
+      const settingsButton = screen.getByTestId('activity-bar-settings')
+
+      // All buttons should be tabbable (no tabindex=-1)
+      expect(searchButton).not.toHaveAttribute('tabindex', '-1')
+      expect(dailyButton).not.toHaveAttribute('tabindex', '-1')
+      expect(settingsButton).not.toHaveAttribute('tabindex', '-1')
+    })
+  })
+})
 
 /**
  * IconBarMode Test Suite
@@ -52,7 +168,11 @@ const mockNotes: Note[] = [
 const mockHandlers = {
   onSelectProject: vi.fn(),
   onCreateProject: vi.fn(),
-  onExpand: vi.fn()
+  onExpand: vi.fn(),
+  onSearch: vi.fn(),
+  onDaily: vi.fn(),
+  onSettings: vi.fn(),
+  onSelectNote: vi.fn()
 }
 
 describe('IconBarMode Component', () => {

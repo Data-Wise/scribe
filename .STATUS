@@ -1,17 +1,17 @@
 ---
 status: active
 priority: P1
-progress: 25
+progress: 70
 version: 1.14.0
-sprint: 33
-started: 2026-01-06
-updated: 2026-01-08
+sprint: 36
+started: 2026-01-08
+updated: 2026-01-10
 editor: hybrid-markdown++
-next_sprint: 34
-next_focus: Project-wide Cross-References
-tests: 2015
-unit_tests: 2015
-e2e_tests: 30
+next_sprint: 37
+next_focus: Mode Consolidation → v1.15.0 Mega Release
+tests: 2291
+unit_tests: 2199
+e2e_tests: 92
 tags:
   - adhd-friendly
   - distraction-free
@@ -27,6 +27,609 @@ tags:
 > **ADHD-friendly distraction-free writer** with projects, academic features, and CLI-based AI.
 
 ## Current Sprint
+
+### v1.15 UI Design Enhancements (Sprint 35) - Phase 1 COMPLETE ✅
+
+**Status:** ✅ Phase 1 Complete (7/8 features, 87.5%)
+**Review Document:** `docs/UI-DESIGN-REVIEW-2026-01-09.md` (22KB)
+**Grade:** B+ (83/100) - Good foundation, needs refinement
+**Research:** Obsidian plugins, VS Code, Zed, Notion design patterns
+**Branch:** `feat/sidebar-v2`
+**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+**Commit:** `750e3c4` - Sprint 35 Phase 1 - UI Design Quick Wins
+
+**Goal:** Improve sidebar discoverability, customization, and polish
+
+**Completed:** 2026-01-09
+**Duration:** ~2 hours orchestrated (vs ~12 hours sequential)
+**Efficiency:** 83% time saved via parallel agent execution
+
+#### Sprint 35 Phase 1: Quick Wins (87.5% Complete) ✅
+
+| # | Feature | Priority | Status | Tests | Time |
+|---|---------|----------|--------|-------|------|
+| ① | Icon Legend (first launch guide) | P1 | ✅ Done | +20 | 6 min |
+| ② | Resize Handle (5px hit area) | P1 | ✅ Done | +4 | 5 min |
+| ③ | Theme-aware status dots | P1 | ✅ Done | +25 | 8 min |
+| ④| Keyboard navigation (arrow keys) | P1 | ✅ Done | +13 | 12 min |
+| ⑤ | Empty state illustrations | P1 | ✅ Done | +8 | 7 min |
+| ⑥ | Drag-and-drop feedback | P2 | ✅ Done | Visual | 10 min |
+| ⑦ | Recent Notes quick access (⌘R) | P2 | ✅ Done | Updated | 15 min |
+| ⑧ | Inline search compact mode | P2 | ⏳ Pending | TBD | 2h est |
+
+**Features Delivered:**
+
+1. **Icon Legend** - First-launch overlay guide
+   - Dismissible with "Got it" button (ADHD-friendly)
+   - localStorage persistence (`hasSeenSidebarGuide`)
+   - Keyboard accessible (Escape, Enter, Tab)
+   - Files: IconLegend.tsx, IconLegend.test.tsx (20 tests)
+
+2. **Resize Handle Enhancement** - VS Code-inspired
+   - 5px hit area (was 4px) for easier grabbing
+   - Hover: accent color + 4px glow
+   - Double-click reset (240px/320px)
+   - Tooltip: "Double-click to reset width"
+
+3. **Theme-Aware Status Dots** - CSS variables
+   - Adapts to all 10 built-in themes
+   - Colors: Active=Green, Planning=Blue, Complete=Purple, Archive=Gray
+   - Smooth 150ms transitions
+   - Tooltips on hover
+   - Files: StatusDot.tsx, StatusDot.test.tsx (25 tests)
+
+4. **Keyboard Navigation** - Accessibility win
+   - Arrow keys (↑↓) with circular looping
+   - Enter to expand/collapse
+   - Escape to clear focus
+   - Visual focus indicator (blue outline)
+   - Auto-scroll focused item
+   - ARIA attributes, reduced motion support
+   - Files: CompactListMode.tsx (13 tests)
+
+5. **Empty State Illustrations** - Friendly onboarding
+   - Lucide icons (FolderPlus, Lightbulb)
+   - Clear CTAs ("Create Project")
+   - Shows in all sidebar modes
+   - Max-width 280px
+   - Files: EmptyState.tsx (8 tests)
+
+6. **Drag-and-Drop Feedback** - Obsidian-style
+   - Dragging: 50% opacity + 0.95 scale
+   - Drop zone: Pulsing blue line (2px)
+   - Success: Bounce animation (300ms)
+   - Cursor: grab → grabbing
+   - Reduced motion support
+
+7. **Recent Notes Quick Access** - Popular feature
+   - Clock icon in Activity Bar
+   - Dropdown: Last 10 notes (MRU order)
+   - ⌘R keyboard shortcut
+   - Relative time ("5m ago", "2h ago")
+   - localStorage persistence
+   - Files: RecentNotesDropdown.tsx
+
+**Test Results:**
+- **2146 tests passing** (+72 from baseline)
+- **70 new tests added**
+- **6 documentation files created**
+- **All builds successful**
+
+**Documentation:**
+- KEYBOARD-NAVIGATION.md
+- VISUAL-TEST-GUIDE.md
+- THEME-AWARE-STATUS-DOTS.md
+- DRAG-DROP-VISUAL-FEEDBACK.md
+- IMPLEMENTATION-empty-state.md
+
+**Orchestration Metrics:**
+- 7 agents deployed (6 parallel, 1 solo)
+- Zero conflicts between agents
+- 100% agent success rate
+- Context usage: 131K/200K (65%)
+
+---
+
+### v1.15 UI Design Enhancements (Sprint 36) - Phase 2 COMPLETE ✅
+
+**Status:** ✅ Phase 2 Complete (3/3 features, 100%)
+**Review Document:** `docs/UI-DESIGN-REVIEW-2026-01-09.md` (22KB)
+**Branch:** `feat/sidebar-v2` (continue)
+**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+**Commits:**
+- `d065ce4` - Sidebar width presets (Task ⑫)
+- `a7e1aec` - Contextual tooltips (Task ⑪)
+- `53759e3` - Auto-collapse sidebar (Task ⑩)
+- `d2889c8` - Custom icons complete (Task ⑨)
+
+**Goal:** Match Obsidian's personalization & power user features
+
+**Completed:** 2026-01-09
+**Duration:** ~12 hours (Tasks ⑨⑩⑪⑫)
+**Inspiration:** Obsidian's Iconic plugin, Auto Hide, VS Code hover tooltips
+
+#### Sprint 36 Phase 2: Customization (100% Complete) ✅
+
+**Focus:** Personalization & Power User Features
+
+| # | Task | Effort | Priority | Status | Deliverable |
+|---|------|--------|----------|--------|-------------|
+| ⑨ | Custom icons (Lucide 1,300+) | 4h | P1 | ✅ Done | IconPicker component |
+| ⑩ | Auto-collapse sidebar option | 3h | P2 | ✅ Done | Settings toggle |
+| ⑪ | Contextual actions in tooltips | 5h | P2 | ✅ Done | Enhanced Tooltip component |
+| ⑫ | Sidebar width presets | 2h | P2 | ✅ Done | Settings gallery |
+
+---
+
+### v1.15 Sidebar Mode Consolidation (Sprint 36 Late) - COMPLETE ✅
+
+**Status:** ✅ All 7 phases complete (Phase 4 deferred to v1.16.0)
+**Spec:** `docs/specs/SPEC-sidebar-mode-consolidation-2026-01-09.md`
+**Brainstorm:** `BRAINSTORM-sidebar-mode-consolidation-2026-01-09.md`
+**Branch:** `feat/sidebar-v2` (continue)
+**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+**Approved:** 2026-01-10
+**Completed:** 2026-01-10
+
+**Goal:** Universal expansion, smart persistence, preset-aware cycling
+
+**Duration:** ~7 hours (actual implementation time)
+**Target Version:** v1.15.0 (Mega Release with Sprint 35/36)
+
+#### Mode Consolidation: Implementation Phases
+
+| Phase | Duration | Priority | Status | Deliverable | Commit |
+|-------|----------|----------|--------|-------------|--------|
+| 1. State Management | 2h | P1 | ✅ Complete | Persistence layer + priority logic | c655013 |
+| 2. Cycle Behavior | 2h | P1 | ✅ Complete | Preset-aware cycling with debounce | 22680ed |
+| 3. Universal Expand | 2h | P1 | ✅ Complete | Inbox + Smart Folders expansion | e20030f |
+| ~~4. Preview Animation~~ | ~~2h~~ | P3 | ⏸️ Deferred v1.16.0 | Hover animation | - |
+| 5. Settings Integration | 1h | P1 | ✅ Complete | 2 new toggles in Appearance | 4d922ba |
+| 6. Preset Update Dialog | 1h | P2 | ✅ Complete | "Don't ask again" checkbox | 85b269f |
+| 7. Mode Indicator | 30min | P2 | ✅ Complete | ActivityBar footer label | ad41c65 |
+| 8. Migration & Polish | 30min | P1 | ✅ Complete | CHANGELOG + docs | [current] |
+
+**Testing:**
+- ✅ 60 E2E tests (comprehensive integration) - COMPLETE (commit: ff28882)
+- ✅ 22 unit tests (strategic component coverage) - COMPLETE (commit: ce92ac0)
+- Total: 82 Mode Consolidation tests (+50% coverage gain)
+
+**Key Simplification (2026-01-10):**
+- ✅ Removed `appearance.alwaysUpdatePreset` toggle
+- ✅ Replaced with "Don't ask again" checkbox in dialog (localStorage)
+- ✅ Settings count: 11 (not 12)
+
+**Features Delivered:**
+- Universal expansion (all items: Projects, Inbox, Smart Folders)
+- Smart mode persistence (remember last mode)
+- Preset-aware cycling (narrow: C↔I, wide: C→W→I)
+- Mode-specific width memory
+- Preset update dialog
+- Mode indicator in ActivityBar
+- Empty states for Inbox/Smart Folders
+
+**Task ⑨: Custom Icons (4 hours)**
+
+Match Obsidian's [Iconic plugin](https://www.obsidianstats.com/plugins/iconic) (1,300+ icons).
+
+**Features:**
+- IconPicker component (emoji + Lucide icons)
+- Per-project icon customization
+- Icon search/filter
+- Emoji picker integration
+- Preview in project settings
+
+**Files to create:**
+- `IconPicker.tsx` - Modal with icon grid + search
+- `IconPicker.test.tsx` - Comprehensive tests
+
+**Files to modify:**
+- `ProjectSettings.tsx` - Add icon picker
+- `Project` type - Add `emoji?: string` field
+- `IconBarMode.tsx` - Render custom icons
+- Database migration - Add icon column
+
+**Implementation:**
+```typescript
+interface IconPickerProps {
+  value?: string           // Current icon/emoji
+  onChange: (icon: string) => void
+  onClose: () => void
+}
+
+// Icon categories
+- Recent (last 5 used)
+- Emoji (grouped by category)
+- Lucide icons (1,300+ searchable)
+```
+
+---
+
+**Task ⑩: Auto-Collapse Sidebar (3 hours)**
+
+Inspired by Obsidian's [Auto Hide plugin](https://www.obsidianstats.com/tags/sidebar).
+
+**Features:**
+- Settings toggle: "Auto-collapse sidebar when writing"
+- Collapse on editor click
+- Expand on sidebar hover
+- Keyboard shortcut override (⌘⇧])
+- Respects manual expansion
+
+**Files to modify:**
+- `GeneralSettings.tsx` - Add toggle
+- `useAppViewStore.ts` - Add `autoCollapseSidebar` state
+- `App.tsx` - Add editor click handler
+- `MissionSidebar.tsx` - Add hover expand logic
+
+**Settings UI:**
+```typescript
+{
+  label: 'Auto-collapse sidebar when writing',
+  type: 'toggle',
+  description: 'Sidebar hides when clicking editor, shows on hover',
+  value: preferences.autoCollapseSidebar,
+  onChange: updatePreferences
+}
+```
+
+---
+
+**Task ⑪: Contextual Actions in Tooltips (5 hours)**
+
+VS Code-style hover tooltips with inline actions.
+
+**Features:**
+- Enhanced Tooltip component with action buttons
+- Quick actions: [Open] [Pin] [⋮ More]
+- Keyboard accessible (Tab through actions)
+- Position-aware (doesn't overflow screen)
+
+**Example:**
+```
+┌────────────────────────┐
+│ Research               │
+│ Active • 3 notes       │
+│ ──────────────────────│
+│ [Open] [Pin] [⋮ More] │
+└────────────────────────┘
+```
+
+**Files to modify:**
+- `Tooltip.tsx` - Add `actions` prop
+- `IconBarMode.tsx` - Add action handlers
+- `CompactListMode.tsx` - Add action handlers
+
+**API Design:**
+```typescript
+interface TooltipAction {
+  label: string
+  icon?: React.ReactNode
+  onClick: () => void
+  variant?: 'default' | 'primary' | 'danger'
+}
+
+<Tooltip
+  content="Research"
+  actions={[
+    { label: 'Open', onClick: handleOpen, variant: 'primary' },
+    { label: 'Pin', onClick: handlePin },
+    { label: 'More', onClick: handleMore, icon: <MoreVertical /> }
+  ]}
+>
+```
+
+---
+
+**Implementation Strategy:**
+
+**Parallel Execution:**
+- Batch A: Tasks ⑨ + ⑩ (4h + 3h = ~4h parallel)
+- Solo: Task ⑪ (5h, complex tooltip integration)
+- Total: ~9 hours with parallelization (vs 12h sequential)
+
+**Testing Requirements:**
+- Unit tests: 40+ new tests
+- E2E tests: 10+ new tests
+- Visual testing in browser
+- Accessibility audit (keyboard nav, ARIA)
+
+**Documentation:**
+- CUSTOM-ICONS.md - Icon picker usage
+- AUTO-COLLAPSE.md - Behavior documentation
+- TOOLTIP-ACTIONS.md - API reference
+
+**Success Criteria:**
+- Icon picker works with 1,300+ Lucide icons
+- Auto-collapse feels natural (not jarring)
+- Tooltip actions are keyboard accessible
+- All tests passing
+- No performance degradation
+
+---
+
+### v1.16 Left Sidebar Redesign (Sprint 34) - SPEC APPROVED ✅
+
+**Status:** ✅ Spec approved, ready for Phase 1 implementation
+**Spec:** `docs/specs/SPEC-left-sidebar-redesign-2026-01-08.md` (v1.1)
+**Brainstorm:** `docs/BRAINSTORM-left-sidebar-layouts-2026-01-08.md`
+**UX Analysis:** `docs/specs/UX-ANALYSIS-LEFT-SIDEBAR-2026-01-08.md`
+**Architecture:** `docs/mission-sidebar-state-flow.md`
+**Branch:** `feat/sidebar-v2`
+**Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
+
+**Goal:** ADHD-friendly "Focus First" sidebar with progressive disclosure
+
+**Design Decisions (All Approved):**
+- ✅ Icon mode (48px) default - minimal clutter
+- ✅ 5 pinned vaults max (Inbox + 4 custom)
+- ✅ Inbox shows recent 5 notes only
+- ✅ Activity Bar with 3 icons (Search, Daily, Settings)
+- ✅ Mode switcher: Both ⌘0 + header icon
+
+#### Sprint 34: Phase 1 - Icon Mode Enhancements ✅ COMPLETE
+
+**Completed:** 2026-01-08
+**Commit:** `0d19e64` feat(sidebar): Phase 1 - Tooltip & Activity Bar components
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Tooltip component (500ms delay) | 1h | P1 | ✅ Done |
+| Activity Bar component (3 icons) | 2h | P1 | ✅ Done |
+| Integrated Tooltip into IconBarMode | 30m | P1 | ✅ Done |
+| Wired Activity Bar handlers | 30m | P1 | ✅ Done |
+| Colored project dots | - | P1 | ✅ Already exists (StatusDot) |
+
+**Files Created:**
+- `src/renderer/src/components/sidebar/Tooltip.tsx` (157 lines)
+- `src/renderer/src/components/sidebar/ActivityBar.tsx` (57 lines)
+- `src/renderer/src/__tests__/ActivityBar.test.tsx` (112 tests)
+
+**Files Modified:**
+- `src/renderer/src/components/sidebar/IconBarMode.tsx`
+- `src/renderer/src/components/sidebar/MissionSidebar.tsx`
+- `src/renderer/src/App.tsx`
+
+**Implementation Method:**
+- Parallel agent development (2 agents)
+- Sequential integration
+- Total time: ~15 minutes
+
+#### Sprint 34: Phase 2 - Inbox Pinning ✅ COMPLETE
+
+**Completed:** 2026-01-08
+**Commit:** `9aa6b2f` feat(sidebar): Phase 2 - Inbox Pinning with amber accent
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| InboxButton component (amber themed) | 2h | P1 | ✅ Done |
+| Unread count logic (project_id = null) | 1h | P1 | ✅ Done |
+| CSS styling (amber accent #f59e0b) | 1h | P1 | ✅ Done |
+| Quick capture shortcut (⌘⇧C) | - | P1 | ✅ Already wired |
+
+**Features:**
+- Dedicated Inbox button at top of Icon Mode (permanent position)
+- Amber accent color (#f59e0b) to differentiate from projects
+- Unread badge showing count of unassigned notes
+- Smart tooltip showing count and status
+- Active indicator when Inbox view is selected
+
+**Files Created:**
+- `src/renderer/src/components/sidebar/InboxButton.tsx` (42 lines)
+
+**Files Modified:**
+- `src/renderer/src/components/sidebar/IconBarMode.tsx` (integrated InboxButton)
+- `src/renderer/src/index.css` (+76 lines amber-themed CSS)
+
+**Implementation Method:**
+- Direct implementation (no agents needed)
+- Total time: ~10 minutes
+
+#### Sprint 34: Phase 3 - Child Project Identification 🔄 IN PROGRESS
+
+**Status:** ✅ Phase 1 Complete, Phase 2 Ready
+**Started:** 2026-01-09
+**Phase 1 Completed:** 2026-01-09
+**Brainstorm:** `docs/BRAINSTORM-child-project-identification-2026-01-09.md`
+**UX Analysis:** Completed by UX agent (aa014e6)
+**Design Document:** `docs/specs/DESIGN-child-project-identification-2026-01-09.md`
+
+**Goal:** Make child projects visually identifiable under expanded smart icons
+
+**Design Approved:**
+- ✅ Expand sidebar to 240px when smart icon opens (vs 48px collapsed)
+- ✅ First-letter icons auto-generated for all child projects
+- ✅ Project names visible (truncated if needed)
+- ✅ Rich metadata: note count + last edited time
+- ⏳ Status grouping at 10+ projects (ACTIVE/PAUSED/COMPLETE) - Phase 2
+- ⏳ Hover preview with recent notes - Phase 2
+- ⏳ 200ms ADHD-friendly animations - Phase 2
+
+**Phase 1: Foundation (2h) - ✅ COMPLETE**
+
+**Completed:** 2026-01-09
+**Commits:**
+- `0b389ea` feat(sidebar): Sprint 34 Phase 3.1 - Child Project Identification Phase 1
+- `62eee89` test(sidebar): Add E2E tests for child project identification (Phase 1)
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Expand sidebar width logic (48px → 240px) | 20m | P1 | ✅ Done |
+| Create ProjectAvatar component (first letter icon) | 30m | P1 | ✅ Done |
+| Update ExpandedChildProjects (2-line layout) | 40m | P1 | ✅ Done |
+| Add CSS styling (expanded child project cards) | 30m | P1 | ✅ Done |
+
+**Files Created:**
+- `src/renderer/src/components/sidebar/ProjectAvatar.tsx` (26 lines)
+- `src/renderer/src/__tests__/ChildProjectIdentification.test.tsx` (871 lines, 32 tests)
+
+**Files Modified:**
+- `src/renderer/src/components/sidebar/IconBarMode.tsx` (+12 lines)
+- `src/renderer/src/components/sidebar/ExpandedChildProjects.tsx` (complete rewrite, 125 lines)
+- `src/renderer/src/index.css` (+60 lines)
+
+**Testing:**
+- 32 new E2E tests (all passing)
+- 2075 total unit tests passing
+- No regressions introduced
+
+**User Value Delivered:**
+✅ **80% of pain point solved** - Users can now identify child projects at a glance
+```
+Before: [●] ← Just a dot
+After:  [M] Mediation Planning    📝 12 • 2h ago
+        [P] Product of Three      📝  8 • 1d ago
+        [C] Collider Bias         📝  5 • 3d ago
+```
+
+**Phase 2: Rich Interactions (9h) - PLANNED**
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Status grouping (10+ projects) | 3h | P2 | [ ] Pending |
+| Hover preview tooltip | 2.5h | P2 | [ ] Pending |
+| Smooth animations (stagger, expand/collapse) | 1.5h | P2 | [ ] Pending |
+| Keyboard navigation (↑↓ Enter Esc) | 2h | P2 | [ ] Pending |
+
+**Phase 3: Advanced Features (18h) - OPTIONAL**
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| Mini-search for 20+ projects | 4h | P3 | [ ] Pending |
+| Custom emoji icons | 6h | P3 | [ ] Pending |
+| Progress ring visualization | 3h | P3 | [ ] Pending |
+| Drag-to-reorder | 5h | P3 | [ ] Pending |
+
+**New Components to Create:**
+- `ProjectAvatar.tsx` - First letter icon component
+- `ExpandedSmartIcon.tsx` - Replaces ExpandedChildProjects (Phase 2)
+- `ProjectTooltip.tsx` - Hover preview component (Phase 2)
+- `ProjectGroup.tsx` - Status grouping (Phase 2)
+
+**Implementation Plan (4 Phases, 28 hours total):**
+- Phase 1: Icon Mode Enhancements (6h) ✅ Complete
+- Phase 2: Inbox Pinning (8h) ✅ Complete
+- Phase 3: Child Project Identification (29h total, 2h Phase 1) 🔄 In Progress
+- Phase 4: Visual Polish (6h)
+
+---
+
+### v1.15 UI Design Enhancements (Sprint 35) - PLANNED 📋
+
+**Status:** 📋 Comprehensive review complete, ready for implementation
+**Review Document:** `docs/UI-DESIGN-REVIEW-2026-01-09.md` (22KB)
+**Grade:** B+ (83/100) - Good foundation, needs refinement
+**Research:** Obsidian plugins, VS Code, Zed, Notion design patterns
+
+**Goal:** Improve sidebar discoverability, customization, and polish
+
+**Key Findings:**
+- ✅ Strong: Progressive disclosure, fast transitions, ADHD-friendly
+- ⚠️ Gaps: Icon discoverability, keyboard nav, customization vs Obsidian
+
+**Roadmap (38 hours total across 3 sprints):**
+
+#### Sprint 35 (v1.15): Quick Wins - 10 hours
+**Focus:** Discoverability & Accessibility
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| ① Icon Legend on first launch | 1h | P1 | [ ] Pending |
+| ② Improve resize handle (5px hit area) | 1h | P1 | [ ] Pending |
+| ③ Theme-aware status dots | 2h | P1 | [ ] Pending |
+| ④ Keyboard navigation (arrow keys) | 2h | P1 | [ ] Pending |
+| ⑤ Empty state illustrations | 1h | P1 | [ ] Pending |
+| ⑥ Drag-and-drop feedback | 1h | P2 | [ ] Pending |
+| ⑦ Recent Notes quick access | 2h | P2 | [ ] Pending |
+| ⑧ Inline search in compact mode | 2h | P2 | [ ] Pending |
+
+**Deliverables:**
+- Icon legend overlay (dismissible tooltip)
+- Wider resize handle with hover effects
+- CSS variables for status colors
+- Arrow key navigation in compact mode
+- Empty state components
+- Visual drop zones for drag
+- Recent files in Activity Bar
+- Search bar in compact mode
+
+**Files to Create/Modify:**
+- `IconLegend.tsx` (new) - First launch guide
+- `ResizeHandle.tsx` - Wider hit area + double-click reset
+- `StatusDot.tsx` - Theme-aware colors
+- `CompactListMode.tsx` - Keyboard nav + inline search
+- `EmptyState.tsx` (new) - Friendly prompts
+- `ActivityBar.tsx` - Recent files icon
+- `index.css` - Drag feedback styles
+
+**Testing:**
+- Unit: 40+ new tests
+- E2E: 15+ new tests
+- Accessibility: axe DevTools audit
+
+#### Sprint 36 (v1.16): Customization - 12 hours
+**Focus:** Match Obsidian's Personalization
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| ⑨ Custom icons (Lucide 1,300+) | 4h | P1 | [ ] Pending |
+| ⑩ Auto-collapse sidebar option | 3h | P2 | [ ] Pending |
+| ⑪ Contextual actions in tooltips | 5h | P2 | [ ] Pending |
+
+**Deliverables:**
+- IconPicker component (emoji + Lucide icons)
+- Auto-collapse setting
+- Enhanced tooltips with [Open] [Pin] [More] buttons
+
+**Inspiration:**
+- Obsidian's Iconic plugin (1,300+ icons)
+- Obsidian's Auto Hide plugin
+- VS Code's hover tooltips
+
+#### Sprint 37 (v1.17): Polish - 16 hours
+**Focus:** Power User Features
+
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| ⑫ Sidebar width presets | 2h | P2 | [ ] Pending |
+| ⑬ Project color customization | 6h | P2 | [ ] Pending |
+| Visual polish pass | 4h | P1 | [ ] Pending |
+| Accessibility audit | 4h | P1 | [ ] Pending |
+
+**Deliverables:**
+- Width preset buttons (Narrow/Medium/Wide)
+- ColorPicker component
+- Animation polish
+- WCAG 2.1 AA compliance
+
+**Deferred to v2.0 (120+ hours):**
+- ⑭ Workspaces (save/restore sidebar configs)
+- ⑮ Alternative views (Kanban, Calendar)
+- ⑯ Graph view in sidebar
+
+**Research Sources:**
+- [Obsidian Sidebar Plugins](https://www.obsidianstats.com/tags/sidebar)
+- [Iconic Plugin](https://www.obsidianstats.com/plugins/iconic)
+- [VS Code UX Guidelines](https://code.visualstudio.com/api/ux-guidelines/overview)
+- [VS Code Sidebars](https://code.visualstudio.com/api/ux-guidelines/sidebars)
+- [Zed Settings UI](https://zed.dev/blog/settings-ui)
+
+**Competitive Gap Analysis:**
+| Feature | Scribe | Obsidian | VS Code | Winner |
+|---------|--------|----------|---------|--------|
+| Icon Mode | ✅ Unique | ❌ | ❌ | **Scribe** |
+| Custom Icons | ❌ | ✅ 1,300+ | ✅ | Others |
+| Keyboard Nav | ⚠️ Partial | ✅ | ✅ | Others |
+| Recent Files | ❌ | ✅ | ✅ | Others |
+| Inline Search | ❌ | ✅ | ✅ | Others |
+
+**Next Steps:**
+1. Review UI-DESIGN-REVIEW-2026-01-09.md
+2. Approve Quick Wins for Sprint 35
+3. Decide on customization vs minimalism trade-offs
+4. Begin Phase 1 implementation (Icon Legend)
+
+---
 
 ### v1.15 Quarto Enhancements (Sprint 33-36) - IN PROGRESS 🚧
 

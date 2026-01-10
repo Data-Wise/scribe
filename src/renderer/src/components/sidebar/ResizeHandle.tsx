@@ -3,10 +3,16 @@ import { useCallback, useEffect, useState } from 'react'
 interface ResizeHandleProps {
   onResize: (deltaX: number) => void
   onResizeEnd: () => void
+  onReset?: () => void
   disabled?: boolean
 }
 
-export function ResizeHandle({ onResize, onResizeEnd, disabled = false }: ResizeHandleProps) {
+export function ResizeHandle({
+  onResize,
+  onResizeEnd,
+  onReset,
+  disabled = false
+}: ResizeHandleProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
 
@@ -16,6 +22,19 @@ export function ResizeHandle({ onResize, onResizeEnd, disabled = false }: Resize
     setIsDragging(true)
     setStartX(e.clientX)
   }, [disabled])
+
+  const handleDoubleClick = useCallback((e: React.MouseEvent) => {
+    if (disabled) return
+    e.preventDefault()
+
+    // Call onReset callback if provided
+    if (onReset) {
+      onReset()
+    }
+
+    // Call onResizeEnd to save the reset state
+    onResizeEnd()
+  }, [disabled, onReset, onResizeEnd])
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging) return
@@ -53,9 +72,11 @@ export function ResizeHandle({ onResize, onResizeEnd, disabled = false }: Resize
     <div
       className={`resize-handle ${isDragging ? 'dragging' : ''}`}
       onMouseDown={handleMouseDown}
+      onDoubleClick={handleDoubleClick}
       role="separator"
       aria-orientation="vertical"
-      aria-label="Resize sidebar"
+      aria-label="Resize sidebar (double-click to reset)"
+      title="Double-click to reset width"
     />
   )
 }

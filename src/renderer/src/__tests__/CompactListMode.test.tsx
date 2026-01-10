@@ -665,4 +665,372 @@ describe('CompactListMode', () => {
       expect(screen.getByText('75%')).toBeInTheDocument()
     })
   })
+
+  describe('Keyboard Navigation', () => {
+    it('moves focus down with ArrowDown key', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+        createProject({ id: 'p3', name: 'Project 3' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+      expect(sidebar).toBeInTheDocument()
+
+      // Press ArrowDown to focus first item
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      // Check that first item has keyboard-focus class
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper).toBeInTheDocument()
+      expect(focusedWrapper?.querySelector('.project-name')?.textContent).toBe('Project 1')
+
+      // Press ArrowDown again to move to second item
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      const focusedWrapper2 = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper2?.querySelector('.project-name')?.textContent).toBe('Project 2')
+    })
+
+    it('moves focus up with ArrowUp key', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+        createProject({ id: 'p3', name: 'Project 3' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Press ArrowDown three times to focus third item (index 2)
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      // Press ArrowUp to move back to second item (index 1)
+      fireEvent.keyDown(sidebar!, { key: 'ArrowUp' })
+
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper?.querySelector('.project-name')?.textContent).toBe('Project 2')
+    })
+
+    it('loops to last item when pressing ArrowUp from first', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+        createProject({ id: 'p3', name: 'Project 3' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Press ArrowUp from initial state (no focus) should go to last item
+      fireEvent.keyDown(sidebar!, { key: 'ArrowUp' })
+
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper?.querySelector('.project-name')?.textContent).toBe('Project 3')
+    })
+
+    it('loops to first item when pressing ArrowDown from last', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+        createProject({ id: 'p3', name: 'Project 3' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Focus last item (press ArrowUp from -1)
+      fireEvent.keyDown(sidebar!, { key: 'ArrowUp' })
+
+      // Press ArrowDown to loop to first
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper?.querySelector('.project-name')?.textContent).toBe('Project 1')
+    })
+
+    it('selects focused project with Enter key', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Focus first item
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      // Press Enter to select
+      fireEvent.keyDown(sidebar!, { key: 'Enter' })
+
+      expect(defaultHandlers.onSelectProject).toHaveBeenCalledWith('p1')
+    })
+
+    it('deselects expanded project with Enter key', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId="p1" // Already selected
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Focus first item (which is already expanded)
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      // Press Enter to collapse
+      fireEvent.keyDown(sidebar!, { key: 'Enter' })
+
+      expect(defaultHandlers.onSelectProject).toHaveBeenCalledWith(null)
+    })
+
+    it('clears focus with Escape key', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Focus first item
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      let focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper).toBeInTheDocument()
+
+      // Press Escape to clear focus
+      fireEvent.keyDown(sidebar!, { key: 'Escape' })
+
+      focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper).not.toBeInTheDocument()
+    })
+
+    it('does not handle keyboard navigation with empty project list', () => {
+      const { container } = render(
+        <CompactListMode
+          projects={[]}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Try to focus - should not crash
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper).not.toBeInTheDocument()
+    })
+
+    it('does not interfere with search input', () => {
+      const projects = Array.from({ length: 6 }, (_, i) =>
+        createProject({ id: `${i}`, name: `Project ${i}` })
+      )
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const searchInput = screen.getByPlaceholderText('Find project...')
+
+      // Focus search input
+      searchInput.focus()
+
+      // Press ArrowDown while in search - should not trigger navigation
+      fireEvent.keyDown(searchInput, { key: 'ArrowDown' })
+
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper).not.toBeInTheDocument()
+    })
+
+    it('updates focus index when clicking project', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+        createProject({ id: 'p3', name: 'Project 3' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      // Click on Project 2
+      fireEvent.click(screen.getByText('Project 2'))
+
+      // Should have keyboard-focus class
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper?.querySelector('.project-name')?.textContent).toBe('Project 2')
+
+      expect(defaultHandlers.onSelectProject).toHaveBeenCalledWith('p2')
+    })
+
+    it('resets focus when search query changes', () => {
+      const projects = Array.from({ length: 6 }, (_, i) =>
+        createProject({ id: `${i}`, name: `Project ${i}` })
+      )
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+      const searchInput = screen.getByPlaceholderText('Find project...')
+
+      // Focus first item
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      let focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper).toBeInTheDocument()
+
+      // Change search - should reset focus
+      fireEvent.change(searchInput, { target: { value: 'Project 1' } })
+
+      focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper).not.toBeInTheDocument()
+    })
+
+    it('handles single project without crashing', () => {
+      const projects = [createProject({ id: 'p1', name: 'Only Project' })]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId={null}
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      const sidebar = container.querySelector('.mission-sidebar-compact')
+
+      // Arrow down should focus the only project
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+
+      const focusedWrapper = container.querySelector('.compact-project-wrapper.keyboard-focus')
+      expect(focusedWrapper?.querySelector('.project-name')?.textContent).toBe('Only Project')
+
+      // Arrow down again should loop back (stay on same project)
+      fireEvent.keyDown(sidebar!, { key: 'ArrowDown' })
+      expect(focusedWrapper?.querySelector('.project-name')?.textContent).toBe('Only Project')
+    })
+
+    it('adds accessibility attributes to projects', () => {
+      const projects = [
+        createProject({ id: 'p1', name: 'Project 1' }),
+        createProject({ id: 'p2', name: 'Project 2' }),
+      ]
+
+      const { container } = render(
+        <CompactListMode
+          projects={projects}
+          notes={[]}
+          currentProjectId="p1"
+          width={280}
+          {...defaultHandlers}
+        />
+      )
+
+      // Check listbox role on container
+      const listbox = container.querySelector('[role="listbox"]')
+      expect(listbox).toBeInTheDocument()
+
+      // Check option role on project wrappers
+      const options = container.querySelectorAll('[role="option"]')
+      expect(options.length).toBe(2)
+
+      // Check aria-selected on expanded project
+      const expandedOption = container.querySelector('.compact-project-wrapper.expanded')
+      expect(expandedOption?.getAttribute('aria-selected')).toBe('true')
+    })
+  })
 })

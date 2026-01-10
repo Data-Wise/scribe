@@ -194,6 +194,11 @@ impl Database {
             self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [9])?;
         }
 
+        if current_version < 10 {
+            self.run_migration_010_add_project_icons()?;
+            self.conn.execute("INSERT INTO schema_version (version) VALUES (?)", [10])?;
+        }
+
         Ok(())
     }
     
@@ -786,6 +791,18 @@ What did you accomplish today?"#);
         ")?;
 
         println!("  ✅ Chat history tables created");
+        Ok(())
+    }
+
+    fn run_migration_010_add_project_icons(&self) -> SqlResult<()> {
+        println!("Running database migration 010 (add project icons)");
+
+        // Add icon column to projects table
+        self.conn.execute_batch("
+            ALTER TABLE projects ADD COLUMN icon TEXT;
+        ")?;
+
+        println!("  ✅ Icon column added to projects table");
         Ok(())
     }
 
