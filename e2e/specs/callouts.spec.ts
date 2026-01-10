@@ -16,14 +16,15 @@ import { test, expect } from '../fixtures'
 test.describe('Callouts', () => {
   test.beforeEach(async ({ basePage, cmEditor }) => {
     await basePage.goto()
-    // Wait for app to fully load
-    await basePage.page.waitForTimeout(1500)
-
-    // Create a new note with callout test content
-    await basePage.page.keyboard.press('Meta+n')  // ⌘N for new note
-
-    // Wait for note to be created and editor to be ready
     await basePage.page.waitForTimeout(1000)
+
+    // Open "Welcome to Scribe" note (demo data)
+    const welcomeNote = basePage.page.locator('button:has-text("Welcome to Scribe")').first()
+    await expect(welcomeNote).toBeVisible({ timeout: 5000 })
+    await welcomeNote.click()
+    await basePage.page.waitForTimeout(500)
+
+    // Wait for editor to be ready
     await cmEditor.waitForEditor()
 
     // Type callout test content
@@ -62,7 +63,7 @@ test.describe('Callouts', () => {
 > [!abstract] Summary
 > This is an abstract callout.`
 
-    // Clear existing content and fill with callout test data
+    // Fill with callout test data
     await cmEditor.fill(calloutContent)
     await basePage.page.waitForTimeout(500)
 

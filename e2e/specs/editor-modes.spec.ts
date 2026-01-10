@@ -348,7 +348,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Markdown Rendering in Reading Mode', () => {
-    test('EDM-24: Reading mode renders headings correctly', async ({ basePage }) => {
+    test('EDM-24: Reading mode renders headings correctly', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -357,10 +357,9 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Use CodeMirror helper for reliable content insertion
-      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
-      await cmHelper.waitForEditor()
-      const currentContent = await cmHelper.getTextContent()
-      await cmHelper.fill(currentContent + '\n\n## HeadingMarkerTest\n\nParagraph text')
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\n## HeadingMarkerTest\n\nParagraph text')
       await basePage.page.waitForTimeout(300)
 
       // Switch to reading mode
@@ -372,7 +371,7 @@ test.describe('Editor Modes', () => {
       await expect(heading).toBeVisible()
     })
 
-    test('EDM-25: Reading mode renders lists correctly', async ({ basePage }) => {
+    test('EDM-25: Reading mode renders lists correctly', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -380,10 +379,9 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Use CodeMirror helper for reliable content insertion
-      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
-      await cmHelper.waitForEditor()
-      const currentContent = await cmHelper.getTextContent()
-      await cmHelper.fill(currentContent + '\n\n- ListItemAlpha\n- ListItemBeta\n- ListItemGamma')
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\n- ListItemAlpha\n- ListItemBeta\n- ListItemGamma')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -394,18 +392,17 @@ test.describe('Editor Modes', () => {
       await expect(listItem).toBeVisible()
     })
 
-    test('EDM-26: Reading mode renders bold and italic', async ({ basePage }) => {
+    test('EDM-26: Reading mode renders bold and italic', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion (keyboard.type drops characters)
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\n**boldmarker** and _italicmarker_')
+      // Use CodeMirror helper for reliable content insertion
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\n**boldmarker** and _italicmarker_')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -417,7 +414,7 @@ test.describe('Editor Modes', () => {
       await expect(italic).toBeVisible()
     })
 
-    test('EDM-27: Reading mode renders code blocks', async ({ basePage }) => {
+    test('EDM-27: Reading mode renders code blocks', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -425,10 +422,9 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Use CodeMirror helper for reliable content insertion
-      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
-      await cmHelper.waitForEditor()
-      const currentContent = await cmHelper.getTextContent()
-      await cmHelper.fill(currentContent + '\n\n`inlinecodemarker`')
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\n`inlinecodemarker`')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -440,7 +436,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Strikethrough Rendering', () => {
-    test('EDM-37: Reading mode renders strikethrough (~~text~~)', async ({ basePage }) => {
+    test('EDM-37: Reading mode renders strikethrough (~~text~~)', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -448,10 +444,9 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Use CodeMirror helper for reliable content insertion
-      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
-      await cmHelper.waitForEditor()
-      const currentContent = await cmHelper.getTextContent()
-      await cmHelper.fill(currentContent + '\n\nThis is ~~strikethroughmarker~~ text')
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\nThis is ~~strikethroughmarker~~ text')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -462,7 +457,7 @@ test.describe('Editor Modes', () => {
       await expect(strikethrough).toBeVisible()
     })
 
-    test('EDM-38: Live Preview mode renders strikethrough', async ({ basePage }) => {
+    test('EDM-38: Live Preview mode renders strikethrough', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
 
@@ -470,10 +465,9 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Use CodeMirror helper for reliable content insertion
-      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
-      await cmHelper.waitForEditor()
-      const currentContent = await cmHelper.getTextContent()
-      await cmHelper.fill(currentContent + '\n\nLive ~~strikethroughlive~~ preview')
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\nLive ~~strikethroughlive~~ preview')
       await basePage.page.waitForTimeout(300)
 
       await liveBtn.click()
@@ -486,7 +480,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('KaTeX Math Rendering', () => {
-    test('EDM-39: Reading mode renders inline math ($...$)', async ({ basePage }) => {
+    test('EDM-39: Reading mode renders inline math ($...$)', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -494,10 +488,9 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Use CodeMirror helper for reliable content insertion
-      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
-      await cmHelper.waitForEditor()
-      const currentContent = await cmHelper.getTextContent()
-      await cmHelper.fill(currentContent + '\n\nInlineMathMarker: $E = mc^2$')
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\nInlineMathMarker: $E = mc^2$')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -509,7 +502,7 @@ test.describe('Editor Modes', () => {
       await expect(prose).toContainText('InlineMathMarker')
     })
 
-    test('EDM-40: Reading mode renders display math ($$...$$)', async ({ basePage }) => {
+    test('EDM-40: Reading mode renders display math ($$...$$)', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -517,10 +510,9 @@ test.describe('Editor Modes', () => {
       await basePage.page.waitForTimeout(300)
 
       // Use CodeMirror helper for reliable content insertion
-      const cmHelper = new (await import('../helpers/codemirror-helpers')).CodeMirrorHelper(basePage.page)
-      await cmHelper.waitForEditor()
-      const currentContent = await cmHelper.getTextContent()
-      await cmHelper.fill(currentContent + '\n\nDisplayMathMarker:\n$$x^2 + y^2 = z^2$$')
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\nDisplayMathMarker:\n$$x^2 + y^2 = z^2$$')
       await basePage.page.waitForTimeout(300)
 
       await readingBtn.click()
@@ -533,20 +525,19 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Rapid Mode Switching', () => {
-    test('EDM-41: Handle rapid mode switching without data loss', async ({ basePage }) => {
+    test('EDM-41: Handle rapid mode switching without data loss', async ({ basePage, cmEditor }) => {
       const testContent = `RAPID_SWITCH_${Date.now()}`
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const liveBtn = basePage.page.locator('button:has-text("Live")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
-      // Add content in source mode using fill()
+      // Add content in source mode using CodeMirror helper
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
-      await textarea.fill(currentContent + '\n\n' + testContent)
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
+      await cmEditor.fill(currentContent + '\n\n' + testContent)
       await basePage.page.waitForTimeout(200)
 
       // Rapid mode switches using buttons
@@ -561,8 +552,8 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      const sourceTextarea = basePage.page.locator('textarea')
-      const content = await sourceTextarea.inputValue()
+      await cmEditor.waitForEditor()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain(testContent)
     })
 
@@ -586,7 +577,7 @@ test.describe('Editor Modes', () => {
   })
 
   test.describe('Focus Behavior', () => {
-    test('EDM-43: Source mode allows immediate typing after switch', async ({ basePage }) => {
+    test('EDM-43: Source mode allows immediate typing after switch', async ({ basePage, cmEditor }) => {
       const sourceBtn = basePage.page.locator('button:has-text("Source")')
       const readingBtn = basePage.page.locator('button:has-text("Reading")')
 
@@ -598,15 +589,14 @@ test.describe('Editor Modes', () => {
       await sourceBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Use fill() for reliable content insertion
-      const textarea = basePage.page.locator('textarea')
-      await textarea.click()
-      const currentContent = await textarea.inputValue()
+      // Use CodeMirror helper for reliable content insertion
+      await cmEditor.waitForEditor()
+      const currentContent = await cmEditor.getTextContent()
       const testMarker = 'FOCUS_TEST_MARKER'
-      await textarea.fill(currentContent + '\n\n' + testMarker)
+      await cmEditor.fill(currentContent + '\n\n' + testMarker)
       await basePage.page.waitForTimeout(100)
 
-      const content = await textarea.inputValue()
+      const content = await cmEditor.getTextContent()
       expect(content).toContain(testMarker)
     })
 
