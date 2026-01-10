@@ -343,12 +343,12 @@ tags:
 **Store Analysis:**
 | Store | Lines | Coverage | Priority | Status |
 |-------|-------|----------|----------|--------|
-| useAppViewStore | 462 | 0% | P0 | 🔄 Next |
-| useSettingsStore | 474 | 0% | P0 | Pending |
-| useHistoryStore | 200 | 0% | P1 | Pending |
-| useProjectStore | 203 | 0% | P1 | Pending |
-| useNotesStore | 200 | 0% | P1 | Pending |
-| **Total** | **1,539** | **0%** | | |
+| useAppViewStore | 462 | ~90%+ (est.) | P0 | ✅ Complete (54/54 tests) |
+| useSettingsStore | 474 | 0% | P0 | 📋 Planned (55 tests) |
+| useHistoryStore | 200 | 0% | P1 | Deferred |
+| useProjectStore | 203 | 0% | P1 | Deferred |
+| useNotesStore | 200 | 0% | P1 | Deferred |
+| **Total** | **1,539** | **~28%** | | |
 
 **Phase 1 Progress:**
 
@@ -365,10 +365,18 @@ tags:
 - Split complex operations into separate `act()` calls
 - Verify both state and localStorage persistence
 
+**useSettingsStore - PLANNED** 📋
+- 📄 Created comprehensive test plan: `__tests__/useSettingsStore.test.plan.md`
+- 📊 Estimated: 55 tests, ~1,100 lines, 3-4 hours effort
+- 🎯 Coverage areas: Settings CRUD (8), Search (6), Import/Export (6), UI State (7), Quick Actions CRUD (10), Reordering (5), Shortcuts (4), localStorage (6), Initialize (3)
+- ⚠️  Complexity: High (requires mocking Fuse.js search, settingsSchema, Set handling)
+- ⏸️  **Status:** Postponed - comprehensive plan documented for future implementation
+
 **Next Steps:**
-- [ ] Create useSettingsStore.test.ts (80%+ coverage target)
-- [ ] Verify Zustand + Immer integration works correctly
+- [ ] Implement useSettingsStore.test.ts when time permits (follow test plan)
+- [ ] Verify Zustand + Immer integration in remaining stores
 - [ ] Document test patterns in TESTING.md
+- [ ] Optional: Add coverage for P1 stores (useHistoryStore, useProjectStore, useNotesStore)
 
 ---
 
