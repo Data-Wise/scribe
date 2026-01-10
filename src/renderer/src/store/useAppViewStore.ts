@@ -39,6 +39,12 @@ interface AppViewState {
   expandedSmartIconId: SmartIconId | null  // Accordion: only one expanded at a time
   projectTypeFilter: ProjectType | null  // Active project type filter for Mission Control
 
+  // Mode consolidation state (v1.15.0)
+  lastExpandedMode: 'compact' | 'card' | null  // Last expanded mode (for smart persistence)
+  lastModeChangeTimestamp: number  // Debounce timestamp for rapid clicking prevention
+  compactModeWidth: number  // Last manual width in Compact mode
+  cardModeWidth: number  // Last manual width in Card mode
+
   // Editor tabs state
   openTabs: EditorTab[]
   activeTabId: string | null
@@ -55,6 +61,10 @@ interface AppViewState {
   cycleSidebarMode: () => void
   toggleSidebarCollapsed: () => void
   setSidebarWidth: (width: number) => void
+
+  // Mode consolidation actions (v1.15.0)
+  determineExpandMode: () => 'compact' | 'card'
+  getCyclePattern: (preset: string) => SidebarMode[]
 
   // Pinned vaults actions
   addPinnedVault: (projectId: string, label: string, color?: string) => boolean
@@ -100,6 +110,13 @@ const PINNED_VAULTS_KEY = 'scribe:pinnedVaults'
 const SMART_ICONS_KEY = 'scribe:smartIcons'
 const EXPANDED_SMART_ICON_KEY = 'scribe:expandedSmartIconId'
 const RECENT_NOTES_KEY = 'scribe:recentNotes'
+
+// Mode consolidation keys (v1.15.0)
+const LAST_EXPANDED_MODE_KEY = 'scribe:lastExpandedMode'
+const LAST_MODE_CHANGE_KEY = 'scribe:lastModeChangeTimestamp'
+const COMPACT_WIDTH_KEY = 'scribe:compactModeWidth'
+const CARD_WIDTH_KEY = 'scribe:cardModeWidth'
+const AUTO_UPDATE_PRESET_KEY = 'scribe:autoUpdatePreset'
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -399,6 +416,90 @@ const saveRecentNotes = (notes: RecentNote[]): void => {
   }
 }
 
+// Mode consolidation helpers (v1.15.0)
+const getLastExpandedMode = (): 'compact' | 'card' | null => {
+  try {
+    const saved = localStorage.getItem(LAST_EXPANDED_MODE_KEY)
+    if (saved === 'compact' || saved === 'card') {
+      return saved
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
+const saveLastExpandedMode = (mode: 'compact' | 'card'): void => {
+  try {
+    localStorage.setItem(LAST_EXPANDED_MODE_KEY, mode)
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getLastModeChangeTimestamp = (): number => {
+  try {
+    const saved = localStorage.getItem(LAST_MODE_CHANGE_KEY)
+    return saved ? parseInt(saved, 10) : 0
+  } catch {
+    return 0
+  }
+}
+
+const saveLastModeChangeTimestamp = (timestamp: number): void => {
+  try {
+    localStorage.setItem(LAST_MODE_CHANGE_KEY, timestamp.toString())
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getCompactModeWidth = (): number => {
+  try {
+    const saved = localStorage.getItem(COMPACT_WIDTH_KEY)
+    if (saved) {
+      const width = parseInt(saved, 10)
+      if (!isNaN(width) && width >= SIDEBAR_WIDTHS.compact.min) {
+        return width
+      }
+    }
+    return SIDEBAR_WIDTHS.compact.default
+  } catch {
+    return SIDEBAR_WIDTHS.compact.default
+  }
+}
+
+const saveCompactModeWidth = (width: number): void => {
+  try {
+    localStorage.setItem(COMPACT_WIDTH_KEY, width.toString())
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getCardModeWidth = (): number => {
+  try {
+    const saved = localStorage.getItem(CARD_WIDTH_KEY)
+    if (saved) {
+      const width = parseInt(saved, 10)
+      if (!isNaN(width) && width >= SIDEBAR_WIDTHS.card.min) {
+        return width
+      }
+    }
+    return SIDEBAR_WIDTHS.card.default
+  } catch {
+    return SIDEBAR_WIDTHS.card.default
+  }
+}
+
+const saveCardModeWidth = (width: number): void => {
+  try {
+    localStorage.setItem(CARD_WIDTH_KEY, width.toString())
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
 /**
  * Determine initial sidebar mode based on session context
  * - Fresh start or > 4 hours → compact (get bearings)
@@ -432,6 +533,13 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   smartIcons: getSavedSmartIcons(),
   expandedSmartIconId: getSavedExpandedSmartIconId(),
   projectTypeFilter: null,
+
+  // Mode consolidation state (v1.15.0)
+  lastExpandedMode: getLastExpandedMode(),
+  lastModeChangeTimestamp: getLastModeChangeTimestamp(),
+  compactModeWidth: getCompactModeWidth(),
+  cardModeWidth: getCardModeWidth(),
+
   lastActiveNoteId: getLastActiveNoteId(),
   openTabs: getSavedTabs(),
   activeTabId: getSavedActiveTabId(),
@@ -439,8 +547,27 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   recentNotes: getSavedRecentNotes(),
 
   setSidebarMode: (mode: SidebarMode) => {
-    set({ sidebarMode: mode })
+    const state = get()
+
+    // Save last expanded mode (if switching to expanded mode)
+    if (mode === 'compact' || mode === 'card') {
+      saveLastExpandedMode(mode)
+      set({ lastExpandedMode: mode })
+    }
+
+    // Update mode-specific width when switching modes
+    let newWidth = state.sidebarWidth
+    if (mode === 'compact') {
+      newWidth = state.compactModeWidth || SIDEBAR_WIDTHS.compact.default
+    } else if (mode === 'card') {
+      newWidth = state.cardModeWidth || SIDEBAR_WIDTHS.card.default
+    } else if (mode === 'icon') {
+      newWidth = SIDEBAR_WIDTHS.icon
+    }
+
+    set({ sidebarMode: mode, sidebarWidth: newWidth })
     saveSidebarMode(mode)
+    saveSidebarWidth(newWidth)
   },
 
   cycleSidebarMode: () => {
@@ -467,12 +594,21 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
 
     if (mode === 'compact') {
       constrainedWidth = Math.max(SIDEBAR_WIDTHS.compact.min, Math.min(SIDEBAR_WIDTHS.compact.max, width))
+      // Save mode-specific width
+      set({ sidebarWidth: constrainedWidth, compactModeWidth: constrainedWidth })
+      saveSidebarWidth(constrainedWidth)
+      saveCompactModeWidth(constrainedWidth)
     } else if (mode === 'card') {
       constrainedWidth = Math.max(SIDEBAR_WIDTHS.card.min, Math.min(SIDEBAR_WIDTHS.card.max, width))
+      // Save mode-specific width
+      set({ sidebarWidth: constrainedWidth, cardModeWidth: constrainedWidth })
+      saveSidebarWidth(constrainedWidth)
+      saveCardModeWidth(constrainedWidth)
+    } else {
+      // Icon mode - no custom width
+      set({ sidebarWidth: constrainedWidth })
+      saveSidebarWidth(constrainedWidth)
     }
-
-    set({ sidebarWidth: constrainedWidth })
-    saveSidebarWidth(constrainedWidth)
   },
 
   // Pinned vaults actions
@@ -811,6 +947,61 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   clearRecentNotes: () => {
     set({ recentNotes: [] })
     saveRecentNotes([])
+  },
+
+  // Mode consolidation actions (v1.15.0)
+
+  /**
+   * Determine which mode to expand to based on priority logic:
+   * 1. If "remember mode" setting is ON and we have a last mode → use it
+   * 2. If "remember mode" setting is OFF or no last mode → use preset
+   * 3. Default fallback → compact
+   *
+   * Note: Settings integration will be added in Phase 5
+   */
+  determineExpandMode: (): 'compact' | 'card' => {
+    const { lastExpandedMode } = get()
+
+    // TODO: Phase 5 - Read from Settings store
+    // const settings = useSettingsStore.getState().settings
+    // const rememberMode = settings['appearance.rememberSidebarMode'] ?? true
+    // const widthPreset = settings['appearance.sidebarWidth'] ?? 'medium'
+
+    // For now, use hardcoded defaults (will be updated in Phase 5)
+    const rememberMode = true  // Default ON
+    const widthPreset = 'medium'  // Default preset
+
+    // Priority 1: Remember mode ON → use last mode if available
+    if (rememberMode && lastExpandedMode) {
+      return lastExpandedMode
+    }
+
+    // Priority 2: Use width preset to determine mode
+    const presetModes: Record<string, 'compact' | 'card'> = {
+      'narrow': 'compact',   // 200px
+      'medium': 'compact',   // 280px
+      'wide': 'card'         // 360px
+    }
+
+    return presetModes[widthPreset] || 'compact'
+  },
+
+  /**
+   * Get cycle pattern based on width preset
+   * - narrow/medium: Icon ↔ Compact (2 states)
+   * - wide: Icon → Compact → Card → Icon (3 states)
+   *
+   * Note: Settings integration will be added in Phase 5
+   */
+  getCyclePattern: (preset: string): SidebarMode[] => {
+    // TODO: Phase 5 - Read from Settings store if preset not provided
+    const cycleMap: Record<string, SidebarMode[]> = {
+      'narrow': ['icon', 'compact'],
+      'medium': ['icon', 'compact'],
+      'wide': ['icon', 'compact', 'card']
+    }
+
+    return cycleMap[preset] || cycleMap['medium']
   }
 }))
 
