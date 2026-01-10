@@ -1,10 +1,14 @@
-import { useState, useMemo } from 'react'
-import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings } from 'lucide-react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
+import { Menu, Plus, Search, FileText, ChevronRight, ChevronDown, FolderOpen, Folder, Settings, FolderPlus, X } from 'lucide-react'
 import { Project, Note } from '../../types'
 import { ActivityDots } from './ActivityDots'
 import { ProjectContextCard } from './ProjectContextCard'
 import { ProjectContextMenu } from './ProjectContextMenu'
 import { NoteContextMenu } from './NoteContextMenu'
+import { EmptyState } from './EmptyState'
+import { useAppViewStore } from '../../store/useAppViewStore'
+import { getIconByName } from '../IconPicker'
+import { ProjectTooltip } from './ContextualTooltip'
 
 interface CompactListModeProps {
   projects: Project[]
@@ -20,6 +24,8 @@ interface CompactListModeProps {
   onEditProject?: (projectId: string) => void
   onArchiveProject?: (projectId: string) => void
   onDeleteProject?: (projectId: string) => void
+  onPinProject?: (projectId: string) => void
+  onUnpinProject?: (projectId: string) => void
   onRenameNote?: (noteId: string) => void
   onMoveNoteToProject?: (noteId: string, projectId: string | null) => void
   onDuplicateNote?: (noteId: string) => void
@@ -40,6 +46,8 @@ export function CompactListMode({
   onEditProject,
   onArchiveProject,
   onDeleteProject,
+  onPinProject,
+  onUnpinProject,
   onRenameNote,
   onMoveNoteToProject,
   onDuplicateNote,
@@ -47,10 +55,18 @@ export function CompactListMode({
   onOpenSettings
 }: CompactListModeProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const isPinned = useAppViewStore(state => state.isPinned)
 
   // Context menu state
   const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
   const [noteContextMenu, setNoteContextMenu] = useState<{ note: Note; position: { x: number; y: number } } | null>(null)
+
+  // Keyboard navigation state
+  const [focusedIndex, setFocusedIndex] = useState(-1)
+  const projectRefs = useRef<(HTMLDivElement | null)[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
 
   // Context menu handlers
   const handleProjectContextMenu = (e: React.MouseEvent, project: Project) => {
@@ -95,8 +111,113 @@ export function CompactListMode({
     return stats
   }, [projects, notes])
 
+  // Count inbox notes
+  const inboxCount = useMemo(() => {
+    return notes.filter(n => !n.deleted_at && !n.project_id).length
+  }, [notes])
+
+  // Keyboard navigation handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const projectCount = sortedProjects.length
+
+      // Don't handle keyboard navigation if there are no projects
+      if (projectCount === 0) return
+
+      // Don't handle keyboard navigation if user is typing in search
+      if (document.activeElement?.tagName === 'INPUT') return
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault()
+          setFocusedIndex((prev) => (prev + 1) % projectCount)
+          break
+
+        case 'ArrowUp':
+          e.preventDefault()
+          setFocusedIndex((prev) =>
+            prev <= 0 ? projectCount - 1 : prev - 1
+          )
+          break
+
+        case 'Enter':
+          if (focusedIndex >= 0 && focusedIndex < projectCount) {
+            e.preventDefault()
+            const project = sortedProjects[focusedIndex]
+            const isExpanded = project.id === currentProjectId
+            onSelectProject(isExpanded ? null : project.id)
+          }
+          break
+
+        case 'Escape':
+          e.preventDefault()
+          setFocusedIndex(-1)
+          break
+      }
+    }
+
+    // Add event listener to the container
+    const container = containerRef.current
+    if (container) {
+      container.addEventListener('keydown', handleKeyDown)
+      return () => container.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [sortedProjects, focusedIndex, currentProjectId, onSelectProject])
+
+  // Auto-scroll focused item into view
+  useEffect(() => {
+    if (focusedIndex >= 0 && projectRefs.current[focusedIndex]) {
+      projectRefs.current[focusedIndex]?.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth'
+      })
+    }
+  }, [focusedIndex])
+
+  // Reset focus when search changes or projects change
+  useEffect(() => {
+    setFocusedIndex(-1)
+  }, [searchQuery, projects.length])
+
+  // ⌘F keyboard shortcut to toggle search
+  useEffect(() => {
+    const handleSearchShortcut = (e: KeyboardEvent) => {
+      if (e.metaKey && e.key === 'f') {
+        e.preventDefault()
+        setIsSearchExpanded((prev) => {
+          const newState = !prev
+          if (newState) {
+            // Focus search input when expanding
+            setTimeout(() => searchInputRef.current?.focus(), 50)
+          } else {
+            // Clear search when collapsing
+            setSearchQuery('')
+          }
+          return newState
+        })
+      }
+    }
+
+    window.addEventListener('keydown', handleSearchShortcut)
+    return () => window.removeEventListener('keydown', handleSearchShortcut)
+  }, [])
+
+  // Auto-focus search input when expanded
+  useEffect(() => {
+    if (isSearchExpanded && searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }, [isSearchExpanded])
+
   return (
-    <div className="mission-sidebar-compact" style={{ width }}>
+    <div
+      className="mission-sidebar-compact"
+      style={{ width }}
+      ref={containerRef}
+      tabIndex={0}
+      role="navigation"
+      aria-label="Projects navigation"
+    >
       {/* Header */}
       <div className="sidebar-header">
         <button
@@ -109,27 +230,68 @@ export function CompactListMode({
         <h3 className="sidebar-title">
           Projects <span className="count">({projects.filter(p => (p.status || 'active') !== 'archive').length})</span>
         </h3>
+        <button
+          className="sidebar-search-toggle"
+          onClick={() => setIsSearchExpanded(!isSearchExpanded)}
+          title={isSearchExpanded ? 'Hide search (⌘F)' : 'Search projects (⌘F)'}
+          aria-label={isSearchExpanded ? 'Hide search' : 'Search projects'}
+          aria-expanded={isSearchExpanded}
+        >
+          <Search size={14} />
+        </button>
       </div>
 
-      {/* Search (if >5 projects) */}
-      {projects.length > 5 && (
-        <div className="sidebar-search">
-          <Search size={14} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Find project..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
+      {/* Collapsible inline search */}
+      {isSearchExpanded && (
+        <div className="sidebar-search-inline">
+          <div className="search-input-wrapper">
+            <Search size={14} className="search-icon" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+              aria-label="Search projects"
+            />
+            {searchQuery && (
+              <button
+                className="search-clear-btn"
+                onClick={() => {
+                  setSearchQuery('')
+                  searchInputRef.current?.focus()
+                }}
+                title="Clear search"
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <div className="search-results-count">
+              {sortedProjects.length} result{sortedProjects.length !== 1 ? 's' : ''}
+            </div>
+          )}
         </div>
       )}
 
       {/* Project list */}
-      <div className="project-list-compact">
-        {sortedProjects.map(project => {
+      <div className="project-list-compact" role="listbox" aria-label="Projects">
+        {sortedProjects.length === 0 && inboxCount === 0 && !searchQuery ? (
+          <EmptyState
+            icon={<FolderPlus className="w-12 h-12" />}
+            title="No projects yet"
+            description="Create your first project to organize your notes"
+            actionLabel="Create Project"
+            onAction={onCreateProject}
+          />
+        ) : (
+          sortedProjects.map((project, index) => {
           const stats = projectStats[project.id]
           const isExpanded = project.id === currentProjectId
+          const isFocused = focusedIndex === index
           const projectNotes = notes
             .filter(n => !n.deleted_at && n.project_id === project.id)
             .sort((a, b) => b.updated_at - a.updated_at)
@@ -137,20 +299,28 @@ export function CompactListMode({
           return (
             <CompactProjectItem
               key={project.id}
+              ref={(el) => (projectRefs.current[index] = el)}
               project={project}
               allNotes={notes}
               allProjects={projects}
               isExpanded={isExpanded}
+              isFocused={isFocused}
               noteCount={stats?.noteCount || 0}
               projectNotes={projectNotes}
-              onClick={() => onSelectProject(isExpanded ? null : project.id)}
+              onClick={() => {
+                setFocusedIndex(index)
+                onSelectProject(isExpanded ? null : project.id)
+              }}
               onSelectNote={onSelectNote}
               onQuickAdd={() => onNewNote(project.id)}
               onContextMenu={(e) => handleProjectContextMenu(e, project)}
               onNoteContextMenu={handleNoteContextMenu}
+              onPin={isPinned(project.id) ? () => onUnpinProject?.(project.id) : () => onPinProject?.(project.id)}
+              isPinned={isPinned(project.id)}
             />
           )
-        })}
+        })
+        )}
 
         {sortedProjects.length === 0 && searchQuery && (
           <div className="no-results">No projects match "{searchQuery}"</div>
@@ -189,6 +359,9 @@ export function CompactListMode({
           onEditProject={onEditProject}
           onArchiveProject={onArchiveProject}
           onDeleteProject={onDeleteProject}
+          onPinProject={onPinProject}
+          onUnpinProject={onUnpinProject}
+          isPinned={isPinned(projectContextMenu.project.id)}
         />
       )}
 
@@ -214,6 +387,7 @@ interface CompactProjectItemProps {
   allNotes: Note[]
   allProjects: Project[]
   isExpanded: boolean
+  isFocused: boolean
   noteCount: number
   projectNotes: Note[]
   onClick: () => void
@@ -221,28 +395,43 @@ interface CompactProjectItemProps {
   onQuickAdd: () => void
   onContextMenu: (e: React.MouseEvent) => void
   onNoteContextMenu: (e: React.MouseEvent, note: Note) => void
+  onPin?: () => void
+  isPinned?: boolean
 }
 
-function CompactProjectItem({
-  project,
-  allNotes,
-  allProjects: _allProjects,
-  isExpanded,
-  noteCount,
-  projectNotes,
-  onClick,
-  onSelectNote,
-  onQuickAdd,
-  onContextMenu,
-  onNoteContextMenu
-}: CompactProjectItemProps) {
+const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemProps>(
+  ({
+    project,
+    allNotes,
+    allProjects: _allProjects,
+    isExpanded,
+    isFocused,
+    noteCount,
+    projectNotes,
+    onClick,
+    onSelectNote,
+    onQuickAdd,
+    onContextMenu,
+    onNoteContextMenu,
+    onPin,
+    isPinned = false
+  }, ref) => {
   const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
-  const FolderIcon = isExpanded ? FolderOpen : Folder
+  // Use custom icon if set, otherwise default to Folder/FolderOpen
+  const ProjectIcon = project.icon
+    ? getIconByName(project.icon)
+    : (isExpanded ? FolderOpen : Folder)
 
   // When expanded, show context card + notes list
   if (isExpanded) {
     return (
-      <div className="compact-project-wrapper expanded">
+      <div
+        ref={ref}
+        className={`compact-project-wrapper expanded ${isFocused ? 'keyboard-focus' : ''}`}
+        role="option"
+        aria-selected={isExpanded}
+        tabIndex={isFocused ? 0 : -1}
+      >
         {/* Collapsed header to close */}
         <button
           className="compact-project-item expanded"
@@ -251,7 +440,7 @@ function CompactProjectItem({
         >
           <div className="item-row">
             <ChevronIcon size={14} className="chevron open" />
-            <FolderIcon size={14} className="folder-icon" />
+            <ProjectIcon size={14} className="folder-icon" />
             <span className="project-name">{project.name}</span>
           </div>
         </button>
@@ -286,24 +475,45 @@ function CompactProjectItem({
     )
   }
 
-  // Collapsed view with activity dots
+  // Collapsed view with activity dots and contextual tooltip
+  const status = project.status || 'active'
+  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1)
+
   return (
-    <div className="compact-project-wrapper">
-      <button
-        className="compact-project-item"
-        onClick={onClick}
-        onContextMenu={onContextMenu}
+    <div
+      ref={ref}
+      className={`compact-project-wrapper ${isFocused ? 'keyboard-focus' : ''}`}
+      role="option"
+      aria-selected={false}
+      tabIndex={isFocused ? 0 : -1}
+    >
+      <ProjectTooltip
+        projectName={project.name}
+        status={statusLabel}
+        noteCount={noteCount}
+        onOpen={onClick}
+        onPin={onPin}
+        onMore={onContextMenu}
+        isPinned={isPinned}
       >
-        <div className="item-row">
-          <ChevronIcon size={14} className="chevron" />
-          <FolderIcon size={14} className="folder-icon" />
-          <span className="project-name">{project.name}</span>
-          <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
-        </div>
-      </button>
+        <button
+          className="compact-project-item"
+          onClick={onClick}
+          onContextMenu={onContextMenu}
+        >
+          <div className="item-row">
+            <ChevronIcon size={14} className="chevron" />
+            <ProjectIcon size={14} className="folder-icon" />
+            <span className="project-name">{project.name}</span>
+            <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
+          </div>
+        </button>
+      </ProjectTooltip>
     </div>
   )
-}
+})
+
+CompactProjectItem.displayName = 'CompactProjectItem'
 
 // Helper functions
 function countWords(content: string): number {

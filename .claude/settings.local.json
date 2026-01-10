@@ -11,7 +11,9 @@
       "Bash(cargo check:*)",
       "Bash(screencapture:*)",
       "Bash(gh release view:*)",
-      "Bash(shasum:*)"
+      "Bash(shasum:*)",
+      "Bash(git worktree add:*)",
+      "Bash(npm test:*)"
     ]
   }
 }

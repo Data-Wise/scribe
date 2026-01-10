@@ -9,6 +9,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Sprint 36 Late Work: Mode Consolidation (v1.15.0)
+
+**Smart sidebar mode persistence and universal expansion for improved workflow.**
+
+#### Added
+
+**Mode Consolidation System:**
+- Mode-specific width memory: Compact and Card modes remember custom widths independently
+- Smart mode persistence: Sidebar restores last expanded mode (Compact/Card) when expanding from Icon
+- Priority logic: "Remember sidebar mode" setting > width preset > safe default
+- Preset-aware cycling: narrow/medium (Icon ↔ Compact), wide (Icon → Compact → Card → Icon)
+- 200ms debounce prevents rapid clicking accidents
+- Universal expansion: Inbox and Smart Folder icons expand sidebar with filtered content
+
+**Settings Integration:**
+- New toggle: "Remember Sidebar Mode" (default: ON) - Settings → Appearance → Sidebar Settings
+- New toggle: "Expansion Preview" (Phase 4, coming v1.16.0) - Settings → Appearance → Sidebar Settings
+- Appearance category badge updated: 9 → 11 settings
+- Width preset integration: narrow/medium/wide determines cycle pattern and default expansion mode
+
+**Preset Update Dialog:**
+- Prompts to update width preset after manual resize crosses boundary
+- "Don't ask again" checkbox for auto-update preference (localStorage-based)
+- Visual comparison: current vs suggested preset with clear descriptions
+- Auto-update flow: Silently updates preset when preference is enabled
+
+**Mode Indicator:**
+- Shows "Compact Mode" or "Card Mode" in ActivityBar footer
+- Hidden in Icon mode for clean minimal UI
+- Uppercase label with subtle styling
+
+**localStorage Tracking:**
+- `scribe:lastExpandedMode` - Last used mode (compact/card)
+- `scribe:compactModeWidth` - Custom width for Compact mode
+- `scribe:cardModeWidth` - Custom width for Card mode
+- `scribe:lastModeChangeTimestamp` - Debounce tracking
+- `scribe:autoUpdatePreset` - Auto-update preference for preset dialog
+
+#### Changed
+
+**Sidebar Behavior:**
+- Expand button (⌘0) and Icon mode icons now use smart expansion (restores last mode)
+- Manual resize preserves width per mode (Compact width ≠ Card width)
+- Preset-aware cycling adapts to width preset (2-state vs 3-state cycles)
+- Inbox icon expands sidebar to show inbox notes (universal accessibility)
+- Smart Folder icons expand sidebar with filtered projects (universal accessibility)
+
+#### Technical
+
+**Implementation:**
+- 7 phases complete: State Management, Cycle Behavior, Universal Expand, Settings Integration, Preset Update Dialog, Mode Indicator, Migration & Polish
+- Zero breaking changes to existing API
+- Backward compatible with v1.14.0
+- TypeScript: 0 new errors
+- All state changes persist to localStorage with error handling
+
 ---
 
 ## [v1.14.0] - 2026-01-07

@@ -21,6 +21,7 @@ export interface Project {
   type: ProjectType
   description?: string
   color: string
+  icon?: string
   createdAt: number
   updatedAt: number
 }

@@ -137,7 +137,7 @@ export const noteToRecord = (note: Partial<Note>): Partial<NoteRecord> => {
  * Uses shared seed data from seed-data.ts to stay in sync with
  * Tauri's database.rs migration 007.
  */
-import { DEMO_PROJECT, DEMO_TAGS, DEMO_NOTES, SEED_DATA_SUMMARY } from './seed-data'
+import { DEMO_PROJECTS, DEMO_TAGS, DEMO_NOTES, DEMO_WIKI_LINKS, SEED_DATA_SUMMARY } from './seed-data'
 
 export const seedDemoData = async (): Promise<boolean> => {
   // Check if already seeded (any projects exist)
@@ -151,18 +151,25 @@ export const seedDemoData = async (): Promise<boolean> => {
 
   const now = Math.floor(Date.now() / 1000)
 
-  // Create demo project from shared data
-  const demoProjectId = generateId()
-  await db.projects.add({
-    id: demoProjectId,
-    name: DEMO_PROJECT.name,
-    type: DEMO_PROJECT.type,
-    status: DEMO_PROJECT.status,
-    description: DEMO_PROJECT.description,
-    color: DEMO_PROJECT.color,
-    created_at: now,
-    updated_at: now
-  })
+  // Create demo projects from shared data
+  const projectIdMap: Record<string, string> = {}
+  for (const project of DEMO_PROJECTS) {
+    const id = generateId()
+    projectIdMap[project.name] = id
+    await db.projects.add({
+      id,
+      name: project.name,
+      type: project.type,
+      status: project.status,
+      description: project.description,
+      color: project.color,
+      created_at: now,
+      updated_at: now
+    })
+  }
+
+  const gettingStartedId = projectIdMap['Getting Started']
+  const researchNotesId = projectIdMap['Research Notes']
 
   // Create demo tags from shared data
   const tagMap: Record<string, string> = {}
@@ -176,12 +183,16 @@ export const seedDemoData = async (): Promise<boolean> => {
   // Create notes from shared data
   const noteMap: Record<string, string> = {}
   const notesToAdd = [
-    { key: 'welcome', offset: 0 },
-    { key: 'features', offset: 60 },
-    { key: 'daily', offset: 120 }
+    { key: 'welcome', offset: 0, projectId: gettingStartedId },
+    { key: 'phase3Guide', offset: 60, projectId: gettingStartedId },
+    { key: 'iconModeTutorial', offset: 120, projectId: gettingStartedId },
+    { key: 'settingsPinnedProjects', offset: 180, projectId: gettingStartedId },
+    { key: 'keyboardShortcuts', offset: 240, projectId: gettingStartedId },
+    { key: 'modeConsolidation', offset: 30, projectId: gettingStartedId }, // v1.15.0 testing guide
+    { key: 'researchExample', offset: 300, projectId: researchNotesId }
   ]
 
-  for (const { key, offset } of notesToAdd) {
+  for (const { key, offset, projectId } of notesToAdd) {
     const noteData = DEMO_NOTES[key as keyof typeof DEMO_NOTES]
     const id = generateId()
     noteMap[noteData.title] = id
@@ -191,7 +202,7 @@ export const seedDemoData = async (): Promise<boolean> => {
       title: noteData.title,
       content: noteData.content,
       folder: noteData.folder,
-      project_id: key === 'daily' ? null : demoProjectId,
+      project_id: projectId,
       created_at: now - offset,
       updated_at: now - offset,
       properties: '{}',
@@ -210,19 +221,13 @@ export const seedDemoData = async (): Promise<boolean> => {
     }
   }
 
-  // Add wiki links between notes
-  const welcomeId = noteMap['Welcome to Scribe']
-  const featuresId = noteMap['Features Overview']
-  const dailyId = noteMap['Daily Note Example']
-
-  if (welcomeId && featuresId) {
-    await db.noteLinks.add({ source_id: welcomeId, target_id: featuresId })
-  }
-  if (featuresId && welcomeId) {
-    await db.noteLinks.add({ source_id: featuresId, target_id: welcomeId })
-  }
-  if (featuresId && dailyId) {
-    await db.noteLinks.add({ source_id: featuresId, target_id: dailyId })
+  // Add wiki links between notes from shared data
+  for (const link of DEMO_WIKI_LINKS) {
+    const sourceId = noteMap[link.from]
+    const targetId = noteMap[link.to]
+    if (sourceId && targetId) {
+      await db.noteLinks.add({ source_id: sourceId, target_id: targetId })
+    }
   }
 
   console.log('[Scribe] Demo data seeded successfully')

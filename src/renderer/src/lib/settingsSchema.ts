@@ -416,6 +416,43 @@ const appearanceCategory: SettingsCategoryData = {
           description: 'Display icons in sidebar tabs',
           defaultValue: true,
           addedInVersion: '1.12.0'
+        },
+        {
+          id: 'appearance.autoCollapseSidebar',
+          type: 'toggle',
+          label: 'Auto-collapse when writing',
+          description: 'Collapse sidebar when editor is focused, expand on hover',
+          defaultValue: false,
+          addedInVersion: 'v1.14.0'
+        },
+        {
+          id: 'appearance.sidebarWidth',
+          type: 'select',
+          label: 'Sidebar Width',
+          description: 'Quick width presets for sidebar (respects mode constraints)',
+          defaultValue: 'medium',
+          options: [
+            { label: 'Narrow - 200px (Minimal)', value: 'narrow' },
+            { label: 'Medium - 280px (Balanced)', value: 'medium' },
+            { label: 'Wide - 360px (Spacious)', value: 'wide' }
+          ],
+          addedInVersion: 'v1.15.0'
+        },
+        {
+          id: 'appearance.rememberSidebarMode',
+          type: 'toggle',
+          label: 'Remember Sidebar Mode',
+          description: 'Restore last expanded mode (Compact/Card) when expanding from Icon mode',
+          defaultValue: true,
+          addedInVersion: 'v1.15.0'
+        },
+        {
+          id: 'appearance.enableExpandPreview',
+          type: 'toggle',
+          label: 'Expansion Preview (Phase 4)',
+          description: 'Show preview overlay when hovering over icons (Coming in v1.16.0)',
+          defaultValue: true,
+          addedInVersion: 'v1.15.0'
         }
       ]
     },
@@ -450,7 +487,7 @@ const appearanceCategory: SettingsCategoryData = {
       ]
     }
   ],
-  badge: 8
+  badge: 11 // Updated for v1.15.0: +2 settings (rememberSidebarMode, enableExpandPreview)
 }
 
 // Advanced Category

@@ -79,6 +79,7 @@ import { api } from '../lib/api'
 import { isBrowser, isTauri } from '../lib/platform'
 import { db, seedDemoData } from '../lib/browser-db'
 import { getDefaultTerminalFolder, setDefaultTerminalFolder } from '../lib/terminal-utils'
+import { PinnedVaultsSettings } from './Settings/PinnedVaultsSettings'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -579,6 +580,9 @@ export function SettingsModal({
                     </div>
                   </div>
                 </section>
+
+                {/* Pinned Vaults Section */}
+                <PinnedVaultsSettings />
 
                 {/* Terminal Section - only shown in Tauri mode */}
                 {isTauri() && (

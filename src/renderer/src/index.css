@@ -29,7 +29,13 @@
   --nexus-accent: #38bdf8;
   --nexus-accent-hover: #7dd3fc;
   --theme-name: 'Oxford Dark';
-  
+
+  /* Status colors - theme-aware */
+  --status-active: #22c55e;      /* Green - active work */
+  --status-planning: #3b82f6;    /* Blue - planning stage */
+  --status-complete: #8b5cf6;    /* Purple - finished */
+  --status-archive: #6b7280;     /* Gray - archived */
+
   /* Editor typography defaults (overridden by JS) */
   --editor-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --editor-font-size: 18px;
@@ -46,6 +52,11 @@
   --nexus-accent: #4ade80;
   --nexus-accent-hover: #86efac;
   --theme-name: 'Forest Night';
+
+  --status-active: #34d399;
+  --status-planning: #60a5fa;
+  --status-complete: #a78bfa;
+  --status-archive: #9ca3af;
 }
 
 /* 3. Warm Cocoa - Soft browns, cozy and grounding */
@@ -58,6 +69,11 @@
   --nexus-accent: #d4a574;
   --nexus-accent-hover: #e4c4a4;
   --theme-name: 'Warm Cocoa';
+
+  --status-active: #4ade80;
+  --status-planning: #60a5fa;
+  --status-complete: #c084fc;
+  --status-archive: #a8a29e;
 }
 
 /* 4. Midnight Purple - Gentle purples, dreamy focus */
@@ -70,6 +86,11 @@
   --nexus-accent: #a78bfa;
   --nexus-accent-hover: #c4b5fd;
   --theme-name: 'Midnight Purple';
+
+  --status-active: #34d399;
+  --status-planning: #60a5fa;
+  --status-complete: #d8b4fe;
+  --status-archive: #a1a1aa;
 }
 
 /* 5. Deep Ocean - Navy blues, calm and stable */
@@ -82,6 +103,11 @@
   --nexus-accent: #60a5fa;
   --nexus-accent-hover: #93c5fd;
   --theme-name: 'Deep Ocean';
+
+  --status-active: #34d399;
+  --status-planning: #7dd3fc;
+  --status-complete: #a78bfa;
+  --status-archive: #94a3b8;
 }
 
 /* ============================================================
@@ -98,6 +124,11 @@
   --nexus-accent: #b45309;
   --nexus-accent-hover: #d97706;
   --theme-name: 'Soft Paper';
+
+  --status-active: #059669;
+  --status-planning: #2563eb;
+  --status-complete: #7c3aed;
+  --status-archive: #57534e;
 }
 
 /* 7. Morning Fog - Cool grays, minimal distraction */
@@ -110,6 +141,11 @@
   --nexus-accent: #4b5563;
   --nexus-accent-hover: #6b7280;
   --theme-name: 'Morning Fog';
+
+  --status-active: #059669;
+  --status-planning: #2563eb;
+  --status-complete: #7c3aed;
+  --status-archive: #525252;
 }
 
 /* 8. Sage Garden - Gentle greens, natural calm */
@@ -122,6 +158,11 @@
   --nexus-accent: #16a34a;
   --nexus-accent-hover: #22c55e;
   --theme-name: 'Sage Garden';
+
+  --status-active: #15803d;
+  --status-planning: #2563eb;
+  --status-complete: #7c3aed;
+  --status-archive: #52525b;
 }
 
 /* 9. Lavender Mist - Soft purples, soothing focus */
@@ -134,6 +175,11 @@
   --nexus-accent: #7c3aed;
   --nexus-accent-hover: #8b5cf6;
   --theme-name: 'Lavender Mist';
+
+  --status-active: #059669;
+  --status-planning: #2563eb;
+  --status-complete: #6d28d9;
+  --status-archive: #57534e;
 }
 
 /* 10. Sand Dune - Warm neutrals, grounding */
@@ -146,6 +192,11 @@
   --nexus-accent: #92400e;
   --nexus-accent-hover: #b45309;
   --theme-name: 'Sand Dune';
+
+  --status-active: #059669;
+  --status-planning: #2563eb;
+  --status-complete: #7c3aed;
+  --status-archive: #78716c;
 }
 
 * {
@@ -1432,6 +1483,136 @@ mark {
 }
 
 /* ============================================================
+   Contextual Tooltip System (VS Code-style)
+
+   Rich tooltips with action buttons for projects, notes, etc.
+   Inspired by VS Code's hover tooltips with inline actions.
+   ============================================================ */
+
+.contextual-tooltip {
+  position: fixed;
+  z-index: 10000;
+  padding: 0;
+  background: #2d2d2d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  min-width: 180px;
+  max-width: 280px;
+  pointer-events: auto;
+  animation: fadeIn 150ms ease;
+}
+
+.contextual-tooltip-content {
+  padding: 10px 12px;
+}
+
+.contextual-tooltip-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.contextual-tooltip-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+.contextual-tooltip-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.contextual-tooltip-actions {
+  display: flex;
+  gap: 0;
+  padding: 4px;
+}
+
+.contextual-tooltip-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 120ms ease;
+  flex: 1;
+  min-width: 0;
+}
+
+.contextual-tooltip-action:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.contextual-tooltip-action.primary {
+  color: #3b82f6;
+}
+
+.contextual-tooltip-action.primary:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.contextual-tooltip-action .action-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.contextual-tooltip-action .action-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Light theme overrides */
+:root[data-theme-type="light"] .contextual-tooltip {
+  background: #f5f5f5;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-title {
+  color: #1a1a1a;
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-divider {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #000000;
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action.primary {
+  color: #2563eb;
+}
+
+:root[data-theme-type="light"] .contextual-tooltip-action.primary:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: #1d4ed8;
+}
+
+/* ============================================================
    Tooltip System for Sidebar Icons
 
    Provides context without cluttering the UI
@@ -2370,11 +2551,11 @@ mark {
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   flex-shrink: 0;
   transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  z-index: 10;
+  overflow: visible; /* Changed from hidden to allow tooltips to appear outside sidebar bounds */
+  z-index: 10000; /* High z-index so tooltips inside can appear above editor */
 }
 
-/* Icon Bar Mode (48px) */
+/* Icon Bar Mode (48px, expands to 240px when smart icon opens) */
 .mission-sidebar-icon {
   width: 48px;
   height: 100%;
@@ -2383,6 +2564,7 @@ mark {
   align-items: center;
   padding: 40px 8px 12px; /* Extra top for traffic lights */
   gap: 4px;
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1); /* Smooth expansion */
 }
 
 .mission-sidebar-icon .sidebar-toggle-btn {
@@ -2495,6 +2677,70 @@ mark {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* Drag and Drop States */
+.project-icon-btn.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  transform: scale(0.95);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.project-icon-btn.drag-over {
+  position: relative;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* Drop zone indicator - pulsing line above the drop target */
+.project-icon-btn.drag-over::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 2px;
+  background: var(--nexus-accent, #3b82f6);
+  border-radius: 1px;
+  animation: pulse-glow 1s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 0 2px var(--nexus-accent, #3b82f6);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 8px var(--nexus-accent, #3b82f6);
+  }
+}
+
+/* Success animation on drop */
+.project-icon-btn.drop-success {
+  animation: drop-bounce 300ms ease-out;
+}
+
+@keyframes drop-bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.project-icon-btn[draggable="true"] {
+  cursor: grab;
+}
+
+.project-icon-btn[draggable="true"]:active {
+  cursor: grabbing;
+}
+
 /* Add Project Icon Button */
 .icon-btn.add-project-icon {
   width: 32px;
@@ -2514,6 +2760,353 @@ mark {
   background: rgba(255, 255, 255, 0.04);
   border-color: var(--nexus-accent);
   color: var(--nexus-accent);
+}
+
+/* Inbox Icon Button (amber accent) */
+.inbox-icon-btn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: all 150ms ease;
+}
+
+.inbox-icon-btn:hover {
+  background: rgba(245, 158, 11, 0.1); /* Amber tint */
+}
+
+.inbox-icon-btn.active {
+  background: rgba(245, 158, 11, 0.15); /* Stronger amber for active */
+}
+
+.inbox-icon-btn .inbox-icon {
+  color: #f59e0b; /* Amber-500 */
+  flex-shrink: 0;
+}
+
+.inbox-icon-btn .active-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: #f59e0b; /* Amber accent */
+  border-radius: 0 2px 2px 0;
+}
+
+/* Inbox Badge (unread count) */
+.inbox-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  color: #000;
+  background: #f59e0b; /* Amber-500 */
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* Inbox badge in active state */
+.inbox-icon-btn.active .inbox-badge {
+  background: #f59e0b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme adjustments for Inbox */
+:root[data-theme-type="light"] .inbox-icon-btn:hover {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+:root[data-theme-type="light"] .inbox-icon-btn.active {
+  background: rgba(245, 158, 11, 0.12);
+}
+
+:root[data-theme-type="light"] .inbox-badge {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Smart Icon Buttons (Permanent Folders)
+   ============================================ */
+
+.smart-icon-btn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: all 150ms ease;
+}
+
+.smart-icon-btn:hover {
+  background: color-mix(in srgb, var(--smart-icon-color) 10%, transparent);
+}
+
+.smart-icon-btn.expanded {
+  background: color-mix(in srgb, var(--smart-icon-color) 15%, transparent);
+}
+
+.smart-icon-btn .smart-icon-emoji {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.smart-icon-btn .expanded-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: var(--smart-icon-color);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Smart Icon Count Badge */
+.smart-icon-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  color: #000;
+  background: var(--smart-icon-color);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.smart-icon-btn.expanded .smart-icon-count {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme adjustments for Smart Icons */
+:root[data-theme-type="light"] .smart-icon-btn:hover {
+  background: color-mix(in srgb, var(--smart-icon-color) 8%, transparent);
+}
+
+:root[data-theme-type="light"] .smart-icon-btn.expanded {
+  background: color-mix(in srgb, var(--smart-icon-color) 12%, transparent);
+}
+
+:root[data-theme-type="light"] .smart-icon-count {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Expanded Child Projects (Smart Icon Children)
+   ============================================ */
+
+.expanded-child-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 8px;
+  margin-bottom: 8px;
+  max-height: calc(100vh - 300px); /* Allow scrolling when many projects */
+  overflow-y: auto;
+  overflow-x: hidden; /* Keep content clipped */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.expanded-child-projects::-webkit-scrollbar {
+  width: 4px;
+}
+
+.expanded-child-projects::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.expanded-child-projects::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.expanded-child-projects::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.expanded-child-projects.empty {
+  padding: 8px;
+  opacity: 0.5;
+}
+
+.expanded-child-projects .empty-message {
+  font-size: 11px;
+  color: var(--nexus-text-secondary);
+  text-align: center;
+}
+
+.child-project-btn {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: all 150ms ease;
+  margin-left: 4px; /* Indent from smart icon */
+}
+
+.child-project-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.child-project-btn.active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Expanded state (when sidebar is 240px) */
+.child-project-btn.expanded {
+  width: 210px; /* Fits within 240px sidebar with padding */
+  height: 44px; /* Taller for 2-line layout */
+  gap: 8px;
+  padding: 6px 8px;
+  justify-content: flex-start; /* Left-align content */
+}
+
+.child-project-btn.expanded .active-indicator {
+  left: -8px; /* Adjust for wider button */
+  height: 24px; /* Taller for 2-line button */
+}
+
+/* Project info container (2-line layout) */
+.child-project-btn.expanded .project-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0; /* Allow text truncation */
+}
+
+.child-project-btn.expanded .project-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.child-project-btn.expanded .project-meta {
+  font-size: 11px;
+  color: var(--nexus-text-tertiary);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums; /* Consistent width for timestamps */
+}
+
+.child-project-btn .active-indicator {
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 12px;
+  background: var(--nexus-text-primary);
+  border-radius: 0 1px 1px 0;
+}
+
+/* Child Project Badge */
+.child-project-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 14px;
+  text-align: center;
+  color: #000;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 7px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.child-project-btn.active .child-project-badge {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Project Avatar (First Letter Icon) */
+.project-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.project-avatar.sm {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.project-avatar.md {
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
+}
+
+/* Light theme adjustments for Child Projects */
+:root[data-theme-type="light"] .child-project-btn:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+:root[data-theme-type="light"] .child-project-btn.active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme-type="light"] .child-project-badge {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme-type="light"] .child-project-btn.expanded .project-name {
+  color: var(--nexus-text-primary);
+}
+
+:root[data-theme-type="light"] .child-project-btn.expanded .project-meta {
+  color: var(--nexus-text-tertiary);
 }
 
 /* Compact List Mode (240px) */
@@ -2599,6 +3192,112 @@ mark {
 
 .mission-sidebar-compact .search-input::placeholder {
   color: var(--nexus-text-muted);
+}
+
+/* Sidebar Search Toggle Button */
+.mission-sidebar-compact .sidebar-search-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--nexus-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+  margin-left: auto;
+}
+
+.mission-sidebar-compact .sidebar-search-toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-primary);
+}
+
+.mission-sidebar-compact .sidebar-search-toggle[aria-expanded="true"] {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--nexus-accent);
+}
+
+/* Collapsible Inline Search */
+.mission-sidebar-compact .sidebar-search-inline {
+  padding: 0 12px 12px 12px;
+  animation: slideDown 200ms ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mission-sidebar-compact .search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--nexus-border);
+  border-radius: 6px;
+  transition: all 150ms ease;
+}
+
+.mission-sidebar-compact .search-input-wrapper:focus-within {
+  border-color: var(--nexus-accent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.mission-sidebar-compact .search-input-wrapper .search-icon {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
+.mission-sidebar-compact .search-input-wrapper .search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--nexus-text-primary);
+  font-size: 13px;
+  outline: none;
+  min-width: 0;
+}
+
+.mission-sidebar-compact .search-input-wrapper .search-input::placeholder {
+  color: var(--nexus-text-muted);
+}
+
+.mission-sidebar-compact .search-clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  color: var(--nexus-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+
+.mission-sidebar-compact .search-clear-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--nexus-text-primary);
+}
+
+.mission-sidebar-compact .search-results-count {
+  margin-top: 6px;
+  padding: 0 12px;
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  font-weight: 500;
 }
 
 /* Project List */
@@ -2825,6 +3524,207 @@ mark {
   margin-left: auto;
   font-size: 10px;
   opacity: 0.5;
+}
+
+/* ===== ACTIVITY BAR (BOTTOM BUTTONS) ===== */
+.activity-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.activity-bar-btn {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--nexus-text-muted);
+  transition: all 150ms ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.activity-bar-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-primary);
+}
+
+.activity-bar-btn:focus-visible {
+  outline: 2px solid var(--nexus-accent);
+  outline-offset: 2px;
+}
+
+.activity-bar-btn.active {
+  background: var(--nexus-bg-tertiary);
+  color: var(--nexus-accent);
+}
+
+.activity-bar-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: var(--nexus-accent);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Light theme adjustments */
+:root[data-theme-type="light"] .activity-bar-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme-type="light"] .activity-bar {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ===== RECENT NOTES DROPDOWN ===== */
+.recent-notes-dropdown {
+  position: absolute;
+  left: 56px;
+  bottom: 80px;
+  width: 280px;
+  max-height: 400px;
+  background: var(--nexus-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.recent-notes-dropdown .dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.recent-notes-dropdown .dropdown-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  margin: 0;
+}
+
+.recent-notes-dropdown .clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--nexus-text-muted);
+  transition: all 150ms ease;
+}
+
+.recent-notes-dropdown .clear-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--nexus-text-primary);
+}
+
+.recent-notes-dropdown .dropdown-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.recent-notes-dropdown .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+}
+
+.recent-notes-dropdown .empty-icon {
+  color: var(--nexus-text-muted);
+  opacity: 0.5;
+}
+
+.recent-notes-dropdown .empty-text {
+  font-size: 13px;
+  color: var(--nexus-text-muted);
+  margin: 0;
+}
+
+.recent-notes-dropdown .recent-note-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 150ms ease;
+  border-radius: 6px;
+}
+
+.recent-notes-dropdown .recent-note-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.recent-notes-dropdown .note-icon {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
+.recent-notes-dropdown .note-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recent-notes-dropdown .note-title {
+  font-size: 13px;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.recent-notes-dropdown .note-time {
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+}
+
+/* Light theme adjustments */
+:root[data-theme-type="light"] .recent-notes-dropdown {
+  background: var(--nexus-bg-primary);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme-type="light"] .recent-notes-dropdown .dropdown-header {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme-type="light"] .recent-notes-dropdown .recent-note-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme-type="light"] .recent-notes-dropdown .clear-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 /* ===== CARD VIEW MODE ===== */
@@ -3383,16 +4283,17 @@ mark {
   right: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 5px;  /* Wider hit area for easier grabbing */
   cursor: col-resize;
   background: transparent;
-  transition: background 150ms ease;
+  transition: background 150ms ease-out, box-shadow 150ms ease-out;
   z-index: 20;
 }
 
 .mission-sidebar .resize-handle:hover,
 .mission-sidebar .resize-handle.dragging {
-  background: rgba(56, 189, 248, 0.3);
+  background: var(--nexus-accent, #3b82f6);
+  box-shadow: 0 0 4px var(--nexus-accent, #3b82f6);
 }
 
 /* ============================================================
@@ -3543,6 +4444,14 @@ mark {
   .recent-note-item {
     transition: none !important;
   }
+
+  /* Disable drag-drop animations */
+  .project-icon-btn.dragging,
+  .project-icon-btn.drag-over::before,
+  .project-icon-btn.drop-success {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 /* Compact Project Wrapper - Folder-style with expand/collapse */
@@ -3574,6 +4483,24 @@ mark {
 .compact-project-wrapper .compact-project-item.expanded {
   background: rgba(255, 255, 255, 0.06);
   border-radius: 6px 6px 0 0;
+}
+
+/* Keyboard focus indicator */
+.compact-project-wrapper.keyboard-focus {
+  outline: 2px solid var(--nexus-accent);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+.compact-project-wrapper.keyboard-focus .compact-project-item {
+  background: rgba(var(--nexus-accent-rgb, 99, 102, 241), 0.1);
+}
+
+/* Smooth transition for focus changes */
+@media (prefers-reduced-motion: no-preference) {
+  .compact-project-wrapper {
+    transition: outline 150ms ease, background 150ms ease;
+  }
 }
 
 /* Chevron animation */
@@ -4959,4 +5886,610 @@ mark {
 .cm-math-inline:hover .cm-math-preview-tooltip,
 .cm-math-display:hover .cm-math-preview-tooltip {
   opacity: 1;
+}
+
+/* ========================================
+   Pinned Vaults Settings
+   ======================================== */
+
+.settings-section {
+  margin-bottom: 32px;
+}
+
+.settings-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.settings-section-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  margin: 0;
+}
+
+.settings-count {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nexus-text-secondary);
+  background: var(--nexus-bg-tertiary);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.settings-description {
+  font-size: 13px;
+  color: var(--nexus-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  padding: 32px 16px;
+  text-align: center;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.empty-state p {
+  margin: 0 0 8px 0;
+}
+
+.text-muted {
+  color: var(--nexus-text-tertiary);
+}
+
+.text-sm {
+  font-size: 12px;
+}
+
+.text-xs {
+  font-size: 11px;
+}
+
+.pinned-vaults-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pinned-vault-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--nexus-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  transition: all 150ms ease;
+}
+
+.pinned-vault-item:hover {
+  background: var(--nexus-bg-tertiary);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pinned-vault-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.drag-handle {
+  color: var(--nexus-text-tertiary);
+  cursor: grab;
+  opacity: 0.5;
+  transition: opacity 150ms ease;
+}
+
+.pinned-vault-item:hover .drag-handle {
+  opacity: 1;
+}
+
+.pinned-vault-item .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pinned-vault-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+}
+
+.icon-btn.danger {
+  color: #ef4444;
+  opacity: 0.7;
+  transition: opacity 150ms ease;
+}
+
+.icon-btn.danger:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.settings-hint {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 8px;
+}
+
+.settings-hint p {
+  margin: 0;
+}
+
+.settings-hint strong {
+  color: var(--nexus-accent);
+}
+
+/* ============================================================
+   Icon Picker Component
+   ============================================================ */
+
+.icon-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.icon-picker-modal {
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: var(--nexus-bg-secondary);
+  border: 1px solid var(--nexus-border);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 250ms ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+.icon-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px 24px;
+  border-bottom: 1px solid var(--nexus-border);
+}
+
+.icon-picker-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  margin: 0;
+}
+
+.icon-picker-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--nexus-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.icon-picker-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--nexus-text-primary);
+}
+
+/* Search */
+.icon-picker-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--nexus-border);
+}
+
+.icon-picker-search .search-icon {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
+.icon-picker-search .search-input {
+  flex: 1;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--nexus-border);
+  border-radius: 8px;
+  color: var(--nexus-text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: all 150ms ease;
+}
+
+.icon-picker-search .search-input:focus {
+  border-color: var(--nexus-accent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.icon-picker-search .search-input::placeholder {
+  color: var(--nexus-text-muted);
+}
+
+/* Category Tabs */
+.icon-picker-categories {
+  display: flex;
+  gap: 4px;
+  padding: 12px 24px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--nexus-border);
+  scrollbar-width: thin;
+}
+
+.icon-picker-categories::-webkit-scrollbar {
+  height: 4px;
+}
+
+.icon-picker-categories::-webkit-scrollbar-thumb {
+  background: var(--nexus-border);
+  border-radius: 2px;
+}
+
+.category-tab {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--nexus-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+  white-space: nowrap;
+}
+
+.category-tab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-primary);
+}
+
+.category-tab.active {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: var(--nexus-accent);
+  color: var(--nexus-accent);
+}
+
+/* Icon Grid */
+.icon-picker-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: 8px;
+  align-content: start;
+}
+
+.icon-option {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: var(--nexus-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.icon-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--nexus-text-primary);
+  transform: scale(1.05);
+}
+
+.icon-option.selected {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: var(--nexus-accent);
+  color: var(--nexus-accent);
+}
+
+.no-icons-message {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--nexus-text-muted);
+}
+
+/* Footer */
+.icon-picker-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid var(--nexus-border);
+}
+
+.icon-count {
+  font-size: 12px;
+  color: var(--nexus-text-muted);
+  font-weight: 500;
+}
+
+.cancel-button {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--nexus-border);
+  border-radius: 6px;
+  color: var(--nexus-text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.cancel-button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================================================
+   Preset Update Dialog - Phase 6: Mode Consolidation
+   ========================================================================= */
+
+.preset-update-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: dialogOverlayFadeIn 150ms ease;
+}
+
+@keyframes dialogOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.preset-update-dialog {
+  background: var(--nexus-bg-primary);
+  border: 1px solid var(--nexus-border-primary);
+  border-radius: 12px;
+  width: 480px;
+  max-width: 90vw;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: dialogSlideUp 200ms ease;
+}
+
+@keyframes dialogSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--nexus-border-primary);
+}
+
+.dialog-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  margin: 0;
+}
+
+.dialog-close-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--nexus-text-tertiary);
+  border-radius: 6px;
+  transition: all 150ms ease;
+}
+
+.dialog-close-btn:hover {
+  background: var(--nexus-bg-hover);
+  color: var(--nexus-text-primary);
+}
+
+.dialog-content {
+  padding: 24px;
+}
+
+.dialog-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--nexus-text-secondary);
+  margin: 0 0 16px 0;
+}
+
+.preset-comparison {
+  background: var(--nexus-bg-secondary);
+  border: 1px solid var(--nexus-border-primary);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.preset-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.preset-item:not(:last-child) {
+  border-bottom: 1px solid var(--nexus-border-primary);
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+}
+
+.preset-item.suggested {
+  color: var(--nexus-accent-primary);
+}
+
+.preset-label {
+  font-size: 13px;
+  color: var(--nexus-text-tertiary);
+  font-weight: 500;
+}
+
+.preset-item.suggested .preset-label {
+  color: var(--nexus-accent-primary);
+}
+
+.preset-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+}
+
+.preset-item.suggested .preset-value {
+  color: var(--nexus-accent-primary);
+}
+
+.dialog-hint {
+  font-size: 13px;
+  color: var(--nexus-text-tertiary);
+  margin: 16px 0 0 0;
+  line-height: 1.5;
+}
+
+.dialog-actions {
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--nexus-border-primary);
+}
+
+.dialog-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--nexus-text-secondary);
+  cursor: pointer;
+  margin-bottom: 16px;
+  user-select: none;
+}
+
+.dialog-checkbox input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.dialog-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.dialog-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+  border: none;
+  outline: none;
+}
+
+.dialog-btn-secondary {
+  background: transparent;
+  color: var(--nexus-text-secondary);
+  border: 1px solid var(--nexus-border-primary);
+}
+
+.dialog-btn-secondary:hover {
+  background: var(--nexus-bg-hover);
+  color: var(--nexus-text-primary);
+}
+
+.dialog-btn-primary {
+  background: var(--nexus-accent-primary);
+  color: white;
+  border: 1px solid transparent;
+}
+
+.dialog-btn-primary:hover {
+  background: var(--nexus-accent-hover);
+}
+
+.dialog-btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* ============================================================================
+   Mode Indicator - Phase 7: Mode Consolidation
+   ========================================================================= */
+
+.mode-indicator {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--nexus-border-primary);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--nexus-text-tertiary);
+  user-select: none;
 }

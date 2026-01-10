@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
 import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
@@ -18,7 +18,7 @@ import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { EditProjectModal } from './components/EditProjectModal'
-import { MissionSidebar } from './components/sidebar'
+import { MissionSidebar, IconLegend } from './components/sidebar'
 import { ClaudeChatPanel } from './components/ClaudeChatPanel'
 import { TerminalPanel } from './components/TerminalPanel'
 import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
@@ -93,6 +93,9 @@ function App() {
     createProject
   } = useProjectStore()
 
+  // Toast notifications
+  const { showToast } = useToast()
+
   // Apply Forest Night theme
   useForestTheme()
 
@@ -103,6 +106,9 @@ function App() {
   const {
     cycleSidebarMode,
     toggleSidebarCollapsed,
+    setSidebarMode,
+    sidebarWidth,
+    setSidebarWidth,
     setLastActiveNote,
     updateSessionTimestamp,
     // Tab state
@@ -111,10 +117,20 @@ function App() {
     setActiveTab,
     openNoteTab,
     closeTab,
-    reopenLastClosedTab
+    reopenLastClosedTab,
+    // Pinned vaults
+    addPinnedVault,
+    removePinnedVault,
+    // Smart icons
+    setSmartIconExpanded,
+    // Recent notes
+    addRecentNote
   } = useAppViewStore()
   const [currentFolder] = useState<string | undefined>(undefined)
   const [editingTitle, setEditingTitle] = useState(false)
+
+  // Editor container ref for auto-collapse functionality
+  const editorContainerRef = useRef<HTMLDivElement>(null)
 
   // User preferences with persistence
   const [preferences, setPreferences] = useState<UserPreferences>(() => loadPreferences())
@@ -712,6 +728,22 @@ function App() {
         setIsCreateProjectModalOpen(true)
       }
 
+      // Smart Icon shortcuts (⌘⇧1-4) - expand/collapse smart icons
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && !e.altKey && /^[1-4]$/.test(e.key)) {
+        e.preventDefault()
+        const shortcuts: Record<string, string> = {
+          '1': 'research',
+          '2': 'teaching',
+          '3': 'r-package',
+          '4': 'dev-tools'
+        }
+        const iconId = shortcuts[e.key]
+        if (iconId) {
+          setSmartIconExpanded(iconId as any, true)
+          setSidebarMode('icon') // Ensure icon mode is active
+        }
+      }
+
       // Tab switching (⌘1-9) - switch to tab by index
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && /^[1-9]$/.test(e.key)) {
         e.preventDefault()
@@ -804,13 +836,18 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
 
-  // Track selected note for smart startup (session context)
+  // Track selected note for smart startup (session context) and recent notes
   useEffect(() => {
     if (selectedNoteId) {
-      setLastActiveNote(selectedNoteId)
-      updateSessionTimestamp()
+      const note = notes.find(n => n.id === selectedNoteId)
+      if (note) {
+        setLastActiveNote(selectedNoteId)
+        updateSessionTimestamp()
+        // Add to recent notes
+        addRecentNote(selectedNoteId, note.title, note.project_id)
+      }
     }
-  }, [selectedNoteId, setLastActiveNote, updateSessionTimestamp])
+  }, [selectedNoteId, notes, setLastActiveNote, updateSessionTimestamp, addRecentNote])
 
   // Sync selected note when active tab changes (for tab clicks)
   useEffect(() => {
@@ -959,6 +996,71 @@ function App() {
     window.addEventListener('preferences-changed', handlePrefsChanged)
     return () => window.removeEventListener('preferences-changed', handlePrefsChanged)
   }, [rightActiveTab])
+
+  // Auto-collapse sidebar when editor is focused
+  useEffect(() => {
+    const autoCollapseEnabled = settings['appearance.autoCollapseSidebar']
+    if (!autoCollapseEnabled || !editorContainerRef.current) return
+
+    const editorContainer = editorContainerRef.current
+
+    const handleFocusIn = () => {
+      // Collapse sidebar when editor gains focus
+      setSidebarMode('icon')
+    }
+
+    const handleMouseEnter = () => {
+      // Expand sidebar on hover when collapsed
+      const currentMode = localStorage.getItem('sidebarMode')
+      if (currentMode === 'icon') {
+        setSidebarMode('compact')
+      }
+    }
+
+    const handleMouseLeave = () => {
+      // Collapse sidebar when mouse leaves (if editor still has focus)
+      if (editorContainer.contains(document.activeElement)) {
+        setSidebarMode('icon')
+      }
+    }
+
+    // Add focus listener to editor container
+    editorContainer.addEventListener('focusin', handleFocusIn)
+
+    // Add hover listeners to sidebar for expand/collapse
+    const sidebar = document.querySelector('.mission-sidebar')
+    if (sidebar) {
+      sidebar.addEventListener('mouseenter', handleMouseEnter)
+      sidebar.addEventListener('mouseleave', handleMouseLeave)
+    }
+
+    return () => {
+      editorContainer.removeEventListener('focusin', handleFocusIn)
+      if (sidebar) {
+        sidebar.removeEventListener('mouseenter', handleMouseEnter)
+        sidebar.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
+  }, [settings, setSidebarMode])
+
+  // Apply sidebar width preset from settings
+  useEffect(() => {
+    const widthPreset = settings['appearance.sidebarWidth'] || 'medium'
+
+    // Map preset values to pixel widths
+    const widthMap: Record<string, number> = {
+      'narrow': 200,
+      'medium': 280,
+      'wide': 360
+    }
+
+    const targetWidth = widthMap[widthPreset as string] || 280 // Default to medium
+
+    // Only update if different from current width (avoid loops)
+    if (sidebarWidth !== targetWidth) {
+      setSidebarWidth(targetWidth)
+    }
+  }, [settings, sidebarWidth, setSidebarWidth])
 
   const handleTagClick = async (tagId: string) => {
     const newSelectedIds = selectedTagIds.includes(tagId)
@@ -1316,6 +1418,17 @@ function App() {
             await loadProjects()
           }
         }}
+        onPinProject={(projectId) => {
+          const project = projects.find(p => p.id === projectId)
+          if (!project) return
+          const success = addPinnedVault(projectId, project.name, project.color)
+          if (!success) {
+            showToast('Maximum 4 projects can be pinned to the sidebar', 'error')
+          }
+        }}
+        onUnpinProject={(projectId) => {
+          removePinnedVault(projectId)
+        }}
         onRenameNote={async (noteId) => {
           // Select the note and focus for rename
           selectNote(noteId)
@@ -1358,6 +1471,8 @@ function App() {
             await loadNotes()
           }
         }}
+        onSearch={() => setIsSearchPanelOpen(true)}
+        onDaily={handleDailyNote}
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
@@ -1450,7 +1565,7 @@ function App() {
                   <h2 onClick={() => setEditingTitle(true)} className="text-2xl font-bold cursor-pointer">{selectedNote.title}</h2>
                 )}
               </div>
-              <div className="flex-1 overflow-hidden relative">
+              <div ref={editorContainerRef} className="flex-1 overflow-hidden relative">
                 <HybridEditor
                   key={selectedNote.id}
                   content={selectedNote.content}
@@ -1835,6 +1950,9 @@ function App() {
           }}
         />
       )}
+
+      {/* Icon Legend - First launch guide */}
+      <IconLegend />
     </div>
   )
 }

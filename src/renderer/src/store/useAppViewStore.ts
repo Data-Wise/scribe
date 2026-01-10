@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId, ProjectType } from '../types'
+import { useSettingsStore } from './useSettingsStore'
 
 /**
  * App View Store - Manages sidebar state, tabs, and session tracking
@@ -9,7 +11,7 @@ import { create } from 'zustand'
  * - card: 320px+, full project cards
  */
 
-export type SidebarMode = 'icon' | 'compact' | 'card'
+export type { SidebarMode } from '../types'
 
 /** Editor tab types */
 export type TabType = 'mission-control' | 'note'
@@ -22,15 +24,35 @@ export interface EditorTab {
   isPinned: boolean
 }
 
+export interface RecentNote {
+  id: string
+  title: string
+  projectId: string | null
+  openedAt: number  // timestamp
+}
+
 interface AppViewState {
   // Sidebar state
   sidebarMode: SidebarMode
   sidebarWidth: number
+  pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom)
+  smartIcons: SmartIcon[]  // 4 permanent smart folders
+  expandedSmartIconId: SmartIconId | null  // Accordion: only one expanded at a time
+  projectTypeFilter: ProjectType | null  // Active project type filter for Mission Control
+
+  // Mode consolidation state (v1.15.0)
+  lastExpandedMode: 'compact' | 'card' | null  // Last expanded mode (for smart persistence)
+  lastModeChangeTimestamp: number  // Debounce timestamp for rapid clicking prevention
+  compactModeWidth: number  // Last manual width in Compact mode
+  cardModeWidth: number  // Last manual width in Card mode
 
   // Editor tabs state
   openTabs: EditorTab[]
   activeTabId: string | null
   closedTabsHistory: EditorTab[]
+
+  // Recent notes tracking
+  recentNotes: RecentNote[]  // Last 10 opened notes
 
   // Session tracking
   lastActiveNoteId: string | null
@@ -40,6 +62,23 @@ interface AppViewState {
   cycleSidebarMode: () => void
   toggleSidebarCollapsed: () => void
   setSidebarWidth: (width: number) => void
+
+  // Mode consolidation actions (v1.15.0)
+  determineExpandMode: () => 'compact' | 'card'
+  getCyclePattern: (preset: string) => SidebarMode[]
+
+  // Pinned vaults actions
+  addPinnedVault: (projectId: string, label: string, color?: string) => boolean
+  removePinnedVault: (vaultId: string) => void
+  reorderPinnedVaults: (fromIndex: number, toIndex: number) => void
+  isPinned: (projectId: string) => boolean
+
+  // Smart icon actions
+  toggleSmartIcon: (iconId: SmartIconId) => void
+  setSmartIconExpanded: (iconId: SmartIconId, expanded: boolean) => void
+  setSmartIconVisibility: (iconId: SmartIconId, visible: boolean) => void
+  reorderSmartIcons: (fromIndex: number, toIndex: number) => void
+  setProjectTypeFilter: (projectType: ProjectType | null) => void
 
   // Tab actions
   openTab: (tab: Omit<EditorTab, 'id'>) => string
@@ -51,6 +90,10 @@ interface AppViewState {
   unpinTab: (tabId: string) => void
   updateTabTitle: (tabId: string, title: string) => void
   reopenLastClosedTab: () => void
+
+  // Recent notes actions
+  addRecentNote: (noteId: string, noteTitle: string, projectId: string | null) => void
+  clearRecentNotes: () => void
 
   // Session actions
   setLastActiveNote: (noteId: string | null) => void
@@ -64,6 +107,18 @@ const SIDEBAR_MODE_KEY = 'scribe:sidebarMode'
 const SIDEBAR_WIDTH_KEY = 'scribe:sidebarWidth'
 const OPEN_TABS_KEY = 'scribe:openTabs'
 const ACTIVE_TAB_KEY = 'scribe:activeTabId'
+const PINNED_VAULTS_KEY = 'scribe:pinnedVaults'
+const SMART_ICONS_KEY = 'scribe:smartIcons'
+const EXPANDED_SMART_ICON_KEY = 'scribe:expandedSmartIconId'
+const RECENT_NOTES_KEY = 'scribe:recentNotes'
+
+// Mode consolidation keys (v1.15.0)
+const LAST_EXPANDED_MODE_KEY = 'scribe:lastExpandedMode'
+const LAST_MODE_CHANGE_KEY = 'scribe:lastModeChangeTimestamp'
+const COMPACT_WIDTH_KEY = 'scribe:compactModeWidth'
+const CARD_WIDTH_KEY = 'scribe:cardModeWidth'
+// TODO: Phase 6 - Used for "Don't ask again" checkbox in preset update dialog
+// const AUTO_UPDATE_PRESET_KEY = 'scribe:autoUpdatePreset'
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -215,6 +270,238 @@ const saveActiveTabId = (tabId: string | null): void => {
   }
 }
 
+// Default Inbox vault (always pinned, always first)
+const INBOX_VAULT: PinnedVault = {
+  id: 'inbox',
+  label: 'Inbox',
+  order: 0,
+  isPermanent: true
+}
+
+// Default Smart Icons configuration
+const DEFAULT_SMART_ICONS: SmartIcon[] = [
+  {
+    id: 'research',
+    label: 'Research',
+    icon: '📖',
+    color: '#8B5CF6',  // purple-500
+    projectType: 'research',
+    isVisible: true,
+    isExpanded: false,
+    order: 0
+  },
+  {
+    id: 'teaching',
+    label: 'Teaching',
+    icon: '🎓',
+    color: '#10B981',  // green-500
+    projectType: 'teaching',
+    isVisible: true,
+    isExpanded: false,
+    order: 1
+  },
+  {
+    id: 'r-package',
+    label: 'R Packages',
+    icon: '📦',
+    color: '#3B82F6',  // blue-500
+    projectType: 'r-package',
+    isVisible: true,
+    isExpanded: false,
+    order: 2
+  },
+  {
+    id: 'dev-tools',
+    label: 'Dev Tools',
+    icon: '⚙️',
+    color: '#F59E0B',  // amber-500
+    projectType: 'r-dev',  // Maps to r-dev project type
+    isVisible: true,
+    isExpanded: false,
+    order: 3
+  }
+]
+
+const getSavedPinnedVaults = (): PinnedVault[] => {
+  try {
+    const saved = localStorage.getItem(PINNED_VAULTS_KEY)
+    if (saved) {
+      const vaults = JSON.parse(saved) as PinnedVault[]
+      // Ensure Inbox is always first and present
+      const hasInbox = vaults.some(v => v.id === 'inbox')
+      if (!hasInbox) {
+        return [INBOX_VAULT, ...vaults.filter(v => v.id !== 'inbox')]
+      }
+      // Sort by order
+      return vaults.sort((a, b) => a.order - b.order)
+    }
+    return [INBOX_VAULT]
+  } catch {
+    return [INBOX_VAULT]
+  }
+}
+
+const savePinnedVaults = (vaults: PinnedVault[]): void => {
+  try {
+    localStorage.setItem(PINNED_VAULTS_KEY, JSON.stringify(vaults))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getSavedSmartIcons = (): SmartIcon[] => {
+  try {
+    const saved = localStorage.getItem(SMART_ICONS_KEY)
+    if (saved) {
+      const icons = JSON.parse(saved) as SmartIcon[]
+      // Merge with defaults to ensure all icons exist with correct schema
+      return DEFAULT_SMART_ICONS.map(defaultIcon => {
+        const savedIcon = icons.find(i => i.id === defaultIcon.id)
+        return savedIcon ? { ...defaultIcon, ...savedIcon } : defaultIcon
+      }).sort((a, b) => a.order - b.order)
+    }
+    return DEFAULT_SMART_ICONS
+  } catch {
+    return DEFAULT_SMART_ICONS
+  }
+}
+
+const saveSmartIcons = (icons: SmartIcon[]): void => {
+  try {
+    localStorage.setItem(SMART_ICONS_KEY, JSON.stringify(icons))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getSavedExpandedSmartIconId = (): SmartIconId | null => {
+  try {
+    const saved = localStorage.getItem(EXPANDED_SMART_ICON_KEY)
+    if (saved && ['research', 'teaching', 'r-package', 'dev-tools'].includes(saved)) {
+      return saved as SmartIconId
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
+const saveExpandedSmartIconId = (iconId: SmartIconId | null): void => {
+  try {
+    if (iconId) {
+      localStorage.setItem(EXPANDED_SMART_ICON_KEY, iconId)
+    } else {
+      localStorage.removeItem(EXPANDED_SMART_ICON_KEY)
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getSavedRecentNotes = (): RecentNote[] => {
+  try {
+    const saved = localStorage.getItem(RECENT_NOTES_KEY)
+    if (saved) {
+      return JSON.parse(saved) as RecentNote[]
+    }
+    return []
+  } catch {
+    return []
+  }
+}
+
+const saveRecentNotes = (notes: RecentNote[]): void => {
+  try {
+    localStorage.setItem(RECENT_NOTES_KEY, JSON.stringify(notes))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+// Mode consolidation helpers (v1.15.0)
+const getLastExpandedMode = (): 'compact' | 'card' | null => {
+  try {
+    const saved = localStorage.getItem(LAST_EXPANDED_MODE_KEY)
+    if (saved === 'compact' || saved === 'card') {
+      return saved
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
+const saveLastExpandedMode = (mode: 'compact' | 'card'): void => {
+  try {
+    localStorage.setItem(LAST_EXPANDED_MODE_KEY, mode)
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getLastModeChangeTimestamp = (): number => {
+  try {
+    const saved = localStorage.getItem(LAST_MODE_CHANGE_KEY)
+    return saved ? parseInt(saved, 10) : 0
+  } catch {
+    return 0
+  }
+}
+
+const saveLastModeChangeTimestamp = (timestamp: number): void => {
+  try {
+    localStorage.setItem(LAST_MODE_CHANGE_KEY, timestamp.toString())
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getCompactModeWidth = (): number => {
+  try {
+    const saved = localStorage.getItem(COMPACT_WIDTH_KEY)
+    if (saved) {
+      const width = parseInt(saved, 10)
+      if (!isNaN(width) && width >= SIDEBAR_WIDTHS.compact.min) {
+        return width
+      }
+    }
+    return SIDEBAR_WIDTHS.compact.default
+  } catch {
+    return SIDEBAR_WIDTHS.compact.default
+  }
+}
+
+const saveCompactModeWidth = (width: number): void => {
+  try {
+    localStorage.setItem(COMPACT_WIDTH_KEY, width.toString())
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+const getCardModeWidth = (): number => {
+  try {
+    const saved = localStorage.getItem(CARD_WIDTH_KEY)
+    if (saved) {
+      const width = parseInt(saved, 10)
+      if (!isNaN(width) && width >= SIDEBAR_WIDTHS.card.min) {
+        return width
+      }
+    }
+    return SIDEBAR_WIDTHS.card.default
+  } catch {
+    return SIDEBAR_WIDTHS.card.default
+  }
+}
+
+const saveCardModeWidth = (width: number): void => {
+  try {
+    localStorage.setItem(CARD_WIDTH_KEY, width.toString())
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
 /**
  * Determine initial sidebar mode based on session context
  * - Fresh start or > 4 hours → compact (get bearings)
@@ -244,32 +531,89 @@ const determineInitialSidebarMode = (): SidebarMode => {
 export const useAppViewStore = create<AppViewState>((set, get) => ({
   sidebarMode: determineInitialSidebarMode(),
   sidebarWidth: getSavedSidebarWidth(),
+  pinnedVaults: getSavedPinnedVaults(),
+  smartIcons: getSavedSmartIcons(),
+  expandedSmartIconId: getSavedExpandedSmartIconId(),
+  projectTypeFilter: null,
+
+  // Mode consolidation state (v1.15.0)
+  lastExpandedMode: getLastExpandedMode(),
+  lastModeChangeTimestamp: getLastModeChangeTimestamp(),
+  compactModeWidth: getCompactModeWidth(),
+  cardModeWidth: getCardModeWidth(),
+
   lastActiveNoteId: getLastActiveNoteId(),
   openTabs: getSavedTabs(),
   activeTabId: getSavedActiveTabId(),
   closedTabsHistory: [],
+  recentNotes: getSavedRecentNotes(),
 
   setSidebarMode: (mode: SidebarMode) => {
-    set({ sidebarMode: mode })
+    const state = get()
+
+    // Save last expanded mode (if switching to expanded mode)
+    if (mode === 'compact' || mode === 'card') {
+      saveLastExpandedMode(mode)
+      set({ lastExpandedMode: mode })
+    }
+
+    // Update mode-specific width when switching modes
+    let newWidth = state.sidebarWidth
+    if (mode === 'compact') {
+      newWidth = state.compactModeWidth || SIDEBAR_WIDTHS.compact.default
+    } else if (mode === 'card') {
+      newWidth = state.cardModeWidth || SIDEBAR_WIDTHS.card.default
+    } else if (mode === 'icon') {
+      newWidth = SIDEBAR_WIDTHS.icon
+    }
+
+    set({ sidebarMode: mode, sidebarWidth: newWidth })
     saveSidebarMode(mode)
+    saveSidebarWidth(newWidth)
   },
 
   cycleSidebarMode: () => {
-    const current = get().sidebarMode
-    const modes: SidebarMode[] = ['icon', 'compact', 'card']
-    const currentIndex = modes.indexOf(current)
-    const nextIndex = (currentIndex + 1) % modes.length
-    const next = modes[nextIndex]
-    set({ sidebarMode: next })
-    saveSidebarMode(next)
+    const state = get()
+    const now = Date.now()
+
+    // Debounce: Prevent rapid clicking (200ms cooldown)
+    if (now - state.lastModeChangeTimestamp < 200) {
+      return // Too soon, ignore click
+    }
+
+    // Phase 5: Read width preset from Settings
+    const settings = useSettingsStore.getState().settings
+    const widthPreset = (settings['appearance.sidebarWidth'] as string) ?? 'medium'
+
+    // Get preset-aware cycle pattern
+    const cyclePattern = state.getCyclePattern(widthPreset)
+
+    // Find next mode in cycle
+    const currentIndex = cyclePattern.indexOf(state.sidebarMode)
+    const nextIndex = (currentIndex + 1) % cyclePattern.length
+    const nextMode = cyclePattern[nextIndex]
+
+    // Update mode using setSidebarMode (handles width restoration)
+    state.setSidebarMode(nextMode)
+
+    // Update debounce timestamp
+    set({ lastModeChangeTimestamp: now })
+    saveLastModeChangeTimestamp(now)
   },
 
   toggleSidebarCollapsed: () => {
-    const current = get().sidebarMode
-    // Toggle between 'icon' (collapsed) and 'compact' (expanded)
-    const next: SidebarMode = current === 'icon' ? 'compact' : 'icon'
-    set({ sidebarMode: next })
-    saveSidebarMode(next)
+    const state = get()
+    const current = state.sidebarMode
+
+    // Toggle between 'icon' (collapsed) and expanded mode
+    if (current === 'icon') {
+      // Expanding: Use smart mode determination (Phase 1)
+      const expandMode = state.determineExpandMode()
+      state.setSidebarMode(expandMode)
+    } else {
+      // Collapsing: Switch to icon mode
+      state.setSidebarMode('icon')
+    }
   },
 
   setSidebarWidth: (width: number) => {
@@ -278,12 +622,160 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
 
     if (mode === 'compact') {
       constrainedWidth = Math.max(SIDEBAR_WIDTHS.compact.min, Math.min(SIDEBAR_WIDTHS.compact.max, width))
+      // Save mode-specific width
+      set({ sidebarWidth: constrainedWidth, compactModeWidth: constrainedWidth })
+      saveSidebarWidth(constrainedWidth)
+      saveCompactModeWidth(constrainedWidth)
     } else if (mode === 'card') {
       constrainedWidth = Math.max(SIDEBAR_WIDTHS.card.min, Math.min(SIDEBAR_WIDTHS.card.max, width))
+      // Save mode-specific width
+      set({ sidebarWidth: constrainedWidth, cardModeWidth: constrainedWidth })
+      saveSidebarWidth(constrainedWidth)
+      saveCardModeWidth(constrainedWidth)
+    } else {
+      // Icon mode - no custom width
+      set({ sidebarWidth: constrainedWidth })
+      saveSidebarWidth(constrainedWidth)
+    }
+  },
+
+  // Pinned vaults actions
+  addPinnedVault: (projectId, label, color) => {
+    const { pinnedVaults } = get()
+
+    // Check if already pinned
+    if (pinnedVaults.some(v => v.id === projectId)) {
+      return false
     }
 
-    set({ sidebarWidth: constrainedWidth })
-    saveSidebarWidth(constrainedWidth)
+    // Max 5 vaults (Inbox + 4 custom)
+    const customVaults = pinnedVaults.filter(v => v.id !== 'inbox')
+    if (customVaults.length >= 4) {
+      return false
+    }
+
+    // Find next available order number
+    const maxOrder = pinnedVaults.reduce((max, v) => Math.max(max, v.order), 0)
+
+    const newVault: PinnedVault = {
+      id: projectId,
+      label,
+      color,
+      order: maxOrder + 1,
+      isPermanent: false
+    }
+
+    const newVaults = [...pinnedVaults, newVault].sort((a, b) => a.order - b.order)
+    set({ pinnedVaults: newVaults })
+    savePinnedVaults(newVaults)
+    return true
+  },
+
+  removePinnedVault: (vaultId) => {
+    const { pinnedVaults } = get()
+
+    // Cannot remove Inbox
+    if (vaultId === 'inbox') {
+      return
+    }
+
+    const newVaults = pinnedVaults.filter(v => v.id !== vaultId)
+    // Reorder remaining vaults
+    const reordered = newVaults.map((v, index) => ({ ...v, order: index }))
+    set({ pinnedVaults: reordered })
+    savePinnedVaults(reordered)
+  },
+
+  reorderPinnedVaults: (fromIndex, toIndex) => {
+    const { pinnedVaults } = get()
+
+    // Cannot move Inbox (always order 0)
+    if (fromIndex === 0 || toIndex === 0) {
+      return
+    }
+
+    const newVaults = [...pinnedVaults]
+    const [moved] = newVaults.splice(fromIndex, 1)
+    newVaults.splice(toIndex, 0, moved)
+
+    // Update order numbers
+    const reordered = newVaults.map((v, index) => ({ ...v, order: index }))
+    set({ pinnedVaults: reordered })
+    savePinnedVaults(reordered)
+  },
+
+  isPinned: (projectId) => {
+    const { pinnedVaults } = get()
+    return pinnedVaults.some(v => v.id === projectId)
+  },
+
+  // Smart icon actions
+  toggleSmartIcon: (iconId) => {
+    const { expandedSmartIconId, smartIcons } = get()
+
+    // Toggle: if already expanded, collapse it; otherwise expand it
+    const newExpandedId = expandedSmartIconId === iconId ? null : iconId
+
+    // Update expansion state in smartIcons array
+    const newIcons = smartIcons.map(icon => ({
+      ...icon,
+      isExpanded: icon.id === newExpandedId
+    }))
+
+    set({
+      expandedSmartIconId: newExpandedId,
+      smartIcons: newIcons
+    })
+    saveExpandedSmartIconId(newExpandedId)
+    saveSmartIcons(newIcons)
+  },
+
+  setSmartIconExpanded: (iconId, expanded) => {
+    const { smartIcons } = get()
+
+    // Accordion mode: only one expanded at a time
+    const newExpandedId = expanded ? iconId : null
+
+    const newIcons = smartIcons.map(icon => ({
+      ...icon,
+      isExpanded: icon.id === newExpandedId
+    }))
+
+    set({
+      expandedSmartIconId: newExpandedId,
+      smartIcons: newIcons
+    })
+    saveExpandedSmartIconId(newExpandedId)
+    saveSmartIcons(newIcons)
+  },
+
+  setSmartIconVisibility: (iconId, visible) => {
+    const { smartIcons } = get()
+
+    const newIcons = smartIcons.map(icon =>
+      icon.id === iconId ? { ...icon, isVisible: visible } : icon
+    )
+
+    set({ smartIcons: newIcons })
+    saveSmartIcons(newIcons)
+  },
+
+  reorderSmartIcons: (fromIndex, toIndex) => {
+    const { smartIcons } = get()
+
+    const newIcons = [...smartIcons]
+    const [moved] = newIcons.splice(fromIndex, 1)
+    newIcons.splice(toIndex, 0, moved)
+
+    // Update order numbers
+    const reordered = newIcons.map((icon, index) => ({ ...icon, order: index }))
+
+    set({ smartIcons: reordered })
+    saveSmartIcons(reordered)
+  },
+
+  setProjectTypeFilter: (projectType) => {
+    set({ projectTypeFilter: projectType })
   },
 
   // Tab actions
@@ -455,6 +947,85 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
 
   updateSessionTimestamp: () => {
     saveSessionTimestamp()
+  },
+
+  // Recent notes actions
+  addRecentNote: (noteId: string, noteTitle: string, projectId: string | null) => {
+    const { recentNotes } = get()
+    const existingIndex = recentNotes.findIndex(n => n.id === noteId)
+
+    let updated: RecentNote[]
+    if (existingIndex >= 0) {
+      // Move to front
+      updated = [...recentNotes]
+      updated.splice(existingIndex, 1)
+      updated.unshift({ id: noteId, title: noteTitle, projectId, openedAt: Date.now() })
+    } else {
+      // Add to front, keep max 10
+      updated = [
+        { id: noteId, title: noteTitle, projectId, openedAt: Date.now() },
+        ...recentNotes
+      ].slice(0, 10)
+    }
+
+    set({ recentNotes: updated })
+    saveRecentNotes(updated)
+  },
+
+  clearRecentNotes: () => {
+    set({ recentNotes: [] })
+    saveRecentNotes([])
+  },
+
+  // Mode consolidation actions (v1.15.0)
+
+  /**
+   * Determine which mode to expand to based on priority logic:
+   * 1. If "remember mode" setting is ON and we have a last mode → use it
+   * 2. If "remember mode" setting is OFF or no last mode → use preset
+   * 3. Default fallback → compact
+   *
+   * Note: Settings integration will be added in Phase 5
+   */
+  determineExpandMode: (): 'compact' | 'card' => {
+    const { lastExpandedMode } = get()
+
+    // Phase 5: Read settings from Settings store
+    const settings = useSettingsStore.getState().settings
+    const rememberMode = settings['appearance.rememberSidebarMode'] ?? true
+    const widthPreset = (settings['appearance.sidebarWidth'] as string) ?? 'medium'
+
+    // Priority 1: Remember mode ON → use last mode if available
+    if (rememberMode && lastExpandedMode) {
+      return lastExpandedMode
+    }
+
+    // Priority 2: Use width preset to determine mode
+    const presetModes: Record<string, 'compact' | 'card'> = {
+      'narrow': 'compact',   // 200px
+      'medium': 'compact',   // 280px
+      'wide': 'card'         // 360px
+    }
+
+    return presetModes[widthPreset] || 'compact'
+  },
+
+  /**
+   * Get cycle pattern based on width preset
+   * - narrow/medium: Icon ↔ Compact (2 states)
+   * - wide: Icon → Compact → Card → Icon (3 states)
+   *
+   * Note: Settings integration will be added in Phase 5
+   */
+  getCyclePattern: (preset: string): SidebarMode[] => {
+    // TODO: Phase 5 - Read from Settings store if preset not provided
+    const cycleMap: Record<string, SidebarMode[]> = {
+      'narrow': ['icon', 'compact'],
+      'medium': ['icon', 'compact'],
+      'wide': ['icon', 'compact', 'card']
+    }
+
+    return cycleMap[preset] || cycleMap['medium']
   }
 }))
 

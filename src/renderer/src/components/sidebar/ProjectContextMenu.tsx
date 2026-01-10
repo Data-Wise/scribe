@@ -1,4 +1,4 @@
-import { FileText, Edit3, Archive, Trash2 } from 'lucide-react'
+import { FileText, Edit3, Archive, Trash2, Pin, PinOff } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Project } from '../../types'
 
@@ -10,6 +10,9 @@ interface ProjectContextMenuProps {
   onEditProject: (projectId: string) => void
   onArchiveProject: (projectId: string) => void
   onDeleteProject: (projectId: string) => void
+  onPinProject?: (projectId: string) => void
+  onUnpinProject?: (projectId: string) => void
+  isPinned?: boolean
 }
 
 export function ProjectContextMenu({
@@ -19,7 +22,10 @@ export function ProjectContextMenu({
   onNewNote,
   onEditProject,
   onArchiveProject,
-  onDeleteProject
+  onDeleteProject,
+  onPinProject,
+  onUnpinProject,
+  isPinned = false
 }: ProjectContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [adjustedPosition, setAdjustedPosition] = useState(position)
@@ -84,6 +90,20 @@ export function ProjectContextMenu({
     onClose()
   }
 
+  const handlePin = () => {
+    if (onPinProject) {
+      onPinProject(project.id)
+    }
+    onClose()
+  }
+
+  const handleUnpin = () => {
+    if (onUnpinProject) {
+      onUnpinProject(project.id)
+    }
+    onClose()
+  }
+
   const isArchived = project.status === 'archive'
 
   return (
@@ -110,6 +130,18 @@ export function ProjectContextMenu({
           <Edit3 size={14} />
           <span>Edit Project</span>
         </button>
+
+        {isPinned ? (
+          <button className="context-menu-item" onClick={handleUnpin}>
+            <PinOff size={14} />
+            <span>Unpin from Sidebar</span>
+          </button>
+        ) : (
+          <button className="context-menu-item" onClick={handlePin}>
+            <Pin size={14} />
+            <span>Pin to Sidebar</span>
+          </button>
+        )}
 
         <button className="context-menu-item" onClick={handleArchive}>
           <Archive size={14} />
