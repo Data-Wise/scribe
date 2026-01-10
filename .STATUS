@@ -161,34 +161,35 @@ tags:
 
 ---
 
-### v1.15 Sidebar Mode Consolidation (Sprint 36 Late) - IN PROGRESS 🚧
+### v1.15 Sidebar Mode Consolidation (Sprint 36 Late) - COMPLETE ✅
 
-**Status:** 🚧 Phase 1 starting (State Management)
+**Status:** ✅ All 7 phases complete (Phase 4 deferred to v1.16.0)
 **Spec:** `docs/specs/SPEC-sidebar-mode-consolidation-2026-01-09.md`
 **Brainstorm:** `BRAINSTORM-sidebar-mode-consolidation-2026-01-09.md`
 **Branch:** `feat/sidebar-v2` (continue)
 **Worktree:** `~/.git-worktrees/scribe/sidebar-v2`
 **Approved:** 2026-01-10
+**Completed:** 2026-01-10
 
 **Goal:** Universal expansion, smart persistence, preset-aware cycling
 
-**Duration Estimate:** ~10 hours (7h core + 3h testing)
+**Duration:** ~7 hours (actual implementation time)
 **Target Version:** v1.15.0 (Mega Release with Sprint 35/36)
 
 #### Mode Consolidation: Implementation Phases
 
-| Phase | Duration | Priority | Status | Deliverable |
-|-------|----------|----------|--------|-------------|
-| 1. State Management | 2h | P1 | 🔄 In Progress | Persistence layer + priority logic |
-| 2. Cycle Behavior | 2h | P1 | [ ] Pending | Preset-aware cycling with debounce |
-| 3. Universal Expand | 2h | P1 | [ ] Pending | Inbox + Smart Folders expansion |
-| ~~4. Preview Animation~~ | ~~2h~~ | P3 | ⏸️ Deferred v1.16.0 | Hover animation |
-| 5. Settings Integration | 1h | P1 | [ ] Pending | 2 new toggles in Appearance |
-| 6. Preset Update Dialog | 1h | P2 | [ ] Pending | "Don't ask again" checkbox |
-| 7. Mode Indicator | 30min | P2 | [ ] Pending | ActivityBar footer label |
-| 8. Migration & Polish | 30min | P1 | [ ] Pending | Defaults + CHANGELOG |
+| Phase | Duration | Priority | Status | Deliverable | Commit |
+|-------|----------|----------|--------|-------------|--------|
+| 1. State Management | 2h | P1 | ✅ Complete | Persistence layer + priority logic | c655013 |
+| 2. Cycle Behavior | 2h | P1 | ✅ Complete | Preset-aware cycling with debounce | 22680ed |
+| 3. Universal Expand | 2h | P1 | ✅ Complete | Inbox + Smart Folders expansion | e20030f |
+| ~~4. Preview Animation~~ | ~~2h~~ | P3 | ⏸️ Deferred v1.16.0 | Hover animation | - |
+| 5. Settings Integration | 1h | P1 | ✅ Complete | 2 new toggles in Appearance | 4d922ba |
+| 6. Preset Update Dialog | 1h | P2 | ✅ Complete | "Don't ask again" checkbox | 85b269f |
+| 7. Mode Indicator | 30min | P2 | ✅ Complete | ActivityBar footer label | ad41c65 |
+| 8. Migration & Polish | 30min | P1 | ✅ Complete | CHANGELOG + docs | [current] |
 
-**Testing:** 30-40 E2E tests (focused coverage)
+**Testing:** 30-40 E2E tests (focused coverage) - PENDING
 
 **Key Simplification (2026-01-10):**
 - ✅ Removed `appearance.alwaysUpdatePreset` toggle
