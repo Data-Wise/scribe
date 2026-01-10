@@ -286,19 +286,52 @@ tags:
 | TypeScript Errors | 3 | 0 | 100% fixed |
 | ESLint Rules | 0 | 15+ | New enforcement |
 
-### Deferred to Sprint 35
+### Sprint 35 - Phase 0: E2E Tests Refactoring - COMPLETE ✅
 
-1. **E2E Tests Refactoring** (4-6 hours)
-   - Tests outdated for CodeMirror 6
-   - See `E2E_TESTS_REFACTOR_PLAN.md`
-   - Not blocking release
+**Status:** ✅ All 3 phases complete
+**Completed:** 2026-01-10
+**Duration:** ~1 hour (vs estimated 4-6 hours)
 
-2. **Accessibility P1** (39 violations)
-   - Keyboard navigation
-   - ARIA labels
-   - Color contrast
+**Phase 1: CodeMirror Test Utilities** ✅
+- [x] Create `e2e/helpers/codemirror-helpers.ts` (275 lines)
+- [x] 20+ utility methods for CodeMirror 6 interaction
+- [x] Support for fill, append, clear, type, autocomplete
+- [x] Syntax highlighting and cursor position inspection
+- **Commit:** b684b3c
 
-3. **System Theme Detection**
+**Phase 2: Fixtures Integration** ✅
+- [x] Add `cmEditor` fixture to test configuration
+- [x] Auto-inject CodeMirrorHelper in all E2E tests
+- **Commit:** 269e9cd
+
+**Phase 3: Spec File Updates** ✅
+- [x] Update callouts.spec.ts (beforeEach hook)
+- [x] Update editor-modes.spec.ts (Source mode check)
+- [x] Update latex-multiline.spec.ts (getTextContent method)
+- [x] Eliminate all `textarea.hybrid-editor-textarea` references (0 remaining)
+- **Commit:** 2b9e247
+
+**Results:**
+- Foundation complete for 674 E2E tests
+- Pattern successfully migrated from textarea → CodeMirror 6
+- 3 spec files validated with new helpers
+- Ready for full E2E test suite expansion
+
+### Remaining Sprint 35 Tasks
+
+1. **E2E Test Suite Validation** (2-3 hours) - NEXT
+   - Run full E2E suite with CodeMirror helpers
+   - Fix any compatibility issues
+   - Target: >90% pass rate
+
+2. **Store Coverage Improvements** (4-6 hours)
+   - Test Zustand stores in isolation
+   - Add missing edge case coverage
+
+3. **Accessibility P1** (6-8 hours)
+   - Fix 39 violations (keyboard nav, ARIA, contrast)
+
+4. **System Theme Detection** (2-3 hours)
    - Auto-detect OS theme
    - "System (Auto)" option
 
@@ -310,12 +343,17 @@ tags:
 **Unit Tests:** 2,344/2,345 passing (99.96%)
 **E2E Tests:** Deferred (refactoring needed)
 
-**Commits:**
+**Sprint 34 Commits:**
 - `ae231c6` - fix(e2e): Increase Playwright timeouts
 - `ad090a2` - fix: TypeScript errors and Immer MapSet plugin
 - `ccd5fde` - feat: Phase 4 Tasks 14-15 - Optimistic UI & Request Deduplication
 - `4a397a0` - docs: Update .STATUS to v1.14.2-alpha
 - `7509626` - feat(performance): Phase 2 - Performance optimizations
+
+**Sprint 35 Phase 0 Commits:**
+- `2b9e247` - feat(e2e): Phase 3 - Update spec files to use CodeMirror helpers
+- `269e9cd` - feat(e2e): Phase 1-2 - Add CodeMirror 6 test helpers and fixtures
+- `b684b3c` - feat(e2e): Phase 1 - Create CodeMirrorHelper utility class
 
 ---
 
