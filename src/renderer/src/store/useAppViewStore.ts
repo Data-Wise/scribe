@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId, ProjectType } from '../types'
+import { useSettingsStore } from './useSettingsStore'
 
 /**
  * App View Store - Manages sidebar state, tabs, and session tracking
@@ -580,8 +581,9 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
       return // Too soon, ignore click
     }
 
-    // Get current width preset (TODO: Phase 5 - read from Settings)
-    const widthPreset = 'medium' // Default preset
+    // Phase 5: Read width preset from Settings
+    const settings = useSettingsStore.getState().settings
+    const widthPreset = (settings['appearance.sidebarWidth'] as string) ?? 'medium'
 
     // Get preset-aware cycle pattern
     const cyclePattern = state.getCyclePattern(widthPreset)
@@ -988,14 +990,10 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   determineExpandMode: (): 'compact' | 'card' => {
     const { lastExpandedMode } = get()
 
-    // TODO: Phase 5 - Read from Settings store
-    // const settings = useSettingsStore.getState().settings
-    // const rememberMode = settings['appearance.rememberSidebarMode'] ?? true
-    // const widthPreset = settings['appearance.sidebarWidth'] ?? 'medium'
-
-    // For now, use hardcoded defaults (will be updated in Phase 5)
-    const rememberMode = true  // Default ON
-    const widthPreset = 'medium'  // Default preset
+    // Phase 5: Read settings from Settings store
+    const settings = useSettingsStore.getState().settings
+    const rememberMode = settings['appearance.rememberSidebarMode'] ?? true
+    const widthPreset = (settings['appearance.sidebarWidth'] as string) ?? 'medium'
 
     // Priority 1: Remember mode ON → use last mode if available
     if (rememberMode && lastExpandedMode) {

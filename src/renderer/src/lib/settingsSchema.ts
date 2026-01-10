@@ -437,6 +437,22 @@ const appearanceCategory: SettingsCategoryData = {
             { label: 'Wide - 360px (Spacious)', value: 'wide' }
           ],
           addedInVersion: 'v1.15.0'
+        },
+        {
+          id: 'appearance.rememberSidebarMode',
+          type: 'toggle',
+          label: 'Remember Sidebar Mode',
+          description: 'Restore last expanded mode (Compact/Card) when expanding from Icon mode',
+          defaultValue: true,
+          addedInVersion: 'v1.15.0'
+        },
+        {
+          id: 'appearance.enableExpandPreview',
+          type: 'toggle',
+          label: 'Expansion Preview (Phase 4)',
+          description: 'Show preview overlay when hovering over icons (Coming in v1.16.0)',
+          defaultValue: true,
+          addedInVersion: 'v1.15.0'
         }
       ]
     },
@@ -471,7 +487,7 @@ const appearanceCategory: SettingsCategoryData = {
       ]
     }
   ],
-  badge: 9
+  badge: 11 // Updated for v1.15.0: +2 settings (rememberSidebarMode, enableExpandPreview)
 }
 
 // Advanced Category
