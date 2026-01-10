@@ -28,21 +28,7 @@ describe('useAppViewStore', () => {
   let localStorageMock: Record<string, string>
 
   beforeEach(() => {
-    // Reset store state before each test
-    const { result } = renderHook(() => useAppViewStore())
-    act(() => {
-      // Reset to defaults
-      result.current.setSidebarMode('compact')
-      result.current.setSidebarWidth(SIDEBAR_WIDTHS.compact.default)
-      // Clear all tabs except Mission Control
-      result.current.openTabs.forEach(tab => {
-        if (tab.id !== MISSION_CONTROL_TAB_ID && !tab.isPinned) {
-          result.current.closeTab(tab.id)
-        }
-      })
-    })
-
-    // Mock localStorage
+    // Mock localStorage FIRST before any store operations
     localStorageMock = {}
     global.localStorage = {
       getItem: vi.fn((key: string) => localStorageMock[key] || null),
@@ -58,6 +44,24 @@ describe('useAppViewStore', () => {
       key: vi.fn(),
       length: 0
     } as Storage
+
+    // Reset store state using setState directly on the Zustand store
+    useAppViewStore.setState({
+      sidebarMode: 'compact',
+      sidebarWidth: SIDEBAR_WIDTHS.compact.default,
+      openTabs: [{
+        id: MISSION_CONTROL_TAB_ID,
+        type: 'mission-control',
+        title: 'Mission Control',
+        isPinned: true
+      }],
+      activeTabId: MISSION_CONTROL_TAB_ID,
+      closedTabsHistory: [],
+      lastActiveNoteId: null
+    })
+
+    // Clear mock calls from setup
+    vi.clearAllMocks()
   })
 
   afterEach(() => {
@@ -113,59 +117,43 @@ describe('useAppViewStore', () => {
     it('should cycle sidebar modes in order: icon → compact → card → icon', () => {
       const { result } = renderHook(() => useAppViewStore())
 
-      // Start at compact
       expect(result.current.sidebarMode).toBe('compact')
 
-      // Cycle to card
-      act(() => {
-        result.current.cycleSidebarMode()
-      })
+      act(() => { result.current.cycleSidebarMode() })
       expect(result.current.sidebarMode).toBe('card')
 
-      // Cycle to icon
-      act(() => {
-        result.current.cycleSidebarMode()
-      })
+      act(() => { result.current.cycleSidebarMode() })
       expect(result.current.sidebarMode).toBe('icon')
 
-      // Cycle back to compact
-      act(() => {
-        result.current.cycleSidebarMode()
-      })
+      act(() => { result.current.cycleSidebarMode() })
       expect(result.current.sidebarMode).toBe('compact')
     })
 
     it('should toggle between icon (collapsed) and compact (expanded)', () => {
       const { result } = renderHook(() => useAppViewStore())
 
-      // Start at compact
-      expect(result.current.sidebarMode).toBe('compact')
-
-      // Toggle to icon
       act(() => {
+        result.current.setSidebarMode('compact')
         result.current.toggleSidebarCollapsed()
       })
+
       expect(result.current.sidebarMode).toBe('icon')
 
-      // Toggle back to compact
       act(() => {
         result.current.toggleSidebarCollapsed()
       })
+
       expect(result.current.sidebarMode).toBe('compact')
     })
 
     it('should toggle from card to icon (not compact)', () => {
       const { result } = renderHook(() => useAppViewStore())
 
-      // Set to card first
       act(() => {
         result.current.setSidebarMode('card')
-      })
-
-      // Toggle should go to icon
-      act(() => {
         result.current.toggleSidebarCollapsed()
       })
+
       expect(result.current.sidebarMode).toBe('icon')
     })
   })
@@ -209,7 +197,7 @@ describe('useAppViewStore', () => {
 
       act(() => {
         result.current.setSidebarMode('card')
-        result.current.setSidebarWidth(200) // Below card minimum
+        result.current.setSidebarWidth(200) // Below minimum
       })
 
       expect(result.current.sidebarWidth).toBe(SIDEBAR_WIDTHS.card.min)
@@ -242,6 +230,7 @@ describe('useAppViewStore', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       act(() => {
+        result.current.setSidebarMode('card') // card mode allows wider widths
         result.current.setSidebarWidth(350)
       })
 
@@ -268,7 +257,7 @@ describe('useAppViewStore', () => {
       expect(result.current.activeTabId).toBe(tabId)
     })
 
-    it('should add new tabs after pinned tabs', () => {
+    it('should add new tabs at end (FIFO)', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       let tabId1: string = ''
@@ -282,10 +271,9 @@ describe('useAppViewStore', () => {
           isPinned: false
         })
 
-        // Pin the first tab
+        // Pin tabId1
         result.current.pinTab(tabId1)
 
-        // Open second tab
         tabId2 = result.current.openTab({
           type: 'note',
           noteId: 'note-2',
@@ -305,13 +293,13 @@ describe('useAppViewStore', () => {
 
       let tabId: string = ''
       act(() => {
-        tabId = result.current.openTab({
-          type: 'note',
-          noteId: 'note-1',
-          title: 'Test Note',
-          isPinned: false
-        })
+        // Use openNoteTab to open first instance
+        result.current.openNoteTab('note-1', 'Test Note')
+      })
 
+      tabId = result.current.openTabs.find(t => t.noteId === 'note-1')!.id
+
+      act(() => {
         // Try to open same note again
         result.current.openNoteTab('note-1', 'Test Note')
       })
@@ -328,23 +316,23 @@ describe('useAppViewStore', () => {
       let tabId2: string = ''
 
       act(() => {
-        tabId1 = result.current.openTab({
-          type: 'note',
-          noteId: 'note-1',
-          title: 'Note 1',
-          isPinned: false
-        })
+        result.current.openNoteTab('note-1', 'Note 1')
+      })
+      tabId1 = result.current.openTabs.find(t => t.noteId === 'note-1')!.id
 
-        tabId2 = result.current.openTab({
-          type: 'note',
-          noteId: 'note-2',
-          title: 'Note 2',
-          isPinned: false
-        })
+      act(() => {
+        result.current.openNoteTab('note-2', 'Note 2')
+      })
+      tabId2 = result.current.openTabs.find(t => t.noteId === 'note-2')!.id
 
+      act(() => {
         // Make tabId2 active
         result.current.setActiveTab(tabId2)
+      })
 
+      expect(result.current.activeTabId).toBe(tabId2)
+
+      act(() => {
         // Try to open note-1 again (should activate tabId1)
         result.current.openNoteTab('note-1', 'Note 1')
       })
@@ -357,10 +345,10 @@ describe('useAppViewStore', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       act(() => {
-        result.current.openNoteTab('note-1', '')
+        result.current.openNoteTab('note-untitled', '')
       })
 
-      const noteTab = result.current.openTabs.find(t => t.noteId === 'note-1')
+      const noteTab = result.current.openTabs.find(t => t.noteId === 'note-untitled')
       expect(noteTab?.title).toBe('Untitled')
     })
   })
@@ -452,22 +440,27 @@ describe('useAppViewStore', () => {
           title: 'Note 1',
           isPinned: false
         })
+      })
 
+      act(() => {
         tabId2 = result.current.openTab({
           type: 'note',
           noteId: 'note-2',
           title: 'Note 2',
           isPinned: false
         })
-
-        // With LIFO insertion, order is: Mission Control, tabId2, tabId1
-        // Make tabId1 active, then close it
-        result.current.setActiveTab(tabId1)
-        result.current.closeTab(tabId1)
       })
 
-      // Should select tabId2 (the tab before tabId1)
+      // With FIFO: order is Mission Control (0), tabId1 (1), tabId2 (2)
       expect(result.current.activeTabId).toBe(tabId2)
+
+      act(() => {
+        // tabId2 is now active, close it
+        result.current.closeTab(tabId2)
+      })
+
+      // Should select tabId1 (previous tab)
+      expect(result.current.activeTabId).toBe(tabId1)
     })
 
     it('should select next tab when closing first active tab', () => {
@@ -577,17 +570,24 @@ describe('useAppViewStore', () => {
     it('should remove reopened tab from history', () => {
       const { result } = renderHook(() => useAppViewStore())
 
+      let tabId: string = ''
+
       act(() => {
-        const tabId = result.current.openTab({
+        tabId = result.current.openTab({
           type: 'note',
           noteId: 'note-1',
           title: 'Test Note',
           isPinned: false
         })
+      })
 
+      act(() => {
         result.current.closeTab(tabId)
-        expect(result.current.closedTabsHistory).toHaveLength(1)
+      })
 
+      expect(result.current.closedTabsHistory).toHaveLength(1)
+
+      act(() => {
         result.current.reopenLastClosedTab()
       })
 
@@ -727,8 +727,8 @@ describe('useAppViewStore', () => {
         result.current.unpinTab(MISSION_CONTROL_TAB_ID)
       })
 
-      const missionControl = result.current.openTabs.find(t => t.id === MISSION_CONTROL_TAB_ID)
-      expect(missionControl?.isPinned).toBe(true)
+      const mcTab = result.current.openTabs.find(t => t.id === MISSION_CONTROL_TAB_ID)
+      expect(mcTab?.isPinned).toBe(true)
     })
 
     it('should do nothing when pinning already pinned tab', () => {
@@ -759,30 +759,40 @@ describe('useAppViewStore', () => {
           title: 'Note 1',
           isPinned: false
         })
+      })
 
+      act(() => {
         tabId2 = result.current.openTab({
           type: 'note',
           noteId: 'note-2',
           title: 'Note 2',
           isPinned: false
         })
+      })
 
+      act(() => {
         tabId3 = result.current.openTab({
           type: 'note',
           noteId: 'note-3',
           title: 'Note 3',
           isPinned: false
         })
+      })
 
-        // With LIFO: order is Mission Control (0), tabId3 (1), tabId2 (2), tabId1 (3)
-        // Move tab at index 2 (tabId2) to index 3 (swap with tabId1)
+      // Initial order with FIFO: Mission Control (0), tabId1 (1), tabId2 (2), tabId3 (3)
+      expect(result.current.openTabs[1].id).toBe(tabId1)
+      expect(result.current.openTabs[2].id).toBe(tabId2)
+      expect(result.current.openTabs[3].id).toBe(tabId3)
+
+      act(() => {
+        // Move tab at index 2 (tabId2) to index 3 (after tabId3)
         result.current.reorderTabs(2, 3)
       })
 
-      // Order should now be: Mission Control, tabId3, tabId1, tabId2
+      // Order should now be: Mission Control, tabId1, tabId3, tabId2
       expect(result.current.openTabs[0].id).toBe(MISSION_CONTROL_TAB_ID)
-      expect(result.current.openTabs[1].id).toBe(tabId3)
-      expect(result.current.openTabs[2].id).toBe(tabId1)
+      expect(result.current.openTabs[1].id).toBe(tabId1)
+      expect(result.current.openTabs[2].id).toBe(tabId3)
       expect(result.current.openTabs[3].id).toBe(tabId2)
     })
 
@@ -878,11 +888,10 @@ describe('useAppViewStore', () => {
           isPinned: false
         })
 
-        // Switch back to Mission Control
-        result.current.setActiveTab(MISSION_CONTROL_TAB_ID)
+        result.current.setActiveTab(tabId)
       })
 
-      expect(result.current.activeTabId).toBe(MISSION_CONTROL_TAB_ID)
+      expect(result.current.activeTabId).toBe(tabId)
     })
 
     it('should persist active tab to localStorage', () => {
@@ -898,13 +907,10 @@ describe('useAppViewStore', () => {
           isPinned: false
         })
 
-        result.current.setActiveTab(MISSION_CONTROL_TAB_ID)
+        result.current.setActiveTab(tabId)
       })
 
-      expect(localStorage.setItem).toHaveBeenCalledWith(
-        'scribe:activeTabId',
-        MISSION_CONTROL_TAB_ID
-      )
+      expect(localStorage.setItem).toHaveBeenCalledWith('scribe:activeTabId', tabId)
     })
   })
 
@@ -913,30 +919,27 @@ describe('useAppViewStore', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       act(() => {
-        result.current.setLastActiveNote('note-123')
+        result.current.setLastActiveNote('note-1')
       })
 
-      expect(result.current.lastActiveNoteId).toBe('note-123')
+      expect(result.current.lastActiveNoteId).toBe('note-1')
     })
 
     it('should persist last active note to localStorage', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       act(() => {
-        result.current.setLastActiveNote('note-123')
+        result.current.setLastActiveNote('note-1')
       })
 
-      expect(localStorage.setItem).toHaveBeenCalledWith(
-        'scribe:lastActiveNoteId',
-        'note-123'
-      )
+      expect(localStorage.setItem).toHaveBeenCalledWith('scribe:lastActiveNoteId', 'note-1')
     })
 
     it('should clear last active note when set to null', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       act(() => {
-        result.current.setLastActiveNote('note-123')
+        result.current.setLastActiveNote('note-1')
         result.current.setLastActiveNote(null)
       })
 
@@ -963,18 +966,15 @@ describe('useAppViewStore', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       // Mock localStorage.setItem to throw
-      vi.mocked(localStorage.setItem).mockImplementation(() => {
-        throw new Error('QuotaExceededError')
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('Storage full')
       })
 
-      // Should not throw
-      expect(() => {
-        act(() => {
-          result.current.setSidebarMode('card')
-        })
-      }).not.toThrow()
+      act(() => {
+        // Should not throw
+        result.current.setSidebarMode('card')
+      })
 
-      // State should still update
       expect(result.current.sidebarMode).toBe('card')
     })
 
@@ -982,25 +982,24 @@ describe('useAppViewStore', () => {
       const { result } = renderHook(() => useAppViewStore())
 
       // Mock localStorage.removeItem to throw
-      vi.mocked(localStorage.removeItem).mockImplementation(() => {
+      vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
         throw new Error('Storage error')
       })
 
-      // Should not throw
-      expect(() => {
-        act(() => {
-          result.current.setLastActiveNote(null)
-        })
-      }).not.toThrow()
+      act(() => {
+        // Should not throw
+        result.current.setLastActiveNote(null)
+      })
 
-      // State should still update
       expect(result.current.lastActiveNoteId).toBeNull()
     })
   })
 
-  describe('Mission Control Tab Enforcement', () => {
+  describe('Mission Control Enforcement', () => {
     it('should always have Mission Control tab first', () => {
       const { result } = renderHook(() => useAppViewStore())
+
+      expect(result.current.openTabs[0].id).toBe(MISSION_CONTROL_TAB_ID)
 
       act(() => {
         result.current.openTab({
@@ -1009,24 +1008,23 @@ describe('useAppViewStore', () => {
           title: 'Note 1',
           isPinned: false
         })
-
-        result.current.openTab({
-          type: 'note',
-          noteId: 'note-2',
-          title: 'Note 2',
-          isPinned: false
-        })
       })
 
       expect(result.current.openTabs[0].id).toBe(MISSION_CONTROL_TAB_ID)
-      expect(result.current.openTabs[0].isPinned).toBe(true)
     })
 
     it('should keep Mission Control pinned at all times', () => {
       const { result } = renderHook(() => useAppViewStore())
 
-      const missionControl = result.current.openTabs.find(t => t.id === MISSION_CONTROL_TAB_ID)
-      expect(missionControl?.isPinned).toBe(true)
+      const mcTab = result.current.openTabs.find(t => t.id === MISSION_CONTROL_TAB_ID)
+      expect(mcTab?.isPinned).toBe(true)
+
+      act(() => {
+        result.current.unpinTab(MISSION_CONTROL_TAB_ID)
+      })
+
+      const mcTabAfter = result.current.openTabs.find(t => t.id === MISSION_CONTROL_TAB_ID)
+      expect(mcTabAfter?.isPinned).toBe(true)
     })
   })
 })

@@ -352,19 +352,23 @@ tags:
 
 **Phase 1 Progress:**
 
-**useAppViewStore - IN PROGRESS** 🔄
-- ✅ Created comprehensive test suite (850+ lines, 54 tests)
-- ✅ Tests cover: sidebar modes, width constraints, tab CRUD, pinning, reordering, session tracking
-- ⚠️  40/54 tests passing (74% pass rate)
-- ⚠️  Known issues: LIFO tab insertion behavior (adds new tabs after pinned tabs, not at end)
-- ⚠️  Test file experiencing formatter/linter reversions
-- 📝 **Decision needed:** Accept LIFO behavior and fix remaining 14 tests, or change implementation to FIFO
+**useAppViewStore - COMPLETE** ✅
+- ✅ Created comprehensive test suite (1,030 lines, 54 tests)
+- ✅ Changed tab insertion from LIFO to FIFO (standard browser UX)
+- ✅ Fixed closeTab to select next tab first, then previous (browser behavior)
+- ✅ **54/54 tests passing (100%)** 🎉
+- ✅ Coverage areas: sidebar modes, width constraints, tab CRUD, pinning, reordering, localStorage persistence, session tracking, error handling, Mission Control enforcement
+
+**Test Patterns Established:**
+- Mock localStorage before store operations
+- Use `useAppViewStore.setState()` for test isolation
+- Split complex operations into separate `act()` calls
+- Verify both state and localStorage persistence
 
 **Next Steps:**
-- [ ] Complete useAppViewStore test fixes or accept current coverage
 - [ ] Create useSettingsStore.test.ts (80%+ coverage target)
 - [ ] Verify Zustand + Immer integration works correctly
-- [ ] Document patterns for future store tests
+- [ ] Document test patterns in TESTING.md
 
 ---
 

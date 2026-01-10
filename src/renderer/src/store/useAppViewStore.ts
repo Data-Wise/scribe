@@ -292,13 +292,8 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
     const newTab: EditorTab = { ...tabData, id }
     const { openTabs } = get()
 
-    // Add after pinned tabs (LIFO for unpinned tabs)
-    const pinnedCount = openTabs.filter(t => t.isPinned).length
-    const newTabs = [
-      ...openTabs.slice(0, pinnedCount),
-      newTab,
-      ...openTabs.slice(pinnedCount)
-    ]
+    // Add at end (FIFO - standard tab behavior)
+    const newTabs = [...openTabs, newTab]
 
     set({ openTabs: newTabs, activeTabId: id })
     saveTabs(newTabs)
@@ -338,13 +333,18 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
     const tabIndex = openTabs.findIndex(t => t.id === tabId)
     const newTabs = openTabs.filter(t => t.id !== tabId)
 
-    // If closing active tab, select adjacent
+    // If closing active tab, select adjacent (prefer next tab, then previous)
     let newActiveId = activeTabId
     if (activeTabId === tabId) {
-      if (tabIndex > 0) {
+      // Try next tab first (standard browser behavior)
+      if (newTabs[tabIndex]) {
+        newActiveId = newTabs[tabIndex].id
+      } else if (tabIndex > 0) {
+        // No next tab, select previous
         newActiveId = newTabs[tabIndex - 1]?.id || MISSION_CONTROL_TAB_ID
       } else {
-        newActiveId = newTabs[0]?.id || MISSION_CONTROL_TAB_ID
+        // No adjacent tabs, select Mission Control
+        newActiveId = MISSION_CONTROL_TAB_ID
       }
     }
 
@@ -431,13 +431,8 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
       return
     }
 
-    // Add tab after pinned tabs
-    const pinnedCount = openTabs.filter(t => t.isPinned).length
-    const newTabs = [
-      ...openTabs.slice(0, pinnedCount),
-      tabToReopen,
-      ...openTabs.slice(pinnedCount)
-    ]
+    // Add tab at end (FIFO - consistent with openTab)
+    const newTabs = [...openTabs, tabToReopen]
 
     set({
       openTabs: newTabs,
