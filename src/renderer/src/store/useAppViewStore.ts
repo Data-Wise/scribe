@@ -116,7 +116,8 @@ const LAST_EXPANDED_MODE_KEY = 'scribe:lastExpandedMode'
 const LAST_MODE_CHANGE_KEY = 'scribe:lastModeChangeTimestamp'
 const COMPACT_WIDTH_KEY = 'scribe:compactModeWidth'
 const CARD_WIDTH_KEY = 'scribe:cardModeWidth'
-const AUTO_UPDATE_PRESET_KEY = 'scribe:autoUpdatePreset'
+// TODO: Phase 6 - Used for "Don't ask again" checkbox in preset update dialog
+// const AUTO_UPDATE_PRESET_KEY = 'scribe:autoUpdatePreset'
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -571,21 +572,46 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
   },
 
   cycleSidebarMode: () => {
-    const current = get().sidebarMode
-    const modes: SidebarMode[] = ['icon', 'compact', 'card']
-    const currentIndex = modes.indexOf(current)
-    const nextIndex = (currentIndex + 1) % modes.length
-    const next = modes[nextIndex]
-    set({ sidebarMode: next })
-    saveSidebarMode(next)
+    const state = get()
+    const now = Date.now()
+
+    // Debounce: Prevent rapid clicking (200ms cooldown)
+    if (now - state.lastModeChangeTimestamp < 200) {
+      return // Too soon, ignore click
+    }
+
+    // Get current width preset (TODO: Phase 5 - read from Settings)
+    const widthPreset = 'medium' // Default preset
+
+    // Get preset-aware cycle pattern
+    const cyclePattern = state.getCyclePattern(widthPreset)
+
+    // Find next mode in cycle
+    const currentIndex = cyclePattern.indexOf(state.sidebarMode)
+    const nextIndex = (currentIndex + 1) % cyclePattern.length
+    const nextMode = cyclePattern[nextIndex]
+
+    // Update mode using setSidebarMode (handles width restoration)
+    state.setSidebarMode(nextMode)
+
+    // Update debounce timestamp
+    set({ lastModeChangeTimestamp: now })
+    saveLastModeChangeTimestamp(now)
   },
 
   toggleSidebarCollapsed: () => {
-    const current = get().sidebarMode
-    // Toggle between 'icon' (collapsed) and 'compact' (expanded)
-    const next: SidebarMode = current === 'icon' ? 'compact' : 'icon'
-    set({ sidebarMode: next })
-    saveSidebarMode(next)
+    const state = get()
+    const current = state.sidebarMode
+
+    // Toggle between 'icon' (collapsed) and expanded mode
+    if (current === 'icon') {
+      // Expanding: Use smart mode determination (Phase 1)
+      const expandMode = state.determineExpandMode()
+      state.setSidebarMode(expandMode)
+    } else {
+      // Collapsing: Switch to icon mode
+      state.setSidebarMode('icon')
+    }
   },
 
   setSidebarWidth: (width: number) => {
