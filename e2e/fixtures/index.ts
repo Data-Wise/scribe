@@ -6,6 +6,7 @@ import { TabsPage } from '../pages/TabsPage'
 import { MissionControlPage } from '../pages/MissionControlPage'
 import { RightSidebarPage } from '../pages/RightSidebarPage'
 import { ModalsPage } from '../pages/ModalsPage'
+import { CodeMirrorHelper } from '../helpers/codemirror-helpers'
 
 /**
  * Custom Playwright fixtures for Scribe E2E tests
@@ -32,6 +33,8 @@ type ScribeFixtures = {
   missionControl: MissionControlPage
   rightSidebar: RightSidebarPage
   modals: ModalsPage
+  /** CodeMirror 6 editor helper for interacting with the code editor */
+  cmEditor: CodeMirrorHelper
   /** Page with pre-seeded test data (notes, projects) */
   seededPage: BasePage
 }
@@ -191,6 +194,11 @@ export const test = base.extend<ScribeFixtures>({
   modals: async ({ page }, use) => {
     const modals = new ModalsPage(page)
     await use(modals)
+  },
+
+  cmEditor: async ({ page }, use) => {
+    const cmEditor = new CodeMirrorHelper(page)
+    await use(cmEditor)
   },
 
   /**
