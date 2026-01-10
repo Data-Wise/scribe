@@ -188,6 +188,7 @@ export const seedDemoData = async (): Promise<boolean> => {
     { key: 'iconModeTutorial', offset: 120, projectId: gettingStartedId },
     { key: 'settingsPinnedProjects', offset: 180, projectId: gettingStartedId },
     { key: 'keyboardShortcuts', offset: 240, projectId: gettingStartedId },
+    { key: 'modeConsolidation', offset: 30, projectId: gettingStartedId }, // v1.15.0 testing guide
     { key: 'researchExample', offset: 300, projectId: researchNotesId }
   ]
 

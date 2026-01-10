@@ -386,6 +386,111 @@ Each project can have:
 ---
 
 **Tip:** Pin projects you access daily, keep others in Card Mode for occasional access.`
+  },
+
+  modeConsolidation: {
+    title: 'v1.15.0: Mode Consolidation Testing',
+    folder: 'inbox',
+    tags: ['tutorial', 'phase3'],
+    content: `# v1.15.0: Mode Consolidation Testing
+
+**Feature:** Smart sidebar mode persistence and universal expansion (Phase 1 complete)
+
+## What's New in Phase 1
+
+### 1. Mode-Specific Width Memory
+
+Each sidebar mode now remembers its own width:
+
+- **Compact Mode** - Remembers last manual width (default 240px)
+- **Card Mode** - Remembers last manual width (default 320px)
+- **Icon Mode** - Always 48px (no custom width)
+
+**Test:** Resize Compact to 260px, switch to Card, resize to 340px, then cycle back to Compact. Width should restore to 260px!
+
+### 2. Smart Mode Persistence
+
+The sidebar remembers your last expanded mode:
+
+- Expanding from Icon → restores last mode (Compact or Card)
+- Setting: "Remember sidebar mode on collapse" (coming in Phase 5)
+
+**Test:** Expand to Card mode, collapse to Icon, expand again → should restore Card mode!
+
+### 3. localStorage Tracking
+
+Check browser DevTools → Application → Local Storage:
+
+\`\`\`
+scribe:lastExpandedMode = "card"
+scribe:compactModeWidth = "260"
+scribe:cardModeWidth = "340"
+scribe:lastModeChangeTimestamp = "1736524800000"
+\`\`\`
+
+## Testing Checklist
+
+### Basic Mode Switching
+
+- [ ] Click sidebar to cycle: Icon → Compact → Card → Icon
+- [ ] Press ⌘⇧[ to cycle modes
+- [ ] Width changes correctly for each mode
+
+### Width Memory
+
+- [ ] Resize Compact to custom width (e.g., 250px)
+- [ ] Switch to Card mode
+- [ ] Resize Card to custom width (e.g., 350px)
+- [ ] Switch back to Compact → width restored to 250px
+- [ ] Switch to Card → width restored to 350px
+
+### Last Mode Persistence
+
+- [ ] Expand to Compact mode
+- [ ] Collapse to Icon
+- [ ] Expand again → should restore Compact
+- [ ] Expand to Card mode
+- [ ] Collapse to Icon
+- [ ] Expand again → should restore Card
+
+### localStorage Verification
+
+Open DevTools (F12) → Application → Local Storage → localhost:
+
+- [ ] \`scribe:lastExpandedMode\` updates when switching modes
+- [ ] \`scribe:compactModeWidth\` updates when resizing Compact
+- [ ] \`scribe:cardModeWidth\` updates when resizing Card
+- [ ] \`scribe:lastModeChangeTimestamp\` updates on mode changes
+
+## Coming in Phase 2 (Next)
+
+- **Preset-aware cycling** - narrow: C↔I, wide: C→W→I
+- **200ms debounce** - prevents rapid clicking spam
+- **Settings integration** - width preset determines cycle pattern
+
+## Coming in Future Phases
+
+- **Phase 3:** Universal expansion (Inbox + Smart Folders)
+- **Phase 5:** Settings UI (2 new toggles)
+- **Phase 6:** Preset update dialog ("Don't ask again")
+- **Phase 7:** Mode indicator (ActivityBar footer)
+- **Phase 8:** Migration & polish
+
+## Bug Reports
+
+If you notice issues with Phase 1:
+
+1. Open DevTools Console (F12)
+2. Check for errors in localStorage operations
+3. Verify state in useAppViewStore (React DevTools)
+4. Report with specific steps to reproduce
+
+---
+
+**Status:** Phase 1 COMPLETE ✅
+**Commit:** c655013
+**Branch:** feat/sidebar-v2
+**Next:** Phase 2 (Cycle Behavior)`
   }
 } as const
 
