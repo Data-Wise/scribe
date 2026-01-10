@@ -263,6 +263,7 @@ export function IconBarMode({
         onDaily={onDaily}
         onSettings={onSettings}
         activeItem={activeActivityItem}
+        sidebarMode="icon"
       />
 
       {/* Recent Notes Dropdown */}

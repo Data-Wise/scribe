@@ -1,4 +1,5 @@
 import { Search, Calendar, Settings, Clock } from 'lucide-react'
+import type { SidebarMode } from '../../types'
 
 interface ActivityBarProps {
   onSearch: () => void
@@ -6,18 +7,22 @@ interface ActivityBarProps {
   onSettings: () => void
   onRecent: () => void
   activeItem?: 'search' | 'daily' | 'recent' | 'settings' | null
+  sidebarMode?: SidebarMode // Phase 7: For mode indicator
 }
 
 /**
  * ActivityBar component - Fixed bottom section of sidebar
  * Provides quick access to search, daily notes, and settings
+ *
+ * Phase 7: Displays mode indicator (Compact/Card) below Settings button
  */
 export function ActivityBar({
   onSearch,
   onDaily,
   onSettings,
   onRecent,
-  activeItem = null
+  activeItem = null,
+  sidebarMode = 'compact'
 }: ActivityBarProps) {
   return (
     <div className="activity-bar" data-testid="activity-bar">
@@ -64,6 +69,13 @@ export function ActivityBar({
       >
         <Settings size={16} />
       </button>
+
+      {/* Phase 7: Mode Indicator - Only show in Compact/Card modes */}
+      {sidebarMode !== 'icon' && (
+        <div className="mode-indicator" data-testid="mode-indicator">
+          {sidebarMode === 'compact' ? 'Compact Mode' : 'Card Mode'}
+        </div>
+      )}
     </div>
   )
 }

@@ -6476,3 +6476,20 @@ mark {
 .dialog-btn-primary:active {
   transform: scale(0.98);
 }
+
+/* ============================================================================
+   Mode Indicator - Phase 7: Mode Consolidation
+   ========================================================================= */
+
+.mode-indicator {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--nexus-border-primary);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--nexus-text-tertiary);
+  user-select: none;
+}
