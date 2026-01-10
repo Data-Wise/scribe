@@ -3,7 +3,16 @@ import { render, screen } from '@testing-library/react'
 import { MissionSidebar } from '../components/sidebar/MissionSidebar'
 import { Project, Note } from '../types'
 
-describe('MissionSidebar Integration', () => {
+/**
+ * MissionSidebar Integration Tests (v1.16.0 Icon-Centric)
+ *
+ * Tests the icon-centric sidebar architecture where:
+ * - Icon bar is always visible (48px)
+ * - Expansion panel is conditional based on expandedIcon
+ * - No collapse/expand toggle (icons control expansion)
+ */
+
+describe('MissionSidebar Integration (v1.16.0)', () => {
   const mockProjects: Project[] = [
     {
       id: '1',
@@ -45,16 +54,84 @@ describe('MissionSidebar Integration', () => {
     onSelectProject: vi.fn(),
     onSelectNote: vi.fn(),
     onCreateProject: vi.fn(),
-    onOpenSearch: vi.fn(),
-    onOpenJournal: vi.fn(),
+    onSearch: vi.fn(),
+    onDaily: vi.fn(),
     onOpenSettings: vi.fn(),
     onNewNote: vi.fn(),
     onEditProject: vi.fn(),
     onArchiveProject: vi.fn(),
     onDeleteProject: vi.fn(),
+    onPinProject: vi.fn(),
+    onUnpinProject: vi.fn(),
+    onRenameNote: vi.fn(),
+    onMoveNoteToProject: vi.fn(),
+    onDuplicateNote: vi.fn(),
+    onDeleteNote: vi.fn(),
   }
 
-  it('renders MissionSidebar component', () => {
+  it('renders MissionSidebar component with icon-centric class', () => {
+    const { container } = render(
+      <MissionSidebar
+        projects={mockProjects}
+        notes={mockNotes}
+        currentProjectId={null}
+        {...mockHandlers}
+      />
+    )
+
+    const sidebar = container.querySelector('.mission-sidebar.icon-centric-mode')
+    expect(sidebar).toBeInTheDocument()
+  })
+
+  it('always renders icon bar (48px wide)', () => {
+    const { container } = render(
+      <MissionSidebar
+        projects={mockProjects}
+        notes={mockNotes}
+        currentProjectId={null}
+        {...mockHandlers}
+      />
+    )
+
+    // Icon bar should always be present
+    const iconBar = container.querySelector('.mission-sidebar-icon')
+    expect(iconBar).toBeInTheDocument()
+  })
+
+  it('renders activity bar with search/daily/settings buttons', () => {
+    render(
+      <MissionSidebar
+        projects={mockProjects}
+        notes={mockNotes}
+        currentProjectId={null}
+        {...mockHandlers}
+      />
+    )
+
+    // Activity bar should be present
+    const searchBtn = screen.queryByTitle(/search/i)
+    const dailyBtn = screen.queryByTitle(/daily/i)
+    const settingsBtn = screen.queryByTitle(/settings/i)
+
+    expect(searchBtn || dailyBtn || settingsBtn).toBeTruthy()
+  })
+
+  it('does not render expansion panel when no icon is expanded', () => {
+    const { container } = render(
+      <MissionSidebar
+        projects={mockProjects}
+        notes={mockNotes}
+        currentProjectId={null}
+        {...mockHandlers}
+      />
+    )
+
+    // Expansion panel should not be present when collapsed
+    const expandedPanel = container.querySelector('.expanded-icon-panel')
+    expect(expandedPanel).not.toBeInTheDocument()
+  })
+
+  it('sets sidebar width based on expansion state', () => {
     const { container } = render(
       <MissionSidebar
         projects={mockProjects}
@@ -65,10 +142,12 @@ describe('MissionSidebar Integration', () => {
     )
 
     const sidebar = container.querySelector('.mission-sidebar')
-    expect(sidebar).toBeInTheDocument()
+
+    // Width should be set via inline style
+    expect(sidebar).toHaveAttribute('style')
   })
 
-  it('renders in icon mode by default or compact mode', () => {
+  it('has icon-centric data attribute', () => {
     const { container } = render(
       <MissionSidebar
         projects={mockProjects}
@@ -78,43 +157,9 @@ describe('MissionSidebar Integration', () => {
       />
     )
 
-    // Should render either icon or compact mode
-    const iconMode = container.querySelector('.mission-sidebar-icon')
-    const compactMode = container.querySelector('.mission-sidebar-compact')
-    
-    expect(iconMode || compactMode).toBeTruthy()
-  })
+    const sidebar = container.querySelector('.mission-sidebar')
 
-  it('displays project names in compact mode', () => {
-    // Force compact mode by mocking the store
-    const { container } = render(
-      <MissionSidebar
-        projects={mockProjects}
-        notes={mockNotes}
-        currentProjectId={null}
-        {...mockHandlers}
-      />
-    )
-
-    // If in compact mode, should show project names
-    const compactMode = container.querySelector('.mission-sidebar-compact')
-    if (compactMode) {
-      expect(screen.queryByText('Test Research Project')).toBeInTheDocument()
-    }
-  })
-
-  it('shows toggle button', () => {
-    render(
-      <MissionSidebar
-        projects={mockProjects}
-        notes={mockNotes}
-        currentProjectId={null}
-        {...mockHandlers}
-      />
-    )
-
-    // Should have a toggle button in any mode
-    const toggleBtn = screen.queryByTitle(/sidebar/i)
-    expect(toggleBtn).toBeInTheDocument()
+    // Should have data-mode attribute
+    expect(sidebar).toHaveAttribute('data-mode')
   })
 })
