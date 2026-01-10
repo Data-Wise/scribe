@@ -292,7 +292,7 @@ export const useAppViewStore = create<AppViewState>((set, get) => ({
     const newTab: EditorTab = { ...tabData, id }
     const { openTabs } = get()
 
-    // Add after pinned tabs
+    // Add after pinned tabs (LIFO for unpinned tabs)
     const pinnedCount = openTabs.filter(t => t.isPinned).length
     const newTabs = [
       ...openTabs.slice(0, pinnedCount),

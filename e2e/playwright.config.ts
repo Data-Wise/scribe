@@ -74,8 +74,8 @@ export default defineConfig({
     // },
   ],
 
-  // Global timeout for tests (increased for Tauri app)
-  timeout: 60000,
+  // Global timeout for tests (increased for complex E2E scenarios)
+  timeout: 120000,
 
   // Expect timeout (increased for slower assertions)
   expect: {

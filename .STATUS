@@ -350,10 +350,19 @@ tags:
 | useNotesStore | 200 | 0% | P1 | Pending |
 | **Total** | **1,539** | **0%** | | |
 
-**Phase 1 Tasks:**
-- [ ] Create useAppViewStore.test.ts (80%+ coverage target)
+**Phase 1 Progress:**
+
+**useAppViewStore - IN PROGRESS** 🔄
+- ✅ Created comprehensive test suite (850+ lines, 54 tests)
+- ✅ Tests cover: sidebar modes, width constraints, tab CRUD, pinning, reordering, session tracking
+- ⚠️  40/54 tests passing (74% pass rate)
+- ⚠️  Known issues: LIFO tab insertion behavior (adds new tabs after pinned tabs, not at end)
+- ⚠️  Test file experiencing formatter/linter reversions
+- 📝 **Decision needed:** Accept LIFO behavior and fix remaining 14 tests, or change implementation to FIFO
+
+**Next Steps:**
+- [ ] Complete useAppViewStore test fixes or accept current coverage
 - [ ] Create useSettingsStore.test.ts (80%+ coverage target)
-- [ ] Test state mutations, side effects, edge cases
 - [ ] Verify Zustand + Immer integration works correctly
 - [ ] Document patterns for future store tests
 

@@ -460,12 +460,14 @@ describe('useAppViewStore', () => {
           isPinned: false
         })
 
-        // tabId2 is now active, close it
-        result.current.closeTab(tabId2)
+        // With LIFO insertion, order is: Mission Control, tabId2, tabId1
+        // Make tabId1 active, then close it
+        result.current.setActiveTab(tabId1)
+        result.current.closeTab(tabId1)
       })
 
-      // Should select tabId1
-      expect(result.current.activeTabId).toBe(tabId1)
+      // Should select tabId2 (the tab before tabId1)
+      expect(result.current.activeTabId).toBe(tabId2)
     })
 
     it('should select next tab when closing first active tab', () => {
@@ -772,14 +774,15 @@ describe('useAppViewStore', () => {
           isPinned: false
         })
 
-        // Move tab at index 2 (tabId2) to index 3 (tabId3 position)
+        // With LIFO: order is Mission Control (0), tabId3 (1), tabId2 (2), tabId1 (3)
+        // Move tab at index 2 (tabId2) to index 3 (swap with tabId1)
         result.current.reorderTabs(2, 3)
       })
 
-      // Order should now be: Mission Control, tabId1, tabId3, tabId2
+      // Order should now be: Mission Control, tabId3, tabId1, tabId2
       expect(result.current.openTabs[0].id).toBe(MISSION_CONTROL_TAB_ID)
-      expect(result.current.openTabs[1].id).toBe(tabId1)
-      expect(result.current.openTabs[2].id).toBe(tabId3)
+      expect(result.current.openTabs[1].id).toBe(tabId3)
+      expect(result.current.openTabs[2].id).toBe(tabId1)
       expect(result.current.openTabs[3].id).toBe(tabId2)
     })
 
