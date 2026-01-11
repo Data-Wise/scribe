@@ -7,6 +7,7 @@ interface ProjectPreviewTooltipProps {
   children: React.ReactElement
   project: Project
   noteCount: number
+  isActive?: boolean
   triggerRef?: React.RefObject<HTMLElement>
 }
 
@@ -25,7 +26,8 @@ interface ProjectPreviewTooltipProps {
 export function ProjectPreviewTooltip({
   children,
   project,
-  noteCount
+  noteCount,
+  isActive = false
 }: ProjectPreviewTooltipProps) {
   const formatTimeAgo = (timestamp: number): string => {
     const now = Date.now()
@@ -52,6 +54,7 @@ export function ProjectPreviewTooltip({
     <ContextualTooltip
       title={project.name}
       subtitle={subtitle}
+      badge={isActive ? 'Active Project' : undefined}
       actions={[]}  // NO actions - preview only
       delay={0}     // Instant show
       hideDelay={200}  // 200ms grace period

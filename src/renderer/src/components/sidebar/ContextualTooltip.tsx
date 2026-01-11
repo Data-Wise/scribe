@@ -12,6 +12,7 @@ interface ContextualTooltipProps {
   children: React.ReactElement
   title: string
   subtitle?: string
+  badge?: string  // Optional badge text (e.g., "Active Project")
   actions?: TooltipAction[]
   delay?: number
   hideDelay?: number
@@ -33,6 +34,7 @@ export function ContextualTooltip({
   children,
   title,
   subtitle,
+  badge,
   actions = [],
   delay = 0,
   hideDelay = 200
@@ -224,7 +226,12 @@ export function ContextualTooltip({
         >
           {/* Content */}
           <div className="contextual-tooltip-content">
-            <div className="contextual-tooltip-title">{title}</div>
+            <div className="contextual-tooltip-header">
+              <div className="contextual-tooltip-title">{title}</div>
+              {badge && (
+                <span className="preview-active-badge">{badge}</span>
+              )}
+            </div>
             {subtitle && (
               <div className="contextual-tooltip-subtitle">{subtitle}</div>
             )}

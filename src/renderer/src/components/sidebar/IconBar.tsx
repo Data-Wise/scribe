@@ -69,6 +69,9 @@ export function IconBar({
   // Recent notes dropdown state
   const [showRecentNotes, setShowRecentNotes] = useState(false)
 
+  // Phase 3: Click pulse animation state
+  const [justActivatedId, setJustActivatedId] = useState<string | null>(null)
+
   // Keyboard shortcut for Recent Notes (⌘R)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -213,6 +216,17 @@ export function IconBar({
             const tooltipContent = `${project.name}\n${formatStatus(project.status || 'active')} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
             const isDragging = draggedIndex === index
             const isDragOver = dragOverIndex === index
+            const justActivated = justActivatedId === project.id
+
+            // Phase 3: Click handler with pulse animation
+            const handleIconClick = () => {
+              // Only trigger pulse when expanding (not collapsing)
+              if (!isExpanded) {
+                setJustActivatedId(project.id)
+                setTimeout(() => setJustActivatedId(null), 400)
+              }
+              onToggleVault(project.id)
+            }
 
             return (
               <Tooltip key={project.id} content={tooltipContent}>
@@ -220,13 +234,14 @@ export function IconBar({
                   project={project}
                   isExpanded={isExpanded}
                   noteCount={noteCount}
-                  onClick={() => onToggleVault(project.id)}
+                  onClick={handleIconClick}
                   onDragStart={() => handleDragStart(index)}
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDrop={(e) => handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
                   isDragging={isDragging}
                   isDragOver={isDragOver}
+                  justActivated={justActivated}
                 />
               </Tooltip>
             )
@@ -279,6 +294,7 @@ interface ProjectIconButtonProps {
   onDragEnd?: () => void
   isDragging?: boolean
   isDragOver?: boolean
+  justActivated?: boolean  // Phase 3: For click pulse animation
 }
 
 // Helper to get Lucide icon component by name
@@ -300,14 +316,15 @@ function ProjectIconButton({
   onDrop,
   onDragEnd,
   isDragging = false,
-  isDragOver = false
+  isDragOver = false,
+  justActivated = false
 }: ProjectIconButtonProps) {
   const status = project.status || 'active'
   const Icon = getProjectIcon(project.icon)
 
   return (
     <button
-      className={`project-icon-btn ${isExpanded ? 'expanded' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
+      className={`project-icon-btn ${isExpanded ? 'expanded' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''} ${justActivated ? 'just-activated' : ''}`}
       onClick={onClick}
       data-status={status}
       data-testid={`project-icon-${project.id}`}
