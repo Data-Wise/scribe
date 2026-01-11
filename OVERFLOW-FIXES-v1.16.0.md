@@ -10,6 +10,7 @@
 
 1. **Icon Bar**: "Add projects folder is very big" - project names overflowing
 2. **Folder Mode**: "notes and folder are overflown" - content overflow in compact mode
+3. **Inbox Expansion**: Note titles displayed in larger font without proper truncation
 
 ---
 
@@ -118,6 +119,63 @@
 
 ---
 
+### Fix 6: Inbox Note Items Styling
+**File:** `src/renderer/src/index.css` (Lines 3318-3367)
+**Change:** Added complete CSS for `.inbox-note-item-compact` class
+
+```css
+/* Inbox Note Items (for Inbox expansion) */
+.inbox-note-item-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 150ms ease;
+  width: 100%;
+  min-width: 0; /* Critical for truncation */
+  border-radius: 6px;
+}
+
+.inbox-note-item-compact .note-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0; /* Allow shrinking */
+}
+
+.inbox-note-item-compact .note-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-note-item-compact .note-timestamp {
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  white-space: nowrap;
+}
+```
+
+**Why:** The `inbox-note-item-compact` class had no CSS defined, causing:
+- Note titles to display at default browser font size (16px) instead of 13px
+- No text truncation on long note titles
+- Inconsistent styling compared to project notes
+
+**Result:**
+- ✅ Inbox note titles now display at consistent 13px font size
+- ✅ Long titles truncate with ellipsis
+- ✅ Matches project note styling throughout the app
+
+---
+
 ## 🎯 Expected Results
 
 After these fixes:
@@ -137,6 +195,12 @@ After these fixes:
 - Nested notes truncate properly
 - Folder names don't overflow
 - All content stays within panel boundaries
+
+✅ **Inbox Mode:**
+- Note titles display at consistent 13px font size
+- Long note titles truncate with ellipsis
+- Timestamps show in 11px muted text
+- Matches project note styling
 
 ---
 
@@ -178,12 +242,14 @@ For `text-overflow: ellipsis` to work in flex layouts, you need:
 To test these fixes manually:
 
 1. Open http://localhost:5173/ in Chrome
-2. Create a project with a very long name (100+ characters)
-3. Pin the project to the sidebar
-4. Expand in compact mode
-5. Create notes with long titles (80+ characters)
-6. Verify all text truncates with ellipsis
-7. Verify no horizontal scrolling
+2. **Inbox Test:** Click Inbox icon, create notes with 80+ character titles, verify 13px font and ellipsis truncation
+3. **Project Test:** Create a project with a very long name (100+ characters)
+4. Pin the project to the sidebar
+5. Expand in compact mode
+6. Create notes with long titles (80+ characters)
+7. Verify all text truncates with ellipsis
+8. Verify no horizontal scrolling
+9. Verify consistent font sizes (13px for titles, 11px for timestamps)
 
 See `VISUAL-TEST-OVERFLOW-v1.16.0.md` for comprehensive test scenarios.
 
@@ -196,8 +262,9 @@ See `VISUAL-TEST-OVERFLOW-v1.16.0.md` for comprehensive test scenarios.
 | `src/renderer/src/index.css` | 3347, 3352 | Compact project item truncation |
 | `src/renderer/src/index.css` | 4726, 4739-4740 | Nested note truncation |
 | `src/renderer/src/index.css` | 3674-3679 | Panel scrolling |
+| `src/renderer/src/index.css` | 3318-3367 | Inbox note items styling |
 
-**Total:** 5 CSS fixes across 1 file
+**Total:** 6 CSS fixes across 1 file
 
 ---
 
