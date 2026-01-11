@@ -13,6 +13,7 @@ interface ProjectContextMenuProps {
   onPinProject?: (projectId: string) => void
   onUnpinProject?: (projectId: string) => void
   isPinned?: boolean
+  isActive?: boolean  // Phase 4: Show active project header
 }
 
 export function ProjectContextMenu({
@@ -25,7 +26,8 @@ export function ProjectContextMenu({
   onDeleteProject,
   onPinProject,
   onUnpinProject,
-  isPinned = false
+  isPinned = false,
+  isActive = false
 }: ProjectContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [adjustedPosition, setAdjustedPosition] = useState(position)
@@ -109,7 +111,7 @@ export function ProjectContextMenu({
   return (
     <div
       ref={menuRef}
-      className="project-context-menu"
+      className={`project-context-menu ${isActive ? 'active-project' : ''}`}
       style={{
         position: 'fixed',
         left: adjustedPosition.x,
@@ -118,6 +120,17 @@ export function ProjectContextMenu({
       }}
     >
       <div className="context-menu-content">
+        {/* Phase 4: Active Project Header */}
+        {isActive && (
+          <>
+            <div className="context-menu-header active-header">
+              <span className="active-header-icon">●</span>
+              <span>Active Project</span>
+            </div>
+            <div className="context-menu-divider" />
+          </>
+        )}
+
         <button className="context-menu-item" onClick={handleNewNote}>
           <FileText size={14} />
           <span>New Note</span>

@@ -5730,6 +5730,36 @@ mark {
   -webkit-user-select: none;
 }
 
+/* Phase 4: Active Project Context Menu Styling */
+.project-context-menu.active-project .context-menu-content {
+  border-color: rgba(var(--nexus-accent-rgb), 0.3);
+  box-shadow:
+    0 0 0 1px rgba(var(--nexus-accent-rgb), 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.context-menu-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--nexus-text-muted);
+}
+
+.context-menu-header.active-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--nexus-accent);
+}
+
+.active-header-icon {
+  font-size: 8px;
+  line-height: 1;
+}
+
 .context-menu-item {
   display: flex;
   align-items: center;
