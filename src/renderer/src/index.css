@@ -3588,6 +3588,150 @@ mark {
   border-top-color: rgba(0, 0, 0, 0.08);
 }
 
+/* ===== ICON-CENTRIC SIDEBAR (v1.16.0) ===== */
+
+/* Icon-Centric Mode: IconBar + ExpandedIconPanel */
+.mission-sidebar.icon-centric-mode {
+  display: flex;
+  flex-direction: row;
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Icon Bar (always visible, 48px) */
+.icon-bar {
+  width: 48px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 8px 12px;
+  gap: 4px;
+  background: var(--nexus-bg-secondary);
+}
+
+/* Expanded Icon Panel (conditional, slides in/out) */
+.expanded-icon-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--nexus-bg-secondary);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  animation: slideInFromLeft 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Panel Header */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 8px;
+}
+
+.panel-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.panel-header .panel-action-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--nexus-text-muted);
+  transition: all 150ms ease;
+}
+
+.panel-header .panel-action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-primary);
+}
+
+/* Icon Button Expanded State */
+.icon-btn.expanded,
+.project-icon-btn.expanded,
+.inbox-btn.expanded,
+.smart-icon-btn.expanded {
+  background: rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.icon-btn.expanded::before,
+.project-icon-btn.expanded::before,
+.inbox-btn.expanded::before,
+.smart-icon-btn.expanded::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--nexus-accent);
+  border-radius: 0 2px 2px 0;
+  animation: indicatorFadeIn 150ms ease;
+}
+
+@keyframes indicatorFadeIn {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  to {
+    opacity: 1;
+    width: 3px;
+  }
+}
+
+/* Icon Button Transitions */
+.icon-btn,
+.project-icon-btn,
+.inbox-btn,
+.smart-icon-btn {
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme adjustments for icon-centric mode */
+:root[data-theme-type="light"] .expanded-icon-panel {
+  border-left-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme-type="light"] .panel-header {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme-type="light"] .panel-header .panel-action-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme-type="light"] .icon-btn.expanded,
+:root[data-theme-type="light"] .project-icon-btn.expanded,
+:root[data-theme-type="light"] .inbox-btn.expanded,
+:root[data-theme-type="light"] .smart-icon-btn.expanded {
+  background: rgba(0, 0, 0, 0.06);
+}
+
 /* ===== RECENT NOTES DROPDOWN ===== */
 .recent-notes-dropdown {
   position: absolute;
