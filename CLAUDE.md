@@ -211,10 +211,10 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.0 In Development 🚧
+## 🎯 Current Status: v1.16.0 Complete ✅
 
 **Version:** 1.16.0 (Icon-Centric Sidebar Expansion)
-**Branch:** `feat/icon-expansion` (in development)
+**Branch:** `feat/icon-expansion` (ready for merge)
 **Target:** v1.16.0 release
 **Install:** `brew install --cask data-wise/tap/scribe` (v1.14.0 stable)
 
@@ -222,49 +222,210 @@ scribe help --all      # Full reference
 
 **Sidebar Architecture Refactor - Complete ✅**
 
-Transition from global `sidebarMode` to per-icon expansion where each icon (Inbox, Smart Folders, Pinned Projects) independently expands with its own preferred view mode (compact or card).
+Transitioned from global `sidebarMode` to per-icon expansion where each icon (Inbox, Smart Folders, Pinned Projects) independently expands with its own preferred view mode (compact or card).
 
 **Key Changes:**
 - ✅ **Icon-Centric Expansion** - Icon bar always visible (48px), icons control expansion
 - ✅ **Per-Icon Mode Preferences** - Each icon remembers compact/card preference
 - ✅ **Accordion Pattern** - Only one icon expanded at a time
 - ✅ **Global Width Management** - Shared compact/card widths across all icons
-- ✅ **No More Mode Cycling** - Removed ⌘0 shortcut, no global mode state
+- ✅ **Removed Shortcuts** - Deleted ⌘B (toggle sidebar) shortcut, no global mode state
+- ✅ **Smooth Animations** - 200ms cubic-bezier transitions, slide-in panels, expanded indicators
 
 **Architecture:**
 ```
-┌────────────────────────────────────────┐
-│ IconBar (48px) │ ExpandedIconPanel     │
-│ - Always visible │ - Conditional         │
-│ - Inbox          │ - CompactListView    │
-│ - Smart Icons    │   OR                 │
-│ - Pinned Vaults  │ - CardGridView       │
-└────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│ Icon-Centric Mode (v1.16.0)                                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌─────┐  ┌──────────────────────────────────────────┐     │
+│  │  I  │  │ Expanded Icon Panel                       │     │
+│  │  N  │  │ ┌──────────────────────────────────────┐ │     │
+│  │  B  │  │ │ Panel Header (Title + Mode Toggle)   │ │     │
+│  │  O  │  │ └──────────────────────────────────────┘ │     │
+│  │  X  │  │                                           │     │
+│  └─────┘  │ ┌──────────────────────────────────────┐ │     │
+│           │ │                                       │ │     │
+│  ┌─────┐  │ │   CompactListView                    │ │     │
+│  │  R  │  │ │      OR                               │ │     │
+│  │  E  │  │ │   CardGridView                        │ │     │
+│  │  S  │  │ │                                       │ │     │
+│  └─────┘  │ │   (mode determined by icon's         │ │     │
+│           │ │    preferredMode setting)             │ │     │
+│  ┌─────┐  │ │                                       │ │     │
+│  │ ... │  │ └──────────────────────────────────────┘ │     │
+│  └─────┘  └──────────────────────────────────────────┘     │
+│           Icon Bar (48px)    Expanded Panel (conditional)   │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**State Changes:**
-- `sidebarMode` → `expandedIcon: { type: 'vault'|'smart', id: string } | null`
-- `lastExpandedMode` → Per-icon `preferredMode: 'compact' | 'card'`
-- New: `expandVault()`, `expandSmartIcon()`, `collapseAll()`, `toggleIcon()`, `setIconMode()`
-- Removed: `cycleSidebarMode()`, `setSidebarMode()`, `toggleSidebarCollapsed()`
+**Component Hierarchy:**
+```
+MissionSidebar.tsx (icon-centric-mode)
+├── IconBar.tsx (48px fixed width, always visible)
+│   ├── InboxButton
+│   ├── SmartIconButton (Research, Teaching, R Package, R Dev, Generic)
+│   ├── VaultIconButton (Pinned Projects)
+│   ├── Spacer
+│   └── ActivityBar
+│
+└── ExpandedIconPanel.tsx (conditional, width = sidebarWidth - 48)
+    ├── PanelHeader
+    │   ├── Icon Label
+    │   ├── Mode Toggle Button (compact ⇄ card)
+    │   └── Close Button
+    │
+    └── Content (based on expandedIcon type + mode)
+        ├── CompactListView.tsx (if mode === 'compact')
+        │   ├── ProjectList (for smart icons)
+        │   └── NoteList (for vault icons)
+        │
+        └── CardGridView.tsx (if mode === 'card')
+            ├── ProjectCards (for smart icons)
+            └── NoteCards (for vault icons)
+```
 
-**Implementation:**
+**State Management (useAppViewStore.ts):**
+
+```typescript
+// Removed (v1.15.0 - Global Mode System)
+sidebarMode: 'icon' | 'compact' | 'card'  // ❌ REMOVED
+lastExpandedMode: 'compact' | 'card' | null  // ❌ REMOVED
+lastModeChangeTimestamp: number  // ❌ REMOVED
+setSidebarMode(mode)  // ❌ REMOVED
+cycleSidebarMode()  // ❌ REMOVED
+toggleSidebarCollapsed()  // ❌ REMOVED
+
+// Added (v1.16.0 - Icon-Centric System)
+expandedIcon: ExpandedIconType | null  // ✅ Which icon is expanded
+  where ExpandedIconType = { type: 'vault', id: string } | { type: 'smart', id: SmartIconId }
+
+// Per-icon mode preferences stored in icon objects:
+PinnedVault.preferredMode: 'compact' | 'card'  // ✅ Each vault remembers mode
+SmartIcon.preferredMode: 'compact' | 'card'    // ✅ Each smart icon remembers mode
+
+// New Actions:
+expandVault(vaultId: string)  // ✅ Expand vault icon, set width from preferredMode
+expandSmartIcon(iconId: SmartIconId)  // ✅ Expand smart icon, set width
+collapseAll()  // ✅ Collapse to icon-only mode (48px width)
+toggleIcon(type: 'vault'|'smart', id: string)  // ✅ Accordion toggle
+setIconMode(type, id, mode: 'compact'|'card')  // ✅ Set icon's preferred mode
+
+// Global Width Settings (shared across all icons):
+compactModeWidth: number  // Default 240px - applied when icon uses compact mode
+cardModeWidth: number     // Default 320px - applied when icon uses card mode
+```
+
+**Accordion Pattern Implementation:**
+
+```typescript
+toggleIcon: (type, id) => {
+  const { expandedIcon, expandVault, expandSmartIcon, collapseAll } = get()
+
+  // If clicking already expanded icon, collapse it
+  if (expandedIcon?.type === type && expandedIcon?.id === id) {
+    collapseAll()
+    return
+  }
+
+  // Otherwise expand this icon (auto-collapses others)
+  if (type === 'vault') {
+    expandVault(id)
+  } else {
+    expandSmartIcon(id as SmartIconId)
+  }
+}
+```
+
+**CSS Structure (index.css):**
+
+```css
+/* Icon-Centric Mode Container */
+.mission-sidebar.icon-centric-mode {
+  display: flex;
+  flex-direction: row;
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Icon Bar (Always Visible) */
+.icon-bar {
+  width: 48px;
+  flex-shrink: 0;
+  background: var(--nexus-bg-primary);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Expanded Icon Panel (Conditional) */
+.expanded-icon-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--nexus-bg-secondary);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  animation: slideInFromLeft 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Expanded Icon Indicator (3px accent bar) */
+.icon-btn.expanded::before,
+.smart-icon-btn.expanded::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--nexus-accent);
+  border-radius: 0 2px 2px 0;
+  animation: indicatorFadeIn 150ms ease;
+}
+
+@keyframes indicatorFadeIn {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  to {
+    opacity: 1;
+    width: 3px;
+  }
+}
+```
+
+**Implementation Phases:**
 - Phase 1: ✅ State refactor (types, store migration)
-- Phase 2A-D: ✅ Component extraction and refactor
-- Phase 3: ✅ Remove deprecated shortcuts
-- Phase 4: ✅ Test updates (2234 passing)
-- Phase 5: 🚧 Polish & documentation (in progress)
+- Phase 2: ✅ Component cleanup (removed 5,724 lines deprecated code)
+- Phase 3: ✅ Remove deprecated shortcuts (⌘B)
+- Phase 4: ✅ Test updates (64 tests passing)
+- Phase 5: ✅ CSS transitions + documentation
 
 **Testing:**
-- ✅ 2234 tests passing
-- ✅ 25 new icon-centric expansion unit tests
+- ✅ 64 icon-centric tests passing (25 core + 23 edge cases + 16 E2E)
+- ✅ 100% Phase 1/2 state management coverage
 - ✅ TypeScript: 0 errors
 - ✅ All production code compiles cleanly
 
 **Migration:**
 - Automatic v1.15.0 → v1.16.0 localStorage migration
-- Old `sidebarMode`, `lastExpandedMode` keys cleaned up
-- Preserves user's last expanded smart icon
+- Old keys cleaned: `sidebarMode`, `lastExpandedMode`, `lastModeChangeTimestamp`
+- Preserves user's last expanded smart icon as `expandedIcon`
+- Defaults all icons to compact mode on first launch
+
+**Keyboard Shortcuts Removed:**
+- ⌘B - Toggle Left Sidebar (no longer needed, click icons instead)
+- ⌘0 - Collapse Sidebar (no longer needed, click expanded icon to collapse)
 
 ---
 
