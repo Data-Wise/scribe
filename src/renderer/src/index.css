@@ -3366,6 +3366,93 @@ mark {
   white-space: nowrap;
 }
 
+/* ============================================================
+   Inbox Card View Styles
+   Card-based layout for inbox notes with preview
+   ============================================================ */
+
+/* Card Container - follows .project-card pattern */
+.inbox-note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  text-align: left;
+  transition: all 150ms ease;
+  min-width: 0; /* Critical for child truncation */
+}
+
+.inbox-note-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Card Header - Icon + Title row */
+.note-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0; /* Allow title to truncate */
+}
+
+.note-card-header svg {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0; /* Icon never shrinks */
+}
+
+.note-card-header .note-title {
+  flex: 1;
+  min-width: 0; /* Enable ellipsis */
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-note-card:hover .note-card-header .note-title {
+  color: var(--nexus-accent);
+}
+
+/* Card Preview - Multi-line content preview */
+.note-card-preview {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--nexus-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Show 3 lines max */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+/* Card Footer - Timestamp + Word count */
+.note-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04); /* Subtle separator */
+}
+
+.note-card-footer .note-timestamp,
+.note-card-footer .note-wordcount {
+  white-space: nowrap;
+}
+
+.note-card-footer .note-wordcount {
+  font-variant-numeric: tabular-nums; /* Align numbers */
+}
+
 /* Compact Project Item */
 .compact-project-item {
   width: 100%;
