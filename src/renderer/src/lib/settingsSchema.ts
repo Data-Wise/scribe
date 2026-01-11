@@ -457,6 +457,35 @@ const appearanceCategory: SettingsCategoryData = {
       ]
     },
     {
+      id: 'icon-glow',
+      title: 'Icon Glow Effect',
+      description: 'Customize active project icon glow',
+      collapsed: false,
+      settings: [
+        {
+          id: 'appearance.iconGlowEffect',
+          type: 'toggle',
+          label: 'Enable Icon Glow',
+          description: 'Show glow effect on active project icons',
+          defaultValue: true,
+          addedInVersion: 'v1.16.0'
+        },
+        {
+          id: 'appearance.iconGlowIntensity',
+          type: 'select',
+          label: 'Glow Intensity',
+          description: 'Control the intensity of the glow effect',
+          defaultValue: 'subtle',
+          options: [
+            { label: 'Subtle - Minimal glow (Recommended)', value: 'subtle' },
+            { label: 'Medium - Balanced visibility', value: 'medium' },
+            { label: 'Prominent - Strong glow', value: 'prominent' }
+          ],
+          addedInVersion: 'v1.16.0'
+        }
+      ]
+    },
+    {
       id: 'terminal',
       title: 'Terminal Appearance',
       description: 'Customize terminal styling',

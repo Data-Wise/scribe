@@ -4,11 +4,12 @@ interface TooltipProps {
   children: React.ReactElement
   content: string
   delay?: number
+  hideDelay?: number
 }
 
 type Position = 'top' | 'bottom' | 'left' | 'right'
 
-export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
+export function Tooltip({ children, content, delay = 0, hideDelay = 200 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState<Position>('top')
   const timeoutRef = useRef<NodeJS.Timeout>()
@@ -107,7 +108,7 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
   }
 
   const getArrowStyles = (): string => {
-    const base = 'absolute w-2 h-2 bg-gray-900/95 rotate-45'
+    const base = 'tooltip-arrow'
     switch (position) {
       case 'top':
         return `${base} bottom-[-4px] left-1/2 -translate-x-1/2`
@@ -134,7 +135,10 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
-    setIsVisible(false)
+    // Give user time to move mouse to the tooltip (grace period)
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(false)
+    }, hideDelay)
   }
 
   useEffect(() => {
@@ -178,8 +182,16 @@ export function Tooltip({ children, content, delay = 500 }: TooltipProps) {
           ref={tooltipRef}
           id={tooltipId.current}
           role="tooltip"
-          className="fixed z-[9999] px-2 py-1.5 text-xs text-white bg-gray-900/95 rounded shadow-lg pointer-events-none whitespace-pre-line max-w-[280px] animate-in fade-in duration-150"
+          className="simple-tooltip"
           style={getPositionStyles()}
+          onMouseEnter={() => {
+            // Cancel hide timeout when mouse enters tooltip
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current)
+            }
+            setIsVisible(true)
+          }}
+          onMouseLeave={handleMouseLeave}
         >
           {content}
           <div className={getArrowStyles()} />

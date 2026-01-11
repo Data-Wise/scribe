@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
-import { Plus, FolderPlus } from 'lucide-react'
+import { Plus, FolderPlus, Folder } from 'lucide-react'
+import * as LucideIcons from 'lucide-react'
 import { Project, Note, ExpandedIconType, SmartIconId } from '../../types'
 import { StatusDot } from './StatusDot'
 import { Tooltip } from './Tooltip'
@@ -280,6 +281,15 @@ interface ProjectIconButtonProps {
   isDragOver?: boolean
 }
 
+// Helper to get Lucide icon component by name
+function getProjectIcon(iconName?: string) {
+  if (!iconName) return Folder
+
+  // Try to get the icon from lucide-react
+  const IconComponent = (LucideIcons as any)[iconName]
+  return IconComponent || Folder
+}
+
 function ProjectIconButton({
   project,
   isExpanded,
@@ -293,6 +303,7 @@ function ProjectIconButton({
   isDragOver = false
 }: ProjectIconButtonProps) {
   const status = project.status || 'active'
+  const Icon = getProjectIcon(project.icon)
 
   return (
     <button
@@ -306,8 +317,11 @@ function ProjectIconButton({
       onDrop={onDrop}
       onDragEnd={onDragEnd}
     >
-      {/* Status dot */}
-      <StatusDot status={status} size="md" />
+      {/* Project icon */}
+      <Icon className="project-icon-main" size={18} />
+
+      {/* Status dot overlay (bottom-right corner) */}
+      <StatusDot status={status} size="sm" className="project-status-overlay" />
 
       {/* Note count badge */}
       {noteCount > 0 && (

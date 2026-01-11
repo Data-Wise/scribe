@@ -8,7 +8,7 @@ import { NoteContextMenu } from './NoteContextMenu'
 import { EmptyState } from './EmptyState'
 import { useAppViewStore } from '../../store/useAppViewStore'
 import { getIconByName } from '../IconPicker'
-import { ProjectTooltip } from './ContextualTooltip'
+import { ProjectPreviewTooltip } from './ProjectPreviewTooltip'
 
 /**
  * CompactListView - Reusable compact list renderer
@@ -364,14 +364,9 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
         aria-selected={false}
         tabIndex={isFocused ? 0 : -1}
       >
-        <ProjectTooltip
-          projectName={project.name}
-          status={statusLabel}
+        <ProjectPreviewTooltip
+          project={project}
           noteCount={noteCount}
-          onOpen={onClick}
-          onPin={onPin}
-          onMore={onContextMenu}
-          isPinned={isPinned}
         >
           <button
             className="compact-project-item"
@@ -385,7 +380,7 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
               <ActivityDots projectId={project.id} notes={allNotes} size="sm" />
             </div>
           </button>
-        </ProjectTooltip>
+        </ProjectPreviewTooltip>
       </div>
     )
   }

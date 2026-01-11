@@ -201,6 +201,7 @@ export function MissionSidebar({
           projects={projects}
           notes={notes}
           expandedIcon={expandedIcon}
+          currentProjectId={currentProjectId}
           mode={currentMode}
           width={width}
           onToggleMode={handleToggleMode}

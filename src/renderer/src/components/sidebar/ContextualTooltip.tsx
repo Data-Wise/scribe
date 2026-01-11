@@ -14,6 +14,7 @@ interface ContextualTooltipProps {
   subtitle?: string
   actions?: TooltipAction[]
   delay?: number
+  hideDelay?: number
 }
 
 type Position = 'top' | 'bottom' | 'left' | 'right'
@@ -33,7 +34,8 @@ export function ContextualTooltip({
   title,
   subtitle,
   actions = [],
-  delay = 500
+  delay = 0,
+  hideDelay = 200
 }: ContextualTooltipProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState<Position>('right')
@@ -162,7 +164,10 @@ export function ContextualTooltip({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
-    setIsVisible(false)
+    // Give user time to move mouse to the tooltip (200ms grace period)
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(false)
+    }, hideDelay)
   }
 
   useEffect(() => {
@@ -208,7 +213,13 @@ export function ContextualTooltip({
           role="tooltip"
           className="contextual-tooltip"
           style={getPositionStyles()}
-          onMouseEnter={() => setIsVisible(true)}
+          onMouseEnter={() => {
+            // Cancel any pending hide timeout when mouse enters tooltip
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current)
+            }
+            setIsVisible(true)
+          }}
           onMouseLeave={handleMouseLeave}
         >
           {/* Content */}

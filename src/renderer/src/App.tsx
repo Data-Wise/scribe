@@ -5,6 +5,7 @@ import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore
 import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
+import { useIconGlowEffect } from './hooks/useIconGlowEffect'
 import { HybridEditor } from './components/HybridEditor'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
@@ -98,6 +99,9 @@ function App() {
 
   // Apply Forest Night theme
   useForestTheme()
+
+  // Apply icon glow effect settings
+  useIconGlowEffect()
 
   // Window dragging hook for editor header
   const dragRegion = useDragRegion()

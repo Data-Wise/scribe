@@ -21,6 +21,7 @@ interface ExpandedIconPanelProps {
 
   // Expansion state
   expandedIcon: ExpandedIconType
+  currentProjectId: string | null  // From parent (App-level state)
   mode: 'compact' | 'card'
   width: number
 
@@ -48,6 +49,7 @@ export function ExpandedIconPanel({
   projects,
   notes,
   expandedIcon,
+  currentProjectId,
   mode,
   width,
   onToggleMode,
@@ -69,13 +71,12 @@ export function ExpandedIconPanel({
   const smartIcons = useAppViewStore(state => state.smartIcons)
 
   // Determine content based on expandedIcon type
-  const { label, showInboxNotes, filteredProjects, currentProjectId } = useMemo(() => {
+  const { label, showInboxNotes, filteredProjects } = useMemo(() => {
     if (!expandedIcon) {
       return {
         label: '',
         showInboxNotes: false,
-        filteredProjects: [],
-        currentProjectId: null
+        filteredProjects: []
       }
     }
 
@@ -85,16 +86,14 @@ export function ExpandedIconPanel({
         return {
           label: 'Inbox',
           showInboxNotes: true,
-          filteredProjects: [],
-          currentProjectId: null
+          filteredProjects: []
         }
       }
       // Pinned project: Show all projects with this one selected
       return {
         label: projects.find(p => p.id === expandedIcon.id)?.name || 'Project',
         showInboxNotes: false,
-        filteredProjects: projects,
-        currentProjectId: expandedIcon.id
+        filteredProjects: projects
       }
     }
 
@@ -104,8 +103,7 @@ export function ExpandedIconPanel({
     return {
       label: smartIcon?.label || 'Projects',
       showInboxNotes: false,
-      filteredProjects: filtered,
-      currentProjectId: null
+      filteredProjects: filtered
     }
   }, [expandedIcon, projects, smartIcons])
 
