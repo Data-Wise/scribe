@@ -3314,6 +3314,58 @@ mark {
   color: var(--nexus-text-muted);
 }
 
+/* Inbox Note Items (for Inbox expansion) */
+.inbox-note-item-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 150ms ease;
+  width: 100%;
+  min-width: 0; /* Critical for truncation */
+  border-radius: 6px;
+}
+
+.inbox-note-item-compact:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.inbox-note-item-compact .note-icon {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
+.inbox-note-item-compact .note-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0; /* Allow shrinking */
+}
+
+.inbox-note-item-compact .note-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-note-item-compact:hover .note-title {
+  color: var(--nexus-accent);
+}
+
+.inbox-note-item-compact .note-timestamp {
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  white-space: nowrap;
+}
+
 /* Compact Project Item */
 .compact-project-item {
   width: 100%;
