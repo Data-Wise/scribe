@@ -91,7 +91,6 @@ npm run build
 | **⌘D** | Daily note |
 | **⌘E** | Toggle edit/preview |
 | **⌘⇧F** | Focus mode |
-| **⌘B** | Toggle file list |
 | **⌘⇧B** | Toggle tags panel |
 | **⌘⌥1-9** | Quick Actions (v1.9.0+) |
 | **⌘Alt+0-9** | Switch themes |
