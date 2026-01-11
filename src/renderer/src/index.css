@@ -3344,10 +3344,12 @@ mark {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0; /* Critical for flex truncation */
 }
 
 .compact-project-item .project-name {
   flex: 1;
+  min-width: 0; /* Allow shrinking for ellipsis */
   font-size: 13px;
   font-weight: 500;
   color: var(--nexus-text-primary);
@@ -3666,6 +3668,14 @@ mark {
 .panel-header .panel-action-btn:hover {
   background: rgba(255, 255, 255, 0.06);
   color: var(--nexus-text-primary);
+}
+
+/* Panel Content - Scrollable area */
+.panel-content {
+  flex: 1;
+  overflow-y: auto; /* Vertical scroll for long content */
+  overflow-x: hidden; /* Never horizontal scroll */
+  min-height: 0; /* Allow flex shrinking */
 }
 
 /* Icon Button Expanded State */
@@ -4721,6 +4731,7 @@ mark {
   text-align: left;
   transition: all 150ms ease;
   width: 100%;
+  min-width: 0; /* Critical for nested note truncation */
 }
 
 .compact-project-wrapper .project-note-item:hover {
@@ -4733,6 +4744,8 @@ mark {
 }
 
 .compact-project-wrapper .project-note-item .note-title {
+  flex: 1;
+  min-width: 0; /* Allow shrinking for ellipsis */
   font-size: 12px;
   color: var(--nexus-text-secondary);
   white-space: nowrap;
