@@ -115,7 +115,7 @@ export function ExpandedIconPanel({
   const panelWidth = width - 48
 
   return (
-    <div className="expanded-icon-panel" style={{ width: panelWidth }}>
+    <div className="expanded-icon-panel" data-testid="expanded-icon-panel" style={{ width: panelWidth }}>
       {/* Header with mode toggle and close */}
       <div className="panel-header">
         <h3 className="panel-title">{label}</h3>
