@@ -363,4 +363,159 @@ describe('ExpandedIconPanel Component', () => {
       expect(compactView).toHaveAttribute('data-show-inbox', 'false')
     })
   })
+
+  describe('Mode Toggle', () => {
+    /**
+     * EIP-11: Renders LayoutGrid icon in compact mode
+     * Note: We test for the button with correct tooltip instead of icon component
+     */
+    it('renders mode toggle button with "card view" tooltip in compact mode', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />)
+
+      const toggleButton = screen.getByTitle('Switch to card view')
+      expect(toggleButton).toBeInTheDocument()
+      expect(toggleButton).toHaveAttribute('aria-label', 'Switch to card view')
+    })
+
+    /**
+     * EIP-12: Renders LayoutList icon in card mode
+     * Note: We test for the button with correct tooltip instead of icon component
+     */
+    it('renders mode toggle button with "compact view" tooltip in card mode', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
+
+      const toggleButton = screen.getByTitle('Switch to compact view')
+      expect(toggleButton).toBeInTheDocument()
+      expect(toggleButton).toHaveAttribute('aria-label', 'Switch to compact view')
+    })
+
+    /**
+     * EIP-13: Calls onToggleMode when mode toggle clicked
+     */
+    it('calls onToggleMode when mode toggle button clicked', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} />)
+
+      const toggleButton = screen.getByTitle(/switch to/i)
+      toggleButton.click()
+
+      expect(props.onToggleMode).toHaveBeenCalledTimes(1)
+    })
+
+    /**
+     * EIP-14: Shows correct tooltip for current mode
+     */
+    it('shows "Switch to card view" in compact mode', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />)
+
+      expect(screen.getByTitle('Switch to card view')).toBeInTheDocument()
+    })
+
+    it('shows "Switch to compact view" in card mode', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
+
+      expect(screen.getByTitle('Switch to compact view')).toBeInTheDocument()
+    })
+  })
+
+  describe('View Switching', () => {
+    /**
+     * EIP-15: Renders CompactListView in compact mode
+     */
+    it('renders CompactListView when mode is compact', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />)
+
+      expect(screen.getByTestId('compact-list-view')).toBeInTheDocument()
+      expect(screen.queryByTestId('card-grid-view')).not.toBeInTheDocument()
+    })
+
+    /**
+     * EIP-16: Renders CardGridView in card mode
+     */
+    it('renders CardGridView when mode is card', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
+
+      expect(screen.getByTestId('card-grid-view')).toBeInTheDocument()
+      expect(screen.queryByTestId('compact-list-view')).not.toBeInTheDocument()
+    })
+
+    /**
+     * EIP-17: Switches from CompactListView to CardGridView on mode change
+     */
+    it('switches views when mode prop changes', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      const { rerender } = render(
+        <ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />
+      )
+
+      expect(screen.getByTestId('compact-list-view')).toBeInTheDocument()
+
+      rerender(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
+
+      expect(screen.queryByTestId('compact-list-view')).not.toBeInTheDocument()
+      expect(screen.getByTestId('card-grid-view')).toBeInTheDocument()
+    })
+
+    /**
+     * EIP-18: Preserves scroll position when switching modes
+     * Note: Skipped - scroll preservation is managed by parent container,
+     * not by ExpandedIconPanel component itself.
+     */
+    it.skip('preserves scroll position when switching between modes', () => {
+      // Skipped - scroll state managed by parent MissionSidebar component
+      // This would require testing the parent container's scroll behavior
+    })
+  })
+
+  describe('Close Button', () => {
+    /**
+     * EIP-19: Renders close button
+     */
+    it('renders close button with correct tooltip', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} />)
+
+      expect(screen.getByTitle('Collapse')).toBeInTheDocument()
+      expect(screen.getByLabelText('Collapse panel')).toBeInTheDocument()
+    })
+
+    /**
+     * EIP-20: Calls onClose when close button clicked
+     */
+    it('calls onClose when close button clicked', () => {
+      const props = createDefaultProps()
+      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
+
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} />)
+
+      const closeButton = screen.getByTitle('Collapse')
+      closeButton.click()
+
+      expect(props.onClose).toHaveBeenCalledTimes(1)
+    })
+  })
 })
