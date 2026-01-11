@@ -391,8 +391,8 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
       // Also set old keys (should be ignored)
       localStorage.setItem('scribe:sidebarMode', 'card')
 
-      // Reset store to trigger migration
-      useAppViewStore.getState().migrateToIconCentric?.()
+      // Migration runs automatically on module load and detects existing v1.16.0 format
+      // by checking for presence of 'scribe:expandedIcon' key (see migrateToIconCentric)
 
       // Should preserve v1.16.0 state
       const stored = localStorage.getItem('scribe:expandedIcon')

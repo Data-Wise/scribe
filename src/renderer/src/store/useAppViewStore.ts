@@ -1,6 +1,5 @@
 import { create } from 'zustand'
-import type { PinnedVault, SidebarMode, SmartIcon, SmartIconId, ProjectType, ExpandedIconType } from '../types'
-import { useSettingsStore } from './useSettingsStore'
+import type { PinnedVault, SmartIcon, SmartIconId, ProjectType, ExpandedIconType } from '../types'
 
 /**
  * App View Store - Manages sidebar state, tabs, and session tracking
@@ -560,7 +559,7 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
       if (type === 'vault') {
         expandVault(id)
       } else {
-        expandSmartIcon(id)
+        expandSmartIcon(id as SmartIconId)
       }
     },
 
