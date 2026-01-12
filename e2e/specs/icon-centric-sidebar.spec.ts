@@ -286,17 +286,21 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await firstSmartIcon.click()
       await basePage.page.waitForTimeout(300)
 
-      // Switch to card mode
-      const modeToggle = basePage.page.locator('.expanded-icon-panel .panel-header button').nth(1)
-      const initialMode = await basePage.page.locator('.project-cards-container').isVisible().catch(() => false) ? 'card' : 'compact'
+      // Get mode toggle button
+      const modeToggle = basePage.page.locator('.expanded-icon-panel button[aria-label*="Switch to"]')
 
-      if (initialMode === 'compact') {
+      // Check current mode from button aria-label
+      const currentAriaLabel = await modeToggle.getAttribute('aria-label')
+      const isInCompactMode = currentAriaLabel?.includes('Switch to card')
+
+      // Switch to card mode if currently in compact
+      if (isInCompactMode) {
         await modeToggle.click()
         await basePage.page.waitForTimeout(300)
       }
 
-      // Verify card mode
-      await expect(basePage.page.locator('.project-cards-container')).toBeVisible()
+      // Verify we're in card mode (button should say "Switch to compact view")
+      await expect(modeToggle).toHaveAttribute('aria-label', 'Switch to compact view')
 
       // Collapse and re-expand
       await firstSmartIcon.click()
@@ -304,8 +308,9 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await firstSmartIcon.click()
       await basePage.page.waitForTimeout(300)
 
-      // Should still be in card mode
-      await expect(basePage.page.locator('.project-cards-container')).toBeVisible()
+      // Should still be in card mode (button should still say "Switch to compact view")
+      const modeToggleAfter = basePage.page.locator('.expanded-icon-panel button[aria-label*="Switch to"]')
+      await expect(modeToggleAfter).toHaveAttribute('aria-label', 'Switch to compact view')
     })
   })
 
