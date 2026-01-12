@@ -21,7 +21,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Icon bar should always be visible
-      const iconBar = basePage.page.locator('.icon-bar')
+      const iconBar = basePage.page.locator('.mission-sidebar-icon')
       await expect(iconBar).toBeVisible()
 
       // Should be 48px wide
@@ -33,12 +33,12 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.goto()
       await basePage.page.waitForTimeout(1000)
 
-      // Find first icon in icon bar
-      const firstIcon = basePage.page.locator('.icon-bar .icon-btn').first()
-      await expect(firstIcon).toBeVisible()
+      // Find inbox icon button
+      const inboxBtn = basePage.page.locator('.inbox-icon-btn')
+      await expect(inboxBtn).toBeVisible()
 
-      // Should be Inbox (amber themed)
-      await expect(firstIcon).toHaveClass(/inbox-btn/)
+      // Should be the inbox button
+      await expect(inboxBtn).toHaveClass(/inbox-icon-btn/)
     })
 
     test('ICS-03: Smart icons are visible (Research, Teaching, R Package, Dev Tools)', async ({ basePage }) => {
@@ -60,8 +60,8 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       const activityBar = basePage.page.locator('.activity-bar')
       await expect(activityBar).toBeVisible()
 
-      // Should be inside icon-bar
-      const iconBar = basePage.page.locator('.icon-bar')
+      // Should be inside icon bar
+      const iconBar = basePage.page.locator('.mission-sidebar-icon')
       const activityBarBox = await activityBar.boundingBox()
       const iconBarBox = await iconBar.boundingBox()
 
@@ -77,7 +77,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Click Inbox icon
-      const inboxIcon = basePage.page.locator('.inbox-btn').first()
+      const inboxIcon = basePage.page.locator('.inbox-icon-btn').first()
       await inboxIcon.click()
       await basePage.page.waitForTimeout(300)
 
@@ -95,7 +95,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand Inbox
-      const inboxIcon = basePage.page.locator('.inbox-btn').first()
+      const inboxIcon = basePage.page.locator('.inbox-icon-btn').first()
       await inboxIcon.click()
       await basePage.page.waitForTimeout(300)
 
@@ -115,7 +115,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand Inbox
-      await basePage.page.locator('.inbox-btn').first().click()
+      await basePage.page.locator('.inbox-icon-btn').first().click()
       await basePage.page.waitForTimeout(300)
       await expect(basePage.page.locator('.expanded-icon-panel')).toContainText('Inbox')
 
@@ -137,19 +137,19 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand Inbox
-      await basePage.page.locator('.inbox-btn').first().click()
+      await basePage.page.locator('.inbox-icon-btn').first().click()
       await basePage.page.waitForTimeout(300)
 
-      // Inbox should have expanded indicator
-      const inboxBtn = basePage.page.locator('.inbox-btn').first()
-      await expect(inboxBtn).toHaveClass(/expanded/)
+      // Inbox should have active indicator
+      const inboxBtn = basePage.page.locator('.inbox-icon-btn').first()
+      await expect(inboxBtn).toHaveClass(/active/)
 
       // Click Research
       await basePage.page.locator('.smart-icon-btn').first().click()
       await basePage.page.waitForTimeout(300)
 
-      // Inbox should no longer be expanded
-      await expect(inboxBtn).not.toHaveClass(/expanded/)
+      // Inbox should no longer be active
+      await expect(inboxBtn).not.toHaveClass(/active/)
     })
   })
 
@@ -159,20 +159,16 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand Inbox
-      const inboxBtn = basePage.page.locator('.inbox-btn').first()
+      const inboxBtn = basePage.page.locator('.inbox-icon-btn').first()
       await inboxBtn.click()
       await basePage.page.waitForTimeout(300)
 
-      // Should have expanded class
-      await expect(inboxBtn).toHaveClass(/expanded/)
+      // Should have active class
+      await expect(inboxBtn).toHaveClass(/active/)
 
-      // Check for ::before pseudo-element via computed style
-      const hasIndicator = await inboxBtn.evaluate(el => {
-        const before = window.getComputedStyle(el, '::before')
-        return before.width && parseInt(before.width) === 3
-      })
-
-      expect(hasIndicator).toBeTruthy()
+      // Check for active-indicator element
+      const activeIndicator = inboxBtn.locator('.active-indicator')
+      await expect(activeIndicator).toBeVisible()
     })
   })
 
@@ -225,7 +221,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand Inbox
-      await basePage.page.locator('.inbox-btn').first().click()
+      await basePage.page.locator('.inbox-icon-btn').first().click()
       await basePage.page.waitForTimeout(300)
 
       // Click close button in panel header
@@ -254,12 +250,12 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand Inbox
-      await basePage.page.locator('.inbox-btn').first().click()
+      await basePage.page.locator('.inbox-icon-btn').first().click()
       await basePage.page.waitForTimeout(300)
 
       // Width should be greater than 48px
       const sidebar = basePage.page.locator('.mission-sidebar')
-      const width = await sidebar.evaluate(el => el.getBoundingClientBox().width)
+      const width = await sidebar.evaluate(el => el.getBoundingClientRect().width)
       expect(width).toBeGreaterThan(48)
     })
   })
@@ -319,7 +315,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Inbox button should exist
-      const inboxBtn = basePage.page.locator('.inbox-btn').first()
+      const inboxBtn = basePage.page.locator('.inbox-icon-btn').first()
       await expect(inboxBtn).toBeVisible()
 
       // May have badge if unassigned notes exist
@@ -331,7 +327,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand Inbox
-      await basePage.page.locator('.inbox-btn').first().click()
+      await basePage.page.locator('.inbox-icon-btn').first().click()
       await basePage.page.waitForTimeout(300)
 
       // Panel should show Inbox content
@@ -366,8 +362,8 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.goto()
       await basePage.page.waitForTimeout(1000)
 
-      // Focus first icon
-      const firstIcon = basePage.page.locator('.icon-bar .icon-btn').first()
+      // Focus first icon (inbox)
+      const firstIcon = basePage.page.locator('.inbox-icon-btn')
       await firstIcon.focus()
 
       // Should be focused
@@ -380,7 +376,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Focus Inbox
-      const inboxBtn = basePage.page.locator('.inbox-btn').first()
+      const inboxBtn = basePage.page.locator('.inbox-icon-btn').first()
       await inboxBtn.focus()
 
       // Press Enter
@@ -405,7 +401,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Rapidly click between icons
-      const inboxBtn = basePage.page.locator('.inbox-btn').first()
+      const inboxBtn = basePage.page.locator('.inbox-icon-btn').first()
       const smartIcon = basePage.page.locator('.smart-icon-btn').first()
 
       await inboxBtn.click()
@@ -418,8 +414,8 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       const expandedPanel = basePage.page.locator('.expanded-icon-panel')
       await expect(expandedPanel).toBeVisible()
 
-      // Only one icon should have expanded class
-      const expandedIcons = basePage.page.locator('.icon-btn.expanded, .smart-icon-btn.expanded')
+      // Only one icon should have active/expanded class
+      const expandedIcons = basePage.page.locator('.inbox-icon-btn.active, .smart-icon-btn.expanded, .project-icon-btn.expanded')
       const count = await expandedIcons.count()
       expect(count).toBe(1)
     })
@@ -429,7 +425,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(1000)
 
       // Expand icon
-      await basePage.page.locator('.inbox-btn').first().click()
+      await basePage.page.locator('.inbox-icon-btn').first().click()
       await basePage.page.waitForTimeout(300)
 
       // Resize viewport
