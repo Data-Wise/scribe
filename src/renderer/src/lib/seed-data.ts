@@ -20,14 +20,16 @@ export const DEMO_PROJECTS = [
     type: 'generic' as const,
     status: 'active' as const,
     description: 'Learn how to use Scribe with these example notes',
-    color: '#3B82F6'
+    color: '#3B82F6',
+    icon: 'BookOpen'
   },
   {
     name: 'Research Notes',
     type: 'research' as const,
     status: 'active' as const,
     description: 'Example research project showcasing vault pinning',
-    color: '#8B5CF6'
+    color: '#8B5CF6',
+    icon: 'GraduationCap'
   }
 ] as const
 

@@ -83,9 +83,6 @@ class ScribeBrowserDB extends Dexie {
 // Singleton instance
 export const db = new ScribeBrowserDB()
 
-// Initialize on import
-db.initialize().catch(console.error)
-
 // Expose to window for E2E tests
 if (typeof window !== 'undefined') {
   ;(window as  any).scribeDb = db
@@ -163,6 +160,7 @@ export const seedDemoData = async (): Promise<boolean> => {
       status: project.status,
       description: project.description,
       color: project.color,
+      icon: project.icon,
       created_at: now,
       updated_at: now
     })
@@ -230,9 +228,40 @@ export const seedDemoData = async (): Promise<boolean> => {
     }
   }
 
+  // Auto-pin demo projects for new users (ADHD-friendly onboarding)
+  const pinnedVaults = [
+    {
+      id: 'inbox',
+      type: 'vault' as const,
+      order: 0,
+      preferredMode: 'compact' as const
+    },
+    {
+      id: gettingStartedId,
+      type: 'vault' as const,
+      order: 1,
+      preferredMode: 'compact' as const
+    },
+    {
+      id: researchNotesId,
+      type: 'vault' as const,
+      order: 2,
+      preferredMode: 'compact' as const
+    }
+  ]
+
+  // Save to localStorage (useAppViewStore key)
+  localStorage.setItem('scribe:pinnedVaults', JSON.stringify(pinnedVaults))
+
   console.log('[Scribe] Demo data seeded successfully')
   console.log(`  - ${SEED_DATA_SUMMARY.description}`)
+  console.log(`  - Auto-pinned ${pinnedVaults.length} vaults (Inbox + demo projects)`)
 
   return true
 }
 
+// Auto-run seed on module import (after db is initialized)
+;(async () => {
+  await db.initialize()
+  await seedDemoData()
+})().catch(console.error)

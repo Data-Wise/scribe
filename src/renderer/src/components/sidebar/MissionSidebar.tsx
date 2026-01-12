@@ -1,10 +1,9 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useMemo } from 'react'
 import { Project, Note } from '../../types'
 import { useAppViewStore, SIDEBAR_WIDTHS } from '../../store/useAppViewStore'
 import { useSettingsStore } from '../../store/useSettingsStore'
-import { IconBarMode } from './IconBarMode'
-import { CompactListMode } from './CompactListMode'
-import { CardViewMode } from './CardViewMode'
+import { IconBar } from './IconBar'
+import { ExpandedIconPanel } from './ExpandedIconPanel'
 import { ResizeHandle } from './ResizeHandle'
 import { PresetUpdateDialog } from '../PresetUpdateDialog'
 
@@ -53,7 +52,18 @@ export function MissionSidebar({
   onDaily,
   onOpenSettings
 }: MissionSidebarProps) {
-  const { sidebarMode, sidebarWidth, setSidebarMode, setSidebarWidth } = useAppViewStore()
+  // v1.16.0: Icon-Centric Expansion State
+  const {
+    expandedIcon,
+    sidebarWidth,
+    pinnedVaults,
+    smartIcons,
+    toggleIcon,
+    setIconMode,
+    collapseAll,
+    setSidebarWidth
+  } = useAppViewStore()
+
   const { settings, updateSetting } = useSettingsStore()
   const [presetDialogState, setPresetDialogState] = useState<{
     currentPreset: string
@@ -61,6 +71,18 @@ export function MissionSidebar({
     suggestedPreset: string
     suggestedWidth: number
   } | null>(null)
+
+  // Compute current mode from expanded icon's preferredMode
+  const currentMode = useMemo(() => {
+    if (!expandedIcon) return null
+
+    if (expandedIcon.type === 'vault') {
+      const vault = pinnedVaults.find(v => v.id === expandedIcon.id)
+      return vault?.preferredMode || 'compact'
+    }
+    const icon = smartIcons.find(i => i.id === expandedIcon.id)
+    return icon?.preferredMode || 'compact'
+  }, [expandedIcon, pinnedVaults, smartIcons])
 
   // Phase 6: Map width to closest preset
   const getPresetFromWidth = useCallback((width: number): string => {
@@ -131,68 +153,69 @@ export function MissionSidebar({
     setPresetDialogState(null)
   }, [])
 
+  // Toggle mode for currently expanded icon
+  const handleToggleMode = useCallback(() => {
+    if (!expandedIcon || !currentMode) return
+
+    const newMode = currentMode === 'compact' ? 'card' : 'compact'
+    setIconMode(expandedIcon.type, expandedIcon.id, newMode)
+  }, [expandedIcon, currentMode, setIconMode])
+
   // Handle double-click reset to default width
   const handleReset = useCallback(() => {
-    const defaultWidth = sidebarMode === 'compact'
+    if (!currentMode) return
+    const defaultWidth = currentMode === 'compact'
       ? SIDEBAR_WIDTHS.compact.default
       : SIDEBAR_WIDTHS.card.default
     setSidebarWidth(defaultWidth)
-  }, [sidebarMode, setSidebarWidth])
+  }, [currentMode, setSidebarWidth])
 
-  // Expand from icon to compact
-  const handleExpand = useCallback(() => {
-    setSidebarMode('compact')
-  }, [setSidebarMode])
-
-  // Collapse from compact to icon
-  const handleCollapse = useCallback(() => {
-    setSidebarMode('icon')
-  }, [setSidebarMode])
-
-  // Get current width based on mode
-  const getCurrentWidth = (): number => {
-    if (sidebarMode === 'icon') {
-      return SIDEBAR_WIDTHS.icon
-    }
-    return sidebarWidth
-  }
-
-  const width = getCurrentWidth()
-  const canResize = sidebarMode === 'compact' || sidebarMode === 'card'
+  // Get current width: 48px when collapsed, sidebarWidth when expanded
+  const width = expandedIcon ? sidebarWidth : SIDEBAR_WIDTHS.icon
+  const canResize = expandedIcon !== null
 
   return (
     <aside
-      className={`mission-sidebar mode-${sidebarMode}`}
+      className="mission-sidebar icon-centric-mode"
       style={{ width }}
-      data-mode={sidebarMode}
+      data-mode={expandedIcon ? currentMode : 'icon'}
       data-testid="left-sidebar"
     >
-      {sidebarMode === 'icon' && (
-        <IconBarMode
-          projects={projects}
-          notes={notes}
-          currentProjectId={currentProjectId}
-          onSelectProject={onSelectProject}
-          onCreateProject={onCreateProject}
-          onExpand={handleExpand}
-          onSearch={onSearch}
-          onDaily={onDaily}
-          onSettings={onOpenSettings}
-          onSelectNote={onSelectNote}
-        />
-      )}
+      {/* Icon bar - always visible */}
+      <IconBar
+        projects={projects}
+        notes={notes}
+        expandedIcon={expandedIcon}
+        onToggleVault={(id) => toggleIcon('vault', id)}
+        onToggleSmartIcon={(id) => toggleIcon('smart', id)}
+        onSearch={onSearch}
+        onDaily={onDaily}
+        onSettings={onOpenSettings}
+        onSelectNote={onSelectNote}
+        onCreateProject={onCreateProject}
+        onEditProject={onEditProject}
+        onArchiveProject={onArchiveProject}
+        onDeleteProject={onDeleteProject}
+        onPinProject={onPinProject}
+        onUnpinProject={onUnpinProject}
+        onNewNote={onNewNote}
+      />
 
-      {sidebarMode === 'compact' && (
-        <CompactListMode
+      {/* Expanded panel - conditional */}
+      {expandedIcon && currentMode && (
+        <ExpandedIconPanel
           projects={projects}
           notes={notes}
+          expandedIcon={expandedIcon}
           currentProjectId={currentProjectId}
+          mode={currentMode}
+          width={width}
+          onToggleMode={handleToggleMode}
+          onClose={collapseAll}
           onSelectProject={onSelectProject}
           onSelectNote={onSelectNote}
-          onCreateProject={onCreateProject}
           onNewNote={onNewNote}
-          onCollapse={handleCollapse}
-          width={width}
+          onCreateProject={onCreateProject}
           onEditProject={onEditProject}
           onArchiveProject={onArchiveProject}
           onDeleteProject={onDeleteProject}
@@ -202,34 +225,10 @@ export function MissionSidebar({
           onMoveNoteToProject={onMoveNoteToProject}
           onDuplicateNote={onDuplicateNote}
           onDeleteNote={onDeleteNote}
-          onOpenSettings={onOpenSettings}
         />
       )}
 
-      {sidebarMode === 'card' && (
-        <CardViewMode
-          projects={projects}
-          notes={notes}
-          currentProjectId={currentProjectId}
-          onSelectProject={onSelectProject}
-          onSelectNote={onSelectNote}
-          onCreateProject={onCreateProject}
-          onNewNote={onNewNote}
-          onCollapse={handleCollapse}
-          width={width}
-          onEditProject={onEditProject}
-          onArchiveProject={onArchiveProject}
-          onDeleteProject={onDeleteProject}
-          onPinProject={onPinProject}
-          onUnpinProject={onUnpinProject}
-          onRenameNote={onRenameNote}
-          onMoveNoteToProject={onMoveNoteToProject}
-          onDuplicateNote={onDuplicateNote}
-          onDeleteNote={onDeleteNote}
-          onOpenSettings={onOpenSettings}
-        />
-      )}
-
+      {/* Resize handle - only when expanded */}
       {canResize && (
         <ResizeHandle
           onResize={handleResize}
@@ -251,9 +250,4 @@ export function MissionSidebar({
       )}
     </aside>
   )
-}
-
-// Export for keyboard shortcut handler
-export function cycleSidebarMode(): void {
-  useAppViewStore.getState().cycleSidebarMode()
 }

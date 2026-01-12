@@ -5,6 +5,7 @@ import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore
 import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
+import { useIconGlowEffect } from './hooks/useIconGlowEffect'
 import { HybridEditor } from './components/HybridEditor'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
@@ -99,18 +100,20 @@ function App() {
   // Apply Forest Night theme
   useForestTheme()
 
+  // Apply icon glow effect settings
+  useIconGlowEffect()
+
   // Window dragging hook for editor header
   const dragRegion = useDragRegion()
 
-  // Sidebar mode and tabs from app view store
+  // Sidebar and tabs from app view store
   const {
-    cycleSidebarMode,
-    toggleSidebarCollapsed,
-    setSidebarMode,
     sidebarWidth,
     setSidebarWidth,
     setLastActiveNote,
     updateSessionTimestamp,
+    expandSmartIcon,
+    collapseAll,
     // Tab state
     openTabs,
     activeTabId,
@@ -121,8 +124,6 @@ function App() {
     // Pinned vaults
     addPinnedVault,
     removePinnedVault,
-    // Smart icons
-    setSmartIconExpanded,
     // Recent notes
     addRecentNote
   } = useAppViewStore()
@@ -426,6 +427,36 @@ function App() {
     }
   }, [loadProjects])
 
+  // Auto-pin demo projects on first launch (ADHD-friendly onboarding)
+  useEffect(() => {
+    const autoPinDemoProjects = async () => {
+      // Only run once after projects are loaded
+      if (projects.length === 0) return
+
+      const pinnedVaults = useAppViewStore.getState().pinnedVaults
+      const addPinnedVault = useAppViewStore.getState().addPinnedVault
+
+      // Find "Getting Started" demo project
+      const demoProject = projects.find(p => p.name === 'Getting Started')
+      if (!demoProject) return
+
+      // Check if it's already pinned
+      const isAlreadyPinned = pinnedVaults.some(v => v.id === demoProject.id)
+      if (isAlreadyPinned) return
+
+      // Auto-pin the demo project
+      console.log('📌 Auto-pinning demo project:', demoProject.name)
+      const success = addPinnedVault(demoProject.id, demoProject.name, demoProject.color)
+      if (success) {
+        console.log('✅ Demo project pinned successfully')
+      } else {
+        console.warn('⚠️ Failed to pin demo project (max vaults reached or already pinned)')
+      }
+    }
+
+    autoPinDemoProjects()
+  }, [projects])
+
   // Project-specific notes are now filtered in MissionSidebar
 
   // Load tags for the current note
@@ -709,13 +740,6 @@ function App() {
         setIsSearchPanelOpen(true)
       }
 
-      // Sidebar mode cycle (⌘0) - cycles through icon/compact/card
-      // Note: ⌘H is macOS system "Hide Window", so we use ⌘0 instead
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === '0') {
-        e.preventDefault()
-        cycleSidebarMode()
-      }
-
       // Quick Capture (⌘⇧C)
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'C') {
         e.preventDefault()
@@ -739,8 +763,8 @@ function App() {
         }
         const iconId = shortcuts[e.key]
         if (iconId) {
-          setSmartIconExpanded(iconId as any, true)
-          setSidebarMode('icon') // Ensure icon mode is active
+          // v1.16.0: Expand smart icon directly
+          expandSmartIcon(iconId as any)
         }
       }
 
@@ -819,10 +843,10 @@ function App() {
         setRightSidebarCollapsed(!rightSidebarCollapsed)
       }
 
-      // Left sidebar toggle (⌘⇧[) - collapse/expand left sidebar
+      // Left sidebar toggle (⌘⇧[) - collapse left sidebar
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === '[') {
         e.preventDefault()
-        toggleSidebarCollapsed()
+        collapseAll()
       }
 
       // Settings shortcut (⌘,) - open settings modal
@@ -834,7 +858,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, cycleSidebarMode, toggleSidebarCollapsed, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings])
+  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings, collapseAll])
 
   // Track selected note for smart startup (session context) and recent notes
   useEffect(() => {
@@ -896,7 +920,7 @@ function App() {
 
           // View menu
           case 'mission_control':
-            cycleSidebarMode()
+            // v1.16.0: No-op (deprecated - sidebar always visible)
             break
           case 'focus_mode':
             handleFocusModeChange(!focusMode)
@@ -914,7 +938,8 @@ function App() {
             updatePreferences({ editorMode: 'reading' })
             break
           case 'toggle_sidebar':
-            cycleSidebarMode()
+            // v1.16.0: Collapse sidebar (icon-centric - no mode cycling)
+            collapseAll()
             break
           case 'knowledge_graph':
             setIsGraphViewOpen(true)
@@ -946,7 +971,6 @@ function App() {
     handleDailyNote,
     handleFocusModeChange,
     focusMode,
-    cycleSidebarMode,
   ])
 
   // Right sidebar resize handler (left sidebar handled by MissionSidebar)
@@ -1006,21 +1030,18 @@ function App() {
 
     const handleFocusIn = () => {
       // Collapse sidebar when editor gains focus
-      setSidebarMode('icon')
+      collapseAll()
     }
 
     const handleMouseEnter = () => {
-      // Expand sidebar on hover when collapsed
-      const currentMode = localStorage.getItem('sidebarMode')
-      if (currentMode === 'icon') {
-        setSidebarMode('compact')
-      }
+      // v1.16.0: No auto-expand on hover (icon-centric - user must click)
+      // Icons always visible, expansion controlled by clicks
     }
 
     const handleMouseLeave = () => {
       // Collapse sidebar when mouse leaves (if editor still has focus)
       if (editorContainer.contains(document.activeElement)) {
-        setSidebarMode('icon')
+        collapseAll()
       }
     }
 
@@ -1041,7 +1062,7 @@ function App() {
         sidebar.removeEventListener('mouseleave', handleMouseLeave)
       }
     }
-  }, [settings, setSidebarMode])
+  }, [settings, collapseAll])
 
   // Apply sidebar width preset from settings
   useEffect(() => {

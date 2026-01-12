@@ -63,7 +63,6 @@
 | **New Note** | `⌘N` |
 | **Daily Note** | `⌘D` |
 | **Search Notes** | `⌘F` |
-| **Toggle Left Sidebar** | `⌘B` |
 | **Toggle Right Sidebar** | `⌘⇧B` |
 | **Toggle Terminal** | `⌘⌥T` |
 | **Back** | `⌘[` |

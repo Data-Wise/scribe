@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react'
-import { Menu, Plus, FolderPlus } from 'lucide-react'
-import { Project, Note } from '../../types'
+import { Plus, FolderPlus, Folder } from 'lucide-react'
+import * as LucideIcons from 'lucide-react'
+import { Project, Note, ExpandedIconType, SmartIconId } from '../../types'
 import { StatusDot } from './StatusDot'
 import { Tooltip } from './Tooltip'
 import { ActivityBar } from './ActivityBar'
@@ -8,51 +9,86 @@ import { InboxButton } from './InboxButton'
 import { SmartIconButton } from './SmartIconButton'
 import { EmptyState } from './EmptyState'
 import { RecentNotesDropdown } from './RecentNotesDropdown'
-import { useAppViewStore, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
+import { ProjectContextMenu } from './ProjectContextMenu'
+import { useAppViewStore } from '../../store/useAppViewStore'
 
-interface IconBarModeProps {
+/**
+ * IconBar - Icon-only sidebar strip (48px wide, always visible)
+ *
+ * v1.16.0 Icon-Centric Expansion:
+ * - Always rendered (no collapse mode)
+ * - Icons call onToggleVault/onToggleSmartIcon for expansion
+ * - Visual active state based on expandedIcon prop
+ */
+
+interface IconBarProps {
+  // Data
   projects: Project[]
   notes: Note[]
-  currentProjectId: string | null
-  onSelectProject: (id: string | null) => void
-  onCreateProject: () => void
-  onExpand: () => void
+
+  // Icon-centric expansion state
+  expandedIcon: ExpandedIconType
+
+  // Icon toggle handlers
+  onToggleVault: (vaultId: string) => void
+  onToggleSmartIcon: (iconId: SmartIconId) => void
+
   // Activity Bar handlers
   onSearch: () => void
   onDaily: () => void
   onSettings: () => void
   onSelectNote: (noteId: string) => void
+  onCreateProject: () => void
+
+  // Project management handlers (for context menu)
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
+  onPinProject?: (projectId: string) => void
+  onUnpinProject?: (projectId: string) => void
+  onNewNote?: (projectId?: string) => void
+
   activeActivityItem?: 'search' | 'daily' | 'recent' | 'settings' | null
 }
 
-export function IconBarMode({
+export function IconBar({
   projects,
   notes,
-  currentProjectId,
-  onSelectProject,
-  onCreateProject,
-  onExpand,
+  expandedIcon,
+  onToggleVault,
+  onToggleSmartIcon,
   onSearch,
   onDaily,
   onSettings,
   onSelectNote,
+  onCreateProject,
+  onEditProject,
+  onArchiveProject,
+  onDeleteProject,
+  onPinProject,
+  onUnpinProject,
+  onNewNote,
   activeActivityItem = null
-}: IconBarModeProps) {
+}: IconBarProps) {
   // Get pinned vaults and smart icons from store
   const pinnedVaults = useAppViewStore(state => state.pinnedVaults)
   const reorderPinnedVaults = useAppViewStore(state => state.reorderPinnedVaults)
   const smartIcons = useAppViewStore(state => state.smartIcons)
-  const setProjectTypeFilter = useAppViewStore(state => state.setProjectTypeFilter)
-  const setActiveTab = useAppViewStore(state => state.setActiveTab)
   const recentNotes = useAppViewStore(state => state.recentNotes)
   const clearRecentNotes = useAppViewStore(state => state.clearRecentNotes)
 
-  // Drag state
+  // Drag state for pinned projects
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
   // Recent notes dropdown state
   const [showRecentNotes, setShowRecentNotes] = useState(false)
+
+  // Phase 3: Click pulse animation state
+  const [justActivatedId, setJustActivatedId] = useState<string | null>(null)
+
+  // Context menu state
+  const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
 
   // Keyboard shortcut for Recent Notes (⌘R)
   useEffect(() => {
@@ -102,8 +138,8 @@ export function IconBarMode({
     return notes.filter(n => !n.deleted_at && !n.project_id).length
   }, [notes])
 
-  // Check if Inbox is the "active" view (no project selected)
-  const isInboxActive = currentProjectId === null
+  // Check if Inbox is expanded
+  const isInboxExpanded = expandedIcon?.type === 'vault' && expandedIcon?.id === 'inbox'
 
   // Compute project counts per smart icon
   const smartIconProjectCounts = useMemo(() => {
@@ -114,10 +150,7 @@ export function IconBarMode({
     return counts
   }, [projects, smartIcons])
 
-  // Icon mode is always 48px (no inline expansion)
-  const sidebarWidth = 48
-
-  // Drag handlers
+  // Drag handlers for pinned projects
   const handleDragStart = (index: number) => {
     setDraggedIndex(index)
   }
@@ -154,33 +187,19 @@ export function IconBarMode({
     setDragOverIndex(null)
   }
 
+  // Context menu handler
+  const handleProjectContextMenu = (e: React.MouseEvent, project: Project) => {
+    e.preventDefault()
+    setProjectContextMenu({ project, position: { x: e.clientX, y: e.clientY } })
+  }
+
   return (
-    <div
-      className="mission-sidebar-icon"
-      style={{ width: `${sidebarWidth}px` }}
-    >
-      {/* Expand button */}
-      <button
-        className="sidebar-toggle-btn"
-        onClick={onExpand}
-        title="Expand sidebar (⌘0)"
-      >
-        <Menu size={18} />
-      </button>
-
-      <div className="sidebar-divider" />
-
+    <div className="mission-sidebar-icon" style={{ width: 48 }}>
       {/* Inbox button (always at top) */}
       <InboxButton
         unreadCount={inboxCount}
-        isActive={isInboxActive}
-        onClick={() => {
-          // Phase 3: Universal expand - expand sidebar and show Inbox
-          onExpand()
-          onSelectProject(null)
-          setProjectTypeFilter(null) // Clear any active filter
-          setActiveTab(MISSION_CONTROL_TAB_ID)
-        }}
+        isActive={isInboxExpanded}
+        onClick={() => onToggleVault('inbox')}
       />
 
       <div className="sidebar-divider" />
@@ -189,21 +208,18 @@ export function IconBarMode({
       {smartIcons
         .filter(icon => icon.isVisible)
         .sort((a, b) => a.order - b.order)
-        .map((icon) => (
-          <SmartIconButton
-            key={icon.id}
-            icon={icon}
-            projectCount={smartIconProjectCounts[icon.id] || 0}
-            isExpanded={false}
-            onClick={() => {
-              // Phase 3: Universal expand - expand sidebar and filter projects
-              onExpand()
-              setProjectTypeFilter(icon.projectType)
-              onSelectProject(null) // Clear project selection
-              setActiveTab(MISSION_CONTROL_TAB_ID)
-            }}
-          />
-        ))}
+        .map((icon) => {
+          const isExpanded = expandedIcon?.type === 'smart' && expandedIcon?.id === icon.id
+          return (
+            <SmartIconButton
+              key={icon.id}
+              icon={icon}
+              projectCount={smartIconProjectCounts[icon.id] || 0}
+              isExpanded={isExpanded}
+              onClick={() => onToggleSmartIcon(icon.id)}
+            />
+          )
+        })}
 
       <div className="sidebar-divider" />
 
@@ -219,29 +235,42 @@ export function IconBarMode({
           />
         ) : (
           sortedProjects.map((project, index) => {
-          const isActive = project.id === currentProjectId
-          const noteCount = noteCounts[project.id] || 0
-          const tooltipContent = `${project.name}\n${formatStatus(project.status || 'active')} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
-          const isDragging = draggedIndex === index
-          const isDragOver = dragOverIndex === index
+            const isExpanded = expandedIcon?.type === 'vault' && expandedIcon?.id === project.id
+            const noteCount = noteCounts[project.id] || 0
+            const tooltipContent = `${project.name}\n${formatStatus(project.status || 'active')} • ${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`
+            const isDragging = draggedIndex === index
+            const isDragOver = dragOverIndex === index
+            const justActivated = justActivatedId === project.id
 
-          return (
-            <Tooltip key={project.id} content={tooltipContent}>
-              <ProjectIconButton
-                project={project}
-                isActive={isActive}
-                noteCount={noteCount}
-                onClick={() => onSelectProject(isActive ? null : project.id)}
-                onDragStart={() => handleDragStart(index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDrop={(e) => handleDrop(e, index)}
-                onDragEnd={handleDragEnd}
-                isDragging={isDragging}
-                isDragOver={isDragOver}
-              />
-            </Tooltip>
-          )
-        })
+            // Phase 3: Click handler with pulse animation
+            const handleIconClick = () => {
+              // Only trigger pulse when expanding (not collapsing)
+              if (!isExpanded) {
+                setJustActivatedId(project.id)
+                setTimeout(() => setJustActivatedId(null), 400)
+              }
+              onToggleVault(project.id)
+            }
+
+            return (
+              <Tooltip key={project.id} content={tooltipContent}>
+                <ProjectIconButton
+                  project={project}
+                  isExpanded={isExpanded}
+                  noteCount={noteCount}
+                  onClick={handleIconClick}
+                  onContextMenu={(e) => handleProjectContextMenu(e, project)}
+                  onDragStart={() => handleDragStart(index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
+                  onDragEnd={handleDragEnd}
+                  isDragging={isDragging}
+                  isDragOver={isDragOver}
+                  justActivated={justActivated}
+                />
+              </Tooltip>
+            )
+          })
         )}
       </div>
 
@@ -274,41 +303,72 @@ export function IconBarMode({
         onSelectNote={onSelectNote}
         onClearAll={clearRecentNotes}
       />
+
+      {/* Project Context Menu */}
+      {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (
+        <ProjectContextMenu
+          project={projectContextMenu.project}
+          position={projectContextMenu.position}
+          onClose={() => setProjectContextMenu(null)}
+          onNewNote={onNewNote}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+          onPinProject={onPinProject}
+          onUnpinProject={onUnpinProject}
+        />
+      )}
     </div>
   )
 }
 
+// ProjectIconButton component
 interface ProjectIconButtonProps {
   project: Project
-  isActive: boolean
+  isExpanded: boolean
   noteCount: number
   onClick: () => void
+  onContextMenu?: (e: React.MouseEvent) => void
   onDragStart?: () => void
   onDragOver?: (e: React.DragEvent) => void
   onDrop?: (e: React.DragEvent) => void
   onDragEnd?: () => void
   isDragging?: boolean
   isDragOver?: boolean
+  justActivated?: boolean  // Phase 3: For click pulse animation
+}
+
+// Helper to get Lucide icon component by name
+function getProjectIcon(iconName?: string) {
+  if (!iconName) return Folder
+
+  // Try to get the icon from lucide-react
+  const IconComponent = (LucideIcons as any)[iconName]
+  return IconComponent || Folder
 }
 
 function ProjectIconButton({
   project,
-  isActive,
+  isExpanded,
   noteCount,
   onClick,
+  onContextMenu,
   onDragStart,
   onDragOver,
   onDrop,
   onDragEnd,
   isDragging = false,
-  isDragOver = false
+  isDragOver = false,
+  justActivated = false
 }: ProjectIconButtonProps) {
   const status = project.status || 'active'
+  const Icon = getProjectIcon(project.icon)
 
   return (
     <button
-      className={`project-icon-btn ${isActive ? 'active' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
+      className={`project-icon-btn ${isExpanded ? 'expanded' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''} ${justActivated ? 'just-activated' : ''}`}
       onClick={onClick}
+      onContextMenu={onContextMenu}
       data-status={status}
       data-testid={`project-icon-${project.id}`}
       draggable={true}
@@ -317,8 +377,11 @@ function ProjectIconButton({
       onDrop={onDrop}
       onDragEnd={onDragEnd}
     >
-      {/* Status dot */}
-      <StatusDot status={status} size="md" />
+      {/* Project icon */}
+      <Icon className="project-icon-main" size={18} />
+
+      {/* Status dot overlay (bottom-right corner) */}
+      <StatusDot status={status} size="sm" className="project-status-overlay" />
 
       {/* Note count badge */}
       {noteCount > 0 && (
@@ -330,8 +393,8 @@ function ProjectIconButton({
         </span>
       )}
 
-      {/* Active indicator */}
-      {isActive && <span className="active-indicator" />}
+      {/* Expanded indicator (replaces active indicator) */}
+      {isExpanded && <span className="active-indicator" />}
     </button>
   )
 }

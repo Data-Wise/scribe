@@ -28,6 +28,9 @@
   --nexus-text-muted: #94a3b8;
   --nexus-accent: #38bdf8;
   --nexus-accent-hover: #7dd3fc;
+  --nexus-accent-rgb: 56, 189, 248;
+  --nexus-accent-dim: rgba(56, 189, 248, 0.3);
+  --nexus-accent-bright: #7dd3fc;
   --theme-name: 'Oxford Dark';
 
   /* Status colors - theme-aware */
@@ -51,6 +54,9 @@
   --nexus-text-muted: #8fa89b;
   --nexus-accent: #4ade80;
   --nexus-accent-hover: #86efac;
+  --nexus-accent-rgb: 74, 222, 128;
+  --nexus-accent-dim: rgba(74, 222, 128, 0.3);
+  --nexus-accent-bright: #86efac;
   --theme-name: 'Forest Night';
 
   --status-active: #34d399;
@@ -68,6 +74,9 @@
   --nexus-text-muted: #a89890;
   --nexus-accent: #d4a574;
   --nexus-accent-hover: #e4c4a4;
+  --nexus-accent-rgb: 212, 165, 116;
+  --nexus-accent-dim: rgba(212, 165, 116, 0.3);
+  --nexus-accent-bright: #e4c4a4;
   --theme-name: 'Warm Cocoa';
 
   --status-active: #4ade80;
@@ -85,6 +94,9 @@
   --nexus-text-muted: #9b94a8;
   --nexus-accent: #a78bfa;
   --nexus-accent-hover: #c4b5fd;
+  --nexus-accent-rgb: 167, 139, 250;
+  --nexus-accent-dim: rgba(167, 139, 250, 0.3);
+  --nexus-accent-bright: #c4b5fd;
   --theme-name: 'Midnight Purple';
 
   --status-active: #34d399;
@@ -102,6 +114,9 @@
   --nexus-text-muted: #8898a8;
   --nexus-accent: #60a5fa;
   --nexus-accent-hover: #93c5fd;
+  --nexus-accent-rgb: 96, 165, 250;
+  --nexus-accent-dim: rgba(96, 165, 250, 0.3);
+  --nexus-accent-bright: #93c5fd;
   --theme-name: 'Deep Ocean';
 
   --status-active: #34d399;
@@ -123,6 +138,9 @@
   --nexus-text-muted: #6b5d4d;
   --nexus-accent: #b45309;
   --nexus-accent-hover: #d97706;
+  --nexus-accent-rgb: 180, 83, 9;
+  --nexus-accent-dim: rgba(180, 83, 9, 0.3);
+  --nexus-accent-bright: #d97706;
   --theme-name: 'Soft Paper';
 
   --status-active: #059669;
@@ -140,6 +158,9 @@
   --nexus-text-muted: #5c6670;
   --nexus-accent: #4b5563;
   --nexus-accent-hover: #6b7280;
+  --nexus-accent-rgb: 75, 85, 99;
+  --nexus-accent-dim: rgba(75, 85, 99, 0.3);
+  --nexus-accent-bright: #6b7280;
   --theme-name: 'Morning Fog';
 
   --status-active: #059669;
@@ -157,6 +178,9 @@
   --nexus-text-muted: #4a6a4a;
   --nexus-accent: #16a34a;
   --nexus-accent-hover: #22c55e;
+  --nexus-accent-rgb: 22, 163, 74;
+  --nexus-accent-dim: rgba(22, 163, 74, 0.3);
+  --nexus-accent-bright: #22c55e;
   --theme-name: 'Sage Garden';
 
   --status-active: #15803d;
@@ -174,6 +198,9 @@
   --nexus-text-muted: #635a70;
   --nexus-accent: #7c3aed;
   --nexus-accent-hover: #8b5cf6;
+  --nexus-accent-rgb: 124, 58, 237;
+  --nexus-accent-dim: rgba(124, 58, 237, 0.3);
+  --nexus-accent-bright: #8b5cf6;
   --theme-name: 'Lavender Mist';
 
   --status-active: #059669;
@@ -191,6 +218,9 @@
   --nexus-text-muted: #6b6055;
   --nexus-accent: #92400e;
   --nexus-accent-hover: #b45309;
+  --nexus-accent-rgb: 146, 64, 14;
+  --nexus-accent-dim: rgba(146, 64, 14, 0.3);
+  --nexus-accent-bright: #b45309;
   --theme-name: 'Sand Dune';
 
   --status-active: #059669;
@@ -1507,12 +1537,34 @@ mark {
   padding: 10px 12px;
 }
 
+.contextual-tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
 .contextual-tooltip-title {
   font-size: 13px;
   font-weight: 600;
   color: #ffffff;
   line-height: 1.4;
-  margin-bottom: 2px;
+  flex: 1;
+}
+
+/* Phase 2: Active Project Badge */
+.preview-active-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--nexus-accent);
+  background: rgba(var(--nexus-accent-rgb), 0.15);
+  border: 1px solid rgba(var(--nexus-accent-rgb), 0.3);
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
 .contextual-tooltip-subtitle {
@@ -1610,6 +1662,53 @@ mark {
 :root[data-theme-type="light"] .contextual-tooltip-action.primary:hover {
   background: rgba(37, 99, 235, 0.1);
   color: #1d4ed8;
+}
+
+/* ============================================================
+   Simple Tooltip (unified style for icon bar tooltips)
+
+   Used by InboxButton, SmartIconButton, and other icon tooltips
+   Matches ContextualTooltip styling but simplified for text-only
+   ============================================================ */
+
+.simple-tooltip {
+  position: fixed;
+  z-index: 9999;
+  padding: 8px 12px;
+  background: #2d2d2d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  max-width: 280px;
+  pointer-events: auto;
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: pre-line;
+}
+
+.tooltip-arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #2d2d2d;
+  transform: rotate(45deg);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Light theme overrides */
+:root[data-theme-type="light"] .simple-tooltip {
+  background: #f5f5f5;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:root[data-theme-type="light"] .tooltip-arrow {
+  background: #f5f5f5;
+  border-right-color: rgba(0, 0, 0, 0.15);
+  border-bottom-color: rgba(0, 0, 0, 0.15);
 }
 
 /* ============================================================
@@ -2632,8 +2731,53 @@ mark {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.project-icon-btn.active {
-  background: var(--nexus-bg-tertiary);
+/* Project icon main display */
+.project-icon-main {
+  color: var(--nexus-text-primary);
+  opacity: 0.8;
+  transition: all 150ms ease;
+}
+
+.project-icon-btn:hover .project-icon-main {
+  opacity: 1;
+}
+
+/* Status dot overlay (bottom-right corner) */
+.project-status-overlay {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  pointer-events: none;
+  border: 1px solid var(--nexus-bg-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Base expanded state (no glow when disabled) */
+.project-icon-btn.expanded {
+  background: transparent;
+  border: none;
+  transform: scale(1.05);
+}
+
+/* Glow Effect - Subtle (Default) */
+:root[data-icon-glow="subtle"] .project-icon-btn.expanded {
+  box-shadow: 0 0 8px rgba(var(--nexus-accent-rgb), 0.3);
+  background: rgba(var(--nexus-accent-rgb), 0.04);
+  border: none;
+}
+
+/* Glow Effect - Medium */
+:root[data-icon-glow="medium"] .project-icon-btn.expanded {
+  box-shadow: 0 0 12px rgba(var(--nexus-accent-rgb), 0.4);
+  background: rgba(var(--nexus-accent-rgb), 0.06);
+  border: none;
+}
+
+/* Glow Effect - Prominent */
+:root[data-icon-glow="prominent"] .project-icon-btn.expanded {
+  box-shadow: 0 0 16px rgba(var(--nexus-accent-rgb), 0.5);
+  background: rgba(var(--nexus-accent-rgb), 0.08);
+  border: none;
 }
 
 .project-icon-btn .active-indicator {
@@ -2645,6 +2789,68 @@ mark {
   height: 16px;
   background: var(--nexus-accent);
   border-radius: 0 2px 2px 0;
+}
+
+/* Layer 4: Enhanced active indicator when expanded */
+.project-icon-btn.expanded .active-indicator {
+  width: 4px;
+  height: 20px;
+}
+
+/* Layer 5: Subtle icon brightness enhancement */
+.project-icon-btn.expanded .project-icon-main,
+.project-icon-btn.expanded [data-status] {
+  filter: brightness(1.1);
+}
+
+.project-icon-btn.expanded .project-icon-main {
+  opacity: 1;
+  color: var(--nexus-accent);
+}
+
+/* Phase 3: Click Pulse Animation */
+@keyframes activatePulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(var(--nexus-accent-rgb), 0.5),
+      0 0 0 rgba(var(--nexus-accent-rgb), 0);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px rgba(var(--nexus-accent-rgb), 0.3),
+      0 0 20px rgba(var(--nexus-accent-rgb), 0.5);
+  }
+  100% {
+    box-shadow:
+      0 0 0 6px rgba(var(--nexus-accent-rgb), 0),
+      0 0 24px rgba(var(--nexus-accent-rgb), 0);
+  }
+}
+
+.project-icon-btn.just-activated {
+  animation: activatePulse 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Phase 2: Hover Intensification for Active Projects */
+:root[data-icon-glow="subtle"] .project-icon-btn.expanded:hover {
+  box-shadow:
+    0 0 0 1px rgba(var(--nexus-accent-rgb), 0.3),
+    0 0 16px rgba(var(--nexus-accent-rgb), 0.35);
+  background: rgba(var(--nexus-accent-rgb), 0.12);
+}
+
+:root[data-icon-glow="medium"] .project-icon-btn.expanded:hover {
+  box-shadow:
+    0 0 0 2px rgba(var(--nexus-accent-rgb), 0.4),
+    0 0 20px rgba(var(--nexus-accent-rgb), 0.45);
+  background: rgba(var(--nexus-accent-rgb), 0.15);
+}
+
+:root[data-icon-glow="prominent"] .project-icon-btn.expanded:hover {
+  box-shadow:
+    0 0 0 2px rgba(var(--nexus-accent-rgb), 0.5),
+    0 0 24px rgba(var(--nexus-accent-rgb), 0.6);
+  background: rgba(var(--nexus-accent-rgb), 0.18);
 }
 
 /* Icon Badge (note count) */
@@ -3314,6 +3520,145 @@ mark {
   color: var(--nexus-text-muted);
 }
 
+/* Inbox Note Items (for Inbox expansion) */
+.inbox-note-item-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 150ms ease;
+  width: 100%;
+  min-width: 0; /* Critical for truncation */
+  border-radius: 6px;
+}
+
+.inbox-note-item-compact:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.inbox-note-item-compact .note-icon {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0;
+}
+
+.inbox-note-item-compact .note-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0; /* Allow shrinking */
+}
+
+.inbox-note-item-compact .note-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-note-item-compact:hover .note-title {
+  color: var(--nexus-accent);
+}
+
+.inbox-note-item-compact .note-timestamp {
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Inbox Card View Styles
+   Card-based layout for inbox notes with preview
+   ============================================================ */
+
+/* Card Container - follows .project-card pattern */
+.inbox-note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  text-align: left;
+  transition: all 150ms ease;
+  min-width: 0; /* Critical for child truncation */
+}
+
+.inbox-note-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Card Header - Icon + Title row */
+.note-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0; /* Allow title to truncate */
+}
+
+.note-card-header svg {
+  color: var(--nexus-text-muted);
+  flex-shrink: 0; /* Icon never shrinks */
+}
+
+.note-card-header .note-title {
+  flex: 1;
+  min-width: 0; /* Enable ellipsis */
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nexus-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-note-card:hover .note-card-header .note-title {
+  color: var(--nexus-accent);
+}
+
+/* Card Preview - Multi-line content preview */
+.note-card-preview {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--nexus-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Show 3 lines max */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+/* Card Footer - Timestamp + Word count */
+.note-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--nexus-text-muted);
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04); /* Subtle separator */
+}
+
+.note-card-footer .note-timestamp,
+.note-card-footer .note-wordcount {
+  white-space: nowrap;
+}
+
+.note-card-footer .note-wordcount {
+  font-variant-numeric: tabular-nums; /* Align numbers */
+}
+
 /* Compact Project Item */
 .compact-project-item {
   width: 100%;
@@ -3344,10 +3689,12 @@ mark {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0; /* Critical for flex truncation */
 }
 
 .compact-project-item .project-name {
   flex: 1;
+  min-width: 0; /* Allow shrinking for ellipsis */
   font-size: 13px;
   font-weight: 500;
   color: var(--nexus-text-primary);
@@ -3586,6 +3933,158 @@ mark {
 
 :root[data-theme-type="light"] .activity-bar {
   border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ===== ICON-CENTRIC SIDEBAR (v1.16.0) ===== */
+
+/* Icon-Centric Mode: IconBar + ExpandedIconPanel */
+.mission-sidebar.icon-centric-mode {
+  display: flex;
+  flex-direction: row;
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Icon Bar (always visible, 48px) */
+.icon-bar {
+  width: 48px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 8px 12px;
+  gap: 4px;
+  background: var(--nexus-bg-secondary);
+}
+
+/* Expanded Icon Panel (conditional, slides in/out) */
+.expanded-icon-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--nexus-bg-secondary);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  animation: slideInFromLeft 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Panel Header */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 8px;
+}
+
+.panel-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.panel-header .panel-action-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--nexus-text-muted);
+  transition: all 150ms ease;
+}
+
+.panel-header .panel-action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-primary);
+}
+
+/* Panel Content - Scrollable area */
+.panel-content {
+  flex: 1;
+  overflow-y: auto; /* Vertical scroll for long content */
+  overflow-x: hidden; /* Never horizontal scroll */
+  min-height: 0; /* Allow flex shrinking */
+}
+
+/* Icon Button Expanded State */
+.icon-btn.expanded,
+.project-icon-btn.expanded,
+.inbox-btn.expanded,
+.smart-icon-btn.expanded {
+  background: rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.icon-btn.expanded::before,
+.project-icon-btn.expanded::before,
+.inbox-btn.expanded::before,
+.smart-icon-btn.expanded::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--nexus-accent);
+  border-radius: 0 2px 2px 0;
+  animation: indicatorFadeIn 150ms ease;
+}
+
+@keyframes indicatorFadeIn {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  to {
+    opacity: 1;
+    width: 3px;
+  }
+}
+
+/* Icon Button Transitions */
+.icon-btn,
+.project-icon-btn,
+.inbox-btn,
+.smart-icon-btn {
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme adjustments for icon-centric mode */
+:root[data-theme-type="light"] .expanded-icon-panel {
+  border-left-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme-type="light"] .panel-header {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme-type="light"] .panel-header .panel-action-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme-type="light"] .icon-btn.expanded,
+:root[data-theme-type="light"] .project-icon-btn.expanded,
+:root[data-theme-type="light"] .inbox-btn.expanded,
+:root[data-theme-type="light"] .smart-icon-btn.expanded {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 /* ===== RECENT NOTES DROPDOWN ===== */
@@ -4577,6 +5076,7 @@ mark {
   text-align: left;
   transition: all 150ms ease;
   width: 100%;
+  min-width: 0; /* Critical for nested note truncation */
 }
 
 .compact-project-wrapper .project-note-item:hover {
@@ -4589,6 +5089,8 @@ mark {
 }
 
 .compact-project-wrapper .project-note-item .note-title {
+  flex: 1;
+  min-width: 0; /* Allow shrinking for ellipsis */
   font-size: 12px;
   color: var(--nexus-text-secondary);
   white-space: nowrap;
@@ -5221,6 +5723,36 @@ mark {
   backdrop-filter: blur(12px);
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Phase 4: Active Project Context Menu Styling */
+.project-context-menu.active-project .context-menu-content {
+  border-color: rgba(var(--nexus-accent-rgb), 0.3);
+  box-shadow:
+    0 0 0 1px rgba(var(--nexus-accent-rgb), 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.context-menu-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--nexus-text-muted);
+}
+
+.context-menu-header.active-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--nexus-accent);
+}
+
+.active-header-icon {
+  font-size: 8px;
+  line-height: 1;
 }
 
 .context-menu-item {
