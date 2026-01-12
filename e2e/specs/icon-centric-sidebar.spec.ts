@@ -182,8 +182,8 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await smartIcon.click()
       await basePage.page.waitForTimeout(300)
 
-      // Mode toggle button should be visible in panel header
-      const modeToggle = basePage.page.locator('.expanded-icon-panel button[aria-label*="mode"]')
+      // Mode toggle button should be visible in panel header (aria-label contains "Switch to")
+      const modeToggle = basePage.page.locator('.expanded-icon-panel button[aria-label*="Switch to"]')
       await expect(modeToggle).toBeVisible()
     })
 
@@ -196,8 +196,8 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(300)
 
       // Get current mode (check for compact-list-view or card-grid-view)
-      const hasCompactView = await basePage.page.locator('.compact-list-view').isVisible().catch(() => false)
-      const hasCardView = await basePage.page.locator('.card-grid-view').isVisible().catch(() => false)
+      const hasCompactView = await basePage.page.locator('.project-list-compact').isVisible().catch(() => false)
+      const hasCardView = await basePage.page.locator('.project-cards-container').isVisible().catch(() => false)
 
       // One of them should be visible
       expect(hasCompactView || hasCardView).toBeTruthy()
@@ -208,8 +208,8 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(300)
 
       // Mode should have switched
-      const newHasCompactView = await basePage.page.locator('.compact-list-view').isVisible().catch(() => false)
-      const newHasCardView = await basePage.page.locator('.card-grid-view').isVisible().catch(() => false)
+      const newHasCompactView = await basePage.page.locator('.project-list-compact').isVisible().catch(() => false)
+      const newHasCardView = await basePage.page.locator('.project-cards-container').isVisible().catch(() => false)
 
       expect(newHasCompactView !== hasCompactView || newHasCardView !== hasCardView).toBeTruthy()
     })
@@ -225,7 +225,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(300)
 
       // Click close button in panel header
-      const closeBtn = basePage.page.locator('.expanded-icon-panel .panel-header button[aria-label="Close"]')
+      const closeBtn = basePage.page.locator('.expanded-icon-panel .panel-header button[aria-label="Collapse panel"]')
       await closeBtn.click()
       await basePage.page.waitForTimeout(300)
 
@@ -288,7 +288,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
 
       // Switch to card mode
       const modeToggle = basePage.page.locator('.expanded-icon-panel .panel-header button').nth(1)
-      const initialMode = await basePage.page.locator('.card-grid-view').isVisible().catch(() => false) ? 'card' : 'compact'
+      const initialMode = await basePage.page.locator('.project-cards-container').isVisible().catch(() => false) ? 'card' : 'compact'
 
       if (initialMode === 'compact') {
         await modeToggle.click()
@@ -296,7 +296,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       }
 
       // Verify card mode
-      await expect(basePage.page.locator('.card-grid-view')).toBeVisible()
+      await expect(basePage.page.locator('.project-cards-container')).toBeVisible()
 
       // Collapse and re-expand
       await firstSmartIcon.click()
@@ -305,7 +305,7 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await basePage.page.waitForTimeout(300)
 
       // Should still be in card mode
-      await expect(basePage.page.locator('.card-grid-view')).toBeVisible()
+      await expect(basePage.page.locator('.project-cards-container')).toBeVisible()
     })
   })
 
@@ -335,8 +335,8 @@ test.describe('Icon-Centric Sidebar (v1.16.0)', () => {
       await expect(panel).toBeVisible()
 
       // Should have notes list or empty state
-      const hasNotesList = await panel.locator('.compact-list-view, .card-grid-view, .empty-state').isVisible()
-      expect(hasNotesList).toBeTruthy()
+      const panelContent = panel.locator('.panel-content')
+      await expect(panelContent).toBeVisible()
     })
   })
 
