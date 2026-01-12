@@ -9,6 +9,7 @@ import { InboxButton } from './InboxButton'
 import { SmartIconButton } from './SmartIconButton'
 import { EmptyState } from './EmptyState'
 import { RecentNotesDropdown } from './RecentNotesDropdown'
+import { ProjectContextMenu } from './ProjectContextMenu'
 import { useAppViewStore } from '../../store/useAppViewStore'
 
 /**
@@ -39,6 +40,14 @@ interface IconBarProps {
   onSelectNote: (noteId: string) => void
   onCreateProject: () => void
 
+  // Project management handlers (for context menu)
+  onEditProject?: (projectId: string) => void
+  onArchiveProject?: (projectId: string) => void
+  onDeleteProject?: (projectId: string) => void
+  onPinProject?: (projectId: string) => void
+  onUnpinProject?: (projectId: string) => void
+  onNewNote?: (projectId?: string) => void
+
   activeActivityItem?: 'search' | 'daily' | 'recent' | 'settings' | null
 }
 
@@ -53,6 +62,12 @@ export function IconBar({
   onSettings,
   onSelectNote,
   onCreateProject,
+  onEditProject,
+  onArchiveProject,
+  onDeleteProject,
+  onPinProject,
+  onUnpinProject,
+  onNewNote,
   activeActivityItem = null
 }: IconBarProps) {
   // Get pinned vaults and smart icons from store
@@ -71,6 +86,9 @@ export function IconBar({
 
   // Phase 3: Click pulse animation state
   const [justActivatedId, setJustActivatedId] = useState<string | null>(null)
+
+  // Context menu state
+  const [projectContextMenu, setProjectContextMenu] = useState<{ project: Project; position: { x: number; y: number } } | null>(null)
 
   // Keyboard shortcut for Recent Notes (⌘R)
   useEffect(() => {
@@ -169,6 +187,12 @@ export function IconBar({
     setDragOverIndex(null)
   }
 
+  // Context menu handler
+  const handleProjectContextMenu = (e: React.MouseEvent, project: Project) => {
+    e.preventDefault()
+    setProjectContextMenu({ project, position: { x: e.clientX, y: e.clientY } })
+  }
+
   return (
     <div className="mission-sidebar-icon" style={{ width: 48 }}>
       {/* Inbox button (always at top) */}
@@ -235,6 +259,7 @@ export function IconBar({
                   isExpanded={isExpanded}
                   noteCount={noteCount}
                   onClick={handleIconClick}
+                  onContextMenu={(e) => handleProjectContextMenu(e, project)}
                   onDragStart={() => handleDragStart(index)}
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDrop={(e) => handleDrop(e, index)}
@@ -278,6 +303,21 @@ export function IconBar({
         onSelectNote={onSelectNote}
         onClearAll={clearRecentNotes}
       />
+
+      {/* Project Context Menu */}
+      {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (
+        <ProjectContextMenu
+          project={projectContextMenu.project}
+          position={projectContextMenu.position}
+          onClose={() => setProjectContextMenu(null)}
+          onNewNote={onNewNote}
+          onEditProject={onEditProject}
+          onArchiveProject={onArchiveProject}
+          onDeleteProject={onDeleteProject}
+          onPinProject={onPinProject}
+          onUnpinProject={onUnpinProject}
+        />
+      )}
     </div>
   )
 }
@@ -288,6 +328,7 @@ interface ProjectIconButtonProps {
   isExpanded: boolean
   noteCount: number
   onClick: () => void
+  onContextMenu?: (e: React.MouseEvent) => void
   onDragStart?: () => void
   onDragOver?: (e: React.DragEvent) => void
   onDrop?: (e: React.DragEvent) => void
@@ -311,6 +352,7 @@ function ProjectIconButton({
   isExpanded,
   noteCount,
   onClick,
+  onContextMenu,
   onDragStart,
   onDragOver,
   onDrop,
@@ -326,6 +368,7 @@ function ProjectIconButton({
     <button
       className={`project-icon-btn ${isExpanded ? 'expanded' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''} ${justActivated ? 'just-activated' : ''}`}
       onClick={onClick}
+      onContextMenu={onContextMenu}
       data-status={status}
       data-testid={`project-icon-${project.id}`}
       draggable={true}

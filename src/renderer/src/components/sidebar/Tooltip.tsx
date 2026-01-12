@@ -171,6 +171,9 @@ export function Tooltip({ children, content, delay = 0, hideDelay = 200 }: Toolt
       handleMouseLeave()
       children.props.onMouseLeave?.(e)
     },
+    onContextMenu: (e: React.MouseEvent) => {
+      children.props.onContextMenu?.(e)
+    },
     'aria-describedby': isVisible ? tooltipId.current : undefined
   })
 

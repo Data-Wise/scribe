@@ -427,6 +427,36 @@ function App() {
     }
   }, [loadProjects])
 
+  // Auto-pin demo projects on first launch (ADHD-friendly onboarding)
+  useEffect(() => {
+    const autoPinDemoProjects = async () => {
+      // Only run once after projects are loaded
+      if (projects.length === 0) return
+
+      const pinnedVaults = useAppViewStore.getState().pinnedVaults
+      const addPinnedVault = useAppViewStore.getState().addPinnedVault
+
+      // Find "Getting Started" demo project
+      const demoProject = projects.find(p => p.name === 'Getting Started')
+      if (!demoProject) return
+
+      // Check if it's already pinned
+      const isAlreadyPinned = pinnedVaults.some(v => v.id === demoProject.id)
+      if (isAlreadyPinned) return
+
+      // Auto-pin the demo project
+      console.log('📌 Auto-pinning demo project:', demoProject.name)
+      const success = addPinnedVault(demoProject.id, demoProject.name, demoProject.color)
+      if (success) {
+        console.log('✅ Demo project pinned successfully')
+      } else {
+        console.warn('⚠️ Failed to pin demo project (max vaults reached or already pinned)')
+      }
+    }
+
+    autoPinDemoProjects()
+  }, [projects])
+
   // Project-specific notes are now filtered in MissionSidebar
 
   // Load tags for the current note

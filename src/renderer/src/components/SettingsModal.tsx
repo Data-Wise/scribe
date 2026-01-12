@@ -35,7 +35,8 @@ import {
   SlidersHorizontal,
   Home,
   FileText,
-  Terminal
+  Terminal,
+  Square
 } from 'lucide-react'
 import {
   loadTemplates,
@@ -183,6 +184,24 @@ export function SettingsModal({
       hiddenTabs: prefs.sidebarHiddenTabs
     }
   })
+
+  // Icon Bar preferences state (v1.16)
+  const [iconBarSettings, setIconBarSettings] = useState(() => {
+    const prefs = loadPreferences()
+    return {
+      iconGlowEffect: prefs.iconGlowEffect ?? true,
+      iconGlowIntensity: prefs.iconGlowIntensity ?? 'subtle'
+    }
+  })
+
+  // Update icon bar setting and save to preferences
+  const updateIconBarSetting = <K extends keyof typeof iconBarSettings>(
+    key: K,
+    value: typeof iconBarSettings[K]
+  ) => {
+    setIconBarSettings(prev => ({ ...prev, [key]: value }))
+    updatePreferences({ [key]: value })
+  }
 
   // Update sidebar setting and save to preferences
   const updateSidebarSetting = <K extends keyof typeof sidebarSettings>(
@@ -453,6 +472,7 @@ export function SettingsModal({
     { id: 'general', label: 'General', icon: SettingsIcon },
     { id: 'editor', label: 'Editor', icon: Type },
     { id: 'appearance', label: 'Appearance', icon: Sparkles },
+    { id: 'icon-bar', label: 'Icon Bar', icon: Square },
     { id: 'files', label: 'Files & Links', icon: FileCode },
     { id: 'academic', label: 'Research', icon: BookOpen },
   ]
@@ -1984,6 +2004,60 @@ export function SettingsModal({
                   </div>
                 </section>
 
+              </div>
+            )}
+
+            {activeTab === 'icon-bar' && (
+              <div className="space-y-6">
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    Glow Effects
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-5">
+                    {/* Enable Icon Glow */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium text-nexus-text-primary">Enable Icon Glow</div>
+                        <div className="text-xs text-nexus-text-muted mt-1">Show glow effect on active project icons</div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={iconBarSettings.iconGlowEffect}
+                        onChange={(e) => {
+                          updateIconBarSetting('iconGlowEffect', e.target.checked)
+                        }}
+                        className="w-4 h-4"
+                      />
+                    </div>
+
+                    {/* Glow Intensity */}
+                    <div>
+                      <label className="text-sm font-medium text-nexus-text-primary mb-2 block">Glow Intensity</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { value: 'subtle', label: 'Subtle', desc: 'Minimal glow (Recommended)' },
+                          { value: 'medium', label: 'Medium', desc: 'Balanced visibility' },
+                          { value: 'prominent', label: 'Prominent', desc: 'Strong glow' }
+                        ].map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => updateIconBarSetting('iconGlowIntensity', option.value as 'subtle' | 'medium' | 'prominent')}
+                            className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${
+                              iconBarSettings.iconGlowIntensity === option.value
+                                ? 'bg-nexus-accent text-white'
+                                : 'bg-nexus-bg-primary text-nexus-text-muted hover:text-nexus-text-primary hover:bg-white/5'
+                            }`}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted mt-1.5">
+                        Control the intensity of the glow effect on active project icons
+                      </p>
+                    </div>
+                  </div>
+                </section>
               </div>
             )}
 

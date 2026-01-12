@@ -193,6 +193,12 @@ export function MissionSidebar({
         onSettings={onOpenSettings}
         onSelectNote={onSelectNote}
         onCreateProject={onCreateProject}
+        onEditProject={onEditProject}
+        onArchiveProject={onArchiveProject}
+        onDeleteProject={onDeleteProject}
+        onPinProject={onPinProject}
+        onUnpinProject={onUnpinProject}
+        onNewNote={onNewNote}
       />
 
       {/* Expanded panel - conditional */}
