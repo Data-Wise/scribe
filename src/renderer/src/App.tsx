@@ -25,6 +25,8 @@ import { TerminalPanel } from './components/TerminalPanel'
 import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
 import { QuickCaptureOverlay } from './components/QuickCaptureOverlay'
 import { DragRegion, useDragRegion } from './components/DragRegion'
+import { KeyboardShortcutHandler } from './components/KeyboardShortcutHandler'
+import { EditorOrchestrator } from './components/EditorOrchestrator'
 import { ToastProvider, useToast, setGlobalToast } from './components/Toast'
 import { Note, Tag, Property } from './types'
 import { Settings2, Link2, Tags, PanelRightOpen, PanelRightClose, BarChart3, Sparkles, Terminal } from 'lucide-react'
@@ -363,22 +365,7 @@ function App() {
   // Theme shortcuts state
   const [themeShortcuts, setThemeShortcuts] = useState<ThemeShortcut[]>(() => loadThemeShortcuts())
   
-  // Theme keyboard shortcuts: Cmd/Ctrl + Alt + [1-0]
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Check for Cmd/Ctrl + Alt + number key
-      if ((e.metaKey || e.ctrlKey) && e.altKey && /^[0-9]$/.test(e.key)) {
-        e.preventDefault()
-        const targetTheme = getThemeForShortcut(e.key, themeShortcuts)
-        if (targetTheme && allThemes[targetTheme]) {
-          setTheme(targetTheme)
-        }
-      }
-    }
-    
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [themeShortcuts, allThemes])
+  // Theme keyboard shortcuts now handled by KeyboardShortcutHandler
   
   // Theme customization handlers
   const handleSaveCustomTheme = (newTheme: Theme) => {
@@ -682,183 +669,7 @@ function App() {
     return allNotes.filter((note) => note.title.toLowerCase().includes(lowerQuery))
   }
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'F') {
-        e.preventDefault()
-        handleFocusModeChange(!focusMode)
-      }
-
-      // Export shortcut (Cmd+Shift+E)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'E') {
-        e.preventDefault()
-        if (selectedNote) {
-          setIsExportDialogOpen(true)
-        }
-      }
-
-      // Graph view shortcut (Cmd+Shift+G)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'G') {
-        e.preventDefault()
-        setIsGraphViewOpen(true)
-      }
-
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'b') {
-        e.preventDefault()
-        setLeftSidebarCollapsed(prev => !prev)
-      }
-      
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'B') {
-        e.preventDefault()
-        setRightSidebarCollapsed(prev => !prev)
-      }
-      
-      if (e.key === 'Escape' && focusMode) {
-        handleFocusModeChange(false)
-      }
-
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'n') {
-        e.preventDefault()
-        handleCreateNote()
-      }
-
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'd') {
-        e.preventDefault()
-        handleDailyNote()
-      }
-
-      // Keyboard shortcuts panel (⌘? or ⌘/)
-      if ((e.metaKey || e.ctrlKey) && (e.key === '?' || e.key === '/')) {
-        e.preventDefault()
-        setIsKeyboardShortcutsOpen(true)
-      }
-
-      // Search panel (⌘F) - note: Cmd+Shift+F is focus mode, Cmd+F is search
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'f') {
-        e.preventDefault()
-        setIsSearchPanelOpen(true)
-      }
-
-      // Quick Capture (⌘⇧C)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'C') {
-        e.preventDefault()
-        setIsQuickCaptureOpen(true)
-      }
-
-      // New Project (⌘⇧P)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'P') {
-        e.preventDefault()
-        setIsCreateProjectModalOpen(true)
-      }
-
-      // Smart Icon shortcuts (⌘⇧1-4) - expand/collapse smart icons
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && !e.altKey && /^[1-4]$/.test(e.key)) {
-        e.preventDefault()
-        const shortcuts: Record<string, string> = {
-          '1': 'research',
-          '2': 'teaching',
-          '3': 'r-package',
-          '4': 'dev-tools'
-        }
-        const iconId = shortcuts[e.key]
-        if (iconId) {
-          // v1.16.0: Expand smart icon directly
-          expandSmartIcon(iconId as any)
-        }
-      }
-
-      // Tab switching (⌘1-9) - switch to tab by index
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && /^[1-9]$/.test(e.key)) {
-        e.preventDefault()
-        const tabIndex = parseInt(e.key) - 1
-        if (tabIndex < openTabs.length) {
-          setActiveTab(openTabs[tabIndex].id)
-        }
-      }
-
-      // Close current tab (⌘W) - closes active non-pinned tab
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'w') {
-        e.preventDefault()
-        // Find the active tab
-        const activeTab = openTabs.find(t => t.id === activeTabId)
-        // Only close if it's not pinned
-        if (activeTab && !activeTab.isPinned) {
-          closeTab(activeTabId!)
-        }
-      }
-
-      // Reopen last closed tab (⌘⇧T)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'T') {
-        e.preventDefault()
-        reopenLastClosedTab()
-        return
-      }
-
-      // Right sidebar tab navigation (⌘] / ⌘[)
-      // Use visible tabs only (respect hidden tabs from settings)
-      const visibleTabs = sidebarTabSettings.tabOrder.filter(
-        (t: SidebarTabId) => !sidebarTabSettings.hiddenTabs.includes(t)
-      )
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === ']') {
-        e.preventDefault()
-        const currentIndex = visibleTabs.indexOf(rightActiveTab)
-        const nextIndex = (currentIndex + 1) % visibleTabs.length
-        setRightActiveTab(visibleTabs[nextIndex])
-        // Also ensure right sidebar is visible
-        if (rightSidebarCollapsed) {
-          setRightSidebarCollapsed(false)
-        }
-      }
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === '[') {
-        e.preventDefault()
-        const currentIndex = visibleTabs.indexOf(rightActiveTab)
-        const prevIndex = (currentIndex - 1 + visibleTabs.length) % visibleTabs.length
-        setRightActiveTab(visibleTabs[prevIndex])
-        // Also ensure right sidebar is visible
-        if (rightSidebarCollapsed) {
-          setRightSidebarCollapsed(false)
-        }
-      }
-
-      // Terminal tab shortcut (⌘⌥T) - toggle or switch to Terminal
-      // Use e.code instead of e.key because Option modifier changes key value on macOS (Option+T = '†')
-      if ((e.metaKey || e.ctrlKey) && e.altKey && !e.shiftKey && e.code === 'KeyT') {
-        e.preventDefault()
-        // If already on Terminal and sidebar is open, close it
-        if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
-          setRightSidebarCollapsed(true)
-        } else {
-          // Switch to Terminal and ensure sidebar is visible
-          setRightActiveTab('terminal')
-          if (rightSidebarCollapsed) {
-            setRightSidebarCollapsed(false)
-          }
-        }
-      }
-
-      // Right sidebar toggle (⌘⇧]) - collapse/expand right sidebar
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === ']') {
-        e.preventDefault()
-        setRightSidebarCollapsed(!rightSidebarCollapsed)
-      }
-
-      // Left sidebar toggle (⌘⇧[) - collapse left sidebar
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === '[') {
-        e.preventDefault()
-        collapseAll()
-      }
-
-      // Settings shortcut (⌘,) - open settings modal
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key === ',') {
-        e.preventDefault()
-        setIsSettingsOpen(true)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusMode, handleFocusModeChange, handleCreateNote, handleDailyNote, selectedNote, openTabs, activeTabId, setActiveTab, closeTab, reopenLastClosedTab, rightActiveTab, setRightActiveTab, rightSidebarCollapsed, setRightSidebarCollapsed, sidebarTabSettings, collapseAll])
+  // Keyboard shortcuts now handled by KeyboardShortcutHandler component
 
   // Track selected note for smart startup (session context) and recent notes
   useEffect(() => {
@@ -886,92 +697,7 @@ function App() {
     }
   }, [activeTabId, openTabs, selectedNoteId, selectNote])
 
-  // Handle native menu events from Tauri (skip in browser mode)
-  useEffect(() => {
-    if (!isTauri()) return // No native menu in browser mode
-
-    let unlisten: (() => void) | null = null
-
-    // Dynamic import to avoid errors in browser mode
-    import('@tauri-apps/api/event').then(({ listen }) => {
-      listen<string>('menu-event', (event) => {
-        const menuId = event.payload
-
-        switch (menuId) {
-          // File menu
-          case 'new_note':
-            handleCreateNote()
-            break
-          case 'new_project':
-            setIsCreateProjectModalOpen(true)
-            break
-          case 'daily_note':
-            handleDailyNote()
-            break
-          case 'quick_capture':
-            setIsQuickCaptureOpen(true)
-            break
-          case 'search':
-            setIsSearchPanelOpen(true)
-            break
-          case 'export':
-            setIsExportDialogOpen(true)
-            break
-
-          // View menu
-          case 'mission_control':
-            // v1.16.0: No-op (deprecated - sidebar always visible)
-            break
-          case 'focus_mode':
-            handleFocusModeChange(!focusMode)
-            break
-          case 'source_mode':
-            setEditorMode('source')
-            updatePreferences({ editorMode: 'source' })
-            break
-          case 'live_preview':
-            setEditorMode('live-preview')
-            updatePreferences({ editorMode: 'live-preview' })
-            break
-          case 'reading_mode':
-            setEditorMode('reading')
-            updatePreferences({ editorMode: 'reading' })
-            break
-          case 'toggle_sidebar':
-            // v1.16.0: Collapse sidebar (icon-centric - no mode cycling)
-            collapseAll()
-            break
-          case 'knowledge_graph':
-            setIsGraphViewOpen(true)
-            break
-
-          // Scribe menu
-          case 'preferences':
-            setIsSettingsOpen(true)
-            break
-          case 'shortcuts':
-            setIsKeyboardShortcutsOpen(true)
-            break
-          case 'about':
-            // TODO: Show about dialog
-            break
-        }
-      }).then(fn => {
-        unlisten = fn
-      })
-    }).catch(err => {
-      console.warn('Tauri event API not available:', err)
-    })
-
-    return () => {
-      if (unlisten) unlisten()
-    }
-  }, [
-    handleCreateNote,
-    handleDailyNote,
-    handleFocusModeChange,
-    focusMode,
-  ])
+  // Native menu events now handled by KeyboardShortcutHandler component
 
   // Right sidebar resize handler (left sidebar handled by MissionSidebar)
   useEffect(() => {
@@ -1285,54 +1011,40 @@ function App() {
         </header>
 
         {/* Focus mode editor */}
-        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
-          {selectedNote ? (
-            <div className="flex-1 flex flex-col min-h-0">
-              <div className="p-6">
-                <h2 className="text-3xl font-bold">{selectedNote.title}</h2>
-              </div>
-              <div className="flex-1 overflow-hidden relative">
-                <HybridEditor
-                  key={selectedNote.id}
-                  content={selectedNote.content}
-                  onChange={handleContentChange}
-                  onWikiLinkClick={handleLinkClick}
-                  onTagClick={handleTagClickInEditor}
-                  onSearchNotes={handleSearchNotesForAutocomplete}
-                  onSearchTags={handleSearchTagsForAutocomplete}
-                  placeholder="Start writing..."
-                  editorMode={editorMode}
-                  onEditorModeChange={(mode) => {
-                    setEditorMode(mode)
-                    updatePreferences({ editorMode: mode })
-                  }}
-                  focusMode={true}
-                  wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
-                  sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
-                  streak={streakInfo.streak}
-                  sessionStartTime={sessionStartTime || undefined}
-                  onToggleTerminal={() => {
-                    // Toggle Terminal: if on Terminal and visible, hide; otherwise show Terminal
-                    if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
-                      setRightSidebarCollapsed(true)
-                    } else {
-                      setRightActiveTab('terminal')
-                      if (rightSidebarCollapsed) {
-                        setRightSidebarCollapsed(false)
-                      }
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          ) : (
-            <EmptyState
-              onCreateNote={handleCreateNote}
-              onOpenDaily={handleDailyNote}
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
-            />
-          )}
-        </div>
+        <EditorOrchestrator
+          selectedNote={selectedNote}
+          notes={notes}
+          editorMode={editorMode}
+          onEditorModeChange={setEditorMode}
+          editingTitle={editingTitle}
+          onEditingTitleChange={setEditingTitle}
+          onContentChange={handleContentChange}
+          onTitleChange={handleTitleChange}
+          onLinkClick={handleLinkClick}
+          onTagClick={handleTagClickInEditor}
+          onSearchNotes={handleSearchNotesForAutocomplete}
+          onSearchTags={handleSearchTagsForAutocomplete}
+          wordCount={wordCount}
+          sessionStartWords={sessionStartWords}
+          streakInfo={streakInfo}
+          sessionStartTime={sessionStartTime}
+          preferences={preferences}
+          onToggleTerminal={() => {
+            if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
+              setRightSidebarCollapsed(true)
+            } else {
+              setRightActiveTab('terminal')
+              if (rightSidebarCollapsed) {
+                setRightSidebarCollapsed(false)
+              }
+            }
+          }}
+          focusMode={true}
+          onFocusModeChange={handleFocusModeChange}
+          onCreateNote={handleCreateNote}
+          onOpenDaily={handleDailyNote}
+          onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+        />
 
         {/* Modals */}
         <CommandPalette
@@ -1372,6 +1084,40 @@ function App() {
   // Normal mode: Three-state collapsible sidebar + main content
   return (
     <div className="w-full h-full bg-nexus-bg-primary text-nexus-text-primary flex overflow-hidden" style={{ height: '100vh' }}>
+      {/* Keyboard shortcut handler (headless component) */}
+      <KeyboardShortcutHandler
+        focusMode={focusMode}
+        onFocusModeChange={handleFocusModeChange}
+        onCreateNote={handleCreateNote}
+        onDailyNote={handleDailyNote}
+        selectedNote={selectedNote}
+        onExportDialogOpen={() => setIsExportDialogOpen(true)}
+        onGraphViewOpen={() => setIsGraphViewOpen(true)}
+        onSearchPanelOpen={() => setIsSearchPanelOpen(true)}
+        onQuickCaptureOpen={() => setIsQuickCaptureOpen(true)}
+        onCreateProjectOpen={() => setIsCreateProjectModalOpen(true)}
+        onKeyboardShortcutsOpen={() => setIsKeyboardShortcutsOpen(true)}
+        onSettingsOpen={() => setIsSettingsOpen(true)}
+        onLeftSidebarToggle={() => setLeftSidebarCollapsed(prev => !prev)}
+        onRightSidebarToggle={() => setRightSidebarCollapsed(prev => !prev)}
+        onCollapseAll={collapseAll}
+        rightSidebarCollapsed={rightSidebarCollapsed}
+        openTabs={openTabs}
+        activeTabId={activeTabId}
+        onSetActiveTab={setActiveTab}
+        onCloseTab={closeTab}
+        onReopenLastClosedTab={reopenLastClosedTab}
+        rightActiveTab={rightActiveTab}
+        onRightActiveTabChange={setRightActiveTab}
+        sidebarTabSettings={sidebarTabSettings}
+        onExpandSmartIcon={expandSmartIcon}
+        editorMode={editorMode}
+        onEditorModeChange={setEditorMode}
+        themeShortcuts={themeShortcuts}
+        allThemes={allThemes}
+        onThemeChange={setTheme}
+      />
+
       {/* Custom CSS injection from user preferences */}
       {preferences.customCSSEnabled && preferences.customCSS && (
         <style id="custom-user-css">{preferences.customCSS}</style>
@@ -1572,53 +1318,41 @@ function App() {
               onCreateProject={() => setIsCreateProjectModalOpen(true)}
             />
           ) : selectedNote ? (
-            <div className="flex-1 flex flex-col min-h-0">
-              <div className="px-6 py-4 border-b border-white/5">
-                {editingTitle ? (
-                  <input
-                    autoFocus
-                    className="text-2xl font-bold bg-transparent outline-none w-full border-b border-nexus-accent"
-                    defaultValue={selectedNote.title}
-                    onBlur={(e) => handleTitleChange(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleTitleChange(e.currentTarget.value)}
-                  />
-                ) : (
-                  <h2 onClick={() => setEditingTitle(true)} className="text-2xl font-bold cursor-pointer">{selectedNote.title}</h2>
-                )}
-              </div>
-              <div ref={editorContainerRef} className="flex-1 overflow-hidden relative">
-                <HybridEditor
-                  key={selectedNote.id}
-                  content={selectedNote.content}
-                  onChange={handleContentChange}
-                  onWikiLinkClick={handleLinkClick}
-                  onTagClick={handleTagClickInEditor}
-                  onSearchNotes={handleSearchNotesForAutocomplete}
-                  onSearchTags={handleSearchTagsForAutocomplete}
-                  placeholder="Start writing... (Cmd+E to preview)"
-                  editorMode={editorMode}
-                  onEditorModeChange={(mode) => {
-                    setEditorMode(mode)
-                    updatePreferences({ editorMode: mode })
-                  }}
-                  focusMode={false}
-                  wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
-                  sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
-                  streak={streakInfo.streak}
-                  sessionStartTime={sessionStartTime || undefined}
-                  onToggleTerminal={() => {
-                    if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
-                      setRightSidebarCollapsed(true)
-                    } else {
-                      setRightActiveTab('terminal')
-                      if (rightSidebarCollapsed) {
-                        setRightSidebarCollapsed(false)
-                      }
-                    }
-                  }}
-                />
-              </div>
-            </div>
+            <EditorOrchestrator
+              selectedNote={selectedNote}
+              notes={notes}
+              editorMode={editorMode}
+              onEditorModeChange={setEditorMode}
+              editingTitle={editingTitle}
+              onEditingTitleChange={setEditingTitle}
+              onContentChange={handleContentChange}
+              onTitleChange={handleTitleChange}
+              onLinkClick={handleLinkClick}
+              onTagClick={handleTagClickInEditor}
+              onSearchNotes={handleSearchNotesForAutocomplete}
+              onSearchTags={handleSearchTagsForAutocomplete}
+              wordCount={wordCount}
+              sessionStartWords={sessionStartWords}
+              streakInfo={streakInfo}
+              sessionStartTime={sessionStartTime}
+              preferences={preferences}
+              onToggleTerminal={() => {
+                if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
+                  setRightSidebarCollapsed(true)
+                } else {
+                  setRightActiveTab('terminal')
+                  if (rightSidebarCollapsed) {
+                    setRightSidebarCollapsed(false)
+                  }
+                }
+              }}
+              focusMode={false}
+              onFocusModeChange={handleFocusModeChange}
+              onCreateNote={handleCreateNote}
+              onOpenDaily={handleDailyNote}
+              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+              editorContainerRef={editorContainerRef}
+            />
           ) : (
             <MissionControl
               projects={projects}
