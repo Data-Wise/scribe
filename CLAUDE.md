@@ -73,6 +73,7 @@ git worktree remove ~/.git-worktrees/scribe/settings
 - **Git branch:** Prefixed with `feat/` (e.g., `feat/settings-enhancement`)
 
 **Example: Settings Enhancement Workflow**
+
 ```bash
 # Phase 1: Create worktree
 git worktree add ~/.git-worktrees/scribe/settings -b feat/settings-enhancement dev
@@ -166,6 +167,12 @@ scribe/
 │   └── renderer/src/              # React frontend
 │       ├── components/
 │       │   ├── MissionControl/    # Mission Control HUD sidebar
+│       │   ├── Settings/          # Modular settings components [NEW]
+│       │   │   ├── GeneralSettingsTab.tsx
+│       │   │   ├── EditorSettingsTab.tsx
+│       │   │   └── SettingsSection.tsx
+│       │   ├── EditorOrchestrator.tsx # Editor rendering logic [NEW]
+│       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts [NEW]
 │       │   ├── Editor/            # BlockNote editor
 │       │   └── ...
 │       ├── lib/                   # Core utilities
@@ -211,14 +218,35 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.0 Complete ✅
+## 🎯 Current Status: Phase 1 Refactoring Complete ✅
 
-**Version:** 1.16.0 (Icon-Centric Sidebar Expansion)
-**Branch:** `feat/icon-expansion` (ready for merge)
-**Target:** v1.16.0 release
-**Install:** `brew install --cask data-wise/tap/scribe` (v1.14.0 stable)
+**Version:** 1.16.1 (Technical Debt Remediation Phase 1)
+**Branch:** `feat/tech-debt-remediation`
+**Status:** ✅ Phase 1.1 (Settings) & 1.2 (App) Complete
+**Impact:** -881 lines removed from monolithic files
 
-### Latest Work: Icon-Centric Sidebar Expansion (v1.16.0)
+### Latest Work: Phase 1 Technical Debt Remediation (2026-01-23)
+
+**Phase 1.1: SettingsModal Refactoring**
+- ✅ Extracted `GeneralSettingsTab`, `EditorSettingsTab`, `SettingsSection`
+- ✅ Reduced `SettingsModal.tsx` by **26%** (614 lines)
+- ✅ Added 13 new unit tests
+
+**Phase 1.2: App.tsx Refactoring**
+- ✅ Extracted `KeyboardShortcutHandler` (25+ shortcuts, Tauri menus)
+- ✅ Extracted `EditorOrchestrator` (Focus/Normal mode rendering)
+- ✅ Reduced `App.tsx` by **13%** (267 lines)
+- ✅ Added 19 new unit tests
+
+**Overall Metrics:**
+- **-881 lines** from monolithic controllers
+- **+4 new components** (well-organized, tested)
+- **+32 new tests** (2,161/2,195 passing, 98.5%)
+- **0 breaking changes**
+
+---
+
+### Previous: Icon-Centric Sidebar Expansion (v1.16.0)
 
 **Sidebar Architecture Refactor - Complete ✅**
 
@@ -233,6 +261,7 @@ Transitioned from global `sidebarMode` to per-icon expansion where each icon (In
 - ✅ **Smooth Animations** - 200ms cubic-bezier transitions, slide-in panels, expanded indicators
 
 **Architecture:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ Icon-Centric Mode (v1.16.0)                                 │
@@ -261,6 +290,7 @@ Transitioned from global `sidebarMode` to per-icon expansion where each icon (In
 ```
 
 **Component Hierarchy:**
+
 ```
 MissionSidebar.tsx (icon-centric-mode)
 ├── IconBar.tsx (48px fixed width, always visible)
@@ -436,7 +466,7 @@ toggleIcon: (type, id) => {
 - ✅ Cmd+Click in Source Mode - Navigate WikiLinks with ⌘+Click
 - ✅ Mode Preservation - Backlinks panel preserves editor mode
 - ✅ 1984 tests passing (30 WikiLink E2E tests)
-- Release: https://github.com/Data-Wise/scribe/releases/tag/v1.14.0
+- Release: <https://github.com/Data-Wise/scribe/releases/tag/v1.14.0>
 
 **Sprint 28: Live Editor Enhancements (v1.10.0)**
 
