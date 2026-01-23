@@ -1,28 +1,28 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { GeneralSettingsTab } from '../components/Settings/GeneralSettingsTab'
-import * as platform from '../../lib/platform'
+import * as platform from '../lib/platform'
 
 // Mock platform detection
-vi.mock('../../lib/platform', () => ({
+vi.mock('../lib/platform', () => ({
   isTauri: vi.fn(),
   isBrowser: vi.fn()
 }))
 
 // Mock preferences
-vi.mock('../../lib/preferences', () => ({
+vi.mock('../lib/preferences', () => ({
   loadPreferences: vi.fn(() => ({ streakDisplayOptIn: false })),
   updatePreferences: vi.fn()
 }))
 
 // Mock terminal utils
-vi.mock('../../lib/terminal-utils', () => ({
+vi.mock('../lib/terminal-utils', () => ({
   getDefaultTerminalFolder: vi.fn(() => '~'),
   setDefaultTerminalFolder: vi.fn()
 }))
 
 // Mock browser DB
-vi.mock('../../lib/browser-db', () => ({
+vi.mock('../lib/browser-db', () => ({
   db: {
     notes: { clear: vi.fn() },
     projects: { clear: vi.fn() },
@@ -35,7 +35,7 @@ vi.mock('../../lib/browser-db', () => ({
 }))
 
 // Mock PinnedVaultsSettings
-vi.mock('../Settings/PinnedVaultsSettings', () => ({
+vi.mock('../components/Settings/PinnedVaultsSettings', () => ({
   PinnedVaultsSettings: () => <div data-testid="pinned-vaults-settings">Pinned Vaults</div>
 }))
 
