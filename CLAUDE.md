@@ -73,6 +73,7 @@ git worktree remove ~/.git-worktrees/scribe/settings
 - **Git branch:** Prefixed with `feat/` (e.g., `feat/settings-enhancement`)
 
 **Example: Settings Enhancement Workflow**
+
 ```bash
 # Phase 1: Create worktree
 git worktree add ~/.git-worktrees/scribe/settings -b feat/settings-enhancement dev
@@ -211,12 +212,12 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.0 Complete ✅
+## 🎯 Current Status: v1.16.0 in Dev Branch
 
-**Version:** 1.16.0 (Icon-Centric Sidebar Expansion)
-**Branch:** `feat/icon-expansion` (ready for merge)
-**Target:** v1.16.0 release
-**Install:** `brew install --cask data-wise/tap/scribe` (v1.14.0 stable)
+**Released:** v1.14.0 (stable, via Homebrew)
+**Dev Branch:** v1.16.0 (Icon-Centric Sidebar - merged, unreleased)
+**Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
+**Tests:** 2133 passing
 
 ### Latest Work: Icon-Centric Sidebar Expansion (v1.16.0)
 
@@ -233,6 +234,7 @@ Transitioned from global `sidebarMode` to per-icon expansion where each icon (In
 - ✅ **Smooth Animations** - 200ms cubic-bezier transitions, slide-in panels, expanded indicators
 
 **Architecture:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ Icon-Centric Mode (v1.16.0)                                 │
@@ -261,6 +263,7 @@ Transitioned from global `sidebarMode` to per-icon expansion where each icon (In
 ```
 
 **Component Hierarchy:**
+
 ```
 MissionSidebar.tsx (icon-centric-mode)
 ├── IconBar.tsx (48px fixed width, always visible)
@@ -436,7 +439,7 @@ toggleIcon: (type, id) => {
 - ✅ Cmd+Click in Source Mode - Navigate WikiLinks with ⌘+Click
 - ✅ Mode Preservation - Backlinks panel preserves editor mode
 - ✅ 1984 tests passing (30 WikiLink E2E tests)
-- Release: https://github.com/Data-Wise/scribe/releases/tag/v1.14.0
+- Release: <https://github.com/Data-Wise/scribe/releases/tag/v1.14.0>
 
 **Sprint 28: Live Editor Enhancements (v1.10.0)**
 
