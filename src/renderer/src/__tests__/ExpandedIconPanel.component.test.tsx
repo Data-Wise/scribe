@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { ExpandedIconPanel } from '../components/sidebar/ExpandedIconPanel'
 import { Project, Note, ExpandedIconType, SmartIconId } from '../types'
 
@@ -107,6 +107,7 @@ function createDefaultProps() {
     projects,
     notes,
     expandedIcon: null as ExpandedIconType,
+    currentProjectId: null as string | null,
     mode: 'compact' as const,
     width: 288, // 240 compact + 48 icon bar
     onToggleMode: vi.fn(),

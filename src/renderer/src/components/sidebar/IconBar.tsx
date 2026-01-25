@@ -46,7 +46,7 @@ interface IconBarProps {
   onDeleteProject?: (projectId: string) => void
   onPinProject?: (projectId: string) => void
   onUnpinProject?: (projectId: string) => void
-  onNewNote?: (projectId?: string) => void
+  onNewNote?: (projectId: string) => void
 
   activeActivityItem?: 'search' | 'daily' | 'recent' | 'settings' | null
 }
@@ -305,12 +305,12 @@ export function IconBar({
       />
 
       {/* Project Context Menu */}
-      {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && (
+      {projectContextMenu && onEditProject && onArchiveProject && onDeleteProject && onNewNote && (
         <ProjectContextMenu
           project={projectContextMenu.project}
           position={projectContextMenu.position}
           onClose={() => setProjectContextMenu(null)}
-          onNewNote={onNewNote}
+          onNewNote={(projectId: string) => onNewNote(projectId)}
           onEditProject={onEditProject}
           onArchiveProject={onArchiveProject}
           onDeleteProject={onDeleteProject}

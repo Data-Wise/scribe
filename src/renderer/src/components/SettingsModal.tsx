@@ -6,7 +6,6 @@ import {
   Type,
   FileCode,
   Share2,
-  User,
   Sparkles,
   Search,
   BookOpen,
@@ -21,21 +20,11 @@ import {
   Copy,
   Check,
   Eye,
-  ExternalLink,
-  Loader2,
   CheckCircle2,
   AlertCircle,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp,
-  Calendar,
-  Globe,
-  Database,
-  RotateCcw,
   SlidersHorizontal,
   Home,
   FileText,
-  Terminal,
   Square
 } from 'lucide-react'
 import {
@@ -54,8 +43,8 @@ import {
   SidebarTabId,
   DEFAULT_SIDEBAR_TAB_ORDER
 } from '../lib/preferences'
-import { 
-  Theme, 
+import {
+  Theme,
   AutoThemeSettings,
   FontSettings,
   ThemeShortcut,
@@ -71,16 +60,11 @@ import {
   fetchThemeFromUrl,
   isValidThemeUrl,
   POPULAR_BASE16_SCHEMES,
-  FONT_FAMILIES,
-  RECOMMENDED_FONTS,
   groupRecommendedFonts,
   Base16Scheme
 } from '../lib/themes'
 import { api } from '../lib/api'
-import { isBrowser, isTauri } from '../lib/platform'
-import { db, seedDemoData } from '../lib/browser-db'
-import { getDefaultTerminalFolder, setDefaultTerminalFolder } from '../lib/terminal-utils'
-import { PinnedVaultsSettings } from './Settings/PinnedVaultsSettings'
+import { getDefaultTerminalFolder } from '../lib/terminal-utils'
 import { GeneralSettingsTab } from './Settings/GeneralSettingsTab'
 import { EditorSettingsTab } from './Settings/EditorSettingsTab'
 
@@ -100,7 +84,7 @@ interface SettingsModalProps {
   onThemeShortcutsChange: (shortcuts: ThemeShortcut[]) => void
 }
 
-type SettingsTab = 'general' | 'editor' | 'appearance' | 'files' | 'academic'
+type SettingsTab = 'general' | 'editor' | 'appearance' | 'files' | 'academic' | 'icon-bar'
 
 export function SettingsModal({ 
   isOpen, 
@@ -553,10 +537,7 @@ export function SettingsModal({
           
           <div className="flex-1 overflow-y-auto p-6 space-y-8">
             {activeTab === 'general' && (
-              <GeneralSettingsTab
-                terminalFolder={terminalFolder}
-                setTerminalFolder={setTerminalFolder}
-              />
+              <GeneralSettingsTab />
             )}
 
             {activeTab === 'editor' && (

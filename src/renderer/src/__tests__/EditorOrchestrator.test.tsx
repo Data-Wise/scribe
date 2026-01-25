@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { EditorOrchestrator } from '../components/EditorOrchestrator'
-import type { Note, EditorMode } from '../types'
+import type { Note } from '../types'
+import type { EditorMode } from '../lib/preferences'
 
 // Mock the HybridEditor component
 vi.mock('../components/HybridEditor', () => ({
@@ -23,8 +24,10 @@ describe('EditorOrchestrator', () => {
     title: 'Test Note',
     content: 'Test content',
     folder: 'inbox',
-    created_at: '2024-01-01',
-    updated_at: '2024-01-01',
+    project_id: null,
+    created_at: Date.now(),
+    updated_at: Date.now(),
+    deleted_at: null,
     properties: {},
   }
 

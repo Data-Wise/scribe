@@ -6,14 +6,12 @@ import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
 import { useIconGlowEffect } from './hooks/useIconGlowEffect'
-import { HybridEditor } from './components/HybridEditor'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { TagsPanel } from './components/TagsPanel'
 import { StatsPanel } from './components/StatsPanel'
 import { SettingsModal } from './components/SettingsModal'
-import { EmptyState } from './components/EmptyState'
 import { MissionControl } from './components/MissionControl'
 import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
@@ -31,7 +29,6 @@ import { ToastProvider, useToast, setGlobalToast } from './components/Toast'
 import { Note, Tag, Property } from './types'
 import { Settings2, Link2, Tags, PanelRightOpen, PanelRightClose, BarChart3, Sparkles, Terminal } from 'lucide-react'
 import { api, runApiDiagnostics } from './lib/api'
-import { isTauri } from './lib/platform'
 import { dialogs } from './lib/browser-dialogs'
 import { CommandPalette } from './components/CommandPalette'
 import { KeyboardShortcuts } from './components/KeyboardShortcuts'
@@ -52,7 +49,6 @@ import {
   saveFontSettings,
   applyFontSettings,
   loadThemeShortcuts,
-  getThemeForShortcut,
 } from './lib/themes'
 import {
   loadPreferences,
