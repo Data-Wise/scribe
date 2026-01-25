@@ -22,7 +22,6 @@ const SHORTCUTS = {
   'Navigation': [
     { keys: '⌘K', description: 'Command Palette' },
     { keys: '⌘F', description: 'Search Notes' },
-    { keys: '⌘B', description: 'Toggle Left Sidebar' },
     { keys: '⌘⇧B', description: 'Toggle Right Sidebar' },
     { keys: '⌘]', description: 'Next Right Panel' },
     { keys: '⌘[', description: 'Previous Right Panel' },

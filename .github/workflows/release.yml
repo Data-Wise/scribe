@@ -95,6 +95,7 @@ jobs:
         run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Download release assets
+        id: download
         run: |
           VERSION=${{ steps.version.outputs.version }}
           

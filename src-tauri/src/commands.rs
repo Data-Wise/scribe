@@ -256,6 +256,7 @@ pub struct CreateProjectInput {
     #[serde(rename = "type")]
     pub project_type: Option<String>,
     pub color: Option<String>,
+    pub icon: Option<String>,
     pub settings: Option<String>,
 }
 
@@ -266,6 +267,7 @@ pub struct UpdateProjectInput {
     #[serde(rename = "type")]
     pub project_type: Option<String>,
     pub color: Option<String>,
+    pub icon: Option<String>,
     pub settings: Option<String>,
 }
 
@@ -280,6 +282,7 @@ pub fn create_project(
         project.description.as_deref(),
         project.project_type.as_deref().unwrap_or("generic"),
         project.color.as_deref(),
+        project.icon.as_deref(),
         project.settings.as_deref(),
     )
     .map_err(|e| e.to_string())
@@ -316,6 +319,7 @@ pub fn update_project(
         updates.description.as_deref(),
         updates.project_type.as_deref(),
         updates.color.as_deref(),
+        updates.icon.as_deref(),
         updates.settings.as_deref(),
     )
     .map_err(|e| e.to_string())

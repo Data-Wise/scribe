@@ -168,9 +168,10 @@ export interface PinnedVault {
   color?: string  // Project color (if applicable)
   order: number  // 0-4
   isPermanent: boolean  // true for Inbox only
+  preferredMode?: 'compact' | 'card'  // v1.16.0: Per-icon mode preference
 }
 
-export type SidebarMode = 'icon' | 'compact' | 'card'
+export type SidebarMode = 'icon' | 'compact' | 'card'  // DEPRECATED in v1.16.0
 
 // Smart Icons - Permanent folder shortcuts for project types
 export type SmartIconId = 'research' | 'teaching' | 'r-package' | 'dev-tools'
@@ -182,8 +183,15 @@ export interface SmartIcon {
   color: string  // hex color for hover/expanded states
   projectType: ProjectType  // maps to Project['type']
   isVisible: boolean  // for customization in Settings
-  isExpanded: boolean  // expansion state
+  isExpanded: boolean  // expansion state (DEPRECATED in v1.16.0)
   order: number  // display order (0-3)
+  preferredMode?: 'compact' | 'card'  // v1.16.0: Per-icon mode preference
 }
+
+// v1.16.0: Icon expansion type for unified icon/vault expansion
+export type ExpandedIconType =
+  | { type: 'vault'; id: string }  // Inbox or pinned project
+  | { type: 'smart'; id: SmartIconId }  // Smart folder icon
+  | null  // Nothing expanded (icon-only sidebar)
 
 export {}

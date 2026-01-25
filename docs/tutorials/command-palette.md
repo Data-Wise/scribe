@@ -138,9 +138,7 @@ Selected command has `>` prefix:
 
 | Command | Shortcut | What It Does |
 |---------|----------|--------------|
-| **Mission Control** | ⌘0 | Dashboard view |
 | **Focus Mode** | ⌘⇧F | Distraction-free writing |
-| **Toggle Sidebar** | ⌘B | Show/hide left sidebar |
 | **Toggle Right Sidebar** | ⌘⇧B | Show/hide right sidebar |
 
 ### Editor Actions

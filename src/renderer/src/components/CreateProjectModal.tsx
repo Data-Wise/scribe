@@ -16,14 +16,19 @@ import { X, FolderPlus, Check } from 'lucide-react'
 import { Project, ProjectType, PROJECT_COLORS } from './ProjectSwitcher'
 import { IconPicker, getIconByName } from './IconPicker'
 
-// Project type options with descriptions
-const PROJECT_TYPES: { value: ProjectType; label: string; description: string }[] = [
-  { value: 'research', label: 'Research', description: 'Academic research papers and manuscripts' },
-  { value: 'teaching', label: 'Teaching', description: 'Course materials and lecture notes' },
-  { value: 'r-package', label: 'R Package', description: 'R package development project' },
-  { value: 'r-dev', label: 'R Development', description: 'R scripts and analysis projects' },
-  { value: 'generic', label: 'Generic', description: 'General purpose project' },
+// Project type options with descriptions and default icons
+const PROJECT_TYPES: { value: ProjectType; label: string; description: string; defaultIcon: string }[] = [
+  { value: 'research', label: 'Research', description: 'Academic research papers and manuscripts', defaultIcon: 'FlaskConical' },
+  { value: 'teaching', label: 'Teaching', description: 'Course materials and lecture notes', defaultIcon: 'GraduationCap' },
+  { value: 'r-package', label: 'R Package', description: 'R package development project', defaultIcon: 'Package' },
+  { value: 'r-dev', label: 'R Development', description: 'R scripts and analysis projects', defaultIcon: 'Code2' },
+  { value: 'generic', label: 'Generic', description: 'General purpose project', defaultIcon: 'Folder' },
 ]
+
+// Get default icon for project type
+const getDefaultIconForType = (type: ProjectType): string => {
+  return PROJECT_TYPES.find(t => t.value === type)?.defaultIcon || 'Folder'
+}
 
 interface CreateProjectModalProps {
   isOpen: boolean
@@ -54,10 +59,18 @@ export function CreateProjectModal({
       setType('generic')
       setDescription('')
       setColor(PROJECT_COLORS[0])
-      setIcon(undefined)
+      setIcon(getDefaultIconForType('generic'))
       setError(null)
     }
   }, [isOpen])
+
+  // Update icon when type changes (smart default)
+  useEffect(() => {
+    // Only set default icon if user hasn't manually selected one
+    if (isOpen) {
+      setIcon(getDefaultIconForType(type))
+    }
+  }, [type, isOpen])
 
   // Validation
   const validateName = (value: string): string | null => {

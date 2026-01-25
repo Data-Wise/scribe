@@ -35,7 +35,8 @@ import {
   SlidersHorizontal,
   Home,
   FileText,
-  Terminal
+  Terminal,
+  Square
 } from 'lucide-react'
 import {
   loadTemplates,
@@ -80,6 +81,8 @@ import { isBrowser, isTauri } from '../lib/platform'
 import { db, seedDemoData } from '../lib/browser-db'
 import { getDefaultTerminalFolder, setDefaultTerminalFolder } from '../lib/terminal-utils'
 import { PinnedVaultsSettings } from './Settings/PinnedVaultsSettings'
+import { GeneralSettingsTab } from './Settings/GeneralSettingsTab'
+import { EditorSettingsTab } from './Settings/EditorSettingsTab'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -183,6 +186,24 @@ export function SettingsModal({
       hiddenTabs: prefs.sidebarHiddenTabs
     }
   })
+
+  // Icon Bar preferences state (v1.16)
+  const [iconBarSettings, setIconBarSettings] = useState(() => {
+    const prefs = loadPreferences()
+    return {
+      iconGlowEffect: prefs.iconGlowEffect ?? true,
+      iconGlowIntensity: prefs.iconGlowIntensity ?? 'subtle'
+    }
+  })
+
+  // Update icon bar setting and save to preferences
+  const updateIconBarSetting = <K extends keyof typeof iconBarSettings>(
+    key: K,
+    value: typeof iconBarSettings[K]
+  ) => {
+    setIconBarSettings(prev => ({ ...prev, [key]: value }))
+    updatePreferences({ [key]: value })
+  }
 
   // Update sidebar setting and save to preferences
   const updateSidebarSetting = <K extends keyof typeof sidebarSettings>(
@@ -453,6 +474,7 @@ export function SettingsModal({
     { id: 'general', label: 'General', icon: SettingsIcon },
     { id: 'editor', label: 'Editor', icon: Type },
     { id: 'appearance', label: 'Appearance', icon: Sparkles },
+    { id: 'icon-bar', label: 'Icon Bar', icon: Square },
     { id: 'files', label: 'Files & Links', icon: FileCode },
     { id: 'academic', label: 'Research', icon: BookOpen },
   ]
@@ -531,642 +553,17 @@ export function SettingsModal({
           
           <div className="flex-1 overflow-y-auto p-6 space-y-8">
             {activeTab === 'general' && (
-              <div className="space-y-6">
-                <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Startup</h4>
-                  <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-                    <div>
-                      <div className="text-sm font-medium text-nexus-text-primary">Open last page on startup</div>
-                      <div className="text-xs text-nexus-text-muted">Return to exactly where you left off.</div>
-                    </div>
-                    <div className="w-10 h-5 bg-nexus-accent rounded-full relative cursor-pointer">
-                      <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full" />
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">ADHD Features</h4>
-                  <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-                    <div>
-                      <div className="text-sm font-medium text-nexus-text-primary">Show writing streak milestones</div>
-                      <div className="text-xs text-nexus-text-muted">Celebrate at 7, 30, 100, and 365 days. Off by default to avoid anxiety.</div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        const prefs = loadPreferences()
-                        updatePreferences({ streakDisplayOptIn: !prefs.streakDisplayOptIn })
-                      }}
-                      className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
-                        loadPreferences().streakDisplayOptIn ? 'bg-nexus-accent' : 'bg-white/10'
-                      }`}
-                    >
-                      <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
-                        loadPreferences().streakDisplayOptIn ? 'right-1' : 'left-1'
-                      }`} />
-                    </button>
-                  </div>
-                </section>
-                
-                <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Identity</h4>
-                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-nexus-purple/20 flex items-center justify-center border border-nexus-purple/30">
-                      <User className="w-6 h-6 text-nexus-purple" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-nexus-text-primary">Research Assistant</div>
-                      <div className="text-xs text-nexus-text-muted">Causal Inference Specialist</div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Pinned Vaults Section */}
-                <PinnedVaultsSettings />
-
-                {/* Terminal Section - only shown in Tauri mode */}
-                {isTauri() && (
-                  <section>
-                    <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4 flex items-center gap-2">
-                      <Terminal className="w-3 h-3" style={{ color: 'var(--nexus-accent)' }} />
-                      Terminal
-                    </h4>
-                    <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
-                      <div>
-                        <label className="text-xs text-nexus-text-muted mb-2 block">Default Terminal Folder</label>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={terminalFolder}
-                            onChange={(e) => setTerminalFolder(e.target.value)}
-                            onBlur={() => setDefaultTerminalFolder(terminalFolder)}
-                            placeholder="~"
-                            className="flex-1 bg-nexus-bg-primary border border-white/10 rounded-md px-3 py-2 text-sm text-nexus-text-primary placeholder:text-nexus-text-muted/50 focus:outline-none focus:border-nexus-accent/50"
-                          />
-                          <button
-                            onClick={() => {
-                              setTerminalFolder('~')
-                              setDefaultTerminalFolder('~')
-                            }}
-                            className="px-3 py-2 bg-white/5 hover:bg-white/10 rounded-md text-xs text-nexus-text-secondary transition-colors"
-                            title="Reset to home directory"
-                          >
-                            <Home className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <p className="text-[10px] text-nexus-text-muted mt-2">
-                          Fallback location when project folder doesn't exist. Terminal opens in project-specific folders when available.
-                        </p>
-                      </div>
-                    </div>
-                  </section>
-                )}
-
-                {/* Browser Mode Section - only shown in browser mode */}
-                {isBrowser() && (
-                  <section>
-                    <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4 flex items-center gap-2">
-                      <Globe className="w-3 h-3" style={{ color: 'rgb(251, 146, 60)' }} />
-                      Browser Mode
-                    </h4>
-                    <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(251, 146, 60, 0.15)' }}>
-                          <Database className="w-5 h-5" style={{ color: 'rgb(251, 146, 60)' }} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-sm font-medium text-nexus-text-primary">IndexedDB Storage</div>
-                          <div className="text-xs text-nexus-text-muted">Your data is stored locally in this browser.</div>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-white/5 pt-4 space-y-3">
-                        <button
-                          onClick={async () => {
-                            if (confirm('This will delete ALL notes, projects, and tags. This cannot be undone. Continue?')) {
-                              await db.notes.clear()
-                              await db.projects.clear()
-                              await db.tags.clear()
-                              await db.noteTags.clear()
-                              await db.noteLinks.clear()
-                              await db.projectSettings.clear()
-                              window.location.reload()
-                            }
-                          }}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors text-sm font-medium"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          Clear All Data
-                        </button>
-
-                        <button
-                          onClick={async () => {
-                            const seeded = await seedDemoData()
-                            if (seeded) {
-                              alert('Demo data has been restored!')
-                              window.location.reload()
-                            } else {
-                              alert('Demo data already exists. Clear data first to re-seed.')
-                            }
-                          }}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-nexus-text-secondary rounded-lg transition-colors text-sm font-medium"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                          Restore Demo Data
-                        </button>
-                      </div>
-
-                      <div className="text-xs text-nexus-text-muted pt-2 border-t border-white/5">
-                        Some features like AI assistance and PDF export require the desktop app.
-                      </div>
-                    </div>
-                  </section>
-                )}
-              </div>
+              <GeneralSettingsTab
+                terminalFolder={terminalFolder}
+                setTerminalFolder={setTerminalFolder}
+              />
             )}
 
             {activeTab === 'editor' && (
-              <div className="space-y-6">
-                <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
-                    <Type className="w-3 h-3 inline mr-2" />
-                    Typography
-                  </h4>
-                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-5">
-                    {/* Font Family */}
-                    <div>
-                      <label className="text-xs text-nexus-text-muted mb-2 block">Font Family</label>
-                      <select
-                        value={fontSettings.family}
-                        onChange={(e) => onFontSettingsChange({ ...fontSettings, family: e.target.value })}
-                        className="w-full bg-nexus-bg-primary border border-white/10 rounded-md p-2 text-sm text-nexus-text-primary"
-                      >
-                        <optgroup label="Sans-Serif (Modern)">
-                          {Object.entries(FONT_FAMILIES).filter(([, f]) => f.category === 'sans').map(([key, font]) => (
-                            <option key={key} value={key}>{font.name}</option>
-                          ))}
-                        </optgroup>
-                        <optgroup label="Serif (Book/Academic)">
-                          {Object.entries(FONT_FAMILIES).filter(([, f]) => f.category === 'serif').map(([key, font]) => (
-                            <option key={key} value={key}>{font.name}</option>
-                          ))}
-                        </optgroup>
-                        <optgroup label="Monospace (Focus/Code)">
-                          {Object.entries(FONT_FAMILIES).filter(([, f]) => f.category === 'mono').map(([key, font]) => (
-                            <option key={key} value={key}>{font.name}</option>
-                          ))}
-                        </optgroup>
-                      </select>
-                      <p className="text-[10px] text-nexus-text-muted mt-1">
-                        {FONT_FAMILIES[fontSettings.family]?.description}
-                      </p>
-                    </div>
-                    
-                    {/* Font Size */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-xs text-nexus-text-muted">Font Size</label>
-                        <span className="text-sm font-bold text-nexus-accent">{fontSettings.size}px</span>
-                      </div>
-                      <input 
-                        type="range" 
-                        className="w-full accent-nexus-accent" 
-                        min="12" 
-                        max="24" 
-                        value={fontSettings.size}
-                        onChange={(e) => onFontSettingsChange({ ...fontSettings, size: parseInt(e.target.value) })}
-                      />
-                      <div className="flex justify-between text-[10px] text-nexus-text-muted mt-1">
-                        <span>12px (compact)</span>
-                        <span>24px (large)</span>
-                      </div>
-                    </div>
-                    
-                    {/* Line Height */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-xs text-nexus-text-muted">Line Height</label>
-                        <span className="text-sm font-bold text-nexus-accent">{fontSettings.lineHeight.toFixed(1)}</span>
-                      </div>
-                      <input 
-                        type="range" 
-                        className="w-full accent-nexus-accent" 
-                        min="1.4" 
-                        max="2.2" 
-                        step="0.1"
-                        value={fontSettings.lineHeight}
-                        onChange={(e) => onFontSettingsChange({ ...fontSettings, lineHeight: parseFloat(e.target.value) })}
-                      />
-                      <div className="flex justify-between text-[10px] text-nexus-text-muted mt-1">
-                        <span>1.4 (tight)</span>
-                        <span>2.2 (spacious)</span>
-                      </div>
-                    </div>
-                    
-                    {/* Preview */}
-                    <div className="pt-3 border-t border-white/5">
-                      <label className="text-xs text-nexus-text-muted mb-2 block">Preview</label>
-                      <div 
-                        className="p-3 bg-nexus-bg-primary rounded-md border border-white/10"
-                        style={{
-                          fontFamily: FONT_FAMILIES[fontSettings.family]?.value,
-                          fontSize: `${fontSettings.size}px`,
-                          lineHeight: fontSettings.lineHeight,
-                        }}
-                      >
-                        <p className="text-nexus-text-primary">The quick brown fox jumps over the lazy dog.</p>
-                        <p className="text-nexus-text-muted">0123456789 - ADHD-friendly writing experience.</p>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                
-                <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">Writing Experience</h4>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-                      <div>
-                        <div className="text-sm font-medium text-nexus-text-primary">Readable line length</div>
-                        <div className="text-xs text-nexus-text-muted">Limit maximum line width for focus.</div>
-                      </div>
-                      <div className="w-10 h-5 bg-nexus-accent rounded-full relative cursor-pointer">
-                        <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full" />
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-                      <div>
-                        <div className="text-sm font-medium text-nexus-text-primary">Spellcheck</div>
-                        <div className="text-xs text-nexus-text-muted">Enable browser-native spellchecking.</div>
-                      </div>
-                      <div className="w-10 h-5 bg-white/10 rounded-full relative cursor-pointer">
-                        <div className="absolute left-1 top-1 w-3 h-3 bg-nexus-text-muted rounded-full" />
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Daily Notes Templates */}
-                <section>
-                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
-                    <Calendar className="w-3 h-3 inline mr-2" />
-                    Journal Template
-                  </h4>
-                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
-                    <div>
-                      <label className="text-xs text-nexus-text-muted mb-2 block">Template</label>
-                      <select
-                        value={selectedTemplateId}
-                        onChange={(e) => handleTemplateChange(e.target.value)}
-                        className="w-full bg-nexus-bg-primary border border-white/10 rounded-md p-2 text-sm text-nexus-text-primary"
-                      >
-                        {templates.map((t) => (
-                          <option key={t.id} value={t.id}>{t.name}</option>
-                        ))}
-                      </select>
-                      <p className="text-[10px] text-nexus-text-muted mt-1">
-                        This template will be used when creating new journal entries (⌘D)
-                      </p>
-                    </div>
-
-                    <div>
-                      <button
-                        onClick={() => setShowTemplatePreview(!showTemplatePreview)}
-                        className="text-xs text-nexus-accent hover:text-nexus-accent-hover flex items-center gap-1"
-                      >
-                        {showTemplatePreview ? 'Hide Preview' : 'Show Preview'}
-                        {showTemplatePreview ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                      </button>
-
-                      {showTemplatePreview && (
-                        <div className="mt-3 p-3 bg-nexus-bg-primary rounded-md border border-white/5 max-h-48 overflow-y-auto">
-                          <pre className="text-xs text-nexus-text-muted whitespace-pre-wrap font-mono">
-                            {templatePreview}
-                          </pre>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="text-[10px] text-nexus-text-muted pt-2 border-t border-white/5">
-                      <div className="font-medium mb-1">Available variables:</div>
-                      <code className="text-nexus-accent">{'{{date}}'}</code> Full date,{' '}
-                      <code className="text-nexus-accent">{'{{date_short}}'}</code> YYYY-MM-DD,{' '}
-                      <code className="text-nexus-accent">{'{{day}}'}</code> Weekday,{' '}
-                      <code className="text-nexus-accent">{'{{time}}'}</code> HH:MM,{' '}
-                      <code className="text-nexus-accent">{'{{week}}'}</code> Week #
-                    </div>
-                  </div>
-                </section>
-
-                {/* Recommended ADHD-Friendly Fonts */}
-                <section>
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold">
-                      <Type className="w-3 h-3 inline mr-2" />
-                      ADHD-Friendly Fonts
-                    </h4>
-                    <div className="flex items-center gap-2">
-                      {showRecommendedFonts && (
-                        <button
-                          onClick={loadInstalledFonts}
-                          disabled={isLoadingFonts}
-                          className="p-1.5 text-nexus-text-muted hover:text-nexus-accent rounded transition-colors disabled:opacity-50"
-                          title="Refresh installed fonts"
-                        >
-                          <RefreshCw className={`w-3.5 h-3.5 ${isLoadingFonts ? 'animate-spin' : ''}`} />
-                        </button>
-                      )}
-                      <button
-                        onClick={() => setShowRecommendedFonts(!showRecommendedFonts)}
-                        className="text-xs text-nexus-accent hover:text-nexus-accent-hover flex items-center gap-1"
-                      >
-                        {showRecommendedFonts ? 'Hide' : 'Show'} ({RECOMMENDED_FONTS.length})
-                        {showRecommendedFonts ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {showRecommendedFonts && (
-                    <div className="space-y-4">
-                      {/* Category Filter Tabs */}
-                      <div className="flex gap-1 p-1 bg-nexus-bg-primary rounded-lg">
-                        {(['all', 'sans', 'serif', 'mono'] as const).map((cat) => (
-                          <button
-                            key={cat}
-                            onClick={() => setFontCategoryFilter(cat)}
-                            className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-                              fontCategoryFilter === cat
-                                ? 'bg-nexus-accent text-white'
-                                : 'text-nexus-text-muted hover:text-nexus-text-primary hover:bg-white/5'
-                            }`}
-                          >
-                            {cat === 'all' ? 'All' : cat === 'sans' ? 'Sans' : cat === 'serif' ? 'Serif' : 'Mono'}
-                          </button>
-                        ))}
-                      </div>
-                      
-                      {/* Search/Filter */}
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-nexus-text-muted" />
-                        <input
-                          type="text"
-                          value={fontSearchQuery}
-                          onChange={(e) => setFontSearchQuery(e.target.value)}
-                          placeholder="Search fonts..."
-                          className="w-full pl-9 pr-3 py-2 bg-nexus-bg-primary border border-white/10 rounded-lg text-sm text-nexus-text-primary placeholder:text-nexus-text-muted/50 focus:outline-none focus:border-nexus-accent/50"
-                        />
-                        {fontSearchQuery && (
-                          <button
-                            onClick={() => setFontSearchQuery('')}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-nexus-text-muted hover:text-nexus-text-primary"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                      
-                      {/* Homebrew status */}
-                      {hasHomebrew === false && (
-                        <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-start gap-2">
-                          <AlertCircle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                          <div className="text-xs text-yellow-200">
-                            <strong>Homebrew not found.</strong> Install it from{' '}
-                            <a href="https://brew.sh" target="_blank" rel="noopener" className="underline">brew.sh</a>
-                            {' '}to enable font installation.
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Loading state */}
-                      {isLoadingFonts && (
-                        <div className="flex items-center gap-2 text-xs text-nexus-text-muted p-4">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Loading installed fonts...
-                        </div>
-                      )}
-                      
-                      {/* No results */}
-                      {(fontSearchQuery || fontCategoryFilter !== 'all') && fontGroups.installed.length === 0 && fontGroups.available.length === 0 && fontGroups.premium.length === 0 && (
-                        <div className="text-center py-8 text-nexus-text-muted">
-                          <Type className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">
-                            {fontSearchQuery 
-                              ? `No fonts match "${fontSearchQuery}"${fontCategoryFilter !== 'all' ? ` in ${fontCategoryFilter}` : ''}`
-                              : `No ${fontCategoryFilter} fonts available`
-                            }
-                          </p>
-                          {(fontSearchQuery || fontCategoryFilter !== 'all') && (
-                            <button
-                              onClick={() => { setFontSearchQuery(''); setFontCategoryFilter('all'); }}
-                              className="mt-2 text-xs text-nexus-accent hover:text-nexus-accent-hover"
-                            >
-                              Clear filters
-                            </button>
-                          )}
-                        </div>
-                      )}
-                      
-                      {/* Installed recommended fonts */}
-                      {fontGroups.installed.length > 0 && (
-                        <div>
-                          <h5 className="text-[10px] uppercase tracking-widest text-green-400 font-bold mb-2 flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3" />
-                            Installed ({fontGroups.installed.length})
-                          </h5>
-                          <div className="space-y-2">
-                            {fontGroups.installed.map(font => (
-                              <div
-                                key={font.id}
-                                className="p-3 bg-nexus-bg-tertiary rounded-lg border border-green-500/20"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm font-medium text-nexus-text-primary">{font.name}</span>
-                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-nexus-text-muted uppercase">
-                                        {font.category}
-                                      </span>
-                                    </div>
-                                    <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <button
-                                      onClick={() => setExpandedFontPreview(expandedFontPreview === font.id ? null : font.id)}
-                                      className="p-1.5 text-nexus-text-muted hover:text-nexus-accent rounded transition-colors"
-                                      title="Preview font"
-                                    >
-                                      <Eye className="w-4 h-4" />
-                                    </button>
-                                    <button
-                                      onClick={() => handleUseFont(font)}
-                                      className="px-2 py-1 text-[10px] font-medium bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded transition-colors"
-                                      title="Use this font in editor"
-                                    >
-                                      Use
-                                    </button>
-                                  </div>
-                                </div>
-                                {/* Font Preview */}
-                                {expandedFontPreview === font.id && (
-                                  <div 
-                                    className="mt-3 p-3 bg-nexus-bg-primary rounded-md border border-white/10"
-                                    style={{ fontFamily: font.fontFamily }}
-                                  >
-                                    <p className="text-lg text-nexus-text-primary leading-relaxed">
-                                      The quick brown fox jumps over the lazy dog.
-                                    </p>
-                                    <p className="text-sm text-nexus-text-muted mt-1">
-                                      0123456789 — AaBbCcDdEeFf IlL1 O0o
-                                    </p>
-                                    <button
-                                      onClick={() => handleUseFont(font)}
-                                      className="mt-3 w-full py-2 text-xs font-medium bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-md transition-colors"
-                                    >
-                                      Use {font.name} in Editor
-                                    </button>
-                                  </div>
-                                )}
-                                <div className="mt-2 text-[10px] text-green-300/80 italic">
-                                  {font.adhdBenefit}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Available for installation */}
-                      {fontGroups.available.length > 0 && (
-                        <div>
-                          <h5 className="text-[10px] uppercase tracking-widest text-nexus-text-muted font-bold mb-2 flex items-center gap-1">
-                            <Download className="w-3 h-3" />
-                            Available via Homebrew ({fontGroups.available.length})
-                          </h5>
-                          <div className="space-y-2">
-                            {fontGroups.available.map(font => (
-                              <div
-                                key={font.id}
-                                className="p-3 bg-nexus-bg-tertiary rounded-lg border border-white/5"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm font-medium text-nexus-text-primary">{font.name}</span>
-                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-nexus-text-muted uppercase">
-                                        {font.category}
-                                      </span>
-                                    </div>
-                                    <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <button
-                                      onClick={() => setExpandedFontPreview(expandedFontPreview === font.id ? null : font.id)}
-                                      className="p-1.5 text-nexus-text-muted hover:text-nexus-accent rounded transition-colors"
-                                      title="Preview font (with fallback)"
-                                    >
-                                      <Eye className="w-4 h-4" />
-                                    </button>
-                                    <button
-                                      onClick={() => handleInstallFont(font)}
-                                      disabled={!hasHomebrew || installingFont !== null}
-                                      className="px-3 py-1.5 bg-nexus-accent hover:bg-nexus-accent-hover text-white text-xs font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                                    >
-                                      {installingFont === font.id ? (
-                                        <>
-                                          <Loader2 className="w-3 h-3 animate-spin" />
-                                          Installing...
-                                        </>
-                                      ) : (
-                                        <>
-                                          <Download className="w-3 h-3" />
-                                          Install
-                                        </>
-                                      )}
-                                    </button>
-                                  </div>
-                                </div>
-                                {/* Font Preview (with fallback since not installed) */}
-                                {expandedFontPreview === font.id && (
-                                  <div 
-                                    className="mt-3 p-3 bg-nexus-bg-primary rounded-md border border-white/10"
-                                    style={{ fontFamily: font.fontFamily }}
-                                  >
-                                    <p className="text-xs text-nexus-text-muted mb-1 italic">
-                                      Preview (using system fallback - install for actual font)
-                                    </p>
-                                    <p className="text-lg text-nexus-text-primary leading-relaxed">
-                                      The quick brown fox jumps over the lazy dog.
-                                    </p>
-                                    <p className="text-sm text-nexus-text-muted mt-1">
-                                      0123456789 — AaBbCcDdEeFf IlL1 O0o
-                                    </p>
-                                  </div>
-                                )}
-                                <div className="mt-2 text-[10px] text-nexus-accent/80 italic">
-                                  {font.adhdBenefit}
-                                </div>
-                                {fontInstallResult?.id === font.id && (
-                                  <div className={`mt-2 text-[10px] p-2 rounded ${
-                                    fontInstallResult.success 
-                                      ? 'bg-green-500/10 text-green-300' 
-                                      : 'bg-red-500/10 text-red-300'
-                                  }`}>
-                                    {fontInstallResult.message}
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Premium fonts */}
-                      {fontGroups.premium.length > 0 && (
-                        <div>
-                          <h5 className="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-2 flex items-center gap-1">
-                            <Sparkles className="w-3 h-3" />
-                            Premium Fonts ({fontGroups.premium.length})
-                          </h5>
-                          <div className="space-y-2">
-                            {fontGroups.premium.map(font => (
-                              <div
-                                key={font.id}
-                                className="p-3 bg-nexus-bg-tertiary rounded-lg border border-purple-500/20"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm font-medium text-nexus-text-primary">{font.name}</span>
-                                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 uppercase">
-                                        {font.category}
-                                      </span>
-                                    </div>
-                                    <div className="text-[10px] text-nexus-text-muted">{font.description}</div>
-                                  </div>
-                                  {font.website && (
-                                    <a
-                                      href={font.website}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="ml-3 px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-xs font-medium rounded-md transition-colors flex items-center gap-1"
-                                    >
-                                      <ExternalLink className="w-3 h-3" />
-                                      Get
-                                    </a>
-                                  )}
-                                </div>
-                                <div className="mt-2 text-[10px] text-purple-300/80 italic">
-                                  {font.adhdBenefit}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </section>
-              </div>
+              <EditorSettingsTab
+                fontSettings={fontSettings}
+                onFontSettingsChange={onFontSettingsChange}
+              />
             )}
 
             {activeTab === 'appearance' && (
@@ -1984,6 +1381,60 @@ export function SettingsModal({
                   </div>
                 </section>
 
+              </div>
+            )}
+
+            {activeTab === 'icon-bar' && (
+              <div className="space-y-6">
+                <section>
+                  <h4 className="text-xs uppercase tracking-widest text-nexus-text-muted font-bold mb-4">
+                    Glow Effects
+                  </h4>
+                  <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-5">
+                    {/* Enable Icon Glow */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm font-medium text-nexus-text-primary">Enable Icon Glow</div>
+                        <div className="text-xs text-nexus-text-muted mt-1">Show glow effect on active project icons</div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={iconBarSettings.iconGlowEffect}
+                        onChange={(e) => {
+                          updateIconBarSetting('iconGlowEffect', e.target.checked)
+                        }}
+                        className="w-4 h-4"
+                      />
+                    </div>
+
+                    {/* Glow Intensity */}
+                    <div>
+                      <label className="text-sm font-medium text-nexus-text-primary mb-2 block">Glow Intensity</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { value: 'subtle', label: 'Subtle', desc: 'Minimal glow (Recommended)' },
+                          { value: 'medium', label: 'Medium', desc: 'Balanced visibility' },
+                          { value: 'prominent', label: 'Prominent', desc: 'Strong glow' }
+                        ].map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => updateIconBarSetting('iconGlowIntensity', option.value as 'subtle' | 'medium' | 'prominent')}
+                            className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${
+                              iconBarSettings.iconGlowIntensity === option.value
+                                ? 'bg-nexus-accent text-white'
+                                : 'bg-nexus-bg-primary text-nexus-text-muted hover:text-nexus-text-primary hover:bg-white/5'
+                            }`}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-nexus-text-muted mt-1.5">
+                        Control the intensity of the glow effect on active project icons
+                      </p>
+                    </div>
+                  </div>
+                </section>
               </div>
             )}
 

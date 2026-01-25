@@ -1,18 +1,25 @@
 ---
 status: active
 priority: P1
-progress: 90
-version: 1.15.0-rc
+progress: 100
+version: 1.16.1
 sprint: 36
 started: 2026-01-08
-updated: 2026-01-10
+updated: 2026-01-23
 editor: hybrid-markdown++
 next_sprint: 37
-next_focus: v1.16.0 Icon-Centric Sidebar Expansion (High Priority after v1.15.0)
-high_priority_backlog: Icon-Centric Expansion (11-12h, Plan Ready)
-tests: 2297
-unit_tests: 2205
-e2e_tests: 92
+next_focus: v1.17.0 Three-Tab Sidebar System / Phase 1.3 Database Modularization
+high_priority_backlog: 1.3 Database Modularization (600 lines, 3h), 1.1 Finish Settings (800 lines)
+tests: 2161
+unit_tests: 2161
+e2e_tests: 109
+code_review: 2026-01-23 (Phase 1 Refactoring complete, -881 lines)
+features_implemented:
+  - tech_debt_phase_1: "App.tsx & SettingsModal.tsx modularization complete"
+  - terminal_integration: "Full PTY shell via portable-pty + xterm.js (288 lines)"
+  - cli_ai: "Claude & Gemini CLI integration (no API keys)"
+  - dual_runtime: "Tauri desktop + browser fallback (IndexedDB)"
+  - icon_centric_sidebar: "v1.16.0 refactor complete"
 tags:
   - adhd-friendly
   - distraction-free
@@ -21,7 +28,10 @@ tags:
   - academic
   - projects
   - cli
+  - terminal
+  - ai-chat
 ---
+
 
 # Scribe
 
@@ -1402,20 +1412,26 @@ After:  [M] Mediation Planning    📝 12 • 2h ago
 
 | Sprint | Focus | Priority | Status |
 |--------|-------|----------|--------|
-| 37 | Icon-Centric Sidebar Expansion | P1 | 📋 Planned |
+| 37 | Three-Tab Sidebar System | P1 | 📋 Planned (Spec Complete) |
 | 27 | Sidebar Consolidation + AI | P1 | 📋 Planned |
 | TBD | SwiftUI Native Port | P3 | 📋 Researched |
 
+**Recently Completed:**
+| Sprint | Focus | Status | Completed |
+|--------|-------|--------|-----------|
+| 36 | Icon-Centric Sidebar Expansion (v1.16.0) | ✅ Complete | 2026-01-10 |
+
 ---
 
-### v1.16 Icon-Centric Sidebar Expansion (High Priority)
+### v1.16 Icon-Centric Sidebar Expansion - COMPLETE ✅
 
-**Status:** 📋 Planning Complete, Ready for Implementation
+**Status:** ✅ Complete and Ready for PR
 **Plan:** `/Users/dt/.claude/plans/majestic-sleeping-scroll.md`
 **Target:** v1.16.0
 **Priority:** P1 (High Priority)
-**Duration:** 11-12 hours (1.5-2 working days)
-**Branch:** TBD (will create feat/icon-expansion)
+**Duration:** 11-12 hours actual (completed 2026-01-10)
+**Branch:** feat/icon-expansion (ready for PR to dev)
+**Completed:** 2026-01-10
 
 **Goal:** Transition from project-centric to icon-centric sidebar expansion where each icon (Inbox, Smart Folders, Pinned Projects) can independently expand and choose its view mode.
 
@@ -1451,13 +1467,19 @@ After:  [M] Mediation Planning    📝 12 • 2h ago
 - `src/renderer/src/components/KeyboardShortcuts.tsx` - Remove shortcut entries
 
 **Verification Checklist:**
-- [ ] No global `sidebarMode` state exists
-- [ ] Each icon has independent `preferredMode` field
-- [ ] Accordion pattern works (one icon at a time)
-- [ ] Single resize handle affects currently expanded icon
-- [ ] ⌘B and ⌘0 shortcuts removed
-- [ ] All tests passing
-- [ ] Migration from v1.15.0 works smoothly
+- [x] No global `sidebarMode` state exists
+- [x] Each icon has independent `preferredMode` field
+- [x] Accordion pattern works (one icon at a time)
+- [x] Single resize handle affects currently expanded icon
+- [x] ⌘B and ⌘0 shortcuts removed
+- [x] All tests passing (2,133 unit tests)
+- [x] Migration from v1.15.0 works smoothly
+
+**Testing Complete:**
+- ✅ 102 icon-centric tests (18 IconBar + 20 ExpandedIconPanel + 64 core/E2E)
+- ✅ 2,133 total unit tests passing
+- ✅ TypeScript: 0 errors
+- ✅ Build: Successful
 
 **Risk Mitigation:**
 - High Risk: Many tests relying on `sidebarMode` (systematic test updates)
@@ -1476,6 +1498,126 @@ After:  [M] Mediation Planning    📝 12 • 2h ago
 3. Implement Phase 2 (component refactor)
 4. Complete testing and polish
 5. PR to dev, merge, tag as v1.16.0
+
+---
+
+### v1.17 Three-Tab Sidebar System - SPEC COMPLETE ✅
+
+**Status:** ✅ Comprehensive spec complete, ready for implementation after v1.16.0
+**Spec:** `docs/specs/SPEC-three-tab-sidebar-2026-01-10.md` (35,000+ words)
+**UX Analysis:** Background agents completed (UX designer + Backend architect)
+**Target:** v1.17.0
+**Priority:** P1 (High Priority after v1.16.0)
+**Duration:** ~20 hours across 3-4 days (6 phases)
+**Branch:** TBD (will create feat/three-tab-sidebar)
+
+**Goal:** Add third "Explorer" tab to sidebar with tree view for hierarchical navigation (Projects > Notes)
+
+**Design Decisions (User-Confirmed via 8 Expert Questions):**
+- ✅ Tab bar position: Inside expanded panel header (saves space)
+- ✅ Tab availability: All icons get 3 tabs (uniform behavior)
+- ✅ Explorer content: Tree view with Projects > Notes hierarchy
+- ✅ Width on tab switch: Keep current width (no jump, ADHD-friendly)
+- ✅ Tab persistence: Remember last tab per icon (independent)
+- ✅ Click to expand: Opens to last active tab (no cycle)
+- ✅ Explorer actions: Drag notes between projects (future v1.17/v1.18)
+- ✅ Tab visual style: macOS-style pill tabs (familiar, cohesive)
+
+**Three Tab Types:**
+
+| Tab | View Type | Use Case | Cognitive Load |
+|-----|-----------|----------|----------------|
+| Compact | List (vertical) | Quick scanning | Low ⭐ |
+| Card | Grid (cards) | Visual browsing | Medium ⭐⭐ |
+| Explorer | Tree (hierarchical) | Organization | High ⭐⭐⭐ |
+
+**Implementation Phases:**
+
+| Phase | Duration | Priority | Deliverable |
+|-------|----------|----------|-------------|
+| 1. State Schema Update | 2h | P1 | IconTabType, ExplorerTreeState interfaces |
+| 2. Migration | 2h | P1 | v1.16.0 → v1.17.0 localStorage migration |
+| 3. Zustand Actions | 4h | P1 | 5 new actions (switchIconTab, toggleExplorerNode, etc.) |
+| 4. UI Components | 8h | P1 | IconTabBar, ExplorerPanelContent, tree nodes |
+| 5. Testing | 4h | P1 | Unit + E2E + migration tests |
+| 6. Documentation | 1h | P2 | CHANGELOG, README updates |
+
+**Key Architecture Changes:**
+- Rename `preferredMode` → `activeTab` (more accurate for 3 tabs)
+- Add `IconTabType = 'compact' | 'card' | 'explorer'`
+- Add `explorerModeWidth: 320px` (third global width)
+- Add `ExplorerTreeState { expandedNodes: Set<string> }` for tree state
+- Per-icon tab memory: Each icon remembers last active tab
+
+**Keyboard Shortcuts:**
+- ⌘1 → Compact tab (matches Editor Source mode)
+- ⌘2 → Card tab (matches Editor Live mode)
+- ⌘3 → Explorer tab (matches Editor Reading mode)
+
+**Recommended Default Tabs:**
+```typescript
+inbox: 'compact',       // Quick capture review
+research: 'card',       // Visual project browsing
+teaching: 'card',       // Visual course browsing
+'r-package': 'compact', // Name-based navigation
+'r-dev': 'compact',     // Name-based navigation
+vault: 'compact'        // Single project notes list
+```
+
+**Testing Strategy:**
+- 40+ unit tests for new Zustand actions
+- 30+ E2E tests for tab switching workflows
+- 5 migration test scenarios
+- Performance benchmarks (< 100ms tab switch, < 200ms tree render)
+
+**Accessibility:**
+- Full ARIA support (tablist, tab, tabpanel roles)
+- Keyboard navigation (⌘1/2/3, ↑↓←→ in tree)
+- Screen reader announcements
+- WCAG 2.1 AA compliance (4.5:1 contrast)
+
+**ADHD-Friendly Design:**
+- Progressive disclosure (start simple, opt into complexity)
+- One tab at a time (no cognitive overload)
+- Constant width on tab switch (no jarring motion)
+- Clear escape hatches (Esc, click icon again)
+
+**Files to Create:**
+- `src/renderer/src/components/sidebar/tabs/IconTabBar.tsx`
+- `src/renderer/src/components/sidebar/tabs/ExplorerPanelContent.tsx`
+- `src/renderer/src/components/sidebar/explorer/ExplorerTree.tsx`
+- `src/renderer/src/components/sidebar/explorer/ProjectTreeNode.tsx`
+- `src/renderer/src/components/sidebar/explorer/NoteTreeNode.tsx`
+
+**Files to Modify:**
+- `src/renderer/src/types/index.ts` - Add IconTabType, ExplorerTreeState
+- `src/renderer/src/store/useAppViewStore.ts` - Add 5 new actions
+- `src/renderer/src/components/sidebar/MissionSidebar.tsx` - Integrate tabs
+- `src/renderer/src/components/sidebar/ExpandedIconPanel.tsx` - Add tab bar
+
+**Verification Checklist:**
+- [ ] All icons have 3 tabs (Compact, Card, Explorer)
+- [ ] Tab bar appears in panel header (macOS pills)
+- [ ] Per-icon tab memory works (independent preferences)
+- [ ] Explorer tree expands/collapses project nodes
+- [ ] Width stays constant when switching tabs
+- [ ] Keyboard shortcuts work (⌘1/2/3)
+- [ ] All tests passing
+- [ ] Migration from v1.16.0 works smoothly
+
+**Benefits:**
+- Better organization for 15+ projects (tree view with status grouping)
+- Flexible workflows (quick scan, visual browse, organize)
+- Progressive disclosure (Explorer only when needed, not forced)
+- Familiar UX (macOS pills, keyboard shortcuts match editor modes)
+
+**Next Steps After v1.16.0 Release:**
+1. Approve comprehensive spec
+2. Create `feat/three-tab-sidebar` branch from dev
+3. Implement Phase 1 (state schema update)
+4. Implement Phase 2 (migration function)
+5. Implement Phase 3-6 (actions, UI, testing, docs)
+6. PR to dev, merge, tag as v1.17.0
 
 ---
 

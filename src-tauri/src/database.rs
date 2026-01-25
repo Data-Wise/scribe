@@ -32,6 +32,7 @@ pub struct Project {
     #[serde(rename = "type")]
     pub project_type: String,
     pub color: Option<String>,
+    pub icon: Option<String>,
     pub settings: Option<String>,
     pub created_at: i64,
     pub updated_at: i64,
@@ -354,6 +355,7 @@ impl Database {
                 description TEXT,
                 type TEXT CHECK(type IN ('research', 'teaching', 'r-package', 'r-dev', 'generic')) DEFAULT 'generic',
                 color TEXT,
+                icon TEXT,
                 settings TEXT,
                 created_at INTEGER DEFAULT (strftime('%s', 'now')),
                 updated_at INTEGER DEFAULT (strftime('%s', 'now'))
@@ -449,13 +451,14 @@ impl Database {
 
         // Create demo project
         self.conn.execute(
-            "INSERT INTO projects (id, name, description, type, color) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO projects (id, name, description, type, color, icon) VALUES (?, ?, ?, ?, ?, ?)",
             rusqlite::params![
                 &project_id,
                 "Getting Started",
                 "Learn how to use Scribe with these example notes",
                 "generic",
-                "#3B82F6"
+                "#3B82F6",
+                "BookOpen"
             ],
         )?;
 
@@ -546,17 +549,17 @@ What did you accomplish today?"#);
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content, "notes", rusqlite::types::Null],
         )?;
 
-        // Update FTS index (properties column added in migration 008, use empty string for demo notes)
+        // Update FTS index (properties column will be added in migration 008, so don't use it here)
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
+            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
             rusqlite::params![&note1_id, "Welcome to Scribe", welcome_content],
         )?;
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
+            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
             rusqlite::params![&note2_id, "Features Overview", features_content],
         )?;
         self.conn.execute(
-            "INSERT INTO notes_fts (note_id, title, content, properties) VALUES (?, ?, ?, '')",
+            "INSERT INTO notes_fts (note_id, title, content) VALUES (?, ?, ?)",
             rusqlite::params![&note3_id, "Daily Note Example", &daily_content],
         )?;
 
@@ -797,12 +800,23 @@ What did you accomplish today?"#);
     fn run_migration_010_add_project_icons(&self) -> SqlResult<()> {
         println!("Running database migration 010 (add project icons)");
 
-        // Add icon column to projects table
-        self.conn.execute_batch("
-            ALTER TABLE projects ADD COLUMN icon TEXT;
-        ")?;
+        // Check if icon column already exists (it's added in migration 004 for new databases)
+        let has_icon_column: bool = self.conn.query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('projects') WHERE name = 'icon'",
+            [],
+            |row| row.get::<_, i32>(0).map(|count| count > 0),
+        )?;
 
-        println!("  ✅ Icon column added to projects table");
+        if !has_icon_column {
+            // Add icon column to projects table (for databases created before migration 004 update)
+            self.conn.execute_batch("
+                ALTER TABLE projects ADD COLUMN icon TEXT;
+            ")?;
+            println!("  ✅ Icon column added to projects table");
+        } else {
+            println!("  ℹ️  Icon column already exists (skipped)");
+        }
+
         Ok(())
     }
 
@@ -1452,15 +1466,16 @@ What did you accomplish today?"#);
         description: Option<&str>,
         project_type: &str,
         color: Option<&str>,
+        icon: Option<&str>,
         settings: Option<&str>,
     ) -> SqlResult<Project> {
         self.conn.execute(
-            "INSERT INTO projects (name, description, type, color, settings) VALUES (?, ?, ?, ?, ?)",
-            rusqlite::params![name, description, project_type, color, settings],
+            "INSERT INTO projects (name, description, type, color, icon, settings) VALUES (?, ?, ?, ?, ?, ?)",
+            rusqlite::params![name, description, project_type, color, icon, settings],
         )?;
 
         let project = self.conn.query_row(
-            "SELECT id, name, description, type, color, settings, created_at, updated_at
+            "SELECT id, name, description, type, color, icon, settings, created_at, updated_at
              FROM projects WHERE rowid = last_insert_rowid()",
             [],
             |row| {
@@ -1470,9 +1485,10 @@ What did you accomplish today?"#);
                     description: row.get(2)?,
                     project_type: row.get(3)?,
                     color: row.get(4)?,
-                    settings: row.get(5)?,
-                    created_at: row.get(6)?,
-                    updated_at: row.get(7)?,
+                    icon: row.get(5)?,
+                    settings: row.get(6)?,
+                    created_at: row.get(7)?,
+                    updated_at: row.get(8)?,
                 })
             },
         )?;
@@ -1482,7 +1498,7 @@ What did you accomplish today?"#);
 
     pub fn get_project(&self, id: &str) -> SqlResult<Option<Project>> {
         let result = self.conn.query_row(
-            "SELECT id, name, description, type, color, settings, created_at, updated_at
+            "SELECT id, name, description, type, color, icon, settings, created_at, updated_at
              FROM projects WHERE id = ?",
             [id],
             |row| {
@@ -1492,9 +1508,10 @@ What did you accomplish today?"#);
                     description: row.get(2)?,
                     project_type: row.get(3)?,
                     color: row.get(4)?,
-                    settings: row.get(5)?,
-                    created_at: row.get(6)?,
-                    updated_at: row.get(7)?,
+                    icon: row.get(5)?,
+                    settings: row.get(6)?,
+                    created_at: row.get(7)?,
+                    updated_at: row.get(8)?,
                 })
             },
         );
@@ -1509,7 +1526,7 @@ What did you accomplish today?"#);
     pub fn list_projects(&self, project_type: Option<&str>) -> SqlResult<Vec<Project>> {
         if let Some(pt) = project_type {
             let mut stmt = self.conn.prepare(
-                "SELECT id, name, description, type, color, settings, created_at, updated_at
+                "SELECT id, name, description, type, color, icon, settings, created_at, updated_at
                  FROM projects WHERE type = ?
                  ORDER BY name COLLATE NOCASE",
             )?;
@@ -1521,16 +1538,17 @@ What did you accomplish today?"#);
                     description: row.get(2)?,
                     project_type: row.get(3)?,
                     color: row.get(4)?,
-                    settings: row.get(5)?,
-                    created_at: row.get(6)?,
-                    updated_at: row.get(7)?,
+                    icon: row.get(5)?,
+                    settings: row.get(6)?,
+                    created_at: row.get(7)?,
+                    updated_at: row.get(8)?,
                 })
             })?;
 
             projects.collect()
         } else {
             let mut stmt = self.conn.prepare(
-                "SELECT id, name, description, type, color, settings, created_at, updated_at
+                "SELECT id, name, description, type, color, icon, settings, created_at, updated_at
                  FROM projects
                  ORDER BY name COLLATE NOCASE",
             )?;
@@ -1542,9 +1560,10 @@ What did you accomplish today?"#);
                     description: row.get(2)?,
                     project_type: row.get(3)?,
                     color: row.get(4)?,
-                    settings: row.get(5)?,
-                    created_at: row.get(6)?,
-                    updated_at: row.get(7)?,
+                    icon: row.get(5)?,
+                    settings: row.get(6)?,
+                    created_at: row.get(7)?,
+                    updated_at: row.get(8)?,
                 })
             })?;
 
@@ -1559,6 +1578,7 @@ What did you accomplish today?"#);
         description: Option<&str>,
         project_type: Option<&str>,
         color: Option<&str>,
+        icon: Option<&str>,
         settings: Option<&str>,
     ) -> SqlResult<Option<Project>> {
         let mut sql_parts = Vec::new();
@@ -1579,6 +1599,10 @@ What did you accomplish today?"#);
         if let Some(c) = color {
             sql_parts.push("color = ?");
             params.push(Box::new(c.to_string()));
+        }
+        if let Some(i) = icon {
+            sql_parts.push("icon = ?");
+            params.push(Box::new(i.to_string()));
         }
         if let Some(s) = settings {
             sql_parts.push("settings = ?");
@@ -1768,7 +1792,7 @@ What did you accomplish today?"#);
         let notes = self.list_notes(None)?;
 
         // Export projects
-        let mut stmt = self.conn.prepare("SELECT id, name, description, type, color, settings, created_at, updated_at FROM projects")?;
+        let mut stmt = self.conn.prepare("SELECT id, name, description, type, color, icon, settings, created_at, updated_at FROM projects")?;
         let projects: Vec<Project> = stmt.query_map([], |row| {
             Ok(Project {
                 id: row.get(0)?,
@@ -1776,9 +1800,10 @@ What did you accomplish today?"#);
                 description: row.get(2)?,
                 project_type: row.get(3)?,
                 color: row.get(4)?,
-                settings: row.get(5)?,
-                created_at: row.get(6)?,
-                updated_at: row.get(7)?,
+                icon: row.get(5)?,
+                settings: row.get(6)?,
+                created_at: row.get(7)?,
+                updated_at: row.get(8)?,
             })
         })?.collect::<Result<Vec<_>, _>>()?;
 
