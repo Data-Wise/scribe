@@ -167,6 +167,12 @@ scribe/
 │   └── renderer/src/              # React frontend
 │       ├── components/
 │       │   ├── MissionControl/    # Mission Control HUD sidebar
+│       │   ├── Settings/          # Modular settings components [NEW]
+│       │   │   ├── GeneralSettingsTab.tsx
+│       │   │   ├── EditorSettingsTab.tsx
+│       │   │   └── SettingsSection.tsx
+│       │   ├── EditorOrchestrator.tsx # Editor rendering logic [NEW]
+│       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts [NEW]
 │       │   ├── Editor/            # BlockNote editor
 │       │   └── ...
 │       ├── lib/                   # Core utilities
@@ -212,14 +218,35 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.0 in Dev Branch
+## 🎯 Current Status: v1.16.1 - Technical Debt Remediation Phase 1 Complete ✅
 
 **Released:** v1.14.0 (stable, via Homebrew)
-**Dev Branch:** v1.16.0 (Icon-Centric Sidebar - merged, unreleased)
+**Dev Branch:** v1.16.1 (Phase 1 Refactoring - ready to merge)
 **Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
-**Tests:** 2133 passing
+**Tests:** 2,162 passing (98.5%)
 
-### Latest Work: Icon-Centric Sidebar Expansion (v1.16.0)
+### Latest Work: Phase 1 Technical Debt Remediation (2026-01-23)
+
+**Phase 1.1: SettingsModal Refactoring**
+- ✅ Extracted `GeneralSettingsTab`, `EditorSettingsTab`, `SettingsSection`
+- ✅ Reduced `SettingsModal.tsx` by **26%** (614 lines)
+- ✅ Added 13 new unit tests
+
+**Phase 1.2: App.tsx Refactoring**
+- ✅ Extracted `KeyboardShortcutHandler` (25+ shortcuts, Tauri menus)
+- ✅ Extracted `EditorOrchestrator` (Focus/Normal mode rendering)
+- ✅ Reduced `App.tsx` by **13%** (267 lines)
+- ✅ Added 19 new unit tests
+
+**Overall Metrics:**
+- **-881 lines** from monolithic controllers
+- **+4 new components** (well-organized, tested)
+- **+32 new tests** (2,161/2,195 passing, 98.5%)
+- **0 breaking changes**
+
+---
+
+### Previous: Icon-Centric Sidebar Expansion (v1.16.0)
 
 **Sidebar Architecture Refactor - Complete ✅**
 

@@ -310,6 +310,7 @@ describe('CreateProjectModal Component', () => {
         type: 'research',
         description: 'A research project',
         color: PROJECT_COLORS[0],
+        icon: 'FlaskConical',
       })
     })
 

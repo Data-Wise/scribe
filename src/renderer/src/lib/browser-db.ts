@@ -261,7 +261,10 @@ export const seedDemoData = async (): Promise<boolean> => {
 }
 
 // Auto-run seed on module import (after db is initialized)
-;(async () => {
-  await db.initialize()
-  await seedDemoData()
-})().catch(console.error)
+// Skip in test environment to avoid interfering with test data
+if (!import.meta.env.VITEST) {
+  ;(async () => {
+    await db.initialize()
+    await seedDemoData()
+  })().catch(console.error)
+}
