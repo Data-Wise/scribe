@@ -240,7 +240,7 @@ scribe/
 
 ## Test Coverage
 
-**978 tests passing** (930 unit + 48 E2E) across 37 test files:
+**2133 tests passing** across test files:
 
 | Test File | Tests |
 |-----------|-------|

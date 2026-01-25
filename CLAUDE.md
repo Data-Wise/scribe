@@ -218,12 +218,12 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: Phase 1 Refactoring Complete ✅
+## 🎯 Current Status: v1.16.1 - Technical Debt Remediation Phase 1 Complete ✅
 
-**Version:** 1.16.1 (Technical Debt Remediation Phase 1)
-**Branch:** `feat/tech-debt-remediation`
-**Status:** ✅ Phase 1.1 (Settings) & 1.2 (App) Complete
-**Impact:** -881 lines removed from monolithic files
+**Released:** v1.14.0 (stable, via Homebrew)
+**Dev Branch:** v1.16.1 (Phase 1 Refactoring - ready to merge)
+**Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
+**Tests:** 2,162 passing (98.5%)
 
 ### Latest Work: Phase 1 Technical Debt Remediation (2026-01-23)
 
