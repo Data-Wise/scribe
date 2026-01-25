@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.11.0-blue)
+![Version](https://img.shields.io/badge/version-1.16.2-blue)
 ![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-978%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-2163%20passing-brightgreen)
 
 ---
 
@@ -73,11 +73,11 @@ cd scribe && npm install && npm run dev
 
     Fuzzy search settings (⌘,), visual theme gallery (8 themes), Quick Actions customization, project templates
 
--   :material-folder-multiple:{ .lg .middle } **Project System**
+-   :material-folder-multiple:{ .lg .middle } **Icon-Centric Sidebar**
 
     ---
 
-    Research, Teaching, R-Package, R-Dev, and Generic project types
+    Per-icon expansion with accordion pattern, compact/card views, and smooth animations (v1.16.0)
 
 -   :material-robot:{ .lg .middle } **CLI-Based AI**
 
@@ -90,6 +90,12 @@ cd scribe && npm install && npm run dev
     ---
 
     Full PTY shell with smart project-aware working directory
+
+-   :material-cog:{ .lg .middle } **Modular Architecture**
+
+    ---
+
+    Clean component extraction, 2163 tests passing, 0 TypeScript errors in production (v1.16.2)
 
 </div>
 
