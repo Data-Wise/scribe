@@ -1,7 +1,7 @@
 import { HybridEditor } from './HybridEditor'
 import { EmptyState } from './EmptyState'
-import { updatePreferences } from '../lib/preferences'
-import type { Note, Tag, EditorMode, UserPreferences } from '../types'
+import { updatePreferences, EditorMode, UserPreferences } from '../lib/preferences'
+import type { Note, Tag } from '../types'
 
 interface EditorOrchestratorProps {
   // Note data
@@ -61,7 +61,7 @@ interface EditorOrchestratorProps {
  */
 export function EditorOrchestrator({
   selectedNote,
-  notes,
+  notes: _notes,
   editorMode,
   onEditorModeChange,
   editingTitle,
@@ -79,12 +79,15 @@ export function EditorOrchestrator({
   preferences,
   onToggleTerminal,
   focusMode,
-  onFocusModeChange,
+  onFocusModeChange: _onFocusModeChange,
   onCreateNote,
   onOpenDaily,
   onOpenCommandPalette,
   editorContainerRef,
 }: EditorOrchestratorProps) {
+  // Unused but kept for future extension
+  void _notes
+  void _onFocusModeChange
   
   // Focus mode: Full-screen editor with minimal chrome
   if (focusMode) {

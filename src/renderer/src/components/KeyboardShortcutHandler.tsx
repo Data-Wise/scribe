@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { isTauri } from '../lib/platform'
-import { updatePreferences } from '../lib/preferences'
-import { getThemeForShortcut } from '../lib/themes'
-import type { Note, Theme, ThemeShortcut, EditorMode, SidebarTabId } from '../types'
+import { updatePreferences, EditorMode, SidebarTabId } from '../lib/preferences'
+import { getThemeForShortcut, Theme, ThemeShortcut } from '../lib/themes'
+import type { Note, SmartIconId } from '../types'
 
 interface Tab {
   id: string
@@ -50,7 +50,7 @@ interface KeyboardShortcutHandlerProps {
   }
   
   // Smart icons
-  onExpandSmartIcon: (iconId: string) => void
+  onExpandSmartIcon: (iconId: SmartIconId) => void
   
   // Editor mode
   editorMode: EditorMode
@@ -99,13 +99,15 @@ export function KeyboardShortcutHandler({
   onRightActiveTabChange,
   sidebarTabSettings,
   onExpandSmartIcon,
-  editorMode,
+  editorMode: _editorMode,
   onEditorModeChange,
   themeShortcuts,
   allThemes,
   onThemeChange,
 }: KeyboardShortcutHandlerProps) {
-  
+  // Unused but kept for potential future use
+  void _editorMode
+
   // Theme keyboard shortcuts: Cmd/Ctrl + Alt + [0-9]
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -202,7 +204,7 @@ export function KeyboardShortcutHandler({
       // Smart Icon shortcuts (⌘⇧1-4)
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && !e.altKey && /^[1-4]$/.test(e.key)) {
         e.preventDefault()
-        const shortcuts: Record<string, string> = {
+        const shortcuts: Record<string, SmartIconId> = {
           '1': 'research',
           '2': 'teaching',
           '3': 'r-package',

@@ -54,6 +54,10 @@ export interface UserPreferences {
   sidebarTabSize: SidebarTabSize    // Tab display size (compact/full)
   sidebarTabOrder: SidebarTabId[]   // Order of tabs (for drag reorder)
   sidebarHiddenTabs: SidebarTabId[] // Hidden tabs (via right-click or settings)
+
+  // Icon Bar preferences (v1.16)
+  iconGlowEffect: boolean           // Enable glow effect on icon hover
+  iconGlowIntensity: 'subtle' | 'medium' | 'prominent'  // Glow intensity level
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -83,6 +87,10 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   sidebarTabSize: 'compact',    // Smaller tabs by default
   sidebarTabOrder: [...DEFAULT_SIDEBAR_TAB_ORDER],
   sidebarHiddenTabs: [],        // All tabs visible by default
+
+  // Icon Bar defaults (v1.16)
+  iconGlowEffect: true,         // Enabled by default
+  iconGlowIntensity: 'subtle',  // Subtle by default
 }
 
 /**

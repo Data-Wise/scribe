@@ -220,8 +220,6 @@ export function CompactListView({
                 onQuickAdd={() => onNewNote(project.id)}
                 onContextMenu={(e) => handleProjectContextMenu(e, project)}
                 onNoteContextMenu={handleNoteContextMenu}
-                onPin={isPinned(project.id) ? () => onUnpinProject?.(project.id) : () => onPinProject?.(project.id)}
-                isPinned={isPinned(project.id)}
               />
             )
           })
@@ -276,8 +274,6 @@ interface CompactProjectItemProps {
   onQuickAdd: () => void
   onContextMenu: (e: React.MouseEvent) => void
   onNoteContextMenu: (e: React.MouseEvent, note: Note) => void
-  onPin?: () => void
-  isPinned?: boolean
 }
 
 const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemProps>(
@@ -293,9 +289,7 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
     onSelectNote,
     onQuickAdd,
     onContextMenu,
-    onNoteContextMenu,
-    onPin,
-    isPinned = false
+    onNoteContextMenu
   }, ref) => {
     const ChevronIcon = isExpanded ? ChevronDown : ChevronRight
     const ProjectIcon = project.icon
@@ -353,9 +347,6 @@ const CompactProjectItem = React.forwardRef<HTMLDivElement, CompactProjectItemPr
     }
 
     // Collapsed view with tooltip
-    const status = project.status || 'active'
-    const statusLabel = status.charAt(0).toUpperCase() + status.slice(1)
-
     return (
       <div
         ref={ref}

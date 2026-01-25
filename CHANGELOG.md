@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.16.2] - 2026-01-24
+
+### Technical Debt Remediation - Phase 1 Complete
+
+**Production code cleanup with 364 lines of dead code removed.**
+
+### Changed
+
+- **Removed 364 lines of unused code** from production files:
+  - `EditorSettingsTab.tsx`: Removed unused UI style and sidebar settings state
+  - `HybridEditor.tsx`: Removed unused input handlers and scroll functions
+  - `useAppViewStore.ts`: Removed unused localStorage helper functions
+  - `CompactListView.tsx`: Removed unused props (`onPin`, `isPinned`, `statusLabel`)
+  - `ExpandedIconPanel.tsx`, `ProjectPreviewTooltip.tsx`: Removed unused imports
+
+### Fixed
+
+- **TypeScript compilation errors** from Phase 1 refactoring resolved
+- **Workbox cache limit** increased to 4 MB for PWA reliability
+
+### Documentation
+
+- Documented 67 non-blocking test file TypeScript errors for Sprint 37 cleanup
+- Added comprehensive release automation fix plan
+
+---
+
+## [v1.16.1] - 2026-01-23
+
+### Phase 1.2 Technical Debt Remediation
+
+**Extracted components from App.tsx and SettingsModal.tsx for better maintainability.**
+
+### Added
+
+- `KeyboardShortcutHandler.tsx`: Extracted 25+ keyboard shortcuts and Tauri menu setup
+- `EditorOrchestrator.tsx`: Extracted Focus/Normal mode editor rendering logic
+- `GeneralSettingsTab.tsx`: Extracted general settings from SettingsModal
+- `EditorSettingsTab.tsx`: Extracted editor settings from SettingsModal
+- `SettingsSection.tsx`: Reusable section component for settings
+
+### Changed
+
+- **App.tsx**: Reduced by 267 lines (13% reduction)
+- **SettingsModal.tsx**: Reduced by 614 lines (26% reduction)
+- **Tests**: 32 new unit tests added, 2,161 total passing (98.5%)
+
+---
+
 ## [v1.16.0] - 2026-01-10
 
 ### Icon-Centric Sidebar Expansion

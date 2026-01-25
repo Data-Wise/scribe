@@ -129,15 +129,6 @@ export const SIDEBAR_WIDTHS = {
 }
 
 // Helper functions for localStorage
-const getLastSessionTimestamp = (): number | null => {
-  try {
-    const saved = localStorage.getItem(SESSION_KEY)
-    return saved ? parseInt(saved, 10) : null
-  } catch {
-    return null
-  }
-}
-
 const saveSessionTimestamp = (): void => {
   try {
     localStorage.setItem(SESSION_KEY, Date.now().toString())
@@ -189,21 +180,6 @@ const saveExpandedIcon = (icon: ExpandedIconType): void => {
     }
   } catch {
     // Ignore localStorage errors
-  }
-}
-
-const getSavedSidebarWidth = (): number => {
-  try {
-    const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY)
-    if (saved) {
-      const width = parseInt(saved, 10)
-      if (!isNaN(width) && width >= SIDEBAR_WIDTHS.compact.min) {
-        return width
-      }
-    }
-    return SIDEBAR_WIDTHS.compact.default
-  } catch {
-    return SIDEBAR_WIDTHS.compact.default
   }
 }
 

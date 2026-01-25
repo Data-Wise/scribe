@@ -33,7 +33,7 @@ const getDefaultIconForType = (type: ProjectType): string => {
 interface CreateProjectModalProps {
   isOpen: boolean
   onClose: () => void
-  onCreateProject: (project: Omit<Project, 'id' | 'created_at' | 'updated_at'>) => void
+  onCreateProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => void
   existingProjectNames?: string[] // For validation
 }
 

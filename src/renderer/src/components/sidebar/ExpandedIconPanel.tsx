@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { LayoutGrid, LayoutList, X } from 'lucide-react'
-import { Project, Note, ExpandedIconType, SmartIconId } from '../../types'
+import { Project, Note, ExpandedIconType } from '../../types'
 import { CompactListView } from './CompactListView'
 import { CardGridView } from './CardGridView'
 import { useAppViewStore } from '../../store/useAppViewStore'
