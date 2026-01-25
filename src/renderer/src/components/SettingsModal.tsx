@@ -27,13 +27,7 @@ import {
   FileText,
   Square
 } from 'lucide-react'
-import {
-  loadTemplates,
-  getSelectedTemplateId,
-  setSelectedTemplateId,
-  processTemplate,
-  DailyNoteTemplate,
-} from '../lib/dailyNoteTemplates'
+// Daily note templates handled by GeneralSettingsTab
 import {
   loadPreferences,
   updatePreferences,
@@ -48,7 +42,6 @@ import {
   AutoThemeSettings,
   FontSettings,
   ThemeShortcut,
-  RecommendedFont,
   createCustomTheme,
   generateThemeFromColor,
   isValidHexColor,
@@ -60,11 +53,9 @@ import {
   fetchThemeFromUrl,
   isValidThemeUrl,
   POPULAR_BASE16_SCHEMES,
-  groupRecommendedFonts,
   Base16Scheme
 } from '../lib/themes'
 import { api } from '../lib/api'
-import { getDefaultTerminalFolder } from '../lib/terminal-utils'
 import { GeneralSettingsTab } from './Settings/GeneralSettingsTab'
 import { EditorSettingsTab } from './Settings/EditorSettingsTab'
 
@@ -124,26 +115,14 @@ export function SettingsModal({
   const [importUrl, setImportUrl] = useState('')
   const [isLoadingUrl, setIsLoadingUrl] = useState(false)
   
-  // Font management state
-  const [installedFonts, setInstalledFonts] = useState<string[]>([])
-  const [isLoadingFonts, setIsLoadingFonts] = useState(false)
-  const [installingFont, setInstallingFont] = useState<string | null>(null)
-  const [fontInstallResult, setFontInstallResult] = useState<{ id: string; success: boolean; message: string } | null>(null)
-  const [hasHomebrew, setHasHomebrew] = useState<boolean | null>(null)
-  const [showRecommendedFonts, setShowRecommendedFonts] = useState(false)
-  const [fontSearchQuery, setFontSearchQuery] = useState('')
-  const [expandedFontPreview, setExpandedFontPreview] = useState<string | null>(null)
-  const [fontCategoryFilter, setFontCategoryFilter] = useState<'all' | 'sans' | 'serif' | 'mono'>('all')
+  // Font management handled by EditorSettingsTab
 
   // Zotero/Bibliography state
   const [bibliographyPath, setBibliographyPath] = useState('')
   const [isSavingBib, setIsSavingBib] = useState(false)
   const [bibSaveResult, setBibSaveResult] = useState<{ success: boolean; message: string } | null>(null)
 
-  // Daily note templates state
-  const [templates, _setTemplates] = useState<DailyNoteTemplate[]>(() => loadTemplates())
-  const [selectedTemplateId, setSelectedTemplate] = useState<string>(() => getSelectedTemplateId())
-  const [showTemplatePreview, setShowTemplatePreview] = useState(false)
+  // Daily note templates handled by GeneralSettingsTab
 
   // UI Style preferences state (for reactivity)
   const [uiStyles, setUiStyles] = useState(() => {
@@ -200,8 +179,7 @@ export function SettingsModal({
     updatePreferences({ [prefKey]: value })
   }
 
-  // Terminal settings state
-  const [terminalFolder, setTerminalFolder] = useState(() => getDefaultTerminalFolder())
+  // Terminal settings managed by GeneralSettingsTab
 
   // Toggle tab visibility
   const toggleTabVisibility = (tabId: SidebarTabId) => {
@@ -226,23 +204,6 @@ export function SettingsModal({
     claude: 'Claude',
     terminal: 'Terminal'
   }
-
-  // Handle template selection
-  const handleTemplateChange = (id: string) => {
-    setSelectedTemplate(id)
-    setSelectedTemplateId(id)
-  }
-
-  // Get currently selected template for preview
-  const selectedTemplate = templates.find(t => t.id === selectedTemplateId) || templates[0]
-  const templatePreview = processTemplate(selectedTemplate?.content || '', new Date())
-
-  // Load installed fonts on mount
-  useEffect(() => {
-    if (isOpen && activeTab === 'editor') {
-      loadInstalledFonts()
-    }
-  }, [isOpen, activeTab])
 
   // Load bibliography path when academic tab is opened
   useEffect(() => {
@@ -274,89 +235,8 @@ export function SettingsModal({
     }
   }
   
-  const loadInstalledFonts = async () => {
-    setIsLoadingFonts(true)
-    try {
-      const [fonts, brewAvailable] = await Promise.all([
-        api.getInstalledFonts(),
-        api.isHomebrewAvailable()
-      ])
-      setInstalledFonts(fonts)
-      setHasHomebrew(brewAvailable)
-    } catch (error) {
-      console.error('Failed to load fonts:', error)
-    } finally {
-      setIsLoadingFonts(false)
-    }
-  }
-  
-  const handleInstallFont = async (font: RecommendedFont) => {
-    if (!font.cask || installingFont) return
-    
-    setInstallingFont(font.id)
-    setFontInstallResult(null)
-    
-    try {
-      const result = await api.installFontViaHomebrew(font.cask)
-      setFontInstallResult({ id: font.id, success: true, message: result })
-      // Reload fonts after install
-      await loadInstalledFonts()
-    } catch (error) {
-      setFontInstallResult({ 
-        id: font.id, 
-        success: false, 
-        message: error instanceof Error ? error.message : 'Installation failed' 
-      })
-    } finally {
-      setInstallingFont(null)
-    }
-  }
-  
-  // Group recommended fonts by status, with search and category filtering
-  const fontGroups = (() => {
-    const groups = groupRecommendedFonts(installedFonts)
-    
-    const filterFont = (font: RecommendedFont) => {
-      // Category filter
-      if (fontCategoryFilter !== 'all' && font.category !== fontCategoryFilter) {
-        return false
-      }
-      // Search filter
-      if (fontSearchQuery.trim()) {
-        const query = fontSearchQuery.toLowerCase()
-        return font.name.toLowerCase().includes(query) ||
-          font.description.toLowerCase().includes(query) ||
-          font.adhdBenefit.toLowerCase().includes(query)
-      }
-      return true
-    }
-    
-    return {
-      installed: groups.installed.filter(filterFont),
-      available: groups.available.filter(filterFont),
-      premium: groups.premium.filter(filterFont),
-    }
-  })()
-  
-  // Handle "Use this font" - applies font directly to CSS variables
-  const handleUseFont = (font: RecommendedFont) => {
-    // Apply directly to CSS custom properties
-    const root = document.documentElement
-    root.style.setProperty('--editor-font-family', font.fontFamily)
-    
-    // Show a brief feedback
-    setFontInstallResult({
-      id: font.id,
-      success: true,
-      message: `Now using ${font.name}! (Changes will reset on reload unless you select it from Typography above)`
-    })
-    
-    // Clear message after 3 seconds
-    setTimeout(() => {
-      setFontInstallResult(null)
-    }, 3000)
-  }
-  
+  // Font management handled by EditorSettingsTab
+
   // Apply preview theme
   useEffect(() => {
     if (previewTheme && themes[previewTheme]) {

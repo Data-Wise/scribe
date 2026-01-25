@@ -2,14 +2,12 @@ import { useState } from 'react'
 import {
   Type,
   Download,
-  Check,
   AlertCircle,
   Loader2,
   ChevronDown,
   ChevronUp,
   Calendar,
   Eye,
-  SlidersHorizontal,
   RefreshCw,
   X,
   CheckCircle2,
@@ -31,15 +29,6 @@ import {
   getSelectedTemplateId,
   setSelectedTemplateId
 } from '../../lib/dailyNoteTemplates'
-import {
-  TabBarStyle,
-  BorderStyle,
-  ActiveTabStyle,
-  SidebarTabId,
-  DEFAULT_SIDEBAR_TAB_ORDER,
-  loadPreferences,
-  updatePreferences
-} from '../../lib/preferences'
 import { api } from '../../lib/api'
 import { isTauri } from '../../lib/platform'
 import { SettingsSection } from './SettingsSection'
@@ -76,36 +65,6 @@ export function EditorSettingsTab({ fontSettings, onFontSettingsChange }: Editor
   const [expandedFontPreview, setExpandedFontPreview] = useState<string | null>(null)
   const [fontCategoryFilter, setFontCategoryFilter] = useState<'all' | 'sans' | 'serif' | 'mono'>('all')
 
-  // UI Style preferences state
-  const [uiStyles, setUiStyles] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      tabBarStyle: prefs.tabBarStyle,
-      borderStyle: prefs.borderStyle,
-      activeTabStyle: prefs.activeTabStyle
-    }
-  })
-
-  // Right Sidebar preferences state
-  const [sidebarSettings, setSidebarSettings] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      tabSize: prefs.sidebarTabSize,
-      tabOrder: prefs.sidebarTabOrder,
-      hiddenTabs: prefs.sidebarHiddenTabs
-    }
-  })
-
-  // Tab display names
-  const tabLabels: Record<SidebarTabId, string> = {
-    properties: 'Properties',
-    backlinks: 'Backlinks',
-    tags: 'Tags',
-    stats: 'Stats',
-    claude: 'Claude',
-    terminal: 'Terminal'
-  }
-
   const handleTemplateChange = (id: string) => {
     setSelectedTemplate(id)
     setSelectedTemplateId(id)
@@ -113,34 +72,6 @@ export function EditorSettingsTab({ fontSettings, onFontSettingsChange }: Editor
 
   const selectedTemplate = templates.find(t => t.id === selectedTemplateId) || templates[0]
   const templatePreview = processTemplate(selectedTemplate?.content || '', new Date())
-
-  const updateUiStyle = (key: keyof typeof uiStyles, value: TabBarStyle | BorderStyle | ActiveTabStyle) => {
-    setUiStyles(prev => ({ ...prev, [key]: value }))
-    updatePreferences({ [key]: value })
-  }
-
-  const updateSidebarSetting = <K extends keyof typeof sidebarSettings>(
-    key: K,
-    value: typeof sidebarSettings[K]
-  ) => {
-    setSidebarSettings(prev => ({ ...prev, [key]: value }))
-    const prefKey = key === 'tabSize' ? 'sidebarTabSize' :
-                    key === 'tabOrder' ? 'sidebarTabOrder' : 'sidebarHiddenTabs'
-    updatePreferences({ [prefKey]: value })
-  }
-
-  const toggleTabVisibility = (tabId: SidebarTabId) => {
-    const isHidden = sidebarSettings.hiddenTabs.includes(tabId)
-    const visibleCount = DEFAULT_SIDEBAR_TAB_ORDER.length - sidebarSettings.hiddenTabs.length
-
-    // Prevent hiding last visible tab
-    if (!isHidden && visibleCount <= 1) return
-
-    const newHidden = isHidden
-      ? sidebarSettings.hiddenTabs.filter(t => t !== tabId)
-      : [...sidebarSettings.hiddenTabs, tabId]
-    updateSidebarSetting('hiddenTabs', newHidden)
-  }
 
   const loadInstalledFonts = async () => {
     if (!isTauri()) return

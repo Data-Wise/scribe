@@ -1,5 +1,4 @@
 import React from 'react'
-import { FileText } from 'lucide-react'
 import { Project } from '../../types'
 import { ContextualTooltip } from './ContextualTooltip'
 
