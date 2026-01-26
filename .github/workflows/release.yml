@@ -226,8 +226,8 @@ jobs:
         run: |
           cd homebrew-tap
 
-          # Check syntax with brew
-          if brew audit --cask Casks/scribe.rb; then
+          # Check syntax with brew (using cask name, not path)
+          if brew audit --cask data-wise/tap/scribe; then
             echo "✅ Cask audit passed"
           else
             echo "❌ Cask audit failed!"
