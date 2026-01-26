@@ -145,6 +145,7 @@ jobs:
           repository: Data-Wise/homebrew-tap
           token: ${{ secrets.TAP_GITHUB_TOKEN }}
           path: homebrew-tap
+          persist-credentials: false
 
       - name: Get version
         id: version
@@ -246,15 +247,16 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
           X64_SHA: ${{ steps.download.outputs.x64_sha }}
           ARM64_SHA: ${{ steps.download.outputs.arm64_sha }}
+          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
         run: |
           cd homebrew-tap
 
-          # Fix: Unset auth headers from first checkout to allow token from second checkout to work
-          # Source: https://jonathansoma.com/everything/git/github-actions-403-error/
-          git config --local --unset-all "http.https://github.com/.extraheader" || true
-
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+
+          # Set remote URL with token for authentication
+          # Source: https://www.w3tutorials.net/blog/how-to-push-to-another-repository-in-github-actions/
+          git remote set-url origin "https://x-access-token:${TAP_GITHUB_TOKEN}@github.com/Data-Wise/homebrew-tap.git"
 
           git add Casks/scribe.rb
 
