@@ -218,14 +218,58 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.1 - Technical Debt Remediation Phase 1 Complete ✅
+## 🎯 Current Status: v1.16.3 - Automated Release Pipeline Complete ✅
 
-**Released:** v1.14.0 (stable, via Homebrew)
-**Dev Branch:** v1.16.1 (Phase 1 Refactoring - ready to merge)
-**Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
-**Tests:** 2,162 passing (98.5%)
+**Released:** v1.16.3 (stable, via Homebrew + automated CI/CD)
+**Install Latest:** `brew install --cask data-wise/tap/scribe` (v1.16.3)
+**CI Automation:** Complete GitHub Actions workflow (build → checksums → homebrew → verify)
+**Tests:** 2,163 passing (98.5%)
 
-### Latest Work: Phase 1 Technical Debt Remediation (2026-01-23)
+### Latest Work: Automated Release Pipeline Implementation (2026-01-25)
+
+**v1.16.3 Release - CI/CD Automation Complete ✅**
+
+**Problem Solved:**
+- v1.16.2 SHA-256 checksum mismatch prevented users from installing via Homebrew
+- Manual release process was error-prone and time-consuming (30+ minutes)
+
+**Solution Delivered:**
+- **GitHub Actions Workflow** (290 lines, `.github/workflows/release.yml`)
+  - Parallel builds: x64 (Intel) + aarch64 (Apple Silicon), ~8-10 min
+  - Auto-generated SHA-256 checksums with CHECKSUMS.txt upload
+  - Safe Homebrew formula updates (Ruby script, no shell injection)
+  - End-to-end installation verification on macOS
+  - Total: 15-20 minutes, fully automated
+- **Comprehensive Documentation** (7 new files, 1,600+ lines)
+  - RELEASE-CHECKLIST.md - Quick start for next release
+  - CI-WORKFLOW-GUIDE.md - Deep technical reference (448 lines)
+  - CI-WORKFLOW-DIAGRAM.md - Visual flowcharts & state machines (428 lines)
+  - README-CI-AUTOMATION.md, CI-AUTOMATION-SUMMARY.md, INDEX-CI-AUTOMATION.md
+  - CHECKSUM-FIX-SUMMARY.md - Issue analysis & prevention
+
+**Release Process (v1.16.3+):**
+```bash
+# Step 1: All you do
+git tag v1.16.3
+git push origin v1.16.3
+
+# Step 2: Workflow handles everything automatically
+# → Builds DMGs for both architectures
+# → Generates & verifies SHA-256 checksums
+# → Updates Homebrew formula safely
+# → Tests installation on macOS
+# Result: Users can install perfectly!
+```
+
+**Key Metrics:**
+- ✅ 0% checksum mismatch risk (automated validation)
+- ✅ 4 error checkpoints (early detection, no silent failures)
+- ✅ 1 manual step (git push tag)
+- ✅ 15-20 minute turnaround (fully hands-off)
+
+---
+
+### Previous Work: Phase 1 Technical Debt Remediation (2026-01-23)
 
 **Phase 1.1: SettingsModal Refactoring**
 - ✅ Extracted `GeneralSettingsTab`, `EditorSettingsTab`, `SettingsSection`

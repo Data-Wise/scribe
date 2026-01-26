@@ -2,21 +2,23 @@
 status: active
 priority: P1
 progress: 100
-version: 1.16.2
+version: 1.16.3
 sprint: 36
 started: 2026-01-08
-updated: 2026-01-24
-released: 2026-01-24
+updated: 2026-01-25
+released: 2026-01-25
 editor: hybrid-markdown++
 next_sprint: 37
-next_focus: Fix 67 test file TypeScript errors (~2.5h) / v1.17.0 Three-Tab Sidebar System
-high_priority_backlog: Test file cleanup (2.5h), 1.3 Database Modularization (600 lines, 3h)
+next_focus: Sprint 37 - Three-Tab Sidebar System / Test file TypeScript cleanup (67 errors, ~2.5h)
+high_priority_backlog: Release v1.16.3 automation tested ✅, Test file cleanup (2.5h), 1.3 Database Modularization (600 lines, 3h)
 tests: 2163
 unit_tests: 2163
 e2e_tests: 109
 code_review: 2026-01-24 (Phase 1.2 cleanup complete, -364 additional lines)
 test_file_errors: 67 (non-blocking, documented in docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md)
 features_implemented:
+  - v1.16.3_release: "Released 2026-01-25 - Automated CI/CD pipeline with SHA-256 validation"
+  - ci_automation: "Complete workflow: build → checksums → homebrew → verify (15-20 min)"
   - v1.16.2_release: "Released 2026-01-24 - Tech Debt Phase 1 complete"
   - tech_debt_phase_1: "App.tsx & SettingsModal.tsx modularization complete (-881 lines)"
   - tech_debt_phase_1_cleanup: "Removed 364 lines unused code (2026-01-24)"

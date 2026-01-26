@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.16.3] - 2026-01-25
+
+### Automated Release Pipeline
+
+**Complete CI/CD automation to eliminate manual release errors and SHA-256 mismatches.**
+
+### Added
+
+- **GitHub Actions Release Workflow** - Fully automated 4-job pipeline:
+  - Parallel builds for x64 (Intel) and aarch64 (Apple Silicon)
+  - Automatic SHA-256 checksum generation and verification
+  - Safe Homebrew formula updates (Ruby script, no shell injection)
+  - End-to-end installation verification on macOS
+- **Comprehensive Release Documentation** (7 files, 1,600+ lines):
+  - `RELEASE-CHECKLIST.md` - Step-by-step release process for v1.16.3+
+  - `CI-WORKFLOW-GUIDE.md` - Detailed workflow documentation (448 lines)
+  - `CI-AUTOMATION-SUMMARY.md` - Stakeholder overview (400 lines)
+  - `CI-WORKFLOW-DIAGRAM.md` - Visual ASCII diagrams and state machines (428 lines)
+  - `README-CI-AUTOMATION.md` - Quick reference guide (260 lines)
+  - `INDEX-CI-AUTOMATION.md` - Master navigation hub (211 lines)
+  - `CHECKSUM-FIX-SUMMARY.md` - v1.16.2 issue analysis (166 lines)
+- **CHECKSUMS.txt** in GitHub release assets for user verification
+
+### Fixed
+
+- **SHA-256 checksum mismatch error** from v1.16.2
+  - v1.16.2 checksum corrected: `390574f67891240fdc6786e6616407784c0955be62a1b9b8bd362c623e1cbe13`
+  - Users can now install `brew install --cask data-wise/tap/scribe` successfully
+  - Automated verification prevents future checksum mismatches
+
+### Security
+
+- Replaced shell injection-vulnerable `sed` commands with safe Ruby script substitution
+- Added environment variable scoping throughout GitHub Actions workflow
+- Multiple error checkpoints for early failure detection
+- Checksum verification before any formula updates or releases
+
+### Performance
+
+- Parallel architecture builds (x64 + aarch64) complete in ~8-10 minutes
+- Full release pipeline: 15-20 minutes (automated, unattended)
+- Single manual step: `git tag v1.16.3 && git push origin v1.16.3`
+
+### Documentation
+
+- Complete release workflow documented (no manual steps beyond tagging)
+- Troubleshooting guide for common CI failures
+- Easy reference for next releases (v1.16.4+)
+
+---
+
 ## [v1.16.2] - 2026-01-24
 
 ### Technical Debt Remediation - Phase 1 Complete
