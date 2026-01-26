@@ -249,6 +249,10 @@ jobs:
         run: |
           cd homebrew-tap
 
+          # Fix: Unset auth headers from first checkout to allow token from second checkout to work
+          # Source: https://jonathansoma.com/everything/git/github-actions-403-error/
+          git config --local --unset-all "http.https://github.com/.extraheader" || true
+
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
