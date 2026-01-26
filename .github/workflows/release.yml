@@ -160,9 +160,9 @@ jobs:
           echo "Downloading release assets for v${VERSION}..."
 
           # Download DMG files
-          curl -L -o x64.dmg \
+          curl -L -o "Scribe_${VERSION}_x64.dmg" \
             "${RELEASE_URL}/Scribe_${VERSION}_x64.dmg"
-          curl -L -o aarch64.dmg \
+          curl -L -o "Scribe_${VERSION}_aarch64.dmg" \
             "${RELEASE_URL}/Scribe_${VERSION}_aarch64.dmg"
 
           # Download CHECKSUMS.txt for verification
@@ -179,8 +179,8 @@ jobs:
           fi
 
           # Calculate SHA256 for cask
-          X64_SHA=$(shasum -a 256 x64.dmg | awk '{print $1}')
-          ARM64_SHA=$(shasum -a 256 aarch64.dmg | awk '{print $1}')
+          X64_SHA=$(shasum -a 256 "Scribe_${VERSION}_x64.dmg" | awk '{print $1}')
+          ARM64_SHA=$(shasum -a 256 "Scribe_${VERSION}_aarch64.dmg" | awk '{print $1}')
 
           echo "x64_sha=${X64_SHA}" >> $GITHUB_OUTPUT
           echo "arm64_sha=${ARM64_SHA}" >> $GITHUB_OUTPUT
