@@ -304,24 +304,25 @@ export function yamlCompletions(context: CompletionContext): CompletionResult | 
 
 /**
  * Chunk option completions
- * Triggers when typing #| inside code blocks
+ * Triggers ONLY when typing #| inside code blocks (not # alone, to avoid tag confusion)
  */
 export function chunkOptionCompletions(context: CompletionContext): CompletionResult | null {
   if (!isInCodeBlock(context)) return null
   
-  // Match #| at start of line or after typing
-  const word = context.matchBefore(/#\|?\s*[a-z-]*:?\s*[a-z]*/)
-  if (!word) return null
-  
-  // Check if line starts with #| or just #
   const line = context.state.doc.lineAt(context.pos)
   const lineText = line.text.trimStart()
-  if (!lineText.startsWith('#|') && !lineText.startsWith('#')) return null
+  
+  // REQUIRE #| prefix - single # is for tags/comments, not chunk options
+  if (!lineText.startsWith('#|')) return null
+  
+  // Match the #| and any partial option text
+  const word = context.matchBefore(/#\|\s*[a-z-]*:?\s*[a-z"']*/i)
+  if (!word) return null
   
   return {
     from: line.from + (line.text.length - line.text.trimStart().length),
     options: CHUNK_OPTIONS,
-    validFor: /^#\|?\s*[a-z-]*:?\s*[a-z"']*$/
+    validFor: /^#\|\s*[a-z-]*:?\s*[a-z"']*$/i
   }
 }
 
