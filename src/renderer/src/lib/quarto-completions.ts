@@ -372,27 +372,30 @@ export function chunkOptionCompletions(context: CompletionContext): CompletionRe
 /**
  * Code chunk language completions
  * Triggers when typing ``` to offer executable code block options
+ * Similar pattern to latexCompletions - uses matchBefore from cursor
  */
 export function codeChunkCompletions(context: CompletionContext): CompletionResult | null {
-  // Get the current line
-  const line = context.state.doc.lineAt(context.pos)
-  const lineText = line.text.trimStart()
+  // Match backticks pattern - must be at start of line (after optional whitespace)
+  // The pattern matches 1-3 backticks optionally followed by { and language name
+  const word = context.matchBefore(/`{1,3}\{?[a-z]*/)
   
-  // Only trigger if line starts with backticks (1-3 backticks)
-  if (!lineText.startsWith('`')) return null
+  // If no match and not explicitly triggered, return null
+  if (!word || (word.from === word.to && !context.explicit)) {
+    return null
+  }
   
-  // Match the backticks from the start of content
-  const match = lineText.match(/^(`{1,3})(\{?[a-z]*)$/)
-  if (!match) return null
+  // Verify we're at the start of a line (only whitespace before the backticks)
+  const line = context.state.doc.lineAt(word.from)
+  const textBeforeMatch = line.text.slice(0, word.from - line.from)
+  if (textBeforeMatch.trim() !== '') {
+    return null  // There's non-whitespace before the backticks
+  }
   
   // Don't trigger inside existing code blocks
   if (isInCodeBlock(context)) return null
   
-  // Calculate the position to replace from
-  const leadingWhitespace = line.text.length - lineText.length
-  
   return {
-    from: line.from + leadingWhitespace,
+    from: word.from,
     options: CODE_CHUNKS,
     validFor: /^`{1,3}\{?[a-z]*$/
   }
