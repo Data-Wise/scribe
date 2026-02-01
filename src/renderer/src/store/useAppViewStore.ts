@@ -417,9 +417,10 @@ const saveCardModeWidth = (width: number): void => {
  */
 const migrateToIconCentric = (): void => {
   try {
-    // Check if migration already complete
-    const hasNewFormat = localStorage.getItem(EXPANDED_ICON_KEY) !== null
-    if (hasNewFormat) return // Already migrated
+    // Check if migration already complete using dedicated version key
+    const MIGRATION_VERSION_KEY = 'scribe:migrationVersion'
+    const currentVersion = localStorage.getItem(MIGRATION_VERSION_KEY)
+    if (currentVersion === 'v1.16.0') return // Already migrated
 
     // Read v1.15.0 keys
     const oldMode = localStorage.getItem('scribe:sidebarMode') // v1.15.0
@@ -441,6 +442,7 @@ const migrateToIconCentric = (): void => {
     localStorage.removeItem('scribe:expandedSmartIconId')
 
     console.log('[Migration] v1.15.0 → v1.16.0 icon-centric migration complete')
+    localStorage.setItem('scribe:migrationVersion', 'v1.16.0')
   } catch (error) {
     console.warn('[Migration] Failed to migrate localStorage:', error)
   }
