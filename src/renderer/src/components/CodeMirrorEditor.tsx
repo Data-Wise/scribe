@@ -14,7 +14,7 @@ import { autocompletion, CompletionContext } from '@codemirror/autocomplete'
 import type { Completion } from '@codemirror/autocomplete'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
-import { yamlCompletions, chunkOptionCompletions, crossRefCompletions } from '../lib/quarto-completions'
+import { yamlCompletions, chunkOptionCompletions, crossRefCompletions, codeChunkCompletions } from '../lib/quarto-completions'
 
 /**
  * Define custom tags for markdown syntax markers
@@ -1539,7 +1539,7 @@ export function CodeMirrorEditor({
     // Cmd+Click navigation works in all modes (especially useful in Source mode)
     cmdClickHandler,
     latexSyntaxPlugin,  // LaTeX syntax highlighting for math blocks
-    autocompletion({ override: [latexCompletions, latexSnippetCompletions, yamlCompletions, chunkOptionCompletions, crossRefCompletions] }),  // LaTeX + Quarto completions
+    autocompletion({ override: [latexCompletions, latexSnippetCompletions, yamlCompletions, chunkOptionCompletions, crossRefCompletions, codeChunkCompletions] }),  // LaTeX + Quarto completions
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
   ]

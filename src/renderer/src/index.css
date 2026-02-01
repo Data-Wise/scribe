@@ -6228,6 +6228,53 @@ mark {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
+/* ============================================================
+   Quarto Code Block Styling
+   Distinct background for fenced code blocks (```{r}, ```{python}, etc.)
+   ============================================================ */
+
+/* Code block container - lines inside fenced code blocks */
+.codemirror-editor-wrapper .cm-line.cm-codeblock-line {
+  background-color: rgba(0, 0, 0, 0.04);
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 0.9em;
+  border-left: 2px solid var(--nexus-accent, #22c55e);
+  padding-left: 12px;
+  margin-left: -2px;
+}
+
+/* Opening fence line ```{r} */
+.codemirror-editor-wrapper .cm-line:has(.tok-codeFence) {
+  background-color: rgba(0, 0, 0, 0.06);
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 0.9em;
+  border-radius: 4px 4px 0 0;
+  margin-top: 8px;
+}
+
+/* Chunk option lines (#|) */
+.codemirror-editor-wrapper .cm-line:has(.tok-comment):has(.tok-monospace) {
+  background-color: rgba(0, 0, 0, 0.04);
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 0.85em;
+  padding-left: 12px;
+  border-left: 2px solid rgba(34, 197, 94, 0.5);
+  color: var(--nexus-text-secondary);
+}
+
+/* Dark mode */
+.dark .codemirror-editor-wrapper .cm-line.cm-codeblock-line {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.dark .codemirror-editor-wrapper .cm-line:has(.tok-codeFence) {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark .codemirror-editor-wrapper .cm-line:has(.tok-comment):has(.tok-monospace) {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
 /* ============================================================================
  * Callout Boxes (Reading Mode)
  * ============================================================================ */

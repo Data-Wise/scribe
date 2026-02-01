@@ -98,6 +98,49 @@ const EXECUTE_OPTIONS: Completion[] = [
 ]
 
 // ============================================================================
+// Code Chunk Language Data
+// ============================================================================
+
+const CODE_CHUNKS: Completion[] = [
+  { 
+    label: '```{r}', 
+    detail: 'R code chunk', 
+    type: 'keyword',
+    apply: '```{r}\n\n```'
+  },
+  { 
+    label: '```{python}', 
+    detail: 'Python code chunk', 
+    type: 'keyword',
+    apply: '```{python}\n\n```'
+  },
+  { 
+    label: '```{julia}', 
+    detail: 'Julia code chunk', 
+    type: 'keyword',
+    apply: '```{julia}\n\n```'
+  },
+  { 
+    label: '```{ojs}', 
+    detail: 'Observable JS chunk', 
+    type: 'keyword',
+    apply: '```{ojs}\n\n```'
+  },
+  { 
+    label: '```{mermaid}', 
+    detail: 'Mermaid diagram', 
+    type: 'keyword',
+    apply: '```{mermaid}\n\n```'
+  },
+  { 
+    label: '```{dot}', 
+    detail: 'Graphviz diagram', 
+    type: 'keyword',
+    apply: '```{dot}\n\n```'
+  },
+]
+
+// ============================================================================
 // Chunk Options Data
 // ============================================================================
 
@@ -323,6 +366,35 @@ export function chunkOptionCompletions(context: CompletionContext): CompletionRe
     from: line.from + (line.text.length - line.text.trimStart().length),
     options: CHUNK_OPTIONS,
     validFor: /^#\|\s*[a-z-]*:?\s*[a-z"']*$/i
+  }
+}
+
+/**
+ * Code chunk language completions
+ * Triggers when typing ``` to offer executable code block options
+ */
+export function codeChunkCompletions(context: CompletionContext): CompletionResult | null {
+  // Get the current line
+  const line = context.state.doc.lineAt(context.pos)
+  const lineText = line.text.trimStart()
+  
+  // Only trigger if line starts with backticks (1-3 backticks)
+  if (!lineText.startsWith('`')) return null
+  
+  // Match the backticks from the start of content
+  const match = lineText.match(/^(`{1,3})(\{?[a-z]*)$/)
+  if (!match) return null
+  
+  // Don't trigger inside existing code blocks
+  if (isInCodeBlock(context)) return null
+  
+  // Calculate the position to replace from
+  const leadingWhitespace = line.text.length - lineText.length
+  
+  return {
+    from: line.from + leadingWhitespace,
+    options: CODE_CHUNKS,
+    validFor: /^`{1,3}\{?[a-z]*$/
   }
 }
 
