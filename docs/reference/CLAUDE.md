@@ -127,25 +127,25 @@ git push origin v1.x.x
 
 ## 📐 Technical Stack (Locked)
 
-| Layer | Technology |
-|-------|------------|
-| Shell | **Tauri 2** (Rust backend) |
-| UI | React 18 |
-| Editor | HybridEditor (CodeMirror 6 + ReactMarkdown) |
-| Styling | Tailwind CSS |
-| State | Zustand |
-| Database | SQLite (Tauri) / **IndexedDB** (Browser) |
-| AI | Claude/Gemini CLI only (NO API) |
-| Citations | Pandoc citeproc |
-| Math | KaTeX |
+| Layer     | Technology                                  |
+| --------- | ------------------------------------------- |
+| Shell     | **Tauri 2** (Rust backend)                  |
+| UI        | React 18                                    |
+| Editor    | HybridEditor (CodeMirror 6 + ReactMarkdown) |
+| Styling   | Tailwind CSS                                |
+| State     | Zustand                                     |
+| Database  | SQLite (Tauri) / **IndexedDB** (Browser)    |
+| AI        | Claude/Gemini CLI only (NO API)             |
+| Citations | Pandoc citeproc                             |
+| Math      | KaTeX                                       |
 
 ### Dual Runtime Support
 
 Scribe runs in two modes with a unified API:
 
-| Mode | Database | Launch | Use Case |
-|------|----------|--------|----------|
-| **Tauri** | SQLite (Rust) | `npm run dev` | Full features, desktop app |
+| Mode        | Database             | Launch             | Use Case                    |
+| ----------- | -------------------- | ------------------ | --------------------------- |
+| **Tauri**   | SQLite (Rust)        | `npm run dev`      | Full features, desktop app  |
 | **Browser** | IndexedDB (Dexie.js) | `npm run dev:vite` | Testing, demos, development |
 
 The API factory (`src/renderer/src/lib/api.ts`) auto-switches based on runtime detection.
@@ -243,6 +243,13 @@ scribe help --all      # Full reference
 - **+4 new components** (well-organized, tested)
 - **+32 new tests** (2,161/2,195 passing, 98.5%)
 - **0 breaking changes**
+
+**Phase 1.3: Quarto Autocomplete Stabilization (v1.16.2)**
+- ✅ Fixed erratic code block behavior (suppressed non-code completions)
+- ✅ Implemented context-aware LaTeX completions (math mode only)
+- ✅ Added syntax highlighting for embedded languages (R, Python, etc.)
+- ✅ Polished code block styling with distinct background
+- ✅ Fixed backtick autocomplete triggers
 
 ---
 
@@ -660,13 +667,13 @@ Features:
 
 ## 🔗 Related Files
 
-| File | Purpose |
-|------|---------|
-| PROJECT-DEFINITION.md | Complete scope control |
-| README.md | User-facing overview |
-| .STATUS | Progress tracking |
-| CHANGELOG.md | Version history |
-| cli/scribe.zsh | Terminal CLI implementation |
+| File                                      | Purpose                           |
+| ----------------------------------------- | --------------------------------- |
+| PROJECT-DEFINITION.md                     | Complete scope control            |
+| README.md                                 | User-facing overview              |
+| .STATUS                                   | Progress tracking                 |
+| CHANGELOG.md                              | Version history                   |
+| cli/scribe.zsh                            | Terminal CLI implementation       |
 | BRAINSTORM-browser-fallback-2025-12-28.md | Browser mode implementation notes |
 
 ---
