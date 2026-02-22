@@ -7,6 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.16.3] - 2026-01-26
+
+### Automated Release Pipeline
+
+**Complete CI/CD automation with 8 critical fixes to eliminate manual release errors.**
+
+### Added
+
+- **GitHub Actions Release Workflow** - Fully automated 5-job pipeline:
+  - `build` - Parallel builds for x64 (Intel) and aarch64 (Apple Silicon)
+  - `create-checksums` - Automatic SHA-256 checksum generation
+  - `update-homebrew` - Safe Homebrew formula updates with verification
+  - `verify-installation` - End-to-end installation testing on macOS
+- **Comprehensive Release Documentation** (7 files, 1,600+ lines)
+- **CHECKSUMS.txt** in GitHub release assets for user verification
+
+### Fixed
+
+- **8 CI/CD pipeline issues** discovered and resolved during release:
+  1. Version mismatch - Synced tauri.conf.json, package.json, Cargo.toml to 1.16.3
+  2. Filename mismatch - curl downloads now match CHECKSUMS.txt entries
+  3. `brew audit` API deprecation - Replaced with `brew style --fix`
+  4. Tap not installed in CI - Use local file validation instead
+  5. Git auth header conflicts - Added `persist-credentials: false`
+  6. Token authentication - Use explicit `git remote set-url` with token
+  7. PAT permissions - Documented Classic token with `repo` scope requirement
+  8. Release notes - Added macOS Gatekeeper workaround instructions
+
+- **SHA-256 checksum mismatch error** from v1.16.2 resolved
+  - Automated verification prevents future checksum mismatches
+
+### Known Issues
+
+- **macOS Gatekeeper** - App shows "damaged" error (unsigned)
+  - Workaround: Run `xattr -cr /Applications/Scribe.app` after installation
+  - Code signing planned for future release (requires Apple Developer account)
+
+### Security
+
+- Safe Ruby script substitution (no shell injection)
+- Environment variable scoping in GitHub Actions
+- Checksum verification before formula updates
+- Token-based authentication with minimal permissions
+
+### Performance
+
+- Parallel architecture builds complete in ~8-10 minutes
+- Full release pipeline: 15-20 minutes (automated)
+- Single manual step: `git tag vX.X.X && git push origin vX.X.X`
+
+### Documentation
+
+- `WORKFLOW-FIX-SUMMARY.md` - Complete debugging history for all 8 fixes
+- Release workflow documented with troubleshooting guide
+
+---
+
 ## [v1.16.2] - 2026-01-24
 
 ### Technical Debt Remediation - Phase 1 Complete

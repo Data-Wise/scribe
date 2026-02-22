@@ -145,6 +145,7 @@ jobs:
           repository: Data-Wise/homebrew-tap
           token: ${{ secrets.TAP_GITHUB_TOKEN }}
           path: homebrew-tap
+          persist-credentials: false
 
       - name: Get version
         id: version
@@ -160,9 +161,9 @@ jobs:
           echo "Downloading release assets for v${VERSION}..."
 
           # Download DMG files
-          curl -L -o x64.dmg \
+          curl -L -o "Scribe_${VERSION}_x64.dmg" \
             "${RELEASE_URL}/Scribe_${VERSION}_x64.dmg"
-          curl -L -o aarch64.dmg \
+          curl -L -o "Scribe_${VERSION}_aarch64.dmg" \
             "${RELEASE_URL}/Scribe_${VERSION}_aarch64.dmg"
 
           # Download CHECKSUMS.txt for verification
@@ -179,8 +180,8 @@ jobs:
           fi
 
           # Calculate SHA256 for cask
-          X64_SHA=$(shasum -a 256 x64.dmg | awk '{print $1}')
-          ARM64_SHA=$(shasum -a 256 aarch64.dmg | awk '{print $1}')
+          X64_SHA=$(shasum -a 256 "Scribe_${VERSION}_x64.dmg" | awk '{print $1}')
+          ARM64_SHA=$(shasum -a 256 "Scribe_${VERSION}_aarch64.dmg" | awk '{print $1}')
 
           echo "x64_sha=${X64_SHA}" >> $GITHUB_OUTPUT
           echo "arm64_sha=${ARM64_SHA}" >> $GITHUB_OUTPUT
@@ -226,11 +227,12 @@ jobs:
         run: |
           cd homebrew-tap
 
-          # Check syntax with brew
-          if brew audit --cask Casks/scribe.rb; then
-            echo "✅ Cask audit passed"
+          # Validate cask syntax using brew style (works with local files)
+          echo "Validating cask syntax..."
+          if brew style --fix Casks/scribe.rb; then
+            echo "✅ Cask validation passed"
           else
-            echo "❌ Cask audit failed!"
+            echo "❌ Cask validation failed!"
             exit 1
           fi
 
@@ -245,11 +247,16 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
           X64_SHA: ${{ steps.download.outputs.x64_sha }}
           ARM64_SHA: ${{ steps.download.outputs.arm64_sha }}
+          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
         run: |
           cd homebrew-tap
 
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+
+          # Set remote URL with token for authentication
+          # Source: https://www.w3tutorials.net/blog/how-to-push-to-another-repository-in-github-actions/
+          git remote set-url origin "https://x-access-token:${TAP_GITHUB_TOKEN}@github.com/Data-Wise/homebrew-tap.git"
 
           git add Casks/scribe.rb
 
