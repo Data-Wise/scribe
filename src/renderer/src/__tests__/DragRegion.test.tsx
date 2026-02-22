@@ -1,8 +1,17 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { DragRegion, useDragRegion } from '../components/DragRegion'
 import * as platformModule from '../lib/platform'
 import { renderHook, act } from '@testing-library/react'
+
+// vi.hoisted runs before vi.mock hoisting, making these available in mock factories
+const { mockStartDragging, mockGetCurrentWindow } = vi.hoisted(() => {
+  const mockStartDragging = vi.fn().mockResolvedValue(undefined)
+  const mockGetCurrentWindow = vi.fn(() => ({
+    startDragging: mockStartDragging,
+  }))
+  return { mockStartDragging, mockGetCurrentWindow }
+})
 
 // Mock the platform module
 vi.mock('../lib/platform', () => ({
@@ -11,37 +20,28 @@ vi.mock('../lib/platform', () => ({
   getPlatform: vi.fn(),
 }))
 
-// Mock the Tauri API
+// Mock the Tauri API — uses hoisted mocks so dynamic import() resolves correctly
 vi.mock('@tauri-apps/api/window', () => ({
-  getCurrentWindow: vi.fn(),
+  getCurrentWindow: mockGetCurrentWindow,
 }))
 
 describe('DragRegion Component', () => {
-  let mockStartDragging: ReturnType<typeof vi.fn>
-  let mockGetCurrentWindow: ReturnType<typeof vi.fn>
   let isTauriMock: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     vi.clearAllMocks()
 
+    // Reset mock implementations after clearAllMocks
+    mockStartDragging.mockResolvedValue(undefined)
+    mockGetCurrentWindow.mockReturnValue({
+      startDragging: mockStartDragging,
+    })
+
     // Setup default mocks
     isTauriMock = vi.fn(() => true)
-    mockStartDragging = vi.fn().mockResolvedValue(undefined)
-    mockGetCurrentWindow = vi.fn(() => ({
-      startDragging: mockStartDragging,
-    }))
 
     // Apply mocks to platform module
-    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock)
-
-    // Mock Tauri API module
-    vi.doMock('@tauri-apps/api/window', () => ({
-      getCurrentWindow: mockGetCurrentWindow,
-    }))
-  })
-
-  afterEach(() => {
-    vi.unmock('@tauri-apps/api/window')
+    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock as () => boolean)
   })
 
   describe('Basic Rendering', () => {
@@ -360,7 +360,7 @@ describe('DragRegion Component', () => {
 
     it('does drag when clicking on regular div', async () => {
       isTauriMock.mockReturnValue(true)
-      const { container } = render(
+      render(
         <DragRegion>
           <div>Regular content</div>
         </DragRegion>
@@ -489,28 +489,19 @@ describe('DragRegion Component', () => {
 })
 
 describe('useDragRegion Hook', () => {
-  let mockStartDragging: ReturnType<typeof vi.fn>
-  let mockGetCurrentWindow: ReturnType<typeof vi.fn>
   let isTauriMock: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    isTauriMock = vi.fn(() => true)
-    mockStartDragging = vi.fn().mockResolvedValue(undefined)
-    mockGetCurrentWindow = vi.fn(() => ({
+    // Reset hoisted mock implementations after clearAllMocks
+    mockStartDragging.mockResolvedValue(undefined)
+    mockGetCurrentWindow.mockReturnValue({
       startDragging: mockStartDragging,
-    }))
+    })
 
-    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock)
-
-    vi.doMock('@tauri-apps/api/window', () => ({
-      getCurrentWindow: mockGetCurrentWindow,
-    }))
-  })
-
-  afterEach(() => {
-    vi.unmock('@tauri-apps/api/window')
+    isTauriMock = vi.fn(() => true)
+    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock as () => boolean)
   })
 
   describe('Basic Hook Functionality', () => {

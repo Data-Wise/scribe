@@ -14,6 +14,7 @@ import { autocompletion, CompletionContext } from '@codemirror/autocomplete'
 import type { Completion } from '@codemirror/autocomplete'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
+import { yamlCompletions, chunkOptionCompletions, crossRefCompletions, codeChunkCompletions } from '../lib/quarto-completions'
 
 /**
  * Define custom tags for markdown syntax markers
@@ -806,10 +807,72 @@ const latexCommands: Completion[] = [
 ]
 
 /**
+ * Check if cursor is in a math context ($..$ or $$..$) 
+ */
+function isInMathContext(context: CompletionContext): boolean {
+  const pos = context.pos
+  const doc = context.state.doc
+  const text = doc.sliceString(0, pos)
+
+  // Look backwards for opening $ or $$
+  let inMath = false
+  let i = text.length - 1
+  while (i >= 0) {
+    if (text[i] === '$') {
+      // Skip escaped \$
+      if (i > 0 && text[i - 1] === '\\') {
+        i -= 2
+        continue
+      }
+      // Check for $$ (display math)
+      if (i > 0 && text[i - 1] === '$') {
+        inMath = !inMath
+        i -= 2
+      } else {
+        // Single $ (inline math)
+        inMath = !inMath
+        i--
+      }
+    } else {
+      i--
+    }
+  }
+  return inMath
+}
+
+/**
+ * Check if cursor is in a Quarto code block (```{r}, etc)
+ */
+function isInQuartoCodeBlock(context: CompletionContext): boolean {
+  const doc = context.state.doc
+  const pos = context.pos
+  
+  // Scan backwards for opening fence
+  let searchPos = pos
+  while (searchPos > 0) {
+    const line = doc.lineAt(searchPos)
+    const trimmed = line.text.trimStart()
+    if (trimmed.startsWith('```')) {
+      // Is this an opening fence (has language specifier)?
+      if (/^```\{?\w/.test(trimmed)) {
+        return true  // Found opening fence, we're inside
+      }
+      // It's a closing fence, we're not in a block
+      return false
+    }
+    searchPos = line.from - 1
+  }
+  return false
+}
+
+/**
  * LaTeX completion source
- * Triggers when user types backslash (\) inside math blocks
+ * Triggers when user types backslash (\) in math mode or outside code blocks
  */
 function latexCompletions(context: CompletionContext) {
+  // Don't show LaTeX completions inside Quarto code blocks (R, Python, etc)
+  if (isInQuartoCodeBlock(context)) return null
+  
   const word = context.matchBefore(/\\[a-zA-Z]*/)
   if (!word || (word.from === word.to && !context.explicit)) {
     return null
@@ -905,9 +968,14 @@ const latexSnippets: LatexSnippet[] = [
 
 /**
  * LaTeX snippet completion source
- * Triggers on snippet keywords (no backslash required)
+ * Triggers on snippet keywords ONLY in math mode
+ * This prevents erratic behavior when typing normal text or code
  */
 function latexSnippetCompletions(context: CompletionContext) {
+  // ONLY trigger in math contexts - this is critical to prevent
+  // snippet popups when typing normal code or text
+  if (!isInMathContext(context)) return null
+  
   // Match alphanumeric snippet triggers
   const word = context.matchBefore(/[a-z][a-z0-9]*/)
   if (!word || (word.from === word.to && !context.explicit)) {
@@ -1538,7 +1606,7 @@ export function CodeMirrorEditor({
     // Cmd+Click navigation works in all modes (especially useful in Source mode)
     cmdClickHandler,
     latexSyntaxPlugin,  // LaTeX syntax highlighting for math blocks
-    autocompletion({ override: [latexCompletions, latexSnippetCompletions] }),  // LaTeX commands & snippets
+    autocompletion({ override: [latexCompletions, latexSnippetCompletions, yamlCompletions, chunkOptionCompletions, crossRefCompletions, codeChunkCompletions] }),  // LaTeX + Quarto completions
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
   ]

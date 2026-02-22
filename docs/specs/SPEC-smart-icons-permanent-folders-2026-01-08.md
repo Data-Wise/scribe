@@ -1,6 +1,6 @@
 # SPEC: Smart Icons - Permanent Type-Based Folders
 
-**Status:** Draft
+**Status:** Implemented (in v1.16.0, 2026-01-10)
 **Created:** 2026-01-08
 **From Brainstorm:** `BRAINSTORM-smart-icons-2026-01-08.md`
 **Version:** 1.0.0

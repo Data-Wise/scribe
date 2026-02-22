@@ -107,7 +107,7 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
 
   describe('Width Boundary Constraints', () => {
     it('constrains compact mode width to minimum (200px)', () => {
-      const { expandVault, setSidebarWidth, setIconMode } = useAppViewStore.getState()
+      const { expandVault, setSidebarWidth } = useAppViewStore.getState()
 
       // Expand inbox in compact mode
       expandVault('inbox')

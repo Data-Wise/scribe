@@ -1,6 +1,6 @@
 # SPEC: Two-Click Progressive Icon Expansion
 
-**Status:** draft
+**Status:** Superseded (not adopted; v1.16.0 uses per-icon preferred mode instead)
 **Created:** 2026-01-10
 **From Brainstorm:** Icon-centric sidebar enhancement
 **Type:** Feature Enhancement

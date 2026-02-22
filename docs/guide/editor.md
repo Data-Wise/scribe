@@ -1,6 +1,6 @@
 # Editor Guide
 
-> The HybridEditor - ADHD-friendly, distraction-free writing
+> CodeMirror 6 powered editor with three modes for every stage of writing
 
 ---
 
@@ -8,22 +8,28 @@
 
 <div class="grid cards" markdown>
 
--   :material-pencil:{ .lg .middle } **Write Mode**
+-   :material-code-tags:{ .lg .middle } **Source Mode** (`⌘1`)
 
     ---
 
-    Clean textarea. No distractions. Just you and your words.
+    Raw markdown with syntax highlighting. Full control over formatting.
 
--   :material-eye:{ .lg .middle } **Preview Mode**
+-   :material-pencil:{ .lg .middle } **Live Preview** (`⌘2`)
 
     ---
 
-    Rendered markdown with clickable links and syntax highlighting.
+    Obsidian-style: syntax hides when cursor moves away. LaTeX renders inline.
+
+-   :material-eye:{ .lg .middle } **Reading Mode** (`⌘3`)
+
+    ---
+
+    Fully rendered view. Click wiki links to navigate. Press `Escape` to exit.
 
 </div>
 
 !!! tip "Toggle Modes"
-    Press `⌘E` to switch between write and preview mode.
+    Press `⌘E` to cycle between modes, or `⌘1`/`⌘2`/`⌘3` to jump directly.
 
 ---
 
@@ -97,6 +103,34 @@ function hello() {
 
 ---
 
+## Quarto Support
+
+Scribe provides first-class editing support for [Quarto](https://quarto.org/) `.qmd` files:
+
+### Smart Autocompletion
+
+| Context | Trigger | Examples |
+|---------|---------|---------|
+| YAML frontmatter | Type key name | `title`, `format`, `bibliography` (40+ keys) |
+| Chunk options | Type `#\|` | `echo`, `fig-width`, `warning` (25+ options) |
+| Cross-references | Type `@fig-`, `@tbl-` | Labels scanned from your document |
+| Code chunks | Type `` ``` `` | R, Python, Julia, OJS, Mermaid |
+| LaTeX commands | Type `\` in math mode | `\alpha`, `\frac{}{}`, `\begin{}` (80+ commands) |
+
+### Context-Aware LaTeX
+
+LaTeX completions only appear where they make sense:
+
+- **In math mode** (`$...$` or `$$...$$`) — full LaTeX command + snippet completions
+- **In code blocks** — LaTeX completions suppressed (no `\alpha` in R code)
+- **In prose** — snippet completions suppressed (no erratic popups)
+
+### Code Block Styling
+
+Quarto code blocks get distinct visual treatment with a monospace font, accent-colored left border, and subdued `#|` chunk option lines.
+
+---
+
 ## Wiki Links
 
 Connect your notes with `[[double brackets]]`:
@@ -166,7 +200,10 @@ Always visible in the status bar:
 
 | Action | Shortcut |
 |--------|----------|
-| **Toggle write/preview** | `⌘E` |
+| **Cycle editor modes** | `⌘E` |
+| **Source mode** | `⌘1` |
+| **Live Preview** | `⌘2` |
+| **Reading mode** | `⌘3` |
 | **Focus mode** | `⌘⇧F` |
 | **Bold** | `⌘B` |
 | **Italic** | `⌘I` |

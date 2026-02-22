@@ -127,25 +127,25 @@ git push origin v1.x.x
 
 ## 📐 Technical Stack (Locked)
 
-| Layer | Technology |
-|-------|------------|
-| Shell | **Tauri 2** (Rust backend) |
-| UI | React 18 |
-| Editor | HybridEditor (CodeMirror 6 + ReactMarkdown) |
-| Styling | Tailwind CSS |
-| State | Zustand |
-| Database | SQLite (Tauri) / **IndexedDB** (Browser) |
-| AI | Claude/Gemini CLI only (NO API) |
-| Citations | Pandoc citeproc |
-| Math | KaTeX |
+| Layer     | Technology                                  |
+| --------- | ------------------------------------------- |
+| Shell     | **Tauri 2** (Rust backend)                  |
+| UI        | React 18                                    |
+| Editor    | HybridEditor (CodeMirror 6 + ReactMarkdown) |
+| Styling   | Tailwind CSS                                |
+| State     | Zustand                                     |
+| Database  | SQLite (Tauri) / **IndexedDB** (Browser)    |
+| AI        | Claude/Gemini CLI only (NO API)             |
+| Citations | Pandoc citeproc                             |
+| Math      | KaTeX                                       |
 
 ### Dual Runtime Support
 
 Scribe runs in two modes with a unified API:
 
-| Mode | Database | Launch | Use Case |
-|------|----------|--------|----------|
-| **Tauri** | SQLite (Rust) | `npm run dev` | Full features, desktop app |
+| Mode        | Database             | Launch             | Use Case                    |
+| ----------- | -------------------- | ------------------ | --------------------------- |
+| **Tauri**   | SQLite (Rust)        | `npm run dev`      | Full features, desktop app  |
 | **Browser** | IndexedDB (Dexie.js) | `npm run dev:vite` | Testing, demos, development |
 
 The API factory (`src/renderer/src/lib/api.ts`) auto-switches based on runtime detection.
@@ -218,58 +218,22 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.3 - Automated Release Pipeline Complete ✅
+## 🎯 Current Status: v1.17.0 - Quarto Autocomplete ✅
 
-**Released:** v1.16.3 (stable, via Homebrew + automated CI/CD)
-**Install Latest:** `brew install --cask data-wise/tap/scribe` (v1.16.3)
-**CI Automation:** Complete GitHub Actions workflow (build → checksums → homebrew → verify)
-**Tests:** 2,163 passing (98.5%)
+**Released:** v1.17.0 (stable)
+**Dev Branch:** v1.17.0 (Quarto autocomplete, test fixes, doc sync)
+**Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
+**Tests:** 2,187 passing (71 files)
 
-### Latest Work: Automated Release Pipeline Implementation (2026-01-25)
+### Latest Work: Quarto Autocomplete Stabilization (PR #40)
 
-**v1.16.3 Release - CI/CD Automation Complete ✅**
+- ✅ Context-aware LaTeX completions (math-only scoping, suppressed in code blocks)
+- ✅ Code chunk completions (R, Python, Julia, OJS, Mermaid, Graphviz)
+- ✅ YAML frontmatter + chunk option + cross-reference completions
+- ✅ Fixed 70 TypeScript errors across 22 test files
+- ✅ Escaped `\$` handling for academic documents
 
-**Problem Solved:**
-- v1.16.2 SHA-256 checksum mismatch prevented users from installing via Homebrew
-- Manual release process was error-prone and time-consuming (30+ minutes)
-
-**Solution Delivered:**
-- **GitHub Actions Workflow** (290 lines, `.github/workflows/release.yml`)
-  - Parallel builds: x64 (Intel) + aarch64 (Apple Silicon), ~8-10 min
-  - Auto-generated SHA-256 checksums with CHECKSUMS.txt upload
-  - Safe Homebrew formula updates (Ruby script, no shell injection)
-  - End-to-end installation verification on macOS
-  - Total: 15-20 minutes, fully automated
-- **Comprehensive Documentation** (7 new files, 1,600+ lines)
-  - RELEASE-CHECKLIST.md - Quick start for next release
-  - CI-WORKFLOW-GUIDE.md - Deep technical reference (448 lines)
-  - CI-WORKFLOW-DIAGRAM.md - Visual flowcharts & state machines (428 lines)
-  - README-CI-AUTOMATION.md, CI-AUTOMATION-SUMMARY.md, INDEX-CI-AUTOMATION.md
-  - CHECKSUM-FIX-SUMMARY.md - Issue analysis & prevention
-
-**Release Process (v1.16.3+):**
-```bash
-# Step 1: All you do
-git tag v1.16.3
-git push origin v1.16.3
-
-# Step 2: Workflow handles everything automatically
-# → Builds DMGs for both architectures
-# → Generates & verifies SHA-256 checksums
-# → Updates Homebrew formula safely
-# → Tests installation on macOS
-# Result: Users can install perfectly!
-```
-
-**Key Metrics:**
-- ✅ 0% checksum mismatch risk (automated validation)
-- ✅ 4 error checkpoints (early detection, no silent failures)
-- ✅ 1 manual step (git push tag)
-- ✅ 15-20 minute turnaround (fully hands-off)
-
----
-
-### Previous Work: Phase 1 Technical Debt Remediation (2026-01-23)
+### Previous: Phase 1 Technical Debt Remediation (2026-01-23)
 
 **Phase 1.1: SettingsModal Refactoring**
 - ✅ Extracted `GeneralSettingsTab`, `EditorSettingsTab`, `SettingsSection`
@@ -287,6 +251,13 @@ git push origin v1.16.3
 - **+4 new components** (well-organized, tested)
 - **+32 new tests** (2,161/2,195 passing, 98.5%)
 - **0 breaking changes**
+
+**Phase 1.3: Quarto Autocomplete Stabilization (v1.16.2)**
+- ✅ Fixed erratic code block behavior (suppressed non-code completions)
+- ✅ Implemented context-aware LaTeX completions (math mode only)
+- ✅ Added syntax highlighting for embedded languages (R, Python, etc.)
+- ✅ Polished code block styling with distinct background
+- ✅ Fixed backtick autocomplete triggers
 
 ---
 
@@ -704,13 +675,13 @@ Features:
 
 ## 🔗 Related Files
 
-| File | Purpose |
-|------|---------|
-| PROJECT-DEFINITION.md | Complete scope control |
-| README.md | User-facing overview |
-| .STATUS | Progress tracking |
-| CHANGELOG.md | Version history |
-| cli/scribe.zsh | Terminal CLI implementation |
+| File                                      | Purpose                           |
+| ----------------------------------------- | --------------------------------- |
+| PROJECT-DEFINITION.md                     | Complete scope control            |
+| README.md                                 | User-facing overview              |
+| .STATUS                                   | Progress tracking                 |
+| CHANGELOG.md                              | Version history                   |
+| cli/scribe.zsh                            | Terminal CLI implementation       |
 | BRAINSTORM-browser-fallback-2025-12-28.md | Browser mode implementation notes |
 
 ---

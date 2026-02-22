@@ -220,11 +220,8 @@ describe('ExpandedIconPanel Component', () => {
           type: 'research',
           color: '#3b82f6',
           icon: 'flask',
-          folder: '',
-          template: 'default',
           created_at: Date.now(),
-          updated_at: Date.now(),
-          archived: false
+          updated_at: Date.now()
         }
       ]
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'proj1' }
@@ -259,11 +256,8 @@ describe('ExpandedIconPanel Component', () => {
           type: 'research',
           color: '#3b82f6',
           icon: 'flask',
-          folder: '',
-          template: 'default',
           created_at: Date.now(),
-          updated_at: Date.now(),
-          archived: false
+          updated_at: Date.now()
         },
         {
           id: 'proj2',
@@ -272,11 +266,8 @@ describe('ExpandedIconPanel Component', () => {
           type: 'teaching',
           color: '#10b981',
           icon: 'graduation-cap',
-          folder: '',
-          template: 'default',
           created_at: Date.now(),
-          updated_at: Date.now(),
-          archived: false
+          updated_at: Date.now()
         },
         {
           id: 'proj3',
@@ -285,11 +276,8 @@ describe('ExpandedIconPanel Component', () => {
           type: 'research',
           color: '#3b82f6',
           icon: 'flask',
-          folder: '',
-          template: 'default',
           created_at: Date.now(),
-          updated_at: Date.now(),
-          archived: false
+          updated_at: Date.now()
         }
       ]
       const expandedIcon: ExpandedIconType = { type: 'smart', id: 'research' }
@@ -314,11 +302,8 @@ describe('ExpandedIconPanel Component', () => {
           type: 'research',
           color: '#3b82f6',
           icon: 'flask',
-          folder: '',
-          template: 'default',
           created_at: Date.now(),
-          updated_at: Date.now(),
-          archived: false
+          updated_at: Date.now()
         },
         {
           id: 'proj2',
@@ -327,11 +312,8 @@ describe('ExpandedIconPanel Component', () => {
           type: 'teaching',
           color: '#10b981',
           icon: 'graduation-cap',
-          folder: '',
-          template: 'default',
           created_at: Date.now(),
-          updated_at: Date.now(),
-          archived: false
+          updated_at: Date.now()
         }
       ]
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'proj1' }

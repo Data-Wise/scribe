@@ -7,7 +7,8 @@ import {
   getAppSettings,
   updateAppSettings
 } from '../lib/terminal-utils'
-import { Project } from '../types'
+import type { Project } from '../types'
+import { createMockProject } from './testUtils'
 
 describe('Terminal Utils', () => {
   // Mock localStorage
@@ -148,156 +149,77 @@ describe('Terminal Utils', () => {
     })
 
     it('returns project workingDirectory when explicitly set', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Test Project',
-        type: 'research',
-        settings: {
-          workingDirectory: '~/explicit/path'
-        },
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ type: 'research', settings: { workingDirectory: '~/explicit/path' } })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/explicit/path')
     })
 
     it('returns default for demo project "Getting Started"', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Getting Started',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Getting Started', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~')
     })
 
     it('returns default for demo project "Research"', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Research',
-        type: 'research',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Research', type: 'research', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~')
     })
 
     it('handles demo project names case-insensitively', () => {
-      const project: Project = {
-        id: '1',
-        name: 'GETTING STARTED',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'GETTING STARTED', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~')
     })
 
     it('handles demo project names with extra whitespace', () => {
-      const project: Project = {
-        id: '1',
-        name: '  getting started  ',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: '  getting started  ', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~')
     })
 
     it('infers path for research project', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Mediation Analysis',
-        type: 'research',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Mediation Analysis', type: 'research', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/projects/research/mediation-analysis')
     })
 
     it('infers path for teaching project', () => {
-      const project: Project = {
-        id: '1',
-        name: 'STAT 440',
-        type: 'teaching',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'STAT 440', type: 'teaching', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/projects/teaching/stat-440')
     })
 
     it('infers path for r-package project', () => {
-      const project: Project = {
-        id: '1',
-        name: 'My Package',
-        type: 'r-package',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'My Package', type: 'r-package', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/projects/r-packages/my-package')
     })
 
     it('infers path for r-dev project', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Dev Tools',
-        type: 'r-dev',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Dev Tools', type: 'r-dev', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/projects/dev-tools/dev-tools')
     })
 
     it('infers path for generic project', () => {
-      const project: Project = {
-        id: '1',
-        name: 'My Project',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'My Project', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/projects/my-project')
     })
 
     it('normalizes project name to folder-friendly format', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Project With Spaces & Special!@# Chars',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Project With Spaces & Special!@# Chars', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       // Spaces become hyphens, special chars removed
@@ -305,28 +227,14 @@ describe('Terminal Utils', () => {
     })
 
     it('handles multiple consecutive spaces', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Project   With   Gaps',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Project   With   Gaps', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/projects/project-with-gaps')
     })
 
     it('removes special characters but keeps hyphens', () => {
-      const project: Project = {
-        id: '1',
-        name: 'React-Redux App v2.0',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'React-Redux App v2.0', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       expect(cwd).toBe('~/projects/react-redux-app-v20')
@@ -335,30 +243,14 @@ describe('Terminal Utils', () => {
 
   describe('getInferredProjectPath', () => {
     it('returns inferred path for research project', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Causal Study',
-        type: 'research',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Causal Study', type: 'research', settings: {} })
 
       const path = getInferredProjectPath(project)
       expect(path).toBe('~/projects/research/causal-study')
     })
 
     it('ignores explicit workingDirectory setting', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Test',
-        type: 'generic',
-        settings: {
-          workingDirectory: '~/custom'
-        },
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Test', settings: { workingDirectory: '~/custom' } })
 
       const path = getInferredProjectPath(project)
       // Should return inferred path, not the explicit one
@@ -366,14 +258,7 @@ describe('Terminal Utils', () => {
     })
 
     it('treats demo projects like regular projects', () => {
-      const project: Project = {
-        id: '1',
-        name: 'Getting Started',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: 'Getting Started', settings: {} })
 
       const path = getInferredProjectPath(project)
       // Returns inferred path even for demo projects
@@ -383,14 +268,7 @@ describe('Terminal Utils', () => {
 
   describe('Edge Cases', () => {
     it('handles empty project name', () => {
-      const project: Project = {
-        id: '1',
-        name: '',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: '', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       // Empty name becomes empty folder name
@@ -398,14 +276,7 @@ describe('Terminal Utils', () => {
     })
 
     it('handles project name with only special characters', () => {
-      const project: Project = {
-        id: '1',
-        name: '!@#$%^&*()',
-        type: 'generic',
-        settings: {},
-        created_at: Date.now(),
-        updated_at: Date.now()
-      }
+      const project = createMockProject({ name: '!@#$%^&*()', settings: {} })
 
       const cwd = inferTerminalCwd(project)
       // All special chars removed

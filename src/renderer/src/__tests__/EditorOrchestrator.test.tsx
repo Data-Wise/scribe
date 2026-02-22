@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { EditorOrchestrator } from '../components/EditorOrchestrator'
-import type { Note } from '../types'
 import type { EditorMode } from '../lib/preferences'
+import { createMockNote, createMockPreferences } from './testUtils'
 
 // Mock the HybridEditor component
 vi.mock('../components/HybridEditor', () => ({
@@ -19,17 +19,7 @@ vi.mock('../components/EmptyState', () => ({
 }))
 
 describe('EditorOrchestrator', () => {
-  const mockNote: Note = {
-    id: 'note-1',
-    title: 'Test Note',
-    content: 'Test content',
-    folder: 'inbox',
-    project_id: null,
-    created_at: Date.now(),
-    updated_at: Date.now(),
-    deleted_at: null,
-    properties: {},
-  }
+  const mockNote = createMockNote({ folder: 'inbox', properties: {} })
 
   const mockProps = {
     selectedNote: mockNote,
@@ -48,16 +38,7 @@ describe('EditorOrchestrator', () => {
     sessionStartWords: {},
     streakInfo: { streak: 5, isActiveToday: true },
     sessionStartTime: Date.now(),
-    preferences: {
-      defaultWordGoal: 500,
-      focusModeEnabled: false,
-      editorMode: 'source' as EditorMode,
-      sidebarTabSize: 'compact' as const,
-      sidebarTabOrder: [],
-      sidebarHiddenTabs: [],
-      customCSSEnabled: false,
-      customCSS: '',
-    },
+    preferences: createMockPreferences(),
     onToggleTerminal: vi.fn(),
     focusMode: false,
     onFocusModeChange: vi.fn(),

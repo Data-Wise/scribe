@@ -66,7 +66,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
 
   describe('expandVault', () => {
     it('expands inbox and sets width based on default mode', () => {
-      const { expandVault, expandedIcon, sidebarWidth } = useAppViewStore.getState()
+      const { expandVault } = useAppViewStore.getState()
 
       expandVault('inbox')
 
@@ -306,7 +306,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
 
   describe('Width Management', () => {
     it('uses compactModeWidth for compact mode icons', () => {
-      const { expandVault, setSidebarWidth } = useAppViewStore.getState()
+      const { expandVault } = useAppViewStore.getState()
 
       // Set custom compact width
       useAppViewStore.setState({ compactModeWidth: 260 })
@@ -317,7 +317,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
     })
 
     it('uses cardModeWidth for card mode icons', () => {
-      const { expandVault, setIconMode, pinnedVaults } = useAppViewStore.getState()
+      const { expandVault, pinnedVaults } = useAppViewStore.getState()
 
       // Set custom card width
       useAppViewStore.setState({ cardModeWidth: 380 })

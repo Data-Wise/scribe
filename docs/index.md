@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.16.2-blue)
+![Version](https://img.shields.io/badge/version-1.17.0-blue)
 ![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-2163%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-2187%20passing-brightgreen)
 
 ---
 
@@ -185,7 +185,7 @@ cd scribe && npm install && npm run dev
 
 ### Mission Control
 
-- [Mission Control Walkthrough](MISSION-CONTROL-WALKTHROUGH.md) - Sidebar tutorial
+- [Mission Control Walkthrough](archive/completed/MISSION-CONTROL-WALKTHROUGH.md) - Sidebar tutorial
 
 ### Technical Reference
 

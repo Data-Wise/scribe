@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { CommandPalette } from '../components/CommandPalette'
+import { createMockNote } from './testUtils'
 
 // Mock the platform module to simulate Tauri mode (features enabled)
 vi.mock('../lib/platform', () => ({
@@ -11,9 +12,9 @@ vi.mock('../lib/platform', () => ({
 
 // Mock notes
 const mockNotes = [
-  { id: '1', title: 'Project Plan', content: '', folder: 'projects', created_at: Date.now(), updated_at: Date.now() },
-  { id: '2', title: 'Meeting Notes', content: '', folder: 'inbox', created_at: Date.now(), updated_at: Date.now() },
-  { id: '3', title: 'Research Paper', content: '', folder: 'resources', created_at: Date.now(), updated_at: Date.now() }
+  createMockNote({ id: '1', title: 'Project Plan', content: '', folder: 'projects' }),
+  createMockNote({ id: '2', title: 'Meeting Notes', content: '', folder: 'inbox' }),
+  createMockNote({ id: '3', title: 'Research Paper', content: '', folder: 'resources' })
 ]
 
 describe('CommandPalette Component', () => {

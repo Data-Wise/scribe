@@ -1,9 +1,9 @@
 # Scribe Development Roadmap - Consolidated
 
-> **Generated:** 2026-01-08
+> **Generated:** 2026-02-01
 > **Status:** Active Planning Document
-> **Current Version:** v1.14.0
-> **Next Release:** v1.15.0 (Quarto Enhancements)
+> **Current Version:** v1.16.3
+> **Next Release:** v1.17.0 (Three-Tab Sidebar System)
 
 ---
 
@@ -13,9 +13,8 @@
 main (protected) ← PR from dev only
   └── dev (planning/merging) ← PR from feature branches
        ├── feat/quarto-v115 (worktree: ~/.git-worktrees/scribe/quarto-v115) ✅ ACTIVE
-       ├── feat/latex-editor-v2 (worktree: ~/.git-worktrees/scribe/latex-v2) 📋 PLANNED
-       ├── feat/sidebar-v2 (worktree: ~/.git-worktrees/scribe/sidebar-v2) 🆕 NEW
-       └── feat/ai-integration (worktree: ~/.git-worktrees/scribe/ai-integration) 🆕 NEW
+       ├── feat/ai-integration (planned) 📋 READY TO START
+       └── feat/latex-editor-v2 (planned) 📋 PLANNED v2.0
 ```
 
 **Principles:**
@@ -26,24 +25,29 @@ main (protected) ← PR from dev only
 - Merge to main for releases only
 
 **Active Worktrees:**
-1. `feat/quarto-v115` - v1.15 Quarto Enhancements (Sprint 33-36)
-2. `feat/latex-editor-v2` - v2.0 LaTeX Editor Mode (Phases 1-6)
-3. `feat/sidebar-v2` - Sidebar Enhancement (Phases 2-4) 🆕
-4. `feat/ai-integration` - AI Backend Integration (Tauri wiring) 🆕
+1. `feat/quarto-v115` - v1.15 Quarto Enhancements (Sprint 33 ✅, 34-36 📋)
+2. `feat/ai-integration` - AI Backend Integration (5-7h, ready to start)
+3. `feat/latex-editor-v2` - v2.0 LaTeX Editor Mode (7 weeks, planned)
+
+**Recent Merges:**
+- ✅ `feat/sidebar-v2` - Merged to dev (v1.15.0 sidebar enhancements)
+- ✅ `feat/tech-debt-remediation` - Merged to main (v1.16.2)
 
 ---
 
-## Current State: v1.14.0 Released ✅
+## Current State: v1.16.3 Released ✅
 
-**Released:** 2026-01-07
+**Released:** 2026-01-26
 **Branch:** main (tagged)
-**Tests:** 1,984 passing (30 WikiLink E2E)
+**Tests:** 2,163 passing (109 E2E)
 
 **Features:**
-- Single-click WikiLink Navigation (Live/Reading modes)
-- Cmd+Click navigation in Source mode
-- Mode preservation in backlinks panel
-- Cursor indicator when Cmd held
+- Automated CI/CD pipeline (8 critical fixes)
+- Complete workflow: build → checksums → homebrew → verify (15-20 min)
+- Tech Debt Phase 1 complete (App.tsx & SettingsModal.tsx modularization, -881 lines)
+- Terminal integration (PTY shell via portable-pty + xterm.js)
+- Claude & Gemini CLI integration
+- Icon-centric sidebar (v1.16.0 refactor)
 
 ### Sidebar & AI Features (Complete - PR #5 Merged)
 
@@ -425,6 +429,7 @@ pub fn parse_quarto_output(output: &str) -> Vec<QuartoError> {
 **Goal:** Enable multi-format support (markdown, LaTeX, Quarto)
 
 **Database Schema:**
+
 ```sql
 -- Migration 010: Add file format support
 ALTER TABLE notes ADD COLUMN file_format TEXT DEFAULT 'md';
@@ -432,6 +437,7 @@ ALTER TABLE notes ADD COLUMN file_format TEXT DEFAULT 'md';
 ```
 
 **EditorFactory Pattern:**
+
 ```typescript
 const EditorFactory = ({ note }) => {
   switch (note.file_format) {
@@ -474,6 +480,7 @@ const EditorFactory = ({ note }) => {
 **Goal:** Compile `.tex` → PDF within Scribe
 
 **Backend:**
+
 ```rust
 // NEW: src-tauri/src/latex.rs
 fn detect_tex_live() -> Option<PathBuf> {
@@ -498,6 +505,7 @@ async fn compile_latex(tex_path: &Path) -> Result<PdfPath> {
 - `pdfjs-dist` (~2MB) - PDF rendering
 
 **Layout:**
+
 ```
 ┌─────────────────────────────────────────────┐
 │ [Source]          |      [PDF Preview]      │
@@ -692,6 +700,7 @@ async fn compile_latex(tex_path: &Path) -> Result<PdfPath> {
 - 4 new Tauri commands: `ai_run_claude`, `ai_is_claude_available`, etc.
 
 **Implementation:**
+
 ```rust
 async fn run_claude(prompt: &str, context: &str, model: Option<&str>) -> Result<String>
 // Executes: echo "$context" | claude --print "$prompt"
@@ -763,6 +772,7 @@ async fn run_claude(prompt: &str, context: &str, model: Option<&str>) -> Result<
 **When Sprint 36 completes:**
 
 1. **Merge to dev:**
+
    ```bash
    cd ~/.git-worktrees/scribe/quarto-v115
    # Commit any final changes
@@ -772,11 +782,13 @@ async fn run_claude(prompt: &str, context: &str, model: Option<&str>) -> Result<
    ```
 
 2. **Create PR to main:**
+
    ```bash
    gh pr create --base main --head dev --title "v1.15 Quarto Enhancements"
    ```
 
 3. **After merge to main:**
+
    ```bash
    git checkout main && git pull
    git tag -a v1.15.0 -m "v1.15.0 - Quarto Enhancements"

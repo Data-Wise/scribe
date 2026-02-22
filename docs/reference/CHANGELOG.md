@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.17.0] - 2026-02-22 — Quarto Autocomplete
+
+### Added
+
+- **Quarto code chunk completions** — type triple backticks for R, Python, Julia, OJS, Mermaid, Graphviz
+- **Quarto YAML frontmatter completions** — 40+ keys with nested value suggestions
+- **Quarto chunk option completions** — 25+ options triggered by `#|` prefix
+- **Quarto cross-reference completions** — `@fig-`, `@tbl-`, `@eq-` labels scanned from document
+- **Context-aware LaTeX completions** — scoped to math mode, suppressed in code blocks
+
+### Fixed
+
+- **LaTeX completions suppressed in Quarto code blocks** — no more `\alpha` popups in R code
+- **Code chunk completions** use `matchBefore` properly for reliable triggering
+- **Chunk options require `#|` prefix** — prevents false positives on plain comments
+- **Escaped `\$` handling** — literal dollar signs no longer break math context tracking
+- **Migration loop prevented** — dedicated version flag for localStorage migrations
+- **70 TypeScript errors resolved** across 22 test files and 1 source file
+
+---
+
 ## [v1.16.2] - 2026-01-24
 
 ### Technical Debt Remediation - Phase 1 Complete
