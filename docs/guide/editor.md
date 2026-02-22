@@ -103,6 +103,34 @@ function hello() {
 
 ---
 
+## Quarto Support
+
+Scribe provides first-class editing support for [Quarto](https://quarto.org/) `.qmd` files:
+
+### Smart Autocompletion
+
+| Context | Trigger | Examples |
+|---------|---------|---------|
+| YAML frontmatter | Type key name | `title`, `format`, `bibliography` (40+ keys) |
+| Chunk options | Type `#\|` | `echo`, `fig-width`, `warning` (25+ options) |
+| Cross-references | Type `@fig-`, `@tbl-` | Labels scanned from your document |
+| Code chunks | Type `` ``` `` | R, Python, Julia, OJS, Mermaid |
+| LaTeX commands | Type `\` in math mode | `\alpha`, `\frac{}{}`, `\begin{}` (80+ commands) |
+
+### Context-Aware LaTeX
+
+LaTeX completions only appear where they make sense:
+
+- **In math mode** (`$...$` or `$$...$$`) — full LaTeX command + snippet completions
+- **In code blocks** — LaTeX completions suppressed (no `\alpha` in R code)
+- **In prose** — snippet completions suppressed (no erratic popups)
+
+### Code Block Styling
+
+Quarto code blocks get distinct visual treatment with a monospace font, accent-colored left border, and subdued `#|` chunk option lines.
+
+---
+
 ## Wiki Links
 
 Connect your notes with `[[double brackets]]`:

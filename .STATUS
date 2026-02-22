@@ -8,8 +8,8 @@ updated: 2026-02-22
 released: 2026-01-24
 editor: hybrid-markdown++
 next_focus: Fix 67 test file TypeScript errors (~2.5h) / v1.17.0 Three-Tab Sidebar System
-tests: 2163
-unit_tests: 2163
+tests: 2187
+unit_tests: 2187
 e2e_tests: 109
 test_file_errors: 67 (non-blocking, documented in docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md)
 tags:

@@ -218,14 +218,22 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.1 - Technical Debt Remediation Phase 1 Complete ✅
+## 🎯 Current Status: v1.16.2 - Quarto Stabilization Complete ✅
 
 **Released:** v1.14.0 (stable, via Homebrew)
-**Dev Branch:** v1.16.1 (Phase 1 Refactoring - ready to merge)
+**Dev Branch:** v1.16.2+ (Quarto autocomplete stabilized)
 **Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
-**Tests:** 2,162 passing (98.5%)
+**Tests:** 2,187 passing (71 files)
 
-### Latest Work: Phase 1 Technical Debt Remediation (2026-01-23)
+### Latest Work: Quarto Autocomplete Stabilization (PR #40)
+
+- ✅ Context-aware LaTeX completions (math-only scoping, suppressed in code blocks)
+- ✅ Code chunk completions (R, Python, Julia, OJS, Mermaid, Graphviz)
+- ✅ YAML frontmatter + chunk option + cross-reference completions
+- ✅ Fixed 70 TypeScript errors across 22 test files
+- ✅ Escaped `\$` handling for academic documents
+
+### Previous: Phase 1 Technical Debt Remediation (2026-01-23)
 
 **Phase 1.1: SettingsModal Refactoring**
 - ✅ Extracted `GeneralSettingsTab`, `EditorSettingsTab`, `SettingsSection`
