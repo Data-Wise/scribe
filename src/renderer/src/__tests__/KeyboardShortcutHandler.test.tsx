@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { KeyboardShortcutHandler } from '../components/KeyboardShortcutHandler'
-import type { SidebarTabId } from '../types'
+import type { SidebarTabId } from '../lib/preferences'
 
 // Mock the platform check
 vi.mock('../lib/platform', () => ({

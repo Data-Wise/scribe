@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ActivityBar } from '../components/sidebar/ActivityBar'
-import { Project, Note } from '../types'
-import { createMockProject } from './testUtils'
 
 /**
  * ActivityBar Component Test Suite
@@ -133,46 +131,8 @@ describe('ActivityBar Component', () => {
  * Those tests are marked as .todo below.
  */
 
-// Mock data
-const mockProjects: Project[] = [
-  createMockProject({
-    id: '1',
-    name: 'Project A',
-    type: 'research',
-    status: 'active',
-    color: '#10b981'
-  }),
-  createMockProject({
-    id: '2',
-    name: 'Project B',
-    type: 'teaching',
-    status: 'planning',
-    color: '#3b82f6'
-  })
-]
-
-const mockNotes: Note[] = [
-  {
-    id: 'n1',
-    title: 'Note 1',
-    content: 'Content with [[Link]]',
-    folder: 'inbox',
-    project_id: '1',
-    created_at: Date.now(),
-    updated_at: Date.now(),
-    deleted_at: null
-  }
-]
-
-const mockHandlers = {
-  onSelectProject: vi.fn(),
-  onCreateProject: vi.fn(),
-  onExpand: vi.fn(),
-  onSearch: vi.fn(),
-  onDaily: vi.fn(),
-  onSettings: vi.fn(),
-  onSelectNote: vi.fn()
-}
+// Mock data reserved for .todo tests below — uncomment when implementing
+// See: createMockProject() and createMockNote() in testUtils.ts
 
 // ============================================================
 // Future Activity Bar Features (Proposed, Not Yet Implemented)

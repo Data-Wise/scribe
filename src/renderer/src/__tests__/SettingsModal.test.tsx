@@ -2,8 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, within, act } from '@testing-library/react'
 import { SettingsModal } from '../components/SettingsModal'
 import { Theme, AutoThemeSettings, FontSettings, ThemeShortcut } from '../lib/themes'
-import { updatePreferences, loadPreferences } from '../lib/preferences'
-import { isTauri } from '../lib/platform'
+import { updatePreferences } from '../lib/preferences'
 
 // Mock dependencies
 vi.mock('../lib/api', () => ({
@@ -119,10 +118,9 @@ const mockThemes: Record<string, Theme> = {
       bgSecondary: '#e8f0e8',
       bgTertiary: '#d8e8d8',
       textPrimary: '#1a2e1a',
-      textSecondary: '#2d4a2d',
       textMuted: '#8fa89b',
       accent: '#4ade80',
-      border: '#e8f0e8',
+      accentHover: '#3bcc6e',
     },
   },
   'ocean': {
@@ -135,10 +133,9 @@ const mockThemes: Record<string, Theme> = {
       bgSecondary: '#161b22',
       bgTertiary: '#21262d',
       textPrimary: '#c9d1d9',
-      textSecondary: '#8b949e',
       textMuted: '#6e7681',
       accent: '#58a6ff',
-      border: '#30363d',
+      accentHover: '#4899e8',
     },
   },
   'midnight': {
@@ -151,15 +148,15 @@ const mockThemes: Record<string, Theme> = {
       bgSecondary: '#111111',
       bgTertiary: '#222222',
       textPrimary: '#ffffff',
-      textSecondary: '#cccccc',
       textMuted: '#888888',
       accent: '#ff6b6b',
-      border: '#333333',
+      accentHover: '#e85c5c',
     },
   },
   'custom-test': {
     id: 'custom-test',
     name: 'Custom Test',
+    description: 'A custom test theme',
     type: 'dark',
     isCustom: true,
     colors: {
@@ -167,10 +164,9 @@ const mockThemes: Record<string, Theme> = {
       bgSecondary: '#2a2a2a',
       bgTertiary: '#3a3a3a',
       textPrimary: '#ffffff',
-      textSecondary: '#cccccc',
       textMuted: '#888888',
       accent: '#00ff00',
-      border: '#444444',
+      accentHover: '#00dd00',
     },
   },
 }
@@ -951,6 +947,7 @@ describe('SettingsModal', () => {
         'test-theme-unique': {
           id: 'test-theme-unique',
           name: 'UniqueTestThemeName',
+          description: 'A test theme',
           type: 'dark' as const,
           colors: mockThemes['ocean'].colors,
         }

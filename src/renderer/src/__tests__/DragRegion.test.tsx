@@ -32,7 +32,7 @@ describe('DragRegion Component', () => {
     }))
 
     // Apply mocks to platform module
-    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock)
+    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock as () => boolean)
 
     // Mock Tauri API module
     vi.doMock('@tauri-apps/api/window', () => ({
@@ -360,7 +360,7 @@ describe('DragRegion Component', () => {
 
     it('does drag when clicking on regular div', async () => {
       isTauriMock.mockReturnValue(true)
-      const { container } = render(
+      render(
         <DragRegion>
           <div>Regular content</div>
         </DragRegion>
@@ -502,7 +502,7 @@ describe('useDragRegion Hook', () => {
       startDragging: mockStartDragging,
     }))
 
-    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock)
+    vi.mocked(platformModule.isTauri).mockImplementation(isTauriMock as () => boolean)
 
     vi.doMock('@tauri-apps/api/window', () => ({
       getCurrentWindow: mockGetCurrentWindow,

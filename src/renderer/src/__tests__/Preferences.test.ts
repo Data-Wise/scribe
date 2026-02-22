@@ -141,6 +141,8 @@ describe('Preferences', () => {
         sidebarTabSize: 'compact',
         sidebarTabOrder: DEFAULT_SIDEBAR_TAB_ORDER,
         sidebarHiddenTabs: [],
+        iconGlowEffect: true,
+        iconGlowIntensity: 'subtle',
       }
 
       expect(prefs.defaultWordGoal).toBe(500)

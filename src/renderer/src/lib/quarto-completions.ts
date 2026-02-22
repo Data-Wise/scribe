@@ -14,12 +14,6 @@ import type { Text } from '@codemirror/state'
 // Types
 // ============================================================================
 
-interface YamlCompletionOption {
-  label: string
-  detail: string
-  children?: YamlCompletionOption[]
-}
-
 interface CrossRef {
   type: 'fig' | 'tbl' | 'eq' | 'sec'
   label: string
@@ -209,8 +203,6 @@ export function isInYamlBlock(context: CompletionContext): boolean {
  * Check for code block at or before position
  */
 function getCodeBlockStart(doc: Text, pos: number): number | null {
-  const text = doc.toString()
-  
   // Look backwards from position for opening ```
   let searchPos = pos
   while (searchPos > 0) {

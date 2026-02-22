@@ -213,7 +213,7 @@ describe('IconBar Component', () => {
           content: '',
           project_id: null,
           folder: '',
-          tags: [],
+
           created_at: Date.now(),
           updated_at: Date.now(),
           deleted_at: null
@@ -224,7 +224,7 @@ describe('IconBar Component', () => {
           content: '',
           project_id: null,
           folder: '',
-          tags: [],
+
           created_at: Date.now(),
           updated_at: Date.now(),
           deleted_at: null
@@ -235,7 +235,7 @@ describe('IconBar Component', () => {
           content: '',
           project_id: 'proj1',
           folder: '',
-          tags: [],
+
           created_at: Date.now(),
           updated_at: Date.now(),
           deleted_at: null
@@ -560,7 +560,7 @@ describe('IconBar Component', () => {
           content: '',
           project_id: null,
           folder: '',
-          tags: [],
+
           created_at: Date.now(),
           updated_at: Date.now(),
           deleted_at: null
@@ -571,7 +571,7 @@ describe('IconBar Component', () => {
           content: '',
           project_id: null,
           folder: '',
-          tags: [],
+
           created_at: Date.now(),
           updated_at: Date.now(),
           deleted_at: Date.now() // Deleted
@@ -582,7 +582,7 @@ describe('IconBar Component', () => {
           content: '',
           project_id: null,
           folder: '',
-          tags: [],
+
           created_at: Date.now(),
           updated_at: Date.now(),
           deleted_at: null
@@ -593,7 +593,7 @@ describe('IconBar Component', () => {
           content: '',
           project_id: 'proj1',
           folder: '',
-          tags: [],
+
           created_at: Date.now(),
           updated_at: Date.now(),
           deleted_at: null

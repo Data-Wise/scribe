@@ -295,7 +295,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
     })
 
     it('switches mode when toggle button is clicked', async () => {
-      const { container, rerender } = render(
+      const { rerender } = render(
         <MissionSidebar
           projects={mockProjects}
           notes={mockNotes}

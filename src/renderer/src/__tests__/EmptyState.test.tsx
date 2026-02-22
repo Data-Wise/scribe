@@ -236,7 +236,7 @@ describe('EmptyState Component', () => {
         return callCount++ === 0 ? 0.5 : originalRandom()
       })
 
-      const { rerender } = render(<EmptyState {...defaultProps} />)
+      render(<EmptyState {...defaultProps} />)
 
       await waitFor(() => {
         // Should have rendered some quote
@@ -417,7 +417,7 @@ describe('EmptyState Component', () => {
 
   describe('Edge Cases', () => {
     it('handles component remounting', () => {
-      const { unmount, rerender } = render(<EmptyState {...defaultProps} />)
+      const { unmount } = render(<EmptyState {...defaultProps} />)
 
       expect(screen.getByText('Ready to write')).toBeInTheDocument()
 

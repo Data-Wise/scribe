@@ -3,7 +3,7 @@
  * Tests YAML completions, chunk options, and cross-references
  */
 
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { EditorState, Text } from '@codemirror/state'
 import { CompletionContext } from '@codemirror/autocomplete'
 import {
