@@ -424,7 +424,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../MISSION-CONTROL-WALKTHROUGH/" class="md-tabs__link">
+        <a href="../archive/completed/MISSION-CONTROL-WALKTHROUGH/" class="md-tabs__link">
           
   
   
@@ -1843,7 +1843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../MISSION-CONTROL-WALKTHROUGH/" class="md-nav__link">
+      <a href="../archive/completed/MISSION-CONTROL-WALKTHROUGH/" class="md-nav__link">
         
   
   
@@ -1909,15 +1909,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#current-state-v1140-released" class="md-nav__link">
+  <a href="#current-state-v1163-released" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current State: v1.14.0 Released ✅
+        Current State: v1.16.3 Released ✅
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Current State: v1.14.0 Released ✅">
+    <nav class="md-nav" aria-label="Current State: v1.16.3 Released ✅">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2452,19 +2452,18 @@
 
 <h1 id="scribe-development-roadmap-consolidated">Scribe Development Roadmap - Consolidated</h1>
 <blockquote>
-<p><strong>Generated:</strong> 2026-01-08
+<p><strong>Generated:</strong> 2026-02-01
 <strong>Status:</strong> Active Planning Document
-<strong>Current Version:</strong> v1.14.0
-<strong>Next Release:</strong> v1.15.0 (Quarto Enhancements)</p>
+<strong>Current Version:</strong> v1.16.3
+<strong>Next Release:</strong> v1.17.0 (Three-Tab Sidebar System)</p>
 </blockquote>
 <hr />
 <h2 id="git-workflow-strategy">Git Workflow Strategy</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>main (protected) ← PR from dev only
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── dev (planning/merging) ← PR from feature branches
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       ├── feat/quarto-v115 (worktree: ~/.git-worktrees/scribe/quarto-v115) ✅ ACTIVE
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>       ├── feat/latex-editor-v2 (worktree: ~/.git-worktrees/scribe/latex-v2) 📋 PLANNED
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       ├── feat/sidebar-v2 (worktree: ~/.git-worktrees/scribe/sidebar-v2) 🆕 NEW
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>       └── feat/ai-integration (worktree: ~/.git-worktrees/scribe/ai-integration) 🆕 NEW
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>       ├── feat/ai-integration (planned) 📋 READY TO START
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       └── feat/latex-editor-v2 (planned) 📋 PLANNED v2.0
 </code></pre></div>
 <p><strong>Principles:</strong>
 - Main branch is protected - PRs from dev only
@@ -2473,20 +2472,24 @@
 - Merge to dev when phases/sprints complete
 - Merge to main for releases only</p>
 <p><strong>Active Worktrees:</strong>
-1. <code>feat/quarto-v115</code> - v1.15 Quarto Enhancements (Sprint 33-36)
-2. <code>feat/latex-editor-v2</code> - v2.0 LaTeX Editor Mode (Phases 1-6)
-3. <code>feat/sidebar-v2</code> - Sidebar Enhancement (Phases 2-4) 🆕
-4. <code>feat/ai-integration</code> - AI Backend Integration (Tauri wiring) 🆕</p>
+1. <code>feat/quarto-v115</code> - v1.15 Quarto Enhancements (Sprint 33 ✅, 34-36 📋)
+2. <code>feat/ai-integration</code> - AI Backend Integration (5-7h, ready to start)
+3. <code>feat/latex-editor-v2</code> - v2.0 LaTeX Editor Mode (7 weeks, planned)</p>
+<p><strong>Recent Merges:</strong>
+- ✅ <code>feat/sidebar-v2</code> - Merged to dev (v1.15.0 sidebar enhancements)
+- ✅ <code>feat/tech-debt-remediation</code> - Merged to main (v1.16.2)</p>
 <hr />
-<h2 id="current-state-v1140-released">Current State: v1.14.0 Released ✅</h2>
-<p><strong>Released:</strong> 2026-01-07
+<h2 id="current-state-v1163-released">Current State: v1.16.3 Released ✅</h2>
+<p><strong>Released:</strong> 2026-01-26
 <strong>Branch:</strong> main (tagged)
-<strong>Tests:</strong> 1,984 passing (30 WikiLink E2E)</p>
+<strong>Tests:</strong> 2,163 passing (109 E2E)</p>
 <p><strong>Features:</strong>
-- Single-click WikiLink Navigation (Live/Reading modes)
-- Cmd+Click navigation in Source mode
-- Mode preservation in backlinks panel
-- Cursor indicator when Cmd held</p>
+- Automated CI/CD pipeline (8 critical fixes)
+- Complete workflow: build → checksums → homebrew → verify (15-20 min)
+- Tech Debt Phase 1 complete (App.tsx &amp; SettingsModal.tsx modularization, -881 lines)
+- Terminal integration (PTY shell via portable-pty + xterm.js)
+- Claude &amp; Gemini CLI integration
+- Icon-centric sidebar (v1.16.0 refactor)</p>
 <h3 id="sidebar-ai-features-complete-pr-5-merged">Sidebar &amp; AI Features (Complete - PR #5 Merged)</h3>
 <p><strong>Status:</strong> ✅ All UI Complete (Dec 28 - Jan 2)
 <strong>Details:</strong> See <code>docs/planning/IMPLEMENTATION-STATUS-2026-01-08.md</code></p>
@@ -2863,12 +2866,12 @@
 <strong>Status:</strong> Planning Complete, Implementation Pending</p>
 <h3 id="phase-1-architecture-foundation-week-1-2">Phase 1: Architecture Foundation (Week 1-2)</h3>
 <p><strong>Goal:</strong> Enable multi-format support (markdown, LaTeX, Quarto)</p>
-<p><strong>Database Schema:</strong>
+<p><strong>Database Schema:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- Migration 010: Add file format support</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">notes</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">file_format</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">;</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">-- Values: &#39;md&#39;, &#39;tex&#39;, &#39;qmd&#39;</span>
-</code></pre></div></p>
-<p><strong>EditorFactory Pattern:</strong>
+</code></pre></div>
+<p><strong>EditorFactory Pattern:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">EditorFactory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">note</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">file_format</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;tex&#39;</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">LaTeXEditor</span><span class="w"> </span><span class="nx">note</span><span class="o">=</span><span class="p">{</span><span class="nx">note</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
@@ -2876,7 +2879,7 @@
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nx">default</span><span class="o">:</span><span class="w"> </span><span class="kt">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">HybridEditor</span><span class="w"> </span><span class="nx">note</span><span class="o">=</span><span class="p">{</span><span class="nx">note</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Files to Modify:</strong>
 - <code>src-tauri/src/database.rs</code> - Add file_format column
 - <code>src/renderer/src/types/index.ts</code> - Add to Note type
@@ -2897,7 +2900,7 @@
 <hr />
 <h3 id="phase-3-tex-live-compilation-week-3-4">Phase 3: TeX Live Compilation (Week 3-4)</h3>
 <p><strong>Goal:</strong> Compile <code>.tex</code> → PDF within Scribe</p>
-<p><strong>Backend:</strong>
+<p><strong>Backend:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// NEW: src-tauri/src/latex.rs</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">fn</span><span class="w"> </span><span class="nf">detect_tex_live</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="n">PathBuf</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="c1">// Check: /Library/TeX/texbin/pdflatex (MacTeX)</span>
@@ -2907,14 +2910,14 @@
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="c1">// pdflatex -interaction=nonstopmode file.tex</span>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="c1">// Parse .log for errors</span>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Tests:</strong> ~20 new tests</p>
 <hr />
 <h3 id="phase-4-pdf-preview-pane-week-4-5">Phase 4: PDF Preview Pane (Week 4-5)</h3>
 <p><strong>Goal:</strong> Live PDF preview alongside editor</p>
 <p><strong>Dependencies:</strong>
 - <code>pdfjs-dist</code> (~2MB) - PDF rendering</p>
-<p><strong>Layout:</strong>
+<p><strong>Layout:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>┌─────────────────────────────────────────────┐
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>│ [Source]          |      [PDF Preview]      │
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>├───────────────────┼─────────────────────────┤
@@ -2922,7 +2925,7 @@
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>│ \begin{document}  │                         │
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>│ ...               │  Page 1/3  [◀] [▶] 100% │
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>└───────────────────┴─────────────────────────┘
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Features:</strong>
 - SyncTeX support (click PDF → jump to source)
 - Auto-compile on save (500ms debounce)</p>
@@ -3253,10 +3256,10 @@
 - <code>src-tauri/src/ai/mod.rs</code> - AI module root
 - <code>src-tauri/src/ai/claude.rs</code> - Claude CLI wrapper
 - 4 new Tauri commands: <code>ai_run_claude</code>, <code>ai_is_claude_available</code>, etc.</p>
-<p><strong>Implementation:</strong>
+<p><strong>Implementation:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">run_claude</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1">// Executes: echo &quot;$context&quot; | claude --print &quot;$prompt&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Frontend:</strong> Update <code>api.ts</code> to invoke Tauri commands instead of returning stub</p>
 <p><strong>Tests:</strong> 20 Rust unit + 38 frontend updates</p>
 <p><strong>Outcome:</strong> Claude Tab and Quick Chat fully functional in desktop app</p>
@@ -3294,30 +3297,28 @@
 <h3 id="v115-release-checklist">v1.15 Release Checklist</h3>
 <p><strong>When Sprint 36 completes:</strong></p>
 <ol>
-<li>
-<p><strong>Merge to dev:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>~/.git-worktrees/scribe/quarto-v115
+<li><strong>Merge to dev:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>~/.git-worktrees/scribe/quarto-v115
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Commit any final changes</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>git<span class="w"> </span>checkout<span class="w"> </span>dev
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>git<span class="w"> </span>merge<span class="w"> </span>feat/quarto-v115<span class="w"> </span>--no-ff<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Merge v1.15 Quarto Enhancements&quot;</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>dev
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Create PR to main:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--head<span class="w"> </span>dev<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;v1.15 Quarto Enhancements&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>After merge to main:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>main<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
+</code></pre></div>
+<ol>
+<li><strong>Create PR to main:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--head<span class="w"> </span>dev<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;v1.15 Quarto Enhancements&quot;</span>
+</code></pre></div>
+<ol>
+<li><strong>After merge to main:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>main<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.15.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;v1.15.0 - Quarto Enhancements&quot;</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.15.0
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Update Homebrew formula</strong></p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Update Homebrew formula</strong></li>
 </ol>
 <hr />
 <h3 id="v20-release-checklist">v2.0 Release Checklist</h3>
