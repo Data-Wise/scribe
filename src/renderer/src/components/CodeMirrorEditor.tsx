@@ -812,13 +812,18 @@ const latexCommands: Completion[] = [
 function isInMathContext(context: CompletionContext): boolean {
   const pos = context.pos
   const doc = context.state.doc
-  const text = doc.toString()
-  
+  const text = doc.sliceString(0, pos)
+
   // Look backwards for opening $ or $$
   let inMath = false
-  let i = pos - 1
+  let i = text.length - 1
   while (i >= 0) {
     if (text[i] === '$') {
+      // Skip escaped \$
+      if (i > 0 && text[i - 1] === '\\') {
+        i -= 2
+        continue
+      }
       // Check for $$ (display math)
       if (i > 0 && text[i - 1] === '$') {
         inMath = !inMath
