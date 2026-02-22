@@ -8,11 +8,11 @@
 
 <div class="grid cards" markdown>
 
--   :material-pencil:{ .lg .middle } **HybridEditor**
+-   :material-pencil:{ .lg .middle } **CodeMirror 6 Editor**
 
     ---
 
-    Write in markdown, preview rendered. Toggle with ⌘E.
+    Three modes: Source (`⌘1`), Live Preview (`⌘2`), Reading (`⌘3`). Cycle with `⌘E`.
 
 -   :material-eye-off:{ .lg .middle } **Focus Mode**
 
@@ -38,14 +38,15 @@
 
 ## Editor
 
-### HybridEditor
+### CodeMirror 6 Editor
 
-| Mode | Description |
-|------|-------------|
-| **Write** | Plain textarea for reliable input |
-| **Preview** | Rendered markdown with clickable links |
+| Mode | Shortcut | Description |
+|------|----------|-------------|
+| **Source** | `⌘1` | Raw markdown with syntax highlighting |
+| **Live Preview** | `⌘2` | Obsidian-style: syntax hides away from cursor, LaTeX renders inline |
+| **Reading** | `⌘3` | Fully rendered view with clickable links |
 
-Press `⌘E` to toggle between modes.
+Press `⌘E` to cycle between modes.
 
 ### Focus Mode
 
@@ -205,6 +206,39 @@ Templates apply preconfigured settings for Quick Actions, daily note templates, 
 - **Reset:** Revert all settings to defaults (cannot be undone)
 
 **Full tutorial:** [Settings Enhancement Guide](../tutorials/settings.md)
+
+---
+
+## Quarto Support
+
+First-class support for [Quarto](https://quarto.org/) academic documents (`.qmd` files):
+
+### Autocompletion
+
+| Context | Trigger | What You Get |
+|---------|---------|--------------|
+| **YAML frontmatter** | Type key name | 40+ keys with nested values |
+| **Chunk options** | Type `#\|` | 25+ options (`echo`, `fig-width`, etc.) |
+| **Cross-references** | Type `@fig-`, `@tbl-` | Labels scanned from document |
+| **Code chunks** | Type `` ``` `` | R, Python, Julia, OJS, Mermaid, Graphviz |
+| **LaTeX math** | Type `\` inside `$...$` | 80+ commands and snippets |
+
+### Code Block Styling
+
+Quarto code blocks get distinct visual treatment:
+
+- Monospace font with accent-colored left border
+- Chunk option lines (`#|`) styled as subdued metadata
+- Opening fence line highlighted
+- Dark mode support
+
+### Smart Completion Scoping
+
+LaTeX completions are context-aware:
+
+- **Suppressed** inside code blocks (```` ```{r} ````) — no `\alpha` popups in R code
+- **Snippet completions** only in math mode (`$...$` or `$$...$$`) — no erratic popups in prose
+- **Escaped `\$`** handled correctly for literal dollar signs in text
 
 ---
 

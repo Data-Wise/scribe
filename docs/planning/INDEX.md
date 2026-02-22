@@ -2,59 +2,16 @@
 
 > Active planning documents for Scribe development
 
-**Last Updated:** 2026-01-02 | **Milestone:** Sprint 30 Phase 1 (Browser Mode Polish)
+**Last Updated:** 2026-02-22 | **Current:** Sprint 37
 
 ---
 
-## Project Root Files
-
-!!! note "Not served by docs site"
-    These files are at the project root (not in docs/). Access them directly in the repository.
-
-| File | Purpose |
-|------|---------|
-| `IDEAS.md` | Feature options index with effort/ADHD ratings |
-| `NEXT_STEPS.md` | Phase 3 options: Terminal tab or Ambient AI |
-| `PROJECT-DEFINITION.md` | Scope control and feature tiers |
-
----
-
-## Workflow Guide
+## Active Planning
 
 | File | Purpose |
 |------|---------|
 | [WORKFLOW-PLANNING-DOCS](WORKFLOW-PLANNING-DOCS.md) | Document hierarchy, templates, Mermaid diagrams |
-
----
-
-## Current Sprint (Browser Mode Polish - Sprint 30)
-
-| File | Purpose |
-|------|---------|
-| [SPRINT-30-browser-mode-polish](SPRINT-30-browser-mode-polish.md) | Sprint 30 master plan (3 phases) |
-| [SPRINT-30-PHASE-1-SUMMARY](SPRINT-30-PHASE-1-SUMMARY.md) | Phase 1 completion summary |
 | [BUG-REPORT-E2E-TITLE-MISMATCH](BUG-REPORT-E2E-TITLE-MISMATCH.md) | E2E test bug investigation & fix documentation |
-
----
-
-## Previous Sprint (Tab Aesthetics)
-
-| File | Purpose |
-|------|---------|
-| [BRAINSTORM-TAB-AESTHETICS](BRAINSTORM-TAB-AESTHETICS-2025-12-29.md) | Tab styling options |
-| [BRAINSTORM-TAB-BAR-SETTINGS](BRAINSTORM-TAB-BAR-SETTINGS-2025-12-29.md) | Tab bar configuration UI |
-| [BRAINSTORM-TAB-THEME-INTEGRATION](BRAINSTORM-TAB-THEME-INTEGRATION-2025-12-29.md) | Tab theme consistency |
-| [BRAINSTORM-PROJECT-NOTE-DISPLAY](BRAINSTORM-PROJECT-NOTE-DISPLAY.md) | Note display layout options |
-
----
-
-## Architecture & Implementation
-
-| File | Purpose |
-|------|---------|
-| [BRAINSTORM-browser-fallback](BRAINSTORM-browser-fallback-2025-12-28.md) | IndexedDB browser mode implementation |
-| [BRAINSTORM-dual-runtime-architecture](BRAINSTORM-dual-runtime-architecture.md) | Tauri/Browser API coordination |
-| [BRAINSTORM-TAURI-TO-SWIFTUI](BRAINSTORM-TAURI-TO-SWIFTUI.md) | SwiftUI consideration notes |
 
 ---
 
@@ -68,15 +25,13 @@
 
 ---
 
-## UI/UX Planning
-
-| File | Purpose |
-|------|---------|
-| [BRAINSTORM-project-dashboard](BRAINSTORM-project-dashboard.md) | Dashboard redesign options |
-| [BRAINSTORM-RIGHT-SIDEBAR](BRAINSTORM-RIGHT-SIDEBAR.md) | Right sidebar consolidation |
-
----
-
 ## Archived
 
-See [archive/planning/](../archive/planning/) for completed sprint plans (SPRINT-8 through SPRINT-25) and v1.0 release documentation.
+Completed sprint plans, brainstorms, and historical planning docs have been moved to organized archive directories:
+
+| Archive | Contents |
+|---------|----------|
+| [archive/sprints/](../archive/sprints/) | Sprint plans and summaries (Sprint 30+) |
+| [archive/brainstorms/](../archive/brainstorms/) | Brainstorm and design exploration docs |
+| [archive/planning/](../archive/planning/) | Earlier sprint plans (Sprint 8-25) and v1.0 docs |
+| [archive/completed/](../archive/completed/) | Completed feature implementation docs |
