@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, within, act } from '@testing-library/react'
 import { SettingsModal } from '../components/SettingsModal'
-import { Theme, AutoThemeSettings, FontSettings, ThemeShortcut } from '../lib/themes'
+import { AutoThemeSettings, FontSettings, ThemeShortcut } from '../lib/themes'
 import { updatePreferences } from '../lib/preferences'
+import { createMockTheme } from './testUtils'
 
 // Mock dependencies
 vi.mock('../lib/api', () => ({
@@ -107,68 +108,23 @@ vi.mock('../lib/themes', async () => {
 })
 
 // Mock themes
-const mockThemes: Record<string, Theme> = {
-  'sage-garden': {
-    id: 'sage-garden',
-    name: 'Sage Garden',
-    type: 'light',
-    description: 'A calming light theme',
-    colors: {
-      bgPrimary: '#f5f8f5',
-      bgSecondary: '#e8f0e8',
-      bgTertiary: '#d8e8d8',
-      textPrimary: '#1a2e1a',
-      textMuted: '#8fa89b',
-      accent: '#4ade80',
-      accentHover: '#3bcc6e',
-    },
-  },
-  'ocean': {
-    id: 'ocean',
-    name: 'Ocean',
-    type: 'dark',
-    description: 'A deep blue dark theme',
-    colors: {
-      bgPrimary: '#0d1117',
-      bgSecondary: '#161b22',
-      bgTertiary: '#21262d',
-      textPrimary: '#c9d1d9',
-      textMuted: '#6e7681',
-      accent: '#58a6ff',
-      accentHover: '#4899e8',
-    },
-  },
-  'midnight': {
-    id: 'midnight',
-    name: 'Midnight',
-    type: 'dark',
-    description: 'Pure dark theme',
-    colors: {
-      bgPrimary: '#000000',
-      bgSecondary: '#111111',
-      bgTertiary: '#222222',
-      textPrimary: '#ffffff',
-      textMuted: '#888888',
-      accent: '#ff6b6b',
-      accentHover: '#e85c5c',
-    },
-  },
-  'custom-test': {
-    id: 'custom-test',
-    name: 'Custom Test',
-    description: 'A custom test theme',
-    type: 'dark',
-    isCustom: true,
-    colors: {
-      bgPrimary: '#1a1a1a',
-      bgSecondary: '#2a2a2a',
-      bgTertiary: '#3a3a3a',
-      textPrimary: '#ffffff',
-      textMuted: '#888888',
-      accent: '#00ff00',
-      accentHover: '#00dd00',
-    },
-  },
+const mockThemes = {
+  'sage-garden': createMockTheme({
+    id: 'sage-garden', name: 'Sage Garden', type: 'light', description: 'A calming light theme',
+    colors: { bgPrimary: '#f5f8f5', bgSecondary: '#e8f0e8', bgTertiary: '#d8e8d8', textPrimary: '#1a2e1a', textMuted: '#8fa89b', accent: '#4ade80', accentHover: '#3bcc6e' },
+  }),
+  'ocean': createMockTheme({
+    id: 'ocean', name: 'Ocean', description: 'A deep blue dark theme',
+    colors: { bgPrimary: '#0d1117', bgSecondary: '#161b22', bgTertiary: '#21262d', textPrimary: '#c9d1d9', textMuted: '#6e7681', accent: '#58a6ff', accentHover: '#4899e8' },
+  }),
+  'midnight': createMockTheme({
+    id: 'midnight', name: 'Midnight', description: 'Pure dark theme',
+    colors: { bgPrimary: '#000000', bgSecondary: '#111111', bgTertiary: '#222222', textPrimary: '#ffffff', textMuted: '#888888', accent: '#ff6b6b', accentHover: '#e85c5c' },
+  }),
+  'custom-test': createMockTheme({
+    id: 'custom-test', name: 'Custom Test', description: 'A custom test theme', isCustom: true,
+    colors: { bgPrimary: '#1a1a1a', bgSecondary: '#2a2a2a', bgTertiary: '#3a3a3a', textPrimary: '#ffffff', textMuted: '#888888', accent: '#00ff00', accentHover: '#00dd00' },
+  }),
 }
 
 const defaultAutoThemeSettings: AutoThemeSettings = {
@@ -944,13 +900,12 @@ describe('SettingsModal', () => {
 
     it('should handle themes without descriptions', () => {
       const themesNoDesc = {
-        'test-theme-unique': {
+        'test-theme-unique': createMockTheme({
           id: 'test-theme-unique',
           name: 'UniqueTestThemeName',
           description: 'A test theme',
-          type: 'dark' as const,
           colors: mockThemes['ocean'].colors,
-        }
+        }),
       }
       render(<SettingsModal {...defaultProps} themes={themesNoDesc} currentTheme="test-theme-unique" />)
       fireEvent.click(screen.getByText('Appearance'))

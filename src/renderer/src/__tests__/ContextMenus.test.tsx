@@ -4,7 +4,8 @@ import '@testing-library/jest-dom'
 
 import { NoteContextMenu } from '../components/sidebar/NoteContextMenu'
 import { ProjectContextMenu } from '../components/sidebar/ProjectContextMenu'
-import { Note, Project } from '../types'
+import type { Note, Project } from '../types'
+import { createMockNote, createMockProject } from './testUtils'
 
 // Mock preferences module
 vi.mock('../lib/preferences', async () => {
@@ -16,35 +17,16 @@ vi.mock('../lib/preferences', async () => {
 })
 
 // Sample test data
-const mockNote: Note = {
-  id: 'note-1',
-  title: 'Test Note',
-  content: 'Test content',
-  folder: '/',
-  project_id: 'project-1',
-  created_at: Date.now(),
-  updated_at: Date.now(),
-  deleted_at: null
-}
+const mockNote = createMockNote({ id: 'note-1', project_id: 'project-1' })
+const mockNoteWithoutProject = createMockNote({ id: 'note-2', title: 'Orphan Note', content: 'No project' })
 
-const mockNoteWithoutProject: Note = {
-  id: 'note-2',
-  title: 'Orphan Note',
-  content: 'No project',
-  folder: '/',
-  project_id: null,
-  created_at: Date.now(),
-  updated_at: Date.now(),
-  deleted_at: null
-}
-
-const mockProjects: Project[] = [
-  { id: 'project-1', name: 'Project Alpha', type: 'generic', color: '#3b82f6', status: 'active', created_at: Date.now(), updated_at: Date.now() },
-  { id: 'project-2', name: 'Project Beta', type: 'generic', color: '#10b981', status: 'active', created_at: Date.now(), updated_at: Date.now() },
-  { id: 'project-3', name: 'Archived Project', type: 'generic', color: '#f59e0b', status: 'archive', created_at: Date.now(), updated_at: Date.now() }
+const mockProjects = [
+  createMockProject({ id: 'project-1', name: 'Project Alpha', color: '#3b82f6' }),
+  createMockProject({ id: 'project-2', name: 'Project Beta', color: '#10b981' }),
+  createMockProject({ id: 'project-3', name: 'Archived Project', color: '#f59e0b', status: 'archive' })
 ]
 
-const mockProject: Project = mockProjects[0]
+const mockProject = mockProjects[0]
 
 const defaultPosition = { x: 100, y: 200 }
 

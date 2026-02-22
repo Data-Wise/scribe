@@ -2,7 +2,7 @@
 
 **Status:** Superseded (by v1.16.0 Icon-Centric Sidebar, 2026-01-10)
 **Created:** 2026-01-08
-**From Brainstorm:** [BRAINSTORM-left-sidebar-layouts-2026-01-08.md](../BRAINSTORM-left-sidebar-layouts-2026-01-08.md)
+**From Brainstorm:** [BRAINSTORM-left-sidebar-layouts-2026-01-08.md](../archive/brainstorms/BRAINSTORM-left-sidebar-layouts-2026-01-08.md)
 **Expert Analysis:**
 - UX: [UX-ANALYSIS-LEFT-SIDEBAR-2026-01-08.md](UX-ANALYSIS-LEFT-SIDEBAR-2026-01-08.md)
 - Architecture: [mission-sidebar-state-flow.md](../mission-sidebar-state-flow.md)

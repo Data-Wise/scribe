@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
+import { createMockTheme, createMockThemeColors } from './testUtils'
 import {
-  Theme,
-  ThemeColors,
   BUILT_IN_THEMES,
   DEFAULT_AUTO_THEME,
   AutoThemeSettings,
@@ -328,18 +327,13 @@ describe('Theme Generation', () => {
 
   describe('createCustomTheme', () => {
     it('creates theme with unique ID', () => {
-      const colors: ThemeColors = {
-        bgPrimary: '#1a1a1a',
-        bgSecondary: '#2a2a2a',
-        bgTertiary: '#3a3a3a',
-        textPrimary: '#ffffff',
-        textMuted: '#888888',
-        accent: '#3388cc',
-        accentHover: '#4499dd',
-      }
-      
+      const colors = createMockThemeColors({
+        bgPrimary: '#1a1a1a', bgSecondary: '#2a2a2a', bgTertiary: '#3a3a3a',
+        textPrimary: '#ffffff', textMuted: '#888888', accent: '#3388cc', accentHover: '#4499dd',
+      })
+
       const theme = createCustomTheme('My Theme', 'dark', colors)
-      
+
       expect(theme.id).toMatch(/^custom-\d+$/)
       expect(theme.name).toBe('My Theme')
       expect(theme.type).toBe('dark')
@@ -348,15 +342,10 @@ describe('Theme Generation', () => {
     })
 
     it('generates different IDs for different themes', async () => {
-      const colors: ThemeColors = {
-        bgPrimary: '#1a1a1a',
-        bgSecondary: '#2a2a2a',
-        bgTertiary: '#3a3a3a',
-        textPrimary: '#ffffff',
-        textMuted: '#888888',
-        accent: '#3388cc',
-        accentHover: '#4499dd',
-      }
+      const colors = createMockThemeColors({
+        bgPrimary: '#1a1a1a', bgSecondary: '#2a2a2a', bgTertiary: '#3a3a3a',
+        textPrimary: '#ffffff', textMuted: '#888888', accent: '#3388cc', accentHover: '#4499dd',
+      })
       
       const theme1 = createCustomTheme('Theme 1', 'dark', colors)
       // Wait 2ms to ensure different timestamp
@@ -374,21 +363,12 @@ describe('Theme Generation', () => {
 // ============================================================
 
 describe('Scribe JSON Import/Export', () => {
-  const sampleTheme: Theme = {
-    id: 'test-theme',
-    name: 'Test Theme',
-    type: 'dark',
-    description: 'A test theme',
+  const sampleTheme = createMockTheme({
     colors: {
-      bgPrimary: '#1a1a1a',
-      bgSecondary: '#2a2a2a',
-      bgTertiary: '#3a3a3a',
-      textPrimary: '#ffffff',
-      textMuted: '#888888',
-      accent: '#3388cc',
-      accentHover: '#4499dd',
+      bgPrimary: '#1a1a1a', bgSecondary: '#2a2a2a', bgTertiary: '#3a3a3a',
+      textPrimary: '#ffffff', textMuted: '#888888', accent: '#3388cc', accentHover: '#4499dd',
     },
-  }
+  })
 
   describe('exportThemeToJSON', () => {
     it('exports theme to valid JSON schema', () => {

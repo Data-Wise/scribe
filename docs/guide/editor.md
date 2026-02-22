@@ -1,6 +1,6 @@
 # Editor Guide
 
-> The HybridEditor - ADHD-friendly, distraction-free writing
+> CodeMirror 6 powered editor with three modes for every stage of writing
 
 ---
 
@@ -8,22 +8,28 @@
 
 <div class="grid cards" markdown>
 
--   :material-pencil:{ .lg .middle } **Write Mode**
+-   :material-code-tags:{ .lg .middle } **Source Mode** (`⌘1`)
 
     ---
 
-    Clean textarea. No distractions. Just you and your words.
+    Raw markdown with syntax highlighting. Full control over formatting.
 
--   :material-eye:{ .lg .middle } **Preview Mode**
+-   :material-pencil:{ .lg .middle } **Live Preview** (`⌘2`)
 
     ---
 
-    Rendered markdown with clickable links and syntax highlighting.
+    Obsidian-style: syntax hides when cursor moves away. LaTeX renders inline.
+
+-   :material-eye:{ .lg .middle } **Reading Mode** (`⌘3`)
+
+    ---
+
+    Fully rendered view. Click wiki links to navigate. Press `Escape` to exit.
 
 </div>
 
 !!! tip "Toggle Modes"
-    Press `⌘E` to switch between write and preview mode.
+    Press `⌘E` to cycle between modes, or `⌘1`/`⌘2`/`⌘3` to jump directly.
 
 ---
 
@@ -166,7 +172,10 @@ Always visible in the status bar:
 
 | Action | Shortcut |
 |--------|----------|
-| **Toggle write/preview** | `⌘E` |
+| **Cycle editor modes** | `⌘E` |
+| **Source mode** | `⌘1` |
+| **Live Preview** | `⌘2` |
+| **Reading mode** | `⌘3` |
 | **Focus mode** | `⌘⇧F` |
 | **Bold** | `⌘B` |
 | **Italic** | `⌘I` |

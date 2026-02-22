@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { GraphView } from '../components/GraphView'
+import { createMockNote } from './testUtils'
 
 // Mock D3 to avoid complex DOM manipulations in tests
 vi.mock('d3', () => {
@@ -60,28 +61,12 @@ vi.mock('d3', () => {
   }
 })
 
-// Mock notes for testing
+// Mock notes for testing — content has wikilinks for graph edge testing
 const mockNotes = [
-  {
-    id: 'note-1',
-    title: 'Getting Started',
-    content: 'This is an introduction to the project.'
-  },
-  {
-    id: 'note-2',
-    title: 'Architecture',
-    content: 'The architecture builds on [[Getting Started]] concepts.'
-  },
-  {
-    id: 'note-3',
-    title: 'API Reference',
-    content: 'See [[Architecture]] for context. Also references [[Getting Started]].'
-  },
-  {
-    id: 'note-4',
-    title: 'Isolated Note',
-    content: 'This note has no wiki-links to other notes.'
-  }
+  createMockNote({ id: 'note-1', title: 'Getting Started', content: 'This is an introduction to the project.' }),
+  createMockNote({ id: 'note-2', title: 'Architecture', content: 'The architecture builds on [[Getting Started]] concepts.' }),
+  createMockNote({ id: 'note-3', title: 'API Reference', content: 'See [[Architecture]] for context. Also references [[Getting Started]].' }),
+  createMockNote({ id: 'note-4', title: 'Isolated Note', content: 'This note has no wiki-links to other notes.' })
 ]
 
 describe('GraphView Component', () => {
