@@ -218,10 +218,10 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.16.2 - Quarto Stabilization Complete ✅
+## 🎯 Current Status: v1.17.0 - Quarto Autocomplete ✅
 
-**Released:** v1.14.0 (stable, via Homebrew)
-**Dev Branch:** v1.16.2+ (Quarto autocomplete stabilized)
+**Released:** v1.17.0 (stable)
+**Dev Branch:** v1.17.0 (Quarto autocomplete, test fixes, doc sync)
 **Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
 **Tests:** 2,187 passing (71 files)
 
