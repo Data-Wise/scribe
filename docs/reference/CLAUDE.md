@@ -199,6 +199,28 @@ npm run test         # Run tests
 npm run typecheck    # TypeScript check
 ```
 
+### Claude Code Desktop Preview
+
+Scribe supports **in-app preview** inside Claude Code Desktop (Feb 2026+). Claude starts the Vite dev server and renders the running app in an embedded browser — auto-verifying changes by screenshotting, inspecting DOM, and clicking elements.
+
+**Config:** `.claude/launch.json` (already set up)
+
+```json
+{
+  "name": "scribe-dev",
+  "runtimeExecutable": "npm",
+  "runtimeArgs": ["run", "dev:vite"],
+  "port": 5173
+}
+```
+
+**Key details:**
+- Uses `dev:vite` (not `dev`) — runs Vite only, no Tauri compilation needed
+- App auto-detects browser mode via `platform.ts` → uses IndexedDB/Dexie for storage
+- Port 5173 matches Vite's default
+- No worktree needed — launch.json is config, not feature code
+- When opening in Claude Code Desktop, **uncheck worktree isolation** to work on `dev` directly
+
 ### Terminal CLI
 
 ```bash
