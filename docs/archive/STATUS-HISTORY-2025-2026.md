@@ -1830,6 +1830,6 @@ See: `BRAINSTORM-TAURI-TO-SWIFTUI.md`, worktree at `~/.git-worktrees/scribe/swif
 - [CHANGELOG.md](../reference/CHANGELOG.md) - Version history
 - [TESTS_SUMMARY.md](../reference/TESTS_SUMMARY.md) - Test coverage
 - [CLAUDE.md](../reference/CLAUDE.md) - AI guidance
-- [docs/planning/](docs/planning/) - Sprint plans
+- [Planning Index](../planning/INDEX.md) - Sprint plans
 ## last_active: 2025-12-30
 ## streak: 3

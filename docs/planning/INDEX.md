@@ -50,10 +50,10 @@ Completed sprint plans, brainstorms, and historical planning docs have been move
 
 | Archive | Contents |
 |---------|----------|
-| [archive/sprints/](../archive/sprints/) | Sprint plans and summaries (Sprint 30+) |
-| [archive/brainstorms/](../archive/brainstorms/) | Brainstorm and design exploration docs |
-| [archive/planning/](../archive/planning/) | Earlier sprint plans (Sprint 8-25) and v1.0 docs |
-| [archive/completed/](../archive/completed/) | Completed feature implementation docs |
+| `archive/sprints/` | Sprint plans and summaries (Sprint 30+) |
+| `archive/brainstorms/` | Brainstorm and design exploration docs |
+| `archive/planning/` | Earlier sprint plans (Sprint 8-25) and v1.0 docs |
+| `archive/completed/` | Completed feature implementation docs |
 
 Moved to archive (2026-02-22):
 - `PLAN-sidebar-v2-enhancement.md` — implemented in v1.16.0
