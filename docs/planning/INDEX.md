@@ -2,20 +2,19 @@
 
 > Active planning documents for Scribe development
 
-**Last Updated:** 2026-01-02 | **Milestone:** Sprint 30 Phase 1 (Browser Mode Polish)
+**Last Updated:** 2026-02-22 | **Current Sprint:** 37 | **Version:** v1.16.2
 
 ---
 
-## Project Root Files
+## Active Plans
 
-!!! note "Not served by docs site"
-    These files are at the project root (not in docs/). Access them directly in the repository.
-
-| File | Purpose |
-|------|---------|
-| `IDEAS.md` | Feature options index with effort/ADHD ratings |
-| `NEXT_STEPS.md` | Phase 3 options: Terminal tab or Ambient AI |
-| `PROJECT-DEFINITION.md` | Scope control and feature tiers |
+| File | Purpose | Status |
+|------|---------|--------|
+| [TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24](TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md) | 67 test file TS errors to fix | Active (~2.5h) |
+| [PLAN-v2-latex-editor](PLAN-v2-latex-editor.md) | v2.0 LaTeX Editor Mode | Deferred (P3) |
+| [PLAN-ai-integration](PLAN-ai-integration.md) | AI Integration - Tauri backend wiring | Backlog |
+| [PROPOSAL-tauri-enhancements](PROPOSAL-tauri-enhancements.md) | Future Tauri backend features | Backlog |
+| [PROPOSAL-build-identification](PROPOSAL-build-identification.md) | Build ID feature spec | Backlog |
 
 ---
 
@@ -27,56 +26,22 @@
 
 ---
 
-## Current Sprint (Browser Mode Polish - Sprint 30)
+## Active Specs (in `docs/specs/`)
 
-| File | Purpose |
-|------|---------|
-| [SPRINT-30-browser-mode-polish](SPRINT-30-browser-mode-polish.md) | Sprint 30 master plan (3 phases) |
-| [SPRINT-30-PHASE-1-SUMMARY](SPRINT-30-PHASE-1-SUMMARY.md) | Phase 1 completion summary |
-| [BUG-REPORT-E2E-TITLE-MISMATCH](BUG-REPORT-E2E-TITLE-MISMATCH.md) | E2E test bug investigation & fix documentation |
-
----
-
-## Previous Sprint (Tab Aesthetics)
-
-| File | Purpose |
-|------|---------|
-| [BRAINSTORM-TAB-AESTHETICS](BRAINSTORM-TAB-AESTHETICS-2025-12-29.md) | Tab styling options |
-| [BRAINSTORM-TAB-BAR-SETTINGS](BRAINSTORM-TAB-BAR-SETTINGS-2025-12-29.md) | Tab bar configuration UI |
-| [BRAINSTORM-TAB-THEME-INTEGRATION](BRAINSTORM-TAB-THEME-INTEGRATION-2025-12-29.md) | Tab theme consistency |
-| [BRAINSTORM-PROJECT-NOTE-DISPLAY](BRAINSTORM-PROJECT-NOTE-DISPLAY.md) | Note display layout options |
-
----
-
-## Architecture & Implementation
-
-| File | Purpose |
-|------|---------|
-| [BRAINSTORM-browser-fallback](BRAINSTORM-browser-fallback-2025-12-28.md) | IndexedDB browser mode implementation |
-| [BRAINSTORM-dual-runtime-architecture](BRAINSTORM-dual-runtime-architecture.md) | Tauri/Browser API coordination |
-| [BRAINSTORM-TAURI-TO-SWIFTUI](BRAINSTORM-TAURI-TO-SWIFTUI.md) | SwiftUI consideration notes |
-
----
-
-## Feature Proposals
-
-| File | Purpose |
-|------|---------|
-| [PROPOSAL-tauri-enhancements](PROPOSAL-tauri-enhancements.md) | Future Tauri backend features |
-| [PROPOSAL-activity-bar](PROPOSAL-activity-bar.md) | Activity bar feature design |
-| [PROPOSAL-build-identification](PROPOSAL-build-identification.md) | Build ID feature spec |
-
----
-
-## UI/UX Planning
-
-| File | Purpose |
-|------|---------|
-| [BRAINSTORM-project-dashboard](BRAINSTORM-project-dashboard.md) | Dashboard redesign options |
-| [BRAINSTORM-RIGHT-SIDEBAR](BRAINSTORM-RIGHT-SIDEBAR.md) | Right sidebar consolidation |
+| Spec | Status | Target |
+|------|--------|--------|
+| [Three-Tab Sidebar](../specs/SPEC-three-tab-sidebar-2026-01-10.md) | Design Approved | v1.17.0 |
+| [Quarto Enhancements](../specs/SPEC-v115-quarto-enhancements-2026-01-07.md) | Partially Implemented | v1.15+ |
+| [LaTeX Editor](../specs/SPEC-latex-editor-2026-01-07.md) | Proposal | v2.0 |
 
 ---
 
 ## Archived
 
-See [archive/planning/](../archive/planning/) for completed sprint plans (SPRINT-8 through SPRINT-25) and v1.0 release documentation.
+See [archive/planning/](../archive/planning/) for completed sprint plans, implemented proposals, and superseded specs.
+
+Moved to archive (2026-02-22):
+- `PLAN-sidebar-v2-enhancement.md` — implemented in v1.16.0
+- `PROPOSAL-activity-bar.md` — implemented in v1.16.0
+- `LIVE-EDITING-NEXT-EVOLUTION.md` — stale (v1.12.0 era)
+- Full `.STATUS` history → `STATUS-HISTORY-2025-2026.md`
