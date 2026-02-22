@@ -192,7 +192,7 @@ describe('ProjectSwitcher Component', () => {
     })
 
     it('shows check mark on selected project', () => {
-      const { container } = render(<ProjectSwitcher {...defaultProps} currentProjectId="proj-1" />)
+      render(<ProjectSwitcher {...defaultProps} currentProjectId="proj-1" />)
       fireEvent.click(screen.getByRole('button'))
 
       // Check icon should be present (Lucide Check)
@@ -256,7 +256,7 @@ describe('ProjectSwitcher Component', () => {
 
   describe('Click Outside', () => {
     it('closes dropdown when clicking outside', () => {
-      const { container } = render(
+      render(
         <div>
           <ProjectSwitcher {...defaultProps} />
           <div data-testid="outside">Outside</div>

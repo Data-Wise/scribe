@@ -1,6 +1,4 @@
 import { describe, it, expect, vi } from 'vitest'
-import { EditorState } from '@codemirror/state'
-import { EditorView } from '@codemirror/view'
 
 /**
  * Multi-line LaTeX Support Unit Tests
@@ -361,7 +359,6 @@ $$`
 
     it('should handle formula with special characters', () => {
       const formula = '\\int_0^{\\infty} e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}'
-      const displayMode = true
 
       expect(formula).toContain('\\int')
       expect(formula).toContain('\\frac')

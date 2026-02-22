@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { Note, Tag } from '../types'
+import { Tag } from '../types'
+import { createMockNote } from './testUtils'
 
 describe('Editor Validation Tests', () => {
   describe('Wiki-Link Pattern Validation', () => {
@@ -151,16 +152,7 @@ describe('Editor Validation Tests', () => {
 
   describe('Note Data Validation', () => {
     it('validates required Note fields', () => {
-      const validNote: Note = {
-        id: '1',
-        title: 'Test Note',
-        content: 'Test content',
-        folder: 'inbox',
-        project_id: null,
-        created_at: Date.now(),
-        updated_at: Date.now(),
-        deleted_at: null
-      }
+      const validNote = createMockNote({ id: '1', folder: 'inbox' })
 
       expect(validNote.id).toBeTruthy()
       expect(validNote.title).toBeTruthy()
@@ -171,19 +163,10 @@ describe('Editor Validation Tests', () => {
     })
 
     it('validates optional Note fields', () => {
-      const noteWithOptional: Note = {
-        id: '1',
-        title: 'Test Note',
-        content: 'Test content',
+      const noteWithOptional = createMockNote({
         folder: 'inbox',
-        project_id: null,
-        created_at: Date.now(),
-        updated_at: Date.now(),
-        deleted_at: null,
-        properties: {
-          key: { key: 'key', value: 'value', type: 'text' }
-        }
-      }
+        properties: { key: { key: 'key', value: 'value', type: 'text' } }
+      })
 
       expect(noteWithOptional.properties).toBeDefined()
     })

@@ -957,9 +957,9 @@ describe('CodeMirrorEditor Rich Markdown Plugin Logic', () => {
 
     it('WikiLinkWidget equality comparison logic', () => {
       // Two widgets with same display text should be equal
-      const text1 = 'Display Text'
-      const text2 = 'Display Text'
-      const text3 = 'Different Text'
+      const text1: string = 'Display Text'
+      const text2: string = 'Display Text'
+      const text3: string = 'Different Text'
 
       // Equality is based on display text
       expect(text1 === text2).toBe(true)

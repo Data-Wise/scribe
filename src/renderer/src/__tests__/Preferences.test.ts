@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
+import { createMockPreferences } from './testUtils'
 import {
   loadPreferences,
   savePreferences,
   updatePreferences,
   DEFAULT_SIDEBAR_TAB_ORDER,
-  UserPreferences,
   TabBarStyle,
   BorderStyle,
   ActiveTabStyle,
@@ -120,28 +120,10 @@ describe('Preferences', () => {
 
   describe('UserPreferences interface', () => {
     it('should create a valid preferences object', () => {
-      const prefs: UserPreferences = {
-        defaultWordGoal: 500,
-        focusModeEnabled: false,
+      const prefs = createMockPreferences({
         lastSessionDate: '2025-01-01',
-        currentStreak: 0,
-        totalWordsWritten: 0,
-        showWordGoalProgress: true,
-        celebrateMilestones: true,
-        streakDisplayOptIn: false,
         editorMode: 'live-preview',
-        customCSS: '',
-        customCSSEnabled: false,
-        hudMode: 'layered',
-        hudSide: 'left',
-        hudRibbonVisible: true,
-        tabBarStyle: 'elevated',
-        borderStyle: 'soft',
-        activeTabStyle: 'elevated',
-        sidebarTabSize: 'compact',
-        sidebarTabOrder: DEFAULT_SIDEBAR_TAB_ORDER,
-        sidebarHiddenTabs: [],
-      }
+      })
 
       expect(prefs.defaultWordGoal).toBe(500)
       expect(prefs.tabBarStyle).toBe('elevated')

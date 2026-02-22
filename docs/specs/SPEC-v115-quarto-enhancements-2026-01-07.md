@@ -2,7 +2,7 @@
 
 > **Formal Specification for Implementation**
 
-**Status:** Draft
+**Status:** Partially Implemented (Sprint 33 completions shipped; Sprint 34 render integration pending)
 **Created:** 2026-01-07
 **Target:** Scribe v1.15.0
 **From Brainstorm:** `BRAINSTORM-editor-polish-quarto-2026-01-07.md`

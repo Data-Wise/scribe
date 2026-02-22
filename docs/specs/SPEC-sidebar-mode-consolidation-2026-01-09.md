@@ -1,6 +1,6 @@
 # SPEC: Sidebar Mode Consolidation & Persistence
 
-**Status:** ✅ Approved for Implementation
+**Status:** Implemented (shipped in v1.15.x, merged to dev 2026-01-10)
 **Created:** 2026-01-09
 **Approved:** 2026-01-10
 **From Brainstorm:** BRAINSTORM-sidebar-mode-consolidation-2026-01-09.md

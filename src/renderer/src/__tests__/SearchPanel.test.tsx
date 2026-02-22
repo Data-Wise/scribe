@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { SearchPanel } from '../components/SearchPanel'
-import { Note, Project } from '../types'
+import type { Note, Project } from '../types'
+import { createMockNote, createMockProject } from './testUtils'
 
 // Mock the api module
 vi.mock('../lib/api', () => ({
@@ -26,44 +27,14 @@ vi.mock('../utils/search', () => ({
 import { api } from '../lib/api'
 
 // Mock notes
-const mockNotes: Note[] = [
-  {
-    id: '1',
-    title: 'Project Plan',
-    content: 'This is the project plan content',
-    folder: 'projects',
-    created_at: Date.now(),
-    updated_at: Date.now()
-  },
-  {
-    id: '2',
-    title: 'Meeting Notes',
-    content: 'Notes from the team meeting',
-    folder: 'inbox',
-    created_at: Date.now(),
-    updated_at: Date.now()
-  },
-  {
-    id: '3',
-    title: 'Research Paper',
-    content: 'Research findings and analysis',
-    folder: 'resources',
-    created_at: Date.now(),
-    updated_at: Date.now()
-  }
+const mockNotes = [
+  createMockNote({ id: '1', title: 'Project Plan', content: 'This is the project plan content', folder: 'projects' }),
+  createMockNote({ id: '2', title: 'Meeting Notes', content: 'Notes from the team meeting', folder: 'inbox' }),
+  createMockNote({ id: '3', title: 'Research Paper', content: 'Research findings and analysis', folder: 'resources' })
 ]
 
-const mockProject: Project = {
-  id: 'proj-1',
-  name: 'Test Project',
-  type: 'academic',
-  color: '#4A90D9',
-  icon: 'book',
-  created_at: Date.now(),
-  updated_at: Date.now()
-}
-
-const mockProjects: Project[] = [mockProject]
+const mockProject = createMockProject({ id: 'proj-1', type: 'research', color: '#4A90D9', icon: 'book' })
+const mockProjects = [mockProject]
 
 describe('SearchPanel Component', () => {
   const defaultProps = {
@@ -868,15 +839,8 @@ describe('SearchPanel Component', () => {
   describe('Untitled Notes', () => {
     it('displays "Untitled" for notes without title', async () => {
       vi.useFakeTimers({ shouldAdvanceTime: true })
-      const notesWithUntitled: Note[] = [
-        {
-          id: '1',
-          title: '',
-          content: 'Some content',
-          folder: 'inbox',
-          created_at: Date.now(),
-          updated_at: Date.now()
-        }
+      const notesWithUntitled = [
+        createMockNote({ id: '1', title: '', content: 'Some content', folder: 'inbox' })
       ]
       vi.mocked(api.searchNotes).mockResolvedValue(notesWithUntitled)
 

@@ -396,8 +396,8 @@ describe('ExportDialog Component', () => {
       })
       mockRevokeObjectURL = vi.fn()
 
-      URL.createObjectURL = mockCreateObjectURL
-      URL.revokeObjectURL = mockRevokeObjectURL
+      URL.createObjectURL = mockCreateObjectURL as typeof URL.createObjectURL
+      URL.revokeObjectURL = mockRevokeObjectURL as typeof URL.revokeObjectURL
     })
 
     afterEach(() => {

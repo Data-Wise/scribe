@@ -188,7 +188,7 @@ describe('InboxButton Component', () => {
     // Note: Tooltip component is tested separately, but we verify the content prop is correct
 
     it('shows "No unassigned notes" when count is 0', () => {
-      const { container } = render(<InboxButton unreadCount={0} isActive={false} onClick={mockOnClick} />)
+      render(<InboxButton unreadCount={0} isActive={false} onClick={mockOnClick} />)
 
       // Tooltip content is passed as prop, we can't directly test it without triggering hover
       // But we can verify the button renders correctly which indirectly confirms tooltip setup

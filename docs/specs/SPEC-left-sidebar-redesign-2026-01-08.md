@@ -1,6 +1,6 @@
 # SPEC: Left Sidebar Redesign - "Focus First" Layout
 
-**Status:** draft
+**Status:** Superseded (by v1.16.0 Icon-Centric Sidebar, 2026-01-10)
 **Created:** 2026-01-08
 **From Brainstorm:** [BRAINSTORM-left-sidebar-layouts-2026-01-08.md](../archive/brainstorms/BRAINSTORM-left-sidebar-layouts-2026-01-08.md)
 **Expert Analysis:**
