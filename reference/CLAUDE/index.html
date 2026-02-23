@@ -2115,10 +2115,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#previous-phase-1-technical-debt-remediation-2026-01-23" class="md-nav__link">
+  <a href="#previous-tech-debt-quarto-stabilization-v1162" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Previous: Phase 1 Technical Debt Remediation (2026-01-23)
+        Previous: Tech Debt + Quarto Stabilization (v1.16.2)
       
     </span>
   </a>
@@ -2126,10 +2126,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#previous-icon-centric-sidebar-expansion-v1160" class="md-nav__link">
+  <a href="#previous-icon-centric-sidebar-v1160" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Previous: Icon-Centric Sidebar Expansion (v1.16.0)
+        Previous: Icon-Centric Sidebar (v1.16.0)
       
     </span>
   </a>
@@ -2280,28 +2280,6 @@
     <span class="md-ellipsis">
       
         Browser Mode Architecture
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ai-integration-cli-only" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Integration (CLI Only)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#daily-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Notes
       
     </span>
   </a>
@@ -2677,244 +2655,48 @@
 <li>✅ Fixed 70 TypeScript errors across 22 test files</li>
 <li>✅ Escaped <code>\$</code> handling for academic documents</li>
 </ul>
-<h3 id="previous-phase-1-technical-debt-remediation-2026-01-23">Previous: Phase 1 Technical Debt Remediation (2026-01-23)</h3>
-<p><strong>Phase 1.1: SettingsModal Refactoring</strong>
-- ✅ Extracted <code>GeneralSettingsTab</code>, <code>EditorSettingsTab</code>, <code>SettingsSection</code>
-- ✅ Reduced <code>SettingsModal.tsx</code> by <strong>26%</strong> (614 lines)
-- ✅ Added 13 new unit tests</p>
-<p><strong>Phase 1.2: App.tsx Refactoring</strong>
-- ✅ Extracted <code>KeyboardShortcutHandler</code> (25+ shortcuts, Tauri menus)
-- ✅ Extracted <code>EditorOrchestrator</code> (Focus/Normal mode rendering)
-- ✅ Reduced <code>App.tsx</code> by <strong>13%</strong> (267 lines)
-- ✅ Added 19 new unit tests</p>
-<p><strong>Overall Metrics:</strong>
-- <strong>-881 lines</strong> from monolithic controllers
-- <strong>+4 new components</strong> (well-organized, tested)
-- <strong>+32 new tests</strong> (2,161/2,195 passing, 98.5%)
-- <strong>0 breaking changes</strong></p>
-<p><strong>Phase 1.3: Quarto Autocomplete Stabilization (v1.16.2)</strong>
-- ✅ Fixed erratic code block behavior (suppressed non-code completions)
-- ✅ Implemented context-aware LaTeX completions (math mode only)
-- ✅ Added syntax highlighting for embedded languages (R, Python, etc.)
-- ✅ Polished code block styling with distinct background
-- ✅ Fixed backtick autocomplete triggers</p>
+<h3 id="previous-tech-debt-quarto-stabilization-v1162">Previous: Tech Debt + Quarto Stabilization (v1.16.2)</h3>
+<p>Extracted <code>KeyboardShortcutHandler</code>, <code>EditorOrchestrator</code>, <code>GeneralSettingsTab</code>, <code>EditorSettingsTab</code> from monolithic App.tsx/SettingsModal.tsx (-881 lines, +4 components, +32 tests). Context-aware LaTeX completions (math-only scoping, suppressed in code blocks).</p>
 <hr />
-<h3 id="previous-icon-centric-sidebar-expansion-v1160">Previous: Icon-Centric Sidebar Expansion (v1.16.0)</h3>
-<p><strong>Sidebar Architecture Refactor - Complete ✅</strong></p>
-<p>Transitioned from global <code>sidebarMode</code> to per-icon expansion where each icon (Inbox, Smart Folders, Pinned Projects) independently expands with its own preferred view mode (compact or card).</p>
-<p><strong>Key Changes:</strong>
-- ✅ <strong>Icon-Centric Expansion</strong> - Icon bar always visible (48px), icons control expansion
-- ✅ <strong>Per-Icon Mode Preferences</strong> - Each icon remembers compact/card preference
-- ✅ <strong>Accordion Pattern</strong> - Only one icon expanded at a time
-- ✅ <strong>Global Width Management</strong> - Shared compact/card widths across all icons
-- ✅ <strong>Removed Shortcuts</strong> - Deleted ⌘B (toggle sidebar) shortcut, no global mode state
-- ✅ <strong>Smooth Animations</strong> - 200ms cubic-bezier transitions, slide-in panels, expanded indicators</p>
-<p><strong>Architecture:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>│ Icon-Centric Mode (v1.16.0)                                 │
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├─────────────────────────────────────────────────────────────┤
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│                                                              │
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│  ┌─────┐  ┌──────────────────────────────────────────┐     │
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│  │  I  │  │ Expanded Icon Panel                       │     │
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│  │  N  │  │ ┌──────────────────────────────────────┐ │     │
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│  │  B  │  │ │ Panel Header (Title + Mode Toggle)   │ │     │
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│  │  O  │  │ └──────────────────────────────────────┘ │     │
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│  │  X  │  │                                           │     │
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>│  └─────┘  │ ┌──────────────────────────────────────┐ │     │
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│           │ │                                       │ │     │
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│  ┌─────┐  │ │   CompactListView                    │ │     │
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│  │  R  │  │ │      OR                               │ │     │
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>│  │  E  │  │ │   CardGridView                        │ │     │
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>│  │  S  │  │ │                                       │ │     │
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>│  └─────┘  │ │   (mode determined by icon&#39;s         │ │     │
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>│           │ │    preferredMode setting)             │ │     │
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>│  ┌─────┐  │ │                                       │ │     │
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>│  │ ... │  │ └──────────────────────────────────────┘ │     │
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>│  └─────┘  └──────────────────────────────────────────┘     │
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>│           Icon Bar (48px)    Expanded Panel (conditional)   │
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>│                                                              │
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>└─────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<p><strong>Component Hierarchy:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>MissionSidebar.tsx (icon-centric-mode)
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── IconBar.tsx (48px fixed width, always visible)
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│   ├── InboxButton
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│   ├── SmartIconButton (Research, Teaching, R Package, R Dev, Generic)
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│   ├── VaultIconButton (Pinned Projects)
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>│   ├── Spacer
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>│   └── ActivityBar
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>│
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>└── ExpandedIconPanel.tsx (conditional, width = sidebarWidth - 48)
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    ├── PanelHeader
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    │   ├── Icon Label
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    │   ├── Mode Toggle Button (compact ⇄ card)
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    │   └── Close Button
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    │
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    └── Content (based on expandedIcon type + mode)
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>        ├── CompactListView.tsx (if mode === &#39;compact&#39;)
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        │   ├── ProjectList (for smart icons)
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>        │   └── NoteList (for vault icons)
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>        │
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>        └── CardGridView.tsx (if mode === &#39;card&#39;)
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>            ├── ProjectCards (for smart icons)
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>            └── NoteCards (for vault icons)
-</code></pre></div>
-<p><strong>State Management (useAppViewStore.ts):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Removed (v1.15.0 - Global Mode System)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nx">sidebarMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;icon&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;compact&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;card&#39;</span><span class="w">  </span><span class="c1">// ❌ REMOVED</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nx">lastExpandedMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;compact&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;card&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="w">  </span><span class="c1">// ❌ REMOVED</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nx">lastModeChangeTimestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">  </span><span class="c1">// ❌ REMOVED</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nx">setSidebarMode</span><span class="p">(</span><span class="nx">mode</span><span class="p">)</span><span class="w">  </span><span class="c1">// ❌ REMOVED</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nx">cycleSidebarMode</span><span class="p">()</span><span class="w">  </span><span class="c1">// ❌ REMOVED</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nx">toggleSidebarCollapsed</span><span class="p">()</span><span class="w">  </span><span class="c1">// ❌ REMOVED</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1">// Added (v1.16.0 - Icon-Centric System)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nx">expandedIcon</span><span class="o">:</span><span class="w"> </span><span class="kt">ExpandedIconType</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="w">  </span><span class="c1">// ✅ Which icon is expanded</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="nx">where</span><span class="w"> </span><span class="nx">ExpandedIconType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;vault&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;smart&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">SmartIconId</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1">// Per-icon mode preferences stored in icon objects:</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nx">PinnedVault</span><span class="p">.</span><span class="nx">preferredMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;compact&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;card&#39;</span><span class="w">  </span><span class="c1">// ✅ Each vault remembers mode</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nx">SmartIcon</span><span class="p">.</span><span class="nx">preferredMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;compact&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;card&#39;</span><span class="w">    </span><span class="c1">// ✅ Each smart icon remembers mode</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1">// New Actions:</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="nx">expandVault</span><span class="p">(</span><span class="nx">vaultId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w">  </span><span class="c1">// ✅ Expand vault icon, set width from preferredMode</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="nx">expandSmartIcon</span><span class="p">(</span><span class="nx">iconId</span><span class="o">:</span><span class="w"> </span><span class="kt">SmartIconId</span><span class="p">)</span><span class="w">  </span><span class="c1">// ✅ Expand smart icon, set width</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="nx">collapseAll</span><span class="p">()</span><span class="w">  </span><span class="c1">// ✅ Collapse to icon-only mode (48px width)</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="nx">toggleIcon</span><span class="p">(</span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;vault&#39;</span><span class="o">|</span><span class="s1">&#39;smart&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w">  </span><span class="c1">// ✅ Accordion toggle</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="nx">setIconMode</span><span class="p">(</span><span class="kr">type</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">mode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;compact&#39;</span><span class="o">|</span><span class="s1">&#39;card&#39;</span><span class="p">)</span><span class="w">  </span><span class="c1">// ✅ Set icon&#39;s preferred mode</span>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
-<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="c1">// Global Width Settings (shared across all icons):</span>
-<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="nx">compactModeWidth</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">  </span><span class="c1">// Default 240px - applied when icon uses compact mode</span>
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="nx">cardModeWidth</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">     </span><span class="c1">// Default 320px - applied when icon uses card mode</span>
-</code></pre></div>
-<p><strong>Accordion Pattern Implementation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">toggleIcon</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="kr">type</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expandedIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">expandVault</span><span class="p">,</span><span class="w"> </span><span class="nx">expandSmartIcon</span><span class="p">,</span><span class="w"> </span><span class="nx">collapseAll</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">get</span><span class="p">()</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="c1">// If clicking already expanded icon, collapse it</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">expandedIcon</span><span class="o">?</span><span class="p">.</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">expandedIcon</span><span class="o">?</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="nx">collapseAll</span><span class="p">()</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="k">return</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="c1">// Otherwise expand this icon (auto-collapses others)</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;vault&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span><span class="nx">expandVault</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="nx">expandSmartIcon</span><span class="p">(</span><span class="nx">id</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">SmartIconId</span><span class="p">)</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="p">}</span>
-</code></pre></div>
-<p><strong>CSS Structure (index.css):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c">/* Icon-Centric Mode Container */</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="p">.</span><span class="nc">mission-sidebar</span><span class="p">.</span><span class="nc">icon-centric-mode</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">flex</span><span class="p">;</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="k">flex-direction</span><span class="p">:</span><span class="w"> </span><span class="kc">row</span><span class="p">;</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="k">transition</span><span class="p">:</span><span class="w"> </span><span class="k">width</span><span class="w"> </span><span class="mi">200</span><span class="kt">ms</span><span class="w"> </span><span class="nb">cubic-bezier</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c">/* Icon Bar (Always Visible) */</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">.</span><span class="nc">icon-bar</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">48</span><span class="kt">px</span><span class="p">;</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="k">flex-shrink</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--nexus-bg-primary</span><span class="p">);</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">  </span><span class="k">border-right</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="w"> </span><span class="kc">solid</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mf">0.05</span><span class="p">);</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="p">}</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c">/* Expanded Icon Panel (Conditional) */</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="p">.</span><span class="nc">expanded-icon-panel</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">  </span><span class="k">flex</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">  </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">flex</span><span class="p">;</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">  </span><span class="k">flex-direction</span><span class="p">:</span><span class="w"> </span><span class="kc">column</span><span class="p">;</span>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--nexus-bg-secondary</span><span class="p">);</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">  </span><span class="k">border-left</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="w"> </span><span class="kc">solid</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mf">0.05</span><span class="p">);</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">  </span><span class="k">animation</span><span class="p">:</span><span class="w"> </span><span class="n">slideInFromLeft</span><span class="w"> </span><span class="mi">200</span><span class="kt">ms</span><span class="w"> </span><span class="nb">cubic-bezier</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="p">}</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="p">@</span><span class="k">keyframes</span><span class="w"> </span><span class="nt">slideInFromLeft</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">  </span><span class="nt">from</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">    </span><span class="k">opacity</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">    </span><span class="k">transform</span><span class="p">:</span><span class="w"> </span><span class="nb">translateX</span><span class="p">(</span><span class="mi">-10</span><span class="kt">px</span><span class="p">);</span>
-<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">  </span><span class="nt">to</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="w">    </span><span class="k">opacity</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="w">    </span><span class="k">transform</span><span class="p">:</span><span class="w"> </span><span class="nb">translateX</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="p">}</span>
-<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>
-<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a><span class="c">/* Expanded Icon Indicator (3px accent bar) */</span>
-<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a><span class="p">.</span><span class="nc">icon-btn</span><span class="p">.</span><span class="nc">expanded</span><span class="p">::</span><span class="nd">before</span><span class="o">,</span>
-<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a><span class="p">.</span><span class="nc">smart-icon-btn</span><span class="p">.</span><span class="nc">expanded</span><span class="p">::</span><span class="nd">before</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a><span class="w">  </span><span class="k">content</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
-<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a><span class="w">  </span><span class="k">position</span><span class="p">:</span><span class="w"> </span><span class="kc">absolute</span><span class="p">;</span>
-<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a><span class="w">  </span><span class="k">left</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="w">  </span><span class="k">top</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="kt">%</span><span class="p">;</span>
-<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a><span class="w">  </span><span class="k">transform</span><span class="p">:</span><span class="w"> </span><span class="nb">translateY</span><span class="p">(</span><span class="mi">-50</span><span class="kt">%</span><span class="p">);</span>
-<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a><span class="w">  </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="kt">px</span><span class="p">;</span>
-<a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a><span class="w">  </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
-<a id="__codelineno-12-47" name="__codelineno-12-47" href="#__codelineno-12-47"></a><span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--nexus-accent</span><span class="p">);</span>
-<a id="__codelineno-12-48" name="__codelineno-12-48" href="#__codelineno-12-48"></a><span class="w">  </span><span class="k">border-radius</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-12-49" name="__codelineno-12-49" href="#__codelineno-12-49"></a><span class="w">  </span><span class="k">animation</span><span class="p">:</span><span class="w"> </span><span class="n">indicatorFadeIn</span><span class="w"> </span><span class="mi">150</span><span class="kt">ms</span><span class="w"> </span><span class="kc">ease</span><span class="p">;</span>
-<a id="__codelineno-12-50" name="__codelineno-12-50" href="#__codelineno-12-50"></a><span class="p">}</span>
-<a id="__codelineno-12-51" name="__codelineno-12-51" href="#__codelineno-12-51"></a>
-<a id="__codelineno-12-52" name="__codelineno-12-52" href="#__codelineno-12-52"></a><span class="p">@</span><span class="k">keyframes</span><span class="w"> </span><span class="nt">indicatorFadeIn</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-53" name="__codelineno-12-53" href="#__codelineno-12-53"></a><span class="w">  </span><span class="nt">from</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-54" name="__codelineno-12-54" href="#__codelineno-12-54"></a><span class="w">    </span><span class="k">opacity</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-12-55" name="__codelineno-12-55" href="#__codelineno-12-55"></a><span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<a id="__codelineno-12-56" name="__codelineno-12-56" href="#__codelineno-12-56"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-12-57" name="__codelineno-12-57" href="#__codelineno-12-57"></a><span class="w">  </span><span class="nt">to</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-58" name="__codelineno-12-58" href="#__codelineno-12-58"></a><span class="w">    </span><span class="k">opacity</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<a id="__codelineno-12-59" name="__codelineno-12-59" href="#__codelineno-12-59"></a><span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="kt">px</span><span class="p">;</span>
-<a id="__codelineno-12-60" name="__codelineno-12-60" href="#__codelineno-12-60"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-12-61" name="__codelineno-12-61" href="#__codelineno-12-61"></a><span class="p">}</span>
-</code></pre></div>
-<p><strong>Implementation Phases:</strong>
-- Phase 1: ✅ State refactor (types, store migration)
-- Phase 2: ✅ Component cleanup (removed 5,724 lines deprecated code)
-- Phase 3: ✅ Remove deprecated shortcuts (⌘B)
-- Phase 4: ✅ Test updates (64 tests passing)
-- Phase 5: ✅ CSS transitions + documentation</p>
-<p><strong>Testing:</strong>
-- ✅ 64 icon-centric tests passing (25 core + 23 edge cases + 16 E2E)
-- ✅ 100% Phase 1/2 state management coverage
-- ✅ TypeScript: 0 errors
-- ✅ All production code compiles cleanly</p>
-<p><strong>Migration:</strong>
-- Automatic v1.15.0 → v1.16.0 localStorage migration
-- Old keys cleaned: <code>sidebarMode</code>, <code>lastExpandedMode</code>, <code>lastModeChangeTimestamp</code>
-- Preserves user's last expanded smart icon as <code>expandedIcon</code>
-- Defaults all icons to compact mode on first launch</p>
-<p><strong>Keyboard Shortcuts Removed:</strong>
-- ⌘B - Toggle Left Sidebar (no longer needed, click icons instead)
-- ⌘0 - Collapse Sidebar (no longer needed, click expanded icon to collapse)</p>
+<h3 id="previous-icon-centric-sidebar-v1160">Previous: Icon-Centric Sidebar (v1.16.0)</h3>
+<p>Per-icon expansion with accordion pattern. <code>IconBar.tsx</code> (48px) + <code>ExpandedIconPanel.tsx</code> with compact/card modes per icon. State in <code>useAppViewStore.ts</code>: <code>expandedIcon</code>, <code>toggleIcon()</code>, per-icon <code>preferredMode</code>. Removed global <code>sidebarMode</code> and ⌘B shortcut. 64 tests, auto-migration from v1.15.0 localStorage keys.</p>
 <hr />
 <h3 id="previous-releases">Previous Releases</h3>
-<p><strong>Sprint 30 Phase 2: WikiLink Navigation (v1.14.0)</strong>
-- ✅ Single-click WikiLink Navigation - Click to navigate in Live/Reading modes
-- ✅ Cmd+Click in Source Mode - Navigate WikiLinks with ⌘+Click
-- ✅ Mode Preservation - Backlinks panel preserves editor mode
-- ✅ 1984 tests passing (30 WikiLink E2E tests)
-- Release: <a href="https://github.com/Data-Wise/scribe/releases/tag/v1.14.0">https://github.com/Data-Wise/scribe/releases/tag/v1.14.0</a></p>
-<p><strong>Sprint 28: Live Editor Enhancements (v1.10.0)</strong></p>
-<ul>
-<li>✅ CodeMirror 6 Live Preview - Obsidian-style syntax hiding</li>
-<li>✅ KaTeX Math Rendering - Inline <code>$...$</code> and display <code>$$...$$</code></li>
-<li>✅ Three Editor Modes - Source (⌘1), Live (⌘2), Reading (⌘3), cycle with ⌘E</li>
-</ul>
-<p><strong>Sprint 27: Backend Foundation + Settings (v1.7.0 → v1.9.0)</strong></p>
-<p><strong>v1.9.0 Features (2025-12-31):</strong>
-- ✅ Settings Enhancement - ⌘, fuzzy search, theme gallery, project templates
-- ✅ Quick Actions Customization - Drag-to-reorder, edit prompts, shortcuts
-- ✅ 1033 tests passing (930 unit + 103 E2E)</p>
-<p><strong>v1.7.0 Features (2025-12-31):</strong>
-- ✅ Chat History Persistence - Migration 009, auto-save/load per note
-- ✅ Quick Actions - 5 one-click AI prompts (Improve, Expand, Summarize, Explain, Research)
-- ✅ @ References - Autocomplete note inclusion
-- ✅ 911 tests passing (829 unit + 82 E2E)</p>
-<p><strong>Sprint 26 Features (2025-12-30):</strong>
-- ✅ Terminal PTY shell (portable-pty + xterm.js)
-- ✅ Mission Control sidebar (Icon/Compact/Card modes)
-- ✅ Browser mode with IndexedDB persistence</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Highlight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.18.0</td>
+<td>Sidebar vault expansion fix + DexieError2 race condition</td>
+</tr>
+<tr>
+<td>v1.16.x</td>
+<td>Icon-centric sidebar, tech debt remediation, Quarto autocomplete</td>
+</tr>
+<tr>
+<td>v1.14.0</td>
+<td>WikiLink single-click navigation</td>
+</tr>
+<tr>
+<td>v1.10.0</td>
+<td>CodeMirror 6 Live Preview, KaTeX math, three editor modes</td>
+</tr>
+<tr>
+<td>v1.9.0</td>
+<td>Settings enhancement (⌘, fuzzy search, theme gallery)</td>
+</tr>
+<tr>
+<td>v1.7.0</td>
+<td>Quick Actions, chat history, @ references</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../CHANGELOG/">CHANGELOG</a> for full details.</p>
 <hr />
 <h2 id="feature-tiers">✅ Feature Tiers</h2>
 <h3 id="tier-1-3-core-shipped">Tier 1-3: Core (Shipped)</h3>
@@ -2969,67 +2751,48 @@
 <hr />
 <h2 id="key-implementation-details">🔧 Key Implementation Details</h2>
 <h3 id="browser-mode-architecture">Browser Mode Architecture</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>│                     React Components                         │
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>└─────────────────────────────┬───────────────────────────────┘
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>                              ▼
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>│                      api.ts (Factory)                        │
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>│   export const api = isTauri() ? tauriApi : browserApi      │
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>└─────────────────────────────┬───────────────────────────────┘
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>                              │
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>              ┌───────────────┴───────────────┐
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>              ▼                               ▼
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>┌─────────────────────────┐     ┌─────────────────────────┐
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>│     Tauri invoke()      │     │   browser-api.ts        │
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>│     (46 operations)     │     │   (IndexedDB/Dexie)     │
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>└─────────────────────────┘     └─────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>│                     React Components                         │
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>└─────────────────────────────┬───────────────────────────────┘
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>                              ▼
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│                      api.ts (Factory)                        │
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│   export const api = isTauri() ? tauriApi : browserApi      │
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>└─────────────────────────────┬───────────────────────────────┘
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>                              │
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>              ┌───────────────┴───────────────┐
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>              ▼                               ▼
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>┌─────────────────────────┐     ┌─────────────────────────┐
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│     Tauri invoke()      │     │   browser-api.ts        │
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│     (46 operations)     │     │   (IndexedDB/Dexie)     │
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>└─────────────────────────┘     └─────────────────────────┘
 </code></pre></div>
-<p><strong>Key files:</strong>
-- <code>platform.ts</code> - <code>isTauri()</code>, <code>isBrowser()</code> detection
-- <code>browser-db.ts</code> - Dexie.js schema, <code>seedDemoData()</code>
-- <code>browser-api.ts</code> - Full 46-operation API for browser
-- <code>browser-dialogs.ts</code> - <code>confirm()</code>, <code>alert()</code> fallbacks</p>
-<h3 id="ai-integration-cli-only">AI Integration (CLI Only)</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">// Uses installed CLI tools, no API keys</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">askClaude</span><span class="p">(</span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">execAsync</span><span class="p">(</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="sb">`echo &quot;</span><span class="si">${</span><span class="nx">escape</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span><span class="si">}</span><span class="sb">&quot; | claude --print &quot;</span><span class="si">${</span><span class="nx">escape</span><span class="p">(</span><span class="nx">prompt</span><span class="p">)</span><span class="si">}</span><span class="sb">&quot;`</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="p">);</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">stdout</span><span class="p">;</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">}</span>
-</code></pre></div>
-<h3 id="daily-notes">Daily Notes</h3>
-<ul>
-<li>Shortcut: ⌘D</li>
-<li>Auto-create with template</li>
-<li>Per-project configuration</li>
-</ul>
+<p>Key files: <code>platform.ts</code> (runtime detection), <code>browser-db.ts</code> (Dexie schema), <code>browser-api.ts</code> (46 operations), <code>browser-dialogs.ts</code> (fallbacks).</p>
 <h3 id="tauri-api-serialization-critical-pattern">Tauri API Serialization (Critical Pattern)</h3>
 <p><strong>Problem:</strong> TypeScript objects don't match Rust types across the Tauri bridge.</p>
 <p><strong>Solution:</strong> Bidirectional serialization in <code>api.ts</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">// Frontend → Rust: Serialize objects to JSON strings</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">prepareNoteForTauri</span><span class="p">(</span><span class="nx">note</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">Note</span><span class="o">&gt;</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">prepared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">note</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nx">prepared</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="p">)</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">prepared</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="p">}</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1">// Rust → Frontend: Parse JSON strings back to objects</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="kd">function</span><span class="w"> </span><span class="nx">parseNoteFromTauri</span><span class="p">(</span><span class="nx">note</span><span class="o">:</span><span class="w"> </span><span class="kt">Note</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Note</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">note</span><span class="o">?</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="p">)</span>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">note</span>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Frontend → Rust: Serialize objects to JSON strings</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">prepareNoteForTauri</span><span class="p">(</span><span class="nx">note</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">Note</span><span class="o">&gt;</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">prepared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">note</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nx">prepared</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">prepared</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">}</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1">// Rust → Frontend: Parse JSON strings back to objects</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="kd">function</span><span class="w"> </span><span class="nx">parseNoteFromTauri</span><span class="p">(</span><span class="nx">note</span><span class="o">:</span><span class="w"> </span><span class="kt">Note</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Note</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">note</span><span class="o">?</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">properties</span><span class="p">)</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">note</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Apply to:</strong> All Note-returning Tauri commands (<code>createNote</code>, <code>updateNote</code>, <code>getNote</code>, <code>listNotes</code>, <code>searchNotes</code>, <code>getOrCreateDailyNote</code>, etc.)</p>
 <h3 id="tab-based-editor-pattern">Tab-Based Editor Pattern</h3>
 <p><strong>To display a note in the editor, BOTH calls are required:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nx">openNoteTab</span><span class="p">(</span><span class="nx">noteId</span><span class="p">,</span><span class="w"> </span><span class="nx">title</span><span class="p">)</span><span class="w">  </span><span class="c1">// Creates/activates tab in editor</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nx">selectNote</span><span class="p">(</span><span class="nx">noteId</span><span class="p">)</span><span class="w">          </span><span class="c1">// Sets note as selected in state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">openNoteTab</span><span class="p">(</span><span class="nx">noteId</span><span class="p">,</span><span class="w"> </span><span class="nx">title</span><span class="p">)</span><span class="w">  </span><span class="c1">// Creates/activates tab in editor</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nx">selectNote</span><span class="p">(</span><span class="nx">noteId</span><span class="p">)</span><span class="w">          </span><span class="c1">// Sets note as selected in state</span>
 </code></pre></div>
 <ul>
 <li><code>selectNote()</code> alone → Note selected but not visible</li>
@@ -3037,7 +2800,7 @@
 </ul>
 <h3 id="error-toast-pattern">Error Toast Pattern</h3>
 <p>Error toasts persist until dismissed (defined in <code>Toast.tsx</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">persistent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="w">  </span><span class="c1">// Errors stay until dismissed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">persistent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="w">  </span><span class="c1">// Errors stay until dismissed</span>
 </code></pre></div>
 <p>Features:
 - Copy button for error message
