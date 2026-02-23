@@ -243,11 +243,20 @@ scribe help --all      # Full reference
 ## 🎯 Current Status: v1.18.0 - Sidebar Vault Fix ✅
 
 **Released:** v1.18.0 (stable)
-**Dev Branch:** v1.18.0 (Sidebar vault expansion fix, browser-mode init fix)
+**Dev Branch:** Pomodoro Focus Timer merged (PR #45)
 **Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
-**Tests:** 2,190 passing (71 files)
+**Tests:** 2,255 passing (73 files)
 
-### Latest Work: Sidebar Vault Expansion Fix (PR #43)
+### Latest Work: Pomodoro Focus Timer (PR #45)
+
+- ✅ Status bar countdown timer (start/pause click, right-click reset)
+- ✅ Zustand store with symmetric callbacks: `tick(onComplete, onBreakComplete)`
+- ✅ Auto-save on work completion, gentle break toasts
+- ✅ Focus Timer settings in General tab (5 new preferences)
+- ✅ Auto-pin new projects to sidebar
+- ✅ 62 new tests (2,255 total)
+
+### Previous: Sidebar Vault Expansion Fix (PR #43)
 
 - ✅ Vault dots filter to correct single project (not all projects)
 - ✅ Breadcrumb syncs via `onSelectProject` on vault toggle
