@@ -4,10 +4,10 @@ priority: P1
 version: 1.18.0
 sprint: 37
 started: 2026-01-08
-updated: 2026-02-22
+updated: 2026-02-23
 released: 2026-01-24
 editor: hybrid-markdown++
-next_focus: Fix 67 test file TypeScript errors (~2.5h) / v1.17.0 Three-Tab Sidebar System
+next_focus: Pomodoro Timer (feature/pomodoro) — Increment 1 of 4
 tests: 2190
 unit_tests: 2190
 e2e_tests: 109
@@ -26,6 +26,10 @@ tags:
 
 ## Current Focus (Sprint 37)
 
+### In Progress
+
+1. **Pomodoro Timer** (WIP) — Status bar countdown timer with auto-save, break nudges, Cmd+Shift+P shortcut. Branch: `feature/pomodoro`. Spec: `docs/specs/SPEC-pomodoro-2026-02-23.md`. 4 increments planned.
+
 ### Next Up
 
 1. **Fix 67 test file TypeScript errors** (~2.5h) — Non-blocking but noisy. Documented in `docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md`
@@ -43,6 +47,13 @@ tags:
 ---
 
 ## Recently Completed
+
+### v1.18.0 (2026-02-22) — Sidebar Vault Expansion Fix + DexieError2 Fix
+
+- Fixed vault dots showing wrong project's notes (PR #43)
+- Fixed sidebar breadcrumb not updating on vault selection
+- Fixed DexieError2 race condition in browser mode (singleton ready promise)
+- 3 new tests (2,190 total)
 
 ### v1.16.2 (2026-01-24) — Tech Debt Phase 1
 
@@ -106,6 +117,7 @@ tags:
 
 | Spec | Status | Target |
 |------|--------|--------|
+| Pomodoro Timer | In Progress | v1.19.0 |
 | Three-Tab Sidebar | Design Approved | v1.17.0 |
 | Quarto Enhancements | Partially Implemented | v1.15+ |
 | LaTeX Editor | Proposal | v2.0 |

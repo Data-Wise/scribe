@@ -56,6 +56,7 @@ import {
   Base16Scheme
 } from '../lib/themes'
 import { api } from '../lib/api'
+import { useAppViewStore } from '../store/useAppViewStore'
 import { GeneralSettingsTab } from './Settings/GeneralSettingsTab'
 import { EditorSettingsTab } from './Settings/EditorSettingsTab'
 
@@ -92,6 +93,7 @@ export function SettingsModal({
   themeShortcuts,
   onThemeShortcutsChange,
 }: SettingsModalProps) {
+  const sidebarWidth = useAppViewStore((s) => s.sidebarWidth)
   const [activeTab, setActiveTab] = useState<SettingsTab>('general')
   const [showCustomCreator, setShowCustomCreator] = useState(false)
   const [customThemeName, setCustomThemeName] = useState('')
@@ -370,7 +372,7 @@ export function SettingsModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed top-0 right-0 bottom-0 z-[100] flex items-center justify-center p-4" style={{ left: sidebarWidth }}>
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-nexus-bg-primary/80 backdrop-blur-sm animate-fade-in"
@@ -1401,7 +1403,7 @@ export function SettingsModal({
 
       {/* Import Modal */}
       {showImportModal && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div className="fixed top-0 right-0 bottom-0 z-[110] flex items-center justify-center p-4" style={{ left: sidebarWidth }}>
           <div 
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => {
@@ -1488,7 +1490,7 @@ export function SettingsModal({
 
       {/* Export Modal */}
       {showExportModal && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div className="fixed top-0 right-0 bottom-0 z-[110] flex items-center justify-center p-4" style={{ left: sidebarWidth }}>
           <div 
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => {
@@ -1559,7 +1561,7 @@ export function SettingsModal({
 
       {/* Theme Preview Bar */}
       {previewTheme && previewTheme !== currentTheme && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[120] bg-nexus-bg-secondary border border-white/10 rounded-xl shadow-2xl px-4 py-3 flex items-center gap-4">
+        <div className="fixed bottom-6 -translate-x-1/2 z-[120] bg-nexus-bg-secondary border border-white/10 rounded-xl shadow-2xl px-4 py-3 flex items-center gap-4" style={{ left: `calc(50% + ${sidebarWidth / 2}px)` }}>
           <Eye className="w-5 h-5 text-nexus-accent" />
           <span className="text-sm text-nexus-text-primary">
             Previewing: <strong>{themes[previewTheme]?.name}</strong>
