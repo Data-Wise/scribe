@@ -37,34 +37,26 @@ export function PomodoroTimer({ onPomodoroComplete, onBreakComplete }: PomodoroT
   onCompleteRef.current = onPomodoroComplete
   onBreakCompleteRef.current = onBreakComplete
 
-  // Track previous status to detect break→idle transitions
-  const prevStatusRef = useRef(status)
-
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === 'undefined') return false
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches
   }, [])
 
-  // Tick interval — runs only when timer is active and not paused
+  // Tick interval — runs only when timer is active and not paused.
+  // Both callbacks are passed symmetrically: work→break fires onComplete,
+  // break→idle fires onBreakComplete. No effect-based detection needed.
   useEffect(() => {
     if (status === 'idle' || isPaused) return
 
     const interval = setInterval(() => {
-      tick(() => onCompleteRef.current?.())
+      tick(
+        () => onCompleteRef.current?.(),
+        () => onBreakCompleteRef.current?.(),
+      )
     }, 1000)
 
     return () => clearInterval(interval)
   }, [status, isPaused, tick])
-
-  // Detect break→idle transition for onBreakComplete
-  useEffect(() => {
-    if (prevStatusRef.current !== 'idle' &&
-        (prevStatusRef.current === 'short-break' || prevStatusRef.current === 'long-break') &&
-        status === 'idle') {
-      onBreakCompleteRef.current?.()
-    }
-    prevStatusRef.current = status
-  }, [status])
 
   const handleClick = useCallback(() => {
     if (status === 'idle') {
@@ -81,7 +73,8 @@ export function PomodoroTimer({ onPomodoroComplete, onBreakComplete }: PomodoroT
     reset()
   }, [reset])
 
-  // Count display: "2/4", "5/8" etc.
+  // Count display: "2/4", "5/8" etc. — shows progress toward next long break.
+  // Rounds up to the next multiple of longBreakInterval (e.g., 5 completed → target 8).
   const nextTarget = Math.ceil((completedToday + 1) / longBreakInterval) * longBreakInterval
   const countDisplay = `${completedToday}/${nextTarget}`
 

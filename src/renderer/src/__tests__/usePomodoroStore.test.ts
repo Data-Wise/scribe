@@ -228,6 +228,43 @@ describe('usePomodoroStore', () => {
       expect(onComplete).not.toHaveBeenCalled()
     })
 
+    it('calls onBreakComplete when break timer hits 0', () => {
+      const onComplete = vi.fn()
+      const onBreakComplete = vi.fn()
+      usePomodoroStore.setState({
+        status: 'short-break',
+        secondsRemaining: 1,
+      })
+      getStore().tick(onComplete, onBreakComplete)
+
+      expect(onBreakComplete).toHaveBeenCalledOnce()
+      expect(onComplete).not.toHaveBeenCalled()
+    })
+
+    it('calls onBreakComplete for long break completion too', () => {
+      const onBreakComplete = vi.fn()
+      usePomodoroStore.setState({
+        status: 'long-break',
+        secondsRemaining: 1,
+      })
+      getStore().tick(undefined, onBreakComplete)
+
+      expect(onBreakComplete).toHaveBeenCalledOnce()
+      expect(getStore().status).toBe('idle')
+    })
+
+    it('does not call onBreakComplete during normal break countdown', () => {
+      const onBreakComplete = vi.fn()
+      usePomodoroStore.setState({
+        status: 'short-break',
+        secondsRemaining: 100,
+      })
+      getStore().tick(undefined, onBreakComplete)
+
+      expect(onBreakComplete).not.toHaveBeenCalled()
+      expect(getStore().secondsRemaining).toBe(99)
+    })
+
     it('does not call onComplete during normal countdown', () => {
       const onComplete = vi.fn()
       getStore().start()

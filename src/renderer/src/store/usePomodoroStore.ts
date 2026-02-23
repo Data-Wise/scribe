@@ -21,7 +21,7 @@ export interface PomodoroState {
   start: () => void
   pause: () => void
   reset: () => void
-  tick: (onComplete?: () => void) => void
+  tick: (onComplete?: () => void, onBreakComplete?: () => void) => void
   syncPreferences: () => void
 }
 
@@ -88,7 +88,7 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
       })
     },
 
-    tick: (onComplete?: () => void) => {
+    tick: (onComplete?: () => void, onBreakComplete?: () => void) => {
       const state = get()
 
       // Don't tick if idle or paused
@@ -98,7 +98,7 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
 
       if (next <= 0) {
         if (state.status === 'work') {
-          // Work session complete
+          // Work session complete — transition to break
           const newCount = state.completedToday + 1
           const isLongBreak = newCount % state.longBreakInterval === 0
           const breakDuration = isLongBreak ? state.longBreakDuration : state.shortBreakDuration
@@ -120,6 +120,9 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
             secondsRemaining: state.workDuration,
             isPaused: false,
           })
+
+          // Notify component for break-over toast
+          onBreakComplete?.()
         }
       } else {
         set({ secondsRemaining: next })
