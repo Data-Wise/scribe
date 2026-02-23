@@ -109,10 +109,10 @@ export function PomodoroTimer({ onPomodoroComplete, onBreakComplete }: PomodoroT
       style={colorStyle}
       title={
         status === 'idle'
-          ? 'Start Pomodoro (⌘⇧P)'
+          ? 'Start Pomodoro'
           : isPaused
-            ? 'Resume (⌘⇧P) · Right-click to reset'
-            : 'Pause (⌘⇧P) · Right-click to reset'
+            ? 'Resume · Right-click to reset'
+            : 'Pause · Right-click to reset'
       }
       data-testid="pomodoro-timer"
       aria-live="polite"

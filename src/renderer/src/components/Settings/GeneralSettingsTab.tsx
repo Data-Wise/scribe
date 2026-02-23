@@ -69,7 +69,7 @@ export function GeneralSettingsTab() {
           <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
             <div>
               <div className="text-sm font-medium text-nexus-text-primary">Show pomodoro timer</div>
-              <div className="text-xs text-nexus-text-muted">Display a focus timer in the status bar. Start with click or ⌘⇧P.</div>
+              <div className="text-xs text-nexus-text-muted">Display a focus timer in the status bar. Click to start.</div>
             </div>
             <button
               onClick={() => {

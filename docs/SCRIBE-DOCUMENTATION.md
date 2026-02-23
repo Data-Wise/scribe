@@ -207,8 +207,7 @@ Scribe supports BibTeX bibliography files. Set your `.bib` file path in Settings
 |----------|--------|
 | `⌘N` | New Note |
 | `⌘D` | Daily Note |
-| `⌘⇧P` | New Project (native menu) |
-| `⌘⇧N` | New Project (JS handler) |
+| `⌘⇧P` | New Project |
 | `⌘⇧C` | Quick Capture |
 | `⌘F` | Search Notes |
 | `⌘⇧E` | Export |
@@ -265,7 +264,7 @@ Scribe supports BibTeX bibliography files. Set your `.bib` file path in Settings
 |----------|--------|
 | `⌘⌥0`–`⌘⌥9` | Switch to theme slot 0–9 |
 
-> Note on `⌘⇧P` vs `⌘⇧N`: The native Tauri menu registers `⌘⇧P` for New Project. The JavaScript keyboard handler registers `⌘⇧N` for the same action. Both work; `⌘⇧N` is preferred from within the app since it fires the JS handler directly. `⌘⇧P` was reassigned from "Pomodoro toggle" in v1.19 — see [Section 8](#8-pomodoro-timer).
+> Note: `⌘⇧P` opens New Project via the native Tauri menu. The pomodoro timer has no keyboard shortcut — use click to start/pause.
 
 ---
 
@@ -320,7 +319,7 @@ The type is cosmetic in terms of data storage — all projects use the same unde
 
 ### Creating a Project
 
-Press `⌘⇧N` (or `⌘⇧P` from the native menu) to open the Create Project modal. You choose:
+Press `⌘⇧P` to open the Create Project modal. You choose:
 
 1. Project name
 2. Project type
@@ -738,7 +737,7 @@ Both implementations satisfy the same TypeScript interface, so all application c
 
 The handler checks `event.metaKey`, `event.shiftKey`, `event.altKey`, and `event.key` to dispatch actions. Each action calls the appropriate store method or opens the relevant dialog.
 
-**Important:** The native Tauri menu also registers shortcuts (e.g., `⌘N`, `⌘⇧P`). When both the native menu and `KeyboardShortcutHandler` register the same shortcut, the native menu fires first (Tauri intercepts it before the WebView). For this reason, some shortcuts exist in both places (`⌘⇧P` in the native menu, `⌘⇧N` in the JS handler) to ensure reliability.
+**Important:** The native Tauri menu also registers shortcuts (e.g., `⌘N`, `⌘⇧P`). When both the native menu and `KeyboardShortcutHandler` register the same shortcut, the native menu fires first (Tauri intercepts it before the WebView).
 
 ### Theme System
 
@@ -965,7 +964,7 @@ Stores should not import from other stores directly. If cross-store coordination
 3. Add it to the keyboard shortcuts table in the Settings help dialog.
 4. Add it to the Keyboard Shortcuts Reference in this documentation.
 
-> Caution: The `⌘⇧P` slot is now used by the native menu for "New Project." Do not register conflicting shortcuts without checking both the JS handler and `tauri.conf.json` / `main.rs`.
+> Caution: The `⌘⇧P` slot is used by the native menu for "New Project." Do not register conflicting shortcuts without checking both the JS handler and `src-tauri/src/lib.rs`.
 
 ### Code Style Conventions
 
@@ -1006,7 +1005,7 @@ Stores should not import from other stores directly. If cross-store coordination
 
 | Version | Notable Changes |
 |---------|----------------|
-| v1.19 | Pomodoro Timer (status bar, state machine, configurable, auto-save); `⌘⇧P` reassigned to New Project in native menu; `⌘⇧N` added as JS handler for New Project |
+| v1.19 | Pomodoro Timer (status bar, state machine, configurable, auto-save); new projects auto-pinned to sidebar |
 | v1.16 | Icon-centric sidebar redesign; pinned vaults; smart icons |
 | Earlier | Knowledge graph (D3), AI integration (Claude + Gemini), terminal (xterm.js), academic citations (BibTeX) |
 
