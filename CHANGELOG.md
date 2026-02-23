@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] — Pomodoro Focus Timer
+## [v1.19.0] - 2026-02-23 — Pomodoro Focus Timer
 
 ### Added
 

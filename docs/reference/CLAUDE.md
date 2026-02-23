@@ -240,10 +240,10 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.18.0 - Sidebar Vault Fix ✅
+## 🎯 Current Status: v1.19.0 - Pomodoro Focus Timer ✅
 
-**Released:** v1.18.0 (stable)
-**Dev Branch:** Pomodoro Focus Timer merged (PR #45)
+**Released:** v1.19.0 (stable)
+**Install:** `brew install --cask data-wise/tap/scribe`
 **Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
 **Tests:** 2,255 passing (73 files)
 

@@ -1,11 +1,11 @@
 ---
 status: active
 priority: P1
-version: 1.18.0
+version: 1.19.0
 sprint: 37
 started: 2026-01-08
 updated: 2026-02-23
-released: 2026-01-24
+released: 2026-02-23
 editor: hybrid-markdown++
 next_focus: Settings Infrastructure Improvements (feature/settings-improvements)
 tests: 2255
