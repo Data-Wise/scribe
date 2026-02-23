@@ -195,8 +195,8 @@ export function KeyboardShortcutHandler({
         onQuickCaptureOpen()
       }
 
-      // New Project (⌘⇧P)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'P') {
+      // New Project (⌘⇧N)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'N') {
         e.preventDefault()
         onCreateProjectOpen()
       }
