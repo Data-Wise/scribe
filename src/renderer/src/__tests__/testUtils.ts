@@ -145,6 +145,11 @@ export function createMockPreferences(overrides: Partial<UserPreferences> = {}):
     sidebarHiddenTabs: [],
     iconGlowEffect: true,
     iconGlowIntensity: 'subtle',
+    pomodoroEnabled: true,
+    pomodoroWorkMinutes: 25,
+    pomodoroShortBreakMinutes: 5,
+    pomodoroLongBreakMinutes: 15,
+    pomodoroLongBreakInterval: 4,
     ...overrides
   }
 }
