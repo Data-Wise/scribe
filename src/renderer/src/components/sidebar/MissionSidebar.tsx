@@ -186,7 +186,15 @@ export function MissionSidebar({
         projects={projects}
         notes={notes}
         expandedIcon={expandedIcon}
-        onToggleVault={(id) => toggleIcon('vault', id)}
+        onToggleVault={(id) => {
+          // If this vault is already expanded, we're collapsing — don't update project
+          const isCollapsing = expandedIcon?.type === 'vault' && expandedIcon?.id === id
+          toggleIcon('vault', id)
+          if (!isCollapsing) {
+            // Expanding a vault: update currentProjectId so breadcrumb + search scope follow
+            onSelectProject(id === 'inbox' ? null : id)
+          }
+        }}
         onToggleSmartIcon={(id) => toggleIcon('smart', id)}
         onSearch={onSearch}
         onDaily={onDaily}
