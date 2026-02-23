@@ -197,7 +197,7 @@ describe('IconBar Component', () => {
       const props = createDefaultProps()
       render(<IconBar {...props} />)
 
-      const addButton = screen.getByTitle('New project (⌘⇧P)')
+      const addButton = screen.getByTitle('New project (⌘⇧N)')
       expect(addButton).toBeInTheDocument()
       expect(addButton).toHaveClass('add-project-icon')
     })
@@ -395,7 +395,7 @@ describe('IconBar Component', () => {
 
       render(<IconBar {...props} onCreateProject={onCreateProject} />)
 
-      const addButton = screen.getByTitle('New project (⌘⇧P)')
+      const addButton = screen.getByTitle('New project (⌘⇧N)')
       addButton.click()
 
       expect(onCreateProject).toHaveBeenCalledTimes(1)

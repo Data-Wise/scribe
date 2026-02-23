@@ -58,6 +58,13 @@ export interface UserPreferences {
   // Icon Bar preferences (v1.16)
   iconGlowEffect: boolean           // Enable glow effect on icon hover
   iconGlowIntensity: 'subtle' | 'medium' | 'prominent'  // Glow intensity level
+
+  // Pomodoro preferences (v1.19)
+  pomodoroEnabled: boolean              // Show timer in status bar
+  pomodoroWorkMinutes: number           // Work duration in minutes
+  pomodoroShortBreakMinutes: number     // Short break in minutes
+  pomodoroLongBreakMinutes: number      // Long break in minutes
+  pomodoroLongBreakInterval: number     // Long break every N pomodoros
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -91,6 +98,13 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   // Icon Bar defaults (v1.16)
   iconGlowEffect: true,         // Enabled by default
   iconGlowIntensity: 'subtle',  // Subtle by default
+
+  // Pomodoro defaults (v1.19)
+  pomodoroEnabled: true,            // Visible by default
+  pomodoroWorkMinutes: 25,          // Standard pomodoro
+  pomodoroShortBreakMinutes: 5,     // Standard short break
+  pomodoroLongBreakMinutes: 15,     // Standard long break
+  pomodoroLongBreakInterval: 4,     // Long break every 4th pomodoro
 }
 
 /**

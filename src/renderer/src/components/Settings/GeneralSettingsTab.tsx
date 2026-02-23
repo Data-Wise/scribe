@@ -1,18 +1,20 @@
-import { useState } from 'react'
-import { User, Terminal, Globe, Database, Trash2, RotateCcw, Home } from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { User, Terminal, Globe, Database, Trash2, RotateCcw, Home, Timer } from 'lucide-react'
 import { isBrowser, isTauri } from '../../lib/platform'
 import { loadPreferences, updatePreferences } from '../../lib/preferences'
 import { getDefaultTerminalFolder, setDefaultTerminalFolder } from '../../lib/terminal-utils'
 import { db, seedDemoData } from '../../lib/browser-db'
+import { usePomodoroStore } from '../../store/usePomodoroStore'
 import { PinnedVaultsSettings } from './PinnedVaultsSettings'
 import { SettingsSection } from './SettingsSection'
 
 /**
  * General Settings Tab
- * 
+ *
  * Includes:
  * - Startup settings
  * - ADHD features (streak milestones)
+ * - Focus timer (Pomodoro)
  * - User identity
  * - Pinned vaults configuration
  * - Terminal settings (Tauri only)
@@ -20,6 +22,19 @@ import { SettingsSection } from './SettingsSection'
  */
 export function GeneralSettingsTab() {
   const [terminalFolder, setTerminalFolder] = useState(() => getDefaultTerminalFolder())
+  const [prefs, setPrefs] = useState(() => loadPreferences())
+
+  /** Toggle a boolean preference and sync pomodoro store if needed */
+  const togglePref = useCallback((key: keyof ReturnType<typeof loadPreferences>) => {
+    const updated = { [key]: !prefs[key] }
+    updatePreferences(updated)
+    const newPrefs = loadPreferences()
+    setPrefs(newPrefs)
+    // Keep pomodoro store in sync when any pomodoro pref changes
+    if (key.startsWith('pomodoro')) {
+      usePomodoroStore.getState().syncPreferences()
+    }
+  }, [prefs])
 
   return (
     <div className="space-y-6">
@@ -44,21 +59,85 @@ export function GeneralSettingsTab() {
             <div className="text-xs text-nexus-text-muted">Celebrate at 7, 30, 100, and 365 days. Off by default to avoid anxiety.</div>
           </div>
           <button
-            onClick={() => {
-              const prefs = loadPreferences()
-              updatePreferences({ streakDisplayOptIn: !prefs.streakDisplayOptIn })
-            }}
+            onClick={() => togglePref('streakDisplayOptIn')}
             className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
-              loadPreferences().streakDisplayOptIn ? 'bg-nexus-accent' : 'bg-white/10'
+              prefs.streakDisplayOptIn ? 'bg-nexus-accent' : 'bg-white/10'
             }`}
           >
             <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
-              loadPreferences().streakDisplayOptIn ? 'right-1' : 'left-1'
+              prefs.streakDisplayOptIn ? 'right-1' : 'left-1'
             }`} />
           </button>
         </div>
       </SettingsSection>
       
+      {/* Focus Timer (Pomodoro) */}
+      <SettingsSection
+        title="Focus Timer"
+        icon={<Timer className="w-3 h-3" style={{ color: 'var(--nexus-accent)' }} />}
+      >
+        <div className="space-y-3">
+          {/* Enable/Disable toggle */}
+          <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
+            <div>
+              <div className="text-sm font-medium text-nexus-text-primary">Show pomodoro timer</div>
+              <div className="text-xs text-nexus-text-muted">Display a focus timer in the status bar. Click to start.</div>
+            </div>
+            <button
+              onClick={() => togglePref('pomodoroEnabled')}
+              className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
+                prefs.pomodoroEnabled ? 'bg-nexus-accent' : 'bg-white/10'
+              }`}
+              data-testid="pomodoro-enabled-toggle"
+            >
+              <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
+                prefs.pomodoroEnabled ? 'right-1' : 'left-1'
+              }`} />
+            </button>
+          </div>
+
+          {/* Duration settings */}
+          <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-4">
+            <FocusTimerInput
+              label="Work duration"
+              description="Minutes per focus session"
+              prefKey="pomodoroWorkMinutes"
+              min={1}
+              max={120}
+              prefs={prefs}
+              onChanged={setPrefs}
+            />
+            <FocusTimerInput
+              label="Short break"
+              description="Minutes between work sessions"
+              prefKey="pomodoroShortBreakMinutes"
+              min={1}
+              max={30}
+              prefs={prefs}
+              onChanged={setPrefs}
+            />
+            <FocusTimerInput
+              label="Long break"
+              description="Minutes after every Nth session"
+              prefKey="pomodoroLongBreakMinutes"
+              min={1}
+              max={60}
+              prefs={prefs}
+              onChanged={setPrefs}
+            />
+            <FocusTimerInput
+              label="Long break interval"
+              description="Take a long break every N pomodoros"
+              prefKey="pomodoroLongBreakInterval"
+              min={2}
+              max={10}
+              prefs={prefs}
+              onChanged={setPrefs}
+            />
+          </div>
+        </div>
+      </SettingsSection>
+
       {/* Identity */}
       <SettingsSection title="Identity">
         <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 flex items-center gap-4">
@@ -171,6 +250,54 @@ export function GeneralSettingsTab() {
           </div>
         </SettingsSection>
       )}
+    </div>
+  )
+}
+
+type PomodoroPrefKey = 'pomodoroWorkMinutes' | 'pomodoroShortBreakMinutes' | 'pomodoroLongBreakMinutes' | 'pomodoroLongBreakInterval'
+
+/** Number input for Focus Timer settings — syncs pomodoro store on change */
+function FocusTimerInput({
+  label,
+  description,
+  prefKey,
+  min,
+  max,
+  prefs,
+  onChanged,
+}: {
+  label: string
+  description: string
+  prefKey: PomodoroPrefKey
+  min: number
+  max: number
+  prefs: ReturnType<typeof loadPreferences>
+  onChanged: (prefs: ReturnType<typeof loadPreferences>) => void
+}) {
+  const value = prefs[prefKey]
+
+  return (
+    <div className="flex items-center justify-between">
+      <div>
+        <div className="text-sm text-nexus-text-primary">{label}</div>
+        <div className="text-xs text-nexus-text-muted">{description}</div>
+      </div>
+      <input
+        type="number"
+        value={value}
+        min={min}
+        max={max}
+        onChange={(e) => {
+          const num = parseInt(e.target.value, 10)
+          if (!isNaN(num) && num >= min && num <= max) {
+            updatePreferences({ [prefKey]: num })
+            onChanged(loadPreferences())
+            usePomodoroStore.getState().syncPreferences()
+          }
+        }}
+        className="w-16 bg-nexus-bg-primary border border-white/10 rounded-md px-2 py-1 text-sm text-nexus-text-primary text-center focus:outline-none focus:border-nexus-accent/50"
+        data-testid={`pomodoro-${prefKey}`}
+      />
     </div>
   )
 }

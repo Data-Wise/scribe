@@ -676,7 +676,20 @@ export const initializeBrowserApi = async (): Promise<void> => {
   await reindexAllNotes()
 }
 
-// Auto-initialize on import (browser mode only, skip in tests)
-if (typeof import.meta.env?.VITEST === 'undefined') {
-  initializeBrowserApi().catch(console.error)
+// Singleton ready promise — deduplicates init and lets callers await readiness
+let readyPromise: Promise<void> | null = null
+
+/**
+ * Returns a promise that resolves when the browser DB is fully initialized.
+ * Safe to call multiple times — only runs init once.
+ * Skipped in test environment (VITEST).
+ */
+export function browserReady(): Promise<void> {
+  if (typeof import.meta.env?.VITEST !== 'undefined') {
+    return Promise.resolve()
+  }
+  if (!readyPromise) {
+    readyPromise = initializeBrowserApi()
+  }
+  return readyPromise
 }

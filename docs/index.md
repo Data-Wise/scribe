@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.18.0-blue)
+![Version](https://img.shields.io/badge/version-1.19.0-blue)
 ![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-2190%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-2255%20passing-brightgreen)
 
 ---
 
@@ -91,11 +91,17 @@ cd scribe && npm install && npm run dev
 
     Full PTY shell with smart project-aware working directory
 
+-   :material-timer-outline:{ .lg .middle } **Pomodoro Focus Timer**
+
+    ---
+
+    25-minute work sessions with auto-save, break reminders, and session tracking in the status bar
+
 -   :material-cog:{ .lg .middle } **Modular Architecture**
 
     ---
 
-    Clean component extraction, 2163 tests passing, 0 TypeScript errors in production (v1.16.2)
+    Clean component extraction, 2,255 tests passing, 0 TypeScript errors in production
 
 </div>
 
@@ -117,6 +123,7 @@ cd scribe && npm install && npm run dev
 | **Daily Notes** | Auto-created with templates |
 | **AI** | Claude + Gemini CLI (no API keys) |
 | **Terminal** | Embedded PTY with project-aware CWD |
+| **Pomodoro Timer** | 25-min focus sessions, auto-save, break toasts |
 | **Export** | LaTeX, PDF, Word, Quarto (planned) |
 
 ---
@@ -148,6 +155,7 @@ cd scribe && npm install && npm run dev
 | **Settings** | ⌘, |
 | **Command Palette** | ⌘K |
 | **New Note** | ⌘N |
+| **New Project** | ⌘⇧N |
 | **Daily Note** | ⌘D |
 | **Focus Mode** | ⌘⇧F |
 | **Toggle Preview** | ⌘E |

@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.18.0-blue)]()
+[![Version](https://img.shields.io/badge/version-1.19.0-blue)]()
 [![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-2190%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-2255%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -240,7 +240,7 @@ scribe/
 
 ## Test Coverage
 
-**2133 tests passing** across test files:
+**2,255 tests passing** across test files:
 
 | Test File | Tests |
 |-----------|-------|

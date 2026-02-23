@@ -280,7 +280,7 @@ export function IconBar({
       <button
         className="icon-btn add-project-icon"
         onClick={onCreateProject}
-        title="New project (⌘⇧P)"
+        title="New project (⌘⇧N)"
       >
         <Plus size={16} />
       </button>

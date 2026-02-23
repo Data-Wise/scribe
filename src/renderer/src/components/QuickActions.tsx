@@ -62,7 +62,7 @@ export function QuickActions({ onDailyNote, onNewNote, onQuickCapture, onNewProj
         </span>
         <div className="text-left">
           <div className="font-medium text-nexus-text-primary">New Project</div>
-          <div className="text-xs text-nexus-text-muted">⌘⇧P</div>
+          <div className="text-xs text-nexus-text-muted">⌘⇧N</div>
         </div>
       </button>
     </div>

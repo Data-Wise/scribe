@@ -32,6 +32,12 @@
 
     Organize with `#hashtags`. Hierarchical support (`#research/stats`).
 
+-   :material-timer-outline:{ .lg .middle } **Pomodoro Timer**
+
+    ---
+
+    25-minute focus sessions with break reminders. Auto-saves your work.
+
 </div>
 
 ---
@@ -61,6 +67,27 @@ Press `⌘E` to cycle between modes.
 ### Word Count
 
 Always visible in the status bar. No clicks required.
+
+### Pomodoro Focus Timer
+
+!!! tip "ADHD-Friendly Time Boxing"
+    Work in focused 25-minute bursts with automatic break reminders.
+
+A minimal timer lives in the status bar, between Word Count and Quick Chat:
+
+| Action | How |
+|--------|-----|
+| **Start/Pause** | Click the timer |
+| **Reset** | Right-click the timer |
+| **View progress** | Session count shows (e.g., 2/4) |
+
+**What happens automatically:**
+
+- **Work complete** → Note auto-saves + "Time for a break! ☕" toast
+- **Break complete** → "Break's over — ready to write?" toast
+- **Midnight** → Session count resets
+
+Configure durations in **Settings → General → Focus Timer**.
 
 ---
 
@@ -143,6 +170,7 @@ Configure in Settings → Writing → Daily Note Template.
 
 | Category | Contents |
 |----------|----------|
+| **General** | Focus Timer (Pomodoro), auto-save, startup behavior |
 | **Editor** | Font, spacing, line height, ligatures, focus mode |
 | **Themes** | Visual theme gallery (8 themes with previews) |
 | **AI & Workflow** | Quick Actions, chat history, @ references |
