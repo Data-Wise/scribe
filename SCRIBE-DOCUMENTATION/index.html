@@ -1,0 +1,4765 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ADHD-friendly distraction-free writer with projects, academic features, and CLI-based AI">
+      
+      
+        <meta name="author" content="Data-Wise">
+      
+      
+        <link rel="canonical" href="https://data-wise.github.io/scribe/SCRIBE-DOCUMENTATION/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Scribe — Comprehensive Technical Documentation - Scribe</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#scribe-comprehensive-technical-documentation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Scribe" class="md-header__button md-logo" aria-label="Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Scribe
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Scribe — Comprehensive Technical Documentation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to high contrast"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to high contrast" for="__palette_3" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to auto mode"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to auto mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20c-2.21 0-4.21-.9-5.66-2.34L17.66 6.34A8.01 8.01 0 0 1 20 12a8 8 0 0 1-8 8M6 8h2V6h1.5v2h2v1.5h-2v2H8v-2H6M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 14h5v-1.5h-5z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Data-Wise/scribe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Data-Wise/scribe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user/QUICKSTART/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user/GETTING-STARTED/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../installation/install/" class="md-tabs__link">
+          
+  
+  
+  Installation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../guide/features/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../tutorials/" class="md-tabs__link">
+          
+  
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/REFCARD-SETTINGS/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/architecture/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../planning/INDEX/" class="md-tabs__link">
+          
+  
+  
+  Planning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../archive/completed/MISSION-CONTROL-WALKTHROUGH/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Scribe" class="md-nav__button md-logo" aria-label="Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Scribe
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Data-Wise/scribe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Data-Wise/scribe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/QUICKSTART/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/GETTING-STARTED/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RELEASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/themes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Themes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/editor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/chat-persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/shortcuts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard Shortcuts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings Enhancement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/terminal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terminal Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/projects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/daily-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Daily Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/mission-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mission Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/command-palette/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Palette
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/backlinks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backlinks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/browser-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Browser Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/REFCARD-SETTINGS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/REFCARD-QUICK-ACTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DUAL-MODE-ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual-Mode Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPONENTS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TAURI-BROWSER-FEATURE-REVIEW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri/Browser Feature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TAURI-WEBDRIVER-RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tauri WebDriver Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/PROJECT-DEFINITION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Definition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/TESTS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/sprints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../planning/INDEX/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/completed/MISSION-CONTROL-WALKTHROUGH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mission Control Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-makes-scribe-different" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Makes Scribe Different
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technology-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technology Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#at-a-glance-core-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a Glance — Core Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Getting Started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Launch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-features-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Features Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Features Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Palette
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#focus-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Focus Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-streaks-and-word-count-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Streaks and Word Count Goals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#academic-citations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic Citations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-keyboard-shortcuts-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Keyboard Shortcuts Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Keyboard Shortcuts Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#global-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sidebar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sidebar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tabs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#editor-view-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editor View Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smart-icons-project-quick-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smart Icons (Project Quick-Switch)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-editor-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Editor Modes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Editor Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#source-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#live-preview-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Live Preview Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-project-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Project Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Project Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pinned-vaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pinned Vaults
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sidebar-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Sidebar System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Sidebar System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#icon-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Icon Bar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expanded-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expanded Panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-sidebar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Right Sidebar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sidebar-state-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sidebar State Persistence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-pomodoro-timer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Pomodoro Timer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Pomodoro Timer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-the-timer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enabling the Timer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-bar-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Bar Display
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-save-on-work-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Save on Work Complete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zustand-store-usepomodorostore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zustand Store: usePomodoroStore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ai-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. AI Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. AI Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Chat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gemini-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gemini Chat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-themes-and-appearance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Themes and Appearance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Themes and Appearance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Themes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Themes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-theme-time-based-switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Theme (Time-Based Switching)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appearance-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appearance Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-settings-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Settings Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Settings Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#writing-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#editor-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editor Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui-style-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Style Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sidebar-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sidebar Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#icon-bar-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Icon Bar Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pomodoro-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pomodoro Preferences
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#component-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zustand-stores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zustand Stores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-layer-factory-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Layer (Factory Pattern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-shortcut-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcut Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. API Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. API Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#links-wiki-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Links (Wiki Links)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#academic-citations_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic Citations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-development-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Development Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Development Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dev-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vitest-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vitest Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-a-new-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing a New Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-preference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Preference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-keyboard-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Keyboard Shortcut
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-style-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Style Conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-stats-v119-pomodoro-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Stats (v1.19 Pomodoro Release)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A — Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-changelog-highlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B — Changelog Highlights
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="scribe-comprehensive-technical-documentation">Scribe — Comprehensive Technical Documentation</h1>
+<p><strong>Version:</strong> 1.19 (Pomodoro release)
+<strong>Last Updated:</strong> 2026-02-23
+<strong>Branch:</strong> feature/pomodoro</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-overview">Overview</a></li>
+<li><a href="#2-getting-started">Getting Started</a></li>
+<li><a href="#3-features-guide">Features Guide</a></li>
+<li><a href="#4-keyboard-shortcuts-reference">Keyboard Shortcuts Reference</a></li>
+<li><a href="#5-editor-modes">Editor Modes</a></li>
+<li><a href="#6-project-management">Project Management</a></li>
+<li><a href="#7-sidebar-system">Sidebar System</a></li>
+<li><a href="#8-pomodoro-timer">Pomodoro Timer</a></li>
+<li><a href="#9-ai-integration">AI Integration</a></li>
+<li><a href="#10-themes-and-appearance">Themes and Appearance</a></li>
+<li><a href="#11-settings-reference">Settings Reference</a></li>
+<li><a href="#12-architecture-overview">Architecture Overview</a></li>
+<li><a href="#13-api-reference">API Reference</a></li>
+<li><a href="#14-development-guide">Development Guide</a></li>
+</ol>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<p>Scribe is a desktop knowledge management and writing application built for researchers, academics, and focused writers. It combines a markdown note editor with project organization, a knowledge graph, AI assistants, academic citation management, and — as of v1.19 — a built-in Pomodoro timer.</p>
+<h3 id="what-makes-scribe-different">What Makes Scribe Different</h3>
+<p>Scribe is intentionally opinionated. Rather than being a general-purpose note tool, it is designed around the workflows of people doing sustained intellectual work: literature reviews, R package development, course preparation, long-form writing. It ships with five project archetypes (Research, Teaching, R Package, R Dev, Generic) that encode those workflows directly into the UI.</p>
+<p>The design philosophy is ADHD-friendly: information is surfaced when needed, not buried in menus. The icon-centric sidebar (introduced in v1.16) keeps the primary workspace uncluttered while making every major function reachable within one click or one keyboard shortcut.</p>
+<h3 id="technology-stack">Technology Stack</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop shell</td>
+<td>Tauri 2.10 (Rust)</td>
+</tr>
+<tr>
+<td>UI framework</td>
+<td>React 18 + TypeScript 5.5</td>
+</tr>
+<tr>
+<td>Build toolchain</td>
+<td>Vite 5</td>
+</tr>
+<tr>
+<td>State management</td>
+<td>Zustand 4.5</td>
+</tr>
+<tr>
+<td>Source editor</td>
+<td>CodeMirror</td>
+</tr>
+<tr>
+<td>Terminal emulator</td>
+<td>xterm.js</td>
+</tr>
+<tr>
+<td>Knowledge graph</td>
+<td>D3.js</td>
+</tr>
+<tr>
+<td>Math rendering</td>
+<td>KaTeX</td>
+</tr>
+<tr>
+<td>Database (desktop)</td>
+<td>SQLite via Tauri</td>
+</tr>
+<tr>
+<td>Database (browser)</td>
+<td>IndexedDB</td>
+</tr>
+<tr>
+<td>Styling</td>
+<td>Tailwind CSS</td>
+</tr>
+</tbody>
+</table>
+<p>Tauri provides the native shell: window management, native menus, file system access, and IPC between the Rust backend and the React frontend. The entire UI is React; Tauri handles only the things a browser cannot.</p>
+<h3 id="at-a-glance-core-capabilities">At a Glance — Core Capabilities</h3>
+<ul>
+<li><strong>Notes</strong> — Create, edit, tag, link, and search markdown notes</li>
+<li><strong>Wiki Links</strong> — <code>[[note name]]</code> syntax with automatic backlink tracking</li>
+<li><strong>Projects</strong> — Five typed project archetypes with scoped note collections</li>
+<li><strong>Knowledge Graph</strong> — Interactive D3 visualization of note connections</li>
+<li><strong>Three Editor Modes</strong> — Source (raw markdown), Live Preview (split), Reading (rendered)</li>
+<li><strong>Export</strong> — PDF, DOCX, LaTeX, HTML via Pandoc</li>
+<li><strong>Focus Mode</strong> — Distraction-free full-screen writing</li>
+<li><strong>Quick Capture</strong> — Instant note from anywhere in the app</li>
+<li><strong>Command Palette</strong> — Keyboard-driven command access</li>
+<li><strong>Tabs</strong> — Pin, reorder, close, reopen tabs</li>
+<li><strong>10 Built-in Themes</strong> — Plus custom CSS and time-based auto-switching</li>
+<li><strong>AI Chat</strong> — Claude and Gemini integration</li>
+<li><strong>Terminal</strong> — Embedded xterm.js shell</li>
+<li><strong>Academic Citations</strong> — BibTeX bibliography management</li>
+<li><strong>Writing Streaks</strong> — Daily streak tracking with milestones</li>
+<li><strong>Word Count Goals</strong> — Per-session targets</li>
+<li><strong>Pomodoro Timer</strong> (v1.19) — Status bar timer with configurable work/break cycles</li>
+</ul>
+<hr />
+<h2 id="2-getting-started">2. Getting Started</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS</td>
+<td>13 Ventura or later (primary platform)</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>18 or later</td>
+</tr>
+<tr>
+<td>Rust toolchain</td>
+<td>Latest stable (for development builds)</td>
+</tr>
+<tr>
+<td>Pandoc</td>
+<td>Optional — required for PDF/DOCX/LaTeX export</td>
+</tr>
+</tbody>
+</table>
+<h3 id="installation">Installation</h3>
+<p>Download the latest <code>.dmg</code> from the GitHub releases page and drag Scribe into your Applications folder. On first launch, macOS may prompt you to allow the app from an unidentified developer — open System Settings &gt; Privacy &amp; Security and click "Open Anyway."</p>
+<p>For development builds, see <a href="#14-development-guide">Section 14 — Development Guide</a>.</p>
+<h3 id="first-launch">First Launch</h3>
+<p>On first launch Scribe will:</p>
+<ol>
+<li>Create a default <strong>Research</strong> project automatically.</li>
+<li>Initialize the local SQLite database (on Tauri) or IndexedDB (in browser dev mode).</li>
+<li>Load the default theme (Sepia).</li>
+<li>Show the empty editor with the sidebar in icon-only mode.</li>
+</ol>
+<p><strong>Recommended first steps:</strong></p>
+<ol>
+<li>Press <code>⌘N</code> to create your first note.</li>
+<li>Press <code>⌘,</code> to open Settings and review preferences.</li>
+<li>Press <code>⌘⇧G</code> to see the (empty) knowledge graph — it fills in as you create linked notes.</li>
+<li>If you write in R or have research projects, press <code>⌘⇧N</code> to create a typed project.</li>
+</ol>
+<hr />
+<h2 id="3-features-guide">3. Features Guide</h2>
+<h3 id="notes">Notes</h3>
+<p>Notes are the atomic unit of Scribe. Every note is a markdown document stored in the database with associated metadata (tags, project membership, timestamps, word count).</p>
+<p><strong>Creating notes:</strong>
+- <code>⌘N</code> — new blank note
+- <code>⌘D</code> — today's daily note (creates one if it does not exist)
+- <code>⌘⇧C</code> — Quick Capture modal (title + body, saves immediately)</p>
+<p><strong>Organizing notes:</strong></p>
+<p>Tags are extracted automatically from <code>#hashtag</code> syntax in the note body and are also manageable from the right sidebar Tags panel. Notes can belong to one project at a time; you change a note's project from the Properties panel in the right sidebar.</p>
+<p><strong>Wiki Links:</strong></p>
+<p>Type <code>[[</code> anywhere in a note to start a wiki link. Scribe auto-extracts all <code>[[note name]]</code> references on save and updates the backlink index. Backlinks for the current note appear in the right sidebar Backlinks panel.</p>
+<p><strong>Search:</strong></p>
+<p>Press <code>⌘F</code> to open the search panel. Search uses SQLite full-text search (FTS) on Tauri or a JavaScript FTS implementation in browser mode. Results are ranked by relevance.</p>
+<h3 id="quick-capture">Quick Capture</h3>
+<p><code>⌘⇧C</code> opens a lightweight modal overlay usable from any screen in the app. Type a title, add body text, and press Enter to save. The note is created in the current project and appears in the sidebar immediately.</p>
+<p>This is intentionally minimal — the goal is to capture an idea before it disappears, not to compose a finished note.</p>
+<h3 id="command-palette">Command Palette</h3>
+<p>The Command Palette surfaces frequently-used actions by keyboard. It is filtered by Fuse.js fuzzy search, so you do not need to type exact command names. It includes up to 5 default quick actions plus custom user-defined ones (max 10 total).</p>
+<h3 id="tabs">Tabs</h3>
+<p>Scribe uses a tab bar above the editor. Tabs represent open notes. Behavior:</p>
+<ul>
+<li><strong>Pin a tab</strong> — right-click the tab</li>
+<li><strong>Reorder tabs</strong> — drag and drop</li>
+<li><strong>Close tab</strong> — <code>⌘W</code> or click the X</li>
+<li><strong>Reopen closed tab</strong> — <code>⌘⇧T</code> (restores from a history of up to 10 closed tabs)</li>
+<li><strong>Switch to tab N</strong> — <code>⌘1</code> through <code>⌘9</code></li>
+</ul>
+<p>Tab state (open tabs, order, pinned state) persists to <code>localStorage</code> via <code>useAppViewStore</code>.</p>
+<h3 id="focus-mode">Focus Mode</h3>
+<p><code>⌘⇧F</code> (or View menu) enters Focus Mode: hides both sidebars, maximizes the editor, and removes all UI chrome. Press <code>Escape</code> or <code>⌘⇧F</code> again to exit. Focus Mode state persists across launches.</p>
+<h3 id="knowledge-graph">Knowledge Graph</h3>
+<p><code>⌘⇧G</code> opens the Knowledge Graph — an interactive D3 force-directed graph where nodes are notes and edges are wiki links. You can:</p>
+<ul>
+<li>Click a node to open that note</li>
+<li>Drag nodes to rearrange the layout</li>
+<li>Zoom with scroll/pinch</li>
+<li>Filter by project or tag</li>
+</ul>
+<p>The graph updates in real time as you create or delete links.</p>
+<h3 id="writing-streaks-and-word-count-goals">Writing Streaks and Word Count Goals</h3>
+<p>Scribe tracks a daily writing streak (days with at least some editing activity). Opt-in via Settings &gt; Writing &gt; Streak Display. Milestones can trigger celebration animations (also opt-in).</p>
+<p>Word count goals are set per-session (default 500 words). Progress appears in the status bar. The goal resets at midnight.</p>
+<h3 id="export">Export</h3>
+<p><code>⌘⇧E</code> opens the Export dialog. Scribe uses Pandoc for document conversion. Available formats:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Requires Pandoc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTML</td>
+<td>No</td>
+</tr>
+<tr>
+<td>PDF</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>DOCX</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>LaTeX</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>The app checks for Pandoc availability at startup via <code>api.isPandocAvailable()</code>. If Pandoc is not installed, PDF/DOCX/LaTeX options are disabled with a link to install it.</p>
+<h3 id="academic-citations">Academic Citations</h3>
+<p>Scribe supports BibTeX bibliography files. Set your <code>.bib</code> file path in Settings &gt; Academic. Once configured:</p>
+<ul>
+<li><code>api.getCitations()</code> loads all entries</li>
+<li><code>api.searchCitations(query)</code> filters by author, title, year, or key</li>
+<li>Citations can be inserted into notes in standard Pandoc citation format (<code>[@key]</code>)</li>
+</ul>
+<hr />
+<h2 id="4-keyboard-shortcuts-reference">4. Keyboard Shortcuts Reference</h2>
+<h3 id="global-shortcuts">Global Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘N</code></td>
+<td>New Note</td>
+</tr>
+<tr>
+<td><code>⌘D</code></td>
+<td>Daily Note</td>
+</tr>
+<tr>
+<td><code>⌘⇧N</code></td>
+<td>New Project</td>
+</tr>
+<tr>
+<td><code>⌘⇧C</code></td>
+<td>Quick Capture</td>
+</tr>
+<tr>
+<td><code>⌘F</code></td>
+<td>Search Notes</td>
+</tr>
+<tr>
+<td><code>⌘⇧E</code></td>
+<td>Export</td>
+</tr>
+<tr>
+<td><code>⌘⇧G</code></td>
+<td>Knowledge Graph</td>
+</tr>
+<tr>
+<td><code>⌘⇧F</code></td>
+<td>Focus Mode toggle</td>
+</tr>
+<tr>
+<td><code>⌘,</code></td>
+<td>Settings</td>
+</tr>
+<tr>
+<td><code>⌘?</code> or <code>⌘/</code></td>
+<td>Keyboard Shortcuts help dialog</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sidebar">Sidebar</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘B</code></td>
+<td>Left Sidebar toggle</td>
+</tr>
+<tr>
+<td><code>⌘⇧B</code></td>
+<td>Right Sidebar toggle</td>
+</tr>
+<tr>
+<td><code>⌘⇧[</code></td>
+<td>Collapse All (left sidebar)</td>
+</tr>
+<tr>
+<td><code>⌘⇧]</code></td>
+<td>Right Sidebar toggle (alias)</td>
+</tr>
+<tr>
+<td><code>⌘[</code></td>
+<td>Right sidebar — previous tab</td>
+</tr>
+<tr>
+<td><code>⌘]</code></td>
+<td>Right sidebar — next tab</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tabs_1">Tabs</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘1</code>–<code>⌘9</code></td>
+<td>Switch to tab N</td>
+</tr>
+<tr>
+<td><code>⌘W</code></td>
+<td>Close current tab</td>
+</tr>
+<tr>
+<td><code>⌘⇧T</code></td>
+<td>Reopen last closed tab</td>
+</tr>
+</tbody>
+</table>
+<h3 id="editor-view-modes">Editor View Modes</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘1</code> (View menu)</td>
+<td>Source mode</td>
+</tr>
+<tr>
+<td><code>⌘2</code> (View menu)</td>
+<td>Live Preview mode</td>
+</tr>
+<tr>
+<td><code>⌘3</code> (View menu)</td>
+<td>Reading mode</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tools">Tools</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘⌥T</code></td>
+<td>Terminal tab toggle</td>
+</tr>
+</tbody>
+</table>
+<h3 id="smart-icons-project-quick-switch">Smart Icons (Project Quick-Switch)</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘⇧1</code></td>
+<td>Research project icon</td>
+</tr>
+<tr>
+<td><code>⌘⇧2</code></td>
+<td>Teaching project icon</td>
+</tr>
+<tr>
+<td><code>⌘⇧3</code></td>
+<td>R Packages project icon</td>
+</tr>
+<tr>
+<td><code>⌘⇧4</code></td>
+<td>Dev Tools project icon</td>
+</tr>
+</tbody>
+</table>
+<h3 id="theme-shortcuts">Theme Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘⌥0</code>–<code>⌘⌥9</code></td>
+<td>Switch to theme slot 0–9</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Note: <code>⌘⇧N</code> opens New Project via the native Tauri menu. The pomodoro timer has no keyboard shortcut — use click to start/pause.</p>
+</blockquote>
+<hr />
+<h2 id="5-editor-modes">5. Editor Modes</h2>
+<p>The editor has three distinct rendering modes, switchable from the View menu or via the mode selector in the editor toolbar.</p>
+<h3 id="source-mode">Source Mode</h3>
+<p>Raw markdown editing via CodeMirror. This is the default for users who prefer direct control over markup. CodeMirror provides:</p>
+<ul>
+<li>Syntax highlighting for markdown, fenced code blocks (with language tags), and inline code</li>
+<li>Line numbers</li>
+<li>vim/emacs keybindings (if configured)</li>
+<li>KaTeX rendering for <code>$inline$</code> and <code>$$block$$</code> math expressions (rendered as overlays)</li>
+</ul>
+<p><strong>Best for:</strong> Power users, those who need precise control over formatting, writing documents that will be exported.</p>
+<h3 id="live-preview-mode">Live Preview Mode</h3>
+<p>A split view: source on the left, rendered HTML on the right. Changes in the source panel update the preview in real time. This mode uses <code>ReactMarkdown</code> for rendering with custom renderers for wiki links, tags, and math.</p>
+<p><strong>Best for:</strong> Users who want to see the output while writing, without leaving the editing surface.</p>
+<h3 id="reading-mode">Reading Mode</h3>
+<p>Full rendered view with no editing surface. The note is displayed as final HTML with all markdown, math, and wiki links rendered. Click a wiki link to navigate to that note.</p>
+<p><strong>Best for:</strong> Reviewing a finished note, reading reference material, following wiki link trails.</p>
+<h3 id="switching-modes">Switching Modes</h3>
+<p>Mode is stored in preferences (<code>editorMode</code> key) and persists across launches. The current mode appears in the View menu with a checkmark. Modes apply globally — switching mode changes the view for all open tabs.</p>
+<hr />
+<h2 id="6-project-management">6. Project Management</h2>
+<h3 id="project-types">Project Types</h3>
+<p>Scribe ships with five project archetypes. Each type customizes the sidebar layout, default tags, and available smart icons.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Icon</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Research</td>
+<td>Microscope</td>
+<td>Literature reviews, research notes, paper drafts</td>
+</tr>
+<tr>
+<td>Teaching</td>
+<td>Graduation cap</td>
+<td>Course materials, lecture notes, syllabi</td>
+</tr>
+<tr>
+<td>R Package</td>
+<td>Package box</td>
+<td>R package documentation, vignettes, NEWS</td>
+</tr>
+<tr>
+<td>R Dev</td>
+<td>Code brackets</td>
+<td>R scripts, analysis notebooks, data notes</td>
+</tr>
+<tr>
+<td>Generic</td>
+<td>Folder</td>
+<td>Any other project structure</td>
+</tr>
+</tbody>
+</table>
+<p>The type is cosmetic in terms of data storage — all projects use the same underlying schema — but it determines which smart icon slot is used and what the default sidebar grouping looks like.</p>
+<h3 id="creating-a-project">Creating a Project</h3>
+<p>Press <code>⌘⇧N</code> to open the Create Project modal. You choose:</p>
+<ol>
+<li>Project name</li>
+<li>Project type</li>
+<li>Optional description</li>
+</ol>
+<p>On save, <code>useProjectStore.createProject()</code> calls <code>api.createProject()</code> and the new project is automatically pinned to the sidebar.</p>
+<h3 id="pinned-vaults">Pinned Vaults</h3>
+<p>The sidebar supports up to <strong>5 pinned vaults</strong> (projects). They appear as icons in the icon bar. If you have more than 5 projects, older pins are evicted (LRU). You can manually reorder or unpin from the sidebar context menu.</p>
+<h3 id="switching-projects">Switching Projects</h3>
+<p>Click a project icon in the sidebar to make it the active project. The note list in the expanded sidebar panel updates to show only notes belonging to that project. Smart icon shortcuts (<code>⌘⇧1</code>–<code>⌘⇧4</code>) jump directly to the four typed project slots.</p>
+<h3 id="default-project">Default Project</h3>
+<p>On first launch, Scribe creates a default <strong>Research</strong> project automatically via <code>useProjectStore</code>'s initialization logic. This ensures new notes always have a project to belong to.</p>
+<hr />
+<h2 id="7-sidebar-system">7. Sidebar System</h2>
+<p>The sidebar was redesigned in v1.16 to use an icon-centric architecture that keeps the writing surface as wide as possible by default.</p>
+<h3 id="structure">Structure</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>App
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── MissionSidebar
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── IconBar (48px wide, always visible)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    │   ├── Pinned vault icons (up to 5)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │   ├── Smart icons (4 typed project shortcuts)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    │   └── System icons (Search, Graph, Terminal, Settings)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └── ExpandedIconPanel (collapsible, 2 styles)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ├── Compact view (dense list)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        └── Card view (richer preview)
+</code></pre></div>
+<h3 id="icon-bar">Icon Bar</h3>
+<p>The icon bar is always visible at 48px wide. It contains:</p>
+<ul>
+<li><strong>Pinned vaults</strong> — up to 5 project icons at the top. Click to expand that project's note list.</li>
+<li><strong>Smart icons</strong> — 4 slots for the four typed project archetypes (Research, Teaching, R Package, R Dev). These are fixed positions; the icon changes to reflect whichever project of that type is active.</li>
+<li><strong>System icons</strong> — at the bottom: Search, Knowledge Graph, Terminal, Settings.</li>
+</ul>
+<h3 id="expanded-panel">Expanded Panel</h3>
+<p>Clicking an icon in the icon bar expands the panel to the right of the icon bar. The expanded panel shows the note list for that project (or search results, graph preview, etc. depending on which icon was clicked).</p>
+<p>Two display styles are available from Settings:</p>
+<ul>
+<li><strong>Compact</strong> — high-density list, icon + title + date</li>
+<li><strong>Card</strong> — larger cards with a preview excerpt</li>
+</ul>
+<h3 id="right-sidebar">Right Sidebar</h3>
+<p>The right sidebar (<code>⌘⇧B</code>) contains contextual panels for the active note:</p>
+<table>
+<thead>
+<tr>
+<th>Panel</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Properties</td>
+<td>Note title, project, creation/modified dates</td>
+</tr>
+<tr>
+<td>Backlinks</td>
+<td>Notes that link to the current note</td>
+</tr>
+<tr>
+<td>Tags</td>
+<td>Tags on the current note (add/remove)</td>
+</tr>
+<tr>
+<td>Stats</td>
+<td>Word count, reading time, character count</td>
+</tr>
+<tr>
+<td>Claude</td>
+<td>AI chat panel (context-aware)</td>
+</tr>
+<tr>
+<td>Terminal</td>
+<td>Embedded xterm.js terminal</td>
+</tr>
+</tbody>
+</table>
+<p>Navigate between right sidebar panels with <code>⌘[</code> and <code>⌘]</code>.</p>
+<h3 id="sidebar-state-persistence">Sidebar State Persistence</h3>
+<p>All sidebar state persists via <code>useAppViewStore</code> to <code>localStorage</code>:</p>
+<ul>
+<li><code>expandedIcon</code> — which icon is currently expanded</li>
+<li><code>sidebarWidth</code> — the user-dragged panel width</li>
+<li><code>pinnedVaults</code> — ordered list of up to 5 pinned project IDs</li>
+<li><code>smartIcons</code> — the 4 typed project slot assignments</li>
+</ul>
+<hr />
+<h2 id="8-pomodoro-timer">8. Pomodoro Timer</h2>
+<p>The Pomodoro Timer is new in v1.19. It is a state machine timer embedded in the status bar that implements the classic Pomodoro Technique: 25-minute work sessions separated by short (5 min) and long (15 min) breaks.</p>
+<h3 id="enabling-the-timer">Enabling the Timer</h3>
+<p>Open Settings (<code>⌘,</code>) and navigate to the Pomodoro section. Toggle <strong>Enable Pomodoro Timer</strong> on. The timer icon appears in the status bar at the bottom of the editor.</p>
+<h3 id="status-bar-display">Status Bar Display</h3>
+<p>When enabled, the timer displays in the editor status bar:</p>
+<ul>
+<li><strong>Idle</strong> — shows a tomato icon and "Pomodoro" label</li>
+<li><strong>Work</strong> — shows remaining time in <code>MM:SS</code> format with a red indicator</li>
+<li><strong>Short Break</strong> — shows remaining time with a green indicator</li>
+<li><strong>Long Break</strong> — shows remaining time with a blue indicator</li>
+<li><strong>Paused</strong> — shows the remaining time with a pause icon overlay</li>
+</ul>
+<h3 id="interactions">Interactions</h3>
+<table>
+<thead>
+<tr>
+<th>Interaction</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Click the timer</td>
+<td>Start (if idle) / Pause (if running) / Resume (if paused)</td>
+</tr>
+<tr>
+<td>Right-click the timer</td>
+<td>Reset to idle state</td>
+</tr>
+</tbody>
+</table>
+<h3 id="state-machine">State Machine</h3>
+<p>The Pomodoro timer follows a strict state machine:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>idle
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  → start()
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  → work (25 min default)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      → tick() each second
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      → onComplete fires at 0
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      → if completedToday % longBreakInterval == 0
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>          → long-break (15 min default)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        else
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>          → short-break (5 min default)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>      → break tick() to 0
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      → reset to idle
+</code></pre></div>
+<p>The <code>completedToday</code> counter increments each time a work session completes. It resets to zero when the app restarts (it is not persisted — it is a session counter).</p>
+<p>The <code>longBreakInterval</code> preference (default 4) controls how frequently long breaks occur. After every 4th completed work session, the next break is a long break instead of a short one.</p>
+<h3 id="auto-save-on-work-complete">Auto-Save on Work Complete</h3>
+<p>When a work session completes (<code>onComplete</code> fires), the timer notifies the active note to save. This ensures writing progress is committed before the break begins. The auto-save uses the same code path as the manual save triggered by <code>useNotesStore.updateNote()</code>.</p>
+<h3 id="configuration">Configuration</h3>
+<p>All Pomodoro preferences are stored in <code>localStorage</code> under the <code>scribe-preferences</code> key:</p>
+<table>
+<thead>
+<tr>
+<th>Preference</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pomodoroEnabled</code></td>
+<td><code>true</code></td>
+<td>Show/hide the timer in the status bar</td>
+</tr>
+<tr>
+<td><code>pomodoroWorkMinutes</code></td>
+<td><code>25</code></td>
+<td>Duration of a work session in minutes</td>
+</tr>
+<tr>
+<td><code>pomodoroShortBreakMinutes</code></td>
+<td><code>5</code></td>
+<td>Duration of a short break in minutes</td>
+</tr>
+<tr>
+<td><code>pomodoroLongBreakMinutes</code></td>
+<td><code>15</code></td>
+<td>Duration of a long break in minutes</td>
+</tr>
+<tr>
+<td><code>pomodoroLongBreakInterval</code></td>
+<td><code>4</code></td>
+<td>Work sessions between long breaks</td>
+</tr>
+</tbody>
+</table>
+<p>Changes to these preferences take effect on the next timer start. If the timer is currently running when preferences change, <code>syncPreferences()</code> is called to update the store without resetting the running session.</p>
+<h3 id="zustand-store-usepomodorostore">Zustand Store: usePomodoroStore</h3>
+<p>The timer state lives in <code>src/renderer/src/store/usePomodoroStore.ts</code>.</p>
+<p><strong>State shape:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">PomodoroState</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;idle&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;work&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;short-break&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;long-break&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">secondsRemaining</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">isPaused</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">completedToday</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nx">lastResetDate</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">      </span><span class="c1">// ISO date (YYYY-MM-DD)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nx">workDuration</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">       </span><span class="c1">// seconds, derived from pomodoroWorkMinutes pref</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nx">shortBreakDuration</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="c1">// seconds, derived from pomodoroShortBreakMinutes pref</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nx">longBreakDuration</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">  </span><span class="c1">// seconds, derived from pomodoroLongBreakMinutes pref</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nx">longBreakInterval</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">  </span><span class="c1">// every N pomodoros</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Actions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start()</code></td>
+<td>Transition from idle to work phase</td>
+</tr>
+<tr>
+<td><code>pause()</code></td>
+<td>Toggle isPaused on a running timer</td>
+</tr>
+<tr>
+<td><code>reset()</code></td>
+<td>Return to idle, clear secondsRemaining</td>
+</tr>
+<tr>
+<td><code>tick(onComplete?, onBreakComplete?)</code></td>
+<td>Decrement secondsRemaining by 1; fire onComplete on work→break, onBreakComplete on break→work</td>
+</tr>
+<tr>
+<td><code>syncPreferences()</code></td>
+<td>Re-read preferences and update duration values without resetting phase</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rendering:</strong></p>
+<p><code>PomodoroTimer</code> is a React component rendered in the editor status bar. It subscribes to <code>usePomodoroStore</code> and sets up a <code>setInterval</code> (1000ms) that calls <code>tick()</code> when the timer is running and not paused. The interval is cleared on component unmount and whenever <code>isPaused</code> becomes true.</p>
+<h3 id="settings-ui">Settings UI</h3>
+<p>The Pomodoro settings appear as a dedicated section in <code>Settings &gt; General</code>. They use the same <code>SettingsSection</code> wrapper and toggle pill style as all other settings sections:</p>
+<ul>
+<li>Enable/disable toggle</li>
+<li>Number inputs for each duration (validated: min 1 min, max 60 min for work/break; max 10 for interval)</li>
+</ul>
+<hr />
+<h2 id="9-ai-integration">9. AI Integration</h2>
+<h3 id="claude-chat">Claude Chat</h3>
+<p>Claude is integrated as a chat panel in the right sidebar. The panel is context-aware: it sends the current note's content along with your message, so Claude can answer questions about what you are writing.</p>
+<p>Under the hood, <code>api.runClaude(prompt, context)</code> sends an IPC message to the Tauri backend, which calls the Anthropic API and streams the response back to the UI.</p>
+<p><strong>Use cases:</strong>
+- "Summarize this note"
+- "What sources should I cite for this claim?"
+- "Help me restructure this argument"
+- "Translate this paragraph to formal academic English"</p>
+<h3 id="gemini-chat">Gemini Chat</h3>
+<p>The same right sidebar panel can switch to Gemini via <code>api.runGemini(prompt, context)</code>. The UX is identical to Claude. Gemini is useful as a second opinion or when you prefer its strengths for certain tasks (e.g., code generation).</p>
+<h3 id="quick-actions">Quick Actions</h3>
+<p>Quick Actions are pre-configured prompts that appear in the command palette. The Settings store manages up to 10 quick actions (5 defaults + 5 user-defined). Each action has:</p>
+<ul>
+<li>A label (shown in command palette)</li>
+<li>A prompt template (can include <code>{{note}}</code> to inject current note content)</li>
+<li>A target AI (Claude or Gemini)</li>
+</ul>
+<p>Default quick actions include things like "Summarize note," "Extract key ideas," and "Generate outline."</p>
+<hr />
+<h2 id="10-themes-and-appearance">10. Themes and Appearance</h2>
+<h3 id="built-in-themes">Built-in Themes</h3>
+<p>Scribe ships with 10 built-in themes. Themes are implemented as sets of CSS custom properties applied to <code>:root</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Slot</th>
+<th>Theme Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Sepia (default)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Dark</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Light</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Nord</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Solarized</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Dracula</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Gruvbox</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Catppuccin</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Tokyo Night</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Monokai</td>
+</tr>
+</tbody>
+</table>
+<p>Switch themes via <code>⌘⌥0</code> through <code>⌘⌥9</code> or from the Appearance section in Settings.</p>
+<h3 id="custom-themes">Custom Themes</h3>
+<p>In Settings &gt; Appearance &gt; Custom CSS, you can write CSS that is injected after the base theme. Enable custom CSS with the toggle in that section. The preference keys are <code>customCSS</code> (string) and <code>customCSSEnabled</code> (boolean).</p>
+<p>Custom CSS can override any CSS variable or add new rules. Example to change the note background:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">:</span><span class="nd">root</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nv">--note-background</span><span class="p">:</span><span class="w"> </span><span class="mh">#1a1a2e</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nv">--note-text</span><span class="p">:</span><span class="w"> </span><span class="mh">#e0e0e0</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="auto-theme-time-based-switching">Auto-Theme (Time-Based Switching)</h3>
+<p>Scribe can automatically switch themes based on time of day. Configure two themes (day and night) and the transition times in Settings &gt; Appearance &gt; Auto Theme. The app checks the current time every 60 seconds and switches if needed.</p>
+<p>This uses a <code>setInterval</code> in the theme loader — not a system event — so the switch happens within one minute of the configured time.</p>
+<h3 id="appearance-preferences">Appearance Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Preference</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tabBarStyle</code></td>
+<td>Tab bar style: default, minimal, or pill</td>
+</tr>
+<tr>
+<td><code>borderStyle</code></td>
+<td>Border rendering: sharp, rounded, or none</td>
+</tr>
+<tr>
+<td><code>activeTabStyle</code></td>
+<td>How the active tab is highlighted</td>
+</tr>
+<tr>
+<td><code>iconGlowEffect</code></td>
+<td>Enable glow effect on sidebar icons</td>
+</tr>
+<tr>
+<td><code>iconGlowIntensity</code></td>
+<td>Glow intensity (0–100)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11-settings-reference">11. Settings Reference</h2>
+<p>All preferences are stored in <code>localStorage</code> under the key <code>scribe-preferences</code>. On load, stored preferences are merged with defaults:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">prefs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">DEFAULTS</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;scribe-preferences&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>This merge-on-load pattern ensures new preference keys added in future versions always have a default value even for existing users.</p>
+<h3 id="writing-preferences">Writing Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>defaultWordGoal</code></td>
+<td><code>500</code></td>
+<td>Daily word count goal</td>
+</tr>
+<tr>
+<td><code>focusModeEnabled</code></td>
+<td><code>false</code></td>
+<td>Whether Focus Mode is active</td>
+</tr>
+<tr>
+<td><code>streakDisplayOptIn</code></td>
+<td><code>false</code></td>
+<td>Show writing streak in status bar</td>
+</tr>
+<tr>
+<td><code>celebrateMilestones</code></td>
+<td><code>false</code></td>
+<td>Animate milestone celebrations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="editor-preferences">Editor Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>editorMode</code></td>
+<td><code>'source'</code></td>
+<td>Default editor mode: <code>source</code>, <code>live-preview</code>, or <code>reading</code></td>
+</tr>
+<tr>
+<td><code>customCSS</code></td>
+<td><code>''</code></td>
+<td>Custom CSS string</td>
+</tr>
+<tr>
+<td><code>customCSSEnabled</code></td>
+<td><code>false</code></td>
+<td>Whether custom CSS is injected</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ui-style-preferences">UI Style Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tabBarStyle</code></td>
+<td><code>'default'</code></td>
+<td>Tab bar visual style</td>
+</tr>
+<tr>
+<td><code>borderStyle</code></td>
+<td><code>'rounded'</code></td>
+<td>Border style for panels</td>
+</tr>
+<tr>
+<td><code>activeTabStyle</code></td>
+<td><code>'underline'</code></td>
+<td>Active tab highlight style</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sidebar-preferences">Sidebar Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sidebarTabSize</code></td>
+<td><code>'compact'</code></td>
+<td>Note list density: <code>compact</code> or <code>card</code></td>
+</tr>
+<tr>
+<td><code>sidebarTabOrder</code></td>
+<td><code>[]</code></td>
+<td>Ordered array of visible sidebar tab IDs</td>
+</tr>
+<tr>
+<td><code>sidebarHiddenTabs</code></td>
+<td><code>[]</code></td>
+<td>Array of tab IDs to hide</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-bar-preferences">Icon Bar Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iconGlowEffect</code></td>
+<td><code>false</code></td>
+<td>Glow effect on sidebar icons</td>
+</tr>
+<tr>
+<td><code>iconGlowIntensity</code></td>
+<td><code>50</code></td>
+<td>Glow intensity 0–100</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pomodoro-preferences">Pomodoro Preferences</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pomodoroEnabled</code></td>
+<td><code>true</code></td>
+<td>Show Pomodoro timer in status bar</td>
+</tr>
+<tr>
+<td><code>pomodoroWorkMinutes</code></td>
+<td><code>25</code></td>
+<td>Work session duration (minutes)</td>
+</tr>
+<tr>
+<td><code>pomodoroShortBreakMinutes</code></td>
+<td><code>5</code></td>
+<td>Short break duration (minutes)</td>
+</tr>
+<tr>
+<td><code>pomodoroLongBreakMinutes</code></td>
+<td><code>15</code></td>
+<td>Long break duration (minutes)</td>
+</tr>
+<tr>
+<td><code>pomodoroLongBreakInterval</code></td>
+<td><code>4</code></td>
+<td>Work sessions per long break cycle</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-architecture-overview">12. Architecture Overview</h2>
+<h3 id="component-tree">Component Tree</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>App.tsx
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── KeyboardShortcutHandler (headless — no rendered output)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>├── MissionSidebar
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│   ├── IconBar (48px, always visible)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│   └── ExpandedIconPanel (collapsible)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│       ├── Note list (compact or card view)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│       └── Search results / Graph preview / etc.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>├── EditorTabs (tab bar above editor)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>├── EditorOrchestrator
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│   └── HybridEditor
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│       ├── CodeMirrorEditor (source mode)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│       └── ReactMarkdown renderer (reading / live preview)
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>├── Right Sidebar
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│   ├── PropertiesPanel
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│   ├── BacklinksPanel
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│   ├── TagsPanel
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│   ├── StatsPanel
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│   ├── ClaudePanel
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│   └── TerminalPanel (xterm.js)
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>├── PomodoroTimer (status bar)
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>└── Dialogs (modal overlays)
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    ├── SettingsDialog
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    ├── CreateProjectModal
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    ├── ExportDialog
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    ├── GraphDialog (D3)
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    └── QuickCaptureModal
+</code></pre></div>
+<h3 id="zustand-stores">Zustand Stores</h3>
+<p>Scribe uses five Zustand stores. All stores live in <code>src/renderer/src/store/</code> (note: singular <code>store</code>, not <code>stores</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Store</th>
+<th>File</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>usePomodoroStore</code></td>
+<td><code>usePomodoroStore.ts</code></td>
+<td>Pomodoro timer state machine</td>
+</tr>
+<tr>
+<td><code>useAppViewStore</code></td>
+<td><code>useAppViewStore.ts</code></td>
+<td>Sidebar state, tabs, pinned vaults</td>
+</tr>
+<tr>
+<td><code>useNotesStore</code></td>
+<td><code>useNotesStore.ts</code></td>
+<td>Notes list, selected note, CRUD</td>
+</tr>
+<tr>
+<td><code>useProjectStore</code></td>
+<td><code>useProjectStore.ts</code></td>
+<td>Projects list, current project</td>
+</tr>
+<tr>
+<td><code>useSettingsStore</code></td>
+<td><code>useSettingsStore.ts</code></td>
+<td>App settings, quick actions, categories</td>
+</tr>
+</tbody>
+</table>
+<p>Stores communicate with the database exclusively through the API layer (<code>api.ts</code>). Stores do not call Tauri IPC or IndexedDB directly.</p>
+<h3 id="data-flow">Data Flow</h3>
+<p>The canonical data flow for note editing:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>User types in editor
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  → HybridEditor.onChange(newContent)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  → useNotesStore.updateNote(id, { content: newContent })
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  → api.updateNote(id, data)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  → Tauri IPC: invoke(&#39;update_note&#39;, data)   [or IndexedDB.put() in browser]
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  → SQLite write (Rust handler)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  → Promise resolves
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  → Store state updated
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  → React re-render (subscribing components)
+</code></pre></div>
+<p>The flow is deliberately linear and synchronous from the UI's perspective. There is no optimistic update / rollback logic — the store updates only after the API call resolves.</p>
+<h3 id="api-layer-factory-pattern">API Layer (Factory Pattern)</h3>
+<p><code>src/renderer/src/api.ts</code> exports a single <code>api</code> object constructed by a factory function that detects the runtime environment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createApi</span><span class="p">()</span><span class="w">  </span><span class="c1">// returns TauriApi or BrowserApi</span>
+</code></pre></div>
+<p><code>TauriApi</code> implements each method via <code>invoke(commandName, args)</code> (Tauri IPC to Rust).
+<code>BrowserApi</code> implements each method via IndexedDB operations (for browser-based development without Tauri).</p>
+<p>Both implementations satisfy the same TypeScript interface, so all application code is runtime-agnostic.</p>
+<h3 id="keyboard-shortcut-handling">Keyboard Shortcut Handling</h3>
+<p><code>KeyboardShortcutHandler</code> is a headless React component (renders <code>null</code>) that registers a single <code>keydown</code> listener on <code>document</code> at mount time. It is placed at the top of the component tree (inside <code>App.tsx</code>) so it captures all keyboard events.</p>
+<p>The handler checks <code>event.metaKey</code>, <code>event.shiftKey</code>, <code>event.altKey</code>, and <code>event.key</code> to dispatch actions. Each action calls the appropriate store method or opens the relevant dialog.</p>
+<p><strong>Important:</strong> The native Tauri menu also registers shortcuts (e.g., <code>⌘N</code>, <code>⌘⇧N</code>). When both the native menu and <code>KeyboardShortcutHandler</code> register the same shortcut, the native menu fires first (Tauri intercepts it before the WebView).</p>
+<h3 id="theme-system">Theme System</h3>
+<p>Themes are applied by <code>loadSelectedTheme()</code>, which:</p>
+<ol>
+<li>Reads the selected theme name from preferences</li>
+<li>Loads the theme object (a map of CSS variable names to values)</li>
+<li>Calls <code>applyTheme(themeObject)</code>, which iterates the map and sets each variable on <code>document.documentElement</code> (<code>:root</code>)</li>
+</ol>
+<p>Custom CSS is injected as a <code>&lt;style&gt;</code> tag after theme application. Auto-theme runs on a 60-second interval and calls <code>loadSelectedTheme()</code> when the current time crosses a threshold.</p>
+<hr />
+<h2 id="13-api-reference">13. API Reference</h2>
+<p>The <code>api</code> object is the single interface between the UI and the database. All methods return Promises.</p>
+<h3 id="notes_1">Notes</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>createNote</code></td>
+<td><code>(data: NoteCreateInput) =&gt; Promise&lt;Note&gt;</code></td>
+<td>Create a new note</td>
+</tr>
+<tr>
+<td><code>updateNote</code></td>
+<td><code>(id: string, data: Partial&lt;Note&gt;) =&gt; Promise&lt;Note&gt;</code></td>
+<td>Update note fields</td>
+</tr>
+<tr>
+<td><code>deleteNote</code></td>
+<td><code>(id: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Delete a note permanently</td>
+</tr>
+<tr>
+<td><code>getNote</code></td>
+<td><code>(id: string) =&gt; Promise&lt;Note&gt;</code></td>
+<td>Fetch a single note by ID</td>
+</tr>
+<tr>
+<td><code>listNotes</code></td>
+<td><code>(projectId?: string) =&gt; Promise&lt;Note[]&gt;</code></td>
+<td>List notes, optionally scoped to a project</td>
+</tr>
+<tr>
+<td><code>searchNotes</code></td>
+<td><code>(query: string) =&gt; Promise&lt;Note[]&gt;</code></td>
+<td>Full-text search, returns ranked results</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tags">Tags</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>createTag</code></td>
+<td><code>(name: string) =&gt; Promise&lt;Tag&gt;</code></td>
+<td>Create a tag</td>
+</tr>
+<tr>
+<td><code>getAllTags</code></td>
+<td><code>() =&gt; Promise&lt;Tag[]&gt;</code></td>
+<td>List all tags</td>
+</tr>
+<tr>
+<td><code>addTagToNote</code></td>
+<td><code>(noteId: string, tagId: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Attach tag to note</td>
+</tr>
+<tr>
+<td><code>removeTagFromNote</code></td>
+<td><code>(noteId: string, tagId: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Detach tag from note</td>
+</tr>
+<tr>
+<td><code>getNoteTags</code></td>
+<td><code>(noteId: string) =&gt; Promise&lt;Tag[]&gt;</code></td>
+<td>Get all tags for a note</td>
+</tr>
+<tr>
+<td><code>filterNotesByTags</code></td>
+<td><code>(tagIds: string[]) =&gt; Promise&lt;Note[]&gt;</code></td>
+<td>Filter notes by tag set</td>
+</tr>
+<tr>
+<td><code>updateNoteTags</code></td>
+<td><code>(noteId: string, content: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Auto-extract <code>#tags</code> from content and sync</td>
+</tr>
+</tbody>
+</table>
+<h3 id="links-wiki-links">Links (Wiki Links)</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>updateNoteLinks</code></td>
+<td><code>(noteId: string, content: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Auto-extract <code>[[links]]</code> and sync backlink index</td>
+</tr>
+<tr>
+<td><code>getBacklinks</code></td>
+<td><code>(noteId: string) =&gt; Promise&lt;Note[]&gt;</code></td>
+<td>Notes that link to <code>noteId</code></td>
+</tr>
+<tr>
+<td><code>getOutgoingLinks</code></td>
+<td><code>(noteId: string) =&gt; Promise&lt;Note[]&gt;</code></td>
+<td>Notes that <code>noteId</code> links to</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projects">Projects</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listProjects</code></td>
+<td><code>() =&gt; Promise&lt;Project[]&gt;</code></td>
+<td>List all projects</td>
+</tr>
+<tr>
+<td><code>createProject</code></td>
+<td><code>(data: ProjectCreateInput) =&gt; Promise&lt;Project&gt;</code></td>
+<td>Create a project</td>
+</tr>
+<tr>
+<td><code>updateProject</code></td>
+<td><code>(id: string, data: Partial&lt;Project&gt;) =&gt; Promise&lt;Project&gt;</code></td>
+<td>Update project fields</td>
+</tr>
+<tr>
+<td><code>deleteProject</code></td>
+<td><code>(id: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Delete a project</td>
+</tr>
+<tr>
+<td><code>getProjectNotes</code></td>
+<td><code>(projectId: string) =&gt; Promise&lt;Note[]&gt;</code></td>
+<td>Notes belonging to project</td>
+</tr>
+<tr>
+<td><code>setNoteProject</code></td>
+<td><code>(noteId: string, projectId: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Move note to project</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai">AI</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>runClaude</code></td>
+<td><code>(prompt: string, context?: string) =&gt; Promise&lt;string&gt;</code></td>
+<td>Send prompt to Claude API</td>
+</tr>
+<tr>
+<td><code>runGemini</code></td>
+<td><code>(prompt: string, context?: string) =&gt; Promise&lt;string&gt;</code></td>
+<td>Send prompt to Gemini API</td>
+</tr>
+</tbody>
+</table>
+<h3 id="export_1">Export</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exportDocument</code></td>
+<td><code>(noteId: string, format: ExportFormat) =&gt; Promise&lt;void&gt;</code></td>
+<td>Export note via Pandoc</td>
+</tr>
+<tr>
+<td><code>isPandocAvailable</code></td>
+<td><code>() =&gt; Promise&lt;boolean&gt;</code></td>
+<td>Check if Pandoc is installed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="terminal">Terminal</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spawnShell</code></td>
+<td><code>() =&gt; Promise&lt;string&gt;</code></td>
+<td>Spawn a shell process, returns PTY ID</td>
+</tr>
+<tr>
+<td><code>writeToShell</code></td>
+<td><code>(ptyId: string, data: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Write input to shell</td>
+</tr>
+<tr>
+<td><code>resizeShell</code></td>
+<td><code>(ptyId: string, cols: number, rows: number) =&gt; Promise&lt;void&gt;</code></td>
+<td>Resize terminal</td>
+</tr>
+<tr>
+<td><code>killShell</code></td>
+<td><code>(ptyId: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Kill shell process</td>
+</tr>
+</tbody>
+</table>
+<h3 id="academic-citations_1">Academic Citations</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getCitations</code></td>
+<td><code>() =&gt; Promise&lt;Citation[]&gt;</code></td>
+<td>Load all entries from configured BibTeX file</td>
+</tr>
+<tr>
+<td><code>searchCitations</code></td>
+<td><code>(query: string) =&gt; Promise&lt;Citation[]&gt;</code></td>
+<td>Search citations by author/title/key/year</td>
+</tr>
+<tr>
+<td><code>setBibliographyPath</code></td>
+<td><code>(path: string) =&gt; Promise&lt;void&gt;</code></td>
+<td>Set path to <code>.bib</code> file</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="14-development-guide">14. Development Guide</h2>
+<h3 id="project-structure">Project Structure</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pomodoro/                          (worktree root = project root)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── src/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│   ├── main.ts                    (Tauri main process entry)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│   └── renderer/
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│       └── src/
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│           ├── App.tsx            (React root)
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│           ├── api.ts             (API factory: Tauri/Browser)
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│           ├── store/             (Zustand stores — singular, not &quot;stores&quot;)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│           │   ├── usePomodoroStore.ts
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│           │   ├── useAppViewStore.ts
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>│           │   ├── useNotesStore.ts
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│           │   ├── useProjectStore.ts
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│           │   └── useSettingsStore.ts
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│           ├── components/
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>│           │   ├── App.tsx
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>│           │   ├── KeyboardShortcutHandler.tsx
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>│           │   ├── EditorOrchestrator.tsx
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>│           │   ├── HybridEditor/
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>│           │   │   └── CodeMirrorEditor.tsx
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>│           │   ├── MissionSidebar/
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>│           │   │   ├── IconBar.tsx
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>│           │   │   └── ExpandedIconPanel.tsx
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>│           │   ├── EditorTabs.tsx
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>│           │   ├── PomodoroTimer.tsx
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>│           │   └── Settings/
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>│           │       ├── GeneralSettingsTab.tsx
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>│           │       ├── EditorSettingsTab.tsx
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>│           │       └── SettingsSection.tsx
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>│           └── __tests__/
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>│               ├── setup.ts       (vitest + happy-dom setup)
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>│               └── testUtils.ts   (createMockPreferences and other helpers)
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>├── src-tauri/                     (Rust Tauri backend)
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>│   ├── src/
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>│   │   └── main.rs
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>│   └── tauri.conf.json
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>├── docs/
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>│   └── SCRIBE-DOCUMENTATION.md   (this file)
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>├── package.json
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>├── vite.config.ts
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>└── vitest.config.ts
+</code></pre></div>
+<h3 id="dev-setup">Dev Setup</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Install JS dependencies</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>npm<span class="w"> </span>install
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Run in browser development mode (no Tauri, uses IndexedDB)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Run with Tauri (requires Rust toolchain)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>dev
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Build production bundle</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>build
+</code></pre></div>
+<p>In browser development mode (<code>npm run dev</code>), the <code>createApi()</code> factory detects the absence of Tauri and returns the <code>BrowserApi</code> implementation backed by IndexedDB. All features work except those that require native OS access (terminal, file system export).</p>
+<h3 id="testing">Testing</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run the full test suite</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>npm<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Run with coverage</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>npm<span class="w"> </span>run<span class="w"> </span>test:coverage
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Run a specific test file</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--<span class="w"> </span>src/renderer/src/__tests__/usePomodoroStore.test.ts
+</code></pre></div>
+<p><strong>Test framework:</strong> Vitest + happy-dom + <code>@testing-library/react</code></p>
+<p><strong>Test setup file:</strong> <code>src/renderer/src/__tests__/setup.ts</code></p>
+<p><strong>Test utilities:</strong> <code>src/renderer/src/__tests__/testUtils.ts</code></p>
+<p>The <code>testUtils.ts</code> file exports <code>createMockPreferences()</code>, which returns a complete preferences object with all fields. This is used in tests that need to mock the preferences store. If you add a new preference key, you must also add it to <code>createMockPreferences()</code> or tests that use it will fail with missing field errors.</p>
+<h3 id="vitest-configuration">Vitest Configuration</h3>
+<p>The <code>vitest.config.ts</code> at the project root configures:
+- <code>environment: 'happy-dom'</code> for DOM simulation
+- <code>setupFiles: ['src/renderer/src/__tests__/setup.ts']</code> for global test setup
+- Path aliases mirroring the Vite config (<code>@/</code> → <code>src/renderer/src/</code>)</p>
+<p>If tests require special VM module flags, document them in <code>vitest.config.ts</code>, not as inline comments.</p>
+<h3 id="writing-a-new-store">Writing a New Store</h3>
+<p>Follow the pattern established by the existing stores:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// src/renderer/src/store/useMyFeatureStore.ts</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">create</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;zustand&#39;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">MyFeatureState</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="c1">// state fields</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">}</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">MyFeatureActions</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="c1">// action signatures</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">}</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">useMyFeatureStore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">create</span><span class="o">&lt;</span><span class="nx">MyFeatureState</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nx">MyFeatureActions</span><span class="o">&gt;</span><span class="p">((</span><span class="nx">set</span><span class="p">,</span><span class="w"> </span><span class="nx">get</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="c1">// initial state</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="c1">// action implementations</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="p">}))</span>
+</code></pre></div>
+<p>Stores should not import from other stores directly. If cross-store coordination is needed, call both stores from the component layer.</p>
+<h3 id="adding-a-preference">Adding a Preference</h3>
+<ol>
+<li>Add the key and default value to the <code>DEFAULTS</code> object in the preferences module.</li>
+<li>Add the TypeScript type to the <code>Preferences</code> interface.</li>
+<li>Add the UI control in the appropriate Settings tab (<code>GeneralSettingsTab.tsx</code> or <code>EditorSettingsTab.tsx</code>).</li>
+<li>Add the key to <code>createMockPreferences()</code> in <code>testUtils.ts</code>.</li>
+<li>Use the <code>SettingsSection</code> wrapper and toggle pill (<code>w-10 h-5 rounded-full</code>) styling for consistency.</li>
+</ol>
+<h3 id="adding-a-keyboard-shortcut">Adding a Keyboard Shortcut</h3>
+<ol>
+<li>Add the handler in <code>KeyboardShortcutHandler.tsx</code> inside the <code>keydown</code> listener.</li>
+<li>If the shortcut should also appear in the native Tauri menu, add it to the menu definition in <code>src-tauri/src/main.rs</code>.</li>
+<li>Add it to the keyboard shortcuts table in the Settings help dialog.</li>
+<li>Add it to the Keyboard Shortcuts Reference in this documentation.</li>
+</ol>
+<blockquote>
+<p>Caution: The <code>⌘⇧N</code> slot is used by the native menu for "New Project." Do not register conflicting shortcuts without checking both the JS handler and <code>src-tauri/src/lib.rs</code>.</p>
+</blockquote>
+<h3 id="code-style-conventions">Code Style Conventions</h3>
+<ul>
+<li><strong>Conventional commits:</strong> <code>feat:</code>, <code>fix:</code>, <code>refactor:</code>, <code>docs:</code>, <code>test:</code>, <code>chore:</code></li>
+<li><strong>Settings UI:</strong> Always use <code>SettingsSection</code> wrapper; always use the standard toggle pill classes</li>
+<li><strong>Toast notifications:</strong> Use <code>showGlobalToast(msg, 'success'|'error'|'info')</code> for global toasts; use <code>useToast().showToast()</code> within components</li>
+<li><strong>Props flow:</strong> Pass props down through <code>App.tsx → EditorOrchestrator → HybridEditor → children</code>; do not skip levels</li>
+<li><strong>Store access:</strong> Access stores via hooks in components; do not call store methods from other stores</li>
+</ul>
+<h3 id="implementation-stats-v119-pomodoro-release">Implementation Stats (v1.19 Pomodoro Release)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total tests</td>
+<td>2190</td>
+<td>2252</td>
+</tr>
+<tr>
+<td>New tests</td>
+<td>—</td>
+<td>62 (35 store + 27 component)</td>
+</tr>
+<tr>
+<td>Test files</td>
+<td>—</td>
+<td>73</td>
+</tr>
+<tr>
+<td>New production files</td>
+<td>—</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Modified production files</td>
+<td>—</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Lines of production code added</td>
+<td>—</td>
+<td>209</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-a-glossary">Appendix A — Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Wiki link</strong></td>
+<td>A <code>[[note name]]</code> reference that Scribe auto-resolves to a note and indexes as a bidirectional link</td>
+</tr>
+<tr>
+<td><strong>Backlink</strong></td>
+<td>A link pointing <em>to</em> the current note from another note</td>
+</tr>
+<tr>
+<td><strong>Pinned vault</strong></td>
+<td>A project pinned to the sidebar icon bar for quick access (max 5)</td>
+</tr>
+<tr>
+<td><strong>Smart icon</strong></td>
+<td>A sidebar icon slot pre-assigned to one of the four typed project archetypes</td>
+</tr>
+<tr>
+<td><strong>Phase</strong></td>
+<td>The current Pomodoro timer state: <code>idle</code>, <code>work</code>, <code>short-break</code>, or <code>long-break</code></td>
+</tr>
+<tr>
+<td><strong>FTS</strong></td>
+<td>Full-text search — the SQLite <code>fts5</code> extension (Tauri) or a JS implementation (browser)</td>
+</tr>
+<tr>
+<td><strong>PTY</strong></td>
+<td>Pseudo-terminal — the OS interface used by the embedded xterm.js terminal</td>
+</tr>
+<tr>
+<td><strong>IPC</strong></td>
+<td>Inter-process communication — the message channel between the Tauri Rust backend and the React WebView frontend</td>
+</tr>
+<tr>
+<td><strong>BibTeX</strong></td>
+<td>A reference management file format (<code>.bib</code>) used for academic citations</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix-b-changelog-highlights">Appendix B — Changelog Highlights</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Notable Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.19</td>
+<td>Pomodoro Timer (status bar, state machine, configurable, auto-save); new projects auto-pinned to sidebar</td>
+</tr>
+<tr>
+<td>v1.16</td>
+<td>Icon-centric sidebar redesign; pinned vaults; smart icons</td>
+</tr>
+<tr>
+<td>Earlier</td>
+<td>Knowledge graph (D3), AI integration (Claude + Gemini), terminal (xterm.js), academic citations (BibTeX)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>This document is the authoritative technical reference for Scribe. For questions not covered here, see the source code in <code>/Users/dt/.git-worktrees/scribe/pomodoro/src/renderer/src/</code>.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Data-Wise" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/theme-toggle.js"></script>
+      
+    
+  </body>
+</html>
