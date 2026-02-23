@@ -57,6 +57,7 @@ import {
 } from '../lib/themes'
 import { api } from '../lib/api'
 import { useAppViewStore } from '../store/useAppViewStore'
+import { usePreferences } from '../hooks/usePreferences'
 import { GeneralSettingsTab } from './Settings/GeneralSettingsTab'
 import { EditorSettingsTab } from './Settings/EditorSettingsTab'
 
@@ -94,6 +95,7 @@ export function SettingsModal({
   onThemeShortcutsChange,
 }: SettingsModalProps) {
   const sidebarWidth = useAppViewStore((s) => s.sidebarWidth)
+  const { prefs: cachedPrefs } = usePreferences()
   const [activeTab, setActiveTab] = useState<SettingsTab>('general')
   const [showCustomCreator, setShowCustomCreator] = useState(false)
   const [customThemeName, setCustomThemeName] = useState('')
@@ -1206,17 +1208,17 @@ export function SettingsModal({
                           updatePreferences({ customCSSEnabled: !prefs.customCSSEnabled })
                         }}
                         className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
-                          loadPreferences().customCSSEnabled ? 'bg-nexus-accent' : 'bg-white/10'
+                          cachedPrefs.customCSSEnabled ? 'bg-nexus-accent' : 'bg-white/10'
                         }`}
                       >
                         <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
-                          loadPreferences().customCSSEnabled ? 'right-1' : 'left-1'
+                          cachedPrefs.customCSSEnabled ? 'right-1' : 'left-1'
                         }`} />
                       </button>
                     </div>
                     <div>
                       <textarea
-                        value={loadPreferences().customCSS}
+                        value={cachedPrefs.customCSS}
                         onChange={(e) => updatePreferences({ customCSS: e.target.value })}
                         placeholder={`/* Custom CSS for Scribe editor */
 .editor-content {

@@ -1,4 +1,5 @@
 import { Pin, PinOff, X, XCircle, ArrowRight, Copy } from 'lucide-react'
+import { SHORTCUTS } from '../../lib/shortcuts'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { EditorTab, MISSION_CONTROL_TAB_ID, useAppViewStore } from '../../store/useAppViewStore'
@@ -156,7 +157,7 @@ export function TabContextMenu({
         >
           <X size={14} />
           <span>Close</span>
-          <span className="shortcut">⌘W</span>
+          <span className="shortcut">{SHORTCUTS.closeTab.label}</span>
         </button>
 
         {/* Close Others */}

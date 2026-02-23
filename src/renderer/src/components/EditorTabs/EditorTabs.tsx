@@ -1,8 +1,10 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Home, X, Pin, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
+import { SHORTCUTS } from '../../lib/shortcuts'
 import { useAppViewStore, EditorTab, MISSION_CONTROL_TAB_ID } from '../../store/useAppViewStore'
 import { useSettingsStore } from '../../store/useSettingsStore'
-import { loadPreferences, TabBarStyle, BorderStyle, ActiveTabStyle } from '../../lib/preferences'
+import { TabBarStyle, BorderStyle, ActiveTabStyle } from '../../lib/preferences'
+import { usePreferences } from '../../hooks/usePreferences'
 import { TabContextMenu } from './TabContextMenu'
 import './EditorTabs.css'
 
@@ -46,7 +48,8 @@ export function EditorTabs({
   const activeTabStyleFromSettings = (settings['appearance.activeTabStyle'] || 'accent-bar') as ActiveTabStyle
 
   // For border style, still use preferences as it's not in Settings store yet
-  const borderStyleFromPrefs = loadPreferences().borderStyle
+  const { prefs } = usePreferences()
+  const borderStyleFromPrefs = prefs.borderStyle
 
   // Use props if provided (for preview), otherwise use settings store
   const tabBarStyle = tabBarStyleProp ?? tabBarStyleFromSettings
@@ -388,7 +391,7 @@ function TabButton({
         <button
           className="tab-close"
           onClick={onClose}
-          title="Close tab (⌘W)"
+          title={`Close tab (${SHORTCUTS.closeTab.label})`}
           data-testid="tab-close"
         >
           <X size={12} />

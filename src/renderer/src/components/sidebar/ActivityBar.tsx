@@ -1,5 +1,6 @@
 import { Search, Calendar, Settings, Clock } from 'lucide-react'
 import type { SidebarMode } from '../../types'
+import { SHORTCUTS } from '../../lib/shortcuts'
 
 interface ActivityBarProps {
   onSearch: () => void
@@ -30,7 +31,7 @@ export function ActivityBar({
       <button
         className={`activity-bar-btn ${activeItem === 'search' ? 'active' : ''}`}
         onClick={onSearch}
-        title="Search (⌘K)"
+        title={`Search (${SHORTCUTS.commandPalette.label})`}
         data-testid="activity-bar-search"
         aria-label="Search"
       >
@@ -41,7 +42,7 @@ export function ActivityBar({
       <button
         className={`activity-bar-btn ${activeItem === 'recent' ? 'active' : ''}`}
         onClick={onRecent}
-        title="Recent Notes (⌘R)"
+        title={`Recent Notes (${SHORTCUTS.recentNotes.label})`}
         data-testid="activity-bar-recent"
         aria-label="Recent Notes"
       >
@@ -52,7 +53,7 @@ export function ActivityBar({
       <button
         className={`activity-bar-btn ${activeItem === 'daily' ? 'active' : ''}`}
         onClick={onDaily}
-        title="Daily Note (⌘D)"
+        title={`Daily Note (${SHORTCUTS.dailyNote.label})`}
         data-testid="activity-bar-daily"
         aria-label="Daily Note"
       >
@@ -63,7 +64,7 @@ export function ActivityBar({
       <button
         className={`activity-bar-btn ${activeItem === 'settings' ? 'active' : ''}`}
         onClick={onSettings}
-        title="Settings (⌘,)"
+        title={`Settings (${SHORTCUTS.settings.label})`}
         data-testid="activity-bar-settings"
         aria-label="Settings"
       >

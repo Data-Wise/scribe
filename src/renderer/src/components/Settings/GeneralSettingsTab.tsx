@@ -1,12 +1,14 @@
 import { useState, useCallback } from 'react'
 import { User, Terminal, Globe, Database, Trash2, RotateCcw, Home, Timer } from 'lucide-react'
 import { isBrowser, isTauri } from '../../lib/platform'
-import { loadPreferences, updatePreferences } from '../../lib/preferences'
 import { getDefaultTerminalFolder, setDefaultTerminalFolder } from '../../lib/terminal-utils'
 import { db, seedDemoData } from '../../lib/browser-db'
 import { usePomodoroStore } from '../../store/usePomodoroStore'
+import { loadPreferences, updatePreferences } from '../../lib/preferences'
+import { usePreferences } from '../../hooks/usePreferences'
 import { PinnedVaultsSettings } from './PinnedVaultsSettings'
 import { SettingsSection } from './SettingsSection'
+import { SettingsToggle } from './SettingsToggle'
 
 /**
  * General Settings Tab
@@ -22,53 +24,37 @@ import { SettingsSection } from './SettingsSection'
  */
 export function GeneralSettingsTab() {
   const [terminalFolder, setTerminalFolder] = useState(() => getDefaultTerminalFolder())
-  const [prefs, setPrefs] = useState(() => loadPreferences())
+  const { prefs, togglePref: baseTogglePref } = usePreferences()
 
   /** Toggle a boolean preference and sync pomodoro store if needed */
   const togglePref = useCallback((key: keyof ReturnType<typeof loadPreferences>) => {
-    const updated = { [key]: !prefs[key] }
-    updatePreferences(updated)
-    const newPrefs = loadPreferences()
-    setPrefs(newPrefs)
-    // Keep pomodoro store in sync when any pomodoro pref changes
-    if (key.startsWith('pomodoro')) {
+    baseTogglePref(key)
+    if (String(key).startsWith('pomodoro')) {
       usePomodoroStore.getState().syncPreferences()
     }
-  }, [prefs])
+  }, [baseTogglePref])
 
   return (
     <div className="space-y-6">
       {/* Startup Settings */}
       <SettingsSection title="Startup">
-        <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-          <div>
-            <div className="text-sm font-medium text-nexus-text-primary">Open last page on startup</div>
-            <div className="text-xs text-nexus-text-muted">Return to exactly where you left off.</div>
-          </div>
-          <div className="w-10 h-5 bg-nexus-accent rounded-full relative cursor-pointer">
-            <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full" />
-          </div>
-        </div>
+        <SettingsToggle
+          label="Open last page on startup"
+          description="Return to exactly where you left off."
+          checked={true}
+          onChange={() => {}}
+        />
       </SettingsSection>
 
       {/* ADHD Features */}
       <SettingsSection title="ADHD Features">
-        <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-          <div>
-            <div className="text-sm font-medium text-nexus-text-primary">Show writing streak milestones</div>
-            <div className="text-xs text-nexus-text-muted">Celebrate at 7, 30, 100, and 365 days. Off by default to avoid anxiety.</div>
-          </div>
-          <button
-            onClick={() => togglePref('streakDisplayOptIn')}
-            className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
-              prefs.streakDisplayOptIn ? 'bg-nexus-accent' : 'bg-white/10'
-            }`}
-          >
-            <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
-              prefs.streakDisplayOptIn ? 'right-1' : 'left-1'
-            }`} />
-          </button>
-        </div>
+        <SettingsToggle
+          label="Show writing streak milestones"
+          description="Celebrate at 7, 30, 100, and 365 days. Off by default to avoid anxiety."
+          checked={prefs.streakDisplayOptIn}
+          onChange={() => togglePref('streakDisplayOptIn')}
+          testId="streak-toggle"
+        />
       </SettingsSection>
       
       {/* Focus Timer (Pomodoro) */}
@@ -105,7 +91,7 @@ export function GeneralSettingsTab() {
               min={1}
               max={120}
               prefs={prefs}
-              onChanged={setPrefs}
+              onChanged={() => {}}
             />
             <FocusTimerInput
               label="Short break"
@@ -114,7 +100,7 @@ export function GeneralSettingsTab() {
               min={1}
               max={30}
               prefs={prefs}
-              onChanged={setPrefs}
+              onChanged={() => {}}
             />
             <FocusTimerInput
               label="Long break"
@@ -123,7 +109,7 @@ export function GeneralSettingsTab() {
               min={1}
               max={60}
               prefs={prefs}
-              onChanged={setPrefs}
+              onChanged={() => {}}
             />
             <FocusTimerInput
               label="Long break interval"
@@ -132,7 +118,7 @@ export function GeneralSettingsTab() {
               min={2}
               max={10}
               prefs={prefs}
-              onChanged={setPrefs}
+              onChanged={() => {}}
             />
           </div>
         </div>

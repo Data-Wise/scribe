@@ -32,6 +32,7 @@ import {
 import { api } from '../../lib/api'
 import { isTauri } from '../../lib/platform'
 import { SettingsSection } from './SettingsSection'
+import { SettingsToggle } from './SettingsToggle'
 
 interface EditorSettingsTabProps {
   fontSettings: FontSettings
@@ -252,25 +253,19 @@ export function EditorSettingsTab({ fontSettings, onFontSettingsChange }: Editor
       {/* Writing Experience */}
       <SettingsSection title="Writing Experience">
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-            <div>
-              <div className="text-sm font-medium text-nexus-text-primary">Readable line length</div>
-              <div className="text-xs text-nexus-text-muted">Limit maximum line width for focus.</div>
-            </div>
-            <div className="w-10 h-5 bg-nexus-accent rounded-full relative cursor-pointer">
-              <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full" />
-            </div>
-          </div>
-          
-          <div className="flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5">
-            <div>
-              <div className="text-sm font-medium text-nexus-text-primary">Spellcheck</div>
-              <div className="text-xs text-nexus-text-muted">Enable browser-native spellchecking.</div>
-            </div>
-            <div className="w-10 h-5 bg-white/10 rounded-full relative cursor-pointer">
-              <div className="absolute left-1 top-1 w-3 h-3 bg-nexus-text-muted rounded-full" />
-            </div>
-          </div>
+          <SettingsToggle
+            label="Readable line length"
+            description="Limit maximum line width for focus."
+            checked={true}
+            onChange={() => {}}
+          />
+
+          <SettingsToggle
+            label="Spellcheck"
+            description="Enable browser-native spellchecking."
+            checked={false}
+            onChange={() => {}}
+          />
         </div>
       </SettingsSection>
 
