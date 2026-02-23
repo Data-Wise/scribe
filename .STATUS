@@ -29,6 +29,7 @@ tags:
 ### In Progress
 
 1. **Pomodoro Timer** (WIP) — Status bar countdown timer with auto-save, break nudges, Cmd+Shift+P shortcut. Branch: `feature/pomodoro`. Spec: `docs/specs/SPEC-pomodoro-2026-02-23.md`. 4 increments planned.
+2. **Settings Infrastructure Improvements** (WIP) — Extract reusable SettingsToggle, shortcut registry, usePreferences hook, pre-commit ORCHESTRATE guard. Branch: `feature/settings-improvements`. Spec: `docs/specs/SPEC-settings-improvements-2026-02-23.md`. ~3.5h total.
 
 ### Next Up
 
@@ -42,6 +43,7 @@ tags:
 | Database modularization (`database.rs` 1,935 lines) | 3h | P1 | Backlog |
 | Quarto Sprint 34 (render integration, `:::` callouts, project cross-refs) | 10-12h | P2 | `SPEC-v115-quarto-enhancements-2026-01-07.md` |
 | Child Project Identification Phase 2 (status grouping, hover preview, animations) | 9h | P2 | `.STATUS` history |
+| `usePreferencesStore` Zustand store wrapping localStorage with cross-tab sync | 4h | P2 | Future (after `feature/settings-improvements`) |
 | v2.0 LaTeX Editor Mode (full Overleaf-like editing) | 7 weeks | P3 | `docs/planning/PLAN-v2-latex-editor.md` |
 
 ---
@@ -118,6 +120,7 @@ tags:
 | Spec | Status | Target |
 |------|--------|--------|
 | Pomodoro Timer | In Progress | v1.19.0 |
+| Settings Improvements | In Progress | v1.19.0 |
 | Three-Tab Sidebar | Design Approved | v1.17.0 |
 | Quarto Enhancements | Partially Implemented | v1.15+ |
 | LaTeX Editor | Proposal | v2.0 |
