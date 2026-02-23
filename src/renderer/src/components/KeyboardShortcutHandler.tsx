@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { isTauri } from '../lib/platform'
+import { usePomodoroStore } from '../store/usePomodoroStore'
 import { updatePreferences, EditorMode, SidebarTabId } from '../lib/preferences'
 import { getThemeForShortcut, Theme, ThemeShortcut } from '../lib/themes'
 import type { Note, SmartIconId } from '../types'
@@ -195,8 +196,19 @@ export function KeyboardShortcutHandler({
         onQuickCaptureOpen()
       }
 
-      // New Project (⌘⇧P)
+      // Pomodoro toggle (⌘⇧P)
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'P') {
+        e.preventDefault()
+        const { status, isPaused, start, pause } = usePomodoroStore.getState()
+        if (status === 'idle' || isPaused) {
+          start()
+        } else {
+          pause()
+        }
+      }
+
+      // New Project (⌘⇧N)
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'N') {
         e.preventDefault()
         onCreateProjectOpen()
       }
