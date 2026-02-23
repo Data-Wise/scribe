@@ -49,7 +49,7 @@ tags:
 
 ## Recently Completed
 
-### Pomodoro Focus Timer (2026-02-23) — PR #45 merged to dev
+### v1.19.0 (2026-02-23) — Pomodoro Focus Timer (Released)
 
 - Pomodoro timer in editor status bar (start/pause click, reset right-click)
 - Zustand store with symmetric callbacks: `tick(onComplete, onBreakComplete)`
@@ -127,8 +127,8 @@ tags:
 
 | Spec | Status | Target |
 |------|--------|--------|
-| Pomodoro Timer | Implemented (PR #45) | v1.19.0 |
-| Settings Improvements | In Progress | v1.19.0 |
+| Pomodoro Timer | Released | v1.19.0 |
+| Settings Improvements | In Progress | v1.20.0 |
 | Three-Tab Sidebar | Design Approved | v1.17.0 |
 | Quarto Enhancements | Partially Implemented | v1.15+ |
 | LaTeX Editor | Proposal | v2.0 |

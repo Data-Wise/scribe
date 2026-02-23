@@ -167,12 +167,13 @@ scribe/
 │   └── renderer/src/              # React frontend
 │       ├── components/
 │       │   ├── MissionControl/    # Mission Control HUD sidebar
-│       │   ├── Settings/          # Modular settings components [NEW]
+│       │   ├── Settings/          # Modular settings components
 │       │   │   ├── GeneralSettingsTab.tsx
 │       │   │   ├── EditorSettingsTab.tsx
 │       │   │   └── SettingsSection.tsx
-│       │   ├── EditorOrchestrator.tsx # Editor rendering logic [NEW]
-│       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts [NEW]
+│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar [v1.19.0]
+│       │   ├── EditorOrchestrator.tsx # Editor rendering logic
+│       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts
 │       │   ├── Editor/            # BlockNote editor
 │       │   └── ...
 │       ├── lib/                   # Core utilities
@@ -182,6 +183,8 @@ scribe/
 │       │   ├── browser-db.ts      # Dexie.js schema + seed data
 │       │   └── browser-dialogs.ts # Browser dialog fallbacks
 │       ├── store/                 # Zustand state
+│       │   ├── useAppViewStore.ts # Sidebar + UI state
+│       │   └── usePomodoroStore.ts # Pomodoro timer state [v1.19.0]
 │       └── types/                 # TypeScript types
 ```
 
@@ -244,7 +247,6 @@ scribe help --all      # Full reference
 
 **Released:** v1.19.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
-**Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
 **Tests:** 2,255 passing (73 files)
 
 ### Latest Work: Pomodoro Focus Timer (PR #45)
@@ -549,17 +551,18 @@ toggleIcon: (type, id) => {
 
 ## ✅ Feature Tiers
 
-### Tier 1-3: Build Now (v1.0)
+### Tier 1-3: Core (Shipped)
 
-- BlockNote editor
+- BlockNote editor → HybridEditor++ (CodeMirror 6)
 - Focus mode
 - Global hotkey
 - Claude/Gemini CLI
+- Pomodoro focus timer (v1.19.0)
 - Zotero citations
 - LaTeX/PDF/Word export
 - Quarto render
 
-### Tier 4: Build Now (v1.0)
+### Tier 4: Core (Shipped)
 
 - Project system (5 types)
 - Daily notes
