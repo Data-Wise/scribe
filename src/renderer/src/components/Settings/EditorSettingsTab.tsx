@@ -31,6 +31,7 @@ import {
 } from '../../lib/dailyNoteTemplates'
 import { api } from '../../lib/api'
 import { isTauri } from '../../lib/platform'
+import { usePreferences } from '../../hooks/usePreferences'
 import { SettingsSection } from './SettingsSection'
 import { SettingsToggle } from './SettingsToggle'
 
@@ -50,6 +51,7 @@ interface EditorSettingsTabProps {
  * - Right sidebar settings
  */
 export function EditorSettingsTab({ fontSettings, onFontSettingsChange }: EditorSettingsTabProps) {
+  const { prefs, togglePref } = usePreferences()
   // Daily note templates state
   const [templates] = useState<DailyNoteTemplate[]>(() => loadTemplates())
   const [selectedTemplateId, setSelectedTemplate] = useState<string>(() => getSelectedTemplateId())
@@ -256,15 +258,15 @@ export function EditorSettingsTab({ fontSettings, onFontSettingsChange }: Editor
           <SettingsToggle
             label="Readable line length"
             description="Limit maximum line width for focus."
-            checked={true}
-            onChange={() => {}}
+            checked={prefs.readableLineLength}
+            onChange={() => togglePref('readableLineLength')}
           />
 
           <SettingsToggle
             label="Spellcheck"
             description="Enable browser-native spellchecking."
-            checked={false}
-            onChange={() => {}}
+            checked={prefs.spellcheck}
+            onChange={() => togglePref('spellcheck')}
           />
         </div>
       </SettingsSection>

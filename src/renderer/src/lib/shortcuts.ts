@@ -1,12 +1,12 @@
 /**
- * SHORTCUTS - Single source of truth for keyboard shortcut labels
+ * SHORTCUTS - Single source of truth for keyboard shortcuts
  *
- * This registry provides display labels for all keyboard shortcuts.
- * When a shortcut keybinding changes, update it here and all UI labels
- * update automatically.
+ * This registry defines key bindings, modifier keys, and display labels
+ * for all keyboard shortcuts. When a shortcut keybinding changes, update
+ * it here and both UI labels and event matching update automatically.
  *
- * NOTE: This file is for LABELS ONLY. The actual keyboard event handlers
- * remain in KeyboardShortcutHandler.tsx and individual components.
+ * Use matchesShortcut(event, shortcutId) in handlers to check if a
+ * KeyboardEvent matches a registered shortcut.
  */
 export const SHORTCUTS = {
   // Notes
@@ -18,7 +18,7 @@ export const SHORTCUTS = {
   commandPalette: { key: 'k', mod: 'cmd', label: '⌘K' },
 
   // Projects
-  newProject: { key: 'p', mod: 'cmd+shift', label: '⌘⇧P' },
+  newProject: { key: 'N', mod: 'cmd+shift', label: '⌘⇧N' },
 
   // View
   focusMode: { key: 'F', mod: 'cmd+shift', label: '⌘⇧F' },
@@ -66,3 +66,26 @@ export const SHORTCUTS = {
 } as const
 
 export type ShortcutId = keyof typeof SHORTCUTS
+
+/**
+ * Check if a KeyboardEvent matches a shortcut definition.
+ * Handles cmd (metaKey/ctrlKey), shift, alt modifiers.
+ */
+export function matchesShortcut(e: KeyboardEvent, shortcutId: ShortcutId): boolean {
+  const shortcut = SHORTCUTS[shortcutId]
+  const mods = shortcut.mod.split('+')
+
+  const needsCmd = mods.includes('cmd')
+  const needsShift = mods.includes('shift')
+  const needsAlt = mods.includes('alt')
+
+  const hasCmd = e.metaKey || e.ctrlKey
+  const hasShift = e.shiftKey
+  const hasAlt = e.altKey
+
+  if (needsCmd !== hasCmd) return false
+  if (needsShift !== hasShift) return false
+  if (needsAlt !== hasAlt) return false
+
+  return e.key === shortcut.key
+}

@@ -41,8 +41,8 @@ export function GeneralSettingsTab() {
         <SettingsToggle
           label="Open last page on startup"
           description="Return to exactly where you left off."
-          checked={true}
-          onChange={() => {}}
+          checked={prefs.openLastPage}
+          onChange={() => togglePref('openLastPage')}
         />
       </SettingsSection>
 
