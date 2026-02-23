@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] — Pomodoro Focus Timer
+
+### Added
+
+- **Pomodoro timer in status bar** — Minimal focus timer between WritingProgress and Quick Chat. Click to start/pause, right-click to reset. Shows countdown (MM:SS) and today's session count (e.g., 2/4).
+- **Zustand store** (`usePomodoroStore`) — Timer state survives note switches. Tracks status (idle/work/short-break/long-break), seconds remaining, completed today count with midnight reset.
+- **Auto-save on pomodoro completion** — Calls `api.updateNote()` when a work session finishes, ensuring a save point every 25 minutes.
+- **Gentle break toasts** — "Time for a break! ☕ Note saved." on work completion, "Break's over — ready to write?" on break completion. Auto-dismiss, no modals.
+- **Focus Timer settings** — Settings > General > "Focus Timer" section with enable toggle and configurable durations (work, short break, long break, interval).
+- **`⌘⇧P` keyboard shortcut** — Toggle pomodoro start/pause. (New Project reassigned to `⌘⇧N`.)
+- **5 new preferences** — `pomodoroEnabled`, `pomodoroWorkMinutes`, `pomodoroShortBreakMinutes`, `pomodoroLongBreakMinutes`, `pomodoroLongBreakInterval`
+- **Accessibility** — `aria-live="polite"` for screen readers, descriptive `aria-label` per state, `prefers-reduced-motion` support (no blink animation)
+- **62 new tests** — 35 store tests + 27 component tests covering all states, transitions, callbacks, and edge cases
+
+---
+
 ## [v1.18.0] - 2026-02-22 — Sidebar Vault Fix
 
 ### Fixed
