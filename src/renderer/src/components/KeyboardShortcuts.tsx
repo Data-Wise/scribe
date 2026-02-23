@@ -13,9 +13,14 @@ const SHORTCUT_CATEGORIES = {
     { keys: SHORTCUTS.newNote.label, description: 'New Note' },
     { keys: SHORTCUTS.dailyNote.label, description: 'Daily Note' },
     { keys: SHORTCUTS.save.label, description: 'Save (auto-saves)' },
+    { keys: SHORTCUTS.quickCapture.label, description: 'Quick Capture' },
+    { keys: SHORTCUTS.newProject.label, description: 'New Project' },
   ],
   'Editor': [
-    { keys: SHORTCUTS.cycleMode.label, description: 'Toggle Preview' },
+    { keys: SHORTCUTS.sourceMode.label, description: 'Source Mode' },
+    { keys: SHORTCUTS.livePreview.label, description: 'Live Preview' },
+    { keys: SHORTCUTS.readingMode.label, description: 'Reading Mode' },
+    { keys: SHORTCUTS.cycleMode.label, description: 'Cycle Editor Mode' },
     { keys: SHORTCUTS.focusMode.label, description: 'Focus Mode' },
     { keys: SHORTCUTS.exportNote.label, description: 'Export Note' },
     { keys: SHORTCUTS.graphView.label, description: 'Graph View' },
@@ -23,10 +28,17 @@ const SHORTCUT_CATEGORIES = {
   'Navigation': [
     { keys: SHORTCUTS.commandPalette.label, description: 'Command Palette' },
     { keys: SHORTCUTS.search.label, description: 'Search Notes' },
+    { keys: SHORTCUTS.recentNotes.label, description: 'Recent Notes' },
+    { keys: SHORTCUTS.dashboard.label, description: 'Dashboard' },
     { keys: SHORTCUTS.rightSidebar.label, description: 'Toggle Right Sidebar' },
     { keys: SHORTCUTS.nextTab.label, description: 'Next Right Panel' },
     { keys: SHORTCUTS.prevTab.label, description: 'Previous Right Panel' },
-    { keys: SHORTCUTS.keyboardShortcuts.label, description: 'Keyboard Shortcuts' },
+    { keys: SHORTCUTS.terminal.label, description: 'Toggle Terminal' },
+  ],
+  'Tabs': [
+    { keys: SHORTCUTS.closeTab.label, description: 'Close Tab' },
+    { keys: SHORTCUTS.reopenTab.label, description: 'Reopen Closed Tab' },
+    { keys: '⌘1-9', description: 'Switch to Tab N' },
   ],
   'Writing': [
     { keys: '[[', description: 'Wiki Link' },
@@ -36,8 +48,9 @@ const SHORTCUT_CATEGORIES = {
     { keys: '$$', description: 'Math (block)' },
   ],
   'General': [
-    { keys: 'ESC', description: 'Exit Focus/Preview/Modal' },
     { keys: SHORTCUTS.settings.label, description: 'Settings' },
+    { keys: SHORTCUTS.keyboardShortcuts.label, description: 'Keyboard Shortcuts' },
+    { keys: 'ESC', description: 'Exit Focus/Preview/Modal' },
   ],
 }
 
