@@ -240,10 +240,10 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.17.0 - Quarto Autocomplete ✅
+## 🎯 Current Status: v1.18.0 - Sidebar Vault Fix ✅
 
-**Released:** v1.17.0 (stable)
-**Dev Branch:** v1.17.0 (Quarto autocomplete, test fixes, doc sync)
+**Released:** v1.18.0 (stable)
+**Dev Branch:** v1.18.0 (Sidebar vault expansion fix, browser-mode init fix)
 **Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
 **Tests:** 2,190 passing (71 files)
 
