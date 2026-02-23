@@ -245,9 +245,16 @@ scribe help --all      # Full reference
 **Released:** v1.17.0 (stable)
 **Dev Branch:** v1.17.0 (Quarto autocomplete, test fixes, doc sync)
 **Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
-**Tests:** 2,187 passing (71 files)
+**Tests:** 2,190 passing (71 files)
 
-### Latest Work: Quarto Autocomplete Stabilization (PR #40)
+### Latest Work: Sidebar Vault Expansion Fix (PR #43)
+
+- ✅ Vault dots filter to correct single project (not all projects)
+- ✅ Breadcrumb syncs via `onSelectProject` on vault toggle
+- ✅ Fixed DexieError2 race condition in browser-mode init
+- ✅ 3 new vault toggle wiring tests
+
+### Previous: Quarto Autocomplete Stabilization (PR #40)
 
 - ✅ Context-aware LaTeX completions (math-only scoping, suppressed in code blocks)
 - ✅ Code chunk completions (R, Python, Julia, OJS, Mermaid, Graphviz)
