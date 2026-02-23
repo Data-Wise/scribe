@@ -29,7 +29,7 @@ A minimal pomodoro timer embedded in Scribe's editor status bar (bottom bar of `
 - [ ] Show today's completed pomodoro count (e.g., "3/4") — resets at midnight
 - [ ] Timer state survives tab switches (changing notes doesn't reset timer)
 - [ ] Respects `prefers-reduced-motion` (no animations if set)
-- [ ] Keyboard shortcut: `Cmd+Shift+P` to toggle start/pause
+- [x] ~~Keyboard shortcut~~ — Removed: `⌘⇧P` conflicted with New Project. Use click to start/pause.
 
 ---
 
@@ -171,7 +171,7 @@ When work timer hits 0:
 ### Accessibility
 
 - Timer updates via `aria-live="polite"` region (screen readers announce changes)
-- Keyboard: `Cmd+Shift+P` to toggle start/pause
+- Keyboard shortcut removed (conflicted with `⌘⇧N` New Project) — use click to start/pause
 - `prefers-reduced-motion`: no blinking on pause state, just dim text
 - All colors inherit from theme variables (works in all themes)
 
@@ -191,7 +191,7 @@ When work timer hits 0:
 - [ ] Auto-save fires on pomodoro completion
 - [ ] Midnight reset works (change system clock or mock date)
 - [ ] Settings changes apply immediately to running timer
-- [ ] `Cmd+Shift+P` shortcut works, doesn't conflict
+- [x] ~~`Cmd+Shift+P` shortcut~~ — Removed (conflicted with New Project)
 - [ ] Screen reader announces timer state changes
 - [ ] Tests cover: start/pause/reset, tick countdown, completion, midnight reset
 

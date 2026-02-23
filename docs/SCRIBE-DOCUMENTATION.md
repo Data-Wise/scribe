@@ -207,7 +207,7 @@ Scribe supports BibTeX bibliography files. Set your `.bib` file path in Settings
 |----------|--------|
 | `⌘N` | New Note |
 | `⌘D` | Daily Note |
-| `⌘⇧P` | New Project |
+| `⌘⇧N` | New Project |
 | `⌘⇧C` | Quick Capture |
 | `⌘F` | Search Notes |
 | `⌘⇧E` | Export |
@@ -264,7 +264,7 @@ Scribe supports BibTeX bibliography files. Set your `.bib` file path in Settings
 |----------|--------|
 | `⌘⌥0`–`⌘⌥9` | Switch to theme slot 0–9 |
 
-> Note: `⌘⇧P` opens New Project via the native Tauri menu. The pomodoro timer has no keyboard shortcut — use click to start/pause.
+> Note: `⌘⇧N` opens New Project via the native Tauri menu. The pomodoro timer has no keyboard shortcut — use click to start/pause.
 
 ---
 
@@ -319,7 +319,7 @@ The type is cosmetic in terms of data storage — all projects use the same unde
 
 ### Creating a Project
 
-Press `⌘⇧P` to open the Create Project modal. You choose:
+Press `⌘⇧N` to open the Create Project modal. You choose:
 
 1. Project name
 2. Project type
@@ -475,14 +475,15 @@ The timer state lives in `src/renderer/src/store/usePomodoroStore.ts`.
 
 ```typescript
 interface PomodoroState {
-  phase: 'idle' | 'work' | 'short-break' | 'long-break'
+  status: 'idle' | 'work' | 'short-break' | 'long-break'
   secondsRemaining: number
   isPaused: boolean
   completedToday: number
-  workSeconds: number        // derived from pomodoroWorkMinutes pref
-  shortBreakSeconds: number  // derived from pomodoroShortBreakMinutes pref
-  longBreakSeconds: number   // derived from pomodoroLongBreakMinutes pref
-  longBreakInterval: number  // derived from pomodoroLongBreakInterval pref
+  lastResetDate: string      // ISO date (YYYY-MM-DD)
+  workDuration: number       // seconds, derived from pomodoroWorkMinutes pref
+  shortBreakDuration: number // seconds, derived from pomodoroShortBreakMinutes pref
+  longBreakDuration: number  // seconds, derived from pomodoroLongBreakMinutes pref
+  longBreakInterval: number  // every N pomodoros
 }
 ```
 
@@ -493,7 +494,7 @@ interface PomodoroState {
 | `start()` | Transition from idle to work phase |
 | `pause()` | Toggle isPaused on a running timer |
 | `reset()` | Return to idle, clear secondsRemaining |
-| `tick(onComplete?)` | Decrement secondsRemaining by 1; fire onComplete and advance phase at 0 |
+| `tick(onComplete?, onBreakComplete?)` | Decrement secondsRemaining by 1; fire onComplete on work→break, onBreakComplete on break→work |
 | `syncPreferences()` | Re-read preferences and update duration values without resetting phase |
 
 **Rendering:**
@@ -737,7 +738,7 @@ Both implementations satisfy the same TypeScript interface, so all application c
 
 The handler checks `event.metaKey`, `event.shiftKey`, `event.altKey`, and `event.key` to dispatch actions. Each action calls the appropriate store method or opens the relevant dialog.
 
-**Important:** The native Tauri menu also registers shortcuts (e.g., `⌘N`, `⌘⇧P`). When both the native menu and `KeyboardShortcutHandler` register the same shortcut, the native menu fires first (Tauri intercepts it before the WebView).
+**Important:** The native Tauri menu also registers shortcuts (e.g., `⌘N`, `⌘⇧N`). When both the native menu and `KeyboardShortcutHandler` register the same shortcut, the native menu fires first (Tauri intercepts it before the WebView).
 
 ### Theme System
 
@@ -964,7 +965,7 @@ Stores should not import from other stores directly. If cross-store coordination
 3. Add it to the keyboard shortcuts table in the Settings help dialog.
 4. Add it to the Keyboard Shortcuts Reference in this documentation.
 
-> Caution: The `⌘⇧P` slot is used by the native menu for "New Project." Do not register conflicting shortcuts without checking both the JS handler and `src-tauri/src/lib.rs`.
+> Caution: The `⌘⇧N` slot is used by the native menu for "New Project." Do not register conflicting shortcuts without checking both the JS handler and `src-tauri/src/lib.rs`.
 
 ### Code Style Conventions
 
