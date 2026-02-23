@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import { Sparkles, Terminal } from 'lucide-react'
+import { PomodoroTimer } from './PomodoroTimer'
 import { SimpleWikiLinkAutocomplete } from './SimpleWikiLinkAutocomplete'
 import { SimpleTagAutocomplete } from './SimpleTagAutocomplete'
 import { CitationAutocomplete } from './CitationAutocomplete'
@@ -30,6 +31,9 @@ interface HybridEditorProps {
   streak?: number // Current writing streak in days
   sessionStartTime?: number // Timestamp when session started (for timer display)
   onToggleTerminal?: () => void // Callback to toggle Terminal panel
+  pomodoroEnabled?: boolean // Show pomodoro timer in status bar
+  onPomodoroComplete?: () => void // Called when a pomodoro work session completes
+  onBreakComplete?: () => void // Called when a break session completes
 }
 
 /**
@@ -56,7 +60,10 @@ export function HybridEditor({
   sessionStartWords = 0,
   streak = 0,
   sessionStartTime,
-  onToggleTerminal
+  onToggleTerminal,
+  pomodoroEnabled = true,
+  onPomodoroComplete,
+  onBreakComplete
 }: HybridEditorProps) {
   const [mode, setMode] = useState<EditorMode>(editorMode)
 
@@ -440,6 +447,11 @@ export function HybridEditor({
           streak={streak}
           sessionStartTime={sessionStartTime}
         />
+
+        {/* Pomodoro timer */}
+        {pomodoroEnabled && (
+          <PomodoroTimer onPomodoroComplete={onPomodoroComplete} onBreakComplete={onBreakComplete} />
+        )}
 
         {/* Quick Chat AI button */}
         <div className="relative">

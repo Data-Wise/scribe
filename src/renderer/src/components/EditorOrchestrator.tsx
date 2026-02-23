@@ -43,6 +43,11 @@ interface EditorOrchestratorProps {
   
   // Ref for auto-collapse
   editorContainerRef?: React.RefObject<HTMLDivElement>
+
+  // Pomodoro
+  pomodoroEnabled?: boolean
+  onPomodoroComplete?: () => void
+  onBreakComplete?: () => void
 }
 
 /**
@@ -84,6 +89,9 @@ export function EditorOrchestrator({
   onOpenDaily,
   onOpenCommandPalette,
   editorContainerRef,
+  pomodoroEnabled,
+  onPomodoroComplete,
+  onBreakComplete,
 }: EditorOrchestratorProps) {
   // Unused but kept for future extension
   void _notes
@@ -119,6 +127,9 @@ export function EditorOrchestrator({
                 streak={streakInfo.streak}
                 sessionStartTime={sessionStartTime || undefined}
                 onToggleTerminal={onToggleTerminal}
+                pomodoroEnabled={pomodoroEnabled}
+                onPomodoroComplete={onPomodoroComplete}
+                onBreakComplete={onBreakComplete}
               />
             </div>
           </div>
@@ -171,12 +182,15 @@ export function EditorOrchestrator({
             streak={streakInfo.streak}
             sessionStartTime={sessionStartTime || undefined}
             onToggleTerminal={onToggleTerminal}
+            pomodoroEnabled={pomodoroEnabled}
+            onPomodoroComplete={onPomodoroComplete}
+            onBreakComplete={onBreakComplete}
           />
         </div>
       </div>
     )
   }
-  
+
   // No note selected: return null (parent will render MissionControl)
   return null
 }

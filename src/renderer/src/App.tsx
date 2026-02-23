@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
 import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
@@ -513,6 +513,26 @@ function App() {
     }
     setLastWordCount(wordCount)
   }, [wordCount])
+
+  // Pomodoro auto-save + toast when a work session completes
+  const handlePomodoroComplete = useCallback(async () => {
+    if (selectedNote) {
+      try {
+        await api.updateNote(selectedNote.id, { content: selectedNote.content })
+        showToast('Time for a break! ☕ Note saved.', 'success')
+      } catch (e) {
+        console.warn('Pomodoro auto-save failed:', e)
+        showToast('Time for a break! ☕', 'success')
+      }
+    } else {
+      showToast('Time for a break! ☕', 'success')
+    }
+  }, [selectedNote, showToast])
+
+  // Toast when a break session completes
+  const handleBreakComplete = useCallback(() => {
+    showToast("Break's over — ready to write?", 'info')
+  }, [showToast])
 
   const handleContentChange = async (content: string) => {
     if (selectedNote) {
@@ -1040,6 +1060,9 @@ function App() {
           onCreateNote={handleCreateNote}
           onOpenDaily={handleDailyNote}
           onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+          pomodoroEnabled={preferences.pomodoroEnabled}
+          onPomodoroComplete={handlePomodoroComplete}
+          onBreakComplete={handleBreakComplete}
         />
 
         {/* Modals */}
@@ -1348,6 +1371,9 @@ function App() {
               onOpenDaily={handleDailyNote}
               onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
               editorContainerRef={editorContainerRef}
+              pomodoroEnabled={preferences.pomodoroEnabled}
+              onPomodoroComplete={handlePomodoroComplete}
+              onBreakComplete={handleBreakComplete}
             />
           ) : (
             <MissionControl
