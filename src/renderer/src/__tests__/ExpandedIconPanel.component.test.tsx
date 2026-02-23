@@ -290,9 +290,9 @@ describe('ExpandedIconPanel Component', () => {
     })
 
     /**
-     * EIP-09: Shows all projects for pinned project vault
+     * EIP-09: Shows only the expanded project for pinned project vault
      */
-    it('shows all projects when expanded icon is pinned project', () => {
+    it('shows only the expanded project when expanded icon is pinned project', () => {
       const props = createDefaultProps()
       const projects: Project[] = [
         {
@@ -320,9 +320,9 @@ describe('ExpandedIconPanel Component', () => {
 
       render(<ExpandedIconPanel {...props} projects={projects} expandedIcon={expandedIcon} />)
 
-      // CompactListView should receive all projects (not filtered)
+      // CompactListView should receive only the expanded project (filtered)
       const compactView = screen.getByTestId('compact-list-view')
-      expect(compactView).toHaveAttribute('data-project-count', '2')
+      expect(compactView).toHaveAttribute('data-project-count', '1')
     })
 
     /**

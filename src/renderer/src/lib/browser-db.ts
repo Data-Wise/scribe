@@ -260,11 +260,6 @@ export const seedDemoData = async (): Promise<boolean> => {
   return true
 }
 
-// Auto-run seed on module import (after db is initialized)
-// Skip in test environment to avoid interfering with test data
-if (!import.meta.env.VITEST) {
-  ;(async () => {
-    await db.initialize()
-    await seedDemoData()
-  })().catch(console.error)
-}
+// NOTE: Auto-initialization removed — browser-api.ts is the single init entry point.
+// This prevents double-init race conditions (DexieError2) when both modules
+// fire concurrent async init chains on import.

@@ -669,6 +669,7 @@ export const reindexAllNotes = async (): Promise<number> => {
  */
 export const initializeBrowserApi = async (): Promise<void> => {
   console.log('[Scribe] Using IndexedDB for persistence')
+  await db.initialize()
   await seedDemoData()
 
   // Reindex existing notes for wiki links and tags
