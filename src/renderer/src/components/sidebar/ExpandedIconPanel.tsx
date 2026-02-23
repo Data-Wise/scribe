@@ -89,11 +89,11 @@ export function ExpandedIconPanel({
           filteredProjects: []
         }
       }
-      // Pinned project: Show all projects with this one selected
+      // Pinned project: Show only this project
       return {
         label: projects.find(p => p.id === expandedIcon.id)?.name || 'Project',
         showInboxNotes: false,
-        filteredProjects: projects
+        filteredProjects: projects.filter(p => p.id === expandedIcon.id)
       }
     }
 

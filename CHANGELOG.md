@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.18.0] - 2026-02-22 — Sidebar Vault Fix
+
+### Fixed
+
+- **Sidebar vault expansion showing wrong notes** (PR #43) - Vault dots now filter to the correct single project instead of passing all projects. Breadcrumb syncs on vault toggle. Fixed DexieError2 race condition in browser-mode initialization.
+- **Broken brainstorm link** in MCP app spec
+
+### Added
+
+- 3 new tests for vault toggle → `onSelectProject` wiring (MissionSidebar)
+
+---
+
 ## [v1.16.3] - 2026-01-26
 
 ### Automated Release Pipeline

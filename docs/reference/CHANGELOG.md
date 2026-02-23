@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.18.0] - 2026-02-22 — Sidebar Vault Fix
+
+### Fixed
+
+- **Sidebar vault expansion showing wrong notes** (PR #43) - Vault dots now filter to the correct single project instead of passing all projects. Breadcrumb syncs on vault toggle. Fixed DexieError2 race condition in browser-mode initialization.
+- **Broken brainstorm link** in MCP app spec
+
+### Added
+
+- 3 new tests for vault toggle → `onSelectProject` wiring (MissionSidebar)
+
+---
+
 ## [v1.17.0] - 2026-02-22 — Quarto Autocomplete
 
 ### Added
@@ -25,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Escaped `\$` handling** — literal dollar signs no longer break math context tracking
 - **Migration loop prevented** — dedicated version flag for localStorage migrations
 - **70 TypeScript errors resolved** across 22 test files and 1 source file
+- **Tauri JS/Rust package alignment** — updated @tauri-apps/api (2.9.1→2.10.1), plugin-dialog (2.4.2→2.6.0), CLI (2.9.6→2.10.0) to match Cargo.lock resolved versions
+- **DragRegion test mock** fixed with `vi.hoisted()` for dynamic Tauri imports
+- **5 broken relative links** fixed in documentation site
 
 ---
 
