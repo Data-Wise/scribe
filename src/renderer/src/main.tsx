@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import { isTauri, logPlatformInfo } from './lib/platform'
+import { waitForApi } from './lib/api'
 import 'katex/dist/katex.min.css'  // KaTeX styles for math rendering
 import './index.css'
 
@@ -55,8 +56,18 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <ErrorBoundary>
-    <App />
-  </ErrorBoundary>
-)
+// Ensure API backend is ready before rendering (prevents DexieError2 race in browser mode)
+const renderApp = () => {
+  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  )
+}
+
+waitForApi()
+  .then(renderApp)
+  .catch((err) => {
+    console.error('[Scribe] API init failed, rendering anyway:', err)
+    renderApp()
+  })

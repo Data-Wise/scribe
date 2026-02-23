@@ -8,7 +8,7 @@
 import { invoke as tauriInvoke } from '@tauri-apps/api/core'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { isTauri, logPlatformInfo } from './platform'
-import { browserApi } from './browser-api'
+import { browserApi, browserReady } from './browser-api'
 import { Note, Tag, TagWithCount, Folder, Project, ProjectType, ProjectSettings } from '../types'
 
 // Log platform on first import
@@ -389,6 +389,15 @@ const tauriApi = {
  * In Browser: Uses IndexedDB via Dexie.js
  */
 const rawApi = isTauri() ? tauriApi : browserApi
+
+/**
+ * Wait for the API backend to be fully initialized.
+ * In Tauri mode: resolves immediately (Rust backend is always ready).
+ * In Browser mode: waits for IndexedDB init to complete.
+ */
+export function waitForApi(): Promise<void> {
+  return isTauri() ? Promise.resolve() : browserReady()
+}
 
 // ============================================================================
 // Toast Notifications for API Operations
