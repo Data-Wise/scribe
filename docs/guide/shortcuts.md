@@ -61,8 +61,10 @@
 | Action | Shortcut |
 |--------|----------|
 | **New Note** | `⌘N` |
+| **New Project** | `⌘⇧N` |
 | **Daily Note** | `⌘D` |
 | **Search Notes** | `⌘F` |
+| **Quick Capture** | `⌘⇧C` |
 | **Toggle Right Sidebar** | `⌘⇧B` |
 | **Toggle Terminal** | `⌘⌥T` |
 | **Back** | `⌘[` |
