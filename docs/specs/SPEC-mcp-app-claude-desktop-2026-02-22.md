@@ -5,7 +5,7 @@
 **Generated:** 2026-02-22
 **Status:** Draft
 **Priority:** P1 (New Distribution Channel)
-**From Brainstorm:** [BRAINSTORM-mcp-app-2026-02-22.md](../../BRAINSTORM-mcp-app-2026-02-22.md)
+**From Brainstorm:** [BRAINSTORM-mcp-app-2026-02-22.md](../archive/brainstorms/BRAINSTORM-mcp-app-2026-02-22.md)
 
 ---
 
