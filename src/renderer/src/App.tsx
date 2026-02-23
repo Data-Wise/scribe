@@ -1672,12 +1672,14 @@ function App() {
         onClose={() => setIsCreateProjectModalOpen(false)}
         onCreateProject={async (projectData) => {
           try {
-            await createProject(
+            const newProject = await createProject(
               projectData.name,
               projectData.type,
               projectData.description,
               projectData.color
             )
+            // Auto-pin the new project so it appears in the sidebar
+            addPinnedVault(newProject.id, newProject.name, newProject.color)
           } catch (error) {
             console.error('Failed to create project:', error)
           }
