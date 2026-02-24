@@ -650,7 +650,7 @@ async fn compile_latex(tex_path: &Path) -> Result<PdfPath> {
 | Sync status indicator | 30m | [ ] Pending |
 | Streak display | 30m | [ ] Pending |
 | Words today counter | 30m | [ ] Pending |
-| Session timer (move) | 15m | [ ] Pending |
+| Pomodoro timer (status bar) | — | [x] Done (v1.19.0) |
 | Editor mode indicator | 15m | [ ] Pending |
 | Zoom level control | 15m | [ ] Pending |
 
