@@ -140,7 +140,7 @@ cd scribe && npm install && npm run dev
     ⌘W closes (auto-saves). ⌘Z always works. No confirmation dialogs.
 
 !!! tip "Visible Progress"
-    Word count always visible. Session timer. Streak indicators.
+    Word count always visible. Pomodoro timer. Streak indicators.
 
 !!! tip "Sensory-Friendly"
     Dark mode default. No distracting animations. Muted colors, high contrast text.
