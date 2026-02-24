@@ -49,7 +49,9 @@ describe('EditorSettingsTab', () => {
   const mockFontSettings: FontSettings = {
     family: 'inter',
     size: 16,
-    lineHeight: 1.6
+    lineHeight: 1.6,
+    codeFamily: 'jetbrains-mono',
+    codeSize: 0.88,
   }
 
   const mockOnFontSettingsChange = vi.fn()
@@ -67,9 +69,10 @@ describe('EditorSettingsTab', () => {
     )
 
     expect(screen.getByText('Typography')).toBeInTheDocument()
-    expect(screen.getByText('Font Family')).toBeInTheDocument()
+    expect(screen.getAllByText('Font Family').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('Font Size')).toBeInTheDocument()
     expect(screen.getByText('Line Height')).toBeInTheDocument()
+    expect(screen.getByText('Code Font')).toBeInTheDocument()
   })
 
   it('renders writing experience section', () => {
