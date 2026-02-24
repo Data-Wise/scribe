@@ -226,7 +226,7 @@ Cached preferences hook with event-based sync.
 Global keyboard shortcut handler (extracted from App.tsx).
 
 **Features:**
-- Handles 27 registered shortcuts
+- Handles 25 registered shortcuts
 - Uses `matchesShortcut(event, shortcutId)` for registry-based event matching
 - Manages Tauri menu registration
 

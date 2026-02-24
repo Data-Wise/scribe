@@ -61,7 +61,7 @@
 | Action | Shortcut |
 |--------|----------|
 | **New Note** | `⌘N` |
-| **New Project** | `⌘⇧N` |
+| **New Project** | `⌘⇧N` (in-app) |
 | **Daily Note** | `⌘D` |
 | **Search Notes** | `⌘F` |
 | **Quick Capture** | `⌘⇧C` |
@@ -138,7 +138,7 @@ All keyboard shortcuts are defined in a single registry file:
 ### SHORTCUTS Registry
 
 The `SHORTCUTS` object is the single source of truth for key bindings,
-modifier keys, and display labels. There are currently **27 registered
+modifier keys, and display labels. There are currently **25 registered
 shortcuts** covering notes, navigation, editor modes, sidebars, and
 system actions.
 

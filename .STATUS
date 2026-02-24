@@ -4,12 +4,12 @@ priority: P1
 version: 1.19.0
 sprint: 37
 started: 2026-01-08
-updated: 2026-02-23
+updated: 2026-02-24
 released: 2026-02-23
 editor: hybrid-markdown++
-next_focus: Settings Infrastructure Improvements (feature/settings-improvements)
-tests: 2255
-unit_tests: 2255
+next_focus: Fix 67 test file TypeScript errors
+tests: 2282
+unit_tests: 2282
 e2e_tests: 109
 test_file_errors: 67 (non-blocking, documented in docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md)
 tags:
@@ -25,10 +25,6 @@ tags:
 > ADHD-friendly distraction-free writer with projects, academic features, and CLI-based AI.
 
 ## Current Focus (Sprint 37)
-
-### In Progress
-
-1. **Settings Infrastructure Improvements** (WIP) — Extract reusable SettingsToggle, shortcut registry, usePreferences hook, pre-commit ORCHESTRATE guard. Branch: `feature/settings-improvements`. Spec: `docs/specs/SPEC-settings-improvements-2026-02-23.md`. ~3.5h total.
 
 ### Next Up
 
@@ -48,6 +44,14 @@ tags:
 ---
 
 ## Recently Completed
+
+### Settings Infrastructure Improvements (2026-02-24) — PR #47
+
+- Reusable `SettingsToggle` component with full accessibility
+- `usePreferences` hook with cached state + event-based sync
+- `SHORTCUTS` registry (25 shortcuts) with `matchesShortcut()` helper
+- Migrated `SettingsModal.tsx` to `usePreferences` hook
+- 27 new tests (2,282 total)
 
 ### v1.19.0 (2026-02-23) — Pomodoro Focus Timer (Released)
 

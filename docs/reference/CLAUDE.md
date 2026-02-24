@@ -247,9 +247,17 @@ scribe help --all      # Full reference
 
 **Released:** v1.19.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
-**Tests:** 2,255 passing (73 files)
+**Tests:** 2,282 passing (76 files)
 
-### Latest Work: Pomodoro Focus Timer (PR #45)
+### Latest Work: Settings Infrastructure Improvements (PR #47)
+
+- ✅ `SettingsToggle` reusable component with accessibility (`role="switch"`, `aria-checked`, `aria-label`)
+- ✅ `usePreferences` hook — cached preferences with event-based cross-component sync
+- ✅ `SHORTCUTS` registry (25 shortcuts) with `matchesShortcut()` helper
+- ✅ Migrated `SettingsModal.tsx` to `usePreferences` hook
+- ✅ 27 new tests (2,282 total)
+
+### Previous: Pomodoro Focus Timer (PR #45)
 
 - ✅ Status bar countdown timer (start/pause click, right-click reset)
 - ✅ Zustand store with symmetric callbacks: `tick(onComplete, onBreakComplete)`
