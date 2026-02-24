@@ -247,9 +247,9 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.19.0 - Pomodoro Focus Timer ✅
+## 🎯 Current Status: v1.20.0 - Settings & Timer Cleanup ✅
 
-**Released:** v1.19.0 (stable)
+**Released:** v1.20.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
 **Tests:** 2,280 passing (76 files)
 

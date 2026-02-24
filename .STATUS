@@ -1,11 +1,11 @@
 ---
 status: active
 priority: P1
-version: 1.19.0
+version: 1.20.0
 sprint: 37
 started: 2026-01-08
 updated: 2026-02-24
-released: 2026-02-23
+released: 2026-02-24
 editor: hybrid-markdown++
 next_focus: Fix 67 test file TypeScript errors
 tests: 2280
