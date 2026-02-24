@@ -5,6 +5,11 @@
  * for all keyboard shortcuts. When a shortcut keybinding changes, update
  * it here and both UI labels and event matching update automatically.
  *
+ * Key casing convention: cmd-only shortcuts use lowercase keys ('n', 'd').
+ * Shift shortcuts use uppercase keys ('F', 'G') because browsers report
+ * e.key as uppercase when Shift is held. matchesShortcut() does a strict
+ * comparison, so the case must match what the browser reports.
+ *
  * Use matchesShortcut(event, shortcutId) in handlers to check if a
  * KeyboardEvent matches a registered shortcut.
  */
@@ -61,8 +66,6 @@ export const SHORTCUTS = {
   // Sidebar navigation
   nextTab: { key: ']', mod: 'cmd', label: '⌘]' },
   prevTab: { key: '[', mod: 'cmd', label: '⌘[' },
-  toggleRightPanel: { key: ']', mod: 'cmd+shift', label: '⌘⇧]' },
-  collapseAll: { key: '[', mod: 'cmd+shift', label: '⌘⇧[' },
 } as const
 
 export type ShortcutId = keyof typeof SHORTCUTS

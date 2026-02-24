@@ -79,4 +79,36 @@ describe('SettingsToggle', () => {
 
     expect(screen.getByTestId('custom-test-id')).toBeInTheDocument()
   })
+
+  it('has correct accessibility attributes', () => {
+    render(
+      <SettingsToggle
+        label="My Toggle"
+        description="Desc"
+        checked={true}
+        onChange={() => {}}
+        testId="a11y-toggle"
+      />
+    )
+
+    const button = screen.getByTestId('a11y-toggle')
+    expect(button).toHaveAttribute('role', 'switch')
+    expect(button).toHaveAttribute('aria-checked', 'true')
+    expect(button).toHaveAttribute('aria-label', 'My Toggle')
+  })
+
+  it('sets aria-checked to false when unchecked', () => {
+    render(
+      <SettingsToggle
+        label="Off Toggle"
+        description="Desc"
+        checked={false}
+        onChange={() => {}}
+        testId="unchecked-toggle"
+      />
+    )
+
+    const button = screen.getByTestId('unchecked-toggle')
+    expect(button).toHaveAttribute('aria-checked', 'false')
+  })
 })

@@ -29,7 +29,6 @@ import {
 } from 'lucide-react'
 // Daily note templates handled by GeneralSettingsTab
 import {
-  loadPreferences,
   updatePreferences,
   TabBarStyle,
   BorderStyle,
@@ -95,7 +94,7 @@ export function SettingsModal({
   onThemeShortcutsChange,
 }: SettingsModalProps) {
   const sidebarWidth = useAppViewStore((s) => s.sidebarWidth)
-  const { prefs: cachedPrefs } = usePreferences()
+  const { prefs: cachedPrefs, updatePref } = usePreferences()
   const [activeTab, setActiveTab] = useState<SettingsTab>('general')
   const [showCustomCreator, setShowCustomCreator] = useState(false)
   const [customThemeName, setCustomThemeName] = useState('')
@@ -129,39 +128,30 @@ export function SettingsModal({
   // Daily note templates handled by GeneralSettingsTab
 
   // UI Style preferences state (for reactivity)
-  const [uiStyles, setUiStyles] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      tabBarStyle: prefs.tabBarStyle,
-      borderStyle: prefs.borderStyle,
-      activeTabStyle: prefs.activeTabStyle
-    }
-  })
+  const [uiStyles, setUiStyles] = useState(() => ({
+    tabBarStyle: cachedPrefs.tabBarStyle,
+    borderStyle: cachedPrefs.borderStyle,
+    activeTabStyle: cachedPrefs.activeTabStyle
+  }))
 
   // Update UI style and save to preferences
   const updateUiStyle = (key: keyof typeof uiStyles, value: TabBarStyle | BorderStyle | ActiveTabStyle) => {
     setUiStyles(prev => ({ ...prev, [key]: value }))
-    updatePreferences({ [key]: value })
+    updatePref(key, value)
   }
 
   // Right Sidebar preferences state (v1.8)
-  const [sidebarSettings, setSidebarSettings] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      tabSize: prefs.sidebarTabSize,
-      tabOrder: prefs.sidebarTabOrder,
-      hiddenTabs: prefs.sidebarHiddenTabs
-    }
-  })
+  const [sidebarSettings, setSidebarSettings] = useState(() => ({
+    tabSize: cachedPrefs.sidebarTabSize,
+    tabOrder: cachedPrefs.sidebarTabOrder,
+    hiddenTabs: cachedPrefs.sidebarHiddenTabs
+  }))
 
   // Icon Bar preferences state (v1.16)
-  const [iconBarSettings, setIconBarSettings] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      iconGlowEffect: prefs.iconGlowEffect ?? true,
-      iconGlowIntensity: prefs.iconGlowIntensity ?? 'subtle'
-    }
-  })
+  const [iconBarSettings, setIconBarSettings] = useState(() => ({
+    iconGlowEffect: cachedPrefs.iconGlowEffect ?? true,
+    iconGlowIntensity: cachedPrefs.iconGlowIntensity ?? 'subtle'
+  }))
 
   // Update icon bar setting and save to preferences
   const updateIconBarSetting = <K extends keyof typeof iconBarSettings>(
@@ -1204,8 +1194,7 @@ export function SettingsModal({
                       </div>
                       <button
                         onClick={() => {
-                          const prefs = loadPreferences()
-                          updatePreferences({ customCSSEnabled: !prefs.customCSSEnabled })
+                          updatePref('customCSSEnabled', !cachedPrefs.customCSSEnabled)
                         }}
                         className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
                           cachedPrefs.customCSSEnabled ? 'bg-nexus-accent' : 'bg-white/10'
@@ -1219,7 +1208,7 @@ export function SettingsModal({
                     <div>
                       <textarea
                         value={cachedPrefs.customCSS}
-                        onChange={(e) => updatePreferences({ customCSS: e.target.value })}
+                        onChange={(e) => updatePref('customCSS', e.target.value)}
                         placeholder={`/* Custom CSS for Scribe editor */
 .editor-content {
   /* Your styles here */

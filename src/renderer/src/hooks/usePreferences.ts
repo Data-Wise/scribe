@@ -31,6 +31,9 @@ export function usePreferences() {
 
   const togglePref = useCallback(
     (key: keyof UserPreferences) => {
+      // Read from localStorage (not cached state) to ensure we toggle from
+      // the latest value, even if React hasn't re-rendered yet. This keeps
+      // the callback reference stable (empty deps) while avoiding stale reads.
       const current = loadPreferences()
       const val = current[key]
       if (typeof val !== 'boolean') return
