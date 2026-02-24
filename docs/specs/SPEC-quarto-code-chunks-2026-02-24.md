@@ -1,7 +1,8 @@
 # SPEC: VS Code-Style Quarto Code Chunks
 
-> **Status:** draft
+> **Status:** approved
 > **Created:** 2026-02-24
+> **Reviewed:** 2026-02-24
 > **From Brainstorm:** `BRAINSTORM-quarto-code-chunks-2026-02-24.md`
 
 ## Overview
@@ -19,10 +20,11 @@ Add distinct visual treatment to Quarto code chunks in Scribe's editor, inspired
 - [ ] Code chunks have a clearly visible background color that differs from prose
 - [ ] Code chunks use a monospace font distinct from the prose font
 - [ ] Background and font adapt automatically to all 10 themes (5 dark + 5 light)
-- [ ] Language badge (e.g., `[R]`, `[PY]`) appears on the opening fence line
-- [ ] Chunk option lines (`#|`) have distinct but subtle styling
+- [ ] Language badge (e.g., `r`, `python`) appears on the opening fence line, always visible
+- [ ] Chunk option lines (`#|`) have distinct but subtle styling (italic + smaller font, no folding)
 - [ ] A "Code Font" preference exists in Settings > Editor
 - [ ] No run buttons, toolbars, or other IDE chrome is added
+- [ ] Empty code chunks (fence-open immediately followed by fence-close) render correctly
 - [ ] All existing tests pass
 - [ ] Performance is not degraded for large documents
 
@@ -68,9 +70,22 @@ index.css (fallback only for plain ```lang fences)
 
 2. **Derived CSS variables, not per-theme config** — `--nexus-code-bg` is computed from existing `bgTertiary` in `applyTheme()`. No new fields on the `Theme` type.
 
-3. **Separate code font from prose font** — New `codeFamily`/`codeSize` fields on `FontSettings`. Default: JetBrains Mono at 88% of editor font size.
+3. **Separate code font from prose font** — New `codeFamily`/`codeSize` fields on `FontSettings`. Default: Fira Code at 88% of editor font size. One `codeFamily` setting controls all code-area fonts (code lines, fence lines, and `#|` option lines).
 
 4. **No execution features** — Scribe is a writing tool. Run buttons, output cells, and execution status belong in VS Code.
+
+### Resolved Decisions
+
+| Question | Decision | Rationale |
+|----------|----------|-----------|
+| `color-mix()` vs JS `rgba()` | **JS `rgba()` in `applyTheme()`** | Guaranteed compatibility. Uses existing `hexToRgb()` helper (line 585, same file). |
+| Language badge visibility | **Always visible** | Simpler implementation. ADHD wayfinding anchor — always answers "what kind?" at a glance. |
+| Chunk option folding | **No folding — style only** | Italic + smaller font for visual hierarchy. Folding adds ViewPlugin state complexity. |
+| Inline executable code | **Skip for v1** | Inline code already has mono styling. Minimal gain vs regex complexity. Can revisit later. |
+| Theme reactivity | **Match existing behavior** | `createEditorTheme()` reads colors once at construction (same as callouts). Editor reconfigure on theme switch handles updates. |
+| Chunk option font size | **Hardcoded 0.82 ratio** | Options always slightly smaller than code content. No extra setting needed. |
+| Badge text format | **Full lowercase** (`r`, `python`, `julia`) | Matches what user typed in the fence. More explicit than abbreviations. |
+| Adjacent chunks | **Visible 8px gap** | Each chunk is a distinct visual unit with its own badge. fence-close bottom-margin + fence-open top-margin create separation. |
 
 ## API Design
 
@@ -93,10 +108,23 @@ export const DEFAULT_FONT_SETTINGS: FontSettings = {
   family: 'system',
   size: 15,
   lineHeight: 1.8,
-  codeFamily: 'jetbrains-mono',  // NEW
+  codeFamily: 'fira-code',        // NEW
   codeSize: 0.88,                 // NEW
 }
 ```
+
+### New entry in `FONT_FAMILIES` registry
+
+```typescript
+'jetbrains-mono': {
+  name: 'JetBrains Mono',
+  value: '"JetBrains Mono", "Fira Code", ui-monospace, monospace',
+  description: 'JetBrains coding font - clean & precise',
+  category: 'mono'
+},
+```
+
+**Note:** `fira-code` already exists in the registry (line 948). JetBrains Mono is added as an additional option. Default `codeFamily` is `'fira-code'`.
 
 ### New CSS Variables
 
@@ -115,8 +143,8 @@ export const DEFAULT_FONT_SETTINGS: FontSettings = {
 | `cm-quarto-fence-open` | Opening fence line (additional) | Top border-radius, top margin |
 | `cm-quarto-fence-close` | Closing fence line (additional) | Bottom border-radius, bottom margin |
 | `cm-quarto-code-line` | Interior code content lines | Code bg, code font, left border |
-| `cm-quarto-chunk-option` | `#\|` option lines | Code bg, smaller font, slight opacity |
-| `cm-quarto-lang-badge` | Language badge widget | Accent-tinted pill, 0.7em |
+| `cm-quarto-chunk-option` | `#\|` option lines | Code bg, smaller font, slight opacity, italic |
+| `cm-quarto-lang-badge` | Language badge widget | Accent-tinted pill, 0.7em, full lowercase |
 
 ## Dependencies
 
@@ -146,7 +174,7 @@ AFTER:
 │ This is prose text in the document.      │
 │                                          │
 │ ┌╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┐ │
-│ ┃ ```{r}                          [R]  ┃ │  <- tinted background
+│ ┃ ```{r}                           r   ┃ │  <- tinted background
 │ ┃ library(ggplot2)                     ┃ │     monospace font
 │ ┃ ggplot(mtcars, aes(x=mpg)) +        ┃ │     language badge
 │ ┃   geom_histogram()                   ┃ │     3px accent border
@@ -179,7 +207,7 @@ AFTER:
 - [x] Code font respects user's font size preference (ratio-based)
 - [x] `prefers-reduced-motion` — no animations on chunk styling
 - [x] Language badge uses `aria-hidden="true"` (decorative)
-- [x] Badge text is uppercase for screen reader clarity
+- [x] Badge text matches fence language (lowercase, e.g., `r`, `python`)
 - [x] Focus/cursor on fence line shows raw syntax (no hidden content)
 
 ### Settings UI Mockup
@@ -191,26 +219,20 @@ Editor Settings
 ├── Line Height: [1.8]
 ├── ─────────────────────────────────
 ├── Code Font
-│   ├── Font Family: [JetBrains Mono  v]  <- filtered to mono fonts only
+│   ├── Font Family: [Fira Code        v]  <- filtered to mono fonts only
 │   └── Size Ratio: [0.88] ========●==  (0.75 - 1.00)
 ```
 
 ## Open Questions
 
-1. **`color-mix()` vs JS computation?** — `color-mix(in srgb, ...)` is cleaner CSS but requires Safari 16.2+ / Chromium 111+. Tauri's WebKit should support it, but the JS `rgba()` approach in `applyTheme()` is guaranteed to work everywhere.
-
-2. **Language badge cursor-reveal?** — Should the badge hide when cursor is on the fence line (like heading mark hiding), or always show?
-
-3. **Chunk option collapsing?** — Should `#|` lines fold when cursor isn't on them? This adds complexity and could be a follow-up feature.
-
-4. **Inline executable code?** — VS Code also styles `` `{r} expr` `` inline code. Should Scribe?
+~~All resolved during review (2026-02-24).~~
 
 ## Review Checklist
 
-- [ ] Spec reviewed by user
-- [ ] Architecture aligns with existing patterns (callout decorations, theme system)
-- [ ] No new dependencies introduced
-- [ ] Backward compatible (existing preferences unaffected)
+- [x] Spec reviewed by user
+- [x] Architecture aligns with existing patterns (callout decorations, theme system)
+- [x] No new dependencies introduced
+- [x] Backward compatible (existing preferences unaffected)
 - [ ] All 10 themes tested
 - [ ] Performance validated with large `.qmd` files
 
@@ -222,11 +244,25 @@ Editor Settings
 
 2. **`Decoration.line()` takes single point** — `range(line.from)` not `range(line.from, line.to)`. Using a range causes runtime error.
 
-3. **`--nexus-code-bg` must be complete value** — CSS can't do `rgba(var(--hex), 0.7)`. Compute full `rgba(r,g,b,a)` string in `applyTheme()` using existing `hexToRgb()` helper.
+3. **`--nexus-code-bg` must be complete value** — CSS can't do `rgba(var(--hex), 0.7)`. Compute full `rgba(r,g,b,a)` string in `applyTheme()` using existing `hexToRgb()` helper (line 585, private function in same file).
 
 4. **Quarto detection regex** — Opening fences matching `/^```\{(\w+)/` are Quarto chunks. Plain `` ```js `` fences are NOT Quarto and should use CSS fallback only.
 
-5. **Font migration** — Existing `FontSettings` in localStorage won't have `codeFamily`/`codeSize`. Use defaults via `{ ...DEFAULT_FONT_SETTINGS, ...stored }` spread pattern.
+5. **Font migration** — Existing `FontSettings` in localStorage won't have `codeFamily`/`codeSize`. Use defaults via `{ ...DEFAULT_FONT_SETTINGS, ...stored }` spread pattern (already used in `loadFontSettings()` at line 985).
+
+6. **Badge color** — Use `accent` (not `textSecondary` which doesn't exist on `ThemeColors`). Badge background: `accent` at 20% opacity. Badge text: `accent` color. Available theme colors: `textPrimary`, `textMuted`, `accent`, `accentHover`.
+
+7. **Empty code chunks** — A chunk with no content lines (fence-open immediately followed by fence-close) must render correctly. The ViewPlugin should handle this by emitting fence-open and fence-close on adjacent lines with no code-line decorations between them.
+
+8. **Settings test impact** — `EditorSettingsTab.test.tsx` may query by "Font Family" label text. With Code Font added, this label appears twice. Use role-based selectors or `within()` scoping to distinguish prose vs code font controls.
+
+9. **Adjacent code chunks** — When two chunks appear back-to-back with no prose between them, the 8px gap (fence-close bottom-margin + fence-open top-margin) keeps them visually distinct. Each chunk gets its own badge.
+
+10. **Badge text** — Use the language string as-is from the fence (lowercase): `r`, `python`, `julia`, `bash`, `javascript`. Do NOT uppercase or abbreviate. The `LanguageBadgeWidget` receives the raw language from the regex match.
+
+11. **Chunk option size is fixed** — `#|` lines always use `calc(editor-size * 0.82)` regardless of the user's `codeSize` setting. This keeps options visually subordinate to code content at any code font size.
+
+12. **`getThemeColors()` reads `--nexus-text-secondary`** but `applyTheme()` never sets it — it falls back to `#94a3b8`. This is a pre-existing inconsistency. For badge styling, use `colors.accent` (which is reliably set) rather than `colors.textSecondary`.
 
 ### Phase Breakdown
 
@@ -239,8 +275,23 @@ Editor Settings
 | 5 | Settings UI (Code Font picker) | 45 min |
 | 6 | Testing + validation | 30 min |
 
+### Explicitly Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Run Cell / CodeLens buttons | Scribe is for writing, not execution |
+| Output cells | Quarto renders outputs separately |
+| Cell toolbar / drag handles | Adds IDE complexity |
+| Chunk option folding | Future enhancement (complexity) |
+| Inline executable code styling | Future enhancement (minimal gain) |
+| Gutter line numbers in chunks | Future opt-in feature |
+| Badge cursor-reveal hiding | Unnecessary complexity; always-visible is better UX |
+
 ## History
 
 | Date | Change |
 |------|--------|
 | 2026-02-24 | Initial spec from max brainstorm with 2 agents (frontend architect + UX designer) |
+| 2026-02-24 | Review round 1: resolved 4 open questions, added edge cases (empty chunks, test impact, badge color fix) |
+| 2026-02-24 | Review round 2: resolved 4 more (reactivity, option size, badge text format, adjacent chunks) |
+| 2026-02-24 | Review round 3: default code font changed to Fira Code, options use same codeFamily setting, status → approved |
