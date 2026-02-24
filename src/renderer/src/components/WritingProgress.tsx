@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from 'react'
-import { Target, TrendingUp, Flame, Clock, Sparkles } from 'lucide-react'
+import { Target, TrendingUp, Flame, Sparkles } from 'lucide-react'
 
 interface WritingProgressProps {
   wordCount: number
@@ -7,7 +7,6 @@ interface WritingProgressProps {
   sessionStartWords?: number
   streak?: number
   showDetails?: boolean
-  sessionStartTime?: number  // Timestamp when session started
 }
 
 // Word count milestones to celebrate
@@ -19,7 +18,6 @@ const MILESTONES = [100, 250, 500, 750, 1000, 1500, 2000]
  * Features:
  * - Word goal progress bar with percentage
  * - Session word count (words written this session)
- * - Session timer (time since first keystroke)
  * - Writing streak indicator with glow
  * - Milestone celebrations at specific word counts
  * - Respects prefers-reduced-motion
@@ -29,8 +27,7 @@ export function WritingProgress({
   wordGoal = 500,
   sessionStartWords = 0,
   streak = 0,
-  showDetails = false,
-  sessionStartTime
+  showDetails = false
 }: WritingProgressProps) {
   // Track last word count to detect milestones
   const lastWordCountRef = useRef(wordCount)
@@ -53,32 +50,6 @@ export function WritingProgress({
   const sessionWords = useMemo(() => {
     return Math.max(0, wordCount - sessionStartWords)
   }, [wordCount, sessionStartWords])
-
-  // Session timer
-  const [sessionDuration, setSessionDuration] = useState('0m')
-
-  useEffect(() => {
-    if (!sessionStartTime) {
-      setSessionDuration('0m')
-      return
-    }
-
-    const updateTimer = () => {
-      const elapsed = Date.now() - sessionStartTime
-      const minutes = Math.floor(elapsed / 60000)
-      const hours = Math.floor(minutes / 60)
-
-      if (hours > 0) {
-        setSessionDuration(`${hours}h ${minutes % 60}m`)
-      } else {
-        setSessionDuration(`${minutes}m`)
-      }
-    }
-
-    updateTimer()
-    const interval = setInterval(updateTimer, 60000) // Update every minute
-    return () => clearInterval(interval)
-  }, [sessionStartTime])
 
   // Detect milestone crossings and trigger celebrations
   useEffect(() => {
@@ -135,14 +106,6 @@ export function WritingProgress({
 
   return (
     <div className="writing-progress flex items-center gap-3">
-      {/* Session timer */}
-      {sessionStartTime && sessionDuration !== '0m' && (
-        <div className="flex items-center gap-1 text-[11px] text-nexus-text-muted">
-          <Clock className="w-3 h-3" />
-          <span className="tabular-nums">{sessionDuration}</span>
-        </div>
-      )}
-
       {/* Word delta this session */}
       {sessionWords > 0 && (
         <div

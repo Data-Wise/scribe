@@ -453,54 +453,6 @@ body {
   text-decoration-color: var(--nexus-text-muted, #64748b);
 }
 
-/* Focus timer */
-.focus-timer {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  color: var(--nexus-text-secondary, #cbd5e1);
-}
-
-.timer-value {
-  min-width: 40px;
-  text-align: center;
-  font-weight: 500;
-  cursor: default; /* Don't inherit grab cursor from parent */
-}
-
-.timer-value.paused {
-  opacity: 0.6;
-  color: var(--nexus-text-muted, #94a3b8);
-}
-
-.timer-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  color: var(--nexus-text-secondary, #cbd5e1);
-  cursor: pointer;
-  font-size: 10px;
-  transition: all 150ms ease;
-  opacity: 0.6;
-}
-
-.timer-btn:hover {
-  background: rgba(128, 128, 128, 0.15);
-  color: var(--nexus-text-primary, #e2e8f0);
-  opacity: 1;
-}
-
-.timer-btn.reset {
-  font-size: 14px;
-}
 
 .sidebar-tab {
   display: flex;

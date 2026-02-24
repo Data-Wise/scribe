@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Removed
+
+- **Session timer** — Removed the legacy session timer from the breadcrumb bar (⏸/▶/↺ controls). It showed raw elapsed time that persisted via localStorage, causing confusing values like "2296:20" across restarts.
+- **sessionStartTime prop chain** — Removed from App.tsx, EditorOrchestrator, HybridEditor, WritingProgress, and StatsPanel interfaces.
+- **4 localStorage keys** — `sessionStart`, `timerPaused`, `pausedDuration`, `pauseStart`.
+- **~50 lines of CSS** — Orphaned `.focus-timer`, `.timer-btn`, `.timer-value` styles.
+
+### Changed
+
+- **StatsPanel Session section** — Duration card replaced with Pomodoro count card showing today's completed sessions from `usePomodoroStore`.
+- **WritingProgress** — No longer displays session elapsed time; shows word delta, progress bar, and streak only.
+
+---
+
 ## [v1.19.1] - 2026-02-24 — Settings Infrastructure Improvements
 
 ### Added

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Project, Note } from '../types'
-import { TrendingUp, Clock, FileText, Folder, ChevronRight } from 'lucide-react'
+import { TrendingUp, FileText, Folder, ChevronRight } from 'lucide-react'
+import { usePomodoroStore } from '../store/usePomodoroStore'
 
 interface StatsPanelProps {
   projects: Project[]
@@ -8,7 +9,6 @@ interface StatsPanelProps {
   currentProjectId: string | null
   wordCount: number
   wordGoal?: number
-  sessionStartTime?: number
   onSelectProject: (projectId: string) => void
   onSelectNote: (noteId: string) => void
 }
@@ -19,7 +19,6 @@ export function StatsPanel({
   currentProjectId,
   wordCount,
   wordGoal = 500,
-  sessionStartTime,
   onSelectProject,
   onSelectNote
 }: StatsPanelProps) {
@@ -46,16 +45,7 @@ export function StatsPanel({
     return notes.filter(n => n.project_id === currentProjectId && !n.deleted_at)
   }, [notes, currentProjectId])
 
-  // Session duration
-  const sessionDuration = useMemo(() => {
-    if (!sessionStartTime) return null
-    const minutes = Math.floor((Date.now() - sessionStartTime) / 60000)
-    if (minutes < 1) return 'Just started'
-    if (minutes < 60) return `${minutes}m`
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    return `${hours}h ${mins}m`
-  }, [sessionStartTime])
+  const completedPomodoros = usePomodoroStore(s => s.completedToday)
 
   // Word goal progress
   const goalProgress = Math.min(100, Math.round((wordCount / wordGoal) * 100))
@@ -71,11 +61,11 @@ export function StatsPanel({
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-nexus-bg-tertiary/30 rounded-lg p-3 border border-nexus-bg-tertiary/50">
             <div className="flex items-center gap-2 text-nexus-text-muted mb-1">
-              <Clock size={12} />
-              <span className="text-[10px] uppercase">Duration</span>
+              <span className="text-sm">🍅</span>
+              <span className="text-[10px] uppercase">Pomodoros</span>
             </div>
             <div className="text-lg font-bold text-nexus-text-primary">
-              {sessionDuration || '--'}
+              {completedPomodoros}
             </div>
           </div>
           <div className="bg-nexus-bg-tertiary/30 rounded-lg p-3 border border-nexus-bg-tertiary/50">

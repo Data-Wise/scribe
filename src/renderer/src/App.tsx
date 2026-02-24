@@ -157,74 +157,6 @@ function App() {
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
 
-  // Session timer for focus tracking (ADHD feature) - persisted to localStorage
-  const [sessionStart, setSessionStart] = useState(() => {
-    const saved = localStorage.getItem('sessionStart')
-    return saved ? parseInt(saved) : Date.now()
-  })
-  const [sessionDuration, setSessionDuration] = useState(0)
-  const [timerPaused, setTimerPaused] = useState(() => {
-    return localStorage.getItem('timerPaused') === 'true'
-  })
-  const [pausedDuration, setPausedDuration] = useState(() => {
-    const saved = localStorage.getItem('pausedDuration')
-    return saved ? parseInt(saved) : 0
-  })
-
-  // Persist session start to localStorage
-  useEffect(() => {
-    localStorage.setItem('sessionStart', sessionStart.toString())
-  }, [sessionStart])
-
-  // Persist paused state
-  useEffect(() => {
-    localStorage.setItem('timerPaused', timerPaused.toString())
-  }, [timerPaused])
-
-  // Persist paused duration
-  useEffect(() => {
-    localStorage.setItem('pausedDuration', pausedDuration.toString())
-  }, [pausedDuration])
-
-  useEffect(() => {
-    if (timerPaused) return
-    const timer = setInterval(() => {
-      setSessionDuration(Math.floor((Date.now() - sessionStart) / 1000) - pausedDuration)
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [sessionStart, timerPaused, pausedDuration])
-
-  const formatSessionTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
-
-  const toggleTimerPause = () => {
-    if (timerPaused) {
-      // Resuming - calculate how long we were paused and add to pausedDuration
-      const pauseStart = parseInt(localStorage.getItem('pauseStart') || '0')
-      if (pauseStart) {
-        const additionalPause = Math.floor((Date.now() - pauseStart) / 1000)
-        setPausedDuration(prev => prev + additionalPause)
-      }
-      localStorage.removeItem('pauseStart')
-    } else {
-      // Pausing - record when we paused
-      localStorage.setItem('pauseStart', Date.now().toString())
-    }
-    setTimerPaused(!timerPaused)
-  }
-
-  const resetTimer = () => {
-    const newStart = Date.now()
-    setSessionStart(newStart)
-    setSessionDuration(0)
-    setPausedDuration(0)
-    setTimerPaused(false)
-    localStorage.removeItem('pauseStart')
-  }
-  
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'>('properties')
 
@@ -287,9 +219,6 @@ function App() {
 
   // Tag filtering - filteredNotes now handled by MissionSidebar
 
-  // Session tracking - time when first keystroke occurred
-  const [sessionStartTime, setSessionStartTime] = useState<number | null>(null)
-  
   // Backlinks refresh key - increment to force BacklinksPanel refresh
   const [backlinksRefreshKey, setBacklinksRefreshKey] = useState(0)
   
@@ -528,11 +457,6 @@ function App() {
 
   const handleContentChange = async (content: string) => {
     if (selectedNote) {
-      // Start session timer on first keystroke
-      if (!sessionStartTime && content.length > 0) {
-        setSessionStartTime(Date.now())
-      }
-
       // Extract tags from content and sync to YAML properties
       const extractedTags = extractTagsFromContent(content)
       const currentProperties = selectedNote.properties || {}
@@ -1030,7 +954,6 @@ function App() {
           wordCount={wordCount}
           sessionStartWords={sessionStartWords}
           streakInfo={streakInfo}
-          sessionStartTime={sessionStartTime}
           preferences={preferences}
           onToggleTerminal={() => {
             if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
@@ -1274,26 +1197,6 @@ function App() {
               )}
             </div>
 
-            {/* Focus timer with controls */}
-            <div className="focus-timer">
-              <button
-                className="timer-btn"
-                onClick={toggleTimerPause}
-                title={timerPaused ? "Resume timer" : "Pause timer"}
-              >
-                {timerPaused ? '▶' : '⏸'}
-              </button>
-              <span className={`timer-value ${timerPaused ? 'paused' : ''}`}>
-                {formatSessionTime(sessionDuration)}
-              </span>
-              <button
-                className="timer-btn reset"
-                onClick={resetTimer}
-                title="Reset timer"
-              >
-                ↺
-              </button>
-            </div>
           </div>
 
           {/* Editor tabs bar */}
@@ -1340,7 +1243,6 @@ function App() {
               wordCount={wordCount}
               sessionStartWords={sessionStartWords}
               streakInfo={streakInfo}
-              sessionStartTime={sessionStartTime}
               preferences={preferences}
               onToggleTerminal={() => {
                 if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
@@ -1523,7 +1425,7 @@ function App() {
                         currentProjectId={currentProjectId}
                         wordCount={wordCount}
                         wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
-                        sessionStartTime={sessionStartTime || undefined}
+
                         onSelectProject={setCurrentProject}
                         onSelectNote={(noteId) => {
                           const note = notes.find(n => n.id === noteId)
