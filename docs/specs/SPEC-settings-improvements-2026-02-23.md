@@ -2,7 +2,7 @@
 
 > **Date:** 2026-02-23
 > **Branch:** `feature/settings-improvements`
-> **Status:** Draft
+> **Status:** Shipped (PR #47, merged 2026-02-24)
 > **Origin:** PR #45 (Pomodoro Timer) code review findings
 
 ## Summary

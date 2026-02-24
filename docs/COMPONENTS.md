@@ -193,6 +193,7 @@ interface SettingsToggleProps {
 **Features:**
 - Consistent label + description layout
 - Animated toggle knob (accent color when on)
+- WCAG accessible: `role="switch"`, `aria-checked`, `aria-label`
 - Used by `GeneralSettingsTab` and `EditorSettingsTab`
 
 **File:** `src/renderer/src/components/Settings/SettingsToggle.tsx`

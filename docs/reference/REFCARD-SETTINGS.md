@@ -20,14 +20,12 @@
 
 | Category | Icon | Contents |
 |----------|------|----------|
-| **General** | ⚙️ | Open last page, readable line length, spellcheck |
-| **Editor** | 📝 | Font, spacing, ligatures, focus mode |
-| **Themes** | 🎨 | Visual theme gallery (8 themes) |
-| **AI & Workflow** | ⚡ | Quick Actions, chat, @ references |
-| **Projects** | 📁 | Templates, defaults, daily notes |
-| **Advanced** | ⚙️ | Performance, data, export/import |
-
-**Badge:** AI category shows "3" badge (3 new features in v1.9.0)
+| **General** | ⚙️ | Open last page, streak display, Focus Timer (Pomodoro), ADHD features |
+| **Editor** | 📝 | Font, spacing, readable line length, spellcheck |
+| **Appearance** | 🎨 | UI style, dark/light theme galleries (10 themes) |
+| **Files** | 📁 | File management settings |
+| **Academic** | 📚 | Citations, Zotero, export formats |
+| **Icon Bar** | 🔧 | Sidebar icon configuration |
 
 ---
 
@@ -39,11 +37,23 @@ and persist to `localStorage` via `SettingsToggle` components.
 | Preference | Default | Tab | Description |
 |------------|---------|-----|-------------|
 | **Open Last Page** | ON | General | Restore the last open note on startup |
+| **Streak Display** | ON | General | Show writing streak indicator |
+| **Pomodoro Enabled** | ON | General | Show Pomodoro timer in status bar |
 | **Readable Line Length** | ON | Editor | Limit editor line width for comfortable reading |
 | **Spellcheck** | OFF | Editor | Enable browser-native spellcheck in the editor |
 
+**Pomodoro Duration Settings** (numeric, in General > Focus Timer):
+
+| Preference | Default | Description |
+|------------|---------|-------------|
+| **Work Minutes** | 25 | Length of a focus session |
+| **Short Break Minutes** | 5 | Break after each session |
+| **Long Break Minutes** | 15 | Break after N sessions |
+| **Long Break Interval** | 4 | Sessions before a long break |
+
 All toggles write-through to `localStorage` immediately (no Save button).
 Changes propagate to other components via the `preferences-changed` event.
+Pomodoro preferences also sync to the `usePomodoroStore` Zustand store.
 
 ---
 
@@ -312,6 +322,6 @@ Changes propagate to other components via the `preferences-changed` event.
 
 ---
 
-**Version:** v1.9.0+
-**Last Updated:** 2025-12-31
-**Changelog:** [v1.9.0 Release Notes](https://github.com/Data-Wise/scribe/releases/tag/v1.9.0)
+**Version:** v1.19.1+
+**Last Updated:** 2026-02-24
+**Changelog:** [v1.19.0 Release Notes](https://github.com/Data-Wise/scribe/releases/tag/v1.19.0)

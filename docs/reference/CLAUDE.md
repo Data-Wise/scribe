@@ -170,14 +170,18 @@ scribe/
 │       │   ├── Settings/          # Modular settings components
 │       │   │   ├── GeneralSettingsTab.tsx
 │       │   │   ├── EditorSettingsTab.tsx
+│       │   │   ├── SettingsToggle.tsx    # Reusable toggle (role=switch) [v1.19.1]
 │       │   │   └── SettingsSection.tsx
 │       │   ├── PomodoroTimer.tsx       # Focus timer in status bar [v1.19.0]
 │       │   ├── EditorOrchestrator.tsx # Editor rendering logic
 │       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts
 │       │   ├── Editor/            # BlockNote editor
 │       │   └── ...
+│       ├── hooks/                 # React hooks
+│       │   └── usePreferences.ts  # Cached prefs + event sync [v1.19.1]
 │       ├── lib/                   # Core utilities
 │       │   ├── api.ts             # API factory (Tauri/Browser)
+│       │   ├── shortcuts.ts       # 25-shortcut registry [v1.19.1]
 │       │   ├── platform.ts        # Runtime detection (isTauri/isBrowser)
 │       │   ├── browser-api.ts     # IndexedDB API (46 operations)
 │       │   ├── browser-db.ts      # Dexie.js schema + seed data

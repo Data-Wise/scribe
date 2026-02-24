@@ -361,10 +361,10 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Tests** | 407 |
+| **Total Tests** | 2,282 |
 | **Pass Rate** | 100% |
-| **Test Files** | 11 |
-| **Test Duration** | ~1.4s |
+| **Test Files** | 76 |
+| **Test Duration** | ~3s |
 | **Skipped** | 7 (WikiLinks legacy) |
 
 ---
@@ -376,7 +376,7 @@
 | Theme System | ✅ | 72 |
 | Font System | ✅ | 29 |
 | Component Rendering | ✅ | 80+ |
-| State Management | ✅ | 13 |
+| State Management | ✅ | 48+ |
 | Tag System | ✅ | 52 |
 | Wiki-Links | ✅ | 16 |
 | Regex Validation | ✅ | 20+ |
@@ -384,8 +384,10 @@
 | Security | ✅ | 4 |
 | Performance | ✅ | 8 |
 | Integration | ✅ | 32 |
-| Accessibility | ✅ | 10+ |
+| Accessibility | ✅ | 12+ |
 | ADHD Design | ✅ | 6 |
+| Pomodoro Timer | ✅ | 62 |
+| Settings Infrastructure | ✅ | 27 |
 
 ---
 
