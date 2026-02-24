@@ -1423,6 +1423,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#preferences-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preferences System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preferences System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-orchestrate-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-commit ORCHESTRATE Guard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#data-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2166,6 +2216,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#preferences-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preferences System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preferences System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-orchestrate-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-commit ORCHESTRATE Guard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#data-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2450,130 +2550,194 @@
 <a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    HybridEditor --&gt; Citation
 </code></pre></div>
 <hr />
+<h2 id="preferences-system">Preferences System</h2>
+<p>The preferences system provides lightweight, event-driven state management
+for user settings that persist to <code>localStorage</code>. It operates alongside
+the Zustand store but uses a simpler read/write model suited to key-value
+preferences.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>flowchart LR
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    LS[localStorage] --&gt;|loadPreferences| HP[usePreferences hook]
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    HP --&gt;|React state| C[Components]
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    UP[updatePreferences / togglePref] --&gt;|write-through| LS
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    UP --&gt;|dispatch| E[&quot;preferences-changed event&quot;]
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    E --&gt;|listener| HP
+</code></pre></div>
+<h3 id="key-modules">Key Modules</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>preferences.ts</code></td>
+<td><code>src/renderer/src/lib/preferences.ts</code></td>
+<td>Load, save, merge preferences to localStorage</td>
+</tr>
+<tr>
+<td><code>usePreferences()</code></td>
+<td><code>src/renderer/src/hooks/usePreferences.ts</code></td>
+<td>React hook — cached reads, event-based sync across components</td>
+</tr>
+<tr>
+<td><code>shortcuts.ts</code></td>
+<td><code>src/renderer/src/lib/shortcuts.ts</code></td>
+<td><code>SHORTCUTS</code> registry — single source of truth for all 27 keyboard shortcuts</td>
+</tr>
+<tr>
+<td><code>matchesShortcut()</code></td>
+<td><code>src/renderer/src/lib/shortcuts.ts</code></td>
+<td>Registry-based <code>KeyboardEvent</code> matching (cmd/shift/alt modifiers)</td>
+</tr>
+<tr>
+<td><code>SettingsToggle</code></td>
+<td><code>src/renderer/src/components/Settings/SettingsToggle.tsx</code></td>
+<td>Reusable toggle switch component for boolean settings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works">How It Works</h3>
+<ol>
+<li><strong><code>loadPreferences()</code></strong> reads from <code>localStorage</code>, merges with defaults so new fields get sensible values on upgrade.</li>
+<li><strong><code>usePreferences()</code></strong> calls <code>loadPreferences()</code> once on mount and caches the result in React state. It listens for the <code>preferences-changed</code> custom event to stay in sync with other components.</li>
+<li><strong><code>updatePreferences()</code> / <code>togglePref()</code></strong> write-through to <code>localStorage</code> and dispatch <code>preferences-changed</code>, triggering all mounted hooks to re-read.</li>
+<li><strong><code>SHORTCUTS</code></strong> defines every keyboard shortcut with <code>key</code>, <code>mod</code>, and <code>label</code>. UI components reference <code>SHORTCUTS.xxx.label</code> for display; handlers call <code>matchesShortcut(event, shortcutId)</code> instead of manual key checks.</li>
+</ol>
+<h3 id="pre-commit-orchestrate-guard">Pre-commit ORCHESTRATE Guard</h3>
+<p>A husky <code>pre-commit</code> hook prevents accidental commits of <code>ORCHESTRATE-*.md</code> planning files to protected branches. These files belong on feature branches during development and are cleaned up on merge.</p>
+<hr />
 <h2 id="data-flow">Data Flow</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sequenceDiagram
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    participant User
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    participant React
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    participant Zustand
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    participant Tauri
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    participant SQLite
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    User-&gt;&gt;React: Type in editor
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    React-&gt;&gt;Zustand: Update local state
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    React-&gt;&gt;Tauri: invoke(&#39;update_note&#39;)
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    Tauri-&gt;&gt;SQLite: UPDATE notes SET content=?
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    SQLite--&gt;&gt;Tauri: Success
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    Tauri--&gt;&gt;React: Updated Note
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    React-&gt;&gt;Zustand: Sync state
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    Note over React,Zustand: Auto-save on content change
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sequenceDiagram
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    participant User
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    participant React
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    participant Zustand
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    participant Tauri
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    participant SQLite
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    User-&gt;&gt;React: Type in editor
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    React-&gt;&gt;Zustand: Update local state
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    React-&gt;&gt;Tauri: invoke(&#39;update_note&#39;)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    Tauri-&gt;&gt;SQLite: UPDATE notes SET content=?
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    SQLite--&gt;&gt;Tauri: Success
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    Tauri--&gt;&gt;React: Updated Note
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    React-&gt;&gt;Zustand: Sync state
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    Note over React,Zustand: Auto-save on content change
 </code></pre></div>
 <hr />
 <h2 id="database-schema">Database Schema</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>erDiagram
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    NOTES {
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        TEXT id PK
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        TEXT title
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        TEXT content
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        TEXT folder
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        INTEGER created_at
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        INTEGER updated_at
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        INTEGER deleted_at
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    }
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    TAGS {
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        TEXT id PK
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        TEXT name UK
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        TEXT color
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        INTEGER created_at
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    }
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    NOTE_TAGS {
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        TEXT note_id FK
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        TEXT tag_id FK
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    }
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    LINKS {
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        TEXT source_id FK
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>        TEXT target_id FK
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        TEXT link_text
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>    }
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    FOLDERS {
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        TEXT path PK
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>        TEXT color
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>        TEXT icon
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>        INTEGER sort_order
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>    }
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
-<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>    NOTES ||--o{ NOTE_TAGS : has
-<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>    TAGS ||--o{ NOTE_TAGS : has
-<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>    NOTES ||--o{ LINKS : &quot;links from&quot;
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>    NOTES ||--o{ LINKS : &quot;links to&quot;
-<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>    FOLDERS ||--o{ NOTES : contains
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>erDiagram
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    NOTES {
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        TEXT id PK
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        TEXT title
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        TEXT content
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        TEXT folder
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        INTEGER created_at
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        INTEGER updated_at
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        INTEGER deleted_at
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    }
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    TAGS {
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        TEXT id PK
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        TEXT name UK
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        TEXT color
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        INTEGER created_at
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    }
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    NOTE_TAGS {
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        TEXT note_id FK
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        TEXT tag_id FK
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    }
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>    LINKS {
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>        TEXT source_id FK
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>        TEXT target_id FK
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>        TEXT link_text
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>    }
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>    FOLDERS {
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>        TEXT path PK
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>        TEXT color
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>        TEXT icon
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>        INTEGER sort_order
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>    }
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>    NOTES ||--o{ NOTE_TAGS : has
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>    TAGS ||--o{ NOTE_TAGS : has
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>    NOTES ||--o{ LINKS : &quot;links from&quot;
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>    NOTES ||--o{ LINKS : &quot;links to&quot;
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>    FOLDERS ||--o{ NOTES : contains
 </code></pre></div>
 <hr />
 <h2 id="file-structure">File Structure</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>scribe/
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── src/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│   ├── main/                    # Electron main (not used - Tauri)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│   └── renderer/
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│       └── src/
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│           ├── App.tsx          # Main application component
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│           ├── main.tsx         # React entry point
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│           ├── index.css        # Global styles + Tailwind
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│           │
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│           ├── components/
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│           │   ├── HybridEditor.tsx      # Main editor component
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│           │   ├── EmptyState.tsx        # Empty state with quotes
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│           │   ├── Ribbon.tsx            # Left icon bar
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│           │   ├── CommandPalette.tsx    # ⌘K command palette
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│           │   ├── SettingsModal.tsx     # Settings dialog
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│           │   ├── SearchBar.tsx         # Note search
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│           │   ├── TagFilter.tsx         # Tag filtering UI
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│           │   ├── TagsPanel.tsx         # Right sidebar tags
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│           │   ├── PropertiesPanel.tsx   # Note properties
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│           │   ├── BacklinksPanel.tsx    # Backlinks display
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│           │   ├── ExportDialog.tsx      # Pandoc export
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│           │   ├── MathRenderer.tsx      # KaTeX math rendering
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│           │   ├── SimpleWikiLinkAutocomplete.tsx
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│           │   ├── SimpleTagAutocomplete.tsx
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│           │   └── CitationAutocomplete.tsx
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│           │
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│           ├── lib/
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│           │   ├── api.ts               # Tauri IPC wrapper
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>│           │   ├── themes.ts            # Theme definitions
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>│           │   └── mathjax.ts           # KaTeX processing
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>│           │
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>│           ├── store/
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>│           │   └── useNotesStore.ts     # Zustand state
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>│           │
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>│           ├── types/
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>│           │   └── index.ts             # TypeScript interfaces
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>│           │
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>│           └── utils/
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>│               ├── search.ts            # Search utilities
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>│               └── sanitize.ts          # HTML sanitization
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>│
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>├── src-tauri/
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>│   └── src/
-<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>│       ├── main.rs              # Tauri entry point
-<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>│       ├── lib.rs               # Tauri setup + command registration
-<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>│       ├── commands.rs          # IPC command handlers
-<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>│       ├── database.rs          # SQLite operations
-<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>│       └── academic.rs          # Citations + Pandoc export
-<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>│
-<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>├── docs/
-<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>│   ├── API.md                   # API reference
-<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>│   ├── ARCHITECTURE.md          # This file
-<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>│   └── planning/
-<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>│       ├── SPRINT-12-UI-POLISH.md
-<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>│       └── SPRINT-13-PROJECT-SYSTEM.md
-<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>│
-<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a>├── .STATUS                      # Project status
-<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a>├── CLAUDE.md                    # AI assistant guidance
-<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a>├── PROJECT-DEFINITION.md        # Scope control
-<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a>└── PROPOSAL-UI-IMPROVEMENTS.md  # UI improvement plan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>scribe/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── src/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│   ├── main/                    # Electron main (not used - Tauri)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│   └── renderer/
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│       └── src/
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│           ├── App.tsx          # Main application component
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│           ├── main.tsx         # React entry point
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│           ├── index.css        # Global styles + Tailwind
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│           │
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│           ├── components/
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│           │   ├── HybridEditor.tsx      # Main editor component
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│           │   ├── EmptyState.tsx        # Empty state with quotes
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>│           │   ├── Ribbon.tsx            # Left icon bar
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│           │   ├── CommandPalette.tsx    # ⌘K command palette
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│           │   ├── SettingsModal.tsx     # Settings dialog
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│           │   ├── SearchBar.tsx         # Note search
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│           │   ├── TagFilter.tsx         # Tag filtering UI
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│           │   ├── TagsPanel.tsx         # Right sidebar tags
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│           │   ├── PropertiesPanel.tsx   # Note properties
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>│           │   ├── BacklinksPanel.tsx    # Backlinks display
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>│           │   ├── ExportDialog.tsx      # Pandoc export
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>│           │   ├── MathRenderer.tsx      # KaTeX math rendering
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>│           │   ├── SimpleWikiLinkAutocomplete.tsx
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>│           │   ├── SimpleTagAutocomplete.tsx
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>│           │   └── CitationAutocomplete.tsx
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>│           │
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>│           ├── hooks/
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>│           │   └── usePreferences.ts    # Cached prefs hook (event sync)
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>│           │
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>│           ├── lib/
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>│           │   ├── api.ts               # Tauri IPC wrapper
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>│           │   ├── preferences.ts       # localStorage preferences R/W
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>│           │   ├── shortcuts.ts         # SHORTCUTS registry + matcher
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>│           │   ├── themes.ts            # Theme definitions
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>│           │   └── mathjax.ts           # KaTeX processing
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>│           │
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>│           ├── store/
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>│           │   └── useNotesStore.ts     # Zustand state
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>│           │
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>│           ├── types/
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>│           │   └── index.ts             # TypeScript interfaces
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>│           │
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>│           └── utils/
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>│               ├── search.ts            # Search utilities
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>│               └── sanitize.ts          # HTML sanitization
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>│
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>├── src-tauri/
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>│   └── src/
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>│       ├── main.rs              # Tauri entry point
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>│       ├── lib.rs               # Tauri setup + command registration
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>│       ├── commands.rs          # IPC command handlers
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>│       ├── database.rs          # SQLite operations
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>│       └── academic.rs          # Citations + Pandoc export
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>│
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>├── docs/
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>│   ├── API.md                   # API reference
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>│   ├── ARCHITECTURE.md          # This file
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>│   └── planning/
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>│       ├── SPRINT-12-UI-POLISH.md
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>│       └── SPRINT-13-PROJECT-SYSTEM.md
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a>│
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a>├── .STATUS                      # Project status
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>├── CLAUDE.md                    # AI assistant guidance
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a>├── PROJECT-DEFINITION.md        # Scope control
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a>└── PROPOSAL-UI-IMPROVEMENTS.md  # UI improvement plan
 </code></pre></div>
 <hr />
 <h2 id="technology-stack">Technology Stack</h2>
@@ -2701,24 +2865,24 @@
 <hr />
 <h2 id="future-architecture">Future Architecture</h2>
 <h3 id="sprint-13-project-system">Sprint 13: Project System</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>graph TD
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    Projects[Projects Table]
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    Notes[Notes Table]
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    Settings[Project Settings]
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    Projects --&gt; Notes
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    Projects --&gt; Settings
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    Note[Per-project themes, fonts, bibliography]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>graph TD
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    Projects[Projects Table]
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    Notes[Notes Table]
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    Settings[Project Settings]
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    Projects --&gt; Notes
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    Projects --&gt; Settings
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    Note[Per-project themes, fonts, bibliography]
 </code></pre></div>
 <h3 id="sprint-15-search-goals">Sprint 15: Search + Goals</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>graph TD
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    Goals[Writing Goals]
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    Stats[Statistics]
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    Calendar[Streak Calendar]
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    Goals --&gt; Stats
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    Stats --&gt; Calendar
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>graph TD
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    Goals[Writing Goals]
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    Stats[Statistics]
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    Calendar[Streak Calendar]
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    Goals --&gt; Stats
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    Stats --&gt; Calendar
 </code></pre></div>
 
 

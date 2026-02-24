@@ -12,13 +12,9 @@
         <meta name="author" content="Data-Wise">
       
       
-        <link rel="canonical" href="https://data-wise.github.io/scribe/guide/features/">
+        <link rel="canonical" href="https://data-wise.github.io/scribe/specs/SPEC-settings-improvements-2026-02-23/">
       
       
-        <link rel="prev" href="../../RELEASE/">
-      
-      
-        <link rel="next" href="../themes/">
       
       
         
@@ -29,7 +25,7 @@
     
     
       
-        <title>Features - Scribe</title>
+        <title>SPEC: Settings Infrastructure Improvements - Scribe</title>
       
     
     
@@ -82,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#features-overview" class="md-skip">
+        <a href="#spec-settings-infrastructure-improvements" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Features
+              SPEC: Settings Infrastructure Improvements
             
           </span>
         </div>
@@ -324,13 +320,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../guide/features/" class="md-tabs__link">
           
   
   
@@ -687,31 +681,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -729,7 +718,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -744,37 +733,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Features
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../guide/features/" class="md-nav__link">
         
   
   
@@ -790,397 +752,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#core-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core Features
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#editor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Editor
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Editor">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#codemirror-6-editor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CodeMirror 6 Editor
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#focus-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Focus Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#word-count" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Word Count
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pomodoro-focus-timer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pomodoro Focus Timer
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wiki-links" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wiki Links
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tags" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tags
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Tags">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tags-panel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tags Panel
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hierarchical-tags" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hierarchical Tags
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#daily-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#settings-v190" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Settings (v1.9.0+)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Settings (v1.9.0+)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#6-settings-categories" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6 Settings Categories
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fuzzy-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fuzzy Search
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#theme-gallery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Theme Gallery
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quick-actions-customization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Actions Customization
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#project-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Project Templates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exportimport" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Export/Import
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quarto-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quarto Support
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quarto Support">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#autocompletion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Autocompletion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-block-styling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Block Styling
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#smart-completion-scoping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Smart Completion Scoping
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#terminal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Terminal
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Terminal">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#working-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Working Directory
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#knowledge-graph" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Knowledge Graph
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#command-palette" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Command Palette
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ai-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#global-hotkey" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Global Hotkey
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#math-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Math Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#accessibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Accessibility
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1193,7 +764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../themes/" class="md-nav__link">
+      <a href="../../guide/themes/" class="md-nav__link">
         
   
   
@@ -1221,7 +792,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../editor/" class="md-nav__link">
+      <a href="../../guide/editor/" class="md-nav__link">
         
   
   
@@ -1249,7 +820,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../chat-persistence/" class="md-nav__link">
+      <a href="../../guide/chat-persistence/" class="md-nav__link">
         
   
   
@@ -1277,7 +848,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../shortcuts/" class="md-nav__link">
+      <a href="../../guide/shortcuts/" class="md-nav__link">
         
   
   
@@ -2327,10 +1898,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-features" class="md-nav__link">
+  <a href="#summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Features
+        Summary
       
     </span>
   </a>
@@ -2338,22 +1909,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#editor" class="md-nav__link">
+  <a href="#problem-statement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Editor
+        Problem Statement
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Editor">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#codemirror-6-editor" class="md-nav__link">
+  <a href="#must-have-p0" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CodeMirror 6 Editor
+        Must Have (P0)
       
     </span>
   </a>
@@ -2361,10 +1943,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#focus-mode" class="md-nav__link">
+  <a href="#should-have-p1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Focus Mode
+        Should Have (P1)
       
     </span>
   </a>
@@ -2372,21 +1954,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#word-count" class="md-nav__link">
+  <a href="#wont-have-this-phase" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Word Count
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pomodoro-focus-timer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pomodoro Focus Timer
+        Won't Have (This Phase)
       
     </span>
   </a>
@@ -2399,33 +1970,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#wiki-links" class="md-nav__link">
+  <a href="#design" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Wiki Links
+        Design
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tags" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tags
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Tags">
+    <nav class="md-nav" aria-label="Design">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tags-panel" class="md-nav__link">
+  <a href="#settingstoggle-component" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tags Panel
+        SettingsToggle Component
       
     </span>
   </a>
@@ -2433,10 +1993,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hierarchical-tags" class="md-nav__link">
+  <a href="#shortcut-registry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Hierarchical Tags
+        Shortcut Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usepreferences-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        usePreferences Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-commit Guard
       
     </span>
   </a>
@@ -2449,10 +2031,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-notes" class="md-nav__link">
+  <a href="#implementation-plan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Notes
+        Implementation Plan
       
     </span>
   </a>
@@ -2460,171 +2042,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#settings-v190" class="md-nav__link">
+  <a href="#testing-strategy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Settings (v1.9.0+)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Settings (v1.9.0+)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#6-settings-categories" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6 Settings Categories
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fuzzy-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fuzzy Search
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#theme-gallery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Theme Gallery
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quick-actions-customization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Actions Customization
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#project-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Project Templates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exportimport" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Export/Import
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quarto-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quarto Support
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quarto Support">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#autocompletion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Autocompletion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-block-styling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Block Styling
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#smart-completion-scoping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Smart Completion Scoping
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#terminal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Terminal
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Terminal">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#working-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Working Directory
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#knowledge-graph" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Knowledge Graph
+        Testing Strategy
       
     </span>
   </a>
@@ -2632,10 +2053,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#command-palette" class="md-nav__link">
+  <a href="#risks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Command Palette
+        Risks
       
     </span>
   </a>
@@ -2643,54 +2064,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-integration" class="md-nav__link">
+  <a href="#future-work-not-this-branch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AI Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#global-hotkey" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Global Hotkey
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#math-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Math Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#accessibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Accessibility
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Future Work (Not This Branch)
       
     </span>
   </a>
@@ -2717,632 +2094,190 @@
   
 
 
-<h1 id="features-overview">Features Overview</h1>
+<h1 id="spec-settings-infrastructure-improvements">SPEC: Settings Infrastructure Improvements</h1>
 <blockquote>
-<p>Every feature follows <strong>minimal friction</strong> and <strong>maximum focus</strong></p>
+<p><strong>Date:</strong> 2026-02-23
+<strong>Branch:</strong> <code>feature/settings-improvements</code>
+<strong>Status:</strong> Shipped (PR #47, merged 2026-02-24)
+<strong>Origin:</strong> PR #45 (Pomodoro Timer) code review findings</p>
 </blockquote>
-<hr />
-<h2 id="core-features">Core Features</h2>
-<div class="grid cards">
+<h2 id="summary">Summary</h2>
+<p>Standardize settings patterns discovered during the Pomodoro PR review: extract reusable toggle components, centralize shortcut labels, and create a <code>usePreferences()</code> hook that eliminates per-render localStorage reads. Also add a pre-commit guard to prevent ORCHESTRATE files from leaking to dev/main.</p>
+<h2 id="problem-statement">Problem Statement</h2>
+<p>The PR #45 review revealed several patterns that, while fixed locally for the Pomodoro feature, exist across the settings codebase:</p>
+<ol>
+<li><strong>Duplicated toggle markup</strong> — 8+ lines of identical toggle switch JSX copy-pasted per setting</li>
+<li><strong>Shortcut label drift</strong> — Labels like <code>⌘⇧P</code> vs <code>⌘⇧N</code> hardcoded in 3+ locations, easily desynchronized</li>
+<li><strong>Per-render localStorage reads</strong> — <code>loadPreferences()</code> called in render paths, each call parsing JSON from localStorage</li>
+<li><strong>No ORCHESTRATE cleanup guard</strong> — Working artifacts can accidentally ship to dev/main</li>
+</ol>
+<h2 id="requirements">Requirements</h2>
+<h3 id="must-have-p0">Must Have (P0)</h3>
 <ul>
-<li>
-<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg></span> <strong>CodeMirror 6 Editor</strong></p>
-<hr />
-<p>Three modes: Source (<code>⌘1</code>), Live Preview (<code>⌘2</code>), Reading (<code>⌘3</code>). Cycle with <code>⌘E</code>.</p>
-</li>
-<li>
-<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.83 9 15 12.16V12a3 3 0 0 0-3-3zm-4.3.8 1.55 1.55c-.05.21-.08.42-.08.65a3 3 0 0 0 3 3c.22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53a5 5 0 0 1-5-5c0-.79.2-1.53.53-2.2M2 4.27l2.28 2.28.45.45C3.08 8.3 1.78 10 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.43.42L19.73 22 21 20.73 3.27 3M12 7a5 5 0 0 1 5 5c0 .64-.13 1.26-.36 1.82l2.93 2.93c1.5-1.25 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-4 .7l2.17 2.15C10.74 7.13 11.35 7 12 7"/></svg></span> <strong>Focus Mode</strong></p>
-<hr />
-<p>Distraction-free writing. Sidebars collapse. ⌘⇧F to toggle.</p>
-</li>
-<li>
-<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.98 2.98 0 0 0 0-4.24 2.98 2.98 0 0 0-4.24 0l-3.53 3.53a2.98 2.98 0 0 0 0 4.24m2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.98 2.98 0 0 0 0 4.24 2.98 2.98 0 0 0 4.24 0l3.53-3.53a2.98 2.98 0 0 0 0-4.24.973.973 0 0 1 0-1.42"/></svg></span> <strong>Wiki Links</strong></p>
-<hr />
-<p>Connect notes with <code>[[double brackets]]</code>. Autocomplete included.</p>
-</li>
-<li>
-<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.5 7A1.5 1.5 0 0 1 4 5.5 1.5 1.5 0 0 1 5.5 4 1.5 1.5 0 0 1 7 5.5 1.5 1.5 0 0 1 5.5 7m15.91 4.58-9-9C12.05 2.22 11.55 2 11 2H4c-1.11 0-2 .89-2 2v7c0 .55.22 1.05.59 1.41l8.99 9c.37.36.87.59 1.42.59s1.05-.23 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.56-.23-1.06-.59-1.42"/></svg></span> <strong>Tags</strong></p>
-<hr />
-<p>Organize with <code>#hashtags</code>. Hierarchical support (<code>#research/stats</code>).</p>
-</li>
-<li>
-<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a7 7 0 0 1-7-7 7 7 0 0 1 7-7 7 7 0 0 1 7 7 7 7 0 0 1-7 7m7.03-12.61 1.42-1.42c-.45-.51-.9-.97-1.41-1.41L17.62 6c-1.55-1.26-3.5-2-5.62-2a9 9 0 0 0-9 9 9 9 0 0 0 9 9c5 0 9-4.03 9-9 0-2.12-.74-4.07-1.97-5.61M11 14h2V8h-2m4-7H9v2h6z"/></svg></span> <strong>Pomodoro Timer</strong></p>
-<hr />
-<p>25-minute focus sessions with break reminders. Auto-saves your work.</p>
-</li>
+<li>Reusable <code>SettingsToggle</code> component with consistent markup and accessibility</li>
+<li><code>SHORTCUTS</code> registry constant used by all UI labels and tests</li>
+<li><code>usePreferences()</code> hook that caches preferences in React state</li>
+<li>Pre-commit hook blocking ORCHESTRATE files on dev/main</li>
 </ul>
-</div>
-<hr />
-<h2 id="editor">Editor</h2>
-<h3 id="codemirror-6-editor">CodeMirror 6 Editor</h3>
+<h3 id="should-have-p1">Should Have (P1)</h3>
+<ul>
+<li>All existing settings tabs migrated away from direct <code>loadPreferences()</code> calls</li>
+<li>Test suite for <code>usePreferences()</code> hook (read, update, toggle, zustand sync)</li>
+<li>Test validating shortcut registry completeness</li>
+</ul>
+<h3 id="wont-have-this-phase">Won't Have (This Phase)</h3>
+<ul>
+<li>Full <code>usePreferencesStore</code> Zustand store (future work — see long-term backlog)</li>
+<li>Reactivity across browser tabs (storage events)</li>
+<li>Migration of non-settings code that reads preferences</li>
+</ul>
+<h2 id="design">Design</h2>
+<h3 id="settingstoggle-component">SettingsToggle Component</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// components/Settings/SettingsToggle.tsx</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">SettingsToggle</span><span class="p">({</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">label</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="p">,</span><span class="w"> </span><span class="nx">checked</span><span class="p">,</span><span class="w"> </span><span class="nx">onChange</span><span class="p">,</span><span class="w"> </span><span class="nx">testId</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="nx">SettingsToggleProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">&quot;flex items-center justify-between p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">&quot;text-sm font-medium text-nexus-text-primary&quot;</span><span class="p">&gt;{</span><span class="nx">label</span><span class="p">}&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">&quot;text-xs text-nexus-text-muted&quot;</span><span class="p">&gt;{</span><span class="nx">description</span><span class="p">}&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="p">&lt;</span><span class="nt">button</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="na">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">onChange</span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="na">className</span><span class="o">=</span><span class="p">{</span><span class="sb">`w-10 h-5 rounded-full relative cursor-pointer transition-colors </span><span class="si">${</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">          </span><span class="nx">checked</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;bg-nexus-accent&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bg-white/10&#39;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="si">}</span><span class="sb">`</span><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="na">role</span><span class="o">=</span><span class="s">&quot;switch&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">        </span><span class="na">aria-checked</span><span class="o">=</span><span class="p">{</span><span class="nx">checked</span><span class="p">}</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="na">aria-label</span><span class="o">=</span><span class="p">{</span><span class="nx">label</span><span class="p">}</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">        </span><span class="na">data-testid</span><span class="o">=</span><span class="p">{</span><span class="nx">testId</span><span class="p">}</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">      </span><span class="p">&gt;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="p">{</span><span class="sb">`absolute top-1 w-3 h-3 bg-white rounded-full transition-all </span><span class="si">${</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">          </span><span class="nx">checked</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;right-1&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;left-1&#39;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="si">}</span><span class="sb">`</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">      </span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="p">)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Key improvements over current pattern:</strong>
+- <code>role="switch"</code> and <code>aria-checked</code> for accessibility
+- Consistent <code>data-testid</code> support
+- Single source of truth for toggle styling</p>
+<h3 id="shortcut-registry">Shortcut Registry</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// lib/shortcuts.ts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">SHORTCUTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nx">newNote</span><span class="o">:</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span><span class="w">       </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘N&#39;</span><span class="p">,</span><span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;New note&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">newProject</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd+shift&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘⇧N&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;New project&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">search</span><span class="o">:</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span><span class="w">       </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘K&#39;</span><span class="p">,</span><span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Search&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nx">settings</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span><span class="w">       </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘,&#39;</span><span class="p">,</span><span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Settings&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nx">pomodoro</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd+shift&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘⇧P&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Focus timer&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nx">save</span><span class="o">:</span><span class="w">       </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span><span class="w">       </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘S&#39;</span><span class="p">,</span><span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Save&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nx">bold</span><span class="o">:</span><span class="w">       </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span><span class="w">       </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘B&#39;</span><span class="p">,</span><span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Bold&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nx">italic</span><span class="o">:</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mod</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span><span class="w">       </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;⌘I&#39;</span><span class="p">,</span><span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Italic&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">ShortcutId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keyof</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">SHORTCUTS</span>
+</code></pre></div>
+<p>Usage in components: <code>SHORTCUTS.newProject.label</code> instead of <code>'⌘⇧N'</code>.</p>
+<h3 id="usepreferences-hook">usePreferences Hook</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// hooks/usePreferences.ts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">usePreferences</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">prefs</span><span class="p">,</span><span class="w"> </span><span class="nx">setPrefs</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">loadPreferences</span><span class="p">())</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">updatePref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useCallback</span><span class="p">(&lt;</span><span class="nt">K</span><span class="w"> </span><span class="na">extends</span><span class="w"> </span><span class="na">keyof</span><span class="w"> </span><span class="na">Preferences</span><span class="p">&gt;(</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">K</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">Preferences</span><span class="p">[</span><span class="nx">K</span><span class="p">]</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nx">updatePreferences</span><span class="p">({</span><span class="w"> </span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">newPrefs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loadPreferences</span><span class="p">()</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nx">setPrefs</span><span class="p">(</span><span class="nx">newPrefs</span><span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="c1">// Auto-sync zustand stores</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">key</span><span class="p">).</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;pomodoro&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nx">usePomodoroStore</span><span class="p">.</span><span class="nx">getState</span><span class="p">().</span><span class="nx">syncPreferences</span><span class="p">()</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">[])</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">togglePref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useCallback</span><span class="p">((</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">keyof</span><span class="w"> </span><span class="nx">Preferences</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nx">updatePref</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="nx">prefs</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">[</span><span class="nx">prefs</span><span class="p">,</span><span class="w"> </span><span class="nx">updatePref</span><span class="p">])</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prefs</span><span class="p">,</span><span class="w"> </span><span class="nx">updatePref</span><span class="p">,</span><span class="w"> </span><span class="nx">togglePref</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="pre-commit-guard">Pre-commit Guard</h3>
+<p>Added to existing <code>.husky/pre-commit</code> (or created if absent):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Block ORCHESTRATE files on protected branches</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">staged_orchestrate</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>diff<span class="w"> </span>--cached<span class="w"> </span>--name-only<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;^ORCHESTRATE-&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span><span class="k">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">branch</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>branch<span class="w"> </span>--show-current<span class="k">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$staged_orchestrate</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$branch</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$branch</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ ORCHESTRATE files cannot be committed to </span><span class="nv">$branch</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Files: </span><span class="nv">$staged_orchestrate</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Fix: git rm ORCHESTRATE-*.md&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">fi</span>
+</code></pre></div>
+<h2 id="implementation-plan">Implementation Plan</h2>
 <table>
 <thead>
 <tr>
-<th>Mode</th>
-<th>Shortcut</th>
+<th>Step</th>
 <th>Description</th>
+<th>Files</th>
+<th>Effort</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Source</strong></td>
-<td><code>⌘1</code></td>
-<td>Raw markdown with syntax highlighting</td>
+<td>1</td>
+<td>Extract SettingsToggle component + tests</td>
+<td>3 files</td>
+<td>30 min</td>
 </tr>
 <tr>
-<td><strong>Live Preview</strong></td>
-<td><code>⌘2</code></td>
-<td>Obsidian-style: syntax hides away from cursor, LaTeX renders inline</td>
+<td>2</td>
+<td>Create SHORTCUTS registry, update labels</td>
+<td>6 files</td>
+<td>20 min</td>
 </tr>
 <tr>
-<td><strong>Reading</strong></td>
-<td><code>⌘3</code></td>
-<td>Fully rendered view with clickable links</td>
+<td>3</td>
+<td>Add pre-commit guard</td>
+<td>1 file</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Create usePreferences hook + tests</td>
+<td>3 files</td>
+<td>1.5h</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Audit + migrate all settings tabs</td>
+<td>5-6 files</td>
+<td>1h</td>
 </tr>
 </tbody>
 </table>
-<p>Press <code>⌘E</code> to cycle between modes.</p>
-<h3 id="focus-mode">Focus Mode</h3>
-<div class="admonition tip">
-<p class="admonition-title">Enter Focus Mode</p>
-<p>Press <code>⌘⇧F</code> to hide sidebars and center your writing.</p>
-</div>
+<p><strong>Total estimated:</strong> ~3.5 hours</p>
+<h2 id="testing-strategy">Testing Strategy</h2>
 <ul>
-<li>Sidebars collapse</li>
-<li>Editor centers on screen</li>
-<li>Only your words remain</li>
-<li>Press <code>⌘⇧F</code> or <code>Escape</code> to exit</li>
+<li><strong>SettingsToggle:</strong> render tests (checked/unchecked, click handler, aria attributes)</li>
+<li><strong>SHORTCUTS:</strong> snapshot test ensuring all keys have label + description</li>
+<li><strong>usePreferences:</strong> unit test with <code>renderHook</code> (read, update, toggle, sync)</li>
+<li><strong>Pre-commit:</strong> manual test on dev branch with staged ORCHESTRATE file</li>
+<li><strong>Audit:</strong> existing settings tests must continue passing after migration</li>
 </ul>
-<h3 id="word-count">Word Count</h3>
-<p>Always visible in the status bar. No clicks required.</p>
-<h3 id="pomodoro-focus-timer">Pomodoro Focus Timer</h3>
-<div class="admonition tip">
-<p class="admonition-title">ADHD-Friendly Time Boxing</p>
-<p>Work in focused 25-minute bursts with automatic break reminders.</p>
-</div>
-<p>A minimal timer lives in the status bar, between Word Count and Quick Chat:</p>
-<table>
-<thead>
-<tr>
-<th>Action</th>
-<th>How</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Start/Pause</strong></td>
-<td>Click the timer</td>
-</tr>
-<tr>
-<td><strong>Reset</strong></td>
-<td>Right-click the timer</td>
-</tr>
-<tr>
-<td><strong>View progress</strong></td>
-<td>Session count shows (e.g., 2/4)</td>
-</tr>
-</tbody>
-</table>
-<p><strong>What happens automatically:</strong></p>
+<h2 id="risks">Risks</h2>
 <ul>
-<li><strong>Work complete</strong> → Note auto-saves + "Time for a break! ☕" toast</li>
-<li><strong>Break complete</strong> → "Break's over — ready to write?" toast</li>
-<li><strong>Midnight</strong> → Session count resets</li>
+<li><strong>Phase 4/5 scope creep:</strong> Other settings tabs may have additional patterns beyond <code>loadPreferences()</code>. Limit scope to preference caching only.</li>
+<li><strong>Shortcut registry completeness:</strong> May miss shortcuts in CodeMirror keymaps (those are editor-level, not app-level). Registry covers app shortcuts only.</li>
 </ul>
-<p>Configure durations in <strong>Settings → General → Focus Timer</strong>.</p>
-<hr />
-<h2 id="wiki-links">Wiki Links</h2>
-<p>Connect your notes with wiki-style links:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>See [[My Other Note]] for more details.
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>How</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Autocomplete</td>
-<td>Type <code>[[</code></td>
-</tr>
-<tr>
-<td>Navigate</td>
-<td>Click links in preview</td>
-</tr>
-<tr>
-<td>Backlinks</td>
-<td>View in right sidebar</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="tags">Tags</h2>
-<p>Organize notes with tags:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>This is about <span class="ni">#research</span> and <span class="ni">#causal</span>-inference.
-</code></pre></div>
-<h3 id="tags-panel">Tags Panel</h3>
-<p>Access via right sidebar → "Tags" tab.</p>
-<table>
-<thead>
-<tr>
-<th>View</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Tree View</strong></td>
-<td>Hierarchical display for nested tags</td>
-</tr>
-<tr>
-<td><strong>Flat View</strong></td>
-<td>Alphabetical list</td>
-</tr>
-<tr>
-<td><strong>Compact</strong></td>
-<td>Reduced padding for more tags</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Tag Management:</strong></p>
+<h2 id="future-work-not-this-branch">Future Work (Not This Branch)</h2>
 <ul>
-<li>Right-click to <strong>Rename</strong> or <strong>Delete</strong></li>
-<li><strong>Orphan Detection</strong> highlights unregistered tags</li>
-<li>One-click to register orphan tags</li>
+<li><strong><code>usePreferencesStore</code> Zustand store</strong> — Full reactive preferences with <code>storage</code> event listener for cross-tab sync. Replaces localStorage entirely. See long-term backlog.</li>
 </ul>
-<h3 id="hierarchical-tags">Hierarchical Tags</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh">#research/statistics/mediation</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="gh">#teaching/stat-440</span>
-</code></pre></div>
-<hr />
-<h2 id="daily-notes">Daily Notes</h2>
-<div class="admonition tip">
-<p class="admonition-title">Quick Access</p>
-<p>Press <code>⌘D</code> to open/create today's note.</p>
-</div>
-<p><strong>5 Built-in Templates:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Template</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Minimal</strong></td>
-<td>Just the date heading</td>
-</tr>
-<tr>
-<td><strong>Journaling</strong></td>
-<td>Gratitude, focus, reflections</td>
-</tr>
-<tr>
-<td><strong>Research</strong></td>
-<td>Notes, papers, ideas sections</td>
-</tr>
-<tr>
-<td><strong>Meeting</strong></td>
-<td>Attendees, agenda, action items</td>
-</tr>
-<tr>
-<td><strong>Focus</strong></td>
-<td>Single priority with blockers</td>
-</tr>
-</tbody>
-</table>
-<p>Configure in Settings → Writing → Daily Note Template.</p>
-<hr />
-<h2 id="settings-v190">Settings (v1.9.0+)</h2>
-<div class="admonition tip">
-<p class="admonition-title">Quick Access</p>
-<p>Press <code>⌘,</code> (Command-Comma) to open Settings.</p>
-</div>
-<p><strong>ADHD-optimized settings system</strong> with fuzzy search, visual theme gallery, and Quick Actions customization.</p>
-<h3 id="6-settings-categories">6 Settings Categories</h3>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Contents</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>General</strong></td>
-<td>Focus Timer (Pomodoro), startup behavior, streak display, ADHD features</td>
-</tr>
-<tr>
-<td><strong>Editor</strong></td>
-<td>Font, spacing, readable line length, spellcheck</td>
-</tr>
-<tr>
-<td><strong>Appearance</strong></td>
-<td>UI style, dark/light theme galleries (10 themes)</td>
-</tr>
-<tr>
-<td><strong>Files</strong></td>
-<td>File management settings</td>
-</tr>
-<tr>
-<td><strong>Academic</strong></td>
-<td>Citations, Zotero, export formats</td>
-</tr>
-<tr>
-<td><strong>Icon Bar</strong></td>
-<td>Sidebar icon configuration</td>
-</tr>
-</tbody>
-</table>
-<h3 id="fuzzy-search">Fuzzy Search</h3>
-<p>Search all settings instantly:</p>
-<ul>
-<li>Type to search (300ms debounce for smooth typing)</li>
-<li>Results show breadcrumb navigation (e.g., "Editor › Font &amp; Spacing › Font Size")</li>
-<li>Click result to jump to that setting</li>
-</ul>
-<h3 id="theme-gallery">Theme Gallery</h3>
-<p><strong>10 built-in themes</strong> with visual previews:</p>
-<p><strong>Favorites:</strong> Slate, Nord, Dracula
-<strong>Dark:</strong> Monokai, GitHub Dark
-<strong>Light:</strong> Linen, Paper, Cream</p>
-<ul>
-<li><strong>3-column grid</strong> with hover effects</li>
-<li><strong>Instant preview</strong> - click to apply</li>
-<li><strong>Visual indicator</strong> - blue border + checkmark on selected theme</li>
-</ul>
-<h3 id="quick-actions-customization">Quick Actions Customization</h3>
-<p>Customize your AI Quick Actions:</p>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>How</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Drag-to-reorder</strong></td>
-<td>Click ⋮⋮ handle, drag row</td>
-</tr>
-<tr>
-<td><strong>Toggle visibility</strong></td>
-<td>Checkbox to show/hide</td>
-</tr>
-<tr>
-<td><strong>Edit prompts</strong></td>
-<td>Click ✏️ pencil icon</td>
-</tr>
-<tr>
-<td><strong>Assign shortcuts</strong></td>
-<td>Click ⌨️ for ⌘⌥1-9</td>
-</tr>
-<tr>
-<td><strong>Choose AI model</strong></td>
-<td>Claude or Gemini per action</td>
-</tr>
-<tr>
-<td><strong>Add custom</strong></td>
-<td>Up to 5 custom actions</td>
-</tr>
-<tr>
-<td><strong>Remove custom</strong></td>
-<td>Click 🗑️ trash icon</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Limits:</strong> 5 default + 5 custom = 10 Quick Actions max (prevents choice paralysis)</p>
-<h3 id="project-templates">Project Templates</h3>
-<p><strong>5 preconfigured templates:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Template</th>
-<th>Icon</th>
-<th>Quick Actions</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Research+</strong></td>
-<td>🔬</td>
-<td>Summarize, Explain, Research</td>
-<td>Papers, lit reviews</td>
-</tr>
-<tr>
-<td><strong>Teaching+</strong></td>
-<td>📚</td>
-<td>Explain, Expand, Summarize</td>
-<td>Lesson plans</td>
-</tr>
-<tr>
-<td><strong>Dev+</strong></td>
-<td>💻</td>
-<td>Explain, Improve, Research</td>
-<td>Code docs</td>
-</tr>
-<tr>
-<td><strong>Writing+</strong></td>
-<td>✍️</td>
-<td>Improve, Expand, Summarize</td>
-<td>Creative writing</td>
-</tr>
-<tr>
-<td><strong>Minimal</strong></td>
-<td>⚪</td>
-<td>None</td>
-<td>Clean slate</td>
-</tr>
-</tbody>
-</table>
-<p>Templates apply preconfigured settings for Quick Actions, daily note templates, and default properties.</p>
-<h3 id="exportimport">Export/Import</h3>
-<ul>
-<li><strong>Export:</strong> Copy all settings as JSON to clipboard</li>
-<li><strong>Import:</strong> Paste JSON to restore settings</li>
-<li><strong>Reset:</strong> Revert all settings to defaults (cannot be undone)</li>
-</ul>
-<p><strong>Full tutorial:</strong> <a href="../../tutorials/settings/">Settings Enhancement Guide</a></p>
-<hr />
-<h2 id="quarto-support">Quarto Support</h2>
-<p>First-class support for <a href="https://quarto.org/">Quarto</a> academic documents (<code>.qmd</code> files):</p>
-<h3 id="autocompletion">Autocompletion</h3>
-<table>
-<thead>
-<tr>
-<th>Context</th>
-<th>Trigger</th>
-<th>What You Get</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>YAML frontmatter</strong></td>
-<td>Type key name</td>
-<td>40+ keys with nested values</td>
-</tr>
-<tr>
-<td><strong>Chunk options</strong></td>
-<td>Type <code>#\|</code></td>
-<td>25+ options (<code>echo</code>, <code>fig-width</code>, etc.)</td>
-</tr>
-<tr>
-<td><strong>Cross-references</strong></td>
-<td>Type <code>@fig-</code>, <code>@tbl-</code></td>
-<td>Labels scanned from document</td>
-</tr>
-<tr>
-<td><strong>Code chunks</strong></td>
-<td>Type <code>```</code></td>
-<td>R, Python, Julia, OJS, Mermaid, Graphviz</td>
-</tr>
-<tr>
-<td><strong>LaTeX math</strong></td>
-<td>Type <code>\</code> inside <code>$...$</code></td>
-<td>80+ commands and snippets</td>
-</tr>
-</tbody>
-</table>
-<h3 id="code-block-styling">Code Block Styling</h3>
-<p>Quarto code blocks get distinct visual treatment:</p>
-<ul>
-<li>Monospace font with accent-colored left border</li>
-<li>Chunk option lines (<code>#|</code>) styled as subdued metadata</li>
-<li>Opening fence line highlighted</li>
-<li>Dark mode support</li>
-</ul>
-<h3 id="smart-completion-scoping">Smart Completion Scoping</h3>
-<p>LaTeX completions are context-aware:</p>
-<ul>
-<li><strong>Suppressed</strong> inside code blocks (<code>```{r}</code>) — no <code>\alpha</code> popups in R code</li>
-<li><strong>Snippet completions</strong> only in math mode (<code>$...$</code> or <code>$$...$$</code>) — no erratic popups in prose</li>
-<li><strong>Escaped <code>\$</code></strong> handled correctly for literal dollar signs in text</li>
-</ul>
-<hr />
-<h2 id="terminal">Terminal</h2>
-<p>Embedded terminal in the right sidebar with smart working directory:</p>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Full PTY</strong></td>
-<td>Real shell via portable-pty</td>
-</tr>
-<tr>
-<td><strong>Smart CWD</strong></td>
-<td>Opens in project folder</td>
-</tr>
-<tr>
-<td><strong>Themed</strong></td>
-<td>Matches Scribe dark mode</td>
-</tr>
-<tr>
-<td><strong>Clickable URLs</strong></td>
-<td>WebLinksAddon enabled</td>
-</tr>
-</tbody>
-</table>
-<h3 id="working-directory">Working Directory</h3>
-<p>Terminal intelligently opens in the right folder:</p>
-<table>
-<thead>
-<tr>
-<th>Project Type</th>
-<th>Inferred Path</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Research</td>
-<td><code>~/projects/research/[name]</code></td>
-</tr>
-<tr>
-<td>Teaching</td>
-<td><code>~/projects/teaching/[name]</code></td>
-</tr>
-<tr>
-<td>R Package</td>
-<td><code>~/projects/r-packages/[name]</code></td>
-</tr>
-<tr>
-<td>R Dev</td>
-<td><code>~/projects/dev-tools/[name]</code></td>
-</tr>
-<tr>
-<td>Generic</td>
-<td><code>~/projects/[name]</code></td>
-</tr>
-</tbody>
-</table>
-<div class="admonition tip">
-<p class="admonition-title">Fallback</p>
-<p>If the folder doesn't exist, terminal opens in your home directory.</p>
-</div>
-<hr />
-<h2 id="knowledge-graph">Knowledge Graph</h2>
-<p>Visualize connections between your notes:</p>
-<ul>
-<li>Interactive D3 force-directed graph</li>
-<li>Notes as nodes, links as edges</li>
-<li>Pan, zoom, and click to navigate</li>
-<li>See clusters of related ideas</li>
-</ul>
-<hr />
-<h2 id="command-palette">Command Palette</h2>
-<p>Press <code>⌘K</code> for quick access:</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>New Note</td>
-<td>Create note</td>
-</tr>
-<tr>
-<td>Daily Note</td>
-<td>Open today's note</td>
-</tr>
-<tr>
-<td>Focus Mode</td>
-<td>Toggle distraction-free</td>
-</tr>
-<tr>
-<td>Ask Claude</td>
-<td>AI assistance</td>
-</tr>
-<tr>
-<td>Ask Gemini</td>
-<td>AI assistance</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="ai-integration">AI Integration</h2>
-<p>Use your existing CLI subscriptions (no API keys needed):</p>
-<table>
-<thead>
-<tr>
-<th>Action</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Improve</strong></td>
-<td>Enhance clarity and flow</td>
-</tr>
-<tr>
-<td><strong>Expand</strong></td>
-<td>Develop the idea further</td>
-</tr>
-<tr>
-<td><strong>Summarize</strong></td>
-<td>Condense to key points</td>
-</tr>
-<tr>
-<td><strong>Explain</strong></td>
-<td>Simplify complex text</td>
-</tr>
-<tr>
-<td><strong>Research</strong></td>
-<td>Find related information</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="admonition-title">CLI Required</p>
-<p>Install <a href="https://claude.ai/cli">Claude CLI</a> or <a href="https://ai.google.dev/gemini-api/docs/cli">Gemini CLI</a> first.</p>
-</div>
-<hr />
-<h2 id="global-hotkey">Global Hotkey</h2>
-<p>Open Scribe from anywhere: <strong>⌘⇧N</strong></p>
-<p>Works even when Scribe is minimized or closed.</p>
-<hr />
-<h2 id="math-support">Math Support</h2>
-<p>Write math using LaTeX syntax:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Inline Math</label><label for="__tabbed_1_2">Display Math</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>The formula $E = mc^2$ is famous.
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>$$
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>$$
-</code></pre></div>
-</div>
-</div>
-</div>
-<p>Powered by KaTeX for fast, native rendering.</p>
-<hr />
-<h2 id="accessibility">Accessibility</h2>
-<div class="admonition tip">
-<p class="admonition-title">ADHD-Friendly Design</p>
-<p>Scribe respects your system preferences and cognitive needs.</p>
-</div>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Reduced motion</strong></td>
-<td>Animations disabled when system preference set</td>
-</tr>
-<tr>
-<td><strong>Screen readers</strong></td>
-<td>Proper ARIA labels</td>
-</tr>
-<tr>
-<td><strong>Keyboard navigation</strong></td>
-<td>Full support</td>
-</tr>
-<tr>
-<td><strong>Auto-save</strong></td>
-<td>Never lose work</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="next-steps">Next Steps</h2>
-<p><a class="md-button md-button--primary" href="../shortcuts/">Keyboard Shortcuts <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg></span></a>
-<a class="md-button" href="../themes/">Themes Guide</a></p>
 
 
 

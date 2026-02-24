@@ -1339,6 +1339,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#preference-toggles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preference Toggles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fuzzy-search" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2294,6 +2305,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#preference-toggles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preference Toggles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fuzzy-search" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2648,33 +2670,118 @@
 </thead>
 <tbody>
 <tr>
+<td><strong>General</strong></td>
+<td>⚙️</td>
+<td>Open last page, streak display, Focus Timer (Pomodoro), ADHD features</td>
+</tr>
+<tr>
 <td><strong>Editor</strong></td>
 <td>📝</td>
-<td>Font, spacing, ligatures, focus mode</td>
+<td>Font, spacing, readable line length, spellcheck</td>
 </tr>
 <tr>
-<td><strong>Themes</strong></td>
+<td><strong>Appearance</strong></td>
 <td>🎨</td>
-<td>Visual theme gallery (8 themes)</td>
+<td>UI style, dark/light theme galleries (10 themes)</td>
 </tr>
 <tr>
-<td><strong>AI &amp; Workflow</strong></td>
-<td>⚡</td>
-<td>Quick Actions, chat, @ references</td>
-</tr>
-<tr>
-<td><strong>Projects</strong></td>
+<td><strong>Files</strong></td>
 <td>📁</td>
-<td>Templates, defaults, daily notes</td>
+<td>File management settings</td>
 </tr>
 <tr>
-<td><strong>Advanced</strong></td>
-<td>⚙️</td>
-<td>Performance, data, export/import</td>
+<td><strong>Academic</strong></td>
+<td>📚</td>
+<td>Citations, Zotero, export formats</td>
+</tr>
+<tr>
+<td><strong>Icon Bar</strong></td>
+<td>🔧</td>
+<td>Sidebar icon configuration</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Badge:</strong> AI category shows "3" badge (3 new features in v1.9.0)</p>
+<hr />
+<h2 id="preference-toggles">Preference Toggles</h2>
+<p>The following boolean preferences are managed by the <code>usePreferences()</code> hook
+and persist to <code>localStorage</code> via <code>SettingsToggle</code> components.</p>
+<table>
+<thead>
+<tr>
+<th>Preference</th>
+<th>Default</th>
+<th>Tab</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Open Last Page</strong></td>
+<td>ON</td>
+<td>General</td>
+<td>Restore the last open note on startup</td>
+</tr>
+<tr>
+<td><strong>Streak Display</strong></td>
+<td>ON</td>
+<td>General</td>
+<td>Show writing streak indicator</td>
+</tr>
+<tr>
+<td><strong>Pomodoro Enabled</strong></td>
+<td>ON</td>
+<td>General</td>
+<td>Show Pomodoro timer in status bar</td>
+</tr>
+<tr>
+<td><strong>Readable Line Length</strong></td>
+<td>ON</td>
+<td>Editor</td>
+<td>Limit editor line width for comfortable reading</td>
+</tr>
+<tr>
+<td><strong>Spellcheck</strong></td>
+<td>OFF</td>
+<td>Editor</td>
+<td>Enable browser-native spellcheck in the editor</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pomodoro Duration Settings</strong> (numeric, in General &gt; Focus Timer):</p>
+<table>
+<thead>
+<tr>
+<th>Preference</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Work Minutes</strong></td>
+<td>25</td>
+<td>Length of a focus session</td>
+</tr>
+<tr>
+<td><strong>Short Break Minutes</strong></td>
+<td>5</td>
+<td>Break after each session</td>
+</tr>
+<tr>
+<td><strong>Long Break Minutes</strong></td>
+<td>15</td>
+<td>Break after N sessions</td>
+</tr>
+<tr>
+<td><strong>Long Break Interval</strong></td>
+<td>4</td>
+<td>Sessions before a long break</td>
+</tr>
+</tbody>
+</table>
+<p>All toggles write-through to <code>localStorage</code> immediately (no Save button).
+Changes propagate to other components via the <code>preferences-changed</code> event.
+Pomodoro preferences also sync to the <code>usePomodoroStore</code> Zustand store.</p>
 <hr />
 <h2 id="fuzzy-search">Fuzzy Search</h2>
 <p><strong>Access:</strong> Just start typing in the search box (auto-focused when Settings opens)</p>
@@ -3252,9 +3359,9 @@
 <li><a href="../../guide/shortcuts/">Keyboard Shortcuts</a> - All shortcuts</li>
 </ul>
 <hr />
-<p><strong>Version:</strong> v1.9.0+
-<strong>Last Updated:</strong> 2025-12-31
-<strong>Changelog:</strong> <a href="https://github.com/Data-Wise/scribe/releases/tag/v1.9.0">v1.9.0 Release Notes</a></p>
+<p><strong>Version:</strong> v1.19.1+
+<strong>Last Updated:</strong> 2026-02-24
+<strong>Changelog:</strong> <a href="https://github.com/Data-Wise/scribe/releases/tag/v1.19.0">v1.19.0 Release Notes</a></p>
 
 
 

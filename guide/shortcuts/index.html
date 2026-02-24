@@ -996,6 +996,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#developer-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Developer Notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Developer Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shortcuts-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SHORTCUTS Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2121,6 +2149,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#developer-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Developer Notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Developer Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shortcuts-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SHORTCUTS Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2258,7 +2314,7 @@
 </tr>
 <tr>
 <td><strong>New Project</strong></td>
-<td><code>⌘⇧N</code></td>
+<td><code>⌘⇧N</code> (in-app)</td>
 </tr>
 <tr>
 <td><strong>Daily Note</strong></td>
@@ -2439,6 +2495,35 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="developer-notes">Developer Notes</h2>
+<p>All keyboard shortcuts are defined in a single registry file:</p>
+<p><strong>File:</strong> <code>src/renderer/src/lib/shortcuts.ts</code></p>
+<h3 id="shortcuts-registry">SHORTCUTS Registry</h3>
+<p>The <code>SHORTCUTS</code> object is the single source of truth for key bindings,
+modifier keys, and display labels. There are currently <strong>25 registered
+shortcuts</strong> covering notes, navigation, editor modes, sidebars, and
+system actions.</p>
+<p><strong>Display labels:</strong> Use <code>SHORTCUTS.xxx.label</code> to render the human-readable
+shortcut string (e.g., <code>SHORTCUTS.focusMode.label</code> returns <code>"⌘⇧F"</code>).</p>
+<p><strong>Event matching:</strong> Use <code>matchesShortcut(event, shortcutId)</code> in keyboard
+event handlers instead of manual <code>event.metaKey &amp;&amp; event.key === '...'</code>
+checks. The function handles <code>cmd</code>, <code>shift</code>, and <code>alt</code> modifier
+combinations automatically.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SHORTCUTS</span><span class="p">,</span><span class="w"> </span><span class="nx">matchesShortcut</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../lib/shortcuts&#39;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">// Display</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">SHORTCUTS</span><span class="p">.</span><span class="nx">focusMode</span><span class="p">.</span><span class="nx">label</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/span&gt;  /</span><span class="o">/</span><span class="w"> </span><span class="s2">&quot;⌘⇧F&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">// Match</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kd">function</span><span class="w"> </span><span class="nx">handleKeyDown</span><span class="p">(</span><span class="nx">e</span><span class="o">:</span><span class="w"> </span><span class="kt">KeyboardEvent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">matchesShortcut</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;focusMode&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nx">toggleFocusMode</span><span class="p">()</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>When a shortcut keybinding changes, update it in <code>shortcuts.ts</code> and both
+UI labels and event matching update automatically.</p>
 <hr />
 <h2 id="next-steps">Next Steps</h2>
 <p><a class="md-button md-button--primary" href="../editor/">Editor Guide <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg></span></a>
