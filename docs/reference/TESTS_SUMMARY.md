@@ -14,7 +14,7 @@
 | **Themes.test.ts** | 101 | Theme system, fonts, import/export |
 | **Validation.test.ts** | 54 | Regex, data validation, security, performance |
 | **Tags.test.tsx** | 52 | Tag CRUD, colors, filtering |
-| **BlockNoteEditor.test.tsx** | 35 | Legacy editor tests |
+| **usePomodoroStore.test.ts** | 35 | Pomodoro timer state machine (v1.19) |
 | **Autocomplete.test.tsx** | 34 | Wiki-link/tag autocomplete, keyboard nav |
 | **HybridEditor.test.tsx** | 32 | Editor rendering, modes, highlighting |
 | **Integration.test.tsx** | 32 | Workflows, ADHD design verification |
@@ -25,7 +25,7 @@
 
 ---
 
-## New in Sprint 10.5: Theme & Font Tests
+## Theme & Font Tests
 
 ### Themes.test.ts (101 tests)
 
@@ -331,7 +331,7 @@
 
 ### Components.test.tsx (16 tests)
 
-- Ribbon navigation
+- Sidebar navigation
 - SearchBar input
 - TagFilter multi-select
 - PropertiesPanel CRUD
@@ -424,11 +424,12 @@ npm test -- --reporter=verbose
 
 ## Test Architecture
 
+76 test files in `src/renderer/src/__tests__/` and component co-located test directories. Key files:
+
 ```
 src/renderer/src/__tests__/
-├── Themes.test.ts             # Theme & font system (NEW)
+├── Themes.test.ts             # Theme & font system
 ├── Autocomplete.test.tsx      # Autocomplete components
-├── BlockNoteEditor.test.tsx   # Legacy editor
 ├── CommandPalette.test.tsx    # Command palette
 ├── Components.test.tsx        # UI components
 ├── HybridEditor.test.tsx      # Main editor
@@ -437,5 +438,9 @@ src/renderer/src/__tests__/
 ├── Tags.test.tsx              # Tag system
 ├── Validation.test.ts         # Validation logic
 ├── WikiLinks.test.tsx         # Wiki-link system
-└── setup.ts                   # Test setup & mocks
+├── usePomodoroStore.test.ts   # Pomodoro state machine
+├── PomodoroTimer.test.tsx     # Pomodoro component
+├── setup.ts                   # Test setup & mocks
+└── testUtils.ts               # Mock factories
++ 62 more files (settings, sidebar, vault wiring, tabs, etc.)
 ```

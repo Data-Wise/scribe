@@ -115,7 +115,7 @@ cd scribe && npm install && npm run dev
 | **Callouts** | 11 Obsidian-style callout types with color coding |
 | **Focus Mode** | Distraction-free, one note at a time |
 | **Settings** | Fuzzy search (⌘,), theme gallery, Quick Actions customization |
-| **Themes** | 8 built-in themes with visual previews |
+| **Themes** | 10 built-in themes with visual previews |
 | **Fonts** | 14 recommended fonts + Homebrew install |
 | **Quick Actions** | 5 default + 5 custom AI actions with drag-to-reorder |
 | **Wiki Links** | `[[link]]` to connect notes |
@@ -168,7 +168,7 @@ cd scribe && npm install && npm run dev
 | Component | Technology |
 |-----------|------------|
 | Framework | Tauri 2 + React 18 |
-| Editor | HybridEditor (ReactMarkdown) |
+| Editor | CodeMirror 6 (Source / Live Preview / Reading) |
 | Styling | Tailwind CSS |
 | State | Zustand |
 | Database | SQLite (Tauri) / IndexedDB (Browser) |

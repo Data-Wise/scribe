@@ -159,7 +159,7 @@ Configure in Settings → Writing → Daily Note Template.
 
 ---
 
-## Settings (v1.9.0+)
+## Settings
 
 !!! tip "Quick Access"
     Press `⌘,` (Command-Comma) to open Settings.
@@ -189,9 +189,8 @@ Search all settings instantly:
 
 **10 built-in themes** with visual previews:
 
-**Favorites:** Slate, Nord, Dracula
-**Dark:** Monokai, GitHub Dark
-**Light:** Linen, Paper, Cream
+**Dark:** Oxford Dark, Forest Night, Warm Cocoa, Midnight Purple, Deep Ocean
+**Light:** Soft Paper, Morning Fog, Sage Garden, Lavender Mist, Sand Dune
 
 - **3-column grid** with hover effects
 - **Instant preview** - click to apply

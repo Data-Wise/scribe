@@ -9,11 +9,25 @@ Scribe is built with Tauri 2 + React, providing a native desktop experience with
 | **Framework** | Tauri 2 | Native desktop shell |
 | **Backend** | Rust | Performance, security |
 | **Frontend** | React 18 | UI components |
-| **Editor** | HybridEditor | Markdown + preview |
+| **Editor** | CodeMirror 6 | Source editor with extensions |
 | **Styling** | Tailwind CSS | Utility-first CSS |
-| **State** | Zustand | Lightweight state management |
-| **Database** | SQLite | Local data storage |
-| **Testing** | Vitest | Fast unit tests |
+| **State** | Zustand (5 stores) | Lightweight state management |
+| **Database** | SQLite (Tauri) / IndexedDB (Browser) | Local data storage |
+| **Terminal** | xterm.js | Embedded PTY shell |
+| **Graph** | D3.js | Knowledge graph visualization |
+| **Math** | KaTeX | LaTeX rendering |
+| **Testing** | Vitest + Testing Library | Unit/integration tests |
+
+## Dual Runtime Architecture
+
+Scribe runs in two modes with a unified API:
+
+| Mode | Database | Launch | Use Case |
+|------|----------|--------|----------|
+| **Tauri** | SQLite (Rust) | `npm run dev` | Full features, desktop app |
+| **Browser** | IndexedDB (Dexie.js) | `npm run dev:vite` | Testing, demos, development |
+
+The API factory (`src/renderer/src/lib/api.ts`) auto-switches based on runtime detection via `platform.ts`.
 
 ## Project Structure
 
@@ -23,24 +37,46 @@ scribe/
 │   └── renderer/              # React frontend
 │       └── src/
 │           ├── components/    # UI components
+│           │   ├── sidebar/   # MissionSidebar system (25+ files)
+│           │   ├── EditorTabs/
+│           │   ├── Settings/  # Settings subsystem (12 files)
 │           │   ├── HybridEditor.tsx
+│           │   ├── CodeMirrorEditor.tsx
+│           │   ├── EditorOrchestrator.tsx
+│           │   ├── KeyboardShortcutHandler.tsx
+│           │   ├── PomodoroTimer.tsx
 │           │   ├── CommandPalette.tsx
-│           │   ├── SettingsModal.tsx
-│           │   └── ...
+│           │   └── ...        # 50+ components total
+│           ├── hooks/
+│           │   ├── usePreferences.ts
+│           │   ├── useIconGlowEffect.ts
+│           │   └── useForestTheme.ts
 │           ├── lib/           # Utilities
+│           │   ├── api.ts            # API factory (Tauri/Browser)
+│           │   ├── browser-api.ts    # IndexedDB API
+│           │   ├── browser-db.ts     # Dexie.js schema
+│           │   ├── preferences.ts
+│           │   ├── shortcuts.ts      # 27-shortcut registry
 │           │   ├── themes.ts
-│           │   └── api.ts
-│           ├── store/         # Zustand state
-│           │   └── useNotesStore.ts
-│           ├── types/         # TypeScript types
-│           └── App.tsx        # Main app
+│           │   ├── quarto-completions.ts
+│           │   └── settingsSchema.ts
+│           ├── store/         # Zustand state (singular)
+│           │   ├── useNotesStore.ts
+│           │   ├── useProjectStore.ts
+│           │   ├── useAppViewStore.ts
+│           │   ├── usePomodoroStore.ts
+│           │   └── useSettingsStore.ts
+│           └── __tests__/     # 76 test files
 │
 ├── src-tauri/                 # Tauri backend
 │   ├── src/
 │   │   ├── lib.rs
 │   │   ├── main.rs
 │   │   ├── database.rs       # SQLite operations
-│   │   └── commands.rs       # IPC handlers
+│   │   ├── database/         # Database modules
+│   │   ├── commands.rs       # IPC handlers
+│   │   ├── academic.rs       # Citations + export
+│   │   └── terminal.rs       # PTY backend
 │   ├── Cargo.toml
 │   └── tauri.conf.json
 │
@@ -52,9 +88,10 @@ scribe/
 ## Data Flow
 
 ```
-User Input → React Component → Zustand Store → Tauri IPC → Rust Backend → SQLite
-                                     ↓
-                              UI Re-render
+User Input → React Component → Zustand Store → API Layer → Backend → Database
+                                     ↓                         ↓
+                              UI Re-render            SQLite (Tauri) or
+                                                      IndexedDB (Browser)
 ```
 
 ## Database Schema
@@ -67,6 +104,22 @@ CREATE TABLE notes (
   title TEXT NOT NULL,
   content TEXT,
   folder TEXT DEFAULT 'inbox',
+  project_id TEXT,
+  created_at TEXT,
+  updated_at TEXT,
+  deleted_at TEXT
+);
+```
+
+### Projects Table
+
+```sql
+CREATE TABLE projects (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  color TEXT,
+  status TEXT DEFAULT 'active',
   created_at TEXT,
   updated_at TEXT
 );
@@ -105,29 +158,18 @@ CREATE TABLE links (
 
 ## Theme System
 
-Themes use CSS custom properties:
-
-```css
-:root {
-  --nexus-bg-primary: #0a0c10;
-  --nexus-bg-secondary: #12161c;
-  --nexus-bg-tertiary: #1a1f26;
-  --nexus-text-primary: #e2e8f0;
-  --nexus-text-muted: #94a3b8;
-  --nexus-accent: #38bdf8;
-  --nexus-accent-hover: #7dd3fc;
-}
-```
-
-Applied via JavaScript:
+Themes use CSS custom properties applied to `:root`:
 
 ```typescript
 function applyTheme(theme: Theme): void {
   const root = document.documentElement;
-  root.style.setProperty('--nexus-bg-primary', theme.colors.bgPrimary);
-  // ... etc
+  Object.entries(theme.colors).forEach(([key, value]) => {
+    root.style.setProperty(`--nexus-${key}`, value);
+  });
 }
 ```
+
+10 built-in themes (5 dark, 5 light) with keyboard shortcuts (`⌘⌥0`–`⌘⌥9`).
 
 ## IPC Communication
 
@@ -145,12 +187,12 @@ fn get_all_notes(db: State<Database>) -> Result<Vec<Note>, String> {
 }
 ```
 
-## Testing Strategy
+## Testing
 
 | Level | Tool | Coverage |
 |-------|------|----------|
-| Unit | Vitest | Components, utilities |
+| Unit | Vitest | Components, utilities, stores |
 | Integration | Vitest + Testing Library | User flows |
-| E2E | Planned | Full app testing |
+| Store | Vitest | Zustand store state machines |
 
-Current: **407 tests passing**
+Current: **2,280+ tests passing** across 76 test files
