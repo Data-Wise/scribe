@@ -251,9 +251,17 @@ scribe help --all      # Full reference
 
 **Released:** v1.19.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
-**Tests:** 2,282 passing (76 files)
+**Tests:** 2,280 passing (76 files)
 
-### Latest Work: Settings Infrastructure Improvements (PR #47)
+### Latest Work: Session Timer Removal (PR #48)
+
+- ✅ Removed legacy session timer from breadcrumb bar (⏸/▶/↺ controls)
+- ✅ Removed `sessionStartTime` prop chain from 5 components
+- ✅ StatsPanel Duration card → Pomodoro count from `usePomodoroStore`
+- ✅ Cleaned 4 localStorage keys and ~50 lines orphaned CSS
+- ✅ Net: -95 lines, 2 session-duration tests removed (2,280 total)
+
+### Previous: Settings Infrastructure Improvements (PR #47)
 
 - ✅ `SettingsToggle` reusable component with accessibility (`role="switch"`, `aria-checked`, `aria-label`)
 - ✅ `usePreferences` hook — cached preferences with event-based cross-component sync
