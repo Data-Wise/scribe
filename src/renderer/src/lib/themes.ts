@@ -261,6 +261,17 @@ export function applyTheme(theme: Theme): void {
   root.style.setProperty('--nexus-accent-hover', theme.colors.accentHover)
   // Set theme type attribute for CSS selectors (light vs dark)
   root.setAttribute('data-theme-type', theme.type)
+
+  // Code chunk background and border derived from theme colors
+  const bgTertiaryRgb = hexToRgb(theme.colors.bgTertiary)
+  const accentRgb = hexToRgb(theme.colors.accent)
+  if (bgTertiaryRgb) {
+    const alpha = theme.type === 'dark' ? 0.45 : 0.50
+    root.style.setProperty('--nexus-code-bg', `rgba(${bgTertiaryRgb.r}, ${bgTertiaryRgb.g}, ${bgTertiaryRgb.b}, ${alpha})`)
+  }
+  if (accentRgb) {
+    root.style.setProperty('--nexus-code-border', `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, 0.25)`)
+  }
 }
 
 // Get all themes (built-in + custom)
@@ -887,12 +898,16 @@ export interface FontSettings {
   family: string
   size: number
   lineHeight: number
+  codeFamily: string
+  codeSize: number
 }
 
 export const DEFAULT_FONT_SETTINGS: FontSettings = {
   family: 'system',
   size: 15,
   lineHeight: 1.8,
+  codeFamily: 'jetbrains-mono',
+  codeSize: 0.88,
 }
 
 // Font family options - Based on Homebrew-installed fonts
@@ -939,6 +954,12 @@ export const FONT_FAMILIES: Record<string, { name: string; value: string; descri
   },
   
   // === Monospace (Code/Focus) ===
+  'jetbrains-mono': {
+    name: 'JetBrains Mono',
+    value: '"JetBrains Mono", "JetBrains Mono NL", monospace',
+    description: 'JetBrains\' coding font - clear & precise',
+    category: 'mono'
+  },
   'sf-mono': {
     name: 'SF Mono',
     value: '"SF Mono", "SFMono-Regular", Menlo, monospace',
@@ -995,10 +1016,13 @@ export function saveFontSettings(settings: FontSettings): void {
 export function applyFontSettings(settings: FontSettings): void {
   const root = document.documentElement
   const fontFamily = FONT_FAMILIES[settings.family]?.value || FONT_FAMILIES['system'].value
-  
+  const codeFontFamily = FONT_FAMILIES[settings.codeFamily]?.value || FONT_FAMILIES['jetbrains-mono'].value
+
   root.style.setProperty('--editor-font-family', fontFamily)
   root.style.setProperty('--editor-font-size', `${settings.size}px`)
   root.style.setProperty('--editor-line-height', `${settings.lineHeight}`)
+  root.style.setProperty('--code-font-family', codeFontFamily)
+  root.style.setProperty('--code-font-size-ratio', `${settings.codeSize}`)
 }
 
 // ============================================================
