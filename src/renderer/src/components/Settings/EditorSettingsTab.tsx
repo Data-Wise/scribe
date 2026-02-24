@@ -13,7 +13,8 @@ import {
   CheckCircle2,
   Sparkles,
   ExternalLink,
-  Search
+  Search,
+  Code
 } from 'lucide-react'
 import {
   FONT_FAMILIES,
@@ -244,6 +245,66 @@ export function EditorSettingsTab({ fontSettings, onFontSettingsChange }: Editor
             >
               <p className="text-nexus-text-primary">The quick brown fox jumps over the lazy dog.</p>
               <p className="text-nexus-text-muted">0123456789 - ADHD-friendly writing experience.</p>
+            </div>
+          </div>
+        </div>
+      </SettingsSection>
+
+      {/* Code Font Section */}
+      <SettingsSection title="Code Font" icon={<Code className="w-3 h-3" />}>
+        <div className="p-4 bg-nexus-bg-tertiary rounded-lg border border-white/5 space-y-5">
+          {/* Code Font Family */}
+          <div>
+            <label className="text-xs text-nexus-text-muted mb-2 block">Font Family</label>
+            <select
+              value={fontSettings.codeFamily}
+              onChange={(e) => onFontSettingsChange({ ...fontSettings, codeFamily: e.target.value })}
+              className="w-full bg-nexus-bg-primary border border-white/10 rounded-md p-2 text-sm text-nexus-text-primary"
+            >
+              {Object.entries(FONT_FAMILIES).filter(([, f]) => f.category === 'mono').map(([key, font]) => (
+                <option key={key} value={key}>{font.name}</option>
+              ))}
+            </select>
+            <p className="text-[10px] text-nexus-text-muted mt-1">
+              {FONT_FAMILIES[fontSettings.codeFamily]?.description}
+            </p>
+          </div>
+
+          {/* Code Size Ratio */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs text-nexus-text-muted">Size Ratio</label>
+              <span className="text-sm font-bold text-nexus-accent">{fontSettings.codeSize.toFixed(2)}</span>
+            </div>
+            <input
+              type="range"
+              className="w-full accent-nexus-accent"
+              min="0.75"
+              max="1.0"
+              step="0.01"
+              value={fontSettings.codeSize}
+              onChange={(e) => onFontSettingsChange({ ...fontSettings, codeSize: parseFloat(e.target.value) })}
+            />
+            <div className="flex justify-between text-[10px] text-nexus-text-muted mt-1">
+              <span>0.75 (compact)</span>
+              <span>1.00 (same as prose)</span>
+            </div>
+          </div>
+
+          {/* Code Font Preview */}
+          <div className="pt-3 border-t border-white/5">
+            <label className="text-xs text-nexus-text-muted mb-2 block">Preview</label>
+            <div
+              className="p-3 bg-nexus-bg-primary rounded-md border border-white/10"
+              style={{
+                fontFamily: FONT_FAMILIES[fontSettings.codeFamily]?.value,
+                fontSize: `${fontSettings.size * fontSettings.codeSize}px`,
+                lineHeight: 1.5,
+              }}
+            >
+              <p className="text-nexus-text-primary">```&#123;r&#125;</p>
+              <p className="text-nexus-text-muted">#| label: fig-scatter</p>
+              <p className="text-nexus-text-primary">ggplot(data, aes(x, y))</p>
             </div>
           </div>
         </div>
