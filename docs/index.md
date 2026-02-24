@@ -71,7 +71,7 @@ cd scribe && npm install && npm run dev
 
     ---
 
-    Fuzzy search settings (⌘,), visual theme gallery (8 themes), Quick Actions customization, project templates
+    Fuzzy search settings (⌘,), visual theme gallery (10 themes), Quick Actions customization, project templates
 
 -   :material-folder-multiple:{ .lg .middle } **Icon-Centric Sidebar**
 
