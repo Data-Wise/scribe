@@ -3,6 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { StatsPanel } from '../components/StatsPanel'
 import { Project, Note } from '../types'
 
+// Mock usePomodoroStore
+vi.mock('../store/usePomodoroStore', () => ({
+  usePomodoroStore: (selector: (s: { completedToday: number }) => number) => selector({ completedToday: 3 }),
+}))
+
 // Mock data
 const mockProjects: Project[] = [
   {
@@ -74,7 +79,6 @@ describe('StatsPanel Component', () => {
     currentProjectId: 'proj-1',
     wordCount: 150,
     wordGoal: 500,
-    sessionStartTime: Date.now() - 1800000, // 30 minutes ago
     onSelectProject: vi.fn(),
     onSelectNote: vi.fn(),
   }
@@ -89,28 +93,18 @@ describe('StatsPanel Component', () => {
       expect(screen.getByText('Session')).toBeInTheDocument()
     })
 
-    it('displays session duration', () => {
+    it('displays Pomodoro count from store', () => {
       render(<StatsPanel {...defaultProps} />)
-      expect(screen.getByText('Duration')).toBeInTheDocument()
-      // 30 minutes ago should show "30m"
-      expect(screen.getByText('30m')).toBeInTheDocument()
+      expect(screen.getByText('Pomodoros')).toBeInTheDocument()
+      // Pomodoro count is in the Session section
+      const sessionSection = screen.getByText('Session').closest('section')
+      expect(sessionSection).toHaveTextContent('3')
     })
 
     it('displays word count', () => {
       render(<StatsPanel {...defaultProps} />)
       expect(screen.getByText('Words')).toBeInTheDocument()
       expect(screen.getByText('150')).toBeInTheDocument()
-    })
-
-    it('shows -- when no session started', () => {
-      render(<StatsPanel {...defaultProps} sessionStartTime={undefined} />)
-      expect(screen.getByText('--')).toBeInTheDocument()
-    })
-
-    it('shows hours and minutes for long sessions', () => {
-      const twoHoursAgo = Date.now() - 7500000 // 2h 5m
-      render(<StatsPanel {...defaultProps} sessionStartTime={twoHoursAgo} />)
-      expect(screen.getByText('2h 5m')).toBeInTheDocument()
     })
   })
 
@@ -174,7 +168,8 @@ describe('StatsPanel Component', () => {
     it('displays total note count', () => {
       render(<StatsPanel {...defaultProps} />)
       expect(screen.getByText('Notes')).toBeInTheDocument()
-      expect(screen.getByText('3')).toBeInTheDocument() // 3 mock notes
+      const allNotesSection = screen.getByText('All Notes').closest('section')
+      expect(allNotesSection).toHaveTextContent('3') // 3 mock notes
     })
 
     it('displays active project count', () => {
@@ -193,7 +188,8 @@ describe('StatsPanel Component', () => {
       ]
       render(<StatsPanel {...defaultProps} notes={notesWithDeleted} />)
       // Should still show 3, not 4
-      expect(screen.getByText('3')).toBeInTheDocument()
+      const allNotesSection = screen.getByText('All Notes').closest('section')
+      expect(allNotesSection).toHaveTextContent('3')
     })
   })
 

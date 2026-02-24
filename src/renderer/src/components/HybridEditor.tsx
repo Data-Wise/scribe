@@ -29,7 +29,6 @@ interface HybridEditorProps {
   wordGoal?: number // Daily word goal for progress visualization
   sessionStartWords?: number // Words at session start for tracking session progress
   streak?: number // Current writing streak in days
-  sessionStartTime?: number // Timestamp when session started (for timer display)
   onToggleTerminal?: () => void // Callback to toggle Terminal panel
   pomodoroEnabled?: boolean // Show pomodoro timer in status bar
   onPomodoroComplete?: () => void // Called when a pomodoro work session completes
@@ -59,7 +58,6 @@ export function HybridEditor({
   wordGoal = 500,
   sessionStartWords = 0,
   streak = 0,
-  sessionStartTime,
   onToggleTerminal,
   pomodoroEnabled = true,
   onPomodoroComplete,
@@ -445,7 +443,6 @@ export function HybridEditor({
           wordGoal={wordGoal}
           sessionStartWords={sessionStartWords}
           streak={streak}
-          sessionStartTime={sessionStartTime}
         />
 
         {/* Pomodoro timer */}
