@@ -967,7 +967,6 @@ function App() {
           wordCount={wordCount}
           sessionStartWords={sessionStartWords}
           streakInfo={streakInfo}
-
           preferences={preferences}
           onToggleTerminal={() => {
             if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
@@ -1257,7 +1256,6 @@ function App() {
               wordCount={wordCount}
               sessionStartWords={sessionStartWords}
               streakInfo={streakInfo}
-    
               preferences={preferences}
               onToggleTerminal={() => {
                 if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {

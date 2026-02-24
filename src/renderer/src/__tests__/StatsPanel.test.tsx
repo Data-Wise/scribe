@@ -5,7 +5,7 @@ import { Project, Note } from '../types'
 
 // Mock usePomodoroStore
 vi.mock('../store/usePomodoroStore', () => ({
-  usePomodoroStore: (selector: (s: { completedToday: number }) => number) => selector({ completedToday: 3 }),
+  usePomodoroStore: (selector: (s: { completedToday: number }) => number) => selector({ completedToday: 5 }),
 }))
 
 // Mock data
@@ -98,7 +98,7 @@ describe('StatsPanel Component', () => {
       expect(screen.getByText('Pomodoros')).toBeInTheDocument()
       // Pomodoro count is in the Session section
       const sessionSection = screen.getByText('Session').closest('section')
-      expect(sessionSection).toHaveTextContent('3')
+      expect(sessionSection).toHaveTextContent('5')
     })
 
     it('displays word count', () => {
