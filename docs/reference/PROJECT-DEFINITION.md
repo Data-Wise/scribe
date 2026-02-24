@@ -52,7 +52,7 @@ No dialogs. No choices. Just write.
 ### 4. Visible Progress
 
 - Word count (always visible)
-- Session timer
+- Pomodoro timer (work/break cycles)
 - Streak indicator (optional)
 
 ### 5. Sensory-Friendly
@@ -250,7 +250,7 @@ Working on [[Sensitivity Analysis]] section...
 | Ecosystem Panel | 9 |
 | Command Palette (⌘K) | 10 |
 | Obsidian Sync | 11 |
-| Session Timer | 9 |
+| Pomodoro Timer | 9 |
 
 ### Tier 3: Academic Features
 

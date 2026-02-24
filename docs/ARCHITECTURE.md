@@ -106,6 +106,45 @@ graph TD
 
 ---
 
+## Preferences System
+
+The preferences system provides lightweight, event-driven state management
+for user settings that persist to `localStorage`. It operates alongside
+the Zustand store but uses a simpler read/write model suited to key-value
+preferences.
+
+```mermaid
+flowchart LR
+    LS[localStorage] -->|loadPreferences| HP[usePreferences hook]
+    HP -->|React state| C[Components]
+    UP[updatePreferences / togglePref] -->|write-through| LS
+    UP -->|dispatch| E["preferences-changed event"]
+    E -->|listener| HP
+```
+
+### Key Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| `preferences.ts` | `src/renderer/src/lib/preferences.ts` | Load, save, merge preferences to localStorage |
+| `usePreferences()` | `src/renderer/src/hooks/usePreferences.ts` | React hook — cached reads, event-based sync across components |
+| `shortcuts.ts` | `src/renderer/src/lib/shortcuts.ts` | `SHORTCUTS` registry — single source of truth for all 27 keyboard shortcuts |
+| `matchesShortcut()` | `src/renderer/src/lib/shortcuts.ts` | Registry-based `KeyboardEvent` matching (cmd/shift/alt modifiers) |
+| `SettingsToggle` | `src/renderer/src/components/Settings/SettingsToggle.tsx` | Reusable toggle switch component for boolean settings |
+
+### How It Works
+
+1. **`loadPreferences()`** reads from `localStorage`, merges with defaults so new fields get sensible values on upgrade.
+2. **`usePreferences()`** calls `loadPreferences()` once on mount and caches the result in React state. It listens for the `preferences-changed` custom event to stay in sync with other components.
+3. **`updatePreferences()` / `togglePref()`** write-through to `localStorage` and dispatch `preferences-changed`, triggering all mounted hooks to re-read.
+4. **`SHORTCUTS`** defines every keyboard shortcut with `key`, `mod`, and `label`. UI components reference `SHORTCUTS.xxx.label` for display; handlers call `matchesShortcut(event, shortcutId)` instead of manual key checks.
+
+### Pre-commit ORCHESTRATE Guard
+
+A husky `pre-commit` hook prevents accidental commits of `ORCHESTRATE-*.md` planning files to protected branches. These files belong on feature branches during development and are cleaned up on merge.
+
+---
+
 ## Data Flow
 
 ```mermaid
@@ -206,8 +245,13 @@ scribe/
 │           │   ├── SimpleTagAutocomplete.tsx
 │           │   └── CitationAutocomplete.tsx
 │           │
+│           ├── hooks/
+│           │   └── usePreferences.ts    # Cached prefs hook (event sync)
+│           │
 │           ├── lib/
 │           │   ├── api.ts               # Tauri IPC wrapper
+│           │   ├── preferences.ts       # localStorage preferences R/W
+│           │   ├── shortcuts.ts         # SHORTCUTS registry + matcher
 │           │   ├── themes.ts            # Theme definitions
 │           │   └── mathjax.ts           # KaTeX processing
 │           │

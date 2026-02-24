@@ -1,8 +1,8 @@
 # Scribe — Comprehensive Technical Documentation
 
-**Version:** 1.19 (Pomodoro release)
-**Last Updated:** 2026-02-23
-**Branch:** feature/pomodoro
+**Version:** 1.19.1 (Settings Infrastructure)
+**Last Updated:** 2026-02-24
+**Branch:** dev
 
 ---
 

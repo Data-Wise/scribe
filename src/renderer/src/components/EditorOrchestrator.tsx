@@ -26,7 +26,6 @@ interface EditorOrchestratorProps {
   wordCount: number
   sessionStartWords: Record<string, number>
   streakInfo: { streak: number; isActiveToday: boolean }
-  sessionStartTime: number | null
   preferences: UserPreferences
   
   // Terminal toggle
@@ -80,7 +79,6 @@ export function EditorOrchestrator({
   wordCount,
   sessionStartWords,
   streakInfo,
-  sessionStartTime,
   preferences,
   onToggleTerminal,
   focusMode,
@@ -125,7 +123,6 @@ export function EditorOrchestrator({
                 wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
                 sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
                 streak={streakInfo.streak}
-                sessionStartTime={sessionStartTime || undefined}
                 onToggleTerminal={onToggleTerminal}
                 pomodoroEnabled={pomodoroEnabled}
                 onPomodoroComplete={onPomodoroComplete}
@@ -180,7 +177,6 @@ export function EditorOrchestrator({
             wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
             sessionStartWords={sessionStartWords[selectedNote.id] || wordCount}
             streak={streakInfo.streak}
-            sessionStartTime={sessionStartTime || undefined}
             onToggleTerminal={onToggleTerminal}
             pomodoroEnabled={pomodoroEnabled}
             onPomodoroComplete={onPomodoroComplete}

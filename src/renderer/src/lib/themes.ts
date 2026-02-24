@@ -891,7 +891,7 @@ export interface FontSettings {
 
 export const DEFAULT_FONT_SETTINGS: FontSettings = {
   family: 'system',
-  size: 18,
+  size: 15,
   lineHeight: 1.8,
 }
 

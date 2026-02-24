@@ -6,6 +6,7 @@ import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
 import { useIconGlowEffect } from './hooks/useIconGlowEffect'
+import { usePreferences } from './hooks/usePreferences'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
@@ -51,11 +52,9 @@ import {
   loadThemeShortcuts,
 } from './lib/themes'
 import {
-  loadPreferences,
   updatePreferences,
   updateStreak,
   getStreakInfo,
-  UserPreferences,
   EditorMode,
   SidebarTabId,
 } from './lib/preferences'
@@ -131,8 +130,8 @@ function App() {
   // Editor container ref for auto-collapse functionality
   const editorContainerRef = useRef<HTMLDivElement>(null)
 
-  // User preferences with persistence
-  const [preferences, setPreferences] = useState<UserPreferences>(() => loadPreferences())
+  // User preferences with persistence (auto-syncs via preferences-changed events)
+  const { prefs: preferences, updatePref } = usePreferences()
   const [streakInfo, setStreakInfo] = useState(() => getStreakInfo())
 
   // Focus mode state (persisted)
@@ -141,8 +140,7 @@ function App() {
   // Persist focus mode changes
   const handleFocusModeChange = (enabled: boolean) => {
     setFocusMode(enabled)
-    const updated = updatePreferences({ focusModeEnabled: enabled })
-    setPreferences(updated)
+    updatePref('focusModeEnabled', enabled)
   }
   
   // Sidebar collapse state (leftSidebarCollapsed now handled by DashboardShell)
@@ -159,74 +157,6 @@ function App() {
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
 
-  // Session timer for focus tracking (ADHD feature) - persisted to localStorage
-  const [sessionStart, setSessionStart] = useState(() => {
-    const saved = localStorage.getItem('sessionStart')
-    return saved ? parseInt(saved) : Date.now()
-  })
-  const [sessionDuration, setSessionDuration] = useState(0)
-  const [timerPaused, setTimerPaused] = useState(() => {
-    return localStorage.getItem('timerPaused') === 'true'
-  })
-  const [pausedDuration, setPausedDuration] = useState(() => {
-    const saved = localStorage.getItem('pausedDuration')
-    return saved ? parseInt(saved) : 0
-  })
-
-  // Persist session start to localStorage
-  useEffect(() => {
-    localStorage.setItem('sessionStart', sessionStart.toString())
-  }, [sessionStart])
-
-  // Persist paused state
-  useEffect(() => {
-    localStorage.setItem('timerPaused', timerPaused.toString())
-  }, [timerPaused])
-
-  // Persist paused duration
-  useEffect(() => {
-    localStorage.setItem('pausedDuration', pausedDuration.toString())
-  }, [pausedDuration])
-
-  useEffect(() => {
-    if (timerPaused) return
-    const timer = setInterval(() => {
-      setSessionDuration(Math.floor((Date.now() - sessionStart) / 1000) - pausedDuration)
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [sessionStart, timerPaused, pausedDuration])
-
-  const formatSessionTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
-
-  const toggleTimerPause = () => {
-    if (timerPaused) {
-      // Resuming - calculate how long we were paused and add to pausedDuration
-      const pauseStart = parseInt(localStorage.getItem('pauseStart') || '0')
-      if (pauseStart) {
-        const additionalPause = Math.floor((Date.now() - pauseStart) / 1000)
-        setPausedDuration(prev => prev + additionalPause)
-      }
-      localStorage.removeItem('pauseStart')
-    } else {
-      // Pausing - record when we paused
-      localStorage.setItem('pauseStart', Date.now().toString())
-    }
-    setTimerPaused(!timerPaused)
-  }
-
-  const resetTimer = () => {
-    const newStart = Date.now()
-    setSessionStart(newStart)
-    setSessionDuration(0)
-    setPausedDuration(0)
-    setTimerPaused(false)
-    localStorage.removeItem('pauseStart')
-  }
-  
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'>('properties')
 
@@ -255,14 +185,11 @@ function App() {
   const sidebarTabSize = (settings['appearance.sidebarTabSize'] || 'compact') as 'compact' | 'full'
   // const showSidebarIcons = settings['appearance.showSidebarIcons'] ?? true // TODO: Implement icon visibility
 
-  const [sidebarTabSettings, setSidebarTabSettings] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      tabSize: sidebarTabSize, // Now from Settings store
-      tabOrder: prefs.sidebarTabOrder, // Still from preferences (not in Settings store yet)
-      hiddenTabs: prefs.sidebarHiddenTabs // Still from preferences (not in Settings store yet)
-    }
-  })
+  const [sidebarTabSettings, setSidebarTabSettings] = useState(() => ({
+    tabSize: sidebarTabSize, // Now from Settings store
+    tabOrder: preferences.sidebarTabOrder, // Still from preferences (not in Settings store yet)
+    hiddenTabs: preferences.sidebarHiddenTabs // Still from preferences (not in Settings store yet)
+  }))
 
   // Sidebar tab drag state (v1.8)
   const [draggedSidebarTab, setDraggedSidebarTab] = useState<SidebarTabId | null>(null)
@@ -292,17 +219,11 @@ function App() {
 
   // Tag filtering - filteredNotes now handled by MissionSidebar
 
-  // Session tracking - time when first keystroke occurred
-  const [sessionStartTime, setSessionStartTime] = useState<number | null>(null)
-  
   // Backlinks refresh key - increment to force BacklinksPanel refresh
   const [backlinksRefreshKey, setBacklinksRefreshKey] = useState(0)
   
   // Editor mode - source, live-preview, or reading (persisted in preferences)
-  const [editorMode, setEditorMode] = useState<EditorMode>(() => {
-    const prefs = loadPreferences()
-    return prefs.editorMode || 'source'
-  })
+  const [editorMode, setEditorMode] = useState<EditorMode>(() => preferences.editorMode || 'source')
   
   // Tags for current note (for PropertiesPanel display)
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
@@ -536,11 +457,6 @@ function App() {
 
   const handleContentChange = async (content: string) => {
     if (selectedNote) {
-      // Start session timer on first keystroke
-      if (!sessionStartTime && content.length > 0) {
-        setSessionStartTime(Date.now())
-      }
-
       // Extract tags from content and sync to YAML properties
       const extractedTags = extractTagsFromContent(content)
       const currentProperties = selectedNote.properties || {}
@@ -742,26 +658,21 @@ function App() {
     localStorage.setItem('rightSidebarCollapsed', rightSidebarCollapsed.toString())
   }, [rightSidebarCollapsed])
 
-  // Listen for sidebar preference changes (from Settings modal)
+  // Sync sidebar tab settings when preferences change (hook auto-syncs via preferences-changed)
   useEffect(() => {
-    const handlePrefsChanged = () => {
-      const prefs = loadPreferences()
-      setSidebarTabSettings({
-        tabSize: prefs.sidebarTabSize,
-        tabOrder: prefs.sidebarTabOrder,
-        hiddenTabs: prefs.sidebarHiddenTabs
-      })
-      // If the active tab is now hidden, switch to the first visible tab
-      if (prefs.sidebarHiddenTabs.includes(rightActiveTab)) {
-        const firstVisible = prefs.sidebarTabOrder.find(
-          (t: SidebarTabId) => !prefs.sidebarHiddenTabs.includes(t)
-        )
-        if (firstVisible) setRightActiveTab(firstVisible)
-      }
+    setSidebarTabSettings({
+      tabSize: preferences.sidebarTabSize,
+      tabOrder: preferences.sidebarTabOrder,
+      hiddenTabs: preferences.sidebarHiddenTabs
+    })
+    // If the active tab is now hidden, switch to the first visible tab
+    if (preferences.sidebarHiddenTabs.includes(rightActiveTab)) {
+      const firstVisible = preferences.sidebarTabOrder.find(
+        (t: SidebarTabId) => !preferences.sidebarHiddenTabs.includes(t)
+      )
+      if (firstVisible) setRightActiveTab(firstVisible)
     }
-    window.addEventListener('preferences-changed', handlePrefsChanged)
-    return () => window.removeEventListener('preferences-changed', handlePrefsChanged)
-  }, [rightActiveTab])
+  }, [preferences.sidebarTabSize, preferences.sidebarTabOrder, preferences.sidebarHiddenTabs, rightActiveTab])
 
   // Auto-collapse sidebar when editor is focused
   useEffect(() => {
@@ -1043,7 +954,6 @@ function App() {
           wordCount={wordCount}
           sessionStartWords={sessionStartWords}
           streakInfo={streakInfo}
-          sessionStartTime={sessionStartTime}
           preferences={preferences}
           onToggleTerminal={() => {
             if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
@@ -1287,26 +1197,6 @@ function App() {
               )}
             </div>
 
-            {/* Focus timer with controls */}
-            <div className="focus-timer">
-              <button
-                className="timer-btn"
-                onClick={toggleTimerPause}
-                title={timerPaused ? "Resume timer" : "Pause timer"}
-              >
-                {timerPaused ? '▶' : '⏸'}
-              </button>
-              <span className={`timer-value ${timerPaused ? 'paused' : ''}`}>
-                {formatSessionTime(sessionDuration)}
-              </span>
-              <button
-                className="timer-btn reset"
-                onClick={resetTimer}
-                title="Reset timer"
-              >
-                ↺
-              </button>
-            </div>
           </div>
 
           {/* Editor tabs bar */}
@@ -1353,7 +1243,6 @@ function App() {
               wordCount={wordCount}
               sessionStartWords={sessionStartWords}
               streakInfo={streakInfo}
-              sessionStartTime={sessionStartTime}
               preferences={preferences}
               onToggleTerminal={() => {
                 if (rightActiveTab === 'terminal' && !rightSidebarCollapsed) {
@@ -1536,7 +1425,7 @@ function App() {
                         currentProjectId={currentProjectId}
                         wordCount={wordCount}
                         wordGoal={selectedNote.properties?.word_goal ? Number(selectedNote.properties.word_goal.value) : preferences.defaultWordGoal}
-                        sessionStartTime={sessionStartTime || undefined}
+
                         onSelectProject={setCurrentProject}
                         onSelectNote={(noteId) => {
                           const note = notes.find(n => n.id === noteId)

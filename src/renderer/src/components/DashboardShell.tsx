@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { SHORTCUTS } from '../lib/shortcuts'
 import { Project, Note } from '../types'
 import { DashboardHeader } from './DashboardHeader'
 import { ProjectsPanel } from './ProjectsPanel'
@@ -106,7 +107,7 @@ export function DashboardShell({
           <button
             onClick={onToggleCollapse}
             className="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
-            title="Expand Dashboard (⌘0)"
+            title={`Expand Dashboard (${SHORTCUTS.dashboard.label})`}
           >
             <span
               className="w-2 h-2 rounded-full"
@@ -127,7 +128,7 @@ export function DashboardShell({
             <button
               onClick={onDailyNote}
               className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-              title="Daily Note (⌘D)"
+              title={`Daily Note (${SHORTCUTS.dailyNote.label})`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -136,7 +137,7 @@ export function DashboardShell({
             <button
               onClick={onCreateNote}
               className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-              title="New Note (⌘N)"
+              title={`New Note (${SHORTCUTS.newNote.label})`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -145,7 +146,7 @@ export function DashboardShell({
             <button
               onClick={onQuickCapture}
               className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-              title="Quick Capture (⌘⇧C)"
+              title={`Quick Capture (${SHORTCUTS.quickCapture.label})`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -159,7 +160,7 @@ export function DashboardShell({
           <button
             onClick={onToggleCollapse}
             className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-            title="Expand Dashboard (⌘0)"
+            title={`Expand Dashboard (${SHORTCUTS.dashboard.label})`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -169,7 +170,7 @@ export function DashboardShell({
           <button
             onClick={onFocusMode}
             className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-            title="Focus Mode (⌘⇧F)"
+            title={`Focus Mode (${SHORTCUTS.focusMode.label})`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -180,7 +181,7 @@ export function DashboardShell({
           <button
             onClick={onSettings}
             className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-            title="Settings (⌘,)"
+            title={`Settings (${SHORTCUTS.settings.label})`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />

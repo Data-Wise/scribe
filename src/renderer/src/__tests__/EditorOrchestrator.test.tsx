@@ -37,7 +37,6 @@ describe('EditorOrchestrator', () => {
     wordCount: 100,
     sessionStartWords: {},
     streakInfo: { streak: 5, isActiveToday: true },
-    sessionStartTime: Date.now(),
     preferences: createMockPreferences(),
     onToggleTerminal: vi.fn(),
     focusMode: false,

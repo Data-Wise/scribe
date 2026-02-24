@@ -167,21 +167,28 @@ scribe/
 │   └── renderer/src/              # React frontend
 │       ├── components/
 │       │   ├── MissionControl/    # Mission Control HUD sidebar
-│       │   ├── Settings/          # Modular settings components [NEW]
+│       │   ├── Settings/          # Modular settings components
 │       │   │   ├── GeneralSettingsTab.tsx
 │       │   │   ├── EditorSettingsTab.tsx
+│       │   │   ├── SettingsToggle.tsx    # Reusable toggle (role=switch) [v1.19.1]
 │       │   │   └── SettingsSection.tsx
-│       │   ├── EditorOrchestrator.tsx # Editor rendering logic [NEW]
-│       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts [NEW]
+│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar [v1.19.0]
+│       │   ├── EditorOrchestrator.tsx # Editor rendering logic
+│       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts
 │       │   ├── Editor/            # BlockNote editor
 │       │   └── ...
+│       ├── hooks/                 # React hooks
+│       │   └── usePreferences.ts  # Cached prefs + event sync [v1.19.1]
 │       ├── lib/                   # Core utilities
 │       │   ├── api.ts             # API factory (Tauri/Browser)
+│       │   ├── shortcuts.ts       # 25-shortcut registry [v1.19.1]
 │       │   ├── platform.ts        # Runtime detection (isTauri/isBrowser)
 │       │   ├── browser-api.ts     # IndexedDB API (46 operations)
 │       │   ├── browser-db.ts      # Dexie.js schema + seed data
 │       │   └── browser-dialogs.ts # Browser dialog fallbacks
 │       ├── store/                 # Zustand state
+│       │   ├── useAppViewStore.ts # Sidebar + UI state
+│       │   └── usePomodoroStore.ts # Pomodoro timer state [v1.19.0]
 │       └── types/                 # TypeScript types
 ```
 
@@ -240,21 +247,36 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.19.0 - Pomodoro Focus Timer ✅
+## 🎯 Current Status: v1.20.0 - Settings & Timer Cleanup ✅
 
-**Released:** v1.19.0 (stable)
+**Released:** v1.20.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
-**Install Stable:** `brew install --cask data-wise/tap/scribe` (v1.14.0)
-**Tests:** 2,255 passing (73 files)
+**Tests:** 2,280 passing (76 files)
 
-### Latest Work: Pomodoro Focus Timer (PR #45)
+### Latest Work: Session Timer Removal (PR #48)
+
+- ✅ Removed legacy session timer from breadcrumb bar (⏸/▶/↺ controls)
+- ✅ Removed `sessionStartTime` prop chain from 5 components
+- ✅ StatsPanel Duration card → Pomodoro count from `usePomodoroStore`
+- ✅ Cleaned 4 localStorage keys and ~50 lines orphaned CSS
+- ✅ Net: -95 lines, 2 session-duration tests removed (2,280 total)
+
+### Previous: Settings Infrastructure Improvements (PR #47)
+
+- ✅ `SettingsToggle` reusable component with accessibility (`role="switch"`, `aria-checked`, `aria-label`)
+- ✅ `usePreferences` hook — cached preferences with event-based cross-component sync
+- ✅ `SHORTCUTS` registry (25 shortcuts) with `matchesShortcut()` helper
+- ✅ Migrated `SettingsModal.tsx` to `usePreferences` hook
+- ✅ 27 new tests (2,282 total)
+
+### Previous: Pomodoro Focus Timer (PR #45)
 
 - ✅ Status bar countdown timer (start/pause click, right-click reset)
 - ✅ Zustand store with symmetric callbacks: `tick(onComplete, onBreakComplete)`
 - ✅ Auto-save on work completion, gentle break toasts
 - ✅ Focus Timer settings in General tab (5 new preferences)
 - ✅ Auto-pin new projects to sidebar
-- ✅ 62 new tests (2,255 total)
+- ✅ 62 new tests (2,282 total)
 
 ### Previous: Sidebar Vault Expansion Fix (PR #43)
 
@@ -271,295 +293,47 @@ scribe help --all      # Full reference
 - ✅ Fixed 70 TypeScript errors across 22 test files
 - ✅ Escaped `\$` handling for academic documents
 
-### Previous: Phase 1 Technical Debt Remediation (2026-01-23)
+### Previous: Tech Debt + Quarto Stabilization (v1.16.2)
 
-**Phase 1.1: SettingsModal Refactoring**
-- ✅ Extracted `GeneralSettingsTab`, `EditorSettingsTab`, `SettingsSection`
-- ✅ Reduced `SettingsModal.tsx` by **26%** (614 lines)
-- ✅ Added 13 new unit tests
-
-**Phase 1.2: App.tsx Refactoring**
-- ✅ Extracted `KeyboardShortcutHandler` (25+ shortcuts, Tauri menus)
-- ✅ Extracted `EditorOrchestrator` (Focus/Normal mode rendering)
-- ✅ Reduced `App.tsx` by **13%** (267 lines)
-- ✅ Added 19 new unit tests
-
-**Overall Metrics:**
-- **-881 lines** from monolithic controllers
-- **+4 new components** (well-organized, tested)
-- **+32 new tests** (2,161/2,195 passing, 98.5%)
-- **0 breaking changes**
-
-**Phase 1.3: Quarto Autocomplete Stabilization (v1.16.2)**
-- ✅ Fixed erratic code block behavior (suppressed non-code completions)
-- ✅ Implemented context-aware LaTeX completions (math mode only)
-- ✅ Added syntax highlighting for embedded languages (R, Python, etc.)
-- ✅ Polished code block styling with distinct background
-- ✅ Fixed backtick autocomplete triggers
+Extracted `KeyboardShortcutHandler`, `EditorOrchestrator`, `GeneralSettingsTab`, `EditorSettingsTab` from monolithic App.tsx/SettingsModal.tsx (-881 lines, +4 components, +32 tests). Context-aware LaTeX completions (math-only scoping, suppressed in code blocks).
 
 ---
 
-### Previous: Icon-Centric Sidebar Expansion (v1.16.0)
+### Previous: Icon-Centric Sidebar (v1.16.0)
 
-**Sidebar Architecture Refactor - Complete ✅**
-
-Transitioned from global `sidebarMode` to per-icon expansion where each icon (Inbox, Smart Folders, Pinned Projects) independently expands with its own preferred view mode (compact or card).
-
-**Key Changes:**
-- ✅ **Icon-Centric Expansion** - Icon bar always visible (48px), icons control expansion
-- ✅ **Per-Icon Mode Preferences** - Each icon remembers compact/card preference
-- ✅ **Accordion Pattern** - Only one icon expanded at a time
-- ✅ **Global Width Management** - Shared compact/card widths across all icons
-- ✅ **Removed Shortcuts** - Deleted ⌘B (toggle sidebar) shortcut, no global mode state
-- ✅ **Smooth Animations** - 200ms cubic-bezier transitions, slide-in panels, expanded indicators
-
-**Architecture:**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ Icon-Centric Mode (v1.16.0)                                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌─────┐  ┌──────────────────────────────────────────┐     │
-│  │  I  │  │ Expanded Icon Panel                       │     │
-│  │  N  │  │ ┌──────────────────────────────────────┐ │     │
-│  │  B  │  │ │ Panel Header (Title + Mode Toggle)   │ │     │
-│  │  O  │  │ └──────────────────────────────────────┘ │     │
-│  │  X  │  │                                           │     │
-│  └─────┘  │ ┌──────────────────────────────────────┐ │     │
-│           │ │                                       │ │     │
-│  ┌─────┐  │ │   CompactListView                    │ │     │
-│  │  R  │  │ │      OR                               │ │     │
-│  │  E  │  │ │   CardGridView                        │ │     │
-│  │  S  │  │ │                                       │ │     │
-│  └─────┘  │ │   (mode determined by icon's         │ │     │
-│           │ │    preferredMode setting)             │ │     │
-│  ┌─────┐  │ │                                       │ │     │
-│  │ ... │  │ └──────────────────────────────────────┘ │     │
-│  └─────┘  └──────────────────────────────────────────┘     │
-│           Icon Bar (48px)    Expanded Panel (conditional)   │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Component Hierarchy:**
-
-```
-MissionSidebar.tsx (icon-centric-mode)
-├── IconBar.tsx (48px fixed width, always visible)
-│   ├── InboxButton
-│   ├── SmartIconButton (Research, Teaching, R Package, R Dev, Generic)
-│   ├── VaultIconButton (Pinned Projects)
-│   ├── Spacer
-│   └── ActivityBar
-│
-└── ExpandedIconPanel.tsx (conditional, width = sidebarWidth - 48)
-    ├── PanelHeader
-    │   ├── Icon Label
-    │   ├── Mode Toggle Button (compact ⇄ card)
-    │   └── Close Button
-    │
-    └── Content (based on expandedIcon type + mode)
-        ├── CompactListView.tsx (if mode === 'compact')
-        │   ├── ProjectList (for smart icons)
-        │   └── NoteList (for vault icons)
-        │
-        └── CardGridView.tsx (if mode === 'card')
-            ├── ProjectCards (for smart icons)
-            └── NoteCards (for vault icons)
-```
-
-**State Management (useAppViewStore.ts):**
-
-```typescript
-// Removed (v1.15.0 - Global Mode System)
-sidebarMode: 'icon' | 'compact' | 'card'  // ❌ REMOVED
-lastExpandedMode: 'compact' | 'card' | null  // ❌ REMOVED
-lastModeChangeTimestamp: number  // ❌ REMOVED
-setSidebarMode(mode)  // ❌ REMOVED
-cycleSidebarMode()  // ❌ REMOVED
-toggleSidebarCollapsed()  // ❌ REMOVED
-
-// Added (v1.16.0 - Icon-Centric System)
-expandedIcon: ExpandedIconType | null  // ✅ Which icon is expanded
-  where ExpandedIconType = { type: 'vault', id: string } | { type: 'smart', id: SmartIconId }
-
-// Per-icon mode preferences stored in icon objects:
-PinnedVault.preferredMode: 'compact' | 'card'  // ✅ Each vault remembers mode
-SmartIcon.preferredMode: 'compact' | 'card'    // ✅ Each smart icon remembers mode
-
-// New Actions:
-expandVault(vaultId: string)  // ✅ Expand vault icon, set width from preferredMode
-expandSmartIcon(iconId: SmartIconId)  // ✅ Expand smart icon, set width
-collapseAll()  // ✅ Collapse to icon-only mode (48px width)
-toggleIcon(type: 'vault'|'smart', id: string)  // ✅ Accordion toggle
-setIconMode(type, id, mode: 'compact'|'card')  // ✅ Set icon's preferred mode
-
-// Global Width Settings (shared across all icons):
-compactModeWidth: number  // Default 240px - applied when icon uses compact mode
-cardModeWidth: number     // Default 320px - applied when icon uses card mode
-```
-
-**Accordion Pattern Implementation:**
-
-```typescript
-toggleIcon: (type, id) => {
-  const { expandedIcon, expandVault, expandSmartIcon, collapseAll } = get()
-
-  // If clicking already expanded icon, collapse it
-  if (expandedIcon?.type === type && expandedIcon?.id === id) {
-    collapseAll()
-    return
-  }
-
-  // Otherwise expand this icon (auto-collapses others)
-  if (type === 'vault') {
-    expandVault(id)
-  } else {
-    expandSmartIcon(id as SmartIconId)
-  }
-}
-```
-
-**CSS Structure (index.css):**
-
-```css
-/* Icon-Centric Mode Container */
-.mission-sidebar.icon-centric-mode {
-  display: flex;
-  flex-direction: row;
-  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Icon Bar (Always Visible) */
-.icon-bar {
-  width: 48px;
-  flex-shrink: 0;
-  background: var(--nexus-bg-primary);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Expanded Icon Panel (Conditional) */
-.expanded-icon-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--nexus-bg-secondary);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  animation: slideInFromLeft 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Expanded Icon Indicator (3px accent bar) */
-.icon-btn.expanded::before,
-.smart-icon-btn.expanded::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 20px;
-  background: var(--nexus-accent);
-  border-radius: 0 2px 2px 0;
-  animation: indicatorFadeIn 150ms ease;
-}
-
-@keyframes indicatorFadeIn {
-  from {
-    opacity: 0;
-    width: 0;
-  }
-  to {
-    opacity: 1;
-    width: 3px;
-  }
-}
-```
-
-**Implementation Phases:**
-- Phase 1: ✅ State refactor (types, store migration)
-- Phase 2: ✅ Component cleanup (removed 5,724 lines deprecated code)
-- Phase 3: ✅ Remove deprecated shortcuts (⌘B)
-- Phase 4: ✅ Test updates (64 tests passing)
-- Phase 5: ✅ CSS transitions + documentation
-
-**Testing:**
-- ✅ 64 icon-centric tests passing (25 core + 23 edge cases + 16 E2E)
-- ✅ 100% Phase 1/2 state management coverage
-- ✅ TypeScript: 0 errors
-- ✅ All production code compiles cleanly
-
-**Migration:**
-- Automatic v1.15.0 → v1.16.0 localStorage migration
-- Old keys cleaned: `sidebarMode`, `lastExpandedMode`, `lastModeChangeTimestamp`
-- Preserves user's last expanded smart icon as `expandedIcon`
-- Defaults all icons to compact mode on first launch
-
-**Keyboard Shortcuts Removed:**
-- ⌘B - Toggle Left Sidebar (no longer needed, click icons instead)
-- ⌘0 - Collapse Sidebar (no longer needed, click expanded icon to collapse)
+Per-icon expansion with accordion pattern. `IconBar.tsx` (48px) + `ExpandedIconPanel.tsx` with compact/card modes per icon. State in `useAppViewStore.ts`: `expandedIcon`, `toggleIcon()`, per-icon `preferredMode`. Removed global `sidebarMode` and ⌘B shortcut. 64 tests, auto-migration from v1.15.0 localStorage keys.
 
 ---
 
 ### Previous Releases
 
-**Sprint 30 Phase 2: WikiLink Navigation (v1.14.0)**
-- ✅ Single-click WikiLink Navigation - Click to navigate in Live/Reading modes
-- ✅ Cmd+Click in Source Mode - Navigate WikiLinks with ⌘+Click
-- ✅ Mode Preservation - Backlinks panel preserves editor mode
-- ✅ 1984 tests passing (30 WikiLink E2E tests)
-- Release: <https://github.com/Data-Wise/scribe/releases/tag/v1.14.0>
+| Version | Highlight |
+|---------|-----------|
+| v1.18.0 | Sidebar vault expansion fix + DexieError2 race condition |
+| v1.16.x | Icon-centric sidebar, tech debt remediation, Quarto autocomplete |
+| v1.14.0 | WikiLink single-click navigation |
+| v1.10.0 | CodeMirror 6 Live Preview, KaTeX math, three editor modes |
+| v1.9.0 | Settings enhancement (⌘, fuzzy search, theme gallery) |
+| v1.7.0 | Quick Actions, chat history, @ references |
 
-**Sprint 28: Live Editor Enhancements (v1.10.0)**
-
-- ✅ CodeMirror 6 Live Preview - Obsidian-style syntax hiding
-- ✅ KaTeX Math Rendering - Inline `$...$` and display `$$...$$`
-- ✅ Three Editor Modes - Source (⌘1), Live (⌘2), Reading (⌘3), cycle with ⌘E
-
-**Sprint 27: Backend Foundation + Settings (v1.7.0 → v1.9.0)**
-
-**v1.9.0 Features (2025-12-31):**
-- ✅ Settings Enhancement - ⌘, fuzzy search, theme gallery, project templates
-- ✅ Quick Actions Customization - Drag-to-reorder, edit prompts, shortcuts
-- ✅ 1033 tests passing (930 unit + 103 E2E)
-
-**v1.7.0 Features (2025-12-31):**
-- ✅ Chat History Persistence - Migration 009, auto-save/load per note
-- ✅ Quick Actions - 5 one-click AI prompts (Improve, Expand, Summarize, Explain, Research)
-- ✅ @ References - Autocomplete note inclusion
-- ✅ 911 tests passing (829 unit + 82 E2E)
-
-**Sprint 26 Features (2025-12-30):**
-- ✅ Terminal PTY shell (portable-pty + xterm.js)
-- ✅ Mission Control sidebar (Icon/Compact/Card modes)
-- ✅ Browser mode with IndexedDB persistence
+See [CHANGELOG](CHANGELOG.md) for full details.
 
 ---
 
 ## ✅ Feature Tiers
 
-### Tier 1-3: Build Now (v1.0)
+### Tier 1-3: Core (Shipped)
 
-- BlockNote editor
+- BlockNote editor → HybridEditor++ (CodeMirror 6)
 - Focus mode
 - Global hotkey
 - Claude/Gemini CLI
+- Pomodoro focus timer (v1.19.0)
 - Zotero citations
 - LaTeX/PDF/Word export
 - Quarto render
 
-### Tier 4: Build Now (v1.0)
+### Tier 4: Core (Shipped)
 
 - Project system (5 types)
 - Daily notes
@@ -623,29 +397,7 @@ toggleIcon: (type, id) => {
 └─────────────────────────┘     └─────────────────────────┘
 ```
 
-**Key files:**
-- `platform.ts` - `isTauri()`, `isBrowser()` detection
-- `browser-db.ts` - Dexie.js schema, `seedDemoData()`
-- `browser-api.ts` - Full 46-operation API for browser
-- `browser-dialogs.ts` - `confirm()`, `alert()` fallbacks
-
-### AI Integration (CLI Only)
-
-```typescript
-// Uses installed CLI tools, no API keys
-async function askClaude(prompt: string, context: string): Promise<string> {
-  const result = await execAsync(
-    `echo "${escape(context)}" | claude --print "${escape(prompt)}"`
-  );
-  return result.stdout;
-}
-```
-
-### Daily Notes
-
-- Shortcut: ⌘D
-- Auto-create with template
-- Per-project configuration
+Key files: `platform.ts` (runtime detection), `browser-db.ts` (Dexie schema), `browser-api.ts` (46 operations), `browser-dialogs.ts` (fallbacks).
 
 ### Tauri API Serialization (Critical Pattern)
 
