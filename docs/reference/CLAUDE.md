@@ -268,7 +268,7 @@ scribe help --all      # Full reference
 - ✅ Auto-save on work completion, gentle break toasts
 - ✅ Focus Timer settings in General tab (5 new preferences)
 - ✅ Auto-pin new projects to sidebar
-- ✅ 62 new tests (2,255 total)
+- ✅ 62 new tests (2,282 total)
 
 ### Previous: Sidebar Vault Expansion Fix (PR #43)
 

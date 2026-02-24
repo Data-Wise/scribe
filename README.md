@@ -240,7 +240,7 @@ scribe/
 
 ## Test Coverage
 
-**2,255 tests passing** across test files:
+**2,282 tests passing** across test files:
 
 | Test File | Tests |
 |-----------|-------|
