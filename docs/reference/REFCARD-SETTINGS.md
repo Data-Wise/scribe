@@ -20,6 +20,7 @@
 
 | Category | Icon | Contents |
 |----------|------|----------|
+| **General** | ⚙️ | Open last page, readable line length, spellcheck |
 | **Editor** | 📝 | Font, spacing, ligatures, focus mode |
 | **Themes** | 🎨 | Visual theme gallery (8 themes) |
 | **AI & Workflow** | ⚡ | Quick Actions, chat, @ references |
@@ -27,6 +28,22 @@
 | **Advanced** | ⚙️ | Performance, data, export/import |
 
 **Badge:** AI category shows "3" badge (3 new features in v1.9.0)
+
+---
+
+## Preference Toggles
+
+The following boolean preferences are managed by the `usePreferences()` hook
+and persist to `localStorage` via `SettingsToggle` components.
+
+| Preference | Default | Tab | Description |
+|------------|---------|-----|-------------|
+| **Open Last Page** | ON | General | Restore the last open note on startup |
+| **Readable Line Length** | ON | Editor | Limit editor line width for comfortable reading |
+| **Spellcheck** | OFF | Editor | Enable browser-native spellcheck in the editor |
+
+All toggles write-through to `localStorage` immediately (no Save button).
+Changes propagate to other components via the `preferences-changed` event.
 
 ---
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { SHORTCUTS } from '../lib/shortcuts'
 
 interface SearchBarProps {
   onSearch: (query: string) => void
@@ -65,7 +66,7 @@ export function SearchBar({ onSearch, onClear }: SearchBarProps) {
         type="text"
         value={query}
         onChange={(e) => handleChange(e.target.value)}
-        placeholder="Search notes... (⌘K)"
+        placeholder={`Search notes... (${SHORTCUTS.commandPalette.label})`}
         className="w-full px-4 py-2 pl-10 pr-8 bg-nexus-bg-primary border border-gray-600 rounded-lg
                    focus:outline-none focus:border-nexus-accent transition-colors
                    text-nexus-text-primary placeholder-gray-500"

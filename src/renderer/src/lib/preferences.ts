@@ -34,11 +34,14 @@ export interface UserPreferences {
   showWordGoalProgress: boolean  // Show progress bar in editor
   celebrateMilestones: boolean   // Show milestone celebrations
   streakDisplayOptIn: boolean    // Show streak milestones (7/30/100/365) - default OFF
+  openLastPage: boolean          // Restore last page on startup
 
   // Editor preferences (v1.3)
   editorMode: EditorMode         // Source, Live Preview, or Reading mode
   customCSS: string              // User's custom CSS for editor
   customCSSEnabled: boolean      // Whether custom CSS is active
+  readableLineLength: boolean    // Limit max line width for focus
+  spellcheck: boolean            // Enable browser-native spellcheck
 
   // HUD / Mission Control preferences (v1.4)
   hudMode: 'layered' | 'persistent' // Layered (overlay) or Persistent (docked)
@@ -76,10 +79,13 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   showWordGoalProgress: true,
   celebrateMilestones: true,
   streakDisplayOptIn: false, // OFF by default - avoids ADHD anxiety
+  openLastPage: true,        // ON by default - restore last page
   // Editor preferences (v1.3)
   editorMode: 'source',      // Start with source mode (familiar)
   customCSS: '',             // No custom CSS by default
   customCSSEnabled: false,   // Disabled by default
+  readableLineLength: true,  // ON by default - limit line width for focus
+  spellcheck: false,         // OFF by default
   // HUD preferences (v1.4)
   hudMode: 'layered',        // Layered by default for max focus
   hudSide: 'left',

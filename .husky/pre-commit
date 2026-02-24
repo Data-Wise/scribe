@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Guard: Block ORCHESTRATE files on dev/main branches
+if git diff --cached --name-only | grep -q '^ORCHESTRATE-'; then
+  branch=$(git branch --show-current)
+  if [ "$branch" = "dev" ] || [ "$branch" = "main" ]; then
+    echo "⚠️  ORCHESTRATE files should not be committed to $branch"
+    echo "   Remove with: git rm ORCHESTRATE-*.md"
+    exit 1
+  fi
+fi

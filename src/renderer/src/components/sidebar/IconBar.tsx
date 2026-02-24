@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Plus, FolderPlus, Folder } from 'lucide-react'
+import { SHORTCUTS } from '../../lib/shortcuts'
 import * as LucideIcons from 'lucide-react'
 import { Project, Note, ExpandedIconType, SmartIconId } from '../../types'
 import { StatusDot } from './StatusDot'
@@ -280,7 +281,7 @@ export function IconBar({
       <button
         className="icon-btn add-project-icon"
         onClick={onCreateProject}
-        title="New project (⌘⇧N)"
+        title={`New project (${SHORTCUTS.newProject.label})`}
       >
         <Plus size={16} />
       </button>

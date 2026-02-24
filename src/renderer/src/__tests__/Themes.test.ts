@@ -1024,7 +1024,7 @@ describe('Font Settings', () => {
   describe('DEFAULT_FONT_SETTINGS', () => {
     it('has sensible defaults', () => {
       expect(DEFAULT_FONT_SETTINGS.family).toBe('system')
-      expect(DEFAULT_FONT_SETTINGS.size).toBe(18)
+      expect(DEFAULT_FONT_SETTINGS.size).toBe(15)
       expect(DEFAULT_FONT_SETTINGS.lineHeight).toBe(1.8)
     })
 

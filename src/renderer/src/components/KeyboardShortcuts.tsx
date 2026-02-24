@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import { X, Keyboard } from 'lucide-react'
+import { SHORTCUTS } from '../lib/shortcuts'
 
 interface KeyboardShortcutsProps {
   isOpen: boolean
@@ -7,25 +8,37 @@ interface KeyboardShortcutsProps {
 }
 
 // Keyboard shortcuts organized by category
-const SHORTCUTS = {
+const SHORTCUT_CATEGORIES = {
   'Notes': [
-    { keys: '⌘N', description: 'New Note' },
-    { keys: '⌘D', description: 'Daily Note' },
-    { keys: '⌘S', description: 'Save (auto-saves)' },
+    { keys: SHORTCUTS.newNote.label, description: 'New Note' },
+    { keys: SHORTCUTS.dailyNote.label, description: 'Daily Note' },
+    { keys: SHORTCUTS.save.label, description: 'Save (auto-saves)' },
+    { keys: SHORTCUTS.quickCapture.label, description: 'Quick Capture' },
+    { keys: SHORTCUTS.newProject.label, description: 'New Project' },
   ],
   'Editor': [
-    { keys: '⌘E', description: 'Toggle Preview' },
-    { keys: '⌘⇧F', description: 'Focus Mode' },
-    { keys: '⌘⇧E', description: 'Export Note' },
-    { keys: '⌘⇧G', description: 'Graph View' },
+    { keys: SHORTCUTS.sourceMode.label, description: 'Source Mode' },
+    { keys: SHORTCUTS.livePreview.label, description: 'Live Preview' },
+    { keys: SHORTCUTS.readingMode.label, description: 'Reading Mode' },
+    { keys: SHORTCUTS.cycleMode.label, description: 'Cycle Editor Mode' },
+    { keys: SHORTCUTS.focusMode.label, description: 'Focus Mode' },
+    { keys: SHORTCUTS.exportNote.label, description: 'Export Note' },
+    { keys: SHORTCUTS.graphView.label, description: 'Graph View' },
   ],
   'Navigation': [
-    { keys: '⌘K', description: 'Command Palette' },
-    { keys: '⌘F', description: 'Search Notes' },
-    { keys: '⌘⇧B', description: 'Toggle Right Sidebar' },
-    { keys: '⌘]', description: 'Next Right Panel' },
-    { keys: '⌘[', description: 'Previous Right Panel' },
-    { keys: '⌘?', description: 'Keyboard Shortcuts' },
+    { keys: SHORTCUTS.commandPalette.label, description: 'Command Palette' },
+    { keys: SHORTCUTS.search.label, description: 'Search Notes' },
+    { keys: SHORTCUTS.recentNotes.label, description: 'Recent Notes' },
+    { keys: SHORTCUTS.dashboard.label, description: 'Dashboard' },
+    { keys: SHORTCUTS.rightSidebar.label, description: 'Toggle Right Sidebar' },
+    { keys: SHORTCUTS.nextTab.label, description: 'Next Right Panel' },
+    { keys: SHORTCUTS.prevTab.label, description: 'Previous Right Panel' },
+    { keys: SHORTCUTS.terminal.label, description: 'Toggle Terminal' },
+  ],
+  'Tabs': [
+    { keys: SHORTCUTS.closeTab.label, description: 'Close Tab' },
+    { keys: SHORTCUTS.reopenTab.label, description: 'Reopen Closed Tab' },
+    { keys: '⌘1-9', description: 'Switch to Tab N' },
   ],
   'Writing': [
     { keys: '[[', description: 'Wiki Link' },
@@ -35,8 +48,9 @@ const SHORTCUTS = {
     { keys: '$$', description: 'Math (block)' },
   ],
   'General': [
+    { keys: SHORTCUTS.settings.label, description: 'Settings' },
+    { keys: SHORTCUTS.keyboardShortcuts.label, description: 'Keyboard Shortcuts' },
     { keys: 'ESC', description: 'Exit Focus/Preview/Modal' },
-    { keys: '⌘,', description: 'Settings' },
   ],
 }
 
@@ -100,7 +114,7 @@ export function KeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsProps) {
         {/* Shortcuts grid */}
         <div className="p-6 overflow-y-auto max-h-[60vh]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Object.entries(SHORTCUTS).map(([category, shortcuts]) => (
+            {Object.entries(SHORTCUT_CATEGORIES).map(([category, shortcuts]) => (
               <div key={category}>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-nexus-text-muted mb-3">
                   {category}
