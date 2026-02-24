@@ -5,7 +5,7 @@
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![Version](https://img.shields.io/badge/version-1.19.0-blue)
 ![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-2255%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-2282%20passing-brightgreen)
 
 ---
 
@@ -71,7 +71,7 @@ cd scribe && npm install && npm run dev
 
     ---
 
-    Fuzzy search settings (⌘,), visual theme gallery (8 themes), Quick Actions customization, project templates
+    Fuzzy search settings (⌘,), visual theme gallery (10 themes), Quick Actions customization, project templates
 
 -   :material-folder-multiple:{ .lg .middle } **Icon-Centric Sidebar**
 
@@ -101,7 +101,7 @@ cd scribe && npm install && npm run dev
 
     ---
 
-    Clean component extraction, 2,255 tests passing, 0 TypeScript errors in production
+    Clean component extraction, 2,282 tests passing, 0 TypeScript errors in production
 
 </div>
 
@@ -155,7 +155,7 @@ cd scribe && npm install && npm run dev
 | **Settings** | ⌘, |
 | **Command Palette** | ⌘K |
 | **New Note** | ⌘N |
-| **New Project** | ⌘⇧N |
+| **New Project** | ⌘⇧N (in-app) |
 | **Daily Note** | ⌘D |
 | **Focus Mode** | ⌘⇧F |
 | **Toggle Preview** | ⌘E |

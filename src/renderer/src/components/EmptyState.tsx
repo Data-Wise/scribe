@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { SHORTCUTS } from '../lib/shortcuts'
 
 interface EmptyStateProps {
   onCreateNote: () => void
@@ -68,7 +69,7 @@ export function EmptyState({ onCreateNote, onOpenDaily, onOpenCommandPalette }: 
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
           New Page
-          <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-white/20 rounded">⌘N</kbd>
+          <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-white/20 rounded">{SHORTCUTS.newNote.label}</kbd>
         </button>
 
         <button
@@ -79,7 +80,7 @@ export function EmptyState({ onCreateNote, onOpenDaily, onOpenCommandPalette }: 
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           Today
-          <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-white/10 rounded">⌘D</kbd>
+          <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-white/10 rounded">{SHORTCUTS.dailyNote.label}</kbd>
         </button>
       </div>
 
@@ -90,7 +91,7 @@ export function EmptyState({ onCreateNote, onOpenDaily, onOpenCommandPalette }: 
           onClick={onOpenCommandPalette}
           className="mx-1.5 px-2 py-1 bg-nexus-bg-tertiary rounded border border-white/10 hover:bg-nexus-bg-secondary transition-colors"
         >
-          ⌘K
+          {SHORTCUTS.commandPalette.label}
         </button>
         <span className="opacity-60">for all commands</span>
       </div>

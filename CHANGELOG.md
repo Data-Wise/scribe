@@ -23,6 +23,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.19.1] - 2026-02-24 — Settings Infrastructure Improvements
+
+### Added
+
+- **`SettingsToggle` component** — Reusable toggle switch with `role="switch"`, `aria-checked`, and `aria-label` accessibility attributes. Used by GeneralSettingsTab and EditorSettingsTab.
+- **`usePreferences` hook** — Cached preferences via React state with `preferences-changed` event listener for cross-component sync. Provides `prefs`, `updatePref()`, and `togglePref()`.
+- **`SHORTCUTS` registry** — Single source of truth for 25 keyboard shortcuts with `matchesShortcut(event, id)` helper for event matching. Replaces manual `e.metaKey && e.key` checks.
+- **27 new tests** — SettingsToggle accessibility, usePreferences hook behavior, SHORTCUTS registry coverage (2,282 total)
+
+### Changed
+
+- Migrated `SettingsModal.tsx` to use `usePreferences` hook (removed raw `loadPreferences` calls)
+- Removed unused shortcut entries (`toggleRightPanel`, `collapseAll`) from registry
+
+---
+
 ## [v1.19.0] - 2026-02-23 — Pomodoro Focus Timer
 
 ### Added

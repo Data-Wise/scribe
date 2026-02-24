@@ -1,4 +1,5 @@
 import { Calendar, FilePlus, Zap, Search, Settings, Minimize2, Target } from 'lucide-react'
+import { SHORTCUTS } from '../lib/shortcuts'
 
 interface DashboardHeaderProps {
   totalNotes: number
@@ -51,21 +52,21 @@ export function DashboardHeader({
           <button
             onClick={onCollapse}
             className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-            title="Collapse Dashboard (⌘0)"
+            title={`Collapse Dashboard (${SHORTCUTS.dashboard.label})`}
           >
             <Minimize2 className="w-4 h-4" />
           </button>
           <button
             onClick={onFocusMode}
             className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-            title="Focus Mode (⌘⇧F)"
+            title={`Focus Mode (${SHORTCUTS.focusMode.label})`}
           >
             <Target className="w-4 h-4" />
           </button>
           <button
             onClick={onSettings}
             className="p-1.5 rounded hover:bg-white/5 text-nexus-text-muted hover:text-nexus-text-primary transition-colors"
-            title="Settings (⌘,)"
+            title={`Settings (${SHORTCUTS.settings.label})`}
           >
             <Settings className="w-4 h-4" />
           </button>
@@ -77,28 +78,28 @@ export function DashboardHeader({
         <QuickActionButton
           icon={<Calendar className="w-4 h-4" />}
           label="Today"
-          shortcut="⌘D"
+          shortcut={SHORTCUTS.dailyNote.label}
           onClick={onDailyNote}
           color="blue"
         />
         <QuickActionButton
           icon={<FilePlus className="w-4 h-4" />}
           label="New Page"
-          shortcut="⌘N"
+          shortcut={SHORTCUTS.newNote.label}
           onClick={onCreateNote}
           color="green"
         />
         <QuickActionButton
           icon={<Zap className="w-4 h-4" />}
           label="Quick Capture"
-          shortcut="⌘⇧C"
+          shortcut={SHORTCUTS.quickCapture.label}
           onClick={onQuickCapture}
           color="yellow"
         />
         <QuickActionButton
           icon={<Search className="w-4 h-4" />}
           label="Search"
-          shortcut="⌘F"
+          shortcut={SHORTCUTS.search.label}
           onClick={onSearch}
           color="purple"
         />

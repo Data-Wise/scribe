@@ -41,7 +41,7 @@
 
   /* Editor typography defaults (overridden by JS) */
   --editor-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --editor-font-size: 18px;
+  --editor-font-size: 15px;
   --editor-line-height: 1.8;
 }
 

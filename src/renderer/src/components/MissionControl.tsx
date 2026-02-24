@@ -4,7 +4,8 @@ import { QuickActions } from './QuickActions'
 import { ProjectCard } from './ProjectCard'
 import { StreakDisplay } from './StreakDisplay'
 import { RecentNotes } from './RecentNotes'
-import { loadPreferences, getStreakInfo } from '../lib/preferences'
+import { getStreakInfo } from '../lib/preferences'
+import { usePreferences } from '../hooks/usePreferences'
 import { useDragRegion } from './DragRegion'
 import { Settings, FolderPlus, X } from 'lucide-react'
 import { useAppViewStore } from '../store/useAppViewStore'
@@ -48,7 +49,7 @@ export function MissionControl({
   onSettings,
   onCreateProject,
 }: MissionControlProps) {
-  const preferences = loadPreferences()
+  const { prefs: preferences } = usePreferences()
   const streakInfo = getStreakInfo()
   const dragRegion = useDragRegion()
 

@@ -1,4 +1,5 @@
 import { Calendar, FilePlus, Zap, FolderPlus } from 'lucide-react'
+import { SHORTCUTS } from '../lib/shortcuts'
 
 interface QuickActionsProps {
   onDailyNote: () => void
@@ -20,7 +21,7 @@ export function QuickActions({ onDailyNote, onNewNote, onQuickCapture, onNewProj
         </span>
         <div className="text-left">
           <div className="font-medium text-nexus-text-primary">Today</div>
-          <div className="text-xs text-nexus-text-muted">⌘D</div>
+          <div className="text-xs text-nexus-text-muted">{SHORTCUTS.dailyNote.label}</div>
         </div>
       </button>
 
@@ -34,7 +35,7 @@ export function QuickActions({ onDailyNote, onNewNote, onQuickCapture, onNewProj
         </span>
         <div className="text-left">
           <div className="font-medium text-nexus-text-primary">New Page</div>
-          <div className="text-xs text-nexus-text-muted">⌘N</div>
+          <div className="text-xs text-nexus-text-muted">{SHORTCUTS.newNote.label}</div>
         </div>
       </button>
 
@@ -48,7 +49,7 @@ export function QuickActions({ onDailyNote, onNewNote, onQuickCapture, onNewProj
         </span>
         <div className="text-left">
           <div className="font-medium text-nexus-text-primary">Quick Capture</div>
-          <div className="text-xs text-nexus-text-muted">⌘⇧C</div>
+          <div className="text-xs text-nexus-text-muted">{SHORTCUTS.quickCapture.label}</div>
         </div>
       </button>
 
@@ -62,7 +63,7 @@ export function QuickActions({ onDailyNote, onNewNote, onQuickCapture, onNewProj
         </span>
         <div className="text-left">
           <div className="font-medium text-nexus-text-primary">New Project</div>
-          <div className="text-xs text-nexus-text-muted">⌘⇧N</div>
+          <div className="text-xs text-nexus-text-muted">{SHORTCUTS.newProject.label}</div>
         </div>
       </button>
     </div>

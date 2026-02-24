@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
+import { SHORTCUTS } from '../lib/shortcuts'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -283,7 +284,7 @@ export function HybridEditor({
         <div
           className="flex rounded-full p-0.5"
           style={{ backgroundColor: 'var(--nexus-bg-tertiary)' }}
-          title="⌘1 Source, ⌘2 Live Preview, ⌘3 Reading, ⌘E cycle"
+          title={`${SHORTCUTS.sourceMode.label} Source, ${SHORTCUTS.livePreview.label} Live Preview, ${SHORTCUTS.readingMode.label} Reading, ${SHORTCUTS.cycleMode.label} cycle`}
         >
           <button
             onClick={() => handleModeChange('source')}
@@ -292,7 +293,7 @@ export function HybridEditor({
                 ? 'bg-nexus-accent text-white shadow-sm'
                 : 'text-nexus-text-muted hover:text-nexus-text-primary'
             }`}
-            title="Source mode (⌘1)"
+            title={`Source mode (${SHORTCUTS.sourceMode.label})`}
           >
             Source
           </button>
@@ -303,7 +304,7 @@ export function HybridEditor({
                 ? 'bg-nexus-accent text-white shadow-sm'
                 : 'text-nexus-text-muted hover:text-nexus-text-primary'
             }`}
-            title="Live Preview mode (⌘2)"
+            title={`Live Preview mode (${SHORTCUTS.livePreview.label})`}
           >
             Live
           </button>
@@ -314,7 +315,7 @@ export function HybridEditor({
                 ? 'bg-nexus-accent text-white shadow-sm'
                 : 'text-nexus-text-muted hover:text-nexus-text-primary'
             }`}
-            title="Reading mode (⌘3)"
+            title={`Reading mode (${SHORTCUTS.readingMode.label})`}
           >
             Reading
           </button>
@@ -434,7 +435,7 @@ export function HybridEditor({
           {mode === 'source' && 'Source'}
           {mode === 'live-preview' && 'Live Preview'}
           {mode === 'reading' && 'Reading'}
-          <span style={{ opacity: 0.6 }}>⌘E</span>
+          <span style={{ opacity: 0.6 }}>{SHORTCUTS.cycleMode.label}</span>
         </span>
 
         {/* Writing progress */}
@@ -478,7 +479,7 @@ export function HybridEditor({
           <button
             onClick={onToggleTerminal}
             className="p-1 rounded transition-colors hover:bg-nexus-bg-tertiary/50 text-nexus-text-muted hover:text-nexus-accent"
-            title="Toggle Terminal (⌘⌥T)"
+            title={`Toggle Terminal (${SHORTCUTS.terminal.label})`}
             data-testid="terminal-status-button"
           >
             <Terminal className="w-3.5 h-3.5" />

@@ -6,6 +6,7 @@ import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
 import { useIconGlowEffect } from './hooks/useIconGlowEffect'
+import { usePreferences } from './hooks/usePreferences'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
@@ -51,11 +52,9 @@ import {
   loadThemeShortcuts,
 } from './lib/themes'
 import {
-  loadPreferences,
   updatePreferences,
   updateStreak,
   getStreakInfo,
-  UserPreferences,
   EditorMode,
   SidebarTabId,
 } from './lib/preferences'
@@ -131,8 +130,8 @@ function App() {
   // Editor container ref for auto-collapse functionality
   const editorContainerRef = useRef<HTMLDivElement>(null)
 
-  // User preferences with persistence
-  const [preferences, setPreferences] = useState<UserPreferences>(() => loadPreferences())
+  // User preferences with persistence (auto-syncs via preferences-changed events)
+  const { prefs: preferences, updatePref } = usePreferences()
   const [streakInfo, setStreakInfo] = useState(() => getStreakInfo())
 
   // Focus mode state (persisted)
@@ -141,8 +140,7 @@ function App() {
   // Persist focus mode changes
   const handleFocusModeChange = (enabled: boolean) => {
     setFocusMode(enabled)
-    const updated = updatePreferences({ focusModeEnabled: enabled })
-    setPreferences(updated)
+    updatePref('focusModeEnabled', enabled)
   }
   
   // Sidebar collapse state (leftSidebarCollapsed now handled by DashboardShell)
@@ -187,14 +185,11 @@ function App() {
   const sidebarTabSize = (settings['appearance.sidebarTabSize'] || 'compact') as 'compact' | 'full'
   // const showSidebarIcons = settings['appearance.showSidebarIcons'] ?? true // TODO: Implement icon visibility
 
-  const [sidebarTabSettings, setSidebarTabSettings] = useState(() => {
-    const prefs = loadPreferences()
-    return {
-      tabSize: sidebarTabSize, // Now from Settings store
-      tabOrder: prefs.sidebarTabOrder, // Still from preferences (not in Settings store yet)
-      hiddenTabs: prefs.sidebarHiddenTabs // Still from preferences (not in Settings store yet)
-    }
-  })
+  const [sidebarTabSettings, setSidebarTabSettings] = useState(() => ({
+    tabSize: sidebarTabSize, // Now from Settings store
+    tabOrder: preferences.sidebarTabOrder, // Still from preferences (not in Settings store yet)
+    hiddenTabs: preferences.sidebarHiddenTabs // Still from preferences (not in Settings store yet)
+  }))
 
   // Sidebar tab drag state (v1.8)
   const [draggedSidebarTab, setDraggedSidebarTab] = useState<SidebarTabId | null>(null)
@@ -228,10 +223,7 @@ function App() {
   const [backlinksRefreshKey, setBacklinksRefreshKey] = useState(0)
   
   // Editor mode - source, live-preview, or reading (persisted in preferences)
-  const [editorMode, setEditorMode] = useState<EditorMode>(() => {
-    const prefs = loadPreferences()
-    return prefs.editorMode || 'source'
-  })
+  const [editorMode, setEditorMode] = useState<EditorMode>(() => preferences.editorMode || 'source')
   
   // Tags for current note (for PropertiesPanel display)
   const [currentNoteTags, setCurrentNoteTags] = useState<Tag[]>([])
@@ -666,26 +658,21 @@ function App() {
     localStorage.setItem('rightSidebarCollapsed', rightSidebarCollapsed.toString())
   }, [rightSidebarCollapsed])
 
-  // Listen for sidebar preference changes (from Settings modal)
+  // Sync sidebar tab settings when preferences change (hook auto-syncs via preferences-changed)
   useEffect(() => {
-    const handlePrefsChanged = () => {
-      const prefs = loadPreferences()
-      setSidebarTabSettings({
-        tabSize: prefs.sidebarTabSize,
-        tabOrder: prefs.sidebarTabOrder,
-        hiddenTabs: prefs.sidebarHiddenTabs
-      })
-      // If the active tab is now hidden, switch to the first visible tab
-      if (prefs.sidebarHiddenTabs.includes(rightActiveTab)) {
-        const firstVisible = prefs.sidebarTabOrder.find(
-          (t: SidebarTabId) => !prefs.sidebarHiddenTabs.includes(t)
-        )
-        if (firstVisible) setRightActiveTab(firstVisible)
-      }
+    setSidebarTabSettings({
+      tabSize: preferences.sidebarTabSize,
+      tabOrder: preferences.sidebarTabOrder,
+      hiddenTabs: preferences.sidebarHiddenTabs
+    })
+    // If the active tab is now hidden, switch to the first visible tab
+    if (preferences.sidebarHiddenTabs.includes(rightActiveTab)) {
+      const firstVisible = preferences.sidebarTabOrder.find(
+        (t: SidebarTabId) => !preferences.sidebarHiddenTabs.includes(t)
+      )
+      if (firstVisible) setRightActiveTab(firstVisible)
     }
-    window.addEventListener('preferences-changed', handlePrefsChanged)
-    return () => window.removeEventListener('preferences-changed', handlePrefsChanged)
-  }, [rightActiveTab])
+  }, [preferences.sidebarTabSize, preferences.sidebarTabOrder, preferences.sidebarHiddenTabs, rightActiveTab])
 
   // Auto-collapse sidebar when editor is focused
   useEffect(() => {

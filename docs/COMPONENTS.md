@@ -12,7 +12,8 @@ Main application component. Manages:
 - Note selection and editing
 - Sidebar visibility
 - Focus mode
-- Keyboard shortcuts
+- Keyboard shortcuts (delegated to `KeyboardShortcutHandler`)
+- User preferences via `usePreferences()` hook
 
 **Key State:**
 ```typescript
@@ -171,6 +172,66 @@ Application settings dialog.
 - Font preview
 
 **File:** `src/renderer/src/components/SettingsModal.tsx`
+
+---
+
+### SettingsToggle.tsx
+
+Reusable toggle switch for boolean settings.
+
+**Props:**
+```typescript
+interface SettingsToggleProps {
+  label: string
+  description: string
+  checked: boolean
+  onChange: () => void
+  testId?: string
+}
+```
+
+**Features:**
+- Consistent label + description layout
+- Animated toggle knob (accent color when on)
+- WCAG accessible: `role="switch"`, `aria-checked`, `aria-label`
+- Used by `GeneralSettingsTab` and `EditorSettingsTab`
+
+**File:** `src/renderer/src/components/Settings/SettingsToggle.tsx`
+
+---
+
+### usePreferences (Hook)
+
+Cached preferences hook with event-based sync.
+
+**Returns:**
+```typescript
+{
+  prefs: UserPreferences     // Current preferences (cached)
+  updatePref(key, value)     // Update a single preference
+  togglePref(key)            // Toggle a boolean preference
+}
+```
+
+**Behavior:**
+- Reads `localStorage` once on mount, caches in React state
+- Listens for `preferences-changed` events to stay in sync across components
+- Write-through: `updatePref` / `togglePref` immediately persist to `localStorage`
+
+**File:** `src/renderer/src/hooks/usePreferences.ts`
+
+---
+
+### KeyboardShortcutHandler.tsx
+
+Global keyboard shortcut handler (extracted from App.tsx).
+
+**Features:**
+- Handles 25 registered shortcuts
+- Uses `matchesShortcut(event, shortcutId)` for registry-based event matching
+- Manages Tauri menu registration
+
+**File:** `src/renderer/src/components/KeyboardShortcutHandler.tsx`
 
 ---
 
