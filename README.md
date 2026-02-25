@@ -193,7 +193,7 @@ Theme picker, ADHD-friendly font recommendations, and typography controls.
 # Development
 npm run dev          # Start Tauri dev server
 npm run dev:vite     # Vite frontend only
-npm run test         # Run 483 tests
+npm run test         # Run 2255 tests
 npm run lint         # Lint code
 
 # Build

@@ -237,6 +237,17 @@ Customize in **Settings → Fonts**:
 | Font size | Adjustable |
 | Line height | Adjustable |
 
+### Code Font
+
+Configure separately in **Settings > Editor > Code Font**:
+
+| Setting | Range/Options |
+|---------|---------------|
+| Code font family | Monospace fonts only (JetBrains Mono, Fira Code, etc.) |
+| Code font size ratio | 0.75–1.0 of editor font size (default: 0.88) |
+
+The code font applies to all Quarto code chunks and inline code. It's independent of your prose font, letting you optimize readability for both writing and code.
+
 ### Recommended Fonts
 
 === "Sans-Serif"
