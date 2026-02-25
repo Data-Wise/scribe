@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.22.0] - 2026-02-25 — Responsive UI Enhancements
+
+### Added
+
+- **Minimum window size** (900x600) preventing layout breakage
+- **Window position memory** via `tauri-plugin-window-state` (persists size, position, maximized state)
+- **Auto-collapse sidebars** on resize — right sidebar collapses first, then left, maintaining 500px minimum editor width
+- **Right sidebar resize handle** with drag support (250–600px range), double-click to reset to 320px default
+- **Global zoom** via `⌘+`/`⌘-` (50%–200% range, 10% steps, WCAG 1.4.4 compliant)
+- **Zoom indicator** in editor header — visible when zoom is not 100%, click to reset
+- **Touch resize support** for sidebar resize handles (`passive: false` touch events)
+- **`.resizing` CSS class** during drag to disable transitions and prevent jank
+- **Reduced-motion audit** — zoom indicator and right sidebar transitions respect `prefers-reduced-motion`
+- 42 new tests (2,322 total)
+
+### Changed
+
+- Right sidebar uses `RIGHT_SIDEBAR_WIDTHS` constants (icon: 48, default: 320, min: 250, max: 600)
+- `useAppViewStore` tracks `autoCollapsedLeft`/`autoCollapsedRight` for user intent preservation
+- `ResizeHandle` component uses `useRef` instead of `useState` for touch event stale closure fix
+
+---
+
 ## [v1.18.0] - 2026-02-22 — Sidebar Vault Fix
 
 ### Fixed

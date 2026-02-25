@@ -1,6 +1,6 @@
 # Settings Tutorial
 
-> **Learn how to customize Scribe with the Settings system (v1.20.0)**
+> **Learn how to customize Scribe with the Settings system (v1.22.0)**
 
 ---
 

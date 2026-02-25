@@ -72,6 +72,18 @@
 
 ---
 
+## Zoom
+
+| Action | Shortcut |
+|--------|----------|
+| **Zoom In** | `⌘+` or `⌘=` |
+| **Zoom Out** | `⌘-` |
+| **Reset Zoom** | Click zoom indicator in editor header |
+
+Range: 50% – 200% in 10% steps. Persists across sessions.
+
+---
+
 ## Editor
 
 | Action | Shortcut |

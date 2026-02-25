@@ -1,6 +1,6 @@
 # Themes
 
-> 10 ADHD-friendly themes designed for extended writing sessions (v1.20.0)
+> 10 ADHD-friendly themes designed for extended writing sessions (v1.22.0)
 
 ---
 

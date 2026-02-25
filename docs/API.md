@@ -1,6 +1,6 @@
 # Scribe API Reference
 
-> Complete reference for Scribe's Tauri IPC commands (v1.20.0)
+> Complete reference for Scribe's Tauri IPC commands (v1.22.0)
 
 ---
 

@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![Version](https://img.shields.io/badge/version-1.20.0-blue)
+![Version](https://img.shields.io/badge/version-1.22.0-blue)
 ![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)
-![Tests](https://img.shields.io/badge/tests-2280%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-2322%20passing-brightgreen)
 
 ---
 
@@ -97,11 +97,17 @@ cd scribe && npm install && npm run dev
 
     25-minute work sessions with auto-save, break reminders, and session tracking in the status bar
 
+-   :material-resize:{ .lg .middle } **Responsive Layout**
+
+    ---
+
+    Auto-collapse sidebars on resize, global zoom (⌘+/⌘-), right sidebar drag resize, window position memory
+
 -   :material-cog:{ .lg .middle } **Modular Architecture**
 
     ---
 
-    Clean component extraction, 2,280 tests passing, 0 TypeScript errors in production
+    Clean component extraction, 2,322 tests passing, 0 TypeScript errors in production
 
 </div>
 
@@ -159,6 +165,8 @@ cd scribe && npm install && npm run dev
 | **Daily Note** | ⌘D |
 | **Focus Mode** | ⌘⇧F |
 | **Toggle Preview** | ⌘E |
+| **Zoom In** | ⌘+ |
+| **Zoom Out** | ⌘- |
 | **Close** | ⌘W |
 
 ---
