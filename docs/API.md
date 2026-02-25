@@ -1,6 +1,6 @@
 # Scribe API Reference
 
-> Complete reference for Scribe's Tauri IPC commands
+> Complete reference for Scribe's Tauri IPC commands (v1.20.0)
 
 ---
 
@@ -487,6 +487,110 @@ Export all notes to Obsidian-compatible markdown files.
 | `target_path` | string | Yes | Directory path |
 
 **Returns:** `string` (success message)
+
+---
+
+## Project Commands
+
+### list_projects
+
+List all projects.
+
+**Returns:** `Project[]`
+
+---
+
+### create_project
+
+Create a new project.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `project.name` | string | Yes | Project name |
+| `project.type` | string | Yes | Project type (research, teaching, r-package, r-dev, generic) |
+| `project.color` | string | No | Hex color code |
+
+**Returns:** `Project`
+
+---
+
+### update_project
+
+Update an existing project.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | Yes | Project UUID |
+| `updates` | object | Yes | Fields to update |
+
+**Returns:** `Project`
+
+---
+
+### delete_project
+
+Delete a project.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | Yes | Project UUID |
+
+**Returns:** `boolean`
+
+---
+
+## Terminal Commands
+
+### spawn_shell
+
+Spawn a PTY shell process.
+
+**Returns:** `string` (PTY ID)
+
+---
+
+### write_to_shell
+
+Write input to a shell process.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `pty_id` | string | Yes | PTY identifier |
+| `data` | string | Yes | Input data |
+
+**Returns:** `void`
+
+---
+
+### resize_shell
+
+Resize a terminal.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `pty_id` | string | Yes | PTY identifier |
+| `cols` | number | Yes | Column count |
+| `rows` | number | Yes | Row count |
+
+**Returns:** `void`
+
+---
+
+### kill_shell
+
+Kill a shell process.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `pty_id` | string | Yes | PTY identifier |
+
+**Returns:** `void`
 
 ---
 

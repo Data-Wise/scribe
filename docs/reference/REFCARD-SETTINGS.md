@@ -1,6 +1,6 @@
 # Settings Reference Card
 
-> **Quick reference for Scribe Settings (v1.9.0+)**
+> **Quick reference for Scribe Settings (v1.20.0)**
 
 ---
 
@@ -78,21 +78,21 @@ Pomodoro preferences also sync to the `usePomodoroStore` Zustand store.
 
 ## Theme Gallery
 
-### 8 Built-In Themes
+### 10 Built-In Themes
 
-**Favorites (⭐):**
-- **Slate** - Professional dark blue-gray
-- **Nord** - Arctic pastel dark
-- **Dracula** - Vampire purple
+**Dark (5):**
+- **Oxford Dark** — Deep scholarly blue
+- **Forest Night** — Nature-inspired dark green
+- **Warm Cocoa** — Rich chocolate brown
+- **Midnight Purple** — Elegant deep purple
+- **Deep Ocean** — Calming dark teal
 
-**Dark:**
-- **Monokai** - Classic Sublime
-- **GitHub Dark** - GitHub's dark mode
-
-**Light:**
-- **Linen** - Warm cream
-- **Paper** - Minimalist white
-- **Cream** - Soft yellow-tinted
+**Light (5):**
+- **Soft Paper** — Warm cream paper
+- **Morning Fog** — Subtle cool gray
+- **Sage Garden** — Gentle green-tinted
+- **Lavender Mist** — Light purple haze
+- **Sand Dune** — Warm sandy beige
 
 ### Theme Selection
 
@@ -322,6 +322,5 @@ Pomodoro preferences also sync to the `usePomodoroStore` Zustand store.
 
 ---
 
-**Version:** v1.19.1+
+**Version:** v1.20.0
 **Last Updated:** 2026-02-24
-**Changelog:** [v1.19.0 Release Notes](https://github.com/Data-Wise/scribe/releases/tag/v1.19.0)

@@ -1,6 +1,6 @@
 # Themes
 
-> 10 ADHD-friendly themes designed for extended writing sessions
+> 10 ADHD-friendly themes designed for extended writing sessions (v1.20.0)
 
 ---
 
@@ -125,6 +125,18 @@ Create your own theme in Settings → Themes:
     - GitHub Gist links
     - Raw file URLs
     - Any accessible JSON/YAML theme file
+
+---
+
+## Settings Integration
+
+Themes are managed in **Settings → Appearance** tab:
+
+- Theme gallery with 3-column grid layout and color preview swatches
+- Selected theme shows blue border + checkmark
+- Auto-theme toggle for time-based switching
+- Custom theme creator with real-time preview
+- All theme preferences use the `usePreferences` hook for cached reads and cross-component sync (v1.19.1+)
 
 ---
 

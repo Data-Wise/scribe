@@ -21,22 +21,19 @@ A complete guide to using Scribe for ADHD-friendly writing.
 
 ## Installation
 
-### Prerequisites
+### Homebrew (Recommended)
 
 ```bash
-# Required
-node --version  # 18+
-npm --version   # 9+
-
-# For Academic Features
-pandoc --version    # For export
-quarto --version    # For .qmd (optional)
+brew tap data-wise/tap
+brew install --cask data-wise/tap/scribe
 ```
 
-### Setup
+### Build from Source
 
 ```bash
-cd ~/projects/dev-tools/scribe
+# Node.js 18+ and Rust required
+git clone https://github.com/Data-Wise/scribe
+cd scribe
 npm install
 npm run dev
 ```
@@ -45,44 +42,45 @@ npm run dev
 
 ## First Launch
 
-1. **App Opens** — Dark mode, sidebar on left
-2. **Create Note** — Click **+ New Note** or ⌘N
+1. **App Opens** — Default theme, icon sidebar on left
+2. **Create Note** — Click **+ New Note** or press `⌘N`
 3. **Start Writing** — No setup needed
 
-### Global Hotkey (Coming Sprint 10)
+### Global Hotkey
 
-**⌘⇧N** — Open Scribe from anywhere
+**⌘⇧N** — Open Scribe from anywhere (requires Accessibility permissions)
 
 ---
 
 ## Writing Notes
 
-### Block-Based Editor
+### Three Editor Modes
 
-Scribe uses a Notion-style block editor:
+| Mode | Shortcut | Description |
+|------|----------|-------------|
+| **Source** | `⌘1` | Raw markdown with syntax highlighting (CodeMirror 6) |
+| **Live Preview** | `⌘2` | Obsidian-style: formatting hides near cursor, LaTeX renders inline |
+| **Reading** | `⌘3` | Fully rendered view with clickable links |
 
-```
-Type / to see block options:
-/heading    → Create heading
-/list       → Bullet list
-/todo       → Checklist
-/code       → Code block
-/quote      → Blockquote
-```
+Press `⌘E` to cycle between modes.
 
 ### Focus Mode
 
-Press **⌘.** to enter distraction-free mode:
+Press **⌘⇧F** to enter distraction-free mode:
 
-- Sidebar hides
-- Editor centers
-- Background dims
+- Sidebars collapse
+- Editor centers on screen
+- Only your words remain
 
-Press **⌘.** again to exit.
+Press **⌘⇧F** or `Escape` to exit.
 
 ### Word Count
 
-Always visible in status bar at bottom.
+Always visible in the status bar at the bottom.
+
+### Pomodoro Timer
+
+Click the timer in the status bar to start a 25-minute focus session. Right-click to reset. Configure durations in Settings > General > Focus Timer.
 
 ---
 
@@ -100,38 +98,14 @@ Always visible in status bar at bottom.
 
 ### Creating a Project
 
-1. Click **⚙️ New Project** in sidebar
+1. Press **⌘⇧N** to open the Create Project modal
 2. Choose project type
 3. Name your project
-4. Select folder location
+4. Project is automatically pinned to the sidebar
 
-### Project Structure
+### Switching Projects
 
-```
-~/Projects/my-research/
-├── .scribe/
-│   └── project.json    # Settings
-├── paper-draft.md
-└── daily/
-    └── 2024-12-24.md
-```
-
-### Project Settings
-
-Edit `.scribe/project.json`:
-
-```json
-{
-  "name": "My Research",
-  "type": "research",
-  "bibliography": "~/Zotero/research.bib",
-  "obsidianVault": "~/vaults/research",
-  "exportDefaults": {
-    "format": "pdf",
-    "citationStyle": "apa7"
-  }
-}
-```
+Click a project icon in the sidebar icon bar, or use **⌘⇧1** through **⌘⇧4** for quick-switch to typed project slots.
 
 ---
 
@@ -141,34 +115,17 @@ Edit `.scribe/project.json`:
 
 Press **⌘D** to open/create today's note.
 
-### Daily Note Template
+### Built-in Templates
 
-```markdown
-## 2024-12-24
+| Template | Use Case |
+|----------|----------|
+| **Minimal** | Just the date heading |
+| **Journaling** | Gratitude, focus, reflections |
+| **Research** | Notes, papers, ideas sections |
+| **Meeting** | Attendees, agenda, action items |
+| **Focus** | Single priority with blockers |
 
-### Progress
-- [ ] Task 1
-- [ ] Task 2
-
-### Notes
-
-### Tags
-#daily
-```
-
-### Customizing Template
-
-Edit project settings:
-
-```json
-{
-  "dailyNotes": {
-    "enabled": true,
-    "folder": "daily",
-    "template": "## {{date}}\n\n### Progress\n\n### Notes\n"
-  }
-}
-```
+Configure in Settings > Writing > Daily Note Template.
 
 ---
 
@@ -184,11 +141,11 @@ See [[My Other Note]] for more details.
 
 ### Navigation
 
-Click a wiki link to jump to that note.
+Click a wiki link in Live Preview or Reading mode to jump to that note.
 
 ### Backlinks
 
-The sidebar shows notes that link to the current note.
+The right sidebar Backlinks panel shows notes that link to the current note.
 
 ---
 
@@ -202,19 +159,32 @@ Type `#` to trigger autocomplete:
 This is about #research and #causal-inference.
 ```
 
+### Hierarchical Tags
+
+```markdown
+#research/statistics/mediation
+#teaching/stat-440
+```
+
 ### Tag Colors
 
 Tags automatically get consistent colors based on their name.
 
 ### Filtering by Tag
 
-Click a tag in the Tags panel to filter notes.
+Click a tag in the Tags panel (right sidebar) to filter notes.
 
 ---
 
 ## AI Integration
 
-### Available Actions
+### Using AI
+
+1. Open the Claude panel in the right sidebar
+2. Type your question — it automatically has context from your current note
+3. Choose a Quick Action from the Command Palette for common tasks
+
+### Quick Actions
 
 | Action | What it does |
 |--------|--------------|
@@ -223,13 +193,6 @@ Click a tag in the Tags panel to filter notes.
 | **Summarize** | Condense to key points |
 | **Explain** | Simplify complex text |
 | **Research** | Find related information |
-
-### Using AI
-
-1. Select text
-2. Press **⌘⇧A** (or right-click → AI)
-3. Choose action
-4. Select provider (Claude or Gemini)
 
 ### Requirements
 
@@ -251,17 +214,16 @@ No API keys needed — uses your CLI subscriptions.
 
 | Format | Extension | Requirements |
 |--------|-----------|--------------|
-| Markdown | .md | None |
+| HTML | .html | None |
 | LaTeX | .tex | Pandoc |
 | PDF | .pdf | Pandoc + LaTeX |
 | Word | .docx | Pandoc |
-| Quarto | .qmd | Quarto |
 
 ### Exporting
 
-1. Open note
-2. Press **⌘E** or File → Export
-3. Choose format
+1. Open a note
+2. Press **⌘⇧E** to open the Export dialog
+3. Choose format and options
 4. Select location
 
 ### Citations
@@ -282,34 +244,40 @@ If you have Zotero configured:
 |--------|----------|
 | New note | ⌘N |
 | Daily note | ⌘D |
-| Focus mode | ⌘. |
+| New project | ⌘⇧N |
+| Quick capture | ⌘⇧C |
+| Focus mode | ⌘⇧F |
 | Command palette | ⌘K |
-| Close | ⌘W |
-| Quit | ⌘Q |
+| Settings | ⌘, |
+| Close tab | ⌘W |
 
-### Editing
+### Editor
 
 | Action | Shortcut |
 |--------|----------|
-| Bold | ⌘B |
-| Italic | ⌘I |
-| Link | ⌘K |
-| Undo | ⌘Z |
-| Redo | ⌘⇧Z |
+| Source mode | ⌘1 |
+| Live Preview | ⌘2 |
+| Reading mode | ⌘3 |
+| Cycle modes | ⌘E |
+| Export | ⌘⇧E |
 
 ### Navigation
 
 | Action | Shortcut |
 |--------|----------|
 | Search notes | ⌘F |
-| Back | ⌘[ |
-| Forward | ⌘] |
+| Knowledge graph | ⌘⇧G |
+| Left sidebar toggle | ⌘B |
+| Right sidebar toggle | ⌘⇧B |
+| Terminal | ⌘⌥T |
 
-### AI
+### Tabs
 
 | Action | Shortcut |
 |--------|----------|
-| AI panel | ⌘⇧A |
+| Switch to tab N | ⌘1–⌘9 |
+| Close tab | ⌘W |
+| Reopen closed tab | ⌘⇧T |
 
 ---
 
@@ -324,14 +292,10 @@ npm install
 npm run dev
 ```
 
-### Database Issues
+### "App is damaged" Error
 
 ```bash
-# Database location
-~/.config/scribe/scribe.db
-
-# Reset (caution: deletes notes)
-rm ~/.config/scribe/scribe.db
+xattr -cr /Applications/Scribe.app
 ```
 
 ### Export Fails
@@ -348,6 +312,6 @@ pdflatex --version
 
 ## Getting Help
 
-- **Project Definition:** [PROJECT-DEFINITION.md](../reference/PROJECT-DEFINITION.md)
-- **Changelog:** [CHANGELOG.md](../reference/CHANGELOG.md)
 - **Quick Start:** [QUICKSTART.md](QUICKSTART.md)
+- **Features Guide:** [Features Overview](../guide/features.md)
+- **Changelog:** [CHANGELOG.md](../reference/CHANGELOG.md)
