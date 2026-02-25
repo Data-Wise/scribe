@@ -203,9 +203,11 @@ erDiagram
     PROJECTS {
         TEXT id PK
         TEXT name
+        TEXT description
         TEXT type
         TEXT color
-        TEXT status
+        TEXT icon
+        TEXT settings
         INTEGER created_at
         INTEGER updated_at
     }

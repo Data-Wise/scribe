@@ -153,8 +153,8 @@ Application settings dialog with 12 sub-components.
 - `SettingsSection.tsx` — Consistent section wrapper
 - `ContextualHint.tsx` — Inline settings guidance
 
-**File:** `src/renderer/src/components/Settings/SettingsModal.tsx` (store-based)
-**Legacy:** `src/renderer/src/components/SettingsModal.tsx` (prop-based, used by App.tsx)
+**File:** `src/renderer/src/components/SettingsModal.tsx` (prop-based, used by App.tsx)
+**Unused:** `src/renderer/src/components/Settings/SettingsModal.tsx` (store-based, not imported)
 
 ---
 

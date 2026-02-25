@@ -102,12 +102,12 @@ User Input → React Component → Zustand Store → API Layer → Backend → D
 CREATE TABLE notes (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
-  content TEXT,
+  content TEXT DEFAULT '',
   folder TEXT DEFAULT 'inbox',
-  project_id TEXT,
-  created_at TEXT,
-  updated_at TEXT,
-  deleted_at TEXT
+  project_id TEXT REFERENCES projects(id),
+  created_at INTEGER DEFAULT (strftime('%s', 'now')),
+  updated_at INTEGER DEFAULT (strftime('%s', 'now')),
+  deleted_at INTEGER NULL
 );
 ```
 
@@ -117,11 +117,13 @@ CREATE TABLE notes (
 CREATE TABLE projects (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
-  type TEXT NOT NULL,
+  description TEXT,
+  type TEXT CHECK(type IN ('research','teaching','r-package','r-dev','generic')) DEFAULT 'generic',
   color TEXT,
-  status TEXT DEFAULT 'active',
-  created_at TEXT,
-  updated_at TEXT
+  icon TEXT,
+  settings TEXT,
+  created_at INTEGER DEFAULT (strftime('%s', 'now')),
+  updated_at INTEGER DEFAULT (strftime('%s', 'now'))
 );
 ```
 
