@@ -13,9 +13,12 @@ A complete guide to using Scribe for ADHD-friendly writing.
 5. [Daily Notes](#daily-notes)
 6. [Wiki Links](#wiki-links)
 7. [Tags](#tags)
-8. [AI Integration](#ai-integration)
-9. [Export](#export)
-10. [Keyboard Shortcuts](#keyboard-shortcuts)
+8. [Code Chunks & Quarto](#code-chunks-quarto)
+9. [LaTeX Math](#latex-math)
+10. [Callouts](#callouts)
+11. [AI Integration](#ai-integration)
+12. [Export](#export)
+13. [Keyboard Shortcuts](#keyboard-shortcuts)
 
 ---
 
@@ -173,6 +176,154 @@ Tags automatically get consistent colors based on their name.
 ### Filtering by Tag
 
 Click a tag in the Tags panel (right sidebar) to filter notes.
+
+---
+
+## Code Chunks & Quarto
+
+Scribe has built-in support for [Quarto](https://quarto.org/) documents (`.qmd` files), the publishing system for scientific and technical writing.
+
+### Creating Code Chunks
+
+Type three backticks to trigger autocompletion for executable code blocks:
+
+````
+```{r}
+library(ggplot2)
+ggplot(mtcars, aes(x = mpg, y = hp)) +
+  geom_point()
+```
+````
+
+**Supported languages:** R, Python, Julia, Observable JS, Mermaid, SQL, Bash, and more.
+
+### Chunk Options
+
+Inside a code chunk, type `#|` to trigger autocomplete for chunk options:
+
+````
+```{r}
+#| label: fig-scatter
+#| fig-cap: "Miles per gallon vs horsepower"
+#| echo: false
+ggplot(mtcars, aes(x = mpg, y = hp)) + geom_point()
+```
+````
+
+Common chunk options:
+
+| Option | Purpose |
+|--------|---------|
+| `#| label:` | Name the chunk for cross-references |
+| `#| fig-cap:` | Add a figure caption |
+| `#| echo: false` | Hide the code in output |
+| `#| eval: false` | Show code but don't run it |
+| `#| warning: false` | Suppress warning messages |
+| `#| tbl-cap:` | Add a table caption |
+
+### Cross-References
+
+Type `@` to trigger cross-reference autocomplete. Scribe scans your document for labels and offers completions:
+
+```markdown
+As shown in @fig-scatter, there is a negative relationship.
+See @tbl-summary for the full results.
+```
+
+| Prefix | References |
+|--------|-----------|
+| `@fig-` | Figures |
+| `@tbl-` | Tables |
+| `@eq-` | Equations |
+| `@sec-` | Sections |
+
+### YAML Frontmatter
+
+At the top of a `.qmd` file, type inside the `---` block to get Quarto-specific YAML completions:
+
+```yaml
+---
+title: "My Analysis"
+author: "Your Name"
+format: html
+execute:
+  echo: true
+  warning: false
+bibliography: references.bib
+---
+```
+
+### Visual Treatment
+
+Code chunks appear with a tinted background and left accent border to distinguish them from prose. This makes it easy to scan between text and code sections in long documents.
+
+---
+
+## LaTeX Math
+
+Scribe renders LaTeX math inline and in display blocks.
+
+### Inline Math
+
+Wrap expressions in single dollar signs:
+
+```markdown
+The sample mean is $\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i$.
+```
+
+### Display Math
+
+Use double dollar signs for centered equations:
+
+```markdown
+$$
+\hat{\beta} = (X'X)^{-1}X'y
+$$
+```
+
+### LaTeX Autocompletion
+
+Type `\` inside math context to trigger LaTeX command completions — Greek letters, operators, environments, and common academic symbols are all available.
+
+### LaTeX Snippets
+
+Common patterns expand automatically in math context:
+
+| Trigger | Expands To |
+|---------|-----------|
+| `\frac` | `\frac{numerator}{denominator}` |
+| `\sum` | `\sum_{i=1}^{n}` |
+| `\int` | `\int_{a}^{b}` |
+| `\beg` | `\begin{environment}...\end{environment}` |
+
+---
+
+## Callouts
+
+Use Quarto-style callouts for notes, warnings, and tips:
+
+```markdown
+> [!note] Important Finding
+> The p-value was below the significance threshold.
+
+> [!tip] Writing Tip
+> Start with your conclusion, then support it.
+
+> [!warning]
+> These results have not been peer-reviewed.
+```
+
+### Callout Types
+
+| Type | Color | Use Case |
+|------|-------|----------|
+| `[!note]` | Blue | General information |
+| `[!tip]` | Green | Helpful suggestions |
+| `[!warning]` | Orange | Cautions and caveats |
+| `[!caution]` | Red | Critical warnings |
+| `[!important]` | Purple | Key points |
+
+Callouts render with colored backgrounds and icons in Live Preview and Reading modes.
 
 ---
 
