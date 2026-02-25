@@ -136,6 +136,12 @@ export const SIDEBAR_WIDTHS = {
   card: { default: 320, min: 320, max: 500 }
 }
 
+// Right sidebar width constraints
+export const RIGHT_SIDEBAR_WIDTHS = {
+  icon: 48,
+  expanded: { default: 320, min: 250, max: 600 }
+}
+
 // Helper functions for localStorage
 const saveSessionTimestamp = (): void => {
   try {
