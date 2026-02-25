@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
-import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
+import { useAppViewStore, MISSION_CONTROL_TAB_ID, SIDEBAR_WIDTHS } from './store/useAppViewStore'
 import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
 import { useIconGlowEffect } from './hooks/useIconGlowEffect'
 import { usePreferences } from './hooks/usePreferences'
+import { useResponsiveLayout } from './hooks/useResponsiveLayout'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
@@ -107,8 +108,10 @@ function App() {
   const {
     sidebarWidth,
     setSidebarWidth,
+    expandedIcon,
     setLastActiveNote,
     updateSessionTimestamp,
+    expandVault,
     expandSmartIcon,
     collapseAll,
     // Tab state
@@ -156,6 +159,30 @@ function App() {
     return saved ? parseInt(saved) : 320
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
+
+  // Responsive layout: auto-collapse sidebars on window resize
+  const lastExpandedIcon = useRef(expandedIcon)
+  useEffect(() => {
+    if (expandedIcon) lastExpandedIcon.current = expandedIcon
+  }, [expandedIcon])
+
+  const leftCollapsed = expandedIcon === null
+  useResponsiveLayout({
+    leftWidth: sidebarWidth || SIDEBAR_WIDTHS.icon,
+    rightWidth: rightSidebarWidth,
+    leftCollapsed,
+    rightCollapsed: rightSidebarCollapsed,
+    onCollapseLeft: collapseAll,
+    onCollapseRight: useCallback(() => setRightSidebarCollapsed(true), []),
+    onExpandLeft: useCallback(() => {
+      const last = lastExpandedIcon.current
+      if (last) {
+        if (last.type === 'vault') expandVault(last.id)
+        else expandSmartIcon(last.id as any)
+      }
+    }, [expandVault, expandSmartIcon]),
+    onExpandRight: useCallback(() => setRightSidebarCollapsed(false), []),
+  })
 
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'>('properties')
