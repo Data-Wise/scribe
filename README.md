@@ -19,11 +19,11 @@ Scribe is a **distraction-free writing app** designed for academics and research
 
 | Feature | Description |
 |---------|-------------|
-| **HybridEditor++** | Three modes: Source, Live Preview, Reading |
+| **CodeMirror 6** | Three modes: Source, Live Preview, Reading |
 | **Callouts** | 11 Obsidian-style callout types with color coding |
 | **Focus Mode** | Distraction-free, one note at a time |
 | **Settings** | ⌘, fuzzy search, theme gallery, Quick Actions customization |
-| **8 Themes** | Visual theme gallery with favorites, dark, and light themes |
+| **10 Themes** | Visual theme gallery with dark and light themes |
 | **14 Fonts** | Recommended fonts + one-click Homebrew install |
 | **Quick Actions** | ✨ Improve, 📝 Expand, 📋 Summarize, 💡 Explain, 🔍 Research (customizable) |
 | **Project Templates** | Research+, Teaching+, Dev+, Writing+, Minimal presets |
@@ -49,8 +49,8 @@ Scribe is a **distraction-free writing app** designed for academics and research
 # Add the tap
 brew tap data-wise/tap
 
-# Install dev channel (current)
-brew install --cask data-wise/tap/scribe-dev
+# Install Scribe
+brew install --cask data-wise/tap/scribe
 ```
 
 ### Download
@@ -162,10 +162,12 @@ Theme picker, ADHD-friendly font recommendations, and typography controls.
 | Component | Technology |
 |-----------|------------|
 | Framework | Tauri 2 + React 18 |
-| Editor | HybridEditor++ (custom) |
+| Editor | CodeMirror 6 |
 | Styling | Tailwind CSS |
-| State | Zustand |
-| Database | SQLite (rusqlite) |
+| State | Zustand (5 stores) |
+| Database | SQLite (Tauri) / IndexedDB (Browser) |
+| Terminal | xterm.js |
+| Graph | D3.js |
 | Math | KaTeX |
 | AI | Claude/Gemini CLI |
 | Citations | Pandoc citeproc |
@@ -179,9 +181,8 @@ Theme picker, ADHD-friendly font recommendations, and typography controls.
 |------|---------|
 | [docs/API.md](docs/API.md) | Complete API reference |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture |
-| [docs/planning/](docs/planning/) | Sprint planning |
-| [PROJECT-DEFINITION.md](PROJECT-DEFINITION.md) | Scope control |
-| [docs/UI-IMPROVEMENTS-PROPOSAL.md](docs/UI-IMPROVEMENTS-PROPOSAL.md) | UI improvement plan |
+| [docs/planning/](docs/planning/) | Active planning |
+| [docs/reference/PROJECT-DEFINITION.md](docs/reference/PROJECT-DEFINITION.md) | Scope control |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 | [CLAUDE.md](CLAUDE.md) | AI assistant guidance |
 
@@ -193,7 +194,7 @@ Theme picker, ADHD-friendly font recommendations, and typography controls.
 # Development
 npm run dev          # Start Tauri dev server
 npm run dev:vite     # Vite frontend only
-npm run test         # Run 483 tests
+npm run test         # Run 2,280+ tests
 npm run lint         # Lint code
 
 # Build

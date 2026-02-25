@@ -95,10 +95,6 @@ brew install --cask zotero
 ### Homebrew
 
 ```bash
-# Dev channel
-brew upgrade --cask scribe-dev
-
-# Stable channel (when available)
 brew upgrade --cask scribe
 ```
 
@@ -107,27 +103,11 @@ brew upgrade --cask scribe
 1. Download the latest DMG from GitHub Releases
 2. Replace the existing Scribe.app in Applications
 
-## Switching Channels
-
-```bash
-# Switch from dev to stable
-brew uninstall --cask scribe-dev
-brew install --cask data-wise/tap/scribe
-
-# Switch from stable to dev
-brew uninstall --cask scribe
-brew install --cask data-wise/tap/scribe-dev
-```
-
 ## Uninstalling
 
 ### Homebrew
 
 ```bash
-# Dev channel
-brew uninstall --cask scribe-dev
-
-# Stable channel
 brew uninstall --cask scribe
 ```
 

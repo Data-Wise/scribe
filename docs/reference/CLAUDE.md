@@ -324,7 +324,7 @@ See [CHANGELOG](CHANGELOG.md) for full details.
 
 ### Tier 1-3: Core (Shipped)
 
-- BlockNote editor → HybridEditor++ (CodeMirror 6)
+- CodeMirror 6 editor (Source / Live Preview / Reading)
 - Focus mode
 - Global hotkey
 - Claude/Gemini CLI

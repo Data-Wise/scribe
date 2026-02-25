@@ -111,7 +111,7 @@ cd scribe && npm install && npm run dev
 
 | Feature | Description |
 |---------|-------------|
-| **HybridEditor++** | Three modes: Source, Live Preview, Reading |
+| **CodeMirror 6** | Three modes: Source, Live Preview, Reading |
 | **Callouts** | 11 Obsidian-style callout types with color coding |
 | **Focus Mode** | Distraction-free, one note at a time |
 | **Settings** | Fuzzy search (⌘,), theme gallery, Quick Actions customization |
