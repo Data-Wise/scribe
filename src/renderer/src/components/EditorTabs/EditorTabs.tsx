@@ -388,14 +388,17 @@ function TabButton({
           <Pin size={10} />
         </span>
       ) : (
-        <button
+        <span
+          role="button"
+          tabIndex={0}
           className="tab-close"
           onClick={onClose}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClose(e as unknown as React.MouseEvent) } }}
           title={`Close tab (${SHORTCUTS.closeTab.label})`}
           data-testid="tab-close"
         >
           <X size={12} />
-        </button>
+        </span>
       )}
     </button>
   )
