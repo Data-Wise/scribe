@@ -253,13 +253,14 @@ First-class support for [Quarto](https://quarto.org/) academic documents (`.qmd`
 
 ### Code Block Styling
 
-Quarto code blocks get VS Code-style visual treatment via the `CodeChunkDecorationPlugin`:
+Quarto code blocks get VS Code-style visual treatment via the `CodeChunkDecorationPlugin`. All three Quarto fence syntaxes are detected: executable (`` `{r}` ``), documentation (`` `{{r}}` ``), and static (`` `{.r}` ``).
 
 - Distinct background with accent-colored left border and rounded corners
 - Configurable monospace code font (Settings > Editor > Code Font)
-- Language badge (e.g., `R`, `PY`) on the opening fence line
+- Language badge (e.g., `R`, `PYTHON`) on the opening fence line
 - Chunk option lines (`#|`) styled as italic subdued metadata
 - Theme-aware — adapts to all 10 themes automatically
+- Plain fences (`` ```js ``) keep simple monospace styling via CSS fallback
 
 ### Smart Completion Scoping
 
