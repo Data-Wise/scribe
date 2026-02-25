@@ -414,6 +414,25 @@ body {
   z-index: 10; /* Ensure editor header is above sidebar to prevent drag region overlap */
 }
 
+/* Zoom level indicator (shown in editor header when zoom ≠ 100%) */
+.zoom-indicator {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-secondary, #cbd5e1);
+  border: none;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: background 150ms ease, color 150ms ease;
+  -webkit-app-region: no-drag;
+}
+
+.zoom-indicator:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--nexus-text-primary, #e2e8f0);
+}
+
 /* Breadcrumb navigation */
 .editor-breadcrumb {
   display: flex;

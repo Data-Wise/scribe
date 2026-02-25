@@ -8,6 +8,7 @@ import { useForestTheme } from './hooks/useForestTheme'
 import { useIconGlowEffect } from './hooks/useIconGlowEffect'
 import { usePreferences } from './hooks/usePreferences'
 import { useResponsiveLayout } from './hooks/useResponsiveLayout'
+import { useGlobalZoom } from './hooks/useGlobalZoom'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
@@ -183,6 +184,9 @@ function App() {
     }, [expandVault, expandSmartIcon]),
     onExpandRight: useCallback(() => setRightSidebarCollapsed(false), []),
   })
+
+  // Global zoom: ⌘+/⌘- to zoom in/out
+  const { zoomLevel, resetZoom } = useGlobalZoom()
 
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'>('properties')
@@ -1201,6 +1205,18 @@ function App() {
                 <span className="breadcrumb-item current">{selectedNote.title}</span>
               )}
             </div>
+
+            {/* Zoom indicator — only shown when zoom ≠ 100% */}
+            {zoomLevel !== 1.0 && (
+              <button
+                className="zoom-indicator"
+                onClick={resetZoom}
+                title="Click to reset zoom to 100%"
+                aria-label={`Zoom level ${Math.round(zoomLevel * 100)}%, click to reset`}
+              >
+                {Math.round(zoomLevel * 100)}%
+              </button>
+            )}
 
           </div>
 
