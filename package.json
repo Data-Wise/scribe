@@ -33,6 +33,7 @@
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-visually-hidden": "^1.2.4",
     "@tauri-apps/plugin-dialog": "^2.6.0",
+    "@tauri-apps/plugin-window-state": "^2",
     "@types/d3": "^7.4.3",
     "@types/katex": "^0.16.7",
     "@uiw/react-codemirror": "^4.25.4",

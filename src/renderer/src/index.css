@@ -2606,6 +2606,18 @@ mark {
   z-index: 10000; /* High z-index so tooltips inside can appear above editor */
 }
 
+/* Right sidebar width transition (matches left sidebar easing) */
+[data-testid="right-sidebar"] {
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+/* Disable transitions during active drag resize */
+.resizing,
+.resizing [data-testid="right-sidebar"] {
+  transition: none !important;
+}
+
 /* Icon Bar Mode (48px, expands to 240px when smart icon opens) */
 .mission-sidebar-icon {
   width: 48px;
@@ -4890,6 +4902,7 @@ mark {
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .mission-sidebar,
+  [data-testid="right-sidebar"],
   .compact-project-item,
   .project-icon-btn,
   .recent-note-item {
