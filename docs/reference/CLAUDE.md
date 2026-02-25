@@ -131,7 +131,7 @@ git push origin v1.x.x
 | --------- | ------------------------------------------- |
 | Shell     | **Tauri 2** (Rust backend)                  |
 | UI        | React 18                                    |
-| Editor    | HybridEditor (CodeMirror 6 + ReactMarkdown) |
+| Editor    | CodeMirror 6                                |
 | Styling   | Tailwind CSS                                |
 | State     | Zustand                                     |
 | Database  | SQLite (Tauri) / **IndexedDB** (Browser)    |
@@ -170,25 +170,25 @@ scribe/
 │       │   ├── Settings/          # Modular settings components
 │       │   │   ├── GeneralSettingsTab.tsx
 │       │   │   ├── EditorSettingsTab.tsx
-│       │   │   ├── SettingsToggle.tsx    # Reusable toggle (role=switch) [v1.19.1]
+│       │   │   ├── SettingsToggle.tsx    # Reusable toggle (role=switch)
 │       │   │   └── SettingsSection.tsx
-│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar [v1.19.0]
+│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar
 │       │   ├── EditorOrchestrator.tsx # Editor rendering logic
 │       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts
-│       │   ├── Editor/            # BlockNote editor
+│       │   ├── CodeMirrorEditor.tsx  # CodeMirror 6 editor
 │       │   └── ...
 │       ├── hooks/                 # React hooks
-│       │   └── usePreferences.ts  # Cached prefs + event sync [v1.19.1]
+│       │   └── usePreferences.ts  # Cached prefs + event sync
 │       ├── lib/                   # Core utilities
 │       │   ├── api.ts             # API factory (Tauri/Browser)
-│       │   ├── shortcuts.ts       # 25-shortcut registry [v1.19.1]
+│       │   ├── shortcuts.ts       # 27-shortcut registry
 │       │   ├── platform.ts        # Runtime detection (isTauri/isBrowser)
 │       │   ├── browser-api.ts     # IndexedDB API (46 operations)
 │       │   ├── browser-db.ts      # Dexie.js schema + seed data
 │       │   └── browser-dialogs.ts # Browser dialog fallbacks
 │       ├── store/                 # Zustand state
 │       │   ├── useAppViewStore.ts # Sidebar + UI state
-│       │   └── usePomodoroStore.ts # Pomodoro timer state [v1.19.0]
+│       │   └── usePomodoroStore.ts # Pomodoro timer state
 │       └── types/                 # TypeScript types
 ```
 
@@ -324,7 +324,7 @@ See [CHANGELOG](CHANGELOG.md) for full details.
 
 ### Tier 1-3: Core (Shipped)
 
-- BlockNote editor → HybridEditor++ (CodeMirror 6)
+- CodeMirror 6 editor (Source / Live Preview / Reading)
 - Focus mode
 - Global hotkey
 - Claude/Gemini CLI

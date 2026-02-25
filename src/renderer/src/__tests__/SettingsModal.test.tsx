@@ -139,6 +139,8 @@ const defaultFontSettings: FontSettings = {
   family: 'inter',
   size: 16,
   lineHeight: 1.6,
+  codeFamily: 'jetbrains-mono',
+  codeSize: 0.88,
 }
 
 const defaultThemeShortcuts: ThemeShortcut[] = [
@@ -237,7 +239,7 @@ describe('SettingsModal', () => {
       await act(async () => {
         fireEvent.click(screen.getByText('Editor'))
       })
-      expect(screen.getByText(/Font Family/)).toBeInTheDocument()
+      expect(screen.getAllByText(/Font Family/).length).toBeGreaterThanOrEqual(1)
     })
 
     it('should switch to Appearance tab', () => {
@@ -350,7 +352,8 @@ describe('SettingsModal', () => {
     })
 
     it('should show font family dropdown', () => {
-      expect(screen.getByText('Font Family')).toBeInTheDocument()
+      const fontFamilyLabels = screen.getAllByText('Font Family')
+      expect(fontFamilyLabels.length).toBeGreaterThanOrEqual(1)
     })
 
     it('should show font size control', () => {
