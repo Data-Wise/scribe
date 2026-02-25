@@ -159,7 +159,7 @@ function App() {
     const saved = localStorage.getItem('rightSidebarWidth')
     return saved ? parseInt(saved) : RIGHT_SIDEBAR_WIDTHS.expanded.default
   })
-  // isResizingRight removed — now handled by ResizeHandle component
+  const [isResizingRight, setIsResizingRight] = useState(false)
 
   // Responsive layout: auto-collapse sidebars on window resize
   const lastExpandedIcon = useRef(expandedIcon)
@@ -1318,10 +1318,11 @@ function App() {
                   setRightSidebarWidth(RIGHT_SIDEBAR_WIDTHS.expanded.default)
                   localStorage.setItem('rightSidebarWidth', String(RIGHT_SIDEBAR_WIDTHS.expanded.default))
                 }}
+                onDragStateChange={setIsResizingRight}
               />
             )}
             <div
-              className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'right-sidebar-collapsed' : ''}`}
+              className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'right-sidebar-collapsed' : ''}${isResizingRight ? ' resizing' : ''}`}
               style={{ width: rightSidebarCollapsed ? `${RIGHT_SIDEBAR_WIDTHS.icon}px` : `${rightSidebarWidth}px` }}
               data-testid="right-sidebar"
             >

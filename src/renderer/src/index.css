@@ -1822,7 +1822,8 @@ mark {
   .sidebar-expanded,
   .sidebar-expanded .tab-content,
   .tooltip-trigger::after,
-  .tooltip-trigger::before {
+  .tooltip-trigger::before,
+  .zoom-indicator {
     transition: none !important;
     animation: none !important;
   }
