@@ -186,7 +186,7 @@ cd scribe && npm install && npm run dev
 
 ### Feature Guides
 
-- [Editor Guide](guide/editor.md) - HybridEditor usage
+- [Editor Guide](guide/editor.md) - CodeMirror 6 editor usage
 - [Keyboard Shortcuts](guide/shortcuts.md) - All shortcuts reference
 - [Themes](guide/themes.md) - Theme customization
 - [Features Overview](guide/features.md) - Complete feature list

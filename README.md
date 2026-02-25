@@ -243,15 +243,7 @@ scribe/
 
 **2,280 tests passing** across test files:
 
-| Test File | Tests |
-|-----------|-------|
-| Themes.test.ts | 101 |
-| Academic.test.ts | 67 |
-| Validation.test.ts | 54 |
-| Tags.test.tsx | 52 |
-| HybridEditor.test.tsx | 37 |
-| Integration.test.tsx | 32 |
-| And 8 more... | 140 |
+76 test files with 2,280+ tests (Vitest + Testing Library + happy-dom).
 
 ---
 

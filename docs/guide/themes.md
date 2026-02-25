@@ -136,7 +136,7 @@ Themes are managed in **Settings → Appearance** tab:
 - Selected theme shows blue border + checkmark
 - Auto-theme toggle for time-based switching
 - Custom theme creator with real-time preview
-- All theme preferences use the `usePreferences` hook for cached reads and cross-component sync (v1.19.1+)
+- All theme preferences use the `usePreferences` hook for cached reads and cross-component sync
 
 ---
 

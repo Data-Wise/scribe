@@ -58,7 +58,7 @@ The Settings modal includes **fuzzy search** to quickly find any setting:
 |---------|-------------|---------|
 | Show writing streak milestones | Celebrate at 7, 30, 100, and 365 days | Off (to avoid anxiety) |
 
-### Focus Timer (Pomodoro) — *New in v1.19.0*
+### Focus Timer (Pomodoro)
 
 The Pomodoro timer appears in the status bar. Click to start, right-click to reset.
 

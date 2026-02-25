@@ -10,7 +10,7 @@
 graph TB
     subgraph "User Interface"
         UI[React 18 App]
-        Editor[HybridEditor++]
+        Editor[CodeMirror 6]
         Cmd[Command Palette]
         Settings[Settings Modal]
     end
