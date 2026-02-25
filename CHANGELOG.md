@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.22.0] - 2026-02-25 — Responsive UI Enhancements
+
+### Added
+
+- **Minimum window size** — Enforced 900×600px minimum via `tauri.conf.json` to prevent layout breakage.
+- **Window position memory** — `tauri-plugin-window-state` persists window size, position, and maximized state across restarts.
+- **Auto-collapse sidebars** — New `useResponsiveLayout` hook auto-collapses sidebars when editor space drops below 500px. Right sidebar collapses first, then left. Re-expands when window grows. Respects user overrides.
+- **Right sidebar resize handle** — Replaced inline mouse handler with shared `ResizeHandle` component for consistent behavior, ARIA attributes, and double-click-to-reset.
+- **Right sidebar width constants** — `RIGHT_SIDEBAR_WIDTHS` (min: 250, default: 320, max: 600) exported from store.
+- **Global zoom** — `useGlobalZoom` hook with ⌘+/⌘- shortcuts (50%–200% range, 10% steps). Persists to localStorage, applies via root font-size scaling. WCAG 1.4.4 compliant.
+- **Zoom indicator** — Appears in editor header when zoom ≠ 100%, click to reset.
+- **Touch resize support** — `ResizeHandle` now handles `touchstart`/`touchmove`/`touchend` events for trackpad and touch-screen resizing.
+- **`.resizing` class** — Applied to sidebar parents during drag, disabling CSS transitions for instant resize feedback.
+- **42 new tests** — ResponsiveFoundation (9), useResponsiveLayout (8), RightSidebarResize (6), useGlobalZoom (11), ResizeHandleTouch (8). Total: 2,322.
+
+### Changed
+
+- **Hidden title** — `hiddenTitle: true` removes redundant title bar text (breadcrumb serves this purpose).
+- **CSS transitions** — Right sidebar now has width transition matching left sidebar's 200ms cubic-bezier easing.
+- **Reduced-motion audit** — All new transitions (right sidebar, zoom indicator) covered by `prefers-reduced-motion: reduce`.
+- **ResizeHandle refactor** — `startX` changed from `useState` to `useRef` to fix stale closure bugs in touch handlers. Added `onDragStateChange` callback.
+
+---
+
 ## [v1.21.0] - 2026-02-25 — Quarto Code Chunk Styling
 
 ### Added
