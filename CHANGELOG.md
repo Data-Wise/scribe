@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] — Quarto Code Chunk Styling
+## [v1.21.0] - 2026-02-25 — Quarto Code Chunk Styling
 
 ### Added
 
