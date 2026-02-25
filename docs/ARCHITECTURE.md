@@ -162,6 +162,61 @@ A husky `pre-commit` hook prevents accidental commits of `ORCHESTRATE-*.md` plan
 
 ---
 
+## Responsive Layout System
+
+The responsive layout system ensures the editor maintains a usable width (500px minimum) across all window sizes, including macOS Stage Manager, split-screen, and Sequoia snap zones.
+
+```mermaid
+flowchart TD
+    WR[Window Resize Event] -->|debounce 150ms| URL[useResponsiveLayout hook]
+    URL -->|calculate| EW["editorWidth = windowWidth - leftPx - rightPx"]
+    EW -->|< 500px| COLLAPSE{Collapse Priority}
+    COLLAPSE -->|1st| CR[Collapse Right Sidebar → 48px]
+    COLLAPSE -->|2nd| CL[Collapse Left Sidebar → 48px]
+    EW -->|≥ 500px| EXPAND[Re-expand auto-collapsed sidebars]
+    EXPAND -->|check| UO{User Override?}
+    UO -->|yes| SKIP[Skip — user controls this sidebar]
+    UO -->|no| RE[Restore to previous width]
+
+    KS["⌘+/⌘- Keyboard Events"] --> GZ[useGlobalZoom hook]
+    GZ -->|apply| FS["document.documentElement.style.fontSize"]
+    GZ -->|persist| LS["localStorage: scribe:zoomLevel"]
+
+    DRAG[ResizeHandle Drag] -->|deltaX| RW[Update rightSidebarWidth]
+    RW -->|persist| LS2["localStorage: rightSidebarWidth"]
+    DRAG -->|onDragStateChange| RC[".resizing CSS class"]
+```
+
+### Key Constants
+
+| Constant | Value | Source |
+|----------|-------|--------|
+| `MIN_EDITOR_WIDTH` | 500px | `useResponsiveLayout.ts` |
+| `RIGHT_SIDEBAR_WIDTHS.icon` | 48px | `useAppViewStore.ts` |
+| `RIGHT_SIDEBAR_WIDTHS.expanded.default` | 320px | `useAppViewStore.ts` |
+| `RIGHT_SIDEBAR_WIDTHS.expanded.min` | 250px | `useAppViewStore.ts` |
+| `RIGHT_SIDEBAR_WIDTHS.expanded.max` | 600px | `useAppViewStore.ts` |
+| Zoom range | 0.5–2.0 (10% steps) | `useGlobalZoom.ts` |
+| Resize debounce | 150ms | `useResponsiveLayout.ts` |
+| Min window size | 900×600 | `tauri.conf.json` |
+
+### User Intent Tracking
+
+The auto-collapse system tracks whether *it* collapsed a sidebar vs. the user manually toggling it. This prevents the system from fighting user intent:
+
+1. **System collapses right sidebar** → `autoCollapsedRight = true`
+2. **User manually re-expands** → `userOverrideRight = true` (system stops managing)
+3. **Window grows significantly** → user override resets, system can manage again
+
+### localStorage Keys (Responsive UI)
+
+| Key | Type | Default | Purpose |
+|-----|------|---------|---------|
+| `scribe:zoomLevel` | float | 1.0 | Global zoom factor |
+| `rightSidebarWidth` | number | 320 | Right sidebar pixel width |
+
+---
+
 ## Data Flow
 
 ```mermaid
@@ -286,6 +341,8 @@ scribe/
 │           │
 │           ├── hooks/
 │           │   ├── usePreferences.ts
+│           │   ├── useResponsiveLayout.ts  # Auto-collapse sidebars on resize
+│           │   ├── useGlobalZoom.ts         # ⌘+/⌘- zoom (0.5–2.0)
 │           │   ├── useIconGlowEffect.ts
 │           │   └── useForestTheme.ts
 │           │
@@ -307,7 +364,7 @@ scribe/
 │           │   ├── usePomodoroStore.ts
 │           │   └── useSettingsStore.ts
 │           │
-│           └── __tests__/            # 76 test files, 2280+ tests
+│           └── __tests__/            # 81 test files, 2322 tests
 │
 ├── src-tauri/
 │   └── src/
