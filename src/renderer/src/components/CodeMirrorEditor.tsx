@@ -1153,9 +1153,10 @@ const codeChunkDecorationPlugin = ViewPlugin.fromClass(
             if (node.name === 'FencedCode') {
               const firstLine = view.state.doc.lineAt(node.from)
               const text = firstLine.text
-              const quartoMatch = text.match(/^```\{(\w+)/)
+              // Match executable {r}, doc {{r}}, and static {.r} code chunks
+              const quartoMatch = text.match(/^```\{\{?\.?(\w+)/)
 
-              if (!quartoMatch) return // Not a Quarto chunk, skip
+              if (!quartoMatch) return // Not a Quarto/fenced chunk, skip
 
               const lang = quartoMatch[1]
 
