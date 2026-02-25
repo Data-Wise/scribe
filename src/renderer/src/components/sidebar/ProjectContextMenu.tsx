@@ -1,4 +1,5 @@
 import { FileText, Edit3, Archive, Trash2, Pin, PinOff } from 'lucide-react'
+import { SHORTCUTS } from '../../lib/shortcuts'
 import { useEffect, useRef, useState } from 'react'
 import { Project } from '../../types'
 
@@ -134,7 +135,7 @@ export function ProjectContextMenu({
         <button className="context-menu-item" onClick={handleNewNote}>
           <FileText size={14} />
           <span>New Note</span>
-          <span className="shortcut">⌘N</span>
+          <span className="shortcut">{SHORTCUTS.newNote.label}</span>
         </button>
 
         <div className="context-menu-divider" />

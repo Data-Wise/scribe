@@ -89,6 +89,40 @@ This is about #research and #methods.
 
 ---
 
+## Code Chunks (Quarto)
+
+Write executable code blocks with autocompletion:
+
+````
+```{r}
+#| label: fig-example
+#| fig-cap: "My figure"
+ggplot(data, aes(x, y)) + geom_point()
+```
+````
+
+- Type `` ``` `` to trigger language completions (R, Python, Julia)
+- Type `#|` inside chunks for option completions
+- Type `@fig-` to cross-reference figures
+
+---
+
+## LaTeX Math
+
+Inline: `$\bar{x} = \frac{1}{n}\sum x_i$`
+
+Display:
+
+```markdown
+$$
+\hat{\beta} = (X'X)^{-1}X'y
+$$
+```
+
+Type `\` inside math for LaTeX command autocomplete.
+
+---
+
 ## Next Steps
 
 [Full Getting Started Guide :material-arrow-right:](GETTING-STARTED.md){ .md-button .md-button--primary }

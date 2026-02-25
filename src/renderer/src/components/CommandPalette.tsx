@@ -1,4 +1,5 @@
 import React from 'react'
+import { SHORTCUTS } from '../lib/shortcuts'
 import { Command } from 'cmdk'
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Title as DialogTitle, Description as DialogDescription } from '@radix-ui/react-dialog'
@@ -154,7 +155,7 @@ export function CommandPalette({
               <kbd className="command-palette-number">1</kbd>
               <Plus className="mr-3 h-4 w-4 text-green-400" />
               <span>Create New Page</span>
-              <kbd className="command-palette-shortcut">⌘N</kbd>
+              <kbd className="command-palette-shortcut">{SHORTCUTS.newNote.label}</kbd>
             </Command.Item>
             <Command.Item
               onSelect={() => { onDailyNote(); setOpen(false); }}
@@ -164,7 +165,7 @@ export function CommandPalette({
               <kbd className="command-palette-number">2</kbd>
               <Calendar className="mr-3 h-4 w-4 text-blue-400" />
               <span>Open Today's Journal</span>
-              <kbd className="command-palette-shortcut">⌘D</kbd>
+              <kbd className="command-palette-shortcut">{SHORTCUTS.dailyNote.label}</kbd>
             </Command.Item>
             <Command.Item
               onSelect={() => {
@@ -227,7 +228,7 @@ export function CommandPalette({
               <kbd className="command-palette-number">6</kbd>
               <Zap className="mr-3 h-4 w-4 text-yellow-400" />
               <span>Toggle Focus Mode</span>
-              <kbd className="command-palette-shortcut">⌘⇧F</kbd>
+              <kbd className="command-palette-shortcut">{SHORTCUTS.focusMode.label}</kbd>
             </Command.Item>
             {onOpenGraph && (
               <Command.Item
@@ -237,7 +238,7 @@ export function CommandPalette({
                 <kbd className="command-palette-number">7</kbd>
                 <Network className="mr-3 h-4 w-4 text-cyan-400" />
                 <span>Open Knowledge Graph</span>
-                <kbd className="command-palette-shortcut">⌘⇧G</kbd>
+                <kbd className="command-palette-shortcut">{SHORTCUTS.graphView.label}</kbd>
               </Command.Item>
             )}
             {hasSelectedNote && onExport && (
@@ -248,7 +249,7 @@ export function CommandPalette({
                 <kbd className="command-palette-number">8</kbd>
                 <Download className="mr-3 h-4 w-4 text-emerald-400" />
                 <span>Export Page (PDF/Word/LaTeX)</span>
-                <kbd className="command-palette-shortcut">⌘⇧E</kbd>
+                <kbd className="command-palette-shortcut">{SHORTCUTS.exportNote.label}</kbd>
               </Command.Item>
             )}
           </Command.Group>

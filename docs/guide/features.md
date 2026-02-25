@@ -159,23 +159,23 @@ Configure in Settings → Writing → Daily Note Template.
 
 ---
 
-## Settings (v1.9.0+)
+## Settings
 
 !!! tip "Quick Access"
     Press `⌘,` (Command-Comma) to open Settings.
 
 **ADHD-optimized settings system** with fuzzy search, visual theme gallery, and Quick Actions customization.
 
-### 5 Settings Categories
+### 6 Settings Categories
 
 | Category | Contents |
 |----------|----------|
-| **General** | Focus Timer (Pomodoro), auto-save, startup behavior |
-| **Editor** | Font, spacing, line height, ligatures, focus mode |
-| **Themes** | Visual theme gallery (8 themes with previews) |
-| **AI & Workflow** | Quick Actions, chat history, @ references |
-| **Projects** | Project templates, defaults, daily notes |
-| **Advanced** | Performance, data management, export/import |
+| **General** | Focus Timer (Pomodoro), startup behavior, streak display, ADHD features |
+| **Editor** | Font, spacing, readable line length, spellcheck |
+| **Appearance** | UI style, dark/light theme galleries (10 themes) |
+| **Files** | File management settings |
+| **Academic** | Citations, Zotero, export formats |
+| **Icon Bar** | Sidebar icon configuration |
 
 ### Fuzzy Search
 
@@ -187,11 +187,10 @@ Search all settings instantly:
 
 ### Theme Gallery
 
-**8 built-in themes** with visual previews:
+**10 built-in themes** with visual previews:
 
-**Favorites:** Slate, Nord, Dracula
-**Dark:** Monokai, GitHub Dark
-**Light:** Linen, Paper, Cream
+**Dark:** Oxford Dark, Forest Night, Warm Cocoa, Midnight Purple, Deep Ocean
+**Light:** Soft Paper, Morning Fog, Sage Garden, Lavender Mist, Sand Dune
 
 - **3-column grid** with hover effects
 - **Instant preview** - click to apply

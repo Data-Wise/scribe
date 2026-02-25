@@ -1,6 +1,6 @@
 # Scribe Release Process
 
-## Version: 0.4.0-alpha.1
+## Current Version: v1.20.0
 
 This document describes the release process for Scribe.
 
@@ -9,21 +9,22 @@ This document describes the release process for Scribe.
 ## Quick Release Checklist
 
 ```bash
-# 1. Update version in all files
+# 1. Update version in ALL files (they drift!)
 #    - package.json
 #    - src-tauri/Cargo.toml
 #    - src-tauri/tauri.conf.json
 #    - .STATUS
+#    Verify: grep for the old version across the entire repo
 
 # 2. Run tests
 npm test
 
 # 3. Build release
-./scripts/build-release.sh
+npm run tauri build
 
 # 4. Create GitHub release and upload DMG
 
-# 5. Update Homebrew tap with SHA256
+# 5. Update Homebrew tap with SHA256 from CHECKSUMS.txt
 ```
 
 ---
@@ -42,10 +43,10 @@ src-tauri/target/release/bundle/
 
 ### Current Build
 
-- **Version**: 0.4.0-alpha.1
+- **Version**: v1.20.0
 - **Architecture**: aarch64 (Apple Silicon)
 - **DMG Size**: ~5.5 MB
-- **SHA256**: `a25e44a2ad3ff2b2659171d22693e593a7f70ccfb226d1f16eab23166d6571cf`
+- **SHA256**: See `CHECKSUMS.txt` in the GitHub release assets
 
 ---
 
@@ -104,14 +105,14 @@ Before releasing:
 
 1. Create tag:
    ```bash
-   git tag v0.4.0-alpha.1
-   git push origin v0.4.0-alpha.1
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
    ```
 
 2. Create release on GitHub:
    - Go to Releases → Draft a new release
-   - Select tag: `v0.4.0-alpha.1`
-   - Title: `Scribe v0.4.0-alpha.1`
+   - Select tag: `vX.Y.Z`
+   - Title: `Scribe vX.Y.Z`
    - Mark as pre-release
    - Upload DMG files
 
@@ -119,7 +120,7 @@ Before releasing:
    ```bash
    cd ~/projects/dev-tools/homebrew-tap
    # Update Casks/scribe.rb with new SHA256
-   git commit -am "Update Scribe to v0.4.0-alpha.1"
+   git commit -am "Update Scribe to vX.Y.Z"
    git push
    ```
 
@@ -128,8 +129,8 @@ Before releasing:
 Push a tag to trigger automated release:
 
 ```bash
-git tag v0.4.0-alpha.1
-git push origin v0.4.0-alpha.1
+git tag vX.Y.Z
+git push origin vX.Y.Z
 ```
 
 The workflow will:
@@ -144,10 +145,10 @@ The workflow will:
 
 | Type | Format | Example |
 |------|--------|---------|
-| Alpha | `X.Y.Z-alpha.N` | `0.4.0-alpha.1` |
-| Beta | `X.Y.Z-beta.N` | `0.4.0-beta.1` |
-| Release Candidate | `X.Y.Z-rc.N` | `0.4.0-rc.1` |
-| Stable | `X.Y.Z` | `0.4.0` |
+| Stable | `X.Y.Z` | `1.20.0` |
+| Patch | `X.Y.Z` | `1.20.1` |
+| Minor | `X.Y.0` | `1.21.0` |
+| Major | `X.0.0` | `2.0.0` |
 
 ---
 

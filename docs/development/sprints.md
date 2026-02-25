@@ -1,179 +1,78 @@
-# Sprint Planning
+# Sprint History
 
 Scribe follows a sprint-based development approach with ~4-8 hour sprints.
 
 ## Current Status
 
-**Progress:** 92% complete
-**Tests:** 483 passing
-**Current Sprint:** 16 Complete
-**Next Sprint:** 17 - Tags Visual Improvements
+**Version:** v1.20.0 (stable release)
+**Tests:** 2,280+ passing (76 files)
+**Architecture:** Tauri 2 + React 18 + CodeMirror 6
 
-## Sprint Overview
+## Feature Tiers (All Shipped)
 
-| Phase | Sprint | Focus | Hours | Status |
-|-------|--------|-------|-------|--------|
-| **1** | 8 | Editor Foundation | 4h | ✅ Complete |
-| 1 | 9 | Editor Enhancement | 4h | ✅ Complete |
-| 1 | 10 | Hotkey + Commands | 6h | ✅ Complete |
-| 1 | 10.5 | Theme & Font System | 4h | ✅ Complete |
-| **2** | 11 | Academic Features | 8h | ✅ Complete |
-| 2 | 12 | UI Polish & Micro-interactions | 4h | ✅ Complete |
-| **3** | 13 | Preferences & Keyboard | 4h | ✅ Complete |
-| 3 | 14 | Knowledge Graph & Templates | 6h | ✅ Complete |
-| **4** | 15 | Tags Panel Quick Wins | 4h | ✅ Complete |
-| 4 | 16 | Tags Panel Core Features | 4h | ✅ Complete |
-| **5** | 17 | Tags Visual Improvements | 4h | ○ Next |
+### Tier 1: MVP
 
-## Completed Sprints
-
-### Sprint 16: Tags Panel Core Features ✅
-
-- Orphan tag detection (scans notes for unregistered `#tags`)
-- Unregistered Tags section with warning styling
-- Register single/all tags buttons
-- Right-click context menu (Rename/Delete)
-- Tag-YAML sync (inline #tags sync to properties.tags)
-- Hierarchical tag regex fix (supports `/` in paths)
-
-### Sprint 15: Tags Panel Quick Wins ✅
-
-- Search/filter bar with real-time filtering
-- Recent tags section (tracks last 8, shows top 5)
-- Compact mode toggle (reduces padding/fonts)
-
-### Sprint 14: Knowledge Graph & Templates ✅
-
-- Knowledge Graph visualization (D3 force-directed)
-- Daily Notes templates (5 built-in + custom)
-- Markdown export with frontmatter
-- Tag hierarchy (path notation: `research/statistics`)
-- Backlinks panel improvements
-
-### Sprint 13: Preferences & Keyboard ✅
-
-- User preferences system (localStorage)
-- Writing streak tracking
-- Enhanced keyboard shortcuts
-- Zotero citation integration
-- Export improvements
-
-### Sprint 12: UI Polish & Micro-interactions ✅
-
-- EmptyState component with animated pen icon
-- Button press feedback (scale animations)
-- Sidebar tooltips with keyboard shortcuts
-- `prefers-reduced-motion` support
-- Daily note template fix (HTML → Markdown)
-
-### Sprint 11: Academic Features ✅
-
-- KaTeX for math rendering (replaced MathJax)
-- Theme colors apply to editor area
-- 10 built-in themes (5 dark, 5 light)
-- 14 ADHD-friendly font recommendations
-
-### Sprint 10.5: Theme & Font System ✅
-
-- 10 built-in themes (5 dark, 5 light)
-- Auto-theme by time of day
-- Custom theme creator
-- Theme import/export (JSON + Base16 YAML)
-- Theme keyboard shortcuts (Cmd+Alt+0-9)
-- Font settings (family, size, line height)
-- 14 ADHD-friendly font recommendations
-- One-click Homebrew font installation
-- **101 new tests** → 407 total
-
-### Sprint 10: Global Hotkey + Commands ✅
-
-- Global hotkey ⌘⇧N opens app
-- Command palette ⌘K with 6 actions
-- Autocomplete cursor positioning
-- Accessibility improvements
-- **31 new tests** → 300 total
-
-### Sprint 9: Editor Enhancement ✅
-
-- Wiki-link autocomplete
-- Tag autocomplete
-- Live highlighting
-- Cursor-following popups
-
-### Sprint 8: Editor Foundation ✅
-
-- HybridEditor with write/preview modes
-- Focus mode (⌘⇧F)
-- Word count
+- CodeMirror 6 editor (Source / Live Preview / Reading modes)
+- Focus mode (`⌘⇧F`)
+- Dark/Light themes (10 built-in)
 - Auto-save
+- Wiki links with autocomplete
+- Tags with hierarchical support
+- Word count
+- Global hotkey (`⌘⇧N`)
 
-## Upcoming Sprints
+### Tier 2: Core
 
-### Sprint 17: Tags Visual Improvements
+- Claude + Gemini CLI integration
+- Command palette (`⌘K`)
+- Writing goals and streaks
+- Pomodoro focus timer (v1.19)
+- Tabs with pin/reorder/close/reopen
 
-- [ ] Tag cloud view (size-based frequency visualization)
-- [ ] Tag icons/emoji (optional per tag)
-- [ ] Connecting lines (tree view indentation guides)
-- [ ] Color picker (click dot to change tag color)
+### Tier 3: Academic
 
-### Sprint 18: Power User Features
+- Zotero/BibTeX citations
+- Citation autocomplete
+- KaTeX math rendering
+- LaTeX/PDF/Word export via Pandoc
+- Quarto document support with completions
 
-- [ ] Bulk operations (multi-select tags for batch operations)
-- [ ] Keyboard shortcuts (`t` to focus panel, `/` to search)
-- [ ] Tag merging (select multiple → merge into one)
-- [ ] Exclusion filters (notes WITHOUT certain tags)
+### Tier 4: Desktop
 
-### Sprint 19: Advanced Features
+- Project system (5 typed archetypes)
+- Icon-centric MissionSidebar (v1.16)
+- Embedded xterm.js terminal
+- D3 knowledge graph
+- Daily notes with templates
+- Backlinks panel
 
-- [ ] AI tag suggestions (based on note content)
-- [ ] Tag templates (preset groups for project types)
-- [ ] Tag statistics (last used, growth over time)
-- [ ] Tag relationships (often used together)
+### Backlog (v2.0+)
 
-## Feature Tiers
-
-### Tier 1: MVP ✅
-
-- HybridEditor
-- Focus Mode
-- Dark Mode
-- Auto-Save
-- Wiki Links
-- Tags (with panel, search, recent, orphan detection)
-- Word Count
-- Global Hotkey
-
-### Tier 2: Core ✅
-
-- Claude CLI
-- Gemini CLI
-- Command Palette
-- Writing goals & streaks
-
-### Tier 3: Academic ✅
-
-- Zotero Integration
-- Citation Autocomplete
-- KaTeX Equation Blocks
-- Export (LaTeX/PDF/Word)
-
-### Tier 4: Knowledge ✅
-
-- Knowledge Graph (D3)
-- Daily Notes with Templates
-- Backlinks Panel
-- Tag Hierarchy
-
-### Deferred to v2
-
-- Terminal (xterm.js)
-- Multi-tab Editing
-- File Tree Browser
-- Project System
+- Live LaTeX editor (full TeX Live compilation)
+- AI integration via Tauri backend (replacing CLI)
 
 ### Never Build
 
-- API-based AI (no keys)
+- API-based AI (CLI only, no keys)
 - Plugin system
 - Mobile app
-- Cloud sync
+- Cloud sync (proprietary)
+
+## Release History
+
+| Version | Highlight |
+|---------|-----------|
+| v1.20.0 | Release cleanup, documentation overhaul |
+| v1.19.0 | Pomodoro focus timer, settings infrastructure |
+| v1.18.0 | Sidebar vault expansion fix, DexieError2 race condition |
+| v1.17.0 | Three-tab sidebar state architecture |
+| v1.16.0 | Icon-centric sidebar redesign, tech debt remediation |
+| v1.15.0 | Quarto autocomplete, LaTeX completions |
+| v1.14.0 | WikiLink single-click navigation |
+| v1.10.0 | CodeMirror 6 Live Preview, KaTeX math, three editor modes |
+| v1.9.0 | Settings enhancement (fuzzy search, theme gallery) |
+| v1.7.0 | Quick Actions, chat history, @ references |
+
+## Sprint Archive
+
+Detailed sprint plans from Sprints 8-36 are archived in `docs/archive/planning/` and `docs/archive/sprints/`.

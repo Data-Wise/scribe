@@ -131,7 +131,7 @@ git push origin v1.x.x
 | --------- | ------------------------------------------- |
 | Shell     | **Tauri 2** (Rust backend)                  |
 | UI        | React 18                                    |
-| Editor    | HybridEditor (CodeMirror 6 + ReactMarkdown) |
+| Editor    | CodeMirror 6                                |
 | Styling   | Tailwind CSS                                |
 | State     | Zustand                                     |
 | Database  | SQLite (Tauri) / **IndexedDB** (Browser)    |
@@ -170,21 +170,25 @@ scribe/
 │       │   ├── Settings/          # Modular settings components
 │       │   │   ├── GeneralSettingsTab.tsx
 │       │   │   ├── EditorSettingsTab.tsx
+│       │   │   ├── SettingsToggle.tsx    # Reusable toggle (role=switch)
 │       │   │   └── SettingsSection.tsx
-│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar [v1.19.0]
+│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar
 │       │   ├── EditorOrchestrator.tsx # Editor rendering logic
 │       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts
-│       │   ├── Editor/            # BlockNote editor
+│       │   ├── CodeMirrorEditor.tsx  # CodeMirror 6 editor
 │       │   └── ...
+│       ├── hooks/                 # React hooks
+│       │   └── usePreferences.ts  # Cached prefs + event sync
 │       ├── lib/                   # Core utilities
 │       │   ├── api.ts             # API factory (Tauri/Browser)
+│       │   ├── shortcuts.ts       # 27-shortcut registry
 │       │   ├── platform.ts        # Runtime detection (isTauri/isBrowser)
 │       │   ├── browser-api.ts     # IndexedDB API (46 operations)
 │       │   ├── browser-db.ts      # Dexie.js schema + seed data
 │       │   └── browser-dialogs.ts # Browser dialog fallbacks
 │       ├── store/                 # Zustand state
 │       │   ├── useAppViewStore.ts # Sidebar + UI state
-│       │   └── usePomodoroStore.ts # Pomodoro timer state [v1.19.0]
+│       │   └── usePomodoroStore.ts # Pomodoro timer state
 │       └── types/                 # TypeScript types
 ```
 
@@ -243,20 +247,36 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.19.0 - Pomodoro Focus Timer ✅
+## 🎯 Current Status: v1.20.0 - Settings & Timer Cleanup ✅
 
-**Released:** v1.19.0 (stable)
+**Released:** v1.20.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
-**Tests:** 2,255 passing (73 files)
+**Tests:** 2,280 passing (76 files)
 
-### Latest Work: Pomodoro Focus Timer (PR #45)
+### Latest Work: Session Timer Removal (PR #48)
+
+- ✅ Removed legacy session timer from breadcrumb bar (⏸/▶/↺ controls)
+- ✅ Removed `sessionStartTime` prop chain from 5 components
+- ✅ StatsPanel Duration card → Pomodoro count from `usePomodoroStore`
+- ✅ Cleaned 4 localStorage keys and ~50 lines orphaned CSS
+- ✅ Net: -95 lines, 2 session-duration tests removed (2,280 total)
+
+### Previous: Settings Infrastructure Improvements (PR #47)
+
+- ✅ `SettingsToggle` reusable component with accessibility (`role="switch"`, `aria-checked`, `aria-label`)
+- ✅ `usePreferences` hook — cached preferences with event-based cross-component sync
+- ✅ `SHORTCUTS` registry (25 shortcuts) with `matchesShortcut()` helper
+- ✅ Migrated `SettingsModal.tsx` to `usePreferences` hook
+- ✅ 27 new tests (2,282 total)
+
+### Previous: Pomodoro Focus Timer (PR #45)
 
 - ✅ Status bar countdown timer (start/pause click, right-click reset)
 - ✅ Zustand store with symmetric callbacks: `tick(onComplete, onBreakComplete)`
 - ✅ Auto-save on work completion, gentle break toasts
 - ✅ Focus Timer settings in General tab (5 new preferences)
 - ✅ Auto-pin new projects to sidebar
-- ✅ 62 new tests (2,255 total)
+- ✅ 62 new tests (2,282 total)
 
 ### Previous: Sidebar Vault Expansion Fix (PR #43)
 
@@ -304,7 +324,7 @@ See [CHANGELOG](CHANGELOG.md) for full details.
 
 ### Tier 1-3: Core (Shipped)
 
-- BlockNote editor → HybridEditor++ (CodeMirror 6)
+- CodeMirror 6 editor (Source / Live Preview / Reading)
 - Focus mode
 - Global hotkey
 - Claude/Gemini CLI

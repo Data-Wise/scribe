@@ -1,6 +1,8 @@
 # Scribe Component Reference
 
-> React component documentation
+> React component documentation — v1.20.0
+>
+> **Last Updated:** 2026-02-24
 
 ---
 
@@ -12,22 +14,14 @@ Main application component. Manages:
 - Note selection and editing
 - Sidebar visibility
 - Focus mode
-- Keyboard shortcuts
+- Keyboard shortcuts (delegated to `KeyboardShortcutHandler`)
+- User preferences via `usePreferences()` hook
+- Pomodoro timer integration
+- Tab management
 
-**Key State:**
-```typescript
-selectedNoteId: string | null
-focusMode: boolean
-leftSidebarCollapsed: boolean
-rightSidebarCollapsed: boolean
-editorMode: 'write' | 'preview'
-```
+**Key State:** Managed via Zustand stores (`useNotesStore`, `useAppViewStore`, `useProjectStore`, `usePomodoroStore`, `useSettingsStore`).
 
-**Keyboard Handlers:**
-- `⌘N` → Create new note
-- `⌘D` → Open daily note
-- `⌘⇧F` → Toggle focus mode
-- `⌘K` → Open command palette
+**Keyboard Handlers:** Delegated to `KeyboardShortcutHandler.tsx` — 27 registered shortcuts.
 
 ---
 
@@ -118,59 +112,109 @@ interface CommandPaletteProps {
 
 ---
 
-### Ribbon.tsx
+### MissionSidebar (sidebar/)
 
-Left icon bar with navigation buttons.
+Icon-centric sidebar system introduced in v1.16. Replaces the original Ribbon.
 
-**Props:**
-```typescript
-interface RibbonProps {
-  onToggleLeft: () => void
-  onToggleRight: () => void
-  onSearch: () => void
-  onSettings: () => void
-  leftCollapsed: boolean
-  rightCollapsed: boolean
-}
-```
+**Structure:**
+- `MissionSidebar.tsx` — Container orchestrating IconBar + ExpandedIconPanel
+- `IconBar.tsx` — 48px icon column (always visible): pinned vaults, smart icons, system icons
+- `ExpandedIconPanel.tsx` — Collapsible panel showing note list, search, graph preview
+- `SmartIconButton.tsx` — Typed project shortcut icons (`⌘⇧1`–`⌘⇧4`)
+- `ActivityBar.tsx` — Activity indicator dots
+- `StatusDot.tsx` — Project status indicators
+- `InboxButton.tsx` — Quick inbox access
+- `ProjectAvatar.tsx` — Project type icon rendering
+- `CompactListView.tsx` / `CardGridView.tsx` — Two note list display styles
 
-**Icons:**
-- Files (toggle left sidebar)
-- Search
-- Tags (toggle right sidebar)
-- Stats
-- Settings
+**25+ components** in `src/renderer/src/components/sidebar/`
 
-**Features:**
-- CSS tooltips on hover
-- Keyboard shortcut hints
-- Active state highlighting
-
-**File:** `src/renderer/src/components/Ribbon.tsx`
+**File:** `src/renderer/src/components/sidebar/MissionSidebar.tsx`
 
 ---
 
-### SettingsModal.tsx
+### SettingsModal (Settings/)
 
-Application settings dialog.
+Application settings dialog with 12 sub-components.
 
 **Tabs:**
-1. **General** - App settings
-2. **Editor** - Font, size, line height
-3. **Appearance** - Themes, custom creator
+1. **General** — App settings, Pomodoro timer config, writing goals
+2. **Editor** — Font, size, line height, editor mode
+3. **Appearance** — Themes (10 built-in), custom CSS, auto-theme, icon glow, UI style
 
-**Theme System:**
-- 10 built-in themes (5 dark, 5 light)
-- Custom theme creator with live preview
-- Import/export (JSON, Base16 YAML, URL)
-- Keyboard shortcuts (⌘Alt+0-9)
+**Key Sub-components:**
+- `GeneralSettingsTab.tsx` — General preferences + Pomodoro settings
+- `EditorSettingsTab.tsx` — Editor preferences
+- `ThemeGallery.tsx` — Visual theme browser
+- `PinnedVaultsSettings.tsx` — Manage pinned sidebar vaults
+- `QuickActionsSettings.tsx` — Configure AI quick actions
+- `ProjectTemplates.tsx` — Project type templates
+- `SettingsToggle.tsx` — Reusable toggle switch (WCAG accessible)
+- `SettingsSection.tsx` — Consistent section wrapper
+- `ContextualHint.tsx` — Inline settings guidance
 
-**Font System:**
-- 14 ADHD-friendly font recommendations
-- One-click Homebrew installation
-- Font preview
+**File:** `src/renderer/src/components/SettingsModal.tsx` (prop-based, used by App.tsx)
+**Unused:** `src/renderer/src/components/Settings/SettingsModal.tsx` (store-based, not imported)
 
-**File:** `src/renderer/src/components/SettingsModal.tsx`
+---
+
+### SettingsToggle.tsx
+
+Reusable toggle switch for boolean settings.
+
+**Props:**
+```typescript
+interface SettingsToggleProps {
+  label: string
+  description: string
+  checked: boolean
+  onChange: () => void
+  testId?: string
+}
+```
+
+**Features:**
+- Consistent label + description layout
+- Animated toggle knob (accent color when on)
+- WCAG accessible: `role="switch"`, `aria-checked`, `aria-label`
+- Used by `GeneralSettingsTab` and `EditorSettingsTab`
+
+**File:** `src/renderer/src/components/Settings/SettingsToggle.tsx`
+
+---
+
+### usePreferences (Hook)
+
+Cached preferences hook with event-based sync.
+
+**Returns:**
+```typescript
+{
+  prefs: UserPreferences     // Current preferences (cached)
+  updatePref(key, value)     // Update a single preference
+  togglePref(key)            // Toggle a boolean preference
+}
+```
+
+**Behavior:**
+- Reads `localStorage` once on mount, caches in React state
+- Listens for `preferences-changed` events to stay in sync across components
+- Write-through: `updatePref` / `togglePref` immediately persist to `localStorage`
+
+**File:** `src/renderer/src/hooks/usePreferences.ts`
+
+---
+
+### KeyboardShortcutHandler.tsx
+
+Global keyboard shortcut handler (extracted from App.tsx).
+
+**Features:**
+- Handles 25 registered shortcuts
+- Uses `matchesShortcut(event, shortcutId)` for registry-based event matching
+- Manages Tauri menu registration
+
+**File:** `src/renderer/src/components/KeyboardShortcutHandler.tsx`
 
 ---
 
@@ -416,17 +460,33 @@ Search results display.
 
 ---
 
+## Additional Components (v1.16+)
+
+| Component | Purpose |
+|-----------|---------|
+| `EditorOrchestrator.tsx` | Routes to correct editor mode (source/live/reading) |
+| `EditorTabs/EditorTabs.tsx` | Tab bar with pin, reorder, close, reopen |
+| `PomodoroTimer.tsx` | Status bar Pomodoro timer (v1.19) |
+| `GraphView.tsx` | D3 force-directed knowledge graph |
+| `TerminalPanel.tsx` | Embedded xterm.js terminal |
+| `ClaudePanel.tsx` / `ClaudeChatPanel.tsx` | AI chat integration |
+| `QuickCaptureOverlay.tsx` | `⌘⇧C` quick note capture modal |
+| `CreateProjectModal.tsx` | New project creation dialog |
+| `EditProjectModal.tsx` | Project editing dialog |
+| `ProjectsPanel.tsx` | Project management view |
+| `WritingProgress.tsx` | Word count goal progress |
+| `StreakDisplay.tsx` | Writing streak visualization |
+| `QuickActions.tsx` | AI quick action commands |
+| `SearchPanel.tsx` | Full search interface |
+| `DashboardShell.tsx` | Dashboard layout container |
+| `Toast.tsx` | Notification toasts |
+| `IconPicker.tsx` | Icon selection UI |
+
+---
+
 ## Testing
 
-All components have corresponding test files in `src/renderer/src/__tests__/`:
-
-| Component | Test File | Tests |
-|-----------|-----------|-------|
-| HybridEditor | HybridEditor.test.tsx | 37 |
-| CommandPalette | CommandPalette.test.tsx | 24 |
-| Tags | Tags.test.tsx | 52 |
-| Components | Components.test.tsx | 16 |
-| Integration | Integration.test.tsx | 32 |
+76 test files with 2,280+ tests (Vitest + Testing Library + happy-dom).
 
 **Run tests:**
 ```bash

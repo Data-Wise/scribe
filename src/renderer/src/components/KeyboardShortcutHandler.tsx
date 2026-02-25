@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { isTauri } from '../lib/platform'
 import { updatePreferences, EditorMode, SidebarTabId } from '../lib/preferences'
+import { matchesShortcut } from '../lib/shortcuts'
 import { getThemeForShortcut, Theme, ThemeShortcut } from '../lib/themes'
 import type { Note, SmartIconId } from '../types'
 
@@ -129,13 +130,13 @@ export function KeyboardShortcutHandler({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Focus mode toggle (⌘⇧F)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'F') {
+      if (matchesShortcut(e, 'focusMode')) {
         e.preventDefault()
         onFocusModeChange(!focusMode)
       }
 
       // Export shortcut (⌘⇧E)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'E') {
+      if (matchesShortcut(e, 'exportNote')) {
         e.preventDefault()
         if (selectedNote) {
           onExportDialogOpen()
@@ -143,19 +144,19 @@ export function KeyboardShortcutHandler({
       }
 
       // Graph view shortcut (⌘⇧G)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'G') {
+      if (matchesShortcut(e, 'graphView')) {
         e.preventDefault()
         onGraphViewOpen()
       }
 
       // Left sidebar toggle (⌘B)
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'b') {
+      if (matchesShortcut(e, 'leftSidebar')) {
         e.preventDefault()
         onLeftSidebarToggle()
       }
-      
+
       // Right sidebar toggle (⌘⇧B)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'B') {
+      if (matchesShortcut(e, 'rightSidebar')) {
         e.preventDefault()
         onRightSidebarToggle()
       }
@@ -166,13 +167,13 @@ export function KeyboardShortcutHandler({
       }
 
       // New note (⌘N)
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'n') {
+      if (matchesShortcut(e, 'newNote')) {
         e.preventDefault()
         onCreateNote()
       }
 
       // Daily note (⌘D)
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'd') {
+      if (matchesShortcut(e, 'dailyNote')) {
         e.preventDefault()
         onDailyNote()
       }
@@ -184,19 +185,19 @@ export function KeyboardShortcutHandler({
       }
 
       // Search panel (⌘F)
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'f') {
+      if (matchesShortcut(e, 'search')) {
         e.preventDefault()
         onSearchPanelOpen()
       }
 
       // Quick Capture (⌘⇧C)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'C') {
+      if (matchesShortcut(e, 'quickCapture')) {
         e.preventDefault()
         onQuickCaptureOpen()
       }
 
       // New Project (⌘⇧N)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'N') {
+      if (matchesShortcut(e, 'newProject')) {
         e.preventDefault()
         onCreateProjectOpen()
       }
@@ -226,7 +227,7 @@ export function KeyboardShortcutHandler({
       }
 
       // Close current tab (⌘W)
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'w') {
+      if (matchesShortcut(e, 'closeTab')) {
         e.preventDefault()
         const activeTab = openTabs.find(t => t.id === activeTabId)
         if (activeTab && !activeTab.isPinned) {
@@ -235,7 +236,7 @@ export function KeyboardShortcutHandler({
       }
 
       // Reopen last closed tab (⌘⇧T)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'T') {
+      if (matchesShortcut(e, 'reopenTab')) {
         e.preventDefault()
         onReopenLastClosedTab()
         return
@@ -292,7 +293,7 @@ export function KeyboardShortcutHandler({
       }
 
       // Settings shortcut (⌘,)
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key === ',') {
+      if (matchesShortcut(e, 'settings')) {
         e.preventDefault()
         onSettingsOpen()
       }

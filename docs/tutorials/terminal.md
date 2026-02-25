@@ -24,9 +24,9 @@ Press **⌘⌥T** (Command + Option + T) from anywhere in Scribe.
 
 ### Method 2: Right Sidebar
 
-1. Look at the right sidebar Activity Bar
-2. Click the **Terminal** icon (bottom icon)
-3. Terminal panel opens below
+1. Look at the right sidebar tab bar
+2. Click the **Terminal** tab
+3. Terminal panel opens
 
 **Result:** You should see a zsh prompt with your project directory.
 

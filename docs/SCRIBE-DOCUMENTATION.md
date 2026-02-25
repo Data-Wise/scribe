@@ -1,8 +1,7 @@
 # Scribe — Comprehensive Technical Documentation
 
-**Version:** 1.19 (Pomodoro release)
-**Last Updated:** 2026-02-23
-**Branch:** feature/pomodoro
+**Version:** 1.20.0
+**Last Updated:** 2026-02-24
 
 ---
 
@@ -836,7 +835,7 @@ The `api` object is the single interface between the UI and the database. All me
 ### Project Structure
 
 ```
-pomodoro/                          (worktree root = project root)
+scribe/                            (project root)
 ├── src/
 │   ├── main.ts                    (Tauri main process entry)
 │   └── renderer/
@@ -975,16 +974,15 @@ Stores should not import from other stores directly. If cross-store coordination
 - **Props flow:** Pass props down through `App.tsx → EditorOrchestrator → HybridEditor → children`; do not skip levels
 - **Store access:** Access stores via hooks in components; do not call store methods from other stores
 
-### Implementation Stats (v1.19 Pomodoro Release)
+### Current Stats (v1.20.0)
 
-| Metric | Before | After |
-|--------|--------|-------|
-| Total tests | 2190 | 2252 |
-| New tests | — | 62 (35 store + 27 component) |
-| Test files | — | 73 |
-| New production files | — | 4 |
-| Modified production files | — | 9 |
-| Lines of production code added | — | 209 |
+| Metric | Value |
+|--------|-------|
+| Total tests | 2,280+ |
+| Test files | 76 |
+| Components | 50+ |
+| Zustand stores | 5 |
+| Keyboard shortcuts | 27 |
 
 ---
 
@@ -1006,10 +1004,13 @@ Stores should not import from other stores directly. If cross-store coordination
 
 | Version | Notable Changes |
 |---------|----------------|
+| v1.20 | Release cleanup, documentation overhaul |
 | v1.19 | Pomodoro Timer (status bar, state machine, configurable, auto-save); new projects auto-pinned to sidebar |
+| v1.17 | Three-tab sidebar state architecture |
 | v1.16 | Icon-centric sidebar redesign; pinned vaults; smart icons |
+| v1.15 | Quarto enhancements, LaTeX completions |
 | Earlier | Knowledge graph (D3), AI integration (Claude + Gemini), terminal (xterm.js), academic citations (BibTeX) |
 
 ---
 
-*This document is the authoritative technical reference for Scribe. For questions not covered here, see the source code in `/Users/dt/.git-worktrees/scribe/pomodoro/src/renderer/src/`.*
+*This document is the authoritative technical reference for Scribe. For questions not covered here, see the source code in `src/renderer/src/`.*

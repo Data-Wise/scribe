@@ -1,32 +1,32 @@
 # Scribe Project Definition
 
-> **Version:** 1.3.0 | **Updated:** 2024-12-25 | **Status:** Active Development (70% Complete)
+> **Version:** 1.20.0 | **Updated:** 2026-02-24 | **Status:** Stable Release
 
 ---
 
-## 🎯 One Sentence
+## One Sentence
 
 **Scribe = ADHD-friendly distraction-free writer + projects + academic features + CLI-based AI.**
 
 ---
 
-## ⚡ TL;DR (30 seconds)
+## TL;DR
 
 | What | How |
 |------|-----|
- | **Editor** | HybridEditor (markdown + preview) |
-| **Focus** | Distraction-free mode, global hotkey |
+| **Editor** | CodeMirror 6 (Source / Live Preview / Reading) |
+| **Focus** | Distraction-free mode, global hotkey, Pomodoro timer |
 | **Projects** | Research, Teaching, R-Package, R-Dev, Generic |
 | **Citations** | Zotero via Better BibTeX |
-| **Export** | Markdown, LaTeX, PDF, Word, Quarto |
+| **Export** | Markdown, LaTeX, PDF, Word via Pandoc |
 | **AI** | Claude + Gemini CLI (no API keys) |
-| **Notes** | Wiki links, tags, daily notes |
-| **Storage** | Local project folders + Obsidian sync |
+| **Notes** | Wiki links, tags, daily notes, knowledge graph |
+| **Storage** | SQLite (Tauri) / IndexedDB (Browser) |
 | **Design** | ADHD-first, minimal friction |
 
 ---
 
-## 🧠 ADHD Design Principles
+## ADHD Design Principles
 
 > **These override ALL feature decisions.**
 
@@ -39,9 +39,9 @@ No dialogs. No choices. Just write.
 
 ### 2. One Thing at a Time
 
-- Single note visible
+- Single note in editor
 - Sidebar collapses in focus mode
-- No tabs, no split views
+- Tabs for multi-note workflows
 
 ### 3. Escape Hatches
 
@@ -52,7 +52,7 @@ No dialogs. No choices. Just write.
 ### 4. Visible Progress
 
 - Word count (always visible)
-- Session timer
+- Pomodoro timer (work/break cycles)
 - Streak indicator (optional)
 
 ### 5. Sensory-Friendly
@@ -64,44 +64,57 @@ No dialogs. No choices. Just write.
 ### 6. Quick Wins
 
 - Milestone celebrations (100, 500, 1000 words)
-- "Win" logging
 - Daily goal progress bar
 
 ---
 
-## ✅ What Scribe IS
+## What Scribe IS
 
- | Principle | Implementation |
+| Principle | Implementation |
 |-----------|----------------|
 | **Distraction-Free Writer** | Focus mode, minimal UI |
-| **Markdown Editor** | Write/Preview mode with live markdown rendering |
-| **Project Manager** | Local folders, project settings |
+| **CodeMirror Editor** | Source/Live/Reading modes |
+| **Project Manager** | 5 typed archetypes with scoped notes |
 | **Academic Writing Tool** | Zotero + LaTeX + Quarto |
-| **Knowledge Notes** | Wiki links, tags, daily notes |
-| **ADHD-Friendly** | Quick capture, low friction |
+| **Knowledge Notes** | Wiki links, tags, daily notes, graph |
+| **ADHD-Friendly** | Quick capture, low friction, Pomodoro |
 | **CLI-Based AI** | `claude` and `gemini` CLI |
-| **Obsidian Companion** | Sync notes to vault |
+| **Desktop App** | Tauri 2 with embedded terminal |
 
 ---
 
-## ❌ What Scribe IS NOT
+## What Scribe IS NOT
 
 | Avoid | Why |
 |-------|-----|
 | Full IDE | Use VS Code / Positron |
-| Terminal emulator | Defer to v2 (use iTerm/Wezterm) |
 | Code editor | Use VS Code / RStudio |
 | Full PKM system | Obsidian does this |
-| Graph view | Too complex, use Obsidian |
 | API-based AI | Requires keys, costs money |
 | Plugin system | Scope creep |
-| Multi-tab editor | Breaks "one thing at a time" |
 
 ---
 
-## 📁 Project System
+## Technical Stack (Locked)
 
-### Project Types
+| Layer | Technology |
+|-------|------------|
+| Shell | Tauri 2 |
+| UI | React 18 |
+| Editor | CodeMirror 6 |
+| Styling | Tailwind CSS |
+| State | Zustand (5 stores) |
+| Database | SQLite (Tauri) / IndexedDB (Browser) |
+| AI | CLI only (no API) |
+| Citations | Pandoc citeproc |
+| Math | KaTeX |
+| Terminal | xterm.js |
+| Graph | D3.js |
+| Testing | Vitest + Testing Library |
+
+---
+
+## Project Types
 
 | Type | Use Case | Default Template |
 |------|----------|------------------|
@@ -111,202 +124,9 @@ No dialogs. No choices. Just write.
 | **R-Dev** | Dev tools projects | README-first |
 | **Generic** | Everything else | Blank |
 
-### Folder Structure
-
-```
-~/Projects/
-├── research-mediation/
-│   ├── .scribe/
-│   │   ├── project.json      # Settings
-│   │   └── templates/        # Custom templates
-│   ├── paper-draft.md
-│   ├── literature-notes.md
-│   └── daily/
-│       ├── 2024-12-24.md
-│       └── 2024-12-25.md
-│
-├── teaching-stats-101/
-│   ├── .scribe/
-│   │   └── project.json
-│   ├── lecture-01.md
-│   └── assignments/
-│
-├── r-package-medfit/
-│   ├── .scribe/
-│   │   └── project.json
-│   └── vignettes/
-│
-└── r-dev-aiterm/
-    ├── .scribe/
-    │   └── project.json
-    └── docs/
-```
-
-### project.json Schema
-
-```json
-{
-  "name": "Mediation Paper",
-  "type": "research",
-  "created": "2024-12-24",
-  "bibliography": "~/Zotero/research.bib",
-  "obsidianVault": "~/vaults/research",
-  "exportDefaults": {
-    "format": "pdf",
-    "template": "academic",
-    "citationStyle": "apa7"
-  },
-  "aiContext": "Causal inference, mediation analysis, sensitivity analysis",
-  "dailyNotes": {
-    "enabled": true,
-    "folder": "daily",
-    "template": "## {{date}}\n\n### Progress\n\n### Notes\n"
-  }
-}
-```
-
-### Project Switcher UI
-
-```
-┌─────────────────────────────────────┐
-│ 📁 Projects                    [+]  │
-├─────────────────────────────────────┤
-│ 🔬 research-mediation      ← Active │
-│ 📚 teaching-stats-101               │
-│ 📦 r-package-medfit                 │
-│ 🔧 r-dev-aiterm                     │
-│ ─────────────────────────────       │
-│ ⚙️ New Project...                   │
-└─────────────────────────────────────┘
-```
-
 ---
 
-## 📝 Knowledge Management
-
-### Included (v1.0)
-
-| Feature | Description |
-|---------|-------------|
-| **Wiki Links** | `[[Note Title]]` with autocomplete |
-| **Tags** | `#tag` with colored badges |
-| **Backlinks** | Show notes linking to current |
-| **Daily Notes** | Auto-create with template |
-| **Note Search** | Search within project |
-
-### Excluded (Use Obsidian)
-
-| Feature | Why Exclude |
-|---------|-------------|
-| Graph view | Complex, Obsidian does better |
-| Full-text search across projects | Use Obsidian |
-| Spaced repetition | Use Obsidian plugin |
-| Canvas/mind map | Use Obsidian |
-| MOC auto-generation | Use Obsidian |
-
-### Daily Notes
-
-```
-Template: daily/{{date}}.md
-
-## 2024-12-24
-
-### Progress
-- [x] Reviewed VanderWeele paper
-- [ ] Run sensitivity analysis
-
-### Notes
-Working on [[Sensitivity Analysis]] section...
-
-### Tags
-#research #mediation
-```
-
-**Hotkey:** ⌘D = Open/create today's daily note
-
----
-
-## 📦 Feature Tiers
-
-### Tier 1: MVP (Must Have)
-
-| Feature | Sprint |
-|---------|--------|
-| HybridEditor (markdown + preview) | 8 |
-| Focus Mode | 8 |
-| Dark Mode | 8 |
-| Auto-Save | 8 |
-| Wiki Links | 9 |
-| Tags | 9 |
-| Word Count | 8 |
-| Global Hotkey (⌘⇧N) | 10 |
-
-### Tier 2: Core Features
-
-| Feature | Sprint |
-|---------|--------|
-| Claude CLI | 9 |
-| Gemini CLI | 9 |
-| Ecosystem Panel | 9 |
-| Command Palette (⌘K) | 10 |
-| Obsidian Sync | 11 |
-| Session Timer | 9 |
-
-### Tier 3: Academic Features
-
-| Feature | Sprint |
-|---------|--------|
-| Zotero Integration | 12 |
-| Citation Autocomplete | 12 |
-| Equation Blocks (KaTeX) | 12 |
-| LaTeX Export | 13 |
-| PDF Export | 13 |
-| Word Export | 13 |
-| Quarto Render | 14 |
-
-### Tier 4: Project System
-
-| Feature | Sprint |
-|---------|--------|
-| Project Switcher | 15 |
-| Project Settings | 15 |
-| Project Templates | 16 |
-| Local Folder Save | 15 |
-| Daily Notes | 16 |
-| Backlinks Panel | 16 |
-
-### Tier 5: Polish (v1.0)
-
-| Feature | Sprint |
-|---------|--------|
-| Writing Goals | 17 |
-| Streak Tracking | 17 |
-| Note Search | 17 |
-
-### Deferred to v2
-
-| Feature | Reason |
-|---------|--------|
-| **Terminal (xterm.js)** | Complexity, external works |
-| **Graph View** | Use Obsidian |
-| **Multi-tab Editing** | Breaks ADHD focus |
-| **File Tree Browser** | Complexity |
-| **Git Integration** | Use external |
-| **Code Execution** | Use RStudio/Positron |
-
-### Never Build
-
-| Feature | Reason |
-|---------|--------|
-| API-based AI | Keys + cost |
-| Plugin system | Scope creep |
-| Mobile app | Different product |
-| Cloud sync (proprietary) | Use Obsidian |
-| Real-time collaboration | Out of scope |
-
----
-
-## 🤖 AI Integration
+## AI Integration
 
 ### Why CLI, Not API?
 
@@ -317,128 +137,18 @@ Working on [[Sensitivity Analysis]] section...
 | Auto-updates | SDK management |
 | Zero config | Setup friction |
 
-### AI Actions (5)
+### Quick Actions (10 max)
 
-| Action | Prompt |
-|--------|--------|
-| **Improve** | "Improve clarity and flow" |
-| **Expand** | "Expand on this idea" |
-| **Summarize** | "Summarize in 2-3 sentences" |
-| **Explain** | "Explain this simply" |
-| **Research** | "What does research say about..." |
+5 default + 5 custom AI actions, configurable in Settings.
 
 ---
 
-## 📚 Academic Stack
-
-### Citation Workflow
-
-```
-Zotero → Better BibTeX → .bib → Scribe → @cite autocomplete
-```
-
-### Export Pipeline
-
-```bash
-# All via Pandoc
-pandoc input.md -o output.{tex,pdf,docx} --citeproc --bibliography=refs.bib
-
-# Quarto
-quarto render input.qmd
-```
-
----
-
-## 🔌 Ecosystem Integration
-
-### Read-Only Status
-
-| Project | What Scribe Reads |
-|---------|------------------|
-| flow-cli | Session, duration |
-| aiterm | Claude quota |
-| obs | Vault stats |
-| mcp-servers | Server status |
-
----
-
-## 📐 Technical Stack
-
-### Locked
-
- | Layer | Technology |
-|-------|------------|
-| Shell | Tauri 2 |
-| UI | React 18 |
-| Editor | HybridEditor (ReactMarkdown) |
-| Styling | Tailwind CSS |
-| State | Zustand |
-| Database | SQLite |
-| AI | CLI only |
-| Citations | Pandoc citeproc |
-| Math | KaTeX |
-
-### Dependencies
-
-```bash
-# User must have:
-- Zotero + Better BibTeX
-- Pandoc
-- LaTeX (for PDF)
-- Quarto (optional)
-- claude CLI
-- gemini CLI
-```
-
----
-
-## 🛤️ Sprint Roadmap
-
-### Phase 1: Editor (Weeks 1-2) ✅ COMPLETE
-
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 8 | Editor Foundation | 4h | ✅ Complete |
-| 9 | Editor Enhancement | 4h | ✅ Complete |
-| 10 | Hotkey + Commands | 6h | ✅ Complete |
-
-### Phase 2: Integration (Weeks 3-4) ← CURRENT
-
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 11 | Academic Features | 8h | 🔄 Next |
-| 12 | Obsidian Sync | 8h | Pending |
-
-### Phase 3: Export (Week 5)
-
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 13 | LaTeX/PDF/Word | 6h | Pending |
-| 14 | Quarto | 6h | Pending |
-
-### Phase 4: Projects (Weeks 6-7)
-
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 15 | Project System | 8h | Pending |
-| 16 | Templates + Daily | 4h | Pending |
-
-### Phase 5: Polish (Week 8)
-
-| Sprint | Focus | Hours | Status |
-|--------|-------|-------|--------|
-| 17 | Search + Goals | 4h | Pending |
-
-**Progress: 42h / 60h (70%) — 300 tests passing**
-
----
-
-## 🚫 Scope Creep Prevention
+## Scope Creep Prevention
 
 ### Before Adding Anything
 
 1. **Does it help ADHD focus?** → If no, reject
-2. **Is it in Tiers 1-5?** → If no, defer
+2. **Is it in shipped tiers?** → If no, defer
 3. **Does it need API keys?** → If yes, reject
 4. **Does it add UI clutter?** → If yes, reconsider
 5. **Can existing tools do it?** → If yes, integrate
@@ -459,115 +169,24 @@ quarto render input.qmd
 
 ---
 
-## 📁 Target Structure
+## Success Metrics
 
- ```
- scribe/
- ├── src/
- │   ├── src-tauri/
- │   │   ├── src/
- │   │   │   ├── lib.rs
- │   │   │   ├── main.rs
- │   │   │   ├── database.rs
- │   │   │   ├── commands.rs
- │   │   │   ├── ai/
- │   │   │   │   ├── claude.rs
- │   │   │   │   └── gemini.rs
- │   │   │   ├── academic/
- │   │   │   │   ├── zotero.rs
- │   │   │   │   ├── pandoc.rs
- │   │   │   │   └── quarto.rs
- │   │   │   ├── projects/
- │   │   │   │   ├── manager.rs       # Project CRUD
- │   │   │   │   ├── templates.rs     # Project templates
- │   │   │   │   └── settings.rs      # project.json
- │   │   │   ├── knowledge/
- │   │   │   │   ├── daily.rs         # Daily notes
- │   │   │   │   ├── backlinks.rs     # Backlink tracking
- │   │   │   │   └── search.rs        # Note search
- │   │   │   ├── ecosystem/
- │   │   │   │   ├── flow.rs
- │   │   │   │   ├── obs.rs
- │   │   │   │   └── aiterm.rs
- │   │   │   └── sync/
- │   │   │       └── obsidian.rs
- │   │
- │   └── renderer/
- │       └── src/
- │           ├── App.tsx
- │           ├── components/
- │           │   ├── HybridEditor.tsx
- │           │   ├── Sidebar/
- │           │   │   ├── ProjectSwitcher.tsx
- │           │   │   ├── NoteList.tsx
- │           │   │   ├── BacklinksPanel.tsx
- │           │   │   └── EcosystemPanel.tsx
- │           │   ├── AIPanel/
- │           │   ├── FocusMode/
- │           │   ├── DailyNotes/
- │           │   └── ExportDialog/
- │           │   ├── blocks/
- │           │   │   ├── WikiLink.tsx
- │           │   │   ├── Tag.tsx
- │           │   │   ├── Citation.tsx
- │           │   │   └── Equation.tsx
- │           │   └── store/
- │
- ├── PROJECT-DEFINITION.md
- ├── README.md
- └── package.json
- ```
+| Metric | Target | Status |
+|--------|--------|--------|
+| Time to capture | < 3 seconds | Achieved |
+| All core features | Complete | Shipped (v1.20.0) |
+| Tests | 2,000+ passing | 2,280+ (76 files) |
+| App launch | < 2 seconds | Achieved |
 
 ---
 
-## 📊 Success Metrics
-
-### v1.0 Release
-
-| Metric | Target | Current |
-|--------|--------|---------|
-| Time to capture | < 3 seconds | ✅ Achieved |
-| All Tier 1-5 features | Complete | 70% |
-| Tests | 80+ passing | **300 passing** |
-| App launch | < 2 seconds | ✅ Achieved |
-
-### v2.0 Consideration (Terminal)
-
-Only after v1.0 is stable:
-
-- Evaluate xterm.js integration
-- User feedback on external terminal
-- ADHD impact assessment
-
----
-
-## 📝 Changelog
+## Changelog
 
 | Date | Version | Changes |
 |------|---------|---------|
-| 2024-12-25 | 1.3.0 | Sprint 10 complete, 300 tests, 70% progress |
-| 2024-12-24 | 1.2.0 | Added project system, daily notes, backlinks |
-| 2024-12-24 | 1.1.0 | Added academic features |
+| 2026-02-24 | 1.20.0 | Documentation overhaul, release cleanup |
+| 2026-02-23 | 1.19.0 | Pomodoro timer, settings infrastructure |
+| 2026-01-10 | 1.16.0 | Icon-centric sidebar, tech debt remediation |
+| 2026-01-07 | 1.15.0 | Quarto autocomplete, LaTeX completions |
+| 2025-12-25 | 1.3.0 | Sprint 10 complete, theme system |
 | 2024-12-24 | 1.0.0 | Initial definition |
-
----
-
- ## 🎯 Summary
-
- ```
- Scribe v1.0 =
-   HybridEditor (markdown + preview)
-   + Focus Mode
-   + Projects (Research, Teaching, R-Package, R-Dev, Generic)
-   + Daily Notes
-   + Wiki Links + Tags + Backlinks
-   + Zotero + LaTeX + Quarto
-   + Claude/Gemini CLI
-   + Obsidian Sync
-
- Terminal = v2 (deferred)
- Graph View = Never (use Obsidian)
- BlockNote = Optional (deferred if HybridEditor works well)
-
- 64 hours. 10 sprints. ADHD-first.
- ```

@@ -61,7 +61,7 @@
 | Action | Shortcut |
 |--------|----------|
 | **New Note** | `⌘N` |
-| **New Project** | `⌘⇧N` |
+| **New Project** | `⌘⇧N` (in-app) |
 | **Daily Note** | `⌘D` |
 | **Search Notes** | `⌘F` |
 | **Quick Capture** | `⌘⇧C` |
@@ -126,6 +126,46 @@ Press `⌘K` then type:
 | Action | Shortcut |
 |--------|----------|
 | **AI Panel** | `⌘⇧A` |
+
+---
+
+## Developer Notes
+
+All keyboard shortcuts are defined in a single registry file:
+
+**File:** `src/renderer/src/lib/shortcuts.ts`
+
+### SHORTCUTS Registry
+
+The `SHORTCUTS` object is the single source of truth for key bindings,
+modifier keys, and display labels. There are currently **25 registered
+shortcuts** covering notes, navigation, editor modes, sidebars, and
+system actions.
+
+**Display labels:** Use `SHORTCUTS.xxx.label` to render the human-readable
+shortcut string (e.g., `SHORTCUTS.focusMode.label` returns `"⌘⇧F"`).
+
+**Event matching:** Use `matchesShortcut(event, shortcutId)` in keyboard
+event handlers instead of manual `event.metaKey && event.key === '...'`
+checks. The function handles `cmd`, `shift`, and `alt` modifier
+combinations automatically.
+
+```typescript
+import { SHORTCUTS, matchesShortcut } from '../lib/shortcuts'
+
+// Display
+<span>{SHORTCUTS.focusMode.label}</span>  // "⌘⇧F"
+
+// Match
+function handleKeyDown(e: KeyboardEvent) {
+  if (matchesShortcut(e, 'focusMode')) {
+    toggleFocusMode()
+  }
+}
+```
+
+When a shortcut keybinding changes, update it in `shortcuts.ts` and both
+UI labels and event matching update automatically.
 
 ---
 

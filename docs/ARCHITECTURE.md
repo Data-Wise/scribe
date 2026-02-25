@@ -10,7 +10,7 @@
 graph TB
     subgraph "User Interface"
         UI[React 18 App]
-        Editor[HybridEditor++]
+        Editor[CodeMirror 6]
         Cmd[Command Palette]
         Settings[Settings Modal]
     end
@@ -61,20 +61,22 @@ graph TB
 graph TD
     App[App.tsx]
 
-    subgraph "Navigation"
-        Ribbon[Ribbon]
-        CommandPalette[CommandPalette]
+    subgraph "Left Sidebar"
+        MissionSidebar[MissionSidebar]
+        IconBar[IconBar]
+        ExpandedPanel[ExpandedIconPanel]
     end
 
-    subgraph "Left Sidebar"
-        FileList[File List]
-        SearchBar[SearchBar]
-        TagFilter[TagFilter]
+    subgraph "Navigation"
+        KSH[KeyboardShortcutHandler]
+        CommandPalette[CommandPalette]
+        EditorTabs[EditorTabs]
     end
 
     subgraph "Main Editor"
-        EmptyState[EmptyState]
+        EditorOrch[EditorOrchestrator]
         HybridEditor[HybridEditor]
+        CodeMirror[CodeMirrorEditor]
         WikiLink[WikiLinkAutocomplete]
         TagAuto[TagAutocomplete]
         Citation[CitationAutocomplete]
@@ -84,25 +86,79 @@ graph TD
         PropertiesPanel[PropertiesPanel]
         BacklinksPanel[BacklinksPanel]
         TagsPanel[TagsPanel]
+        StatsPanel[StatsPanel]
+        ClaudePanel[ClaudePanel]
+        TerminalPanel[TerminalPanel]
+    end
+
+    subgraph "Status Bar"
+        PomodoroTimer[PomodoroTimer]
+        WritingProgress[WritingProgress]
     end
 
     subgraph "Modals"
         SettingsModal[SettingsModal]
         ExportDialog[ExportDialog]
+        GraphView[GraphView / D3]
+        QuickCapture[QuickCaptureOverlay]
+        CreateProject[CreateProjectModal]
     end
 
-    App --> Ribbon
+    App --> MissionSidebar
+    MissionSidebar --> IconBar
+    MissionSidebar --> ExpandedPanel
+    App --> KSH
     App --> CommandPalette
-    App --> FileList
-    App --> HybridEditor
-    App --> EmptyState
-    App --> PropertiesPanel
-    App --> SettingsModal
-
+    App --> EditorTabs
+    App --> EditorOrch
+    EditorOrch --> HybridEditor
+    HybridEditor --> CodeMirror
     HybridEditor --> WikiLink
     HybridEditor --> TagAuto
     HybridEditor --> Citation
+    App --> PropertiesPanel
+    App --> SettingsModal
+    App --> PomodoroTimer
 ```
+
+---
+
+## Preferences System
+
+The preferences system provides lightweight, event-driven state management
+for user settings that persist to `localStorage`. It operates alongside
+the Zustand store but uses a simpler read/write model suited to key-value
+preferences.
+
+```mermaid
+flowchart LR
+    LS[localStorage] -->|loadPreferences| HP[usePreferences hook]
+    HP -->|React state| C[Components]
+    UP[updatePreferences / togglePref] -->|write-through| LS
+    UP -->|dispatch| E["preferences-changed event"]
+    E -->|listener| HP
+```
+
+### Key Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| `preferences.ts` | `src/renderer/src/lib/preferences.ts` | Load, save, merge preferences to localStorage |
+| `usePreferences()` | `src/renderer/src/hooks/usePreferences.ts` | React hook — cached reads, event-based sync across components |
+| `shortcuts.ts` | `src/renderer/src/lib/shortcuts.ts` | `SHORTCUTS` registry — single source of truth for all 27 keyboard shortcuts |
+| `matchesShortcut()` | `src/renderer/src/lib/shortcuts.ts` | Registry-based `KeyboardEvent` matching (cmd/shift/alt modifiers) |
+| `SettingsToggle` | `src/renderer/src/components/Settings/SettingsToggle.tsx` | Reusable toggle switch component for boolean settings |
+
+### How It Works
+
+1. **`loadPreferences()`** reads from `localStorage`, merges with defaults so new fields get sensible values on upgrade.
+2. **`usePreferences()`** calls `loadPreferences()` once on mount and caches the result in React state. It listens for the `preferences-changed` custom event to stay in sync with other components.
+3. **`updatePreferences()` / `togglePref()`** write-through to `localStorage` and dispatch `preferences-changed`, triggering all mounted hooks to re-read.
+4. **`SHORTCUTS`** defines every keyboard shortcut with `key`, `mod`, and `label`. UI components reference `SHORTCUTS.xxx.label` for display; handlers call `matchesShortcut(event, shortcutId)` instead of manual key checks.
+
+### Pre-commit ORCHESTRATE Guard
+
+A husky `pre-commit` hook prevents accidental commits of `ORCHESTRATE-*.md` planning files to protected branches. These files belong on feature branches during development and are cleaned up on merge.
 
 ---
 
@@ -138,9 +194,22 @@ erDiagram
         TEXT title
         TEXT content
         TEXT folder
+        TEXT project_id FK
         INTEGER created_at
         INTEGER updated_at
         INTEGER deleted_at
+    }
+
+    PROJECTS {
+        TEXT id PK
+        TEXT name
+        TEXT description
+        TEXT type
+        TEXT color
+        TEXT icon
+        TEXT settings
+        INTEGER created_at
+        INTEGER updated_at
     }
 
     TAGS {
@@ -168,6 +237,7 @@ erDiagram
         INTEGER sort_order
     }
 
+    PROJECTS ||--o{ NOTES : contains
     NOTES ||--o{ NOTE_TAGS : has
     TAGS ||--o{ NOTE_TAGS : has
     NOTES ||--o{ LINKS : "links from"
@@ -182,64 +252,76 @@ erDiagram
 ```
 scribe/
 ├── src/
-│   ├── main/                    # Electron main (not used - Tauri)
 │   └── renderer/
 │       └── src/
-│           ├── App.tsx          # Main application component
-│           ├── main.tsx         # React entry point
-│           ├── index.css        # Global styles + Tailwind
+│           ├── App.tsx               # Main application component
+│           ├── main.tsx              # React entry point
+│           ├── index.css             # Global styles + Tailwind
 │           │
 │           ├── components/
-│           │   ├── HybridEditor.tsx      # Main editor component
-│           │   ├── EmptyState.tsx        # Empty state with quotes
-│           │   ├── Ribbon.tsx            # Left icon bar
-│           │   ├── CommandPalette.tsx    # ⌘K command palette
-│           │   ├── SettingsModal.tsx     # Settings dialog
-│           │   ├── SearchBar.tsx         # Note search
-│           │   ├── TagFilter.tsx         # Tag filtering UI
-│           │   ├── TagsPanel.tsx         # Right sidebar tags
-│           │   ├── PropertiesPanel.tsx   # Note properties
-│           │   ├── BacklinksPanel.tsx    # Backlinks display
-│           │   ├── ExportDialog.tsx      # Pandoc export
-│           │   ├── MathRenderer.tsx      # KaTeX math rendering
-│           │   ├── SimpleWikiLinkAutocomplete.tsx
-│           │   ├── SimpleTagAutocomplete.tsx
-│           │   └── CitationAutocomplete.tsx
+│           │   ├── sidebar/          # MissionSidebar system
+│           │   │   ├── MissionSidebar.tsx
+│           │   │   ├── IconBar.tsx
+│           │   │   ├── ExpandedIconPanel.tsx
+│           │   │   ├── SmartIconButton.tsx
+│           │   │   ├── ActivityBar.tsx
+│           │   │   └── ...           # 25+ sidebar components
+│           │   ├── EditorTabs/       # Tab management
+│           │   │   └── EditorTabs.tsx
+│           │   ├── Settings/         # Settings subsystem
+│           │   │   ├── SettingsModal.tsx
+│           │   │   ├── GeneralSettingsTab.tsx
+│           │   │   ├── EditorSettingsTab.tsx
+│           │   │   └── ...           # 12 settings components
+│           │   ├── HybridEditor.tsx
+│           │   ├── CodeMirrorEditor.tsx
+│           │   ├── EditorOrchestrator.tsx
+│           │   ├── KeyboardShortcutHandler.tsx
+│           │   ├── CommandPalette.tsx
+│           │   ├── PomodoroTimer.tsx
+│           │   ├── GraphView.tsx
+│           │   ├── TerminalPanel.tsx
+│           │   ├── ClaudePanel.tsx
+│           │   └── ...               # 50+ components total
+│           │
+│           ├── hooks/
+│           │   ├── usePreferences.ts
+│           │   ├── useIconGlowEffect.ts
+│           │   └── useForestTheme.ts
 │           │
 │           ├── lib/
-│           │   ├── api.ts               # Tauri IPC wrapper
-│           │   ├── themes.ts            # Theme definitions
-│           │   └── mathjax.ts           # KaTeX processing
+│           │   ├── api.ts            # API factory (Tauri/Browser)
+│           │   ├── browser-api.ts    # Browser-mode IndexedDB API
+│           │   ├── browser-db.ts     # IndexedDB schema
+│           │   ├── preferences.ts    # localStorage preferences R/W
+│           │   ├── shortcuts.ts      # SHORTCUTS registry + matcher
+│           │   ├── themes.ts         # Theme definitions
+│           │   ├── quarto-completions.ts  # Quarto/LaTeX completions
+│           │   ├── settingsSchema.ts # Settings validation
+│           │   └── ...
 │           │
-│           ├── store/
-│           │   └── useNotesStore.ts     # Zustand state
+│           ├── store/                # Zustand stores (singular)
+│           │   ├── useNotesStore.ts
+│           │   ├── useProjectStore.ts
+│           │   ├── useAppViewStore.ts
+│           │   ├── usePomodoroStore.ts
+│           │   └── useSettingsStore.ts
 │           │
-│           ├── types/
-│           │   └── index.ts             # TypeScript interfaces
-│           │
-│           └── utils/
-│               ├── search.ts            # Search utilities
-│               └── sanitize.ts          # HTML sanitization
+│           └── __tests__/            # 76 test files, 2280+ tests
 │
 ├── src-tauri/
 │   └── src/
-│       ├── main.rs              # Tauri entry point
-│       ├── lib.rs               # Tauri setup + command registration
-│       ├── commands.rs          # IPC command handlers
-│       ├── database.rs          # SQLite operations
-│       └── academic.rs          # Citations + Pandoc export
+│       ├── main.rs               # Tauri entry point
+│       ├── lib.rs                # Tauri setup + command registration
+│       ├── commands.rs           # IPC command handlers
+│       ├── database.rs           # SQLite operations
+│       ├── database/             # Database modules
+│       ├── academic.rs           # Citations + Pandoc export
+│       └── terminal.rs           # PTY terminal backend
 │
-├── docs/
-│   ├── API.md                   # API reference
-│   ├── ARCHITECTURE.md          # This file
-│   └── planning/
-│       ├── SPRINT-12-UI-POLISH.md
-│       └── SPRINT-13-PROJECT-SYSTEM.md
-│
-├── .STATUS                      # Project status
-├── CLAUDE.md                    # AI assistant guidance
-├── PROJECT-DEFINITION.md        # Scope control
-└── PROPOSAL-UI-IMPROVEMENTS.md  # UI improvement plan
+├── docs/                         # Documentation site (mkdocs)
+├── .STATUS                       # Project status
+└── CLAUDE.md                     # AI assistant guidance
 ```
 
 ---
@@ -253,8 +335,10 @@ scribe/
 | **Styling** | Tailwind CSS | Utility-first CSS |
 | **State** | Zustand | Lightweight state management |
 | **Database** | SQLite (rusqlite) | Local persistence |
-| **Editor** | HybridEditor++ | Custom contenteditable + markdown |
+| **Editor** | CodeMirror 6 | Source editor with extensions |
 | **Math** | KaTeX | LaTeX rendering |
+| **Terminal** | xterm.js | Embedded terminal emulator |
+| **Graph** | D3.js | Knowledge graph visualization |
 | **AI** | Claude/Gemini CLI | AI assistance (no API keys) |
 | **Export** | Pandoc | Document conversion |
 | **Citations** | BibTeX/Zotero | Bibliography management |
@@ -278,17 +362,17 @@ scribe/
 
 ---
 
-### 2. HybridEditor++ (Custom Editor)
+### 2. CodeMirror 6 Editor
 
-**Decision:** Build custom editor instead of using BlockNote/TipTap.
+**Decision:** Use CodeMirror 6 for source editing with custom extensions.
 
 **Rationale:**
 - Full control over markdown handling
-- Better wiki-link `[[...]]` support
-- Lighter weight than full rich-text editors
-- ADHD-optimized: minimal distractions
+- Extensible via CodeMirror's extension API
+- Better wiki-link `[[...]]` and LaTeX support via custom completions
+- Three modes: Source (CodeMirror), Live Preview (split), Reading (rendered)
 
-**Trade-off:** More maintenance, less features.
+**Trade-off:** More maintenance than drop-in editors, but full control over academic workflows.
 
 ---
 
@@ -340,30 +424,16 @@ scribe/
 
 ---
 
-## Future Architecture
+## State Management
 
-### Sprint 13: Project System
+Scribe uses five Zustand stores, all in `src/renderer/src/store/`:
 
-```mermaid
-graph TD
-    Projects[Projects Table]
-    Notes[Notes Table]
-    Settings[Project Settings]
+| Store | Responsibility |
+|-------|----------------|
+| `useNotesStore` | Notes CRUD, selected note, search |
+| `useProjectStore` | Projects list, current project |
+| `useAppViewStore` | Sidebar state, tabs, pinned vaults |
+| `usePomodoroStore` | Pomodoro timer state machine |
+| `useSettingsStore` | App settings, quick actions |
 
-    Projects --> Notes
-    Projects --> Settings
-
-    Note[Per-project themes, fonts, bibliography]
-```
-
-### Sprint 15: Search + Goals
-
-```mermaid
-graph TD
-    Goals[Writing Goals]
-    Stats[Statistics]
-    Calendar[Streak Calendar]
-
-    Goals --> Stats
-    Stats --> Calendar
-```
+Stores communicate with the database exclusively through the API layer (`api.ts`). Stores do not call Tauri IPC or IndexedDB directly.

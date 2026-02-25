@@ -1,15 +1,15 @@
 ---
 status: active
 priority: P1
-version: 1.19.0
+version: 1.20.0
 sprint: 37
 started: 2026-01-08
-updated: 2026-02-23
-released: 2026-02-23
+updated: 2026-02-24
+released: 2026-02-24
 editor: hybrid-markdown++
-next_focus: Settings Infrastructure Improvements (feature/settings-improvements)
-tests: 2255
-unit_tests: 2255
+next_focus: Fix 67 test file TypeScript errors
+tests: 2280
+unit_tests: 2280
 e2e_tests: 109
 test_file_errors: 67 (non-blocking, documented in docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md)
 tags:
@@ -25,10 +25,6 @@ tags:
 > ADHD-friendly distraction-free writer with projects, academic features, and CLI-based AI.
 
 ## Current Focus (Sprint 37)
-
-### In Progress
-
-1. **Settings Infrastructure Improvements** (WIP) — Extract reusable SettingsToggle, shortcut registry, usePreferences hook, pre-commit ORCHESTRATE guard. Branch: `feature/settings-improvements`. Spec: `docs/specs/SPEC-settings-improvements-2026-02-23.md`. ~3.5h total.
 
 ### Next Up
 
@@ -49,6 +45,22 @@ tags:
 
 ## Recently Completed
 
+### Session Timer Removal (2026-02-24) — PR #48
+
+- Removed legacy session timer from breadcrumb bar (⏸/▶/↺ controls)
+- Removed `sessionStartTime` prop chain from 5 components
+- StatsPanel Duration card → Pomodoro count from `usePomodoroStore`
+- Cleaned 4 localStorage keys and ~50 lines orphaned CSS
+- Net: -95 lines, 2,280 tests (2 session-duration tests removed)
+
+### Settings Infrastructure Improvements (2026-02-24) — PR #47
+
+- Reusable `SettingsToggle` component with full accessibility
+- `usePreferences` hook with cached state + event-based sync
+- `SHORTCUTS` registry (25 shortcuts) with `matchesShortcut()` helper
+- Migrated `SettingsModal.tsx` to `usePreferences` hook
+- 27 new tests (2,282 total)
+
 ### v1.19.0 (2026-02-23) — Pomodoro Focus Timer (Released)
 
 - Pomodoro timer in editor status bar (start/pause click, reset right-click)
@@ -56,7 +68,7 @@ tags:
 - Auto-save on work completion, gentle break toasts
 - Focus Timer settings in General tab (5 new preferences)
 - Auto-pin new projects to sidebar
-- 62 new tests (2,255 total)
+- 62 new tests (2,282 total)
 
 ### v1.18.0 (2026-02-22) — Sidebar Vault Expansion Fix + DexieError2 Fix
 
@@ -98,10 +110,10 @@ tags:
 |-------|------|
 | Shell | Tauri 2 |
 | UI | React 18 |
-| Editor | CodeMirror 6 (HybridEditor++) |
-| Styling | Tailwind |
-| State | Zustand |
-| Database | SQLite (rusqlite) |
+| Editor | CodeMirror 6 |
+| Styling | Tailwind CSS |
+| State | Zustand (5 stores) |
+| Database | SQLite (Tauri) / IndexedDB (Browser) |
 | AI | Claude/Gemini CLI |
 | Unit Tests | Vitest + Testing Library |
 | E2E Tests | Playwright |

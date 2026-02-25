@@ -24,6 +24,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.20.0] - 2026-02-25 — Release Cleanup & Documentation Overhaul
+
+### Added
+
+- **`SettingsToggle` component** — Reusable toggle switch with `role="switch"`, `aria-checked`, and `aria-label` accessibility attributes. Used by GeneralSettingsTab and EditorSettingsTab.
+- **`usePreferences` hook** — Cached preferences via React state with `preferences-changed` event listener for cross-component sync. Provides `prefs`, `updatePref()`, and `togglePref()`.
+- **`SHORTCUTS` registry** — Single source of truth for 27 keyboard shortcuts with `matchesShortcut(event, id)` helper for event matching. Replaces manual `e.metaKey && e.key` checks.
+
+### Changed
+
+- **StatsPanel Session section** — Duration card replaced with Pomodoro count card showing today's completed sessions from `usePomodoroStore`.
+- **WritingProgress** — No longer displays session elapsed time; shows word delta, progress bar, and streak only.
+- Migrated `SettingsModal.tsx` to use `usePreferences` hook (removed raw `loadPreferences` calls)
+
+### Removed
+
+- **Session timer** — Removed the legacy session timer from the breadcrumb bar (⏸/▶/↺ controls). Raw elapsed time persisted via localStorage causing confusing values like "2296:20" across restarts.
+- **sessionStartTime prop chain** — Removed from App.tsx, EditorOrchestrator, HybridEditor, WritingProgress, and StatsPanel interfaces.
+- **4 localStorage keys** — `sessionStart`, `timerPaused`, `pausedDuration`, `pauseStart`.
+- **~50 lines of CSS** — Orphaned `.focus-timer`, `.timer-btn`, `.timer-value` styles.
+
+### Documentation
+
+- **Comprehensive documentation overhaul** (PR #50) — Updated 17 docs, archived 29 obsolete files to `docs/archive/completed-2026-02/`
+- Updated all architecture diagrams (component tree, ER diagram, file tree) to reflect current codebase
+- Added Project Commands and Terminal Commands to API reference
+- Corrected editor references: HybridEditor++ → CodeMirror 6 across all docs
+- Fixed database schema docs: timestamps are INTEGER (unix epoch), added missing project columns
+- Updated Homebrew install: `scribe-dev` → `scribe` (stable channel)
+- Replaced stale test counts (483 → 2,280+) and theme counts (8 → 10)
+- Modernized RELEASE.md: removed hardcoded `0.4.0-alpha.1`, replaced with `vX.Y.Z` templates
+- Updated sprint history from detailed plans to release history table
+- Corrected SettingsModal documentation (prop-based is primary, store-based is unused)
+
+---
+
 ## [v1.19.0] - 2026-02-23 — Pomodoro Focus Timer
 
 ### Added
