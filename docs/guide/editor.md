@@ -127,7 +127,34 @@ LaTeX completions only appear where they make sense:
 
 ### Code Block Styling
 
-Quarto code blocks get distinct visual treatment with a monospace font, accent-colored left border, and subdued `#|` chunk option lines.
+Quarto code blocks get VS Code-style visual treatment. All three Quarto fence syntaxes are supported:
+
+| Syntax | Purpose | Example |
+|--------|---------|---------|
+| `` `{r}` `` | Executable chunk | Runs code during Quarto render |
+| `` `{{r}}` `` | Documentation chunk | Displays chunk syntax without executing |
+| `` `{.r}` `` | Static code block | Syntax-highlighted, never executed |
+
+Visual features:
+
+- **Distinct background** — Derived from theme colors, adapts to all 10 themes
+- **Monospace code font** — Configurable in Settings > Editor > Code Font (default: JetBrains Mono)
+- **Accent-colored left border** — 3px border with rounded corners on opening/closing fences
+- **Language badge** — Uppercase label (e.g., `R`, `PYTHON`) on the opening fence line
+- **Chunk option styling** — `#|` lines render italic with reduced opacity
+- **Plain fences unchanged** — Standard `` ```js `` blocks keep simple monospace styling
+
+![Quarto code chunks with R, Python, and Julia language badges](../assets/screenshots/quarto-chunks-multi-language.png)
+
+*Code chunks across R, Python, and Julia — each with language badge, accent border, and themed background.*
+
+![All three Quarto fence syntaxes: executable, documentation, and static](../assets/screenshots/quarto-chunks-syntax-variants.png)
+
+*Three syntax variants: executable `{python}`, documentation `{{r}}`, and static `{.python}` — all receive identical visual treatment.*
+
+![Code chunks adapt to dark themes automatically](../assets/screenshots/quarto-chunks-dark-theme.png)
+
+*Theme adaptation: Oxford Dark theme with blue accent borders and badges.*
 
 ---
 
@@ -221,6 +248,21 @@ Customize in **Settings → Fonts**:
 | Font family | 14 ADHD-friendly fonts |
 | Font size | Adjustable |
 | Line height | Adjustable |
+
+### Code Font
+
+Configure separately in **Settings > Editor > Code Font**:
+
+| Setting | Range/Options |
+|---------|---------------|
+| Code font family | Monospace fonts only (JetBrains Mono, Fira Code, etc.) |
+| Code font size ratio | 0.75–1.0 of editor font size (default: 0.88) |
+
+The code font applies to all Quarto code chunks and inline code. It's independent of your prose font, letting you optimize readability for both writing and code.
+
+![Code Font settings panel in Settings > Editor](../assets/screenshots/settings-code-font.png)
+
+*Code Font settings: monospace font family picker and size ratio slider with live preview.*
 
 ### Recommended Fonts
 

@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] — Quarto Code Chunk Styling
+
+### Added
+
+- **Quarto code chunk visual treatment** — VS Code-style distinct background, monospace code font, accent-colored left border, and rounded corners. Supports all three Quarto fence syntaxes: executable (```` ```{r} ````), documentation (```` ```{{r}} ````), and static (```` ```{.r} ````). Powered by a new `CodeChunkDecorationPlugin` (ViewPlugin) that detects Quarto fences via syntax tree.
+- **Language badge** — Small uppercase badge (e.g., `R`, `PY`, `JL`) on the opening fence line of Quarto code chunks. Decorative (`aria-hidden`).
+- **Chunk option styling** — `#|` lines get italic, smaller font, and reduced opacity for clear visual hierarchy.
+- **Code Font settings** — Settings > Editor > Code Font section with mono-filtered font family dropdown and size ratio slider (0.75–1.0). New `codeFamily` and `codeSize` fields in `FontSettings`.
+- **JetBrains Mono** added to font registry as default code font.
+- **Theme-aware code variables** — `--nexus-code-bg` and `--nexus-code-border` CSS variables computed from theme colors, adapting across all 10 themes automatically.
+
+### Changed
+
+- **Code chunk CSS** — Replaced 40 lines of static CSS (with dark mode overrides) with 5-line fallback for non-Quarto fences. Quarto styling now handled entirely by the ViewPlugin.
+
+---
+
 ## [v1.20.0] - 2026-02-25 — Release Cleanup & Documentation Overhaul
 
 ### Added

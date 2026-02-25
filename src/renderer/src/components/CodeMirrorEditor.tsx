@@ -1112,6 +1112,103 @@ const latexSyntaxPlugin = ViewPlugin.fromClass(LaTeXSyntaxHighlighter, {
   decorations: v => v.decorations
 })
 
+// ============================================================
+// Quarto Code Chunk Decoration Plugin
+// ============================================================
+
+class LanguageBadgeWidget extends WidgetType {
+  constructor(readonly lang: string) { super() }
+
+  toDOM() {
+    const badge = document.createElement('span')
+    badge.className = 'cm-quarto-lang-badge'
+    badge.textContent = this.lang.toUpperCase()
+    badge.setAttribute('aria-hidden', 'true')
+    return badge
+  }
+
+  eq(other: LanguageBadgeWidget) { return this.lang === other.lang }
+}
+
+const codeChunkDecorationPlugin = ViewPlugin.fromClass(
+  class {
+    decorations: DecorationSet
+
+    constructor(view: EditorView) {
+      this.decorations = this.computeDecorations(view)
+    }
+
+    update(update: ViewUpdate) {
+      if (update.docChanged || update.viewportChanged)
+        this.decorations = this.computeDecorations(update.view)
+    }
+
+    computeDecorations(view: EditorView): DecorationSet {
+      const decorations: Range<Decoration>[] = []
+
+      for (const { from, to } of view.visibleRanges) {
+        syntaxTree(view.state).iterate({
+          from, to,
+          enter(node) {
+            if (node.name === 'FencedCode') {
+              const firstLine = view.state.doc.lineAt(node.from)
+              const text = firstLine.text
+              // Match executable {r}, doc {{r}}, and static {.r} code chunks
+              const quartoMatch = text.match(/^```\{\{?\.?(\w+)/)
+
+              if (!quartoMatch) return // Not a Quarto/fenced chunk, skip
+
+              const lang = quartoMatch[1]
+
+              // Iterate all lines in the fenced code block
+              let pos = node.from
+              while (pos <= node.to) {
+                const line = view.state.doc.lineAt(pos)
+                const lineText = line.text
+
+                if (line.from === firstLine.from) {
+                  // Opening fence line
+                  decorations.push(
+                    Decoration.line({ class: 'cm-quarto-fence-line cm-quarto-fence-open' }).range(line.from)
+                  )
+                  // Badge widget at end of opening fence
+                  decorations.push(
+                    Decoration.widget({ widget: new LanguageBadgeWidget(lang), side: 1 }).range(line.to)
+                  )
+                } else if (lineText.trimStart() === '```') {
+                  // Closing fence line
+                  decorations.push(
+                    Decoration.line({ class: 'cm-quarto-fence-line cm-quarto-fence-close' }).range(line.from)
+                  )
+                } else if (lineText.startsWith('#|')) {
+                  // Chunk option line
+                  decorations.push(
+                    Decoration.line({ class: 'cm-quarto-chunk-option' }).range(line.from)
+                  )
+                } else {
+                  // Code content line
+                  decorations.push(
+                    Decoration.line({ class: 'cm-quarto-code-line' }).range(line.from)
+                  )
+                }
+
+                // Move to next line
+                if (pos === line.to && pos === node.to) break
+                pos = line.to + 1
+              }
+            }
+          }
+        })
+      }
+
+      // Decorations MUST be sorted by position
+      decorations.sort((a, b) => a.from - b.from)
+      return Decoration.set(decorations)
+    }
+  },
+  { decorations: v => v.decorations }
+)
+
 /**
  * Get runtime theme colors from CSS variables
  * This function reads the ACTUAL computed values at runtime
@@ -1485,6 +1582,60 @@ function createEditorTheme() {
     fontSize: '0.9em',
     maxWidth: '30em',
   },
+
+  // === Quarto Code Chunk Styles ===
+  '.cm-quarto-fence-line': {
+    backgroundColor: 'var(--nexus-code-bg)',
+    fontFamily: 'var(--code-font-family)',
+    fontSize: 'calc(var(--editor-font-size) * var(--code-font-size-ratio, 0.88))',
+    lineHeight: '1.5',
+    borderLeft: '3px solid var(--nexus-code-border)',
+    paddingLeft: '12px',
+    marginLeft: '-3px',
+  },
+  '.cm-quarto-fence-open': {
+    borderTopLeftRadius: '6px',
+    borderTopRightRadius: '6px',
+    marginTop: '8px',
+  },
+  '.cm-quarto-fence-close': {
+    borderBottomLeftRadius: '6px',
+    borderBottomRightRadius: '6px',
+    marginBottom: '8px',
+  },
+  '.cm-quarto-code-line': {
+    backgroundColor: 'var(--nexus-code-bg)',
+    fontFamily: 'var(--code-font-family)',
+    fontSize: 'calc(var(--editor-font-size) * var(--code-font-size-ratio, 0.88))',
+    lineHeight: '1.5',
+    borderLeft: '3px solid var(--nexus-code-border)',
+    paddingLeft: '12px',
+    marginLeft: '-3px',
+  },
+  '.cm-quarto-chunk-option': {
+    backgroundColor: 'var(--nexus-code-bg)',
+    fontFamily: 'var(--code-font-family)',
+    fontSize: 'calc(var(--editor-font-size) * 0.82)',
+    lineHeight: '1.5',
+    borderLeft: '3px solid var(--nexus-code-border)',
+    paddingLeft: '12px',
+    marginLeft: '-3px',
+    opacity: '0.75',
+    fontStyle: 'italic',
+  },
+  '.cm-quarto-lang-badge': {
+    display: 'inline-block',
+    fontSize: '0.7em',
+    fontFamily: 'var(--code-font-family)',
+    padding: '1px 6px',
+    borderRadius: '3px',
+    backgroundColor: 'var(--nexus-code-border)',
+    color: 'var(--nexus-text-secondary)',
+    marginLeft: '8px',
+    verticalAlign: 'middle',
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase',
+  },
   })
 }
 
@@ -1606,6 +1757,7 @@ export function CodeMirrorEditor({
     // Cmd+Click navigation works in all modes (especially useful in Source mode)
     cmdClickHandler,
     latexSyntaxPlugin,  // LaTeX syntax highlighting for math blocks
+    codeChunkDecorationPlugin,  // Quarto code chunk visual treatment
     autocompletion({ override: [latexCompletions, latexSnippetCompletions, yamlCompletions, chunkOptionCompletions, crossRefCompletions, codeChunkCompletions] }),  // LaTeX + Quarto completions
     EditorView.lineWrapping,
     placeholder ? EditorView.contentAttributes.of({ 'aria-placeholder': placeholder }) : [],
