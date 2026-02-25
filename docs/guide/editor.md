@@ -144,6 +144,18 @@ Visual features:
 - **Chunk option styling** — `#|` lines render italic with reduced opacity
 - **Plain fences unchanged** — Standard `` ```js `` blocks keep simple monospace styling
 
+![Quarto code chunks with R, Python, and Julia language badges](../assets/screenshots/quarto-chunks-multi-language.png)
+
+*Code chunks across R, Python, and Julia — each with language badge, accent border, and themed background.*
+
+![All three Quarto fence syntaxes: executable, documentation, and static](../assets/screenshots/quarto-chunks-syntax-variants.png)
+
+*Three syntax variants: executable `{python}`, documentation `{{r}}`, and static `{.python}` — all receive identical visual treatment.*
+
+![Code chunks adapt to dark themes automatically](../assets/screenshots/quarto-chunks-dark-theme.png)
+
+*Theme adaptation: Oxford Dark theme with blue accent borders and badges.*
+
 ---
 
 ## Wiki Links
@@ -247,6 +259,10 @@ Configure separately in **Settings > Editor > Code Font**:
 | Code font size ratio | 0.75–1.0 of editor font size (default: 0.88) |
 
 The code font applies to all Quarto code chunks and inline code. It's independent of your prose font, letting you optimize readability for both writing and code.
+
+![Code Font settings panel in Settings > Editor](../assets/screenshots/settings-code-font.png)
+
+*Code Font settings: monospace font family picker and size ratio slider with live preview.*
 
 ### Recommended Fonts
 
