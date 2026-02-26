@@ -1,17 +1,17 @@
 ---
 status: active
 priority: P1
-version: 1.21.0
+version: 1.22.0
 sprint: 38
 started: 2026-01-08
-updated: 2026-02-25
+updated: 2026-02-26
 released: 2026-02-25
 editor: hybrid-markdown++
-next_focus: Fix 67 test file TypeScript errors
-tests: 2280
-unit_tests: 2280
+next_focus: Release v1.22.0 (responsive UI merged to dev)
+tests: 2322
+unit_tests: 2322
 e2e_tests: 109
-test_file_errors: 67 (non-blocking, documented in docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md)
+test_file_errors: 0 (resolved)
 tags:
   - adhd-friendly
   - distraction-free
@@ -24,12 +24,15 @@ tags:
 
 > ADHD-friendly distraction-free writer with projects, academic features, and CLI-based AI.
 
-## Current Focus (Sprint 37)
+## Current Focus (Sprint 38)
+
+### In Progress
+
+1. **Release v1.22.0** — Responsive UI merged to dev. Pending: manual macOS testing (Stage Manager, split-screen, Sequoia snap zones), then release PR to main.
 
 ### Next Up
 
-1. **Fix 67 test file TypeScript errors** (~2.5h) — Non-blocking but noisy. Documented in `docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md`
-2. **v1.17.0 Three-Tab Sidebar System** (~20h) — Add Explorer tree tab alongside Compact/Card. Spec approved: `docs/specs/SPEC-three-tab-sidebar-2026-01-10.md`
+1. **v1.17.0 Three-Tab Sidebar System** (~20h) — Add Explorer tree tab alongside Compact/Card. Spec approved: `docs/specs/SPEC-three-tab-sidebar-2026-01-10.md`
 
 ### Active Backlog
 
@@ -44,6 +47,24 @@ tags:
 ---
 
 ## Recently Completed
+
+### Responsive UI Enhancements (2026-02-25) — feature/responsive-ui
+
+- Minimum window size (350×350), supports macOS 4-pane tiling, window position memory (tauri-plugin-window-state)
+- Auto-collapse sidebars on resize (useResponsiveLayout hook, 500px editor minimum)
+- Right sidebar ResizeHandle + width constants (250–600px range)
+- Global zoom ⌘+/⌘- (50%–200%), zoom indicator in editor header
+- Touch resize support, .resizing class during drag, reduced-motion audit
+- 46 new tests (2,326 total)
+
+### v1.21.0 (2026-02-25) — Quarto Code Chunk Styling (Released)
+
+- VS Code-style code chunk visual treatment (background, accent border, language badges)
+- Supports all three Quarto fence syntaxes: `{r}`, `{{r}}`, `{.r}`
+- CodeMirror ViewPlugin with LanguageBadgeWidget for 15+ languages
+- 4 documentation screenshots captured and embedded
+- Merged PR #51, released v1.21.0, Homebrew cask auto-updated
+- 2,280 tests passing
 
 ### Session Timer Removal (2026-02-24) — PR #48
 
@@ -139,6 +160,7 @@ tags:
 
 | Spec | Status | Target |
 |------|--------|--------|
+| Responsive UI | Feature Complete | v1.22.0 |
 | Pomodoro Timer | Released | v1.19.0 |
 | Settings Improvements | In Progress | v1.20.0 |
 | Three-Tab Sidebar | Design Approved | v1.17.0 |

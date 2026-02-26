@@ -1,6 +1,6 @@
 # Settings Reference Card
 
-> **Quick reference for Scribe Settings (v1.20.0)**
+> **Quick reference for Scribe Settings (v1.22.0)**
 
 ---
 
@@ -322,5 +322,5 @@ Pomodoro preferences also sync to the `usePomodoroStore` Zustand store.
 
 ---
 
-**Version:** v1.20.0
+**Version:** v1.22.0
 **Last Updated:** 2026-02-24

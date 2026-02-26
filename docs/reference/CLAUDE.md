@@ -178,7 +178,9 @@ scribe/
 │       │   ├── CodeMirrorEditor.tsx  # CodeMirror 6 editor
 │       │   └── ...
 │       ├── hooks/                 # React hooks
-│       │   └── usePreferences.ts  # Cached prefs + event sync
+│       │   ├── usePreferences.ts  # Cached prefs + event sync
+│       │   ├── useResponsiveLayout.ts # Auto-collapse sidebars on resize
+│       │   └── useGlobalZoom.ts   # ⌘+/⌘- zoom (0.5–2.0)
 │       ├── lib/                   # Core utilities
 │       │   ├── api.ts             # API factory (Tauri/Browser)
 │       │   ├── shortcuts.ts       # 27-shortcut registry
@@ -247,11 +249,22 @@ scribe help --all      # Full reference
 
 ---
 
-## 🎯 Current Status: v1.20.0 - Settings & Timer Cleanup ✅
+## 🎯 Current Status: v1.22.0 - Responsive UI Enhancements ✅
 
-**Released:** v1.20.0 (stable)
+**Released:** v1.22.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
-**Tests:** 2,280 passing (76 files)
+**Tests:** 2,326 passing (81 files)
+
+### Latest Work: Responsive UI (feature/responsive-ui)
+
+- ✅ Minimum window size (350×350) via `tauri.conf.json`
+- ✅ Window position memory via `tauri-plugin-window-state`
+- ✅ `useResponsiveLayout` hook — auto-collapse sidebars on resize (right first, then left, 500px editor minimum)
+- ✅ `useGlobalZoom` hook — ⌘+/⌘- zoom (0.5–2.0), persists to `scribe:zoomLevel` localStorage
+- ✅ Right sidebar `ResizeHandle` with drag + touch support (250–600px range)
+- ✅ `.resizing` CSS class during drag (disables transitions)
+- ✅ Reduced-motion audit (zoom indicator + right sidebar transitions)
+- ✅ 42 new tests (2,326 total)
 
 ### Latest Work: Session Timer Removal (PR #48)
 

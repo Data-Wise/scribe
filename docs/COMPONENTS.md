@@ -1,8 +1,8 @@
 # Scribe Component Reference
 
-> React component documentation — v1.20.0
+> React component documentation — v1.22.0
 >
-> **Last Updated:** 2026-02-24
+> **Last Updated:** 2026-02-25
 
 ---
 
@@ -215,6 +215,93 @@ Global keyboard shortcut handler (extracted from App.tsx).
 - Manages Tauri menu registration
 
 **File:** `src/renderer/src/components/KeyboardShortcutHandler.tsx`
+
+---
+
+## Responsive Layout Components (v1.22)
+
+### useResponsiveLayout (Hook)
+
+Auto-collapse/expand sidebars based on window width, respecting user intent.
+
+**Options:**
+```typescript
+interface ResponsiveLayoutOptions {
+  leftWidth: number           // Current left sidebar width (px)
+  rightWidth: number          // Current right sidebar width (px)
+  leftCollapsed: boolean      // Is left sidebar currently collapsed?
+  rightCollapsed: boolean     // Is right sidebar currently collapsed?
+  onCollapseLeft: () => void  // Callback to collapse left sidebar
+  onCollapseRight: () => void // Callback to collapse right sidebar
+  onExpandLeft: () => void    // Callback to re-expand left sidebar
+  onExpandRight: () => void   // Callback to re-expand right sidebar
+}
+```
+
+**Behavior:**
+- Debounces resize events (150ms) to avoid layout thrash
+- Collapse priority: right sidebar first, then left
+- Tracks `autoCollapsed` vs `userOverride` per sidebar
+- Won't re-collapse a sidebar the user manually re-expanded
+- Re-expansion uses projected-width check to prevent oscillation loops
+
+**File:** `src/renderer/src/hooks/useResponsiveLayout.ts`
+
+---
+
+### useGlobalZoom (Hook)
+
+Global UI zoom via CSS rem scaling with keyboard shortcuts.
+
+**Returns:**
+```typescript
+{
+  zoomLevel: number       // Current zoom (0.5–2.0)
+  zoomIn: () => void      // Increment by 0.1 (⌘=)
+  zoomOut: () => void     // Decrement by 0.1 (⌘-)
+  resetZoom: () => void   // Reset to 1.0
+}
+```
+
+**Behavior:**
+- Applies zoom via `document.documentElement.style.fontSize = ${factor * 100}%`
+- All rem-based sizes scale proportionally (Tailwind-compatible)
+- Persists to `localStorage` key `scribe:zoomLevel`
+- WCAG 1.4.4 compliant (supports up to 200%)
+- Zoom indicator in editor header (visible only when zoom != 100%, click to reset)
+
+**File:** `src/renderer/src/hooks/useGlobalZoom.ts`
+
+---
+
+### ResizeHandle (sidebar/)
+
+Interactive drag handle for sidebar resizing with mouse and touch support.
+
+**Props:**
+```typescript
+interface ResizeHandleProps {
+  onResize: (deltaX: number) => void          // Fired on mouse/touch move
+  onResizeEnd: () => void                      // Fired on release (for localStorage save)
+  onReset?: () => void                         // Fired on double-click (reset to default)
+  onDragStateChange?: (isDragging: boolean) => void  // For parent .resizing CSS class
+  disabled?: boolean                           // Hide completely if disabled
+}
+```
+
+**Features:**
+- Mouse and touch input (touch uses `passive: false` for `preventDefault`)
+- Uses `useRef` for `startX` (avoids stale closure bugs in event handlers)
+- Double-click resets width via `onReset` callback
+- Visual feedback: `.dragging` class, accent-colored separator line, grip dots on hover
+- Accessible: `role="separator"`, `aria-orientation="vertical"`
+
+**CSS Classes:**
+- `.resize-handle` — 6px wide transparent bar with `:before` separator line
+- `.resize-handle:hover` / `.resize-handle.dragging` — accent highlight + grip dots
+- `.resizing` — Applied to parent during drag, disables `transition` to prevent jank
+
+**File:** `src/renderer/src/components/sidebar/ResizeHandle.tsx`
 
 ---
 
@@ -486,9 +573,19 @@ Search results display.
 
 ## Testing
 
-76 test files with 2,280+ tests (Vitest + Testing Library + happy-dom).
+81 test files with 2,326 tests (Vitest + Testing Library + happy-dom).
 
 **Run tests:**
 ```bash
 npm test
 ```
+
+### Responsive UI Test Files (v1.22)
+
+| Test File | Tests | Coverage |
+|-----------|-------|----------|
+| `ResponsiveFoundation.test.ts` | 9 | Tauri config snapshots, CSS transition assertions |
+| `useResponsiveLayout.test.ts` | 8 | Collapse priority, debouncing, user override tracking |
+| `RightSidebarResize.test.ts` | 6 | Width constant validation, clamping |
+| `useGlobalZoom.test.ts` | 11 | Zoom in/out, clamp, persist, keyboard shortcuts |
+| `ResizeHandleTouch.test.tsx` | 8 | Touch events, drag state, `.resizing` CSS, reduced motion |

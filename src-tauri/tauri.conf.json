@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Scribe",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "identifier": "com.scribe.app",
   "build": {
     "frontendDist": "../dist",
@@ -16,11 +16,15 @@
         "title": "Scribe",
         "width": 1200,
         "height": 800,
+        "minWidth": 350,
+        "minHeight": 350,
         "resizable": true,
         "fullscreen": false,
         "decorations": true,
         "transparent": false,
-        "titleBarStyle": "Overlay"
+        "hiddenTitle": true,
+        "titleBarStyle": "Overlay",
+        "visible": true
       }
     ],
 

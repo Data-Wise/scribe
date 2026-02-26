@@ -2,7 +2,7 @@
 
 > Active planning documents for Scribe development
 
-**Last Updated:** 2026-02-24 | **Version:** v1.20.0
+**Last Updated:** 2026-02-25 | **Version:** v1.22.0
 
 ---
 
@@ -10,7 +10,7 @@
 
 | File | Purpose | Status |
 |------|---------|--------|
-| [TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24](TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md) | Test file TS errors to fix | Active |
+| [TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24](../archive/completed/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md) | Test file TS errors to fix | Completed |
 | [E2E-SIMPLIFICATION-PROPOSAL](E2E-SIMPLIFICATION-PROPOSAL.md) | E2E test simplification | Proposal |
 | [PROPOSAL-test-coverage-expansion-2026-01-10](PROPOSAL-test-coverage-expansion-2026-01-10.md) | Test coverage expansion plan | Proposal |
 | [PLAN-v2-latex-editor](PLAN-v2-latex-editor.md) | v2.0 LaTeX Editor Mode | Deferred (P3) |

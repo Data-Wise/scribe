@@ -1,6 +1,6 @@
 # Scribe Release Process
 
-## Current Version: v1.20.0
+## Current Version: v1.22.0
 
 This document describes the release process for Scribe.
 
@@ -43,7 +43,7 @@ src-tauri/target/release/bundle/
 
 ### Current Build
 
-- **Version**: v1.20.0
+- **Version**: v1.22.0
 - **Architecture**: aarch64 (Apple Silicon)
 - **DMG Size**: ~5.5 MB
 - **SHA256**: See `CHECKSUMS.txt` in the GitHub release assets
@@ -96,6 +96,10 @@ Before releasing:
    - Command palette (⌘K)
    - Theme switching
    - Focus mode (⌘⇧F)
+   - Global zoom (⌘+/⌘-)
+   - Window position memory (close + reopen restores size/position)
+   - Auto-collapse sidebars (resize below ~850px)
+   - Right sidebar drag resize (250–600px)
 
 ---
 

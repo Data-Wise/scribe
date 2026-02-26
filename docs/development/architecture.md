@@ -49,6 +49,8 @@ scribe/
 │           │   └── ...        # 50+ components total
 │           ├── hooks/
 │           │   ├── usePreferences.ts
+│           │   ├── useResponsiveLayout.ts  # Auto-collapse sidebars on resize
+│           │   ├── useGlobalZoom.ts         # ⌘+/⌘- zoom (0.5–2.0)
 │           │   ├── useIconGlowEffect.ts
 │           │   └── useForestTheme.ts
 │           ├── lib/           # Utilities
@@ -66,7 +68,7 @@ scribe/
 │           │   ├── useAppViewStore.ts
 │           │   ├── usePomodoroStore.ts
 │           │   └── useSettingsStore.ts
-│           └── __tests__/     # 76 test files
+│           └── __tests__/     # 81 test files, 2,326 tests
 │
 ├── src-tauri/                 # Tauri backend
 │   ├── src/
@@ -197,4 +199,4 @@ fn get_all_notes(db: State<Database>) -> Result<Vec<Note>, String> {
 | Integration | Vitest + Testing Library | User flows |
 | Store | Vitest | Zustand store state machines |
 
-Current: **2,280+ tests passing** across 76 test files
+Current: **2,326 tests passing** across 81 test files

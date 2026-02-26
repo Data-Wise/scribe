@@ -1,7 +1,7 @@
 # Test Coverage Summary - Scribe Editor
 
-**Generated:** 2026-02-24
-**Total Tests:** 2,280 passing (76 test files)
+**Generated:** 2026-02-25
+**Total Tests:** 2,326 passing (81 test files)
 **Test Framework:** Vitest + Testing Library + happy-dom
 **TypeScript:** 0 production errors, 67 test file warnings (documented)
 
@@ -361,9 +361,9 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Tests** | 2,280 |
+| **Total Tests** | 2,326 |
 | **Pass Rate** | 100% |
-| **Test Files** | 76 |
+| **Test Files** | 81 |
 | **Test Duration** | ~3s |
 | **Skipped** | 7 (WikiLinks legacy) |
 
@@ -424,7 +424,7 @@ npm test -- --reporter=verbose
 
 ## Test Architecture
 
-76 test files in `src/renderer/src/__tests__/` and component co-located test directories. Key files:
+81 test files in `src/renderer/src/__tests__/` and component co-located test directories. Key files:
 
 ```
 src/renderer/src/__tests__/

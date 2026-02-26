@@ -18,7 +18,7 @@ brew install --cask data-wise/tap/scribe
 
 | Channel | Cask | Tracks | Status |
 |---------|------|--------|--------|
-| **Stable** | `scribe` | v1.x releases | Current (v1.20.0) |
+| **Stable** | `scribe` | v1.x releases | Current (v1.22.0) |
 
 ## One-Line Install
 
