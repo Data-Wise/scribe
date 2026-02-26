@@ -173,10 +173,11 @@ export function MissionSidebar({
   // Get current width: 48px when collapsed, sidebarWidth when expanded
   const width = expandedIcon ? sidebarWidth : SIDEBAR_WIDTHS.icon
   const canResize = expandedIcon !== null
+  const [isResizing, setIsResizing] = useState(false)
 
   return (
     <aside
-      className="mission-sidebar icon-centric-mode"
+      className={`mission-sidebar icon-centric-mode${isResizing ? ' resizing' : ''}`}
       style={{ width }}
       data-mode={expandedIcon ? currentMode : 'icon'}
       data-testid="left-sidebar"
@@ -242,6 +243,7 @@ export function MissionSidebar({
           onResize={handleResize}
           onResizeEnd={handleResizeEnd}
           onReset={handleReset}
+          onDragStateChange={setIsResizing}
         />
       )}
 

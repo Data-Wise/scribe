@@ -2,7 +2,7 @@
 
 > Active planning documents for Scribe development
 
-**Last Updated:** 2026-02-24 | **Version:** v1.20.0
+**Last Updated:** 2026-02-25 | **Version:** v1.22.0
 
 ---
 

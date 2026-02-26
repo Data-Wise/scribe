@@ -414,6 +414,25 @@ body {
   z-index: 10; /* Ensure editor header is above sidebar to prevent drag region overlap */
 }
 
+/* Zoom level indicator (shown in editor header when zoom ≠ 100%) */
+.zoom-indicator {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--nexus-text-secondary, #cbd5e1);
+  border: none;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: background 150ms ease, color 150ms ease;
+  -webkit-app-region: no-drag;
+}
+
+.zoom-indicator:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--nexus-text-primary, #e2e8f0);
+}
+
 /* Breadcrumb navigation */
 .editor-breadcrumb {
   display: flex;
@@ -1803,7 +1822,8 @@ mark {
   .sidebar-expanded,
   .sidebar-expanded .tab-content,
   .tooltip-trigger::after,
-  .tooltip-trigger::before {
+  .tooltip-trigger::before,
+  .zoom-indicator {
     transition: none !important;
     animation: none !important;
   }
@@ -2604,6 +2624,18 @@ mark {
   transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
   overflow: visible; /* Changed from hidden to allow tooltips to appear outside sidebar bounds */
   z-index: 10000; /* High z-index so tooltips inside can appear above editor */
+}
+
+/* Right sidebar width transition (matches left sidebar easing) */
+[data-testid="right-sidebar"] {
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+/* Disable transitions during active drag resize */
+.resizing,
+.resizing [data-testid="right-sidebar"] {
+  transition: none !important;
 }
 
 /* Icon Bar Mode (48px, expands to 240px when smart icon opens) */
@@ -4890,6 +4922,7 @@ mark {
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .mission-sidebar,
+  [data-testid="right-sidebar"],
   .compact-project-item,
   .project-icon-btn,
   .recent-note-item {

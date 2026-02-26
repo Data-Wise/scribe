@@ -1,15 +1,15 @@
 ---
 status: active
 priority: P1
-version: 1.21.0
+version: 1.22.0
 sprint: 38
 started: 2026-01-08
 updated: 2026-02-25
 released: 2026-02-25
 editor: hybrid-markdown++
-next_focus: Fix 67 test file TypeScript errors
-tests: 2280
-unit_tests: 2280
+next_focus: Manual testing of responsive UI (Stage Manager, split-screen, Sequoia snap zones)
+tests: 2322
+unit_tests: 2322
 e2e_tests: 109
 test_file_errors: 67 (non-blocking, documented in docs/planning/TEST-FILE-TYPESCRIPT-ERRORS-2026-01-24.md)
 tags:
@@ -44,6 +44,15 @@ tags:
 ---
 
 ## Recently Completed
+
+### Responsive UI Enhancements (2026-02-25) — feature/responsive-ui
+
+- Minimum window size (900×600), window position memory (tauri-plugin-window-state)
+- Auto-collapse sidebars on resize (useResponsiveLayout hook, 500px editor minimum)
+- Right sidebar ResizeHandle + width constants (250–600px range)
+- Global zoom ⌘+/⌘- (50%–200%), zoom indicator in editor header
+- Touch resize support, .resizing class during drag, reduced-motion audit
+- 42 new tests (2,322 total)
 
 ### Session Timer Removal (2026-02-24) — PR #48
 
@@ -139,6 +148,7 @@ tags:
 
 | Spec | Status | Target |
 |------|--------|--------|
+| Responsive UI | Feature Complete | v1.22.0 |
 | Pomodoro Timer | Released | v1.19.0 |
 | Settings Improvements | In Progress | v1.20.0 |
 | Three-Tab Sidebar | Design Approved | v1.17.0 |

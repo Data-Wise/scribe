@@ -371,6 +371,51 @@ Powered by KaTeX for fast, native rendering.
 
 ---
 
+## Responsive Layout
+
+Scribe adapts gracefully to any window size, including macOS Stage Manager, split-screen, and Sequoia snap zones.
+
+### Window Management
+
+| Feature | Detail |
+|---------|--------|
+| **Minimum size** | 900 x 600 px (prevents layout breakage) |
+| **Position memory** | Window restores position, size, and maximized state between launches |
+| **macOS tiling** | Stage Manager, split-screen, and Sequoia snap zones all supported |
+
+### Auto-Collapse Sidebars
+
+When the window shrinks, sidebars auto-collapse to preserve a 500px minimum editor width:
+
+1. **Right sidebar collapses first** (to 48px icon bar)
+2. **Left sidebar collapses second** (if still too narrow)
+3. **Sidebars auto-restore** when the window grows back
+4. **User overrides respected** — if you manually re-expand a collapsed sidebar, Scribe stops managing it until the next resize
+
+### Global Zoom
+
+| Action | How |
+|--------|-----|
+| **Zoom in** | `⌘+` or `⌘=` (10% increments) |
+| **Zoom out** | `⌘-` (10% increments) |
+| **Reset** | Click the zoom indicator in the editor header |
+| **Range** | 50% – 200% (WCAG 1.4.4 compliant) |
+
+A zoom indicator appears in the editor header when zoom is not 100%. Click it to reset.
+
+### Right Sidebar Resize
+
+| Action | How |
+|--------|-----|
+| **Drag** | Drag the thin separator bar between editor and right sidebar |
+| **Reset** | Double-click the separator to reset to 320px default |
+| **Range** | 250px – 600px |
+| **Touch** | Touch/trackpad drag supported |
+
+Width persists across sessions via localStorage.
+
+---
+
 ## Accessibility
 
 !!! tip "ADHD-Friendly Design"
@@ -382,6 +427,9 @@ Powered by KaTeX for fast, native rendering.
 | **Screen readers** | Proper ARIA labels |
 | **Keyboard navigation** | Full support |
 | **Auto-save** | Never lose work |
+| **Global zoom** | ⌘+/⌘- zoom to 200% (WCAG 1.4.4) |
+| **Resize handle a11y** | `role="separator"` + `aria-orientation="vertical"` |
+| **Touch support** | Resize handles work with touch/trackpad input |
 
 ---
 

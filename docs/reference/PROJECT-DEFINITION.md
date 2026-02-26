@@ -1,6 +1,6 @@
 # Scribe Project Definition
 
-> **Version:** 1.20.0 | **Updated:** 2026-02-24 | **Status:** Stable Release
+> **Version:** 1.22.0 | **Updated:** 2026-02-25 | **Status:** Stable Release
 
 ---
 
@@ -15,7 +15,7 @@
 | What | How |
 |------|-----|
 | **Editor** | CodeMirror 6 (Source / Live Preview / Reading) |
-| **Focus** | Distraction-free mode, global hotkey, Pomodoro timer |
+| **Focus** | Distraction-free mode, global hotkey, Pomodoro timer, global zoom |
 | **Projects** | Research, Teaching, R-Package, R-Dev, Generic |
 | **Citations** | Zotero via Better BibTeX |
 | **Export** | Markdown, LaTeX, PDF, Word via Pandoc |
@@ -174,8 +174,8 @@ No dialogs. No choices. Just write.
 | Metric | Target | Status |
 |--------|--------|--------|
 | Time to capture | < 3 seconds | Achieved |
-| All core features | Complete | Shipped (v1.20.0) |
-| Tests | 2,000+ passing | 2,280+ (76 files) |
+| All core features | Complete | Shipped (v1.22.0) |
+| Tests | 2,000+ passing | 2,322 (81 files) |
 | App launch | < 2 seconds | Achieved |
 
 ---
@@ -184,6 +184,7 @@ No dialogs. No choices. Just write.
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-02-25 | 1.22.0 | Responsive UI: auto-collapse, zoom, resize handle, window memory |
 | 2026-02-24 | 1.20.0 | Documentation overhaul, release cleanup |
 | 2026-02-23 | 1.19.0 | Pomodoro timer, settings infrastructure |
 | 2026-01-10 | 1.16.0 | Icon-centric sidebar, tech debt remediation |

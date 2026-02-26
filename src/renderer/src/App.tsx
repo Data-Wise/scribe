@@ -1,12 +1,14 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useNotesStore } from './store/useNotesStore'
 import { useProjectStore } from './store/useProjectStore'
-import { useAppViewStore, MISSION_CONTROL_TAB_ID } from './store/useAppViewStore'
+import { useAppViewStore, MISSION_CONTROL_TAB_ID, SIDEBAR_WIDTHS, RIGHT_SIDEBAR_WIDTHS } from './store/useAppViewStore'
 import { useSettingsStore } from './store/useSettingsStore'
 import { EditorTabs } from './components/EditorTabs'
 import { useForestTheme } from './hooks/useForestTheme'
 import { useIconGlowEffect } from './hooks/useIconGlowEffect'
 import { usePreferences } from './hooks/usePreferences'
+import { useResponsiveLayout } from './hooks/useResponsiveLayout'
+import { useGlobalZoom } from './hooks/useGlobalZoom'
 import { BacklinksPanel } from './components/BacklinksPanel'
 import { TagFilter } from './components/TagFilter'
 import { PropertiesPanel } from './components/PropertiesPanel'
@@ -18,7 +20,7 @@ import { ExportDialog } from './components/ExportDialog'
 import { GraphView } from './components/GraphView'
 import { CreateProjectModal } from './components/CreateProjectModal'
 import { EditProjectModal } from './components/EditProjectModal'
-import { MissionSidebar, IconLegend } from './components/sidebar'
+import { MissionSidebar, IconLegend, ResizeHandle } from './components/sidebar'
 import { ClaudeChatPanel } from './components/ClaudeChatPanel'
 import { TerminalPanel } from './components/TerminalPanel'
 import { SidebarTabContextMenu } from './components/SidebarTabContextMenu'
@@ -107,8 +109,10 @@ function App() {
   const {
     sidebarWidth,
     setSidebarWidth,
+    expandedIcon,
     setLastActiveNote,
     updateSessionTimestamp,
+    expandVault,
     expandSmartIcon,
     collapseAll,
     // Tab state
@@ -153,9 +157,38 @@ function App() {
   // Right sidebar width state with localStorage persistence
   const [rightSidebarWidth, setRightSidebarWidth] = useState(() => {
     const saved = localStorage.getItem('rightSidebarWidth')
-    return saved ? parseInt(saved) : 320
+    return saved ? parseInt(saved) : RIGHT_SIDEBAR_WIDTHS.expanded.default
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
+  const rightSidebarWidthRef = useRef(rightSidebarWidth)
+  useEffect(() => { rightSidebarWidthRef.current = rightSidebarWidth }, [rightSidebarWidth])
+
+  // Responsive layout: auto-collapse sidebars on window resize
+  const lastExpandedIcon = useRef(expandedIcon)
+  useEffect(() => {
+    if (expandedIcon) lastExpandedIcon.current = expandedIcon
+  }, [expandedIcon])
+
+  const leftCollapsed = expandedIcon === null
+  useResponsiveLayout({
+    leftWidth: sidebarWidth || SIDEBAR_WIDTHS.icon,
+    rightWidth: rightSidebarWidth,
+    leftCollapsed,
+    rightCollapsed: rightSidebarCollapsed,
+    onCollapseLeft: collapseAll,
+    onCollapseRight: useCallback(() => setRightSidebarCollapsed(true), []),
+    onExpandLeft: useCallback(() => {
+      const last = lastExpandedIcon.current
+      if (last) {
+        if (last.type === 'vault') expandVault(last.id)
+        else expandSmartIcon(last.id)
+      }
+    }, [expandVault, expandSmartIcon]),
+    onExpandRight: useCallback(() => setRightSidebarCollapsed(false), []),
+  })
+
+  // Global zoom: ⌘+/⌘- to zoom in/out
+  const { zoomLevel, resetZoom } = useGlobalZoom()
 
   // Tab state (leftActiveTab removed - notes list is in DashboardShell now)
   const [rightActiveTab, setRightActiveTab] = useState<'properties' | 'backlinks' | 'tags' | 'stats' | 'claude' | 'terminal'>('properties')
@@ -630,28 +663,6 @@ function App() {
   }, [activeTabId, openTabs, selectedNoteId, selectNote])
 
   // Native menu events now handled by KeyboardShortcutHandler component
-
-  // Right sidebar resize handler (left sidebar handled by MissionSidebar)
-  useEffect(() => {
-    if (!isResizingRight) return
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const newWidth = Math.min(Math.max(window.innerWidth - e.clientX, 250), 600)
-      setRightSidebarWidth(newWidth)
-      localStorage.setItem('rightSidebarWidth', newWidth.toString())
-    }
-
-    const handleMouseUp = () => {
-      setIsResizingRight(false)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isResizingRight])
 
   // Persist right sidebar collapsed state
   useEffect(() => {
@@ -1197,6 +1208,18 @@ function App() {
               )}
             </div>
 
+            {/* Zoom indicator — only shown when zoom ≠ 100% */}
+            {zoomLevel !== 1.0 && (
+              <button
+                className="zoom-indicator"
+                onClick={resetZoom}
+                title="Click to reset zoom to 100%"
+                aria-label={`Zoom level ${Math.round(zoomLevel * 100)}%, click to reset`}
+              >
+                {Math.round(zoomLevel * 100)}%
+              </button>
+            )}
+
           </div>
 
           {/* Editor tabs bar */}
@@ -1284,16 +1307,25 @@ function App() {
         {selectedNote && (
           <>
             {!rightSidebarCollapsed && (
-              <div
-                className={`resize-handle ${isResizingRight ? 'resizing' : ''}`}
-                onMouseDown={() => setIsResizingRight(true)}
-                onDoubleClick={() => setRightSidebarCollapsed(true)}
-                title="Drag to resize, double-click to collapse"
+              <ResizeHandle
+                onResize={(deltaX) => {
+                  const newWidth = Math.max(
+                    RIGHT_SIDEBAR_WIDTHS.expanded.min,
+                    Math.min(RIGHT_SIDEBAR_WIDTHS.expanded.max, rightSidebarWidth - deltaX)
+                  )
+                  setRightSidebarWidth(newWidth)
+                }}
+                onResizeEnd={() => localStorage.setItem('rightSidebarWidth', String(rightSidebarWidthRef.current))}
+                onReset={() => {
+                  setRightSidebarWidth(RIGHT_SIDEBAR_WIDTHS.expanded.default)
+                  localStorage.setItem('rightSidebarWidth', String(RIGHT_SIDEBAR_WIDTHS.expanded.default))
+                }}
+                onDragStateChange={setIsResizingRight}
               />
             )}
             <div
-              className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'right-sidebar-collapsed' : ''}`}
-              style={{ width: rightSidebarCollapsed ? '48px' : `${rightSidebarWidth}px` }}
+              className={`bg-nexus-bg-secondary flex flex-col ${rightSidebarCollapsed ? 'right-sidebar-collapsed' : ''}${isResizingRight ? ' resizing' : ''}`}
+              style={{ width: rightSidebarCollapsed ? `${RIGHT_SIDEBAR_WIDTHS.icon}px` : `${rightSidebarWidth}px` }}
               data-testid="right-sidebar"
             >
               {/* Fixed header with toggle button - always in same position */}

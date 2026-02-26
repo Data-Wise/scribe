@@ -1,7 +1,7 @@
 # Scribe — Comprehensive Technical Documentation
 
-**Version:** 1.20.0
-**Last Updated:** 2026-02-24
+**Version:** 1.22.0
+**Last Updated:** 2026-02-25
 
 ---
 
@@ -974,12 +974,12 @@ Stores should not import from other stores directly. If cross-store coordination
 - **Props flow:** Pass props down through `App.tsx → EditorOrchestrator → HybridEditor → children`; do not skip levels
 - **Store access:** Access stores via hooks in components; do not call store methods from other stores
 
-### Current Stats (v1.20.0)
+### Current Stats (v1.22.0)
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 2,280+ |
-| Test files | 76 |
+| Total tests | 2,322 |
+| Test files | 81 |
 | Components | 50+ |
 | Zustand stores | 5 |
 | Keyboard shortcuts | 27 |

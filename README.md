@@ -3,9 +3,9 @@
 > **ADHD-Friendly Distraction-Free Writer**
 
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
-[![Version](https://img.shields.io/badge/version-1.20.0-blue)]()
+[![Version](https://img.shields.io/badge/version-1.22.0-blue)]()
 [![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-2280%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-2322%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -38,6 +38,8 @@ Scribe is a **distraction-free writing app** designed for academics and research
 | **CLI** | Terminal access via `scribe` command |
 | **Command Palette** | ⌘K quick actions |
 | **Global Hotkey** | ⌘⇧N opens from anywhere |
+| **Global Zoom** | ⌘+/⌘- zoom (50%–200%), WCAG 1.4.4 compliant |
+| **Responsive UI** | Auto-collapse sidebars, window position memory, right sidebar resize |
 
 ---
 
@@ -95,6 +97,8 @@ npm run build
 | **⌘⌥1-9** | Quick Actions (v1.9.0+) |
 | **⌘Alt+0-9** | Switch themes |
 | **⌘+Click** | Navigate WikiLink (Source mode) |
+| **⌘+** | Zoom in (10%) |
+| **⌘-** | Zoom out (10%) |
 
 ---
 
@@ -194,7 +198,7 @@ Theme picker, ADHD-friendly font recommendations, and typography controls.
 # Development
 npm run dev          # Start Tauri dev server
 npm run dev:vite     # Vite frontend only
-npm run test         # Run 2,255 tests
+npm run test         # Run 2,322 tests
 npm run lint         # Lint code
 
 # Build
@@ -241,9 +245,9 @@ scribe/
 
 ## Test Coverage
 
-**2,280 tests passing** across test files:
+**2,322 tests passing** across test files:
 
-76 test files with 2,280+ tests (Vitest + Testing Library + happy-dom).
+81 test files with 2,322 tests (Vitest + Testing Library + happy-dom).
 
 ---
 
