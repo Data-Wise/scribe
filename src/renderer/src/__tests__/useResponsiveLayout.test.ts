@@ -35,11 +35,25 @@ describe('useResponsiveLayout', () => {
     renderHook(() => useResponsiveLayout(opts))
 
     // Shrink window so editor < 500px: 900 - 240 - 320 = 340 < 500
+    // But after right collapses: 900 - 240 - 48 = 612 >= 500 → left stays
     resizeWindow(900)
     act(() => { vi.advanceTimersByTime(200) })
 
     expect(opts.onCollapseRight).toHaveBeenCalled()
     expect(opts.onCollapseLeft).not.toHaveBeenCalled()
+  })
+
+  it('collapses both sidebars in one pass when window is very narrow', () => {
+    const opts = defaultOptions()
+    renderHook(() => useResponsiveLayout(opts))
+
+    // Very narrow: 700 - 240 - 320 = 140 < 500 → collapse right
+    // After right collapse: 700 - 240 - 48 = 412 < 500 → collapse left too
+    resizeWindow(700)
+    act(() => { vi.advanceTimersByTime(200) })
+
+    expect(opts.onCollapseRight).toHaveBeenCalledTimes(1)
+    expect(opts.onCollapseLeft).toHaveBeenCalledTimes(1)
   })
 
   it('collapses left sidebar after right is already collapsed', () => {
@@ -170,5 +184,52 @@ describe('useResponsiveLayout', () => {
     expect(() => {
       renderHook(() => useResponsiveLayout(opts))
     }).not.toThrow()
+  })
+
+  it('evaluates layout on mount — collapses sidebars if window is already narrow', () => {
+    // Start at narrow width BEFORE rendering the hook
+    Object.defineProperty(window, 'innerWidth', { value: 700, writable: true })
+    const opts = defaultOptions()
+
+    renderHook(() => useResponsiveLayout(opts))
+
+    // Mount-time handleResize() fires immediately (no debounce needed)
+    // 700 - 240 - 320 = 140 < 500 → both sidebars collapse on mount
+    expect(opts.onCollapseRight).toHaveBeenCalledTimes(1)
+    expect(opts.onCollapseLeft).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not collapse on mount when window is wide enough', () => {
+    // Default beforeEach sets innerWidth = 1400
+    const opts = defaultOptions()
+
+    renderHook(() => useResponsiveLayout(opts))
+
+    // 1400 - 240 - 320 = 840 >= 500 → no collapse
+    expect(opts.onCollapseRight).not.toHaveBeenCalled()
+    expect(opts.onCollapseLeft).not.toHaveBeenCalled()
+  })
+
+  it('sets up ResizeObserver on document.documentElement', () => {
+    const observeSpy = vi.fn()
+    const disconnectSpy = vi.fn()
+    const OriginalResizeObserver = window.ResizeObserver
+
+    class MockResizeObserver {
+      observe = observeSpy
+      unobserve = vi.fn()
+      disconnect = disconnectSpy
+    }
+    window.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver
+
+    const opts = defaultOptions()
+    const { unmount } = renderHook(() => useResponsiveLayout(opts))
+
+    expect(observeSpy).toHaveBeenCalledWith(document.documentElement)
+
+    unmount()
+    expect(disconnectSpy).toHaveBeenCalled()
+
+    window.ResizeObserver = OriginalResizeObserver
   })
 })

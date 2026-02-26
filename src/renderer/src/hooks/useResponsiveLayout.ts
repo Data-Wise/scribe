@@ -76,19 +76,22 @@ export function useResponsiveLayout({
 
     // --- Shrinking: collapse sidebars to make room ---
     if (editorWidth < MIN_EDITOR_WIDTH) {
+      let currentRightPx = rightPx
+
       // Step 1: Collapse right sidebar first (if expanded and not user-overridden)
       if (!rightCollapsed && !userOverrideRight.current) {
         autoCollapsedRight.current = true
         onCollapseRight()
-        return // Re-evaluate on next frame after state updates
+        currentRightPx = ICON_WIDTH
       }
 
-      // Step 2: Collapse left sidebar (if expanded and not user-overridden)
-      if (!leftCollapsed && !userOverrideLeft.current) {
+      // Step 2: Still too narrow? Collapse left sidebar too
+      const projectedEditor = windowWidth - leftPx - currentRightPx
+      if (projectedEditor < MIN_EDITOR_WIDTH && !leftCollapsed && !userOverrideLeft.current) {
         autoCollapsedLeft.current = true
         onCollapseLeft()
-        return
       }
+      return
     }
 
     // --- Growing: re-expand auto-collapsed sidebars ---
@@ -123,16 +126,31 @@ export function useResponsiveLayout({
   }, [leftWidth, rightWidth, leftCollapsed, rightCollapsed, onCollapseLeft, onCollapseRight, onExpandLeft, onExpandRight])
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null
+    // Evaluate layout on mount (catches initial window size, tiling, snap zones)
+    handleResize()
 
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
     const debouncedResize = () => {
       if (timeoutId) clearTimeout(timeoutId)
       timeoutId = setTimeout(handleResize, DEBOUNCE_MS)
     }
 
     window.addEventListener('resize', debouncedResize)
+
+    // ResizeObserver catches macOS tiling / split-screen that may skip DOM resize events
+    const observer = new ResizeObserver(debouncedResize)
+    observer.observe(document.documentElement)
+
+    // Tauri native resize — belt-and-suspenders for Stage Manager, Sequoia snap zones
+    let unlistenTauri: (() => void) | null = null
+    import('@tauri-apps/api/window').then(({ getCurrentWindow }) => {
+      getCurrentWindow().onResized(debouncedResize).then(fn => { unlistenTauri = fn })
+    }).catch(() => {}) // Graceful no-op in browser mode
+
     return () => {
       window.removeEventListener('resize', debouncedResize)
+      observer.disconnect()
+      unlistenTauri?.()
       if (timeoutId) clearTimeout(timeoutId)
     }
   }, [handleResize])
