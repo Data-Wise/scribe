@@ -940,15 +940,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#settings-v190" class="md-nav__link">
+  <a href="#settings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Settings (v1.9.0+)
+        Settings
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Settings (v1.9.0+)">
+    <nav class="md-nav" aria-label="Settings">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1152,6 +1152,67 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#responsive-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsive Layout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Responsive Layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#window-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Window Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-collapse-sidebars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Collapse Sidebars
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-zoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global Zoom
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-sidebar-resize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Right Sidebar Resize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2460,15 +2521,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#settings-v190" class="md-nav__link">
+  <a href="#settings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Settings (v1.9.0+)
+        Settings
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Settings (v1.9.0+)">
+    <nav class="md-nav" aria-label="Settings">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2672,6 +2733,67 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#responsive-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsive Layout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Responsive Layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#window-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Window Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-collapse-sidebars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Collapse Sidebars
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-zoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global Zoom
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-sidebar-resize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Right Sidebar Resize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2935,7 +3057,7 @@
 </table>
 <p>Configure in Settings → Writing → Daily Note Template.</p>
 <hr />
-<h2 id="settings-v190">Settings (v1.9.0+)</h2>
+<h2 id="settings">Settings</h2>
 <div class="admonition tip">
 <p class="admonition-title">Quick Access</p>
 <p>Press <code>⌘,</code> (Command-Comma) to open Settings.</p>
@@ -2985,9 +3107,8 @@
 </ul>
 <h3 id="theme-gallery">Theme Gallery</h3>
 <p><strong>10 built-in themes</strong> with visual previews:</p>
-<p><strong>Favorites:</strong> Slate, Nord, Dracula
-<strong>Dark:</strong> Monokai, GitHub Dark
-<strong>Light:</strong> Linen, Paper, Cream</p>
+<p><strong>Dark:</strong> Oxford Dark, Forest Night, Warm Cocoa, Midnight Purple, Deep Ocean
+<strong>Light:</strong> Soft Paper, Morning Fog, Sage Garden, Lavender Mist, Sand Dune</p>
 <ul>
 <li><strong>3-column grid</strong> with hover effects</li>
 <li><strong>Instant preview</strong> - click to apply</li>
@@ -3127,12 +3248,14 @@
 </tbody>
 </table>
 <h3 id="code-block-styling">Code Block Styling</h3>
-<p>Quarto code blocks get distinct visual treatment:</p>
+<p>Quarto code blocks get VS Code-style visual treatment via the <code>CodeChunkDecorationPlugin</code>. All three Quarto fence syntaxes are detected: executable (<code>`{r}`</code>), documentation (<code>`{{r}}`</code>), and static (<code>`{.r}`</code>).</p>
 <ul>
-<li>Monospace font with accent-colored left border</li>
-<li>Chunk option lines (<code>#|</code>) styled as subdued metadata</li>
-<li>Opening fence line highlighted</li>
-<li>Dark mode support</li>
+<li>Distinct background with accent-colored left border and rounded corners</li>
+<li>Configurable monospace code font (Settings &gt; Editor &gt; Code Font)</li>
+<li>Language badge (e.g., <code>R</code>, <code>PYTHON</code>) on the opening fence line</li>
+<li>Chunk option lines (<code>#|</code>) styled as italic subdued metadata</li>
+<li>Theme-aware — adapts to all 10 themes automatically</li>
+<li>Plain fences (<code>```js</code>) keep simple monospace styling via CSS fallback</li>
 </ul>
 <h3 id="smart-completion-scoping">Smart Completion Scoping</h3>
 <p>LaTeX completions are context-aware:</p>
@@ -3308,6 +3431,96 @@
 </div>
 <p>Powered by KaTeX for fast, native rendering.</p>
 <hr />
+<h2 id="responsive-layout">Responsive Layout</h2>
+<p>Scribe adapts gracefully to any window size, including macOS Stage Manager, split-screen, and Sequoia snap zones.</p>
+<h3 id="window-management">Window Management</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Minimum size</strong></td>
+<td>350 × 350 px (supports macOS 4-pane tiling)</td>
+</tr>
+<tr>
+<td><strong>Position memory</strong></td>
+<td>Window restores position, size, and maximized state between launches</td>
+</tr>
+<tr>
+<td><strong>macOS tiling</strong></td>
+<td>Stage Manager, split-screen, Sequoia snap zones, and 4-pane arrangements all supported</td>
+</tr>
+</tbody>
+</table>
+<h3 id="auto-collapse-sidebars">Auto-Collapse Sidebars</h3>
+<p>When the window shrinks, sidebars auto-collapse to preserve a 500px minimum editor width:</p>
+<ol>
+<li><strong>Right sidebar collapses first</strong> (to 48px icon bar)</li>
+<li><strong>Left sidebar collapses second</strong> (if still too narrow)</li>
+<li><strong>Sidebars auto-restore</strong> when the window grows back</li>
+<li><strong>User overrides respected</strong> — if you manually re-expand a collapsed sidebar, Scribe stops managing it until the next resize</li>
+</ol>
+<h3 id="global-zoom">Global Zoom</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Zoom in</strong></td>
+<td><code>⌘+</code> or <code>⌘=</code> (10% increments)</td>
+</tr>
+<tr>
+<td><strong>Zoom out</strong></td>
+<td><code>⌘-</code> (10% increments)</td>
+</tr>
+<tr>
+<td><strong>Reset</strong></td>
+<td>Click the zoom indicator in the editor header</td>
+</tr>
+<tr>
+<td><strong>Range</strong></td>
+<td>50% – 200% (WCAG 1.4.4 compliant)</td>
+</tr>
+</tbody>
+</table>
+<p>A zoom indicator appears in the editor header when zoom is not 100%. Click it to reset.</p>
+<h3 id="right-sidebar-resize">Right Sidebar Resize</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Drag</strong></td>
+<td>Drag the thin separator bar between editor and right sidebar</td>
+</tr>
+<tr>
+<td><strong>Reset</strong></td>
+<td>Double-click the separator to reset to 320px default</td>
+</tr>
+<tr>
+<td><strong>Range</strong></td>
+<td>250px – 600px</td>
+</tr>
+<tr>
+<td><strong>Touch</strong></td>
+<td>Touch/trackpad drag supported</td>
+</tr>
+</tbody>
+</table>
+<p>Width persists across sessions via localStorage.</p>
+<hr />
 <h2 id="accessibility">Accessibility</h2>
 <div class="admonition tip">
 <p class="admonition-title">ADHD-Friendly Design</p>
@@ -3336,6 +3549,18 @@
 <tr>
 <td><strong>Auto-save</strong></td>
 <td>Never lose work</td>
+</tr>
+<tr>
+<td><strong>Global zoom</strong></td>
+<td>⌘+/⌘- zoom to 200% (WCAG 1.4.4)</td>
+</tr>
+<tr>
+<td><strong>Resize handle a11y</strong></td>
+<td><code>role="separator"</code> + <code>aria-orientation="vertical"</code></td>
+</tr>
+<tr>
+<td><strong>Touch support</strong></td>
+<td>Resize handles work with touch/trackpad input</td>
 </tr>
 </tbody>
 </table>

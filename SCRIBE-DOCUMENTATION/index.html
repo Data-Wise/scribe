@@ -3011,10 +3011,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#implementation-stats-v119-pomodoro-release" class="md-nav__link">
+  <a href="#current-stats-v1220" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementation Stats (v1.19 Pomodoro Release)
+        Current Stats (v1.22.0)
       
     </span>
   </a>
@@ -3069,9 +3069,8 @@
 
 
 <h1 id="scribe-comprehensive-technical-documentation">Scribe — Comprehensive Technical Documentation</h1>
-<p><strong>Version:</strong> 1.19.1 (Settings Infrastructure)
-<strong>Last Updated:</strong> 2026-02-24
-<strong>Branch:</strong> dev</p>
+<p><strong>Version:</strong> 1.22.0
+<strong>Last Updated:</strong> 2026-02-25</p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
@@ -4447,7 +4446,7 @@
 <hr />
 <h2 id="14-development-guide">14. Development Guide</h2>
 <h3 id="project-structure">Project Structure</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pomodoro/                          (worktree root = project root)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>scribe/                            (project root)
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── src/
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│   ├── main.ts                    (Tauri main process entry)
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│   └── renderer/
@@ -4567,45 +4566,34 @@
 <li><strong>Props flow:</strong> Pass props down through <code>App.tsx → EditorOrchestrator → HybridEditor → children</code>; do not skip levels</li>
 <li><strong>Store access:</strong> Access stores via hooks in components; do not call store methods from other stores</li>
 </ul>
-<h3 id="implementation-stats-v119-pomodoro-release">Implementation Stats (v1.19 Pomodoro Release)</h3>
+<h3 id="current-stats-v1220">Current Stats (v1.22.0)</h3>
 <table>
 <thead>
 <tr>
 <th>Metric</th>
-<th>Before</th>
-<th>After</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Total tests</td>
-<td>2190</td>
-<td>2252</td>
-</tr>
-<tr>
-<td>New tests</td>
-<td>—</td>
-<td>62 (35 store + 27 component)</td>
+<td>2,326</td>
 </tr>
 <tr>
 <td>Test files</td>
-<td>—</td>
-<td>73</td>
+<td>81</td>
 </tr>
 <tr>
-<td>New production files</td>
-<td>—</td>
-<td>4</td>
+<td>Components</td>
+<td>50+</td>
 </tr>
 <tr>
-<td>Modified production files</td>
-<td>—</td>
-<td>9</td>
+<td>Zustand stores</td>
+<td>5</td>
 </tr>
 <tr>
-<td>Lines of production code added</td>
-<td>—</td>
-<td>209</td>
+<td>Keyboard shortcuts</td>
+<td>27</td>
 </tr>
 </tbody>
 </table>
@@ -4667,12 +4655,24 @@
 </thead>
 <tbody>
 <tr>
+<td>v1.20</td>
+<td>Release cleanup, documentation overhaul</td>
+</tr>
+<tr>
 <td>v1.19</td>
 <td>Pomodoro Timer (status bar, state machine, configurable, auto-save); new projects auto-pinned to sidebar</td>
 </tr>
 <tr>
+<td>v1.17</td>
+<td>Three-tab sidebar state architecture</td>
+</tr>
+<tr>
 <td>v1.16</td>
 <td>Icon-centric sidebar redesign; pinned vaults; smart icons</td>
+</tr>
+<tr>
+<td>v1.15</td>
+<td>Quarto enhancements, LaTeX completions</td>
 </tr>
 <tr>
 <td>Earlier</td>
@@ -4681,7 +4681,7 @@
 </tbody>
 </table>
 <hr />
-<p><em>This document is the authoritative technical reference for Scribe. For questions not covered here, see the source code in <code>/Users/dt/.git-worktrees/scribe/pomodoro/src/renderer/src/</code>.</em></p>
+<p><em>This document is the authoritative technical reference for Scribe. For questions not covered here, see the source code in <code>src/renderer/src/</code>.</em></p>
 
 
 

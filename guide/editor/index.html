@@ -1085,6 +1085,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#code-font" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Font
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#recommended-fonts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2427,6 +2438,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#code-font" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Font
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#recommended-fonts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2636,7 +2658,48 @@
 <li><strong>In prose</strong> — snippet completions suppressed (no erratic popups)</li>
 </ul>
 <h3 id="code-block-styling">Code Block Styling</h3>
-<p>Quarto code blocks get distinct visual treatment with a monospace font, accent-colored left border, and subdued <code>#|</code> chunk option lines.</p>
+<p>Quarto code blocks get VS Code-style visual treatment. All three Quarto fence syntaxes are supported:</p>
+<table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>`{r}`</code></td>
+<td>Executable chunk</td>
+<td>Runs code during Quarto render</td>
+</tr>
+<tr>
+<td><code>`{{r}}`</code></td>
+<td>Documentation chunk</td>
+<td>Displays chunk syntax without executing</td>
+</tr>
+<tr>
+<td><code>`{.r}`</code></td>
+<td>Static code block</td>
+<td>Syntax-highlighted, never executed</td>
+</tr>
+</tbody>
+</table>
+<p>Visual features:</p>
+<ul>
+<li><strong>Distinct background</strong> — Derived from theme colors, adapts to all 10 themes</li>
+<li><strong>Monospace code font</strong> — Configurable in Settings &gt; Editor &gt; Code Font (default: JetBrains Mono)</li>
+<li><strong>Accent-colored left border</strong> — 3px border with rounded corners on opening/closing fences</li>
+<li><strong>Language badge</strong> — Uppercase label (e.g., <code>R</code>, <code>PYTHON</code>) on the opening fence line</li>
+<li><strong>Chunk option styling</strong> — <code>#|</code> lines render italic with reduced opacity</li>
+<li><strong>Plain fences unchanged</strong> — Standard <code>```js</code> blocks keep simple monospace styling</li>
+</ul>
+<p><img alt="Quarto code chunks with R, Python, and Julia language badges" src="../../assets/screenshots/quarto-chunks-multi-language.png" /></p>
+<p><em>Code chunks across R, Python, and Julia — each with language badge, accent border, and themed background.</em></p>
+<p><img alt="All three Quarto fence syntaxes: executable, documentation, and static" src="../../assets/screenshots/quarto-chunks-syntax-variants.png" /></p>
+<p><em>Three syntax variants: executable <code>{python}</code>, documentation <code>{{r}}</code>, and static <code>{.python}</code> — all receive identical visual treatment.</em></p>
+<p><img alt="Code chunks adapt to dark themes automatically" src="../../assets/screenshots/quarto-chunks-dark-theme.png" /></p>
+<p><em>Theme adaptation: Oxford Dark theme with blue accent borders and badges.</em></p>
 <hr />
 <h2 id="wiki-links">Wiki Links</h2>
 <p>Connect your notes with <code>[[double brackets]]</code>:</p>
@@ -2814,6 +2877,29 @@
 </tr>
 </tbody>
 </table>
+<h3 id="code-font">Code Font</h3>
+<p>Configure separately in <strong>Settings &gt; Editor &gt; Code Font</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Range/Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code font family</td>
+<td>Monospace fonts only (JetBrains Mono, Fira Code, etc.)</td>
+</tr>
+<tr>
+<td>Code font size ratio</td>
+<td>0.75–1.0 of editor font size (default: 0.88)</td>
+</tr>
+</tbody>
+</table>
+<p>The code font applies to all Quarto code chunks and inline code. It's independent of your prose font, letting you optimize readability for both writing and code.</p>
+<p><img alt="Code Font settings panel in Settings &gt; Editor" src="../../assets/screenshots/settings-code-font.png" /></p>
+<p><em>Code Font settings: monospace font family picker and size ratio slider with live preview.</em></p>
 <h3 id="recommended-fonts">Recommended Fonts</h3>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Sans-Serif</label><label for="__tabbed_2_2">Serif</label><label for="__tabbed_2_3">Monospace</label></div>
 <div class="tabbed-content">

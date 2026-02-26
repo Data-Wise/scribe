@@ -720,10 +720,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#version-040-alpha1" class="md-nav__link">
+  <a href="#current-version-v1220" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Version: 0.4.0-alpha.1
+        Current Version: v1.22.0
       
     </span>
   </a>
@@ -2189,10 +2189,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#version-040-alpha1" class="md-nav__link">
+  <a href="#current-version-v1220" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Version: 0.4.0-alpha.1
+        Current Version: v1.22.0
       
     </span>
   </a>
@@ -2442,25 +2442,26 @@
 
 
 <h1 id="scribe-release-process">Scribe Release Process</h1>
-<h2 id="version-040-alpha1">Version: 0.4.0-alpha.1</h2>
+<h2 id="current-version-v1220">Current Version: v1.22.0</h2>
 <p>This document describes the release process for Scribe.</p>
 <hr />
 <h2 id="quick-release-checklist">Quick Release Checklist</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Update version in all files</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Update version in ALL files (they drift!)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">#    - package.json</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">#    - src-tauri/Cargo.toml</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">#    - src-tauri/tauri.conf.json</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">#    - .STATUS</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 2. Run tests</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>npm<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 3. Build release</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>./scripts/build-release.sh
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 4. Create GitHub release and upload DMG</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 5. Update Homebrew tap with SHA256</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">#    Verify: grep for the old version across the entire repo</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 2. Run tests</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>npm<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 3. Build release</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>npm<span class="w"> </span>run<span class="w"> </span>tauri<span class="w"> </span>build
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># 4. Create GitHub release and upload DMG</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 5. Update Homebrew tap with SHA256 from CHECKSUMS.txt</span>
 </code></pre></div>
 <hr />
 <h2 id="build-artifacts">Build Artifacts</h2>
@@ -2473,10 +2474,10 @@
 </code></pre></div>
 <h3 id="current-build">Current Build</h3>
 <ul>
-<li><strong>Version</strong>: 0.4.0-alpha.1</li>
+<li><strong>Version</strong>: v1.22.0</li>
 <li><strong>Architecture</strong>: aarch64 (Apple Silicon)</li>
 <li><strong>DMG Size</strong>: ~5.5 MB</li>
-<li><strong>SHA256</strong>: <code>a25e44a2ad3ff2b2659171d22693e593a7f70ccfb226d1f16eab23166d6571cf</code></li>
+<li><strong>SHA256</strong>: See <code>CHECKSUMS.txt</code> in the GitHub release assets</li>
 </ul>
 <hr />
 <h2 id="installation-methods">Installation Methods</h2>
@@ -2514,6 +2515,10 @@
 <li>Command palette (⌘K)</li>
 <li>Theme switching</li>
 <li>Focus mode (⌘⇧F)</li>
+<li>Global zoom (⌘+/⌘-)</li>
+<li>Window position memory (close + reopen restores size/position)</li>
+<li>Auto-collapse sidebars (resize below ~850px)</li>
+<li>Right sidebar drag resize (250–600px)</li>
 </ol>
 <hr />
 <h2 id="github-release-process">GitHub Release Process</h2>
@@ -2521,16 +2526,16 @@
 <ol>
 <li>
 <p>Create tag:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>tag<span class="w"> </span>v0.4.0-alpha.1
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.4.0-alpha.1
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>tag<span class="w"> </span>vX.Y.Z
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>vX.Y.Z
 </code></pre></div></p>
 </li>
 <li>
 <p>Create release on GitHub:</p>
 </li>
 <li>Go to Releases → Draft a new release</li>
-<li>Select tag: <code>v0.4.0-alpha.1</code></li>
-<li>Title: <code>Scribe v0.4.0-alpha.1</code></li>
+<li>Select tag: <code>vX.Y.Z</code></li>
+<li>Title: <code>Scribe vX.Y.Z</code></li>
 <li>Mark as pre-release</li>
 <li>
 <p>Upload DMG files</p>
@@ -2539,15 +2544,15 @@
 <p>Update Homebrew tap:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/dev-tools/homebrew-tap
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Update Casks/scribe.rb with new SHA256</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s2">&quot;Update Scribe to v0.4.0-alpha.1&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s2">&quot;Update Scribe to vX.Y.Z&quot;</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>git<span class="w"> </span>push
 </code></pre></div></p>
 </li>
 </ol>
 <h3 id="automated-release-github-actions">Automated Release (GitHub Actions)</h3>
 <p>Push a tag to trigger automated release:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>tag<span class="w"> </span>v0.4.0-alpha.1
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.4.0-alpha.1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>tag<span class="w"> </span>vX.Y.Z
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>vX.Y.Z
 </code></pre></div>
 <p>The workflow will:
 1. Build for Intel and Apple Silicon
@@ -2566,24 +2571,24 @@
 </thead>
 <tbody>
 <tr>
-<td>Alpha</td>
-<td><code>X.Y.Z-alpha.N</code></td>
-<td><code>0.4.0-alpha.1</code></td>
-</tr>
-<tr>
-<td>Beta</td>
-<td><code>X.Y.Z-beta.N</code></td>
-<td><code>0.4.0-beta.1</code></td>
-</tr>
-<tr>
-<td>Release Candidate</td>
-<td><code>X.Y.Z-rc.N</code></td>
-<td><code>0.4.0-rc.1</code></td>
-</tr>
-<tr>
 <td>Stable</td>
 <td><code>X.Y.Z</code></td>
-<td><code>0.4.0</code></td>
+<td><code>1.20.0</code></td>
+</tr>
+<tr>
+<td>Patch</td>
+<td><code>X.Y.Z</code></td>
+<td><code>1.20.1</code></td>
+</tr>
+<tr>
+<td>Minor</td>
+<td><code>X.Y.0</code></td>
+<td><code>1.21.0</code></td>
+</tr>
+<tr>
+<td>Major</td>
+<td><code>X.0.0</code></td>
+<td><code>2.0.0</code></td>
 </tr>
 </tbody>
 </table>

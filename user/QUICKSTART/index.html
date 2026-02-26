@@ -647,6 +647,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#code-chunks-quarto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Chunks (Quarto)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#latex-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LaTeX Math
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2094,6 +2116,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#code-chunks-quarto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Chunks (Quarto)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#latex-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LaTeX Math
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2255,6 +2299,29 @@
 <li>Type <code>#</code> to trigger autocomplete</li>
 <li>Click tags in sidebar to filter</li>
 </ul>
+<hr />
+<h2 id="code-chunks-quarto">Code Chunks (Quarto)</h2>
+<p>Write executable code blocks with autocompletion:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>```{r}
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>#| label: fig-example
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>#| fig-cap: &quot;My figure&quot;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ggplot(data, aes(x, y)) + geom_point()
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>```
+</code></pre></div>
+<ul>
+<li>Type <code>```</code> to trigger language completions (R, Python, Julia)</li>
+<li>Type <code>#|</code> inside chunks for option completions</li>
+<li>Type <code>@fig-</code> to cross-reference figures</li>
+</ul>
+<hr />
+<h2 id="latex-math">LaTeX Math</h2>
+<p>Inline: <code>$\bar{x} = \frac{1}{n}\sum x_i$</code></p>
+<p>Display:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>$$
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>\hat{\beta} = (X&#39;X)^{-1}X&#39;y
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>$$
+</code></pre></div>
+<p>Type <code>\</code> inside math for LaTeX command autocomplete.</p>
 <hr />
 <h2 id="next-steps">Next Steps</h2>
 <p><a class="md-button md-button--primary" href="../GETTING-STARTED/">Full Getting Started Guide <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg></span></a>

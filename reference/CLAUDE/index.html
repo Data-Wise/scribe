@@ -2070,16 +2070,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#current-status-v1200-settings-timer-cleanup" class="md-nav__link">
+  <a href="#current-status-v1220-responsive-ui-enhancements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎯 Current Status: v1.20.0 - Settings &amp; Timer Cleanup ✅
+        🎯 Current Status: v1.22.0 - Responsive UI Enhancements ✅
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🎯 Current Status: v1.20.0 - Settings &amp; Timer Cleanup ✅">
+    <nav class="md-nav" aria-label="🎯 Current Status: v1.22.0 - Responsive UI Enhancements ✅">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#latest-work-responsive-ui-featureresponsive-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latest Work: Responsive UI (feature/responsive-ui)
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#latest-work-session-timer-removal-pr-48" class="md-nav__link">
@@ -2521,7 +2532,7 @@
 </tr>
 <tr>
 <td>Editor</td>
-<td>HybridEditor (CodeMirror 6 + ReactMarkdown)</td>
+<td>CodeMirror 6</td>
 </tr>
 <tr>
 <td>Styling</td>
@@ -2593,26 +2604,28 @@
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│       │   ├── Settings/          # Modular settings components
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│       │   │   ├── GeneralSettingsTab.tsx
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│       │   │   ├── EditorSettingsTab.tsx
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│       │   │   ├── SettingsToggle.tsx    # Reusable toggle (role=switch) [v1.19.1]
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│       │   │   ├── SettingsToggle.tsx    # Reusable toggle (role=switch)
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│       │   │   └── SettingsSection.tsx
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar [v1.19.0]
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│       │   ├── PomodoroTimer.tsx       # Focus timer in status bar
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│       │   ├── EditorOrchestrator.tsx # Editor rendering logic
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│       │   ├── KeyboardShortcutHandler.tsx # Global shortcuts
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│       │   ├── Editor/            # BlockNote editor
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│       │   ├── CodeMirrorEditor.tsx  # CodeMirror 6 editor
 <a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│       │   └── ...
 <a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│       ├── hooks/                 # React hooks
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│       │   └── usePreferences.ts  # Cached prefs + event sync [v1.19.1]
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│       ├── lib/                   # Core utilities
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│       │   ├── api.ts             # API factory (Tauri/Browser)
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│       │   ├── shortcuts.ts       # 25-shortcut registry [v1.19.1]
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│       │   ├── platform.ts        # Runtime detection (isTauri/isBrowser)
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>│       │   ├── browser-api.ts     # IndexedDB API (46 operations)
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>│       │   ├── browser-db.ts      # Dexie.js schema + seed data
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>│       │   └── browser-dialogs.ts # Browser dialog fallbacks
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>│       ├── store/                 # Zustand state
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>│       │   ├── useAppViewStore.ts # Sidebar + UI state
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>│       │   └── usePomodoroStore.ts # Pomodoro timer state [v1.19.0]
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>│       └── types/                 # TypeScript types
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│       │   ├── usePreferences.ts  # Cached prefs + event sync
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│       │   ├── useResponsiveLayout.ts # Auto-collapse sidebars on resize
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│       │   └── useGlobalZoom.ts   # ⌘+/⌘- zoom (0.5–2.0)
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│       ├── lib/                   # Core utilities
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│       │   ├── api.ts             # API factory (Tauri/Browser)
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>│       │   ├── shortcuts.ts       # 27-shortcut registry
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>│       │   ├── platform.ts        # Runtime detection (isTauri/isBrowser)
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>│       │   ├── browser-api.ts     # IndexedDB API (46 operations)
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>│       │   ├── browser-db.ts      # Dexie.js schema + seed data
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>│       │   └── browser-dialogs.ts # Browser dialog fallbacks
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>│       ├── store/                 # Zustand state
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>│       │   ├── useAppViewStore.ts # Sidebar + UI state
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>│       │   └── usePomodoroStore.ts # Pomodoro timer state
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>│       └── types/                 # TypeScript types
 </code></pre></div>
 <hr />
 <h2 id="commands">🚀 Commands</h2>
@@ -2653,10 +2666,21 @@
 </code></pre></div>
 <p><strong>Aliases:</strong> <code>sd</code> (daily), <code>sc</code> (capture), <code>ss</code> (search), <code>sl</code> (list)</p>
 <hr />
-<h2 id="current-status-v1200-settings-timer-cleanup">🎯 Current Status: v1.20.0 - Settings &amp; Timer Cleanup ✅</h2>
-<p><strong>Released:</strong> v1.20.0 (stable)
+<h2 id="current-status-v1220-responsive-ui-enhancements">🎯 Current Status: v1.22.0 - Responsive UI Enhancements ✅</h2>
+<p><strong>Released:</strong> v1.22.0 (stable)
 <strong>Install:</strong> <code>brew install --cask data-wise/tap/scribe</code>
-<strong>Tests:</strong> 2,280 passing (76 files)</p>
+<strong>Tests:</strong> 2,326 passing (81 files)</p>
+<h3 id="latest-work-responsive-ui-featureresponsive-ui">Latest Work: Responsive UI (feature/responsive-ui)</h3>
+<ul>
+<li>✅ Minimum window size (350×350) via <code>tauri.conf.json</code></li>
+<li>✅ Window position memory via <code>tauri-plugin-window-state</code></li>
+<li>✅ <code>useResponsiveLayout</code> hook — auto-collapse sidebars on resize (right first, then left, 500px editor minimum)</li>
+<li>✅ <code>useGlobalZoom</code> hook — ⌘+/⌘- zoom (0.5–2.0), persists to <code>scribe:zoomLevel</code> localStorage</li>
+<li>✅ Right sidebar <code>ResizeHandle</code> with drag + touch support (250–600px range)</li>
+<li>✅ <code>.resizing</code> CSS class during drag (disables transitions)</li>
+<li>✅ Reduced-motion audit (zoom indicator + right sidebar transitions)</li>
+<li>✅ 42 new tests (2,326 total)</li>
+</ul>
 <h3 id="latest-work-session-timer-removal-pr-48">Latest Work: Session Timer Removal (PR #48)</h3>
 <ul>
 <li>✅ Removed legacy session timer from breadcrumb bar (⏸/▶/↺ controls)</li>
@@ -2743,7 +2767,7 @@
 <h2 id="feature-tiers">✅ Feature Tiers</h2>
 <h3 id="tier-1-3-core-shipped">Tier 1-3: Core (Shipped)</h3>
 <ul>
-<li>BlockNote editor → HybridEditor++ (CodeMirror 6)</li>
+<li>CodeMirror 6 editor (Source / Live Preview / Reading)</li>
 <li>Focus mode</li>
 <li>Global hotkey</li>
 <li>Claude/Gemini CLI</li>
