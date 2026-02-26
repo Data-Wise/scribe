@@ -1,7 +1,7 @@
 # Test Coverage Summary - Scribe Editor
 
 **Generated:** 2026-02-25
-**Total Tests:** 2,322 passing (81 test files)
+**Total Tests:** 2,326 passing (81 test files)
 **Test Framework:** Vitest + Testing Library + happy-dom
 **TypeScript:** 0 production errors, 67 test file warnings (documented)
 
@@ -361,7 +361,7 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Tests** | 2,322 |
+| **Total Tests** | 2,326 |
 | **Pass Rate** | 100% |
 | **Test Files** | 81 |
 | **Test Duration** | ~3s |

@@ -5,7 +5,7 @@ Scribe follows a sprint-based development approach with ~4-8 hour sprints.
 ## Current Status
 
 **Version:** v1.22.0 (stable release)
-**Tests:** 2,322 passing (81 files)
+**Tests:** 2,326 passing (81 files)
 **Architecture:** Tauri 2 + React 18 + CodeMirror 6
 
 ## Feature Tiers (All Shipped)

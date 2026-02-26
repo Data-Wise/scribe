@@ -253,18 +253,18 @@ scribe help --all      # Full reference
 
 **Released:** v1.22.0 (stable)
 **Install:** `brew install --cask data-wise/tap/scribe`
-**Tests:** 2,322 passing (81 files)
+**Tests:** 2,326 passing (81 files)
 
 ### Latest Work: Responsive UI (feature/responsive-ui)
 
-- ✅ Minimum window size (900x600) via `tauri.conf.json`
+- ✅ Minimum window size (350×350) via `tauri.conf.json`
 - ✅ Window position memory via `tauri-plugin-window-state`
 - ✅ `useResponsiveLayout` hook — auto-collapse sidebars on resize (right first, then left, 500px editor minimum)
 - ✅ `useGlobalZoom` hook — ⌘+/⌘- zoom (0.5–2.0), persists to `scribe:zoomLevel` localStorage
 - ✅ Right sidebar `ResizeHandle` with drag + touch support (250–600px range)
 - ✅ `.resizing` CSS class during drag (disables transitions)
 - ✅ Reduced-motion audit (zoom indicator + right sidebar transitions)
-- ✅ 42 new tests (2,322 total)
+- ✅ 42 new tests (2,326 total)
 
 ### Latest Work: Session Timer Removal (PR #48)
 

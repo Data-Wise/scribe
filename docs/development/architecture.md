@@ -68,7 +68,7 @@ scribe/
 │           │   ├── useAppViewStore.ts
 │           │   ├── usePomodoroStore.ts
 │           │   └── useSettingsStore.ts
-│           └── __tests__/     # 81 test files, 2,322 tests
+│           └── __tests__/     # 81 test files, 2,326 tests
 │
 ├── src-tauri/                 # Tauri backend
 │   ├── src/
@@ -199,4 +199,4 @@ fn get_all_notes(db: State<Database>) -> Result<Vec<Note>, String> {
 | Integration | Vitest + Testing Library | User flows |
 | Store | Vitest | Zustand store state machines |
 
-Current: **2,322 tests passing** across 81 test files
+Current: **2,326 tests passing** across 81 test files

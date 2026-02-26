@@ -5,7 +5,7 @@
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
 [![Version](https://img.shields.io/badge/version-1.22.0-blue)]()
 [![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-2322%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-2326%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -198,7 +198,7 @@ Theme picker, ADHD-friendly font recommendations, and typography controls.
 # Development
 npm run dev          # Start Tauri dev server
 npm run dev:vite     # Vite frontend only
-npm run test         # Run 2,322 tests
+npm run test         # Run 2,326 tests
 npm run lint         # Lint code
 
 # Build
@@ -245,9 +245,9 @@ scribe/
 
 ## Test Coverage
 
-**2,322 tests passing** across test files:
+**2,326 tests passing** across test files:
 
-81 test files with 2,322 tests (Vitest + Testing Library + happy-dom).
+81 test files with 2,326 tests (Vitest + Testing Library + happy-dom).
 
 ---
 

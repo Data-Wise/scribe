@@ -978,7 +978,7 @@ Stores should not import from other stores directly. If cross-store coordination
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 2,322 |
+| Total tests | 2,326 |
 | Test files | 81 |
 | Components | 50+ |
 | Zustand stores | 5 |

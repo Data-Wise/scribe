@@ -219,4 +219,4 @@ Vertical drag bar on LEFT edge of right sidebar (mirror of left sidebar's right-
 | Date | Change |
 |------|--------|
 | 2026-02-25 | Initial draft from deep UX brainstorm |
-| 2026-02-25 | All 5 increments implemented. 42 new tests (2,322 total). Status → implemented. |
+| 2026-02-25 | All 5 increments implemented. 42 new tests (2,326 total). Status → implemented. |

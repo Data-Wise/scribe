@@ -573,7 +573,7 @@ Search results display.
 
 ## Testing
 
-81 test files with 2,322 tests (Vitest + Testing Library + happy-dom).
+81 test files with 2,326 tests (Vitest + Testing Library + happy-dom).
 
 **Run tests:**
 ```bash

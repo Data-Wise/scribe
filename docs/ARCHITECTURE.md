@@ -364,7 +364,7 @@ scribe/
 │           │   ├── usePomodoroStore.ts
 │           │   └── useSettingsStore.ts
 │           │
-│           └── __tests__/            # 81 test files, 2322 tests
+│           └── __tests__/            # 81 test files, 2326 tests
 │
 ├── src-tauri/
 │   └── src/

@@ -175,7 +175,7 @@ No dialogs. No choices. Just write.
 |--------|--------|--------|
 | Time to capture | < 3 seconds | Achieved |
 | All core features | Complete | Shipped (v1.22.0) |
-| Tests | 2,000+ passing | 2,322 (81 files) |
+| Tests | 2,000+ passing | 2,326 (81 files) |
 | App launch | < 2 seconds | Achieved |
 
 ---
