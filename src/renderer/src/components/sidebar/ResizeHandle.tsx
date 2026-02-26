@@ -107,7 +107,6 @@ export function ResizeHandle({
       role="separator"
       aria-orientation="vertical"
       aria-label="Resize sidebar (double-click to reset)"
-      aria-valuenow={undefined}
       title="Double-click to reset width"
     />
   )

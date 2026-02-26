@@ -50,10 +50,6 @@ interface AppViewState {
   // Recent notes tracking
   recentNotes: RecentNote[]  // Last 10 opened notes
 
-  // Responsive layout: tracks whether sidebars were collapsed by resize (not user)
-  autoCollapsedLeft: boolean
-  autoCollapsedRight: boolean
-
   // Session tracking
   lastActiveNoteId: string | null
 
@@ -90,10 +86,6 @@ interface AppViewState {
   // Recent notes actions
   addRecentNote: (noteId: string, noteTitle: string, projectId: string | null) => void
   clearRecentNotes: () => void
-
-  // Responsive layout actions
-  setAutoCollapsedLeft: (v: boolean) => void
-  setAutoCollapsedRight: (v: boolean) => void
 
   // Session actions
   setLastActiveNote: (noteId: string | null) => void
@@ -500,9 +492,6 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
     compactModeWidth: compactWidth,
     cardModeWidth: cardWidth,
 
-    autoCollapsedLeft: false,
-    autoCollapsedRight: false,
-
     lastActiveNoteId: getLastActiveNoteId(),
     openTabs: getSavedTabs(),
     activeTabId: getSavedActiveTabId(),
@@ -876,9 +865,6 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
       saveTabs(newTabs)
       saveActiveTabId(tabToReopen.id)
     },
-
-    setAutoCollapsedLeft: (v: boolean) => set({ autoCollapsedLeft: v }),
-    setAutoCollapsedRight: (v: boolean) => set({ autoCollapsedRight: v }),
 
     setLastActiveNote: (noteId: string | null) => {
       set({ lastActiveNoteId: noteId })

@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Right sidebar uses `RIGHT_SIDEBAR_WIDTHS` constants (icon: 48, default: 320, min: 250, max: 600)
-- `useAppViewStore` tracks `autoCollapsedLeft`/`autoCollapsedRight` for user intent preservation
+- `useResponsiveLayout` hook tracks auto-collapse state via internal refs for user intent preservation
 - `ResizeHandle` component uses `useRef` instead of `useState` for touch event stale closure fix
 
 ---

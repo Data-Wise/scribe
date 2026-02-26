@@ -109,12 +109,12 @@ N/A — No API changes. This is a frontend-only feature.
 - `rightSidebarCollapsed` — collapse state
 - `scribe:sidebarWidth` — left sidebar preset
 
-### New Zustand State (`useAppViewStore`)
+### Internal Hook State (`useResponsiveLayout`)
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `autoCollapsedLeft` | boolean | True when left sidebar was collapsed by resize logic |
-| `autoCollapsedRight` | boolean | True when right sidebar was collapsed by resize logic |
+Auto-collapse tracking is managed via `useRef` inside the hook (not in the Zustand store):
+
+- `autoCollapsedLeft` / `autoCollapsedRight` — whether the hook collapsed each sidebar
+- `userOverrideLeft` / `userOverrideRight` — whether the user manually re-expanded after auto-collapse
 
 ### New Constants
 

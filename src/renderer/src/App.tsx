@@ -160,6 +160,8 @@ function App() {
     return saved ? parseInt(saved) : RIGHT_SIDEBAR_WIDTHS.expanded.default
   })
   const [isResizingRight, setIsResizingRight] = useState(false)
+  const rightSidebarWidthRef = useRef(rightSidebarWidth)
+  useEffect(() => { rightSidebarWidthRef.current = rightSidebarWidth }, [rightSidebarWidth])
 
   // Responsive layout: auto-collapse sidebars on window resize
   const lastExpandedIcon = useRef(expandedIcon)
@@ -179,7 +181,7 @@ function App() {
       const last = lastExpandedIcon.current
       if (last) {
         if (last.type === 'vault') expandVault(last.id)
-        else expandSmartIcon(last.id as any)
+        else expandSmartIcon(last.id)
       }
     }, [expandVault, expandSmartIcon]),
     onExpandRight: useCallback(() => setRightSidebarCollapsed(false), []),
@@ -1313,7 +1315,7 @@ function App() {
                   )
                   setRightSidebarWidth(newWidth)
                 }}
-                onResizeEnd={() => localStorage.setItem('rightSidebarWidth', String(rightSidebarWidth))}
+                onResizeEnd={() => localStorage.setItem('rightSidebarWidth', String(rightSidebarWidthRef.current))}
                 onReset={() => {
                   setRightSidebarWidth(RIGHT_SIDEBAR_WIDTHS.expanded.default)
                   localStorage.setItem('rightSidebarWidth', String(RIGHT_SIDEBAR_WIDTHS.expanded.default))
