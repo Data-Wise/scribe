@@ -25,7 +25,7 @@ Scribe's UI is desktop-first but lacks responsive behavior when the window is re
 
 ### Acceptance Criteria
 
-- [x] Window enforces minimum size (900×600) preventing layout breakage
+- [x] Window enforces minimum size (350×350) supporting macOS 4-pane tiling
 - [x] Window remembers position and size between launches
 - [x] Left sidebar auto-collapses to icon bar (48px) when editor would shrink below 500px
 - [x] Right sidebar auto-collapses to icon bar (48px) when editor would shrink below 500px

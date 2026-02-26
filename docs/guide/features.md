@@ -379,9 +379,9 @@ Scribe adapts gracefully to any window size, including macOS Stage Manager, spli
 
 | Feature | Detail |
 |---------|--------|
-| **Minimum size** | 900 x 600 px (prevents layout breakage) |
+| **Minimum size** | 350 × 350 px (supports macOS 4-pane tiling) |
 | **Position memory** | Window restores position, size, and maximized state between launches |
-| **macOS tiling** | Stage Manager, split-screen, and Sequoia snap zones all supported |
+| **macOS tiling** | Stage Manager, split-screen, Sequoia snap zones, and 4-pane arrangements all supported |
 
 ### Auto-Collapse Sidebars
 

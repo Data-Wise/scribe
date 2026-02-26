@@ -125,14 +125,20 @@ export function useResponsiveLayout({
     }
   }, [leftWidth, rightWidth, leftCollapsed, rightCollapsed, onCollapseLeft, onCollapseRight, onExpandLeft, onExpandRight])
 
+  // Ref to always access latest handleResize without re-subscribing listeners.
+  // This breaks the infinite loop: state change → handleResize recreated →
+  // but effect does NOT re-run (empty deps). Listeners call ref.current instead.
+  const handleResizeRef = useRef(handleResize)
+  handleResizeRef.current = handleResize
+
   useEffect(() => {
     // Evaluate layout on mount (catches initial window size, tiling, snap zones)
-    handleResize()
+    handleResizeRef.current()
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     const debouncedResize = () => {
       if (timeoutId) clearTimeout(timeoutId)
-      timeoutId = setTimeout(handleResize, DEBOUNCE_MS)
+      timeoutId = setTimeout(() => handleResizeRef.current(), DEBOUNCE_MS)
     }
 
     window.addEventListener('resize', debouncedResize)
@@ -153,5 +159,5 @@ export function useResponsiveLayout({
       unlistenTauri?.()
       if (timeoutId) clearTimeout(timeoutId)
     }
-  }, [handleResize])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 }

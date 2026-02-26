@@ -9,12 +9,12 @@ describe('Responsive Foundation - Increment 1', () => {
     )
     const mainWindow = tauriConfig.app.windows[0]
 
-    it('sets minWidth to 900', () => {
-      expect(mainWindow.minWidth).toBe(900)
+    it('sets minWidth to 350', () => {
+      expect(mainWindow.minWidth).toBe(350)
     })
 
-    it('sets minHeight to 600', () => {
-      expect(mainWindow.minHeight).toBe(600)
+    it('sets minHeight to 350', () => {
+      expect(mainWindow.minHeight).toBe(350)
     })
 
     it('has hiddenTitle enabled', () => {

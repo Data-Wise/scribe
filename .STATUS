@@ -50,12 +50,12 @@ tags:
 
 ### Responsive UI Enhancements (2026-02-25) — feature/responsive-ui
 
-- Minimum window size (900×600), window position memory (tauri-plugin-window-state)
+- Minimum window size (350×350), supports macOS 4-pane tiling, window position memory (tauri-plugin-window-state)
 - Auto-collapse sidebars on resize (useResponsiveLayout hook, 500px editor minimum)
 - Right sidebar ResizeHandle + width constants (250–600px range)
 - Global zoom ⌘+/⌘- (50%–200%), zoom indicator in editor header
 - Touch resize support, .resizing class during drag, reduced-motion audit
-- 42 new tests (2,322 total)
+- 46 new tests (2,326 total)
 
 ### v1.21.0 (2026-02-25) — Quarto Code Chunk Styling (Released)
 

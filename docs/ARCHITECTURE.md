@@ -164,7 +164,7 @@ A husky `pre-commit` hook prevents accidental commits of `ORCHESTRATE-*.md` plan
 
 ## Responsive Layout System
 
-The responsive layout system ensures the editor maintains a usable width (500px minimum) across all window sizes, including macOS Stage Manager, split-screen, and Sequoia snap zones.
+The responsive layout system ensures the editor maintains a usable width (500px minimum) across all window sizes, including macOS Stage Manager, split-screen, Sequoia snap zones, and 4-pane tiling. Uses triple resize detection (DOM `window.resize` + `ResizeObserver` + Tauri `onResized()`) and a ref-based pattern to avoid React re-render loops.
 
 ```mermaid
 flowchart TD
@@ -198,7 +198,7 @@ flowchart TD
 | `RIGHT_SIDEBAR_WIDTHS.expanded.max` | 600px | `useAppViewStore.ts` |
 | Zoom range | 0.5–2.0 (10% steps) | `useGlobalZoom.ts` |
 | Resize debounce | 150ms | `useResponsiveLayout.ts` |
-| Min window size | 900×600 | `tauri.conf.json` |
+| Min window size | 350×350 | `tauri.conf.json` |
 
 ### User Intent Tracking
 
