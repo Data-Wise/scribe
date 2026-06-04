@@ -5,11 +5,11 @@ version: 1.22.0
 sprint: 38
 started: 2026-01-08
 updated: 2026-02-26
-released: 2026-02-25
+released: 2026-02-26
 editor: hybrid-markdown++
-next_focus: Release v1.22.0 (responsive UI merged to dev)
-tests: 2322
-unit_tests: 2322
+next_focus: Next feature (v1.22.0 released)
+tests: 2326
+unit_tests: 2326
 e2e_tests: 109
 test_file_errors: 0 (resolved)
 tags:
@@ -26,9 +26,9 @@ tags:
 
 ## Current Focus (Sprint 38)
 
-### In Progress
+### Just Completed
 
-1. **Release v1.22.0** — Responsive UI merged to dev. Pending: manual macOS testing (Stage Manager, split-screen, Sequoia snap zones), then release PR to main.
+1. **v1.22.0 Released** (2026-02-26) — Responsive UI with auto-collapse sidebars, global zoom, macOS 4-pane tiling (350×350 min), right sidebar resize. Multi-arch DMGs built & uploaded, Homebrew cask updated, docs deployed.
 
 ### Next Up
 
@@ -160,7 +160,7 @@ tags:
 
 | Spec | Status | Target |
 |------|--------|--------|
-| Responsive UI | Feature Complete | v1.22.0 |
+| Responsive UI | Released | v1.22.0 |
 | Pomodoro Timer | Released | v1.19.0 |
 | Settings Improvements | In Progress | v1.20.0 |
 | Three-Tab Sidebar | Design Approved | v1.17.0 |
