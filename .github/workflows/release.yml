@@ -260,10 +260,45 @@ jobs:
 
           git add Casks/scribe.rb
 
+          # Tap main is branch-protected (PR-only + required status checks), so
+          # a direct push is rejected with GH006. Push a bot branch, open a PR,
+          # and auto-merge it once the required checks pass.
+          BRANCH="bot/scribe-${VERSION}"
+          git checkout -b "$BRANCH"
+
           # Use heredoc for commit message to avoid injection
           git commit -m "chore: Update Scribe to v${VERSION}" -m "ARM64 SHA256: ${ARM64_SHA}" -m "x64 SHA256: ${X64_SHA}" -m "Checksums verified against release assets" -m "Co-Authored-By: GitHub Actions <actions@github.com>"
 
-          git push origin main
+          # Force-push is safe: bot/scribe-* is a bot-owned, per-version
+          # branch; overwriting it just makes re-runs idempotent.
+          git push --force -u origin "$BRANCH"
+
+          export GH_TOKEN="$TAP_GITHUB_TOKEN"
+          if ! gh pr view "$BRANCH" --repo Data-Wise/homebrew-tap --json state -q .state 2>/dev/null | grep -q OPEN; then
+            gh pr create --repo Data-Wise/homebrew-tap \
+              --base main --head "$BRANCH" \
+              --title "scribe: update cask to v${VERSION}" \
+              --body "Automated cask bump from scribe release.yml (checksums verified against release assets)."
+          fi
+
+          # Auto-merge waits for the tap's required checks; if they already
+          # completed, fall back to an immediate merge.
+          gh pr merge "$BRANCH" --repo Data-Wise/homebrew-tap --squash --auto \
+            || gh pr merge "$BRANCH" --repo Data-Wise/homebrew-tap --squash
+
+          # verify-installation (next job) runs `brew install` against tap
+          # main, so wait for the PR to actually merge before finishing.
+          for i in $(seq 1 30); do
+            STATE=$(gh pr view "$BRANCH" --repo Data-Wise/homebrew-tap --json state -q .state)
+            if [ "$STATE" = "MERGED" ]; then
+              echo "Tap PR merged"
+              exit 0
+            fi
+            echo "Waiting for tap PR to merge (state: $STATE, attempt $i/30)..."
+            sleep 10
+          done
+          echo "::error::Tap PR did not merge within 5 minutes — verify-installation would test a stale formula"
+          exit 1
 
   verify-installation:
     needs: update-homebrew
