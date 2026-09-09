@@ -5,7 +5,7 @@
 [![Status](https://img.shields.io/badge/status-active-brightgreen)]()
 [![Version](https://img.shields.io/badge/version-1.22.0-blue)]()
 [![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)]()
-[![Tests](https://img.shields.io/badge/tests-2326%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-2342%20passing-brightgreen)]()
 [![Tauri](https://img.shields.io/badge/tauri-2-blue)]()
 [![React](https://img.shields.io/badge/react-18-blue)]()
 
@@ -40,6 +40,7 @@ Scribe is a **distraction-free writing app** designed for academics and research
 | **Global Hotkey** | ⌘⇧N opens from anywhere |
 | **Global Zoom** | ⌘+/⌘- zoom (50%–200%), WCAG 1.4.4 compliant |
 | **Responsive UI** | Auto-collapse sidebars, window position memory, right sidebar resize |
+| **Three-Tab Sidebar** | Compact/Card/Explorer views per icon, with a status-grouped project tree in Explorer |
 
 ---
 

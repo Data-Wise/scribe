@@ -4,12 +4,12 @@ priority: P1
 version: 1.22.0
 sprint: 38
 started: 2026-01-08
-updated: 2026-02-26
+updated: 2026-09-08
 released: 2026-02-26
 editor: hybrid-markdown++
-next_focus: Next feature (v1.22.0 released)
-tests: 2326
-unit_tests: 2326
+next_focus: Three-tab sidebar complete on feature branch (unmerged)
+tests: 2342
+unit_tests: 2342
 e2e_tests: 109
 test_file_errors: 0 (resolved)
 tags:
@@ -29,10 +29,7 @@ tags:
 ### Just Completed
 
 1. **v1.22.0 Released** (2026-02-26) — Responsive UI with auto-collapse sidebars, global zoom, macOS 4-pane tiling (350×350 min), right sidebar resize. Multi-arch DMGs built & uploaded, Homebrew cask updated, docs deployed.
-
-### Next Up
-
-1. **v1.17.0 Three-Tab Sidebar System** (~20h) — Add Explorer tree tab alongside Compact/Card. Spec approved: `docs/specs/SPEC-three-tab-sidebar-2026-01-10.md`
+2. **Three-Tab Sidebar (2026-09-08)** — All 6 spec phases complete on `feature/three-tab-sidebar` (not yet merged): state schema, localStorage migration, Zustand actions, IconTabBar + Explorer tree UI, 18 new tests (2,342 total). Spec: `docs/specs/SPEC-three-tab-sidebar-2026-01-10.md`. Not included: keyboard shortcuts for tab switching, delete-project→auto-collapse integration, a node cap on persisted tree state — none were in any phase's scope.
 
 ### Active Backlog
 
