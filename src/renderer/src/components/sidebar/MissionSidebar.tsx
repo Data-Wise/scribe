@@ -1,5 +1,5 @@
 import { useCallback, useState, useMemo } from 'react'
-import { Project, Note } from '../../types'
+import { Project, Note, IconTabType } from '../../types'
 import { useAppViewStore, SIDEBAR_WIDTHS } from '../../store/useAppViewStore'
 import { useSettingsStore } from '../../store/useSettingsStore'
 import { IconBar } from './IconBar'
@@ -72,8 +72,8 @@ export function MissionSidebar({
     suggestedWidth: number
   } | null>(null)
 
-  // Compute current mode from expanded icon's activeTab
-  const currentMode = useMemo(() => {
+  // Compute active tab for expanded icon
+  const currentTab: IconTabType | null = useMemo(() => {
     if (!expandedIcon) return null
 
     if (expandedIcon.type === 'vault') {
@@ -153,22 +153,17 @@ export function MissionSidebar({
     setPresetDialogState(null)
   }, [])
 
-  // Toggle mode for currently expanded icon
-  const handleToggleMode = useCallback(() => {
-    if (!expandedIcon || !currentMode) return
-
-    const newMode = currentMode === 'compact' ? 'card' : 'compact'
-    switchIconTab(expandedIcon.type, expandedIcon.id, newMode)
-  }, [expandedIcon, currentMode, switchIconTab])
+  // Switch tab for currently expanded icon
+  const handleTabChange = useCallback((tab: IconTabType) => {
+    if (!expandedIcon) return
+    switchIconTab(expandedIcon.type, expandedIcon.id, tab)
+  }, [expandedIcon, switchIconTab])
 
   // Handle double-click reset to default width
   const handleReset = useCallback(() => {
-    if (!currentMode) return
-    const defaultWidth = currentMode === 'compact'
-      ? SIDEBAR_WIDTHS.compact.default
-      : SIDEBAR_WIDTHS.card.default
-    setSidebarWidth(defaultWidth)
-  }, [currentMode, setSidebarWidth])
+    if (!currentTab) return
+    setSidebarWidth(SIDEBAR_WIDTHS[currentTab].default)
+  }, [currentTab, setSidebarWidth])
 
   // Get current width: 48px when collapsed, sidebarWidth when expanded
   const width = expandedIcon ? sidebarWidth : SIDEBAR_WIDTHS.icon
@@ -179,7 +174,7 @@ export function MissionSidebar({
     <aside
       className={`mission-sidebar icon-centric-mode${isResizing ? ' resizing' : ''}`}
       style={{ width }}
-      data-mode={expandedIcon ? currentMode : 'icon'}
+      data-mode={expandedIcon ? currentTab : 'icon'}
       data-testid="left-sidebar"
     >
       {/* Icon bar - always visible */}
@@ -211,15 +206,15 @@ export function MissionSidebar({
       />
 
       {/* Expanded panel - conditional */}
-      {expandedIcon && currentMode && (
+      {expandedIcon && currentTab && (
         <ExpandedIconPanel
           projects={projects}
           notes={notes}
           expandedIcon={expandedIcon}
           currentProjectId={currentProjectId}
-          mode={currentMode === 'explorer' ? 'card' : currentMode} // TODO(Phase 4): ExpandedIconPanel needs a 3rd 'explorer' render path
+          activeTab={currentTab}
           width={width}
-          onToggleMode={handleToggleMode}
+          onTabChange={handleTabChange}
           onClose={collapseAll}
           onSelectProject={onSelectProject}
           onSelectNote={onSelectNote}
