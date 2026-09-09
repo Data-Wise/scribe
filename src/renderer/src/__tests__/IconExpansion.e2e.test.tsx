@@ -262,8 +262,8 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
   // ============================================================
 
   describe('Per-Icon Mode Preferences', () => {
-    it('displays mode toggle button when icon is expanded', async () => {
-      const { container, rerender } = render(
+    it('displays the 3-tab bar (Compact/Card/Explorer) when icon is expanded', async () => {
+      const { rerender } = render(
         <MissionSidebar
           projects={mockProjects}
           notes={mockNotes}
@@ -284,17 +284,13 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
       )
 
       await waitFor(() => {
-        const expandedPanel = container.querySelector('.expanded-icon-panel')
-        expect(expandedPanel).toBeInTheDocument()
-
-        // Mode toggle should be present
-        const modeToggle = container.querySelector('.panel-action-btn') ||
-                          screen.queryByTitle(/switch to/i)
-        expect(modeToggle).toBeTruthy()
+        expect(screen.getByTitle('Compact')).toBeInTheDocument()
+        expect(screen.getByTitle('Card')).toBeInTheDocument()
+        expect(screen.getByTitle('Explorer')).toBeInTheDocument()
       })
     })
 
-    it('switches mode when toggle button is clicked', async () => {
+    it('switches active tab via switchIconTab and updates width', async () => {
       const { rerender } = render(
         <MissionSidebar
           projects={mockProjects}
