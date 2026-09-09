@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2194,20 +2194,20 @@
 - Event listener (<code>listen</code> for menu events)
 - Window controls (<code>getCurrentWindow</code>)</p>
 <p><strong>Current Error:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>TypeError: Cannot read properties of undefined (reading &#39;transformCallback&#39;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>TypeError: Cannot read properties of undefined (reading 'transformCallback')
 </code></pre></div></p>
 <hr />
 <h2 id="quick-wins-30-min-each">Quick Wins (&lt; 30 min each)</h2>
 <ol>
 <li>
 <p><strong>isTauri detection utility</strong> - Single check for runtime environment
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">isTauri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s1">&#39;__TAURI__&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;__TAURI_INTERNALS__&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">isTauri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s1">'__TAURI__'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">'__TAURI_INTERNALS__'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Guard existing listen() call</strong> - Prevent crash on App.tsx:617
    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isTauri</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">unlisten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">listen</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">&#39;menu-event&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">unlisten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">listen</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">'menu-event'</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">)</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">}</span>
 </code></pre></div></p>
 </li>
@@ -2221,7 +2221,7 @@
 <p><strong>Pros:</strong> Fast, no external deps, mirrors test setup pattern
 <strong>Cons:</strong> Data lost on refresh, no persistence</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// src/renderer/src/lib/browser-api.ts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Note</span><span class="p">,</span><span class="w"> </span><span class="nx">Project</span><span class="p">,</span><span class="w"> </span><span class="nx">Tag</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../types&#39;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Note</span><span class="p">,</span><span class="w"> </span><span class="nx">Project</span><span class="p">,</span><span class="w"> </span><span class="nx">Tag</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'../types'</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kd">class</span><span class="w"> </span><span class="nx">BrowserMockDB</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">notes</span><span class="o">:</span><span class="w"> </span><span class="kt">Map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">Note</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="p">()</span>
@@ -2254,7 +2254,7 @@
 <p><strong>Pros:</strong> Data persists across refresh, closer to real DB
 <strong>Cons:</strong> More complex, async everywhere, migration headaches</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Using Dexie.js for cleaner IndexedDB API</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">import</span><span class="w"> </span><span class="nx">Dexie</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;dexie&#39;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">import</span><span class="w"> </span><span class="nx">Dexie</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'dexie'</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kd">class</span><span class="w"> </span><span class="nx">ScribeDB</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Dexie</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">notes</span><span class="o">!:</span><span class="w"> </span><span class="nx">Table</span><span class="o">&lt;</span><span class="nx">Note</span><span class="o">&gt;</span>
@@ -2262,11 +2262,11 @@
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nx">tags</span><span class="o">!:</span><span class="w"> </span><span class="nx">Table</span><span class="o">&lt;</span><span class="nx">Tag</span><span class="o">&gt;</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="s1">&#39;scribe-browser&#39;</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="s1">'scribe-browser'</span><span class="p">)</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">version</span><span class="p">(</span><span class="mf">1</span><span class="p">).</span><span class="nx">stores</span><span class="p">({</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nx">notes</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id, title, folder, project_id, created_at&#39;</span><span class="p">,</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="nx">projects</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id, name, type&#39;</span><span class="p">,</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="nx">tags</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id, name&#39;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nx">notes</span><span class="o">:</span><span class="w"> </span><span class="s1">'id, title, folder, project_id, created_at'</span><span class="p">,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="nx">projects</span><span class="o">:</span><span class="w"> </span><span class="s1">'id, name, type'</span><span class="p">,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="nx">tags</span><span class="o">:</span><span class="w"> </span><span class="s1">'id, name'</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="p">})</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">}</span>
@@ -2276,10 +2276,10 @@
 <p><strong>Pros:</strong> Clean separation, easy to swap implementations
 <strong>Cons:</strong> Requires refactoring api.ts imports throughout codebase</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// src/renderer/src/lib/api-factory.ts</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">api</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">tauriApi</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./tauri-api&#39;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">api</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">browserApi</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./browser-api&#39;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">api</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">tauriApi</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./tauri-api'</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">api</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">browserApi</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./browser-api'</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">isTauri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s1">&#39;__TAURI__&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">isTauri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s1">'__TAURI__'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">isTauri</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">tauriApi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">browserApi</span>
 </code></pre></div>
@@ -2348,18 +2348,18 @@
 <h3 id="phase-1-stop-the-crash-15-min">Phase 1: Stop the Crash (15 min)</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// src/renderer/src/lib/platform.ts</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">isTauri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;__TAURI__&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;__TAURI_INTERNALS__&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s1">'__TAURI__'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">'__TAURI_INTERNALS__'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">window</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">isBrowser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="nx">isTauri</span><span class="p">()</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// App.tsx - guard the listen call</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">isTauri</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./lib/platform&#39;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">isTauri</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./lib/platform'</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isTauri</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w">  </span><span class="c1">// Skip in browser mode</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">unlisten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">listen</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">&#39;menu-event&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">unlisten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">listen</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">'menu-event'</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="p">)</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">unlisten</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">fn</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fn</span><span class="p">())</span><span class="w"> </span><span class="p">}</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">},</span><span class="w"> </span><span class="p">[])</span>
 </code></pre></div>
@@ -2370,7 +2370,7 @@
 <h3 id="phase-4-dialog-fallbacks-15-min">Phase 4: Dialog Fallbacks (15 min)</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Browser fallbacks for Tauri dialogs</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">browserDialogs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">open</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">prompt</span><span class="p">(</span><span class="s1">&#39;Enter path:&#39;</span><span class="p">),</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">open</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">prompt</span><span class="p">(</span><span class="s1">'Enter path:'</span><span class="p">),</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">ask</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">msg</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">confirm</span><span class="p">(</span><span class="nx">msg</span><span class="p">),</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">async</span><span class="w"> </span><span class="p">(</span><span class="nx">msg</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">alert</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
@@ -2404,8 +2404,8 @@
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>┌─────────────────────────┐     ┌─────────────────────────┐
 <a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>│     tauri-api.ts        │     │    browser-api.ts       │
 <a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>│                         │     │                         │
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>│  invoke(&#39;create_note&#39;)  │     │  browserDB.createNote() │
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>│  invoke(&#39;list_projects&#39;)│     │  browserDB.listProjects()│
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>│  invoke('create_note')  │     │  browserDB.createNote() │
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>│  invoke('list_projects')│     │  browserDB.listProjects()│
 <a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>│         ...             │     │         ...             │
 <a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>└─────────────────────────┘     └─────────────────────────┘
 <a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>              │                               │
@@ -2547,7 +2547,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

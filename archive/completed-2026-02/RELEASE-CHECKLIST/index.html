@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2124,8 +2124,8 @@
 <p><strong>File:</strong> <code>~/projects/dev-tools/homebrew-tap/Casks/scribe.rb</code></p>
 <p>Update the <code>sha256</code> hash in the <code>on_arm</code> block:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">on_arm</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="n">sha256</span><span class="w"> </span><span class="s2">&quot;390574f67891240fdc6786e6616407784c0955be62a1b9b8bd362c623e1cbe13&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="n">url</span><span class="w"> </span><span class="s2">&quot;https://github.com/Data-Wise/scribe/releases/download/v</span><span class="si">#{</span><span class="n">version</span><span class="si">}</span><span class="s2">/Scribe_</span><span class="si">#{</span><span class="n">version</span><span class="si">}</span><span class="s2">_aarch64.dmg&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="n">sha256</span><span class="w"> </span><span class="s2">"390574f67891240fdc6786e6616407784c0955be62a1b9b8bd362c623e1cbe13"</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="n">url</span><span class="w"> </span><span class="s2">"https://github.com/Data-Wise/scribe/releases/download/v</span><span class="si">#{</span><span class="n">version</span><span class="si">}</span><span class="s2">/Scribe_</span><span class="si">#{</span><span class="n">version</span><span class="si">}</span><span class="s2">_aarch64.dmg"</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">end</span>
 </code></pre></div>
 <p><strong>Critical:</strong> The checksum MUST match the one generated from the actual DMG file.</p>
@@ -2147,12 +2147,12 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/dev-tools/homebrew-tap
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>add<span class="w"> </span>Casks/scribe.rb
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: Update Scribe v1.16.2 checksum in Homebrew formula</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"fix: Update Scribe v1.16.2 checksum in Homebrew formula</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">Checksum: 390574f67891240fdc6786e6616407784c0955be62a1b9b8bd362c623e1cbe13</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">Generated from: src-tauri/target/release/bundle/dmg/Scribe_1.16.2_aarch64.dmg</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">Co-Authored-By: Claude Haiku 4.5 &lt;noreply@anthropic.com&gt;&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">Co-Authored-By: Claude Haiku 4.5 &lt;noreply@anthropic.com&gt;"</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 </code></pre></div>
@@ -2201,25 +2201,25 @@
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># scripts/validate-release.sh</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">VERSION</span><span class="o">=</span><span class="si">${</span><span class="nv">1</span><span class="p">:?Usage: validate-release.sh &lt;version&gt;</span><span class="si">}</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">DMG</span><span class="o">=</span><span class="s2">&quot;src-tauri/target/release/bundle/dmg/Scribe_</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">_aarch64.dmg&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">DMG</span><span class="o">=</span><span class="s2">"src-tauri/target/release/bundle/dmg/Scribe_</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">_aarch64.dmg"</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DMG</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ DMG not found: </span><span class="nv">$DMG</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$DMG</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"❌ DMG not found: </span><span class="nv">$DMG</span><span class="s2">"</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">fi</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nv">CHECKSUM</span><span class="o">=</span><span class="k">$(</span>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DMG</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">&#39; &#39;</span><span class="w"> </span>-f1<span class="k">)</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Checksum: </span><span class="nv">$CHECKSUM</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nv">CHECKSUM</span><span class="o">=</span><span class="k">$(</span>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DMG</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">' '</span><span class="w"> </span>-f1<span class="k">)</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ Checksum: </span><span class="nv">$CHECKSUM</span><span class="s2">"</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Check formula has matching checksum</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="nv">FORMULA_CHECKSUM</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-oP<span class="w"> </span><span class="s1">&#39;sha256 &quot;\K[^&quot;]+&#39;</span><span class="w"> </span>~/projects/dev-tools/homebrew-tap/Casks/scribe.rb<span class="k">)</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="nv">FORMULA_CHECKSUM</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-oP<span class="w"> </span><span class="s1">'sha256 "\K[^"]+'</span><span class="w"> </span>~/projects/dev-tools/homebrew-tap/Casks/scribe.rb<span class="k">)</span>
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CHECKSUM</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$FORMULA_CHECKSUM</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Formula checksum matches DMG&quot;</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$CHECKSUM</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"</span><span class="nv">$FORMULA_CHECKSUM</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ Formula checksum matches DMG"</span>
 <a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="k">else</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Checksum mismatch!&quot;</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   DMG:     </span><span class="nv">$CHECKSUM</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;   Formula: </span><span class="nv">$FORMULA_CHECKSUM</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"❌ Checksum mismatch!"</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"   DMG:     </span><span class="nv">$CHECKSUM</span><span class="s2">"</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"   Formula: </span><span class="nv">$FORMULA_CHECKSUM</span><span class="s2">"</span>
 <a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="k">fi</span>
 </code></pre></div>
@@ -2336,7 +2336,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

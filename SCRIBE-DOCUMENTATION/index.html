@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3733,7 +3733,7 @@
 <p>The timer state lives in <code>src/renderer/src/store/usePomodoroStore.ts</code>.</p>
 <p><strong>State shape:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">PomodoroState</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;idle&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;work&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;short-break&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;long-break&#39;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">'idle'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'work'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'short-break'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'long-break'</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">secondsRemaining</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">isPaused</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">completedToday</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
@@ -3903,7 +3903,7 @@
 <hr />
 <h2 id="11-settings-reference">11. Settings Reference</h2>
 <p>All preferences are stored in <code>localStorage</code> under the key <code>scribe-preferences</code>. On load, stored preferences are merged with defaults:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">prefs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">DEFAULTS</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;scribe-preferences&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">prefs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">DEFAULTS</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">'scribe-preferences'</span><span class="p">)</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">'{}'</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <p>This merge-on-load pattern ensures new preference keys added in future versions always have a default value even for existing users.</p>
 <h3 id="writing-preferences">Writing Preferences</h3>
@@ -4153,7 +4153,7 @@
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  → HybridEditor.onChange(newContent)
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  → useNotesStore.updateNote(id, { content: newContent })
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  → api.updateNote(id, data)
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  → Tauri IPC: invoke(&#39;update_note&#39;, data)   [or IndexedDB.put() in browser]
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  → Tauri IPC: invoke('update_note', data)   [or IndexedDB.put() in browser]
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  → SQLite write (Rust handler)
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  → Promise resolves
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  → Store state updated
@@ -4453,7 +4453,7 @@
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│       └── src/
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│           ├── App.tsx            (React root)
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│           ├── api.ts             (API factory: Tauri/Browser)
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│           ├── store/             (Zustand stores — singular, not &quot;stores&quot;)
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│           ├── store/             (Zustand stores — singular, not "stores")
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│           │   ├── usePomodoroStore.ts
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│           │   ├── useAppViewStore.ts
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>│           │   ├── useNotesStore.ts
@@ -4524,7 +4524,7 @@
 <h3 id="writing-a-new-store">Writing a New Store</h3>
 <p>Follow the pattern established by the existing stores:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// src/renderer/src/store/useMyFeatureStore.ts</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">create</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;zustand&#39;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">create</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'zustand'</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">MyFeatureState</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="c1">// state fields</span>
@@ -4756,7 +4756,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../javascripts/theme-toggle.js"></script>
       

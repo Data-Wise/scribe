@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2253,8 +2253,8 @@
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Create PR dev → main</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--head<span class="w"> </span>dev<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Release v1.9.0: Settings Enhancement Complete&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--body<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>RELEASE-NOTES-v1.9.0.md<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--title<span class="w"> </span><span class="s2">"Release v1.9.0: Settings Enhancement Complete"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--body<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>cat<span class="w"> </span>RELEASE-NOTES-v1.9.0.md<span class="k">)</span><span class="s2">"</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Review and merge PR</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>gh<span class="w"> </span>pr<span class="w"> </span>merge<span class="w"> </span>--merge
@@ -2264,7 +2264,7 @@
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Create Git Tag</strong>
   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.9.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v1.9.0: Settings Enhancement Complete&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.9.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Release v1.9.0: Settings Enhancement Complete"</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.9.0
 </code></pre></div></p>
 </li>
@@ -2274,7 +2274,7 @@
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Create GitHub Release</strong>
   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gh<span class="w"> </span>release<span class="w"> </span>create<span class="w"> </span>v1.9.0<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;v1.9.0: Settings Enhancement Complete&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--title<span class="w"> </span><span class="s2">"v1.9.0: Settings Enhancement Complete"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--notes-file<span class="w"> </span>RELEASE-NOTES-v1.9.0.md<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--latest
 </code></pre></div></p>
@@ -2431,10 +2431,10 @@
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>npm<span class="w"> </span>version<span class="w"> </span><span class="m">1</span>.9.0<span class="w"> </span>--no-git-tag-version
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Update Cargo.toml (manual edit)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># version = &quot;1.9.0&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># version = "1.9.0"</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Update tauri.conf.json (manual edit)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># &quot;version&quot;: &quot;1.9.0&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># "version": "1.9.0"</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Update .STATUS (manual edit)</span>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># version: 1.9.0</span>
@@ -2455,7 +2455,7 @@
 <hr />
 <h2 id="commits-since-v180">📊 Commits Since v1.8.0</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>d0d977f Merge pull request #19 from Data-Wise/feat/settings-phase-3-polish
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>d98efeb Merge branch &#39;dev&#39; into feat/settings-phase-3-polish
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>d98efeb Merge branch 'dev' into feat/settings-phase-3-polish
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>1def5fe fix: Extract debounce constant &amp; improve E2E timing verification
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>63fe758 docs: Mark Settings Enhancement as complete - v1.8.0 shipped
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>5510bcf docs: Update .STATUS - v1.8.0 shipped
@@ -2633,7 +2633,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

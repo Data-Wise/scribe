@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2691,13 +2691,13 @@
 </code></pre></div>
 <p><strong>Frontend Integration:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// MOD: src/renderer/src/components/ExportDialog.tsx</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// Add &quot;Quarto Render&quot; option with format selector</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// Add "Quarto Render" option with format selector</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="o">&lt;</span><span class="nx">select</span><span class="o">&gt;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">&quot;html&quot;</span><span class="o">&gt;</span><span class="nx">HTML</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="o">&gt;</span><span class="nx">PDF</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">&quot;docx&quot;</span><span class="o">&gt;</span><span class="nx">Word</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">&quot;revealjs&quot;</span><span class="o">&gt;</span><span class="nx">Reveal</span><span class="p">.</span><span class="nx">js</span><span class="w"> </span><span class="nx">Slides</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">&quot;beamer&quot;</span><span class="o">&gt;</span><span class="nx">Beamer</span><span class="w"> </span><span class="nx">Slides</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">"html"</span><span class="o">&gt;</span><span class="nx">HTML</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">"pdf"</span><span class="o">&gt;</span><span class="nx">PDF</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">"docx"</span><span class="o">&gt;</span><span class="nx">Word</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">"revealjs"</span><span class="o">&gt;</span><span class="nx">Reveal</span><span class="p">.</span><span class="nx">js</span><span class="w"> </span><span class="nx">Slides</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">option</span><span class="w"> </span><span class="nx">value</span><span class="o">=</span><span class="s2">"beamer"</span><span class="o">&gt;</span><span class="nx">Beamer</span><span class="w"> </span><span class="nx">Slides</span><span class="o">&lt;</span><span class="err">/option&gt;</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="o">&lt;</span><span class="err">/select&gt;</span>
 </code></pre></div>
 <p><strong>Files to Create:</strong>
@@ -2868,14 +2868,14 @@
 <p><strong>Goal:</strong> Enable multi-format support (markdown, LaTeX, Quarto)</p>
 <p><strong>Database Schema:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- Migration 010: Add file format support</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">notes</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">file_format</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">-- Values: &#39;md&#39;, &#39;tex&#39;, &#39;qmd&#39;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">notes</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">file_format</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'md'</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">-- Values: 'md', 'tex', 'qmd'</span>
 </code></pre></div>
 <p><strong>EditorFactory Pattern:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">EditorFactory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">note</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">note</span><span class="p">.</span><span class="nx">file_format</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;tex&#39;</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">LaTeXEditor</span><span class="w"> </span><span class="nx">note</span><span class="o">=</span><span class="p">{</span><span class="nx">note</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;qmd&#39;</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">QuartoEditor</span><span class="w"> </span><span class="nx">note</span><span class="o">=</span><span class="p">{</span><span class="nx">note</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s1">'tex'</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">LaTeXEditor</span><span class="w"> </span><span class="nx">note</span><span class="o">=</span><span class="p">{</span><span class="nx">note</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s1">'qmd'</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">QuartoEditor</span><span class="w"> </span><span class="nx">note</span><span class="o">=</span><span class="p">{</span><span class="nx">note</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nx">default</span><span class="o">:</span><span class="w"> </span><span class="kt">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">HybridEditor</span><span class="w"> </span><span class="nx">note</span><span class="o">=</span><span class="p">{</span><span class="nx">note</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span>
@@ -3258,7 +3258,7 @@
 - 4 new Tauri commands: <code>ai_run_claude</code>, <code>ai_is_claude_available</code>, etc.</p>
 <p><strong>Implementation:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">run_claude</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1">// Executes: echo &quot;$context&quot; | claude --print &quot;$prompt&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1">// Executes: echo "$context" | claude --print "$prompt"</span>
 </code></pre></div>
 <p><strong>Frontend:</strong> Update <code>api.ts</code> to invoke Tauri commands instead of returning stub</p>
 <p><strong>Tests:</strong> 20 Rust unit + 38 frontend updates</p>
@@ -3302,19 +3302,19 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>~/.git-worktrees/scribe/quarto-v115
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Commit any final changes</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>git<span class="w"> </span>checkout<span class="w"> </span>dev
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>git<span class="w"> </span>merge<span class="w"> </span>feat/quarto-v115<span class="w"> </span>--no-ff<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Merge v1.15 Quarto Enhancements&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>git<span class="w"> </span>merge<span class="w"> </span>feat/quarto-v115<span class="w"> </span>--no-ff<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Merge v1.15 Quarto Enhancements"</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>dev
 </code></pre></div>
 <ol>
 <li><strong>Create PR to main:</strong></li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--head<span class="w"> </span>dev<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;v1.15 Quarto Enhancements&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--head<span class="w"> </span>dev<span class="w"> </span>--title<span class="w"> </span><span class="s2">"v1.15 Quarto Enhancements"</span>
 </code></pre></div>
 <ol>
 <li><strong>After merge to main:</strong></li>
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>main<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.15.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;v1.15.0 - Quarto Enhancements&quot;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.15.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">"v1.15.0 - Quarto Enhancements"</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.15.0
 </code></pre></div>
 <ol>
@@ -3457,7 +3457,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

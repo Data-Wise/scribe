@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2119,7 +2119,7 @@
 <li>Open Chrome DevTools (⌘⌥I)</li>
 <li><strong>Check localStorage:</strong>
    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// In Console tab:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;settings-storage&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">'settings-storage'</span><span class="p">)</span>
 </code></pre></div></li>
 <li>Does it contain old settings schema?</li>
 <li>
@@ -2152,7 +2152,7 @@
 <ol>
 <li>
 <p><strong>Check if settingsSchema.ts is being imported:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;settingsSchema&quot;</span><span class="w"> </span>src/renderer/src/components/Settings/
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">"settingsSchema"</span><span class="w"> </span>src/renderer/src/components/Settings/
 </code></pre></div></p>
 </li>
 <li>
@@ -2173,7 +2173,7 @@
 </li>
 <li>
 <p><strong>Verify the exact line numbers:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;459,487p&#39;</span><span class="w"> </span>src/renderer/src/lib/settingsSchema.ts
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'459,487p'</span><span class="w"> </span>src/renderer/src/lib/settingsSchema.ts
 </code></pre></div></p>
 </li>
 <li>
@@ -2181,7 +2181,7 @@
 </li>
 <li>
 <p><strong>Check export order:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;export const settingsCategories&quot;</span><span class="w"> </span>src/renderer/src/lib/settingsSchema.ts
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">"export const settingsCategories"</span><span class="w"> </span>src/renderer/src/lib/settingsSchema.ts
 </code></pre></div></p>
 </li>
 <li>Confirm appearanceCategory is in the array</li>
@@ -2196,7 +2196,7 @@
 <li>
 <p><strong>Stop all dev processes:</strong>
    <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>lsof<span class="w"> </span>-ti:5173<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>-9
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pkill<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;tauri dev&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pkill<span class="w"> </span>-f<span class="w"> </span><span class="s2">"tauri dev"</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -2235,15 +2235,15 @@
 <p><strong>Add debug logging to SettingsModal.tsx:</strong>
    <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// In handleCategoryClick function (around line 87):</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">handleCategoryClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">categoryId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;📊 Category clicked:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryId</span><span class="p">)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;📊 Current category:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategoryId</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'📊 Category clicked:'</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryId</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'📊 Current category:'</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategoryId</span><span class="p">)</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nx">setCurrentCategoryId</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">)</span>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1">// In render (around line 176):</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;📊 Rendering category:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategory</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;📊 Sections count:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategory</span><span class="p">.</span><span class="nx">sections</span><span class="o">?</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;📊 Sections:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategory</span><span class="p">.</span><span class="nx">sections</span><span class="o">?</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">s</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">id</span><span class="p">))</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'📊 Rendering category:'</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategory</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'📊 Sections count:'</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategory</span><span class="p">.</span><span class="nx">sections</span><span class="o">?</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'📊 Sections:'</span><span class="p">,</span><span class="w"> </span><span class="nx">currentCategory</span><span class="p">.</span><span class="nx">sections</span><span class="o">?</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">s</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">id</span><span class="p">))</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -2262,7 +2262,7 @@
 <ol>
 <li>
 <p><strong>Read SettingsModal.tsx section rendering code:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;176,220p&#39;</span><span class="w"> </span>src/renderer/src/components/Settings/SettingsModal.tsx
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'176,220p'</span><span class="w"> </span>src/renderer/src/components/Settings/SettingsModal.tsx
 </code></pre></div></p>
 </li>
 <li>
@@ -2450,7 +2450,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

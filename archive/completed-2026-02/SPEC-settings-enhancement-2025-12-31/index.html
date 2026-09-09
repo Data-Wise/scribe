@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2289,17 +2289,17 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │   └── &lt;CloseButton /&gt;
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ├── &lt;SettingsBody&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │   ├── &lt;Sidebar&gt;
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │   │   ├── &lt;CategoryTab id=&quot;editor&quot; badge=&quot;new&quot; /&gt;
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │   │   ├── &lt;CategoryTab id=&quot;themes&quot; /&gt;
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │   │   ├── &lt;CategoryTab id=&quot;ai&quot; badge={3} /&gt;      // 3 new settings
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │   │   ├── &lt;CategoryTab id=&quot;projects&quot; /&gt;
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │   │   └── &lt;CategoryTab id=&quot;advanced&quot; /&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │   │   ├── &lt;CategoryTab id="editor" badge="new" /&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │   │   ├── &lt;CategoryTab id="themes" /&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │   │   ├── &lt;CategoryTab id="ai" badge={3} /&gt;      // 3 new settings
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │   │   ├── &lt;CategoryTab id="projects" /&gt;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │   │   └── &lt;CategoryTab id="advanced" /&gt;
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │   └── &lt;Content&gt;
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │       ├── &lt;SettingsSection collapsed={false}&gt;
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │       │   ├── &lt;SectionHeader /&gt;
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │       │   ├── &lt;Setting type=&quot;toggle&quot; /&gt;
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │       │   ├── &lt;Setting type=&quot;select&quot; /&gt;
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │       │   └── &lt;Setting type=&quot;gallery&quot; /&gt;  // Theme picker
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │       │   ├── &lt;Setting type="toggle" /&gt;
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │       │   ├── &lt;Setting type="select" /&gt;
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │       │   └── &lt;Setting type="gallery" /&gt;  // Theme picker
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │       └── &lt;SettingsSection collapsed={true}&gt;
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │           └── {/* Progressive disclosure */}
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  └── &lt;SettingsFooter&gt;
@@ -2335,11 +2335,11 @@
 </code></pre></div></p>
 <p><strong>Data Model:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">SettingsCategory</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;editor&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;themes&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ai&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;projects&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;advanced&#39;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">'editor'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'themes'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'ai'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'projects'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'advanced'</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">sections</span><span class="o">:</span><span class="w"> </span><span class="kt">SettingsSection</span><span class="p">[]</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nx">badge</span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;new&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nx">badge</span><span class="o">?:</span><span class="w"> </span><span class="s1">'new'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">number</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">SettingsSection</span><span class="w"> </span><span class="p">{</span>
@@ -2352,15 +2352,15 @@
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">Setting</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;toggle&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;select&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;text&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;number&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;color&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;keymap&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;gallery&#39;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'toggle'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'select'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'text'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'number'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'color'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'keymap'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'gallery'</span>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="nx">description?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="nx">tooltip?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="nx">defaultValue</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span>
 <a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="nx">options?</span><span class="o">:</span><span class="w"> </span><span class="kt">SelectOption</span><span class="p">[]</span>
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="nx">validation</span><span class="o">?:</span><span class="w"> </span><span class="p">(</span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="kt">boolean</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span><span class="nx">contextualHintLocation?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// e.g., &#39;ClaudePanel&#39;</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span><span class="nx">addedInVersion?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">          </span><span class="c1">// e.g., &#39;v1.7.0&#39;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span><span class="nx">contextualHintLocation?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// e.g., 'ClaudePanel'</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span><span class="nx">addedInVersion?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">          </span><span class="c1">// e.g., 'v1.7.0'</span>
 <a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="p">}</span>
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">QuickAction</span><span class="w"> </span><span class="p">{</span>
@@ -2370,8 +2370,8 @@
 <a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span><span class="nx">prompt</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">  </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
 <a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">  </span><span class="nx">order</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">  </span><span class="nx">shortcut?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// e.g., &#39;⌘⌥1&#39;</span>
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;claude&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;gemini&#39;</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">  </span><span class="nx">shortcut?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// e.g., '⌘⌥1'</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'claude'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'gemini'</span>
 <a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">  </span><span class="nx">isCustom</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
 <a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="p">}</span>
 <a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>
@@ -2424,8 +2424,8 @@
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="p">(</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="k">key</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">       </span><span class="c1">-- JSON-encoded</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="n">category</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">    </span><span class="c1">-- &#39;editor&#39; | &#39;themes&#39; | &#39;ai&#39; | &#39;projects&#39; | &#39;advanced&#39;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="n">added_in_version</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w">     </span><span class="c1">-- e.g., &#39;v1.7.0&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="n">category</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">    </span><span class="c1">-- 'editor' | 'themes' | 'ai' | 'projects' | 'advanced'</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="n">added_in_version</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w">     </span><span class="c1">-- e.g., 'v1.7.0'</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="n">updated_at</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">);</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
@@ -2441,10 +2441,10 @@
 </code></pre></div></p>
 <p><strong>IndexedDB Schema (Browser):</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// src/renderer/src/lib/browser-db.ts</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Dexie</span><span class="p">(</span><span class="s1">&#39;ScribeDB&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Dexie</span><span class="p">(</span><span class="s1">'ScribeDB'</span><span class="p">)</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nx">db</span><span class="p">.</span><span class="nx">version</span><span class="p">(</span><span class="mf">10</span><span class="p">).</span><span class="nx">stores</span><span class="p">({</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;key, category, added_in_version&#39;</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nx">project_templates</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id, is_builtin&#39;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="s1">'key, category, added_in_version'</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nx">project_templates</span><span class="o">:</span><span class="w"> </span><span class="s1">'id, is_builtin'</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">})</span>
 </code></pre></div></p>
 <h3 id="dependencies">Dependencies</h3>
@@ -2545,28 +2545,28 @@
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>│                                                                 │
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>│ ┌───────────────────────────────────────────────────────────┐  │
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>│ │ ☑ ✨ Improve                                        [⚙️] │  │
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>│ │   &quot;Improve clarity and flow, fix grammar, and enhance    │  │
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>│ │    readability while preserving the author&#39;s voice.&quot;     │  │
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>│ │   "Improve clarity and flow, fix grammar, and enhance    │  │
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>│ │    readability while preserving the author's voice."     │  │
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>│ │   Shortcut: ⌘⌥1        Model: Claude Sonnet 4.5          │  │
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>│ └───────────────────────────────────────────────────────────┘  │
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>│ │                                                               │
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>│ ┌───────────────────────────────────────────────────────────┐  │
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>│ │ ☑ 📝 Expand                                         [⚙️] │  │
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>│ │   &quot;Expand on this idea with more detail, examples, and   │  │
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>│ │    supporting information.&quot;                              │  │
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>│ │   "Expand on this idea with more detail, examples, and   │  │
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>│ │    supporting information."                              │  │
 <a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>│ │   Shortcut: ⌘⌥2        Model: Claude Sonnet 4.5          │  │
 <a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>│ └───────────────────────────────────────────────────────────┘  │
 <a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>│ │                                                               │
 <a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>│ ┌───────────────────────────────────────────────────────────┐  │
 <a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>│ │ ☐ 📋 Summarize                                      [⚙️] │  │
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>│ │   &quot;Create a concise summary highlighting key points.&quot;    │  │
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>│ │   "Create a concise summary highlighting key points."    │  │
 <a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>│ │   Shortcut: ⌘⌥3        Model: Gemini 2.0 Flash           │  │
 <a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>│ └───────────────────────────────────────────────────────────┘  │
 <a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>│ │                                                               │
 <a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>│ ┌───────────────────────────────────────────────────────────┐  │
 <a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>│ │ ☑ 💡 Explain                                        [⚙️] │  │
-<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>│ │   &quot;Explain this concept in simpler terms, suitable for   │  │
-<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>│ │    someone unfamiliar with the topic.&quot;                   │  │
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>│ │   "Explain this concept in simpler terms, suitable for   │  │
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>│ │    someone unfamiliar with the topic."                   │  │
 <a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>│ │   Shortcut: ⌘⌥4        Model: Claude Sonnet 4.5          │  │
 <a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>│ └───────────────────────────────────────────────────────────┘  │
 <a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>│                                                                 │
@@ -2772,7 +2772,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2565,7 +2565,7 @@
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── SmartIconHeader                   # Title + collapse button
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── ProjectGroupList                  # Manages status groups
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── ProjectGroup (Active)         # Collapsible group
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │   ├── ProjectGroupHeader        # &quot;ACTIVE (3)&quot; + chevron
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │   ├── ProjectGroupHeader        # "ACTIVE (3)" + chevron
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │   └── ProjectList               # List of child projects
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       ├── ProjectItem           # Individual project row
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       │   ├── ProjectAvatar     # First letter icon ⭐ NEW
@@ -2579,7 +2579,7 @@
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">ProjectAvatarProps</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">letter</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Smart icon color</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">size</span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;sm&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;md&#39;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">size</span><span class="o">?:</span><span class="w"> </span><span class="s1">'sm'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'md'</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// ProjectItem.tsx - Phase 1</span>
@@ -2594,9 +2594,9 @@
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1">// ProjectGroup.tsx - Phase 2</span>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">ProjectGroupProps</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;paused&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;complete&#39;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">'active'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'paused'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'complete'</span>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="nx">projects</span><span class="o">:</span><span class="w"> </span><span class="kt">Project</span><span class="p">[]</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="nx">defaultExpanded?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w">  </span><span class="c1">// true for &quot;active&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="nx">defaultExpanded?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w">  </span><span class="c1">// true for "active"</span>
 <a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="nx">onSelectProject</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">projectId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">void</span>
 <a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">}</span>
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
@@ -2733,13 +2733,13 @@
 <hr />
 <h2 id="accessibility-phase-2">Accessibility (Phase 2+)</h2>
 <h3 id="aria-structure">ARIA Structure</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">&lt;</span><span class="nt">aside</span><span class="w"> </span><span class="na">aria-label</span><span class="o">=</span><span class="p">{</span><span class="sb">`</span><span class="si">${</span><span class="nx">smartIcon</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb"> projects`</span><span class="p">}</span><span class="w"> </span><span class="na">role</span><span class="o">=</span><span class="s">&quot;navigation&quot;</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">&lt;</span><span class="nt">aside</span><span class="w"> </span><span class="na">aria-label</span><span class="o">=</span><span class="p">{</span><span class="sb">`</span><span class="si">${</span><span class="nx">smartIcon</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb"> projects`</span><span class="p">}</span><span class="w"> </span><span class="na">role</span><span class="o">=</span><span class="s">"navigation"</span><span class="p">&gt;</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">header</span><span class="p">&gt;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">h2</span><span class="w"> </span><span class="na">id</span><span class="o">=</span><span class="s">&quot;smart-icon-title&quot;</span><span class="p">&gt;{</span><span class="nx">smartIcon</span><span class="p">.</span><span class="nx">emoji</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="nx">smartIcon</span><span class="p">.</span><span class="nx">label</span><span class="p">}&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">h2</span><span class="w"> </span><span class="na">id</span><span class="o">=</span><span class="s">"smart-icon-title"</span><span class="p">&gt;{</span><span class="nx">smartIcon</span><span class="p">.</span><span class="nx">emoji</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="nx">smartIcon</span><span class="p">.</span><span class="nx">label</span><span class="p">}&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">button</span><span class="w"> </span><span class="na">aria-label</span><span class="o">=</span><span class="p">{</span><span class="sb">`Collapse </span><span class="si">${</span><span class="nx">smartIcon</span><span class="p">.</span><span class="nx">label</span><span class="si">}</span><span class="sb"> projects`</span><span class="p">}&gt;</span><span class="err">×</span><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="p">&lt;/</span><span class="nt">header</span><span class="p">&gt;</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">section</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">&quot;project-group&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">section</span><span class="w"> </span><span class="na">className</span><span class="o">=</span><span class="s">"project-group"</span><span class="p">&gt;</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">button</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="na">aria-expanded</span><span class="o">=</span><span class="p">{</span><span class="nx">isExpanded</span><span class="p">}</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="na">aria-controls</span><span class="o">=</span><span class="p">{</span><span class="sb">`group-</span><span class="si">${</span><span class="nx">status</span><span class="si">}</span><span class="sb">`</span><span class="p">}</span>
@@ -2792,13 +2792,13 @@
 </code></pre></div>
 <h3 id="2-long-project-names">2. Long Project Names</h3>
 <p><strong>Solution:</strong> Smart truncation at word boundaries</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Input: &quot;Advanced Statistical Mediation Analysis&quot;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Output: &quot;Advanced Statistical…&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Input: "Advanced Statistical Mediation Analysis"
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Output: "Advanced Statistical…"
 </code></pre></div>
 <h3 id="3-empty-status-groups">3. Empty Status Groups</h3>
 <p><strong>Solution:</strong> Hide groups with 0 projects</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="nx">groupedProjects</span><span class="p">.</span><span class="nx">paused</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">StatusGroup</span><span class="w"> </span><span class="na">status</span><span class="o">=</span><span class="s">&quot;paused&quot;</span><span class="w"> </span><span class="na">projects</span><span class="o">=</span><span class="p">{</span><span class="nx">groupedProjects</span><span class="p">.</span><span class="nx">paused</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">StatusGroup</span><span class="w"> </span><span class="na">status</span><span class="o">=</span><span class="s">"paused"</span><span class="w"> </span><span class="na">projects</span><span class="o">=</span><span class="p">{</span><span class="nx">groupedProjects</span><span class="p">.</span><span class="nx">paused</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">)}</span>
 </code></pre></div>
 <h3 id="4-hover-preview-loading">4. Hover Preview Loading</h3>
@@ -2807,13 +2807,13 @@
 <h2 id="performance-optimization">Performance Optimization</h2>
 <h3 id="1-virtualization-50-projects">1. Virtualization (50+ Projects)</h3>
 <p>Use <code>react-window</code> for smooth scrolling:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FixedSizeList</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react-window&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FixedSizeList</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'react-window'</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">&lt;</span><span class="nt">FixedSizeList</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="na">height</span><span class="o">=</span><span class="p">{</span><span class="mf">400</span><span class="p">}</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="na">itemCount</span><span class="o">=</span><span class="p">{</span><span class="nx">projects</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="na">itemSize</span><span class="o">=</span><span class="p">{</span><span class="mf">44</span><span class="p">}</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="na">width</span><span class="o">=</span><span class="s">&quot;100%&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="na">width</span><span class="o">=</span><span class="s">"100%"</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">&gt;</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">{({</span><span class="w"> </span><span class="nx">index</span><span class="p">,</span><span class="w"> </span><span class="nx">style</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">div</span><span class="w"> </span><span class="na">style</span><span class="o">=</span><span class="p">{</span><span class="nx">style</span><span class="p">}&gt;</span>
@@ -2834,24 +2834,24 @@
 <hr />
 <h2 id="testing-strategy">Testing Strategy</h2>
 <h3 id="unit-tests-20-tests">Unit Tests (20 tests)</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;ProjectAvatar&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;renders first letter uppercase&#39;</span><span class="p">)</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;applies background color&#39;</span><span class="p">)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;handles duplicate letters&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">describe</span><span class="p">(</span><span class="s1">'ProjectAvatar'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'renders first letter uppercase'</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'applies background color'</span><span class="p">)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'handles duplicate letters'</span><span class="p">)</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">})</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;ExpandedSmartIcon&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;shows all projects when &lt; 10&#39;</span><span class="p">)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;groups by status when &gt;= 10&#39;</span><span class="p">)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;truncates long project names&#39;</span><span class="p">)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nx">describe</span><span class="p">(</span><span class="s1">'ExpandedSmartIcon'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'shows all projects when &lt; 10'</span><span class="p">)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'groups by status when &gt;= 10'</span><span class="p">)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'truncates long project names'</span><span class="p">)</span>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="p">})</span>
 </code></pre></div>
 <h3 id="e2e-tests-8-tests">E2E Tests (8 tests)</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Child Project Identification E2E&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;expands sidebar when smart icon opens&#39;</span><span class="p">)</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;shows project names and metadata&#39;</span><span class="p">)</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;navigates with keyboard&#39;</span><span class="p">)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;shows quick preview on hover&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">describe</span><span class="p">(</span><span class="s1">'Child Project Identification E2E'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'expands sidebar when smart icon opens'</span><span class="p">)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'shows project names and metadata'</span><span class="p">)</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'navigates with keyboard'</span><span class="p">)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'shows quick preview on hover'</span><span class="p">)</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">})</span>
 </code></pre></div>
 <hr />
@@ -3057,7 +3057,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../javascripts/theme-toggle.js"></script>
       

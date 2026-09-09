@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2320,7 +2320,7 @@
 <h3 id="before-v1x-manual-error-prone">Before (v1.x - Manual &amp; Error-Prone)</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Developer: git tag v1.16.2
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>     ↓
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Build succeeds but checksums don&#39;t match
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Build succeeds but checksums don't match
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>     ↓
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Manual fix required:
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  1. Generate checksum locally
@@ -2425,8 +2425,8 @@
 <h3 id="5-casksscriberb-homebrew-tap">5. <code>Casks/scribe.rb</code> (homebrew-tap)</h3>
 <p><strong>Status:</strong> ✅ Fixed (in previous commit)</p>
 <p><strong>Change:</strong> Updated ARM64 SHA256 from invalid to correct
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Before: sha256 &quot;5ca34fd366f9cd7b17669880b861d4d38ad37fd230a6d86e9435c36d438440fd&quot;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>After:  sha256 &quot;390574f67891240fdc6786e6616407784c0955be62a1b9b8bd362c623e1cbe13&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Before: sha256 "5ca34fd366f9cd7b17669880b861d4d38ad37fd230a6d86e9435c36d438440fd"
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>After:  sha256 "390574f67891240fdc6786e6616407784c0955be62a1b9b8bd362c623e1cbe13"
 </code></pre></div></p>
 <hr />
 <h2 id="commits-created">Commits Created</h2>
@@ -2490,7 +2490,7 @@
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">✓ Verify checksums match</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Extract SHA-256 values</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update Casks/scribe.rb (safe Ruby script)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">✓ Validate with &#39;brew audit&#39;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">✓ Validate with 'brew audit'</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Commit and push to homebrew-tap</span>
 </code></pre></div>
 <h3 id="step-4-automated-installation-test">Step 4: Automated Installation Test</h3>
@@ -2516,12 +2516,12 @@
 <h3 id="2-safe-cask-updates">2. Safe Cask Updates</h3>
 <p><strong>Old Problem:</strong> sed command could fail silently or cause injection
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Dangerous - can corrupt formula or inject code</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="s2">&quot;s/PLACEHOLDER/</span><span class="si">${</span><span class="nv">CHECKSUM</span><span class="si">}</span><span class="s2">/&quot;</span><span class="w"> </span>Casks/scribe.rb
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="s2">"s/PLACEHOLDER/</span><span class="si">${</span><span class="nv">CHECKSUM</span><span class="si">}</span><span class="s2">/"</span><span class="w"> </span>Casks/scribe.rb
 </code></pre></div></p>
 <p><strong>New Solution:</strong> Ruby script with explicit error handling
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Safe - clear success/failure, no injection risk</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cask_file</span><span class="p">)</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">content</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/on_arm do\s+sha256\s+&quot;[^&quot;]+&quot;/</span><span class="p">,</span><span class="w"> </span><span class="sx">%Q{on_arm do</span><span class="se">\n</span><span class="sx">    sha256 &quot;</span><span class="si">#{</span><span class="n">arm64_sha</span><span class="si">}</span><span class="sx">&quot;}</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">content</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/on_arm do\s+sha256\s+"[^"]+"/</span><span class="p">,</span><span class="w"> </span><span class="sx">%Q{on_arm do</span><span class="se">\n</span><span class="sx">    sha256 "</span><span class="si">#{</span><span class="n">arm64_sha</span><span class="si">}</span><span class="sx">"}</span><span class="p">)</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="no">File</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cask_file</span><span class="p">,</span><span class="w"> </span><span class="n">content</span><span class="p">)</span>
 </code></pre></div></p>
 <hr />
@@ -2768,7 +2768,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

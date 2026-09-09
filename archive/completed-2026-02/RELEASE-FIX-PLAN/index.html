@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2204,16 +2204,16 @@
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>npm<span class="w"> </span>version<span class="w"> </span><span class="m">1</span>.16.1<span class="w"> </span>--no-git-tag-version
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Update src-tauri/tauri.conf.json</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="s1">&#39;s/&quot;version&quot;: &quot;1.14.0&quot;/&quot;version&quot;: &quot;1.16.1&quot;/&#39;</span><span class="w"> </span>src-tauri/tauri.conf.json
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="s1">'s/"version": "1.14.0"/"version": "1.16.1"/'</span><span class="w"> </span>src-tauri/tauri.conf.json
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Update src-tauri/Cargo.toml</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="s1">&#39;s/^version = &quot;1.14.0&quot;/version = &quot;1.16.1&quot;/&#39;</span><span class="w"> </span>src-tauri/Cargo.toml
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="s1">'s/^version = "1.14.0"/version = "1.16.1"/'</span><span class="w"> </span>src-tauri/Cargo.toml
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Commit version bump:</strong>
    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>package.json<span class="w"> </span>src-tauri/tauri.conf.json<span class="w"> </span>src-tauri/Cargo.toml<span class="w"> </span>package-lock.json
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: Bump version to v1.16.1</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: Bump version to v1.16.1</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">Reflects Phase 1 Technical Debt Remediation completion.</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
@@ -2223,7 +2223,7 @@
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">- +32 tests (2,162 passing)</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">- 0 breaking changes</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">Co-Authored-By: Claude Sonnet 4.5 &lt;noreply@anthropic.com&gt;&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">Co-Authored-By: Claude Sonnet 4.5 &lt;noreply@anthropic.com&gt;"</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -2247,7 +2247,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Merge dev → main (if ready for stable release)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--head<span class="w"> </span>dev<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Release v1.16.1&quot;</span><span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;Phase 1 Technical Debt Remediation</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--head<span class="w"> </span>dev<span class="w"> </span>--title<span class="w"> </span><span class="s2">"Release v1.16.1"</span><span class="w"> </span>--body<span class="w"> </span><span class="s2">"Phase 1 Technical Debt Remediation</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">**Changes:**</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">- Extracted 4 components from monolithic files</span>
@@ -2257,7 +2257,7 @@
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">- Fixed auto-seed in test environment</span>
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">- 0 breaking changes</span>
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">See CHANGELOG.md for full details.&quot;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">See CHANGELOG.md for full details."</span>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># 2. Merge the PR (in GitHub UI or via gh)</span>
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>gh<span class="w"> </span>pr<span class="w"> </span>merge<span class="w"> </span>&lt;PR-NUMBER&gt;<span class="w"> </span>--merge
@@ -2265,14 +2265,14 @@
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># 3. Create and push tag</span>
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.16.1<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v1.16.1 - Phase 1 Technical Debt Remediation&quot;</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.16.1<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Release v1.16.1 - Phase 1 Technical Debt Remediation"</span>
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.16.1
 </code></pre></div>
 <p><strong>OR From Dev Branch (for pre-release testing):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create tag directly on dev</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>dev
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>dev
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.16.1-alpha<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v1.16.1-alpha - Phase 1 Testing&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.16.1-alpha<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Release v1.16.1-alpha - Phase 1 Testing"</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.16.1-alpha
 </code></pre></div>
 <h3 id="step-3-monitor-release-workflow">Step 3: Monitor Release Workflow</h3>
@@ -2291,11 +2291,11 @@
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Should see: &quot;Update Scribe to v1.16.1&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Should see: "Update Scribe to v1.16.1"</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check cask content</span>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>cat<span class="w"> </span>Casks/scribe.rb<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>version
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Should show: version &quot;1.16.1&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Should show: version "1.16.1"</span>
 </code></pre></div>
 <h3 id="step-5-test-installation">Step 5: Test Installation</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Update tap</span>
@@ -2318,12 +2318,12 @@
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># This updates package.json AND creates a git tag</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># 2. Update tauri versions manually</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="s1">&#39;s/&quot;version&quot;: &quot;X.Y.Z&quot;/&quot;version&quot;: &quot;X.Y.Z+1&quot;/&#39;</span><span class="w"> </span>src-tauri/tauri.conf.json
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="s1">&#39;s/^version = &quot;X.Y.Z&quot;/version = &quot;X.Y.Z+1&quot;/&#39;</span><span class="w"> </span>src-tauri/Cargo.toml
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="s1">'s/"version": "X.Y.Z"/"version": "X.Y.Z+1"/'</span><span class="w"> </span>src-tauri/tauri.conf.json
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="s1">'s/^version = "X.Y.Z"/version = "X.Y.Z+1"/'</span><span class="w"> </span>src-tauri/Cargo.toml
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># 3. Commit</span>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>git<span class="w"> </span>add<span class="w"> </span>src-tauri/tauri.conf.json<span class="w"> </span>src-tauri/Cargo.toml
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: Bump version to vX.Y.Z+1&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: Bump version to vX.Y.Z+1"</span>
 <a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># 4. Push tag</span>
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>vX.Y.Z+1
@@ -2369,7 +2369,7 @@
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Or delete and recreate tag</span>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>git<span class="w"> </span>tag<span class="w"> </span>-d<span class="w"> </span>v1.16.1
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>:v1.16.1
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.16.1<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v1.16.1&quot;</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.16.1<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Release v1.16.1"</span>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.16.1
 </code></pre></div>
 <h3 id="dmg-download-fails-404-error">DMG Download Fails (404 Error)</h3>
@@ -2471,7 +2471,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2029,7 +2029,7 @@
   <a href="#why-is-perfect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why `⌘`` is Perfect
+        Why \ is Perfect
       
     </span>
   </a>
@@ -2118,7 +2118,7 @@
   <a href="#keep-no-changes-needed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ Keep `⌘`` - No Changes Needed
+        ✅ Keep \ - No Changes Needed
       
     </span>
   </a>
@@ -2349,7 +2349,7 @@
 <td>Collapse/expand</td>
 </tr>
 <tr>
-<td><strong>`⌘``</strong></td>
+<td><strong><code>\</code></strong></td>
 <td><strong>Toggle Terminal</strong></td>
 <td><strong>App.tsx:804</strong></td>
 <td><strong>NEW</strong></td>
@@ -2476,7 +2476,7 @@
 <hr />
 <h2 id="conflict-analysis">Conflict Analysis</h2>
 <h3 id="no-conflicts-found">✅ No Conflicts Found</h3>
-<p><strong>Terminal shortcut `⌘`` does NOT conflict with any existing shortcuts.</strong></p>
+<p><strong>Terminal shortcut <code>\</code> does NOT conflict with any existing shortcuts.</strong></p>
 <table>
 <thead>
 <tr>
@@ -2513,7 +2513,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="why-is-perfect">Why `⌘`` is Perfect</h3>
+<h3 id="why-is-perfect">Why <code>\</code> is Perfect</h3>
 <ol>
 <li><strong>Convention:</strong> Standard terminal shortcut in many apps (VS Code, iTerm2)</li>
 <li><strong>Ergonomic:</strong> Easy to reach, natural pairing with terminal</li>
@@ -2524,14 +2524,14 @@
 <hr />
 <h2 id="terminal-shortcut-behavior">Terminal Shortcut Behavior</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// App.tsx:804-816</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="nx">e</span><span class="p">.</span><span class="nx">metaKey</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ctrlKey</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;`&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="nx">e</span><span class="p">.</span><span class="nx">metaKey</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ctrlKey</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'`'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="c1">// If already on Terminal and sidebar is open, close it</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">rightActiveTab</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;terminal&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">rightSidebarCollapsed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">rightActiveTab</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'terminal'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">rightSidebarCollapsed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nx">setRightSidebarCollapsed</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="c1">// Switch to Terminal and ensure sidebar is visible</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nx">setRightActiveTab</span><span class="p">(</span><span class="s1">&#39;terminal&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nx">setRightActiveTab</span><span class="p">(</span><span class="s1">'terminal'</span><span class="p">)</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">rightSidebarCollapsed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nx">setRightSidebarCollapsed</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">}</span>
@@ -2573,10 +2573,10 @@
 <p><strong>Current:</strong> Terminal button in status bar (verified in code)
 <strong>Location:</strong> Status bar shows Terminal toggle button
 <strong>Works:</strong> Clicking status bar button also toggles Terminal</p>
-<p>Both keyboard shortcut (`⌘``) and status bar button provide same functionality.</p>
+<p>Both keyboard shortcut (<code>\</code>) and status bar button provide same functionality.</p>
 <hr />
 <h2 id="recommendations">Recommendations</h2>
-<h3 id="keep-no-changes-needed">✅ Keep `⌘`` - No Changes Needed</h3>
+<h3 id="keep-no-changes-needed">✅ Keep <code>\</code> - No Changes Needed</h3>
 <ol>
 <li><strong>No conflicts</strong> with existing shortcuts</li>
 <li><strong>Industry standard</strong> (VS Code, iTerm2, many IDEs)</li>
@@ -2585,7 +2585,7 @@
 </ol>
 <h3 id="action-items">📝 Action Items</h3>
 <ol>
-<li><strong>Update documentation:</strong> Add `⌘`` to shortcuts.md</li>
+<li><strong>Update documentation:</strong> Add <code>\</code> to shortcuts.md</li>
 <li><strong>Update main README:</strong> Include Terminal shortcut in feature list</li>
 <li><strong>Add to keyboard shortcuts panel:</strong> When user presses <code>⌘?</code></li>
 </ol>
@@ -2626,7 +2626,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Verdict:</strong> Terminal shortcut `⌘`` is <strong>perfectly safe</strong> and should be kept as-is. Only documentation updates needed.</p>
+<p><strong>Verdict:</strong> Terminal shortcut <code>\</code> is <strong>perfectly safe</strong> and should be kept as-is. Only documentation updates needed.</p>
 
 
 
@@ -2701,7 +2701,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       

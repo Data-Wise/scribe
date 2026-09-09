@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2514,7 +2514,7 @@
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Icons:
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>1. Search (⌘F) - Global search
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>2. Daily (⌘D) - Today&#39;s note
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>2. Daily (⌘D) - Today's note
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>3. Settings (⌘,) - Preferences
 </code></pre></div>
 <h3 id="adhd-optimizations">ADHD Optimizations</h3>
@@ -2529,7 +2529,7 @@
 <h3 id="technical-implementation">Technical Implementation</h3>
 <p><strong>State Management:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">MissionSidebarStore</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">mode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;icon&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;compact&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;card&#39;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">mode</span><span class="o">:</span><span class="w"> </span><span class="s1">'icon'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'compact'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">'card'</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">width</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">pinnedVaults</span><span class="o">:</span><span class="w"> </span><span class="kt">PinnedVault</span><span class="p">[]</span><span class="w">  </span><span class="c1">// Max 5</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">expandedProjects</span><span class="o">:</span><span class="w"> </span><span class="kt">Set</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span>
@@ -2537,7 +2537,7 @@
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">PinnedVault</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;inbox&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Inbox always first</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">'inbox'</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Inbox always first</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="nx">emoji</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="nx">order</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">  </span><span class="c1">// 0-4</span>
@@ -2689,7 +2689,7 @@
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>└── dev tools tab
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Level 2: CONTENT AREA
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>├── Active vault&#39;s notes (full list)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>├── Active vault's notes (full list)
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>└── Search/filter within vault
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Level 3: ACTIVITY BAR
@@ -2972,7 +2972,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../javascripts/theme-toggle.js"></script>
       
