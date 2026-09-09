@@ -1,17 +1,20 @@
 import { useMemo } from 'react'
-import { LayoutGrid, LayoutList, X } from 'lucide-react'
-import { Project, Note, ExpandedIconType } from '../../types'
+import { X } from 'lucide-react'
+import { Project, Note, ExpandedIconType, IconTabType } from '../../types'
 import { CompactListView } from './CompactListView'
 import { CardGridView } from './CardGridView'
+import { ExplorerPanelContent } from './tabs/ExplorerPanelContent'
+import { IconTabBar } from './tabs/IconTabBar'
 import { useAppViewStore } from '../../store/useAppViewStore'
 
 /**
  * ExpandedIconPanel - Unified content renderer for icon expansion
  *
- * v1.16.0 Icon-Centric Expansion:
+ * v1.17.0 Three-Tab Sidebar:
  * - Shows content based on expandedIcon type (vault/smart)
- * - Delegates to CompactListView or CardGridView based on mode
- * - Provides mode toggle and close button
+ * - Delegates to CompactListView, CardGridView, or ExplorerPanelContent
+ *   based on the icon's active tab
+ * - Provides the 3-tab pill selector (IconTabBar) and close button
  */
 
 interface ExpandedIconPanelProps {
@@ -22,11 +25,11 @@ interface ExpandedIconPanelProps {
   // Expansion state
   expandedIcon: ExpandedIconType
   currentProjectId: string | null  // From parent (App-level state)
-  mode: 'compact' | 'card'
+  activeTab: IconTabType
   width: number
 
   // Actions
-  onToggleMode: () => void
+  onTabChange: (tab: IconTabType) => void
   onClose: () => void
   onSelectProject: (id: string | null) => void
   onSelectNote: (id: string) => void
@@ -50,9 +53,9 @@ export function ExpandedIconPanel({
   notes,
   expandedIcon,
   currentProjectId,
-  mode,
+  activeTab,
   width,
-  onToggleMode,
+  onTabChange,
   onClose,
   onSelectProject,
   onSelectNote,
@@ -114,18 +117,11 @@ export function ExpandedIconPanel({
 
   return (
     <div className="expanded-icon-panel" data-testid="expanded-icon-panel" style={{ width: panelWidth }}>
-      {/* Header with mode toggle and close */}
+      {/* Header with tab bar and close */}
       <div className="panel-header">
         <h3 className="panel-title">{label}</h3>
         <div className="panel-header-actions">
-          <button
-            className="panel-action-btn"
-            onClick={onToggleMode}
-            title={`Switch to ${mode === 'compact' ? 'card' : 'compact'} view`}
-            aria-label={`Switch to ${mode === 'compact' ? 'card' : 'compact'} view`}
-          >
-            {mode === 'compact' ? <LayoutGrid size={16} /> : <LayoutList size={16} />}
-          </button>
+          <IconTabBar activeTab={activeTab} onTabChange={onTabChange} />
           <button
             className="panel-action-btn"
             onClick={onClose}
@@ -137,9 +133,9 @@ export function ExpandedIconPanel({
         </div>
       </div>
 
-      {/* Render based on mode */}
+      {/* Render based on active tab */}
       <div className="panel-content">
-        {mode === 'compact' ? (
+        {activeTab === 'compact' && (
           <CompactListView
             projects={filteredProjects}
             notes={notes}
@@ -159,7 +155,8 @@ export function ExpandedIconPanel({
             onDuplicateNote={onDuplicateNote}
             onDeleteNote={onDeleteNote}
           />
-        ) : (
+        )}
+        {activeTab === 'card' && (
           <CardGridView
             projects={filteredProjects}
             notes={notes}
@@ -178,6 +175,16 @@ export function ExpandedIconPanel({
             onMoveNoteToProject={onMoveNoteToProject}
             onDuplicateNote={onDuplicateNote}
             onDeleteNote={onDeleteNote}
+          />
+        )}
+        {activeTab === 'explorer' && (
+          <ExplorerPanelContent
+            projects={filteredProjects}
+            notes={notes}
+            showInboxNotes={showInboxNotes}
+            currentProjectId={currentProjectId}
+            onSelectProject={(id) => onSelectProject(id)}
+            onSelectNote={onSelectNote}
           />
         )}
       </div>

@@ -108,9 +108,9 @@ function createDefaultProps() {
     notes,
     expandedIcon: null as ExpandedIconType,
     currentProjectId: null as string | null,
-    mode: 'compact' as const,
+    activeTab: 'compact' as const,
     width: 288, // 240 compact + 48 icon bar
-    onToggleMode: vi.fn(),
+    onTabChange: vi.fn(),
     onClose: vi.fn(),
     onSelectProject: vi.fn(),
     onSelectNote: vi.fn(),
@@ -347,74 +347,52 @@ describe('ExpandedIconPanel Component', () => {
     })
   })
 
-  describe('Mode Toggle', () => {
+  describe('Tab Bar (v1.17.0)', () => {
     /**
-     * EIP-11: Renders LayoutGrid icon in compact mode
-     * Note: We test for the button with correct tooltip instead of icon component
+     * EIP-11: Renders all three tabs with correct aria-selected state
      */
-    it('renders mode toggle button with "card view" tooltip in compact mode', () => {
+    it('renders Compact/Card/Explorer tabs, marking the active one selected', () => {
       const props = createDefaultProps()
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
 
-      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />)
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} activeTab="compact" />)
 
-      const toggleButton = screen.getByTitle('Switch to card view')
-      expect(toggleButton).toBeInTheDocument()
-      expect(toggleButton).toHaveAttribute('aria-label', 'Switch to card view')
+      const compactTab = screen.getByTitle('Compact')
+      const cardTab = screen.getByTitle('Card')
+      const explorerTab = screen.getByTitle('Explorer')
+      expect(compactTab).toHaveAttribute('aria-selected', 'true')
+      expect(cardTab).toHaveAttribute('aria-selected', 'false')
+      expect(explorerTab).toHaveAttribute('aria-selected', 'false')
     })
 
     /**
-     * EIP-12: Renders LayoutList icon in card mode
-     * Note: We test for the button with correct tooltip instead of icon component
+     * EIP-12: Active tab reflects the activeTab prop
      */
-    it('renders mode toggle button with "compact view" tooltip in card mode', () => {
+    it('marks the Card tab selected when activeTab is card', () => {
       const props = createDefaultProps()
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
 
-      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} activeTab="card" />)
 
-      const toggleButton = screen.getByTitle('Switch to compact view')
-      expect(toggleButton).toBeInTheDocument()
-      expect(toggleButton).toHaveAttribute('aria-label', 'Switch to compact view')
+      expect(screen.getByTitle('Card')).toHaveAttribute('aria-selected', 'true')
+      expect(screen.getByTitle('Compact')).toHaveAttribute('aria-selected', 'false')
     })
 
     /**
-     * EIP-13: Calls onToggleMode when mode toggle clicked
+     * EIP-13: Calls onTabChange with the clicked tab's id
      */
-    it('calls onToggleMode when mode toggle button clicked', () => {
+    it('calls onTabChange with "explorer" when the Explorer tab is clicked', () => {
       const props = createDefaultProps()
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
 
-      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} />)
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} activeTab="compact" />)
 
-      const toggleButton = screen.getByTitle(/switch to/i)
-      toggleButton.click()
+      screen.getByTitle('Explorer').click()
 
-      expect(props.onToggleMode).toHaveBeenCalledTimes(1)
-    })
-
-    /**
-     * EIP-14: Shows correct tooltip for current mode
-     */
-    it('shows "Switch to card view" in compact mode', () => {
-      const props = createDefaultProps()
-      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
-
-      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />)
-
-      expect(screen.getByTitle('Switch to card view')).toBeInTheDocument()
-    })
-
-    it('shows "Switch to compact view" in card mode', () => {
-      const props = createDefaultProps()
-      const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
-
-      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
-
-      expect(screen.getByTitle('Switch to compact view')).toBeInTheDocument()
+      expect(props.onTabChange).toHaveBeenCalledTimes(1)
+      expect(props.onTabChange).toHaveBeenCalledWith('explorer')
     })
   })
-
   describe('View Switching', () => {
     /**
      * EIP-15: Renders CompactListView in compact mode
@@ -423,7 +401,7 @@ describe('ExpandedIconPanel Component', () => {
       const props = createDefaultProps()
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
 
-      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />)
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} activeTab="compact" />)
 
       expect(screen.getByTestId('compact-list-view')).toBeInTheDocument()
       expect(screen.queryByTestId('card-grid-view')).not.toBeInTheDocument()
@@ -436,7 +414,7 @@ describe('ExpandedIconPanel Component', () => {
       const props = createDefaultProps()
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
 
-      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
+      render(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} activeTab="card" />)
 
       expect(screen.getByTestId('card-grid-view')).toBeInTheDocument()
       expect(screen.queryByTestId('compact-list-view')).not.toBeInTheDocument()
@@ -450,12 +428,12 @@ describe('ExpandedIconPanel Component', () => {
       const expandedIcon: ExpandedIconType = { type: 'vault', id: 'inbox' }
 
       const { rerender } = render(
-        <ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="compact" />
+        <ExpandedIconPanel {...props} expandedIcon={expandedIcon} activeTab="compact" />
       )
 
       expect(screen.getByTestId('compact-list-view')).toBeInTheDocument()
 
-      rerender(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} mode="card" />)
+      rerender(<ExpandedIconPanel {...props} expandedIcon={expandedIcon} activeTab="card" />)
 
       expect(screen.queryByTestId('compact-list-view')).not.toBeInTheDocument()
       expect(screen.getByTestId('card-grid-view')).toBeInTheDocument()
