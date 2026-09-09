@@ -106,6 +106,8 @@ const RECENT_NOTES_KEY = 'scribe:recentNotes'
 const EXPANDED_ICON_KEY = 'scribe:expandedIcon'
 const COMPACT_WIDTH_KEY = 'scribe:compactModeWidth'
 const CARD_WIDTH_KEY = 'scribe:cardModeWidth'
+const EXPLORER_WIDTH_KEY = 'scribe:explorerModeWidth'  // v1.17.0
+const EXPLORER_TREE_STATE_KEY = 'scribe:explorerTreeState'  // v1.17.0
 
 // Mission Control tab ID (constant, always pinned)
 export const MISSION_CONTROL_TAB_ID = 'mission-control'
@@ -455,8 +457,64 @@ const migrateToIconCentric = (): void => {
   }
 }
 
+/**
+ * v1.17.0 Migration: Convert v1.16.0 icon-centric state to three-tab architecture
+ * Runs once on first load after upgrade. Independent of migrateToIconCentric's
+ * own version marker (scribe:migrationVersion) to avoid the two migrations
+ * clobbering each other's completion signal - this one checks its own artifact.
+ */
+const migrateToThreeTabSidebar = (): void => {
+  try {
+    // Check if migration already complete (own artifact, not the shared version key)
+    if (localStorage.getItem(EXPLORER_WIDTH_KEY) !== null) return
+
+    console.log('[Migration] Starting v1.16.0 → v1.17.0 three-tab migration')
+
+    // 1. Add explorerModeWidth (default 320px)
+    localStorage.setItem(EXPLORER_WIDTH_KEY, '320')
+
+    // 2. Update cardModeWidth default (320 → 360 for better card layout)
+    const currentCardWidth = localStorage.getItem(CARD_WIDTH_KEY)
+    if (currentCardWidth === '320') {
+      localStorage.setItem(CARD_WIDTH_KEY, '360')
+    }
+
+    // 3. Migrate pinnedVaults: preferredMode -> activeTab
+    const vaults = localStorage.getItem(PINNED_VAULTS_KEY)
+    if (vaults) {
+      const parsed = JSON.parse(vaults) as Array<Record<string, unknown>>
+      const migrated = parsed.map(v => {
+        const { preferredMode, ...rest } = v
+        return { ...rest, activeTab: preferredMode || 'compact' }
+      })
+      localStorage.setItem(PINNED_VAULTS_KEY, JSON.stringify(migrated))
+    }
+
+    // 4. Migrate smartIcons: preferredMode -> activeTab
+    const icons = localStorage.getItem(SMART_ICONS_KEY)
+    if (icons) {
+      const parsed = JSON.parse(icons) as Array<Record<string, unknown>>
+      const migrated = parsed.map(i => {
+        const { preferredMode, ...rest } = i
+        return { ...rest, activeTab: preferredMode || 'compact' }
+      })
+      localStorage.setItem(SMART_ICONS_KEY, JSON.stringify(migrated))
+    }
+
+    // 5. Initialize explorerTreeState (empty)
+    localStorage.setItem(EXPLORER_TREE_STATE_KEY, JSON.stringify({ expandedNodes: [] }))
+
+    console.log('[Migration] v1.16.0 → v1.17.0 three-tab migration complete')
+  } catch (error) {
+    console.warn('[Migration] Failed to migrate localStorage (v1.17.0):', error)
+    // Non-blocking: app falls back to defaults if migration fails
+  }
+}
+
+
 // Run migration before initialization
 migrateToIconCentric()
+migrateToThreeTabSidebar()
 
 export const useAppViewStore = create<AppViewState>((set, get) => {
   // Initialize state
