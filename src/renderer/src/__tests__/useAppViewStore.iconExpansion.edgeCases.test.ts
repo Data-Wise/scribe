@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useAppViewStore, SIDEBAR_WIDTHS } from '../store/useAppViewStore'
-import type { SmartIconId } from '../types'
+import type { SmartIconId, PinnedVault, SmartIcon } from '../types'
 
 /**
  * Icon-Centric Expansion - Edge Cases and Error Handling (v1.16.0)
@@ -29,7 +29,7 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
           label: 'Inbox',
           order: 0,
           isPermanent: true,
-          preferredMode: 'compact'
+          activeTab: 'compact'
         }
       ],
       smartIcons: [
@@ -42,7 +42,7 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
           isVisible: true,
           isExpanded: false,
           order: 0,
-          preferredMode: 'compact'
+          activeTab: 'compact'
         }
       ],
       projectTypeFilter: null,
@@ -132,10 +132,10 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
     })
 
     it('constrains card mode width to minimum (320px)', () => {
-      const { expandVault, setIconMode, setSidebarWidth } = useAppViewStore.getState()
+      const { expandVault, switchIconTab, setSidebarWidth } = useAppViewStore.getState()
 
       // Set inbox to card mode
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
       expandVault('inbox')
 
       // Try to set width below minimum
@@ -146,9 +146,9 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
     })
 
     it('constrains card mode width to maximum (500px)', () => {
-      const { expandVault, setIconMode, setSidebarWidth } = useAppViewStore.getState()
+      const { expandVault, switchIconTab, setSidebarWidth } = useAppViewStore.getState()
 
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
       expandVault('inbox')
 
       // Try to set width above maximum
@@ -191,18 +191,18 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
     })
 
     it('handles rapid mode switching', () => {
-      const { expandVault, setIconMode } = useAppViewStore.getState()
+      const { expandVault, switchIconTab } = useAppViewStore.getState()
 
       expandVault('inbox')
 
       // Rapidly switch modes
-      setIconMode('vault', 'inbox', 'card')
-      setIconMode('vault', 'inbox', 'compact')
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'compact')
+      switchIconTab('vault', 'inbox', 'card')
 
       // Should end in card mode
       const vault = useAppViewStore.getState().pinnedVaults.find(v => v.id === 'inbox')
-      expect(vault?.preferredMode).toBe('card')
+      expect(vault?.activeTab).toBe('card')
       expect(useAppViewStore.getState().sidebarWidth).toBe(SIDEBAR_WIDTHS.card.default)
     })
 
@@ -262,10 +262,10 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
       expect(useAppViewStore.getState().sidebarWidth).toBe(SIDEBAR_WIDTHS.compact.default)
     })
 
-    it('handles missing preferredMode in vault', () => {
+    it('handles missing activeTab in vault', () => {
       const { expandVault, pinnedVaults } = useAppViewStore.getState()
 
-      // Add vault without preferredMode
+      // Add vault without activeTab
       const newVaults = [
         ...pinnedVaults,
         {
@@ -273,8 +273,8 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
           label: 'Test',
           order: 1,
           isPermanent: false
-          // preferredMode omitted
-        }
+          // activeTab omitted - simulates pre-migration/malformed data
+        } as PinnedVault
       ]
 
       useAppViewStore.setState({ pinnedVaults: newVaults })
@@ -285,10 +285,10 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
       expect(useAppViewStore.getState().sidebarWidth).toBe(SIDEBAR_WIDTHS.compact.default)
     })
 
-    it('handles missing preferredMode in smart icon', () => {
+    it('handles missing activeTab in smart icon', () => {
       const { expandSmartIcon, smartIcons } = useAppViewStore.getState()
 
-      // Add icon without preferredMode
+      // Add icon without activeTab
       const newIcons = [
         ...smartIcons,
         {
@@ -300,8 +300,8 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
           isVisible: true,
           isExpanded: false,
           order: 1
-          // preferredMode omitted
-        }
+          // activeTab omitted - simulates pre-migration/malformed data
+        } as SmartIcon
       ]
 
       useAppViewStore.setState({ smartIcons: newIcons })
@@ -353,7 +353,7 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
     })
 
     it('continues working when localStorage is disabled', () => {
-      const { expandVault, setIconMode, collapseAll } = useAppViewStore.getState()
+      const { expandVault, switchIconTab, collapseAll } = useAppViewStore.getState()
 
       // Disable localStorage
       const originalSetItem = localStorage.setItem
@@ -368,7 +368,7 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
       // All operations should work (in-memory only)
       expect(() => {
         expandVault('inbox')
-        setIconMode('vault', 'inbox', 'card')
+        switchIconTab('vault', 'inbox', 'card')
         collapseAll()
       }).not.toThrow()
 
@@ -422,7 +422,7 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
 
   describe('Width Memory Per Mode', () => {
     it('maintains separate widths for compact and card modes', () => {
-      const { expandVault, setIconMode, setSidebarWidth } = useAppViewStore.getState()
+      const { expandVault, switchIconTab, setSidebarWidth } = useAppViewStore.getState()
 
       // Expand in compact mode and resize
       expandVault('inbox')
@@ -432,25 +432,25 @@ describe('useAppViewStore Icon Expansion - Edge Cases', () => {
       expect(useAppViewStore.getState().cardModeWidth).toBe(SIDEBAR_WIDTHS.card.default) // Unchanged
 
       // Switch to card mode and resize
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
       setSidebarWidth(400)
 
       expect(useAppViewStore.getState().compactModeWidth).toBe(280) // Unchanged
       expect(useAppViewStore.getState().cardModeWidth).toBe(400)
 
       // Switch back to compact
-      setIconMode('vault', 'inbox', 'compact')
+      switchIconTab('vault', 'inbox', 'compact')
 
       // Should restore compact width (280)
       expect(useAppViewStore.getState().sidebarWidth).toBe(280)
     })
 
     it('preserves mode widths across icon switches', () => {
-      const { expandVault, expandSmartIcon, setIconMode, setSidebarWidth } = useAppViewStore.getState()
+      const { expandVault, expandSmartIcon, switchIconTab, setSidebarWidth } = useAppViewStore.getState()
 
       // Set inbox to card mode, resize to 380
       expandVault('inbox')
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
       setSidebarWidth(380)
 
       // Switch to research (compact mode by default)

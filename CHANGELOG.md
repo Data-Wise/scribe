@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.23.0] - 2026-09-08 — Three-Tab Sidebar (Explorer Tab)
+
+### Added
+
+- **Explorer tab** — Third view alongside Compact/Card, showing a status-grouped project tree (Active/Planning/Complete; archived projects excluded, matching the existing Compact/Card filter). Expand a project to reveal its notes. Inbox shows a flat list of unassigned notes instead, mirroring Compact/Card's own Inbox handling.
+- **`IconTabBar`** — 3-pill tab selector (Compact/Card/Explorer) in the expanded panel header, replacing the old single toggle button. Each icon (vault or smart folder) remembers its own active tab independently, same as the v1.16.0 compact/card preference.
+- **Explorer tree state persistence** — which projects are expanded in the Explorer tree survives collapsing and re-expanding the panel (`scribe:explorerTreeState`).
+- **18 new tests** — store actions (switchIconTab's explorer case, 4 tree actions) + migration coverage (localStorage upgrade from v1.16.0's `preferredMode` to `activeTab`, `explorerModeWidth` seeding, the conditional `cardModeWidth` 320→360 bump). Total: 2,342.
+
+### Not included in this pass
+
+- Keyboard shortcuts for tab switching (⌘2/⌘3)
+- Deleting a project auto-collapsing its Explorer tree node
+- A cap on how many Explorer nodes persist to localStorage (relevant only at 100+ projects; the app has no virtual scrolling/search-filter/lazy-loading for that scale yet either)
+
+### Migration
+
+- Existing `preferredMode` values on pinned vaults/smart icons migrate automatically to `activeTab` on first load (one-time, non-destructive — falls back to `compact` if unset or on any error).
+
+---
+
 ## [v1.22.0] - 2026-02-25 — Responsive UI Enhancements
 
 ### Added

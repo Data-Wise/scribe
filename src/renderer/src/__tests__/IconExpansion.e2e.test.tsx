@@ -93,7 +93,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
           label: 'Inbox',
           order: 0,
           isPermanent: true,
-          preferredMode: 'compact',
+          activeTab: 'compact',
         },
       ],
       smartIcons: [
@@ -106,7 +106,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
           isVisible: true,
           isExpanded: false,
           order: 0,
-          preferredMode: 'compact',
+          activeTab: 'compact',
         },
         {
           id: 'teaching',
@@ -117,7 +117,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
           isVisible: true,
           isExpanded: false,
           order: 1,
-          preferredMode: 'compact',
+          activeTab: 'compact',
         },
       ],
     })
@@ -262,8 +262,8 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
   // ============================================================
 
   describe('Per-Icon Mode Preferences', () => {
-    it('displays mode toggle button when icon is expanded', async () => {
-      const { container, rerender } = render(
+    it('displays the 3-tab bar (Compact/Card/Explorer) when icon is expanded', async () => {
+      const { rerender } = render(
         <MissionSidebar
           projects={mockProjects}
           notes={mockNotes}
@@ -284,17 +284,13 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
       )
 
       await waitFor(() => {
-        const expandedPanel = container.querySelector('.expanded-icon-panel')
-        expect(expandedPanel).toBeInTheDocument()
-
-        // Mode toggle should be present
-        const modeToggle = container.querySelector('.panel-action-btn') ||
-                          screen.queryByTitle(/switch to/i)
-        expect(modeToggle).toBeTruthy()
+        expect(screen.getByTitle('Compact')).toBeInTheDocument()
+        expect(screen.getByTitle('Card')).toBeInTheDocument()
+        expect(screen.getByTitle('Explorer')).toBeInTheDocument()
       })
     })
 
-    it('switches mode when toggle button is clicked', async () => {
+    it('switches active tab via switchIconTab and updates width', async () => {
       const { rerender } = render(
         <MissionSidebar
           projects={mockProjects}
@@ -318,7 +314,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
       const initialWidth = useAppViewStore.getState().sidebarWidth
 
       // Switch to card mode
-      useAppViewStore.getState().setIconMode('vault', 'inbox', 'card')
+      useAppViewStore.getState().switchIconTab('vault', 'inbox', 'card')
       rerender(
         <MissionSidebar
           projects={mockProjects}
@@ -331,17 +327,17 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
       await waitFor(() => {
         const state = useAppViewStore.getState()
         const vault = state.pinnedVaults.find(v => v.id === 'inbox')
-        expect(vault?.preferredMode).toBe('card')
+        expect(vault?.activeTab).toBe('card')
         expect(state.sidebarWidth).toBeGreaterThan(initialWidth)
       })
     })
 
     it('remembers mode preference when switching between icons', async () => {
       // Set research to card mode
-      useAppViewStore.getState().setIconMode('smart', 'research', 'card')
+      useAppViewStore.getState().switchIconTab('smart', 'research', 'card')
 
       // Set teaching to compact mode
-      useAppViewStore.getState().setIconMode('smart', 'teaching', 'compact')
+      useAppViewStore.getState().switchIconTab('smart', 'teaching', 'compact')
 
       // Expand research → should use card width (320)
       useAppViewStore.getState().expandSmartIcon('research')
@@ -454,7 +450,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
       useAppViewStore.setState({ cardModeWidth: 380 })
 
       // Set inbox to card mode
-      useAppViewStore.getState().setIconMode('vault', 'inbox', 'card')
+      useAppViewStore.getState().switchIconTab('vault', 'inbox', 'card')
 
       // Expand inbox
       useAppViewStore.getState().expandVault('inbox')
@@ -497,7 +493,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
       expect(useAppViewStore.getState().sidebarWidth).toBe(240) // compact default
 
       // 3. Switch to card mode
-      useAppViewStore.getState().setIconMode('vault', 'inbox', 'card')
+      useAppViewStore.getState().switchIconTab('vault', 'inbox', 'card')
       expect(useAppViewStore.getState().sidebarWidth).toBe(320) // card default
 
       // 4. Switch to research icon
@@ -523,7 +519,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
 
       // Expand and set preferences
       useAppViewStore.getState().expandSmartIcon('research')
-      useAppViewStore.getState().setIconMode('smart', 'research', 'card')
+      useAppViewStore.getState().switchIconTab('smart', 'research', 'card')
 
       const stateBefore = useAppViewStore.getState()
 
@@ -544,7 +540,7 @@ describe('Icon-Centric Sidebar Expansion E2E', () => {
       expect(stateAfter.sidebarWidth).toBe(stateBefore.sidebarWidth)
 
       const icon = stateAfter.smartIcons.find(i => i.id === 'research')
-      expect(icon?.preferredMode).toBe('card')
+      expect(icon?.activeTab).toBe('card')
     })
   })
 })

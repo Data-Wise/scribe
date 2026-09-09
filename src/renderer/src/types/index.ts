@@ -161,6 +161,9 @@ declare global {
   }
 }
 
+// v1.17.0: Icon panel tab type (Compact | Card | Explorer)
+export type IconTabType = 'compact' | 'card' | 'explorer'
+
 // Sidebar types
 export interface PinnedVault {
   id: 'inbox' | string  // 'inbox' reserved, others are project IDs
@@ -168,7 +171,7 @@ export interface PinnedVault {
   color?: string  // Project color (if applicable)
   order: number  // 0-4
   isPermanent: boolean  // true for Inbox only
-  preferredMode?: 'compact' | 'card'  // v1.16.0: Per-icon mode preference
+  activeTab: IconTabType  // v1.17.0: renamed from 'preferredMode' (v1.16.0)
 }
 
 export type SidebarMode = 'icon' | 'compact' | 'card'  // DEPRECATED in v1.16.0
@@ -185,7 +188,7 @@ export interface SmartIcon {
   isVisible: boolean  // for customization in Settings
   isExpanded: boolean  // expansion state (DEPRECATED in v1.16.0)
   order: number  // display order (0-3)
-  preferredMode?: 'compact' | 'card'  // v1.16.0: Per-icon mode preference
+  activeTab: IconTabType  // v1.17.0: renamed from 'preferredMode' (v1.16.0)
 }
 
 // v1.16.0: Icon expansion type for unified icon/vault expansion
@@ -193,5 +196,10 @@ export type ExpandedIconType =
   | { type: 'vault'; id: string }  // Inbox or pinned project
   | { type: 'smart'; id: SmartIconId }  // Smart folder icon
   | null  // Nothing expanded (icon-only sidebar)
+
+// v1.17.0: Explorer tab tree expansion state
+export interface ExplorerTreeState {
+  expandedNodes: Set<string>  // Project IDs expanded in the Explorer tree
+}
 
 export {}

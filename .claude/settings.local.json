@@ -54,7 +54,8 @@
       "Bash(mkdocs gh-deploy:*)",
       "Bash(mkdocs build:*)",
       "WebFetch(domain:quarto.org)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:v2.tauri.app)"
     ]
   }
 }
