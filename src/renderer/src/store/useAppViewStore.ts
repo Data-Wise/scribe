@@ -125,7 +125,8 @@ const generateTabId = (): string => `tab-${Date.now()}-${Math.random().toString(
 export const SIDEBAR_WIDTHS = {
   icon: 48,
   compact: { default: 240, min: 200, max: 300 },
-  card: { default: 320, min: 320, max: 500 }
+  card: { default: 320, min: 320, max: 500 },
+  explorer: { default: 320, min: 200, max: 500 }  // v1.17.0
 }
 
 // Right sidebar width constraints
