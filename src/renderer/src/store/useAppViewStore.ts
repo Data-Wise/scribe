@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { PinnedVault, SmartIcon, SmartIconId, ProjectType, ExpandedIconType } from '../types'
+import type { PinnedVault, SmartIcon, SmartIconId, ProjectType, ExpandedIconType, IconTabType, ExplorerTreeState } from '../types'
 
 /**
  * App View Store - Manages sidebar state, tabs, and session tracking
@@ -34,13 +34,17 @@ interface AppViewState {
   // Sidebar state (v1.16.0 - Icon-Centric Expansion)
   expandedIcon: ExpandedIconType  // Which icon is expanded (vault/smart/null)
   sidebarWidth: number
-  pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom), each with preferredMode
-  smartIcons: SmartIcon[]  // 4 permanent smart folders, each with preferredMode
+  pinnedVaults: PinnedVault[]  // Max 5 (Inbox + 4 custom), each with activeTab
+  smartIcons: SmartIcon[]  // 4 permanent smart folders, each with activeTab
   projectTypeFilter: ProjectType | null  // Active project type filter for Mission Control
 
   // Width memory per mode (v1.16.0)
   compactModeWidth: number  // Global width for all icons in compact mode
   cardModeWidth: number  // Global width for all icons in card mode
+  explorerModeWidth: number  // v1.17.0: Global width for all icons in explorer mode
+
+  // Explorer tree state (v1.17.0)
+  explorerTreeState: ExplorerTreeState
 
   // Editor tabs state
   openTabs: EditorTab[]
@@ -58,8 +62,14 @@ interface AppViewState {
   expandSmartIcon: (iconId: SmartIconId) => void
   collapseAll: () => void
   toggleIcon: (type: 'vault' | 'smart', id: string) => void
-  setIconMode: (type: 'vault' | 'smart', id: string, mode: 'compact' | 'card') => void
+  switchIconTab: (type: 'vault' | 'smart', id: string, tab: IconTabType) => void  // v1.17.0: replaces setIconMode
   setSidebarWidth: (width: number) => void
+
+  // Explorer tree actions (v1.17.0)
+  toggleExplorerNode: (projectId: string) => void
+  expandExplorerNode: (projectId: string) => void
+  collapseExplorerNode: (projectId: string) => void
+  collapseAllExplorerNodes: () => void
 
   // Pinned vaults actions
   addPinnedVault: (projectId: string, label: string, color?: string) => boolean
@@ -247,13 +257,13 @@ const saveActiveTabId = (tabId: string | null): void => {
     // Ignore localStorage errors
   }
 }
-
 // Default Inbox vault (always pinned, always first)
 const INBOX_VAULT: PinnedVault = {
   id: 'inbox',
   label: 'Inbox',
   order: 0,
-  isPermanent: true
+  isPermanent: true,
+  activeTab: 'compact'  // v1.17.0
 }
 
 // Default Smart Icons configuration
@@ -266,7 +276,8 @@ const DEFAULT_SMART_ICONS: SmartIcon[] = [
     projectType: 'research',
     isVisible: true,
     isExpanded: false,
-    order: 0
+    order: 0,
+    activeTab: 'compact'  // v1.17.0
   },
   {
     id: 'teaching',
@@ -276,7 +287,8 @@ const DEFAULT_SMART_ICONS: SmartIcon[] = [
     projectType: 'teaching',
     isVisible: true,
     isExpanded: false,
-    order: 1
+    order: 1,
+    activeTab: 'compact'  // v1.17.0
   },
   {
     id: 'r-package',
@@ -286,7 +298,8 @@ const DEFAULT_SMART_ICONS: SmartIcon[] = [
     projectType: 'r-package',
     isVisible: true,
     isExpanded: false,
-    order: 2
+    order: 2,
+    activeTab: 'compact'  // v1.17.0
   },
   {
     id: 'dev-tools',
@@ -296,7 +309,8 @@ const DEFAULT_SMART_ICONS: SmartIcon[] = [
     projectType: 'r-dev',  // Maps to r-dev project type
     isVisible: true,
     isExpanded: false,
-    order: 3
+    order: 3,
+    activeTab: 'compact'  // v1.17.0
   }
 ]
 
@@ -420,6 +434,67 @@ const saveCardModeWidth = (width: number): void => {
   }
 }
 
+const getExplorerModeWidth = (): number => {
+  try {
+    const saved = localStorage.getItem(EXPLORER_WIDTH_KEY)
+    if (saved) {
+      const width = parseInt(saved, 10)
+      if (!isNaN(width) && width >= SIDEBAR_WIDTHS.explorer.min) {
+        return width
+      }
+    }
+    return SIDEBAR_WIDTHS.explorer.default
+  } catch {
+    return SIDEBAR_WIDTHS.explorer.default
+  }
+}
+
+const saveExplorerModeWidth = (width: number): void => {
+  try {
+    localStorage.setItem(EXPLORER_WIDTH_KEY, width.toString())
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+// v1.17.0: width for whichever tab is active - avoids repeating this 3-way
+// switch at every expand/switch/resize call site
+const getWidthForTab = (
+  tab: IconTabType,
+  compactWidth: number,
+  cardWidth: number,
+  explorerWidth: number
+): number => {
+  if (tab === 'compact') return compactWidth
+  if (tab === 'card') return cardWidth
+  return explorerWidth
+}
+
+const getExplorerTreeState = (): ExplorerTreeState => {
+  try {
+    const saved = localStorage.getItem(EXPLORER_TREE_STATE_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved) as { expandedNodes: string[] }
+      return { expandedNodes: new Set(parsed.expandedNodes) }
+    }
+    return { expandedNodes: new Set() }
+  } catch {
+    return { expandedNodes: new Set() }
+  }
+}
+
+const saveExplorerTreeState = (treeState: ExplorerTreeState): void => {
+  try {
+    localStorage.setItem(
+      EXPLORER_TREE_STATE_KEY,
+      JSON.stringify({ expandedNodes: Array.from(treeState.expandedNodes) })
+    )
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+
 /**
  * v1.16.0 Migration: Convert v1.15.0 localStorage to icon-centric format
  * Automatically runs once on first load after upgrade
@@ -521,22 +596,22 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
   const expandedIcon = getSavedExpandedIcon()
   const compactWidth = getCompactModeWidth()
   const cardWidth = getCardModeWidth()
+  const explorerWidth = getExplorerModeWidth()
 
-  // Determine initial sidebar width based on expanded icon's mode
+  // Determine initial sidebar width based on expanded icon's active tab
   let initialWidth = SIDEBAR_WIDTHS.icon // Default to icon mode (collapsed)
   if (expandedIcon) {
-    // Get the expanded icon's preferred mode
     const pinnedVaults = getSavedPinnedVaults()
     const smartIcons = getSavedSmartIcons()
 
     if (expandedIcon.type === 'vault') {
       const vault = pinnedVaults.find(v => v.id === expandedIcon.id)
-      const mode = vault?.preferredMode || 'compact'
-      initialWidth = mode === 'compact' ? compactWidth : cardWidth
+      const tab = vault?.activeTab || 'compact'
+      initialWidth = getWidthForTab(tab, compactWidth, cardWidth, explorerWidth)
     } else {
       const icon = smartIcons.find(i => i.id === expandedIcon.id)
-      const mode = icon?.preferredMode || 'compact'
-      initialWidth = mode === 'compact' ? compactWidth : cardWidth
+      const tab = icon?.activeTab || 'compact'
+      initialWidth = getWidthForTab(tab, compactWidth, cardWidth, explorerWidth)
     }
   }
 
@@ -547,9 +622,11 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
     smartIcons: getSavedSmartIcons(),
     projectTypeFilter: null,
 
-    // Width memory per mode (v1.16.0)
+    // Width memory per tab (v1.16.0 compact/card, v1.17.0 explorer)
     compactModeWidth: compactWidth,
     cardModeWidth: cardWidth,
+    explorerModeWidth: explorerWidth,
+    explorerTreeState: getExplorerTreeState(),
 
     lastActiveNoteId: getLastActiveNoteId(),
     openTabs: getSavedTabs(),
@@ -560,10 +637,10 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
     // v1.16.0 Icon-Centric Sidebar Actions
 
     expandVault: (vaultId) => {
-      const { pinnedVaults, compactModeWidth, cardModeWidth } = get()
+      const { pinnedVaults, compactModeWidth, cardModeWidth, explorerModeWidth } = get()
       const vault = pinnedVaults.find(v => v.id === vaultId)
-      const mode = vault?.preferredMode || 'compact'
-      const width = mode === 'compact' ? compactModeWidth : cardModeWidth
+      const tab = vault?.activeTab || 'compact'
+      const width = getWidthForTab(tab, compactModeWidth, cardModeWidth, explorerModeWidth)
 
       const expandedIcon: ExpandedIconType = { type: 'vault', id: vaultId }
       set({ expandedIcon, sidebarWidth: width })
@@ -572,10 +649,10 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
     },
 
     expandSmartIcon: (iconId) => {
-      const { smartIcons, compactModeWidth, cardModeWidth } = get()
+      const { smartIcons, compactModeWidth, cardModeWidth, explorerModeWidth } = get()
       const icon = smartIcons.find(i => i.id === iconId)
-      const mode = icon?.preferredMode || 'compact'
-      const width = mode === 'compact' ? compactModeWidth : cardModeWidth
+      const tab = icon?.activeTab || 'compact'
+      const width = getWidthForTab(tab, compactModeWidth, cardModeWidth, explorerModeWidth)
 
       const expandedIcon: ExpandedIconType = { type: 'smart', id: iconId }
       set({ expandedIcon, sidebarWidth: width })
@@ -606,19 +683,19 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
       }
     },
 
-    setIconMode: (type, id, mode) => {
-      const { pinnedVaults, smartIcons, expandedIcon, compactModeWidth, cardModeWidth } = get()
+    switchIconTab: (type, id, tab) => {
+      const { pinnedVaults, smartIcons, expandedIcon, compactModeWidth, cardModeWidth, explorerModeWidth } = get()
 
-      // Update icon's preferred mode
+      // Update icon's active tab
       if (type === 'vault') {
         const newVaults = pinnedVaults.map(v =>
-          v.id === id ? { ...v, preferredMode: mode } : v
+          v.id === id ? { ...v, activeTab: tab } : v
         )
         set({ pinnedVaults: newVaults })
         savePinnedVaults(newVaults)
       } else {
         const newIcons = smartIcons.map(i =>
-          i.id === id ? { ...i, preferredMode: mode } : i
+          i.id === id ? { ...i, activeTab: tab } : i
         )
         set({ smartIcons: newIcons })
         saveSmartIcons(newIcons)
@@ -626,7 +703,7 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
 
       // Update width if this icon is currently expanded
       if (expandedIcon?.type === type && expandedIcon?.id === id) {
-        const width = mode === 'compact' ? compactModeWidth : cardModeWidth
+        const width = getWidthForTab(tab, compactModeWidth, cardModeWidth, explorerModeWidth)
         set({ sidebarWidth: width })
         saveSidebarWidth(width)
       }
@@ -638,29 +715,72 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
       // If sidebar collapsed, do nothing
       if (!expandedIcon) return
 
-      // Get current icon's mode
-      let mode: 'compact' | 'card' = 'compact'
+      // Get current icon's active tab
+      let tab: IconTabType = 'compact'
       if (expandedIcon.type === 'vault') {
         const vault = pinnedVaults.find(v => v.id === expandedIcon.id)
-        mode = vault?.preferredMode || 'compact'
+        tab = vault?.activeTab || 'compact'
       } else {
         const icon = smartIcons.find(i => i.id === expandedIcon.id)
-        mode = icon?.preferredMode || 'compact'
+        tab = icon?.activeTab || 'compact'
       }
 
-      // Constrain width based on mode
-      let constrainedWidth = width
-      if (mode === 'compact') {
-        constrainedWidth = Math.max(SIDEBAR_WIDTHS.compact.min, Math.min(SIDEBAR_WIDTHS.compact.max, width))
+      // Constrain width based on tab
+      const tier = SIDEBAR_WIDTHS[tab]
+      const constrainedWidth = Math.max(tier.min, Math.min(tier.max, width))
+      if (tab === 'compact') {
         set({ sidebarWidth: constrainedWidth, compactModeWidth: constrainedWidth })
         saveSidebarWidth(constrainedWidth)
         saveCompactModeWidth(constrainedWidth)
-      } else {
-        constrainedWidth = Math.max(SIDEBAR_WIDTHS.card.min, Math.min(SIDEBAR_WIDTHS.card.max, width))
+      } else if (tab === 'card') {
         set({ sidebarWidth: constrainedWidth, cardModeWidth: constrainedWidth })
         saveSidebarWidth(constrainedWidth)
         saveCardModeWidth(constrainedWidth)
+      } else {
+        set({ sidebarWidth: constrainedWidth, explorerModeWidth: constrainedWidth })
+        saveSidebarWidth(constrainedWidth)
+        saveExplorerModeWidth(constrainedWidth)
       }
+    },
+
+    // Explorer tree actions (v1.17.0)
+    toggleExplorerNode: (projectId) => {
+      const { explorerTreeState } = get()
+      const expandedNodes = new Set(explorerTreeState.expandedNodes)
+      if (expandedNodes.has(projectId)) {
+        expandedNodes.delete(projectId)
+      } else {
+        expandedNodes.add(projectId)
+      }
+      const newState = { expandedNodes }
+      set({ explorerTreeState: newState })
+      saveExplorerTreeState(newState)
+    },
+
+    expandExplorerNode: (projectId) => {
+      const { explorerTreeState } = get()
+      if (explorerTreeState.expandedNodes.has(projectId)) return
+      const expandedNodes = new Set(explorerTreeState.expandedNodes)
+      expandedNodes.add(projectId)
+      const newState = { expandedNodes }
+      set({ explorerTreeState: newState })
+      saveExplorerTreeState(newState)
+    },
+
+    collapseExplorerNode: (projectId) => {
+      const { explorerTreeState } = get()
+      if (!explorerTreeState.expandedNodes.has(projectId)) return
+      const expandedNodes = new Set(explorerTreeState.expandedNodes)
+      expandedNodes.delete(projectId)
+      const newState = { expandedNodes }
+      set({ explorerTreeState: newState })
+      saveExplorerTreeState(newState)
+    },
+
+    collapseAllExplorerNodes: () => {
+      const newState = { expandedNodes: new Set<string>() }
+      set({ explorerTreeState: newState })
+      saveExplorerTreeState(newState)
     },
 
   // Pinned vaults actions
@@ -686,7 +806,8 @@ export const useAppViewStore = create<AppViewState>((set, get) => {
       label,
       color,
       order: maxOrder + 1,
-      isPermanent: false
+      isPermanent: false,
+      activeTab: 'compact'  // v1.17.0: default tab for newly pinned vaults
     }
 
     const newVaults = [...pinnedVaults, newVault].sort((a, b) => a.order - b.order)

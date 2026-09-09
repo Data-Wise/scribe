@@ -59,7 +59,7 @@ export function MissionSidebar({
     pinnedVaults,
     smartIcons,
     toggleIcon,
-    setIconMode,
+    switchIconTab,
     collapseAll,
     setSidebarWidth
   } = useAppViewStore()
@@ -72,16 +72,16 @@ export function MissionSidebar({
     suggestedWidth: number
   } | null>(null)
 
-  // Compute current mode from expanded icon's preferredMode
+  // Compute current mode from expanded icon's activeTab
   const currentMode = useMemo(() => {
     if (!expandedIcon) return null
 
     if (expandedIcon.type === 'vault') {
       const vault = pinnedVaults.find(v => v.id === expandedIcon.id)
-      return vault?.preferredMode || 'compact'
+      return vault?.activeTab || 'compact'
     }
     const icon = smartIcons.find(i => i.id === expandedIcon.id)
-    return icon?.preferredMode || 'compact'
+    return icon?.activeTab || 'compact'
   }, [expandedIcon, pinnedVaults, smartIcons])
 
   // Phase 6: Map width to closest preset
@@ -158,8 +158,8 @@ export function MissionSidebar({
     if (!expandedIcon || !currentMode) return
 
     const newMode = currentMode === 'compact' ? 'card' : 'compact'
-    setIconMode(expandedIcon.type, expandedIcon.id, newMode)
-  }, [expandedIcon, currentMode, setIconMode])
+    switchIconTab(expandedIcon.type, expandedIcon.id, newMode)
+  }, [expandedIcon, currentMode, switchIconTab])
 
   // Handle double-click reset to default width
   const handleReset = useCallback(() => {
@@ -217,7 +217,7 @@ export function MissionSidebar({
           notes={notes}
           expandedIcon={expandedIcon}
           currentProjectId={currentProjectId}
-          mode={currentMode}
+          mode={currentMode === 'explorer' ? 'card' : currentMode} // TODO(Phase 4): ExpandedIconPanel needs a 3rd 'explorer' render path
           width={width}
           onToggleMode={handleToggleMode}
           onClose={collapseAll}

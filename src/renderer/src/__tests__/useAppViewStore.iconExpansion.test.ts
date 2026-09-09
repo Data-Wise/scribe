@@ -10,7 +10,7 @@ import type { SmartIconId } from '../types'
  * - expandSmartIcon: Expand smart icon (research, teaching, etc.)
  * - collapseAll: Collapse to icon-only mode
  * - toggleIcon: Accordion pattern (one expanded at a time)
- * - setIconMode: Per-icon mode preferences (compact/card)
+ * - switchIconTab: Per-icon mode preferences (compact/card)
  */
 
 describe('useAppViewStore - Icon-Centric Expansion', () => {
@@ -30,7 +30,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
           label: 'Inbox',
           order: 0,
           isPermanent: true,
-          preferredMode: 'compact'
+          activeTab: 'compact'
         }
       ],
       smartIcons: [
@@ -43,7 +43,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
           isVisible: true,
           isExpanded: false,
           order: 0,
-          preferredMode: 'compact'
+          activeTab: 'compact'
         },
         {
           id: 'teaching',
@@ -54,7 +54,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
           isVisible: true,
           isExpanded: false,
           order: 1,
-          preferredMode: 'compact'
+          activeTab: 'compact'
         }
       ]
     })
@@ -80,7 +80,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
 
       // Set inbox to prefer card mode
       const updatedVaults = pinnedVaults.map(v =>
-        v.id === 'inbox' ? { ...v, preferredMode: 'card' as const } : v
+        v.id === 'inbox' ? { ...v, activeTab: 'card' as const } : v
       )
       useAppViewStore.setState({ pinnedVaults: updatedVaults })
 
@@ -121,7 +121,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
 
       // Set research to prefer card mode
       const updated = smartIcons.map(i =>
-        i.id === 'research' ? { ...i, preferredMode: 'card' as const } : i
+        i.id === 'research' ? { ...i, activeTab: 'card' as const } : i
       )
       useAppViewStore.setState({ smartIcons: updated })
 
@@ -227,76 +227,76 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
   })
 
   // ============================================================
-  // setIconMode Tests (Per-Icon Mode Preferences)
+  // switchIconTab Tests (Per-Icon Mode Preferences)
   // ============================================================
 
-  describe('setIconMode', () => {
+  describe('switchIconTab', () => {
     it('sets vault mode preference and updates width if expanded', () => {
-      const { expandVault, setIconMode } = useAppViewStore.getState()
+      const { expandVault, switchIconTab } = useAppViewStore.getState()
 
       // Expand inbox (compact by default)
       expandVault('inbox')
       expect(useAppViewStore.getState().sidebarWidth).toBe(SIDEBAR_WIDTHS.compact.default)
 
       // Switch to card mode
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
 
       const state = useAppViewStore.getState()
       const vault = state.pinnedVaults.find(v => v.id === 'inbox')
-      expect(vault?.preferredMode).toBe('card')
+      expect(vault?.activeTab).toBe('card')
       expect(state.sidebarWidth).toBe(SIDEBAR_WIDTHS.card.default)
     })
 
     it('sets smart icon mode preference and updates width if expanded', () => {
-      const { expandSmartIcon, setIconMode } = useAppViewStore.getState()
+      const { expandSmartIcon, switchIconTab } = useAppViewStore.getState()
 
       // Expand research (compact by default)
       expandSmartIcon('research' as SmartIconId)
       expect(useAppViewStore.getState().sidebarWidth).toBe(SIDEBAR_WIDTHS.compact.default)
 
       // Switch to card mode
-      setIconMode('smart', 'research', 'card')
+      switchIconTab('smart', 'research', 'card')
 
       const state = useAppViewStore.getState()
       const icon = state.smartIcons.find(i => i.id === 'research')
-      expect(icon?.preferredMode).toBe('card')
+      expect(icon?.activeTab).toBe('card')
       expect(state.sidebarWidth).toBe(SIDEBAR_WIDTHS.card.default)
     })
 
     it('does not update width if different icon is expanded', () => {
-      const { expandSmartIcon, setIconMode } = useAppViewStore.getState()
+      const { expandSmartIcon, switchIconTab } = useAppViewStore.getState()
 
       // Expand research
       expandSmartIcon('research' as SmartIconId)
       const widthBefore = useAppViewStore.getState().sidebarWidth
 
       // Change teaching mode (different icon)
-      setIconMode('smart', 'teaching', 'card')
+      switchIconTab('smart', 'teaching', 'card')
 
       // Width should not change
       expect(useAppViewStore.getState().sidebarWidth).toBe(widthBefore)
     })
 
     it('persists vault mode preference to localStorage', () => {
-      const { setIconMode } = useAppViewStore.getState()
+      const { switchIconTab } = useAppViewStore.getState()
 
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
 
       const stored = localStorage.getItem('scribe:pinnedVaults')
       const vaults = JSON.parse(stored!)
       const inbox = vaults.find((v: any) => v.id === 'inbox')
-      expect(inbox.preferredMode).toBe('card')
+      expect(inbox.activeTab).toBe('card')
     })
 
     it('persists smart icon mode preference to localStorage', () => {
-      const { setIconMode } = useAppViewStore.getState()
+      const { switchIconTab } = useAppViewStore.getState()
 
-      setIconMode('smart', 'research', 'card')
+      switchIconTab('smart', 'research', 'card')
 
       const stored = localStorage.getItem('scribe:smartIcons')
       const icons = JSON.parse(stored!)
       const research = icons.find((i: any) => i.id === 'research')
-      expect(research.preferredMode).toBe('card')
+      expect(research.activeTab).toBe('card')
     })
   })
 
@@ -324,7 +324,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
 
       // Set inbox to card mode
       const updated = pinnedVaults.map(v =>
-        v.id === 'inbox' ? { ...v, preferredMode: 'card' as const } : v
+        v.id === 'inbox' ? { ...v, activeTab: 'card' as const } : v
       )
       useAppViewStore.setState({ pinnedVaults: updated })
 
@@ -350,18 +350,18 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
     })
 
     it('preserves mode-specific widths when switching icons', () => {
-      const { expandSmartIcon, setIconMode, setSidebarWidth } = useAppViewStore.getState()
+      const { expandSmartIcon, switchIconTab, setSidebarWidth } = useAppViewStore.getState()
 
       // Expand research in compact mode, resize to 250
       expandSmartIcon('research' as SmartIconId)
       setSidebarWidth(250)
 
       // Switch research to card mode, resize to 380
-      setIconMode('smart', 'research', 'card')
+      switchIconTab('smart', 'research', 'card')
       setSidebarWidth(380)
 
       // Switch back to compact mode
-      setIconMode('smart', 'research', 'compact')
+      switchIconTab('smart', 'research', 'compact')
 
       // Should restore compact width
       expect(useAppViewStore.getState().sidebarWidth).toBe(250)
@@ -406,7 +406,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
 
   describe('Integration', () => {
     it('complete workflow: expand → resize → switch mode → collapse', () => {
-      const { expandVault, setSidebarWidth, setIconMode, collapseAll } = useAppViewStore.getState()
+      const { expandVault, setSidebarWidth, switchIconTab, collapseAll } = useAppViewStore.getState()
 
       // 1. Expand inbox (compact mode)
       expandVault('inbox')
@@ -417,7 +417,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
       expect(useAppViewStore.getState().compactModeWidth).toBe(260)
 
       // 3. Switch to card mode
-      setIconMode('vault', 'inbox', 'card')
+      switchIconTab('vault', 'inbox', 'card')
       expect(useAppViewStore.getState().sidebarWidth).toBe(SIDEBAR_WIDTHS.card.default)
 
       // 4. Resize card mode
@@ -425,7 +425,7 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
       expect(useAppViewStore.getState().cardModeWidth).toBe(380)
 
       // 5. Switch back to compact
-      setIconMode('vault', 'inbox', 'compact')
+      switchIconTab('vault', 'inbox', 'compact')
       expect(useAppViewStore.getState().sidebarWidth).toBe(260) // Restored
 
       // 6. Collapse
@@ -434,13 +434,13 @@ describe('useAppViewStore - Icon-Centric Expansion', () => {
     })
 
     it('accordion pattern with mode preferences', () => {
-      const { expandSmartIcon, setIconMode } = useAppViewStore.getState()
+      const { expandSmartIcon, switchIconTab } = useAppViewStore.getState()
 
       // Set research to card mode
-      setIconMode('smart', 'research', 'card')
+      switchIconTab('smart', 'research', 'card')
 
       // Set teaching to compact mode
-      setIconMode('smart', 'teaching', 'compact')
+      switchIconTab('smart', 'teaching', 'compact')
 
       // Expand research → should use card width
       expandSmartIcon('research' as SmartIconId)
