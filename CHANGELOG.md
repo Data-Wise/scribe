@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] — Three-Tab Sidebar (Explorer Tab)
+## [v1.23.0] - 2026-09-08 — Three-Tab Sidebar (Explorer Tab)
 
 ### Added
 

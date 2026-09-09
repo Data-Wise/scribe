@@ -1,13 +1,13 @@
 ---
 status: active
 priority: P1
-version: 1.22.0
+version: 1.23.0
 sprint: 38
 started: 2026-01-08
 updated: 2026-09-08
 released: 2026-02-26
 editor: hybrid-markdown++
-next_focus: v1.17.0 Three-Tab Sidebar merged to dev (PR #60)
+next_focus: Three-Tab Sidebar released as v1.23.0
 tests: 2342
 unit_tests: 2342
 e2e_tests: 109
@@ -28,7 +28,7 @@ tags:
 
 ### Just Completed
 
-1. **v1.17.0 Three-Tab Sidebar** (2026-09-08) — All 6 spec phases merged to `dev` via PR #60: state schema, localStorage migration, Zustand actions, IconTabBar + Explorer tree UI, tests, docs. 83 test files, 2,342 passing. Spec: `docs/specs/SPEC-three-tab-sidebar-2026-01-10.md`. Not included: keyboard shortcuts for tab switching, delete-project→auto-collapse integration, a node cap on persisted tree state — none were in any phase's scope.
+1. **Three-Tab Sidebar** (2026-09-08, released as v1.23.0) — All 6 spec phases merged to `dev` via PR #60: state schema, localStorage migration, Zustand actions, IconTabBar + Explorer tree UI, tests, docs. 83 test files, 2,342 passing. Spec: `docs/specs/SPEC-three-tab-sidebar-2026-01-10.md`. Not included: keyboard shortcuts for tab switching, delete-project→auto-collapse integration, a node cap on persisted tree state — none were in any phase's scope.
 2. **v1.22.0 Released** (2026-02-26) — Responsive UI with auto-collapse sidebars, global zoom, macOS 4-pane tiling (350×350 min), right sidebar resize. Multi-arch DMGs built & uploaded, Homebrew cask updated, docs deployed.
 
 ### Active Backlog
@@ -160,7 +160,7 @@ tags:
 | Responsive UI | Released | v1.22.0 |
 | Pomodoro Timer | Released | v1.19.0 |
 | Settings Improvements | In Progress | v1.20.0 |
-| Three-Tab Sidebar | Merged to dev | v1.17.0 |
+| Three-Tab Sidebar | Released | v1.23.0 |
 | Quarto Enhancements | Partially Implemented | v1.15+ |
 | LaTeX Editor | Proposal | v2.0 |
 | Left Sidebar Redesign | Superseded by v1.16.0 | — |

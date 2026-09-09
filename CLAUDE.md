@@ -6,7 +6,7 @@ academic writing tools, themes, and CLI-based AI integration.
 ## Stack
 - **Tauri 2** (Rust shell) + **React 18** + TypeScript front-end; Node/npm (`package.json`).
 - `cli/` companion CLI; docs via mkdocs (`mkdocs.yml`, `docs/`); e2e tests in `e2e/`.
-- Status: **active**, v1.22.0, large green suite (~2326 tests).
+- Status: **active**, v1.23.0, large green suite (~2342 tests).
 
 ## Working here
 - Dev/build: `npm install`, then the Tauri scripts in `package.json`.
