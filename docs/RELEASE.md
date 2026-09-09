@@ -120,12 +120,15 @@ Before releasing:
    - Mark as pre-release
    - Upload DMG files
 
-3. Update Homebrew tap:
+3. Update Homebrew tap (tap `main` is branch-protected — direct push fails with GH006):
    ```bash
    cd ~/projects/dev-tools/homebrew-tap
    # Update Casks/scribe.rb with new SHA256
+   git checkout -b bot/scribe-vX.Y.Z
    git commit -am "Update Scribe to vX.Y.Z"
-   git push
+   git push -u origin bot/scribe-vX.Y.Z
+   gh pr create --base main --head bot/scribe-vX.Y.Z --title "scribe: update cask to vX.Y.Z"
+   gh pr merge bot/scribe-vX.Y.Z --squash --auto
    ```
 
 ### Automated Release (GitHub Actions)
@@ -141,7 +144,12 @@ The workflow will:
 1. Build for Intel and Apple Silicon
 2. Create draft release
 3. Upload DMG files
-4. Update Homebrew tap (requires TAP_GITHUB_TOKEN secret)
+4. Update Homebrew tap: commits to a per-version `bot/scribe-*` branch, opens a PR against
+   the tap's `main` (branch-protected — direct push is rejected with GH006), and auto-merges
+   it once the tap's required checks pass, with an immediate-merge fallback (requires
+   `TAP_GITHUB_TOKEN` secret). The job polls until the tap PR is `MERGED` (5-min timeout)
+   before finishing, since `verify-installation` immediately runs `brew install` against tap
+   `main`.
 
 ---
 
@@ -162,12 +170,14 @@ The workflow will:
 ~/projects/dev-tools/homebrew-tap/Casks/scribe.rb
 ```
 
-After updating, push to remote:
+After updating, push via a PR (tap `main` is branch-protected):
 ```bash
 cd ~/projects/dev-tools/homebrew-tap
+git checkout -b bot/scribe-vX.Y.Z
 git add Casks/scribe.rb
 git commit -m "Update Scribe to vX.Y.Z"
-git push
+git push -u origin bot/scribe-vX.Y.Z
+gh pr create --base main --head bot/scribe-vX.Y.Z --title "scribe: update cask to vX.Y.Z"
 ```
 
 ---
@@ -201,6 +211,12 @@ xattr -cr /Applications/Scribe.app
 brew tap --repair
 brew update
 ```
+
+### Tap push rejected with GH006 (branch protection)
+
+`homebrew-tap`'s `main` requires a PR — a direct `git push` fails. Push to a `bot/scribe-*`
+branch and open a PR instead (see "Homebrew Cask Location" above); the automated release
+workflow already does this.
 
 ---
 
